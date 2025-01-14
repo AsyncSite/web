@@ -1,26 +1,29 @@
+// src/App.tsx
 import React from 'react';
-import logo from './logo.svg';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import Intro from './components/sections/Intro';
+import About from './components/sections/About';
+import Worldview from './components/sections/Worldview';
+import Routine from './components/sections/Routine';
+import Extra from './components/sections/Extra';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => {
+    return (
+        <div className="App">
+
+            <Intro/>
+            <About/>
+            {/* 헤더 (처음엔 화면 아래 깔려 있다가, 스크롤 시 상단 고정) */}
+            <Header/>
+            <Worldview/>
+            <Routine/>
+            <Extra/>
+            <Footer/>
+        </div>
+    );
+};
 
 export default App;
