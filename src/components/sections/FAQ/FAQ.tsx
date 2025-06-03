@@ -96,7 +96,7 @@ const FAQ: React.FC = () => {
         });
 
     return (
-        <div className="faq-page">
+        <div id="faq" className="faq-page">
             {/* 헤더 */}
             <header className="faq-header">
                 <h1 className="faq-title">FAQ</h1>
@@ -190,8 +190,8 @@ const FAQ: React.FC = () => {
                 )}
             </div>
 
-            {/* CTA 섹션 */}
-            <div className="faq-cta-section">
+
+            <div id="contact-cta" className="faq-cta-section">
                 <h2 className="cta-question">궁금한 게 더 있으신가요?</h2>
                 <div className="cta-button-group">
                     <button className="cta-button kakao">카카오톡 문의</button>

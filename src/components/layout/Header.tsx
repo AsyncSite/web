@@ -53,11 +53,21 @@ const Header: React.FC = () => {
 
                 <nav>
                     <ul>
-                        <li><a href="/">HOME</a></li>
-                        <li><a href="/">ABOUT</a></li>
-                        <li><a href="#">MOIM</a></li>
-                        <li><a href="#">JOIN US</a></li>
-                        <li><a href="/">CONTACT</a></li>
+                        <li>
+                            <a href="#intro">HOME</a>
+                        </li>
+                        <li>
+                            <a href="#about">ABOUT</a>
+                        </li>
+                        <li>
+                            <a href="#routine">MOIM</a>
+                        </li>
+                        <li>
+                            <a href="#faq">FAQ</a>
+                        </li>
+                        <li>
+                            <a href="#contact-cta">CONTACT</a>
+                        </li>
                     </ul>
                 </nav>
             </div>

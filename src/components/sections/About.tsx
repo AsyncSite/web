@@ -336,7 +336,7 @@ const About: React.FC = () => {
     }, []);
 
     return (
-        <div className="about-page-container" ref={containerRef}>
+        <div id="about" className="about-page-container" ref={containerRef}>
             <div className="stack-cards">
                 {cards.map((card) => (
                     <div className="stack-cards__item" key={card.id}>

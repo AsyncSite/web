@@ -27,7 +27,7 @@ const Routine: React.FC = () => {
 
 
     return (
-        <div className="routine-page">
+        <div id="routine" className="routine-page">
             <header className="header-section">
                 {/* ★ 변경됨: Apple 스타일의 타이포그래피 개선 */}
                 <div className="header-content">

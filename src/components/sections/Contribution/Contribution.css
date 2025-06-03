@@ -1,7 +1,7 @@
 /* src/sections/Contribution/Contribution.css */
 
 .contribution-page {
-    min-height: auto;
+    min-height: auto !important;
     padding-top: 1rem;
     padding-bottom: 1rem;
     /* FAQ 아래 자연스럽게 이어지도록 배경을 투명 유지 */
