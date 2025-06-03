@@ -1,4 +1,3 @@
-// src/components/sections/Extra.tsx
 import React from 'react';
 
 const Extra: React.FC = () => {

@@ -18,17 +18,54 @@ const About: React.FC = () => {
     const cards: CardContent[] = [
         {
             id: 1,
-            title: '🪴 우리는 이런 사람들이에요',
-            subtitle: '“잔디를 심는 사람들, 11맨을 소개할게요!”',
+            title: '🪴 11맨: 함께 성장하는 공간', // 간결한 제목
+            subtitle: '“배우고, 공유하고, 함께 나아가는 개발자 커뮤니티”', // 부제 유지 또는 미세 조정
             content: (
-                <>
-                    우리는 <strong>매일 한 줄의 변화</strong>로 성장하는 커뮤니티예요.<br />
-                    개발 공부, 사이드 프로젝트, 아니면 그냥 소소한 기록까지,<br />
-                    작은 행동들이 모여 <strong>큰 그림</strong>을 만들어가고 있어요. 🚀<br />
-                    느슨하지만 끈끈하게, 따로 또 같이 움직이는 사람들이랍니다.<br />
-                </>
+                <div className="card-content-redesign">
+                    <div className="card-point">
+                        <span className="card-point-icon">🌱</span>
+                        <div className="card-point-text">
+                            <h4 className="card-point-keyword">꾸준한 학습과 실천</h4>
+                            <p className="card-point-explanation">
+                                매일 작은 목표를 통해 함께 <strong>성장하며</strong>, 어제보다 나은 오늘을 만들어요.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="card-point">
+                        <span className="card-point-icon">💡</span>
+                        <div className="card-point-text">
+                            <h4 className="card-point-keyword">자유로운 지식 공유</h4>
+                            <p className="card-point-explanation">
+                                스터디, 경험담, Q&A로 서로의 성장을 돕는 <strong>집단 지성</strong>을 추구해요.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="card-point">
+                        <span className="card-point-icon">🔗</span>
+                        <div className="card-point-text">
+                            <h4 className="card-point-keyword">수평적 연결과 지지</h4>
+                            <p className="card-point-explanation">
+                                부담 없는 분위기에서 <strong>관심사</strong>를 기반으로 자유롭게 교류하고 응원해요.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             ),
         },
+        // {
+        //     id: 2,
+        //     title: '🪴 우리는 이런 사람들이에요',
+        //     subtitle: '“매일 작은 커밋 🌱, 함께 큰 성장을 이루는 11맨입니다!”', // 부제목 수정
+        //     content: (
+        //         <>
+        //             {/* 내용 수정 */}
+        //             우리는 <strong>매일의 작은 실천</strong>(1일 1커밋!)으로 함께 성장하는 개발자 커뮤니티, 11맨입니다.<br />
+        //             각자의 자리에서 찍는 작은 점들이 모여 의미 있는 별자리를 만들듯, <br />
+        //             우리의 꾸준한 기록과 공유는 <strong>집단 지성의 힘</strong>을 발휘합니다. 🚀<br />
+        //             느슨하지만 끈끈한 연결 속에서, 따로 또 같이 시너지를 만들어갑니다.<br />
+        //         </>
+        //     ),
+        // },
         {
             id: 2,
             title: '🌏 우리의 세계관은 이런 거야!',
@@ -126,99 +163,128 @@ const About: React.FC = () => {
         const container = containerRef.current;
         if (!container) return;
 
-        // 모든 카드 DOM 요소 가져오기
         const cardItems = Array.from(
             container.querySelectorAll<HTMLDivElement>('.stack-cards__item')
         );
 
-        // --- (2-1) 처음에 첫 카드 제외 모두 slide-up (숨김) 처리 ---
         cardItems.forEach((card, idx) => {
             if (idx > 0) {
                 card.classList.add('slide-up');
             }
         });
 
-        // 다음 카드로 넘어가는 함수
         const showNextCard = (currentIndex: number) => {
             const total = cardItems.length;
+            // 다음 카드로 이동 (마지막 카드에서 처음으로 순환)
             const nextIndex = (currentIndex + 1) % total;
+            if (currentIndex === cardItems.length -1 && nextIndex === 0) {
+                // 이 부분은 순환을 막고 싶다면 조건을 추가하거나,
+                // 현재는 순환되도록 둡니다 (하단 화살표와 동일한 로직).
+                // 만약 이 클릭 방식으로는 순환시키고 싶지 않다면 아래와 같이 수정:
+                // if (currentIndex < cardItems.length - 1) {
+                //   cardItems[currentIndex].classList.add('slide-up');
+                //   cardItems[currentIndex + 1].classList.remove('slide-up');
+                // }
+                // 여기서는 기존 showNextCard/showPrevCard의 순환 로직을 따르겠습니다.
+            }
             cardItems[currentIndex].classList.add('slide-up');
             cardItems[nextIndex].classList.remove('slide-up');
         };
 
-        // 이전 카드로 넘어가는 함수
         const showPrevCard = (currentIndex: number) => {
             const total = cardItems.length;
+            // 이전 카드로 이동 (첫 카드에서 마지막으로 순환)
             const prevIndex = (currentIndex - 1 + total) % total;
+            if (currentIndex === 0 && prevIndex === cardItems.length -1) {
+                // 순환을 막고 싶다면 조건 추가
+                // if (currentIndex > 0) {
+                //    cardItems[currentIndex].classList.add('slide-up');
+                //    cardItems[currentIndex - 1].classList.remove('slide-up');
+                // }
+            }
             cardItems[currentIndex].classList.add('slide-up');
             cardItems[prevIndex].classList.remove('slide-up');
         };
 
-        // --- (2-2) wheel 이벤트 핸들러 ---
         function handleCardWheel(this: HTMLDivElement, e: WheelEvent) {
             const el = e.currentTarget as HTMLDivElement;
             const { scrollTop, scrollHeight, clientHeight } = el;
-
             const isAtTop = scrollTop === 0;
-            const isAtBottom = scrollTop + clientHeight >= scrollHeight;
+            const isAtBottom = scrollTop + clientHeight >= scrollHeight -1; // -1은 스크롤 정밀도 문제 보정
 
-            // 카드 안에서 아직 스크롤 여유가 있으면, 창 전체로의 스크롤 이벤트 전파 중단
             if (!isAtTop && !isAtBottom) {
                 e.stopPropagation();
                 return;
             }
 
-            // 어느 카드인지 인덱스 확인
-            const cardIndex = cardItems.findIndex((c) => c.querySelector('.inner') === el);
-            if (cardIndex < 0) return; // 혹시 못 찾았으면 종료
+            const cardItem = el.closest('.stack-cards__item');
+            if (!cardItem) return;
+            const cardIndex = cardItems.indexOf(cardItem as HTMLDivElement);
+            if (cardIndex < 0) return;
 
-            // 아래로 스크롤 (맨 아래에서 더 스크롤) => 다음 카드
             if (isAtBottom && e.deltaY > 0) {
                 e.preventDefault();
                 showNextCard(cardIndex);
             }
-
-            // 위로 스크롤 (맨 위에서 더 스크롤) => 이전 카드
             if (isAtTop && e.deltaY < 0) {
                 e.preventDefault();
                 showPrevCard(cardIndex);
             }
         }
 
-        // --- (2-3) 화살표 클릭 핸들러 ---
         function handleArrowClick(e: MouseEvent) {
             e.preventDefault();
-            // 클릭된 화살표가 속한 card index를 찾기
             const arrowEl = e.currentTarget as HTMLDivElement;
             const cardItem = arrowEl.closest('.stack-cards__item');
             if (!cardItem) return;
-
             const cardIndex = cardItems.indexOf(cardItem as HTMLDivElement);
             if (cardIndex < 0) return;
-
-            // 다음 카드로 이동
             showNextCard(cardIndex);
         }
 
-        // 각 카드 내부 .inner에 wheel 이벤트 등록 & arrow-down 클릭 이벤트 등록
+
+        function handleCardRegionClick(this: HTMLDivElement, e: MouseEvent) {
+            const cardItem = this; // '.stack-cards__item'
+            const target = e.target as HTMLElement;
+
+            // 클릭된 요소가 화살표(.arrow-down)거나 그 자식이면, 화살표 자체의 클릭 핸들러가 처리
+            if (target.closest('.arrow-down')) {
+                return;
+            }
+
+            // ✨ 텍스트 영역 클릭 시에도 카드 이동을 허용하기 위해 아래 조건문 제거 또는 주석 처리
+            // const innerElement = cardItem.querySelector<HTMLDivElement>('.inner');
+            // if (innerElement && innerElement.contains(target) && target !== innerElement) {
+            //     return;
+            // }
+
+            const cardIndex = cardItems.indexOf(cardItem);
+            if (cardIndex < 0) return;
+
+            const rect = cardItem.getBoundingClientRect();
+            const clickYInCard = e.clientY - rect.top; // 카드 상단 기준 클릭 위치
+
+            if (clickYInCard < rect.height / 2) { // 카드 상단 절반 클릭
+                showPrevCard(cardIndex);
+            } else { // 카드 하단 절반 클릭
+                showNextCard(cardIndex);
+            }
+        }
+
         cardItems.forEach((card) => {
             const innerEl = card.querySelector<HTMLDivElement>('.inner');
             const arrowEl = card.querySelector<HTMLDivElement>('.arrow-down');
 
-            // wheel
             if (innerEl) {
-                innerEl.addEventListener('wheel', handleCardWheel, {
-                    passive: false, // preventDefault() 사용을 위해
-                });
+                innerEl.addEventListener('wheel', handleCardWheel, { passive: false });
             }
-
-            // arrow click
             if (arrowEl) {
                 arrowEl.addEventListener('click', handleArrowClick);
             }
+            // ✨ 각 카드 아이템에 새로운 클릭 이벤트 리스너 등록
+            card.addEventListener('click', handleCardRegionClick);
         });
 
-        // cleanup
         return () => {
             cardItems.forEach((card) => {
                 const innerEl = card.querySelector<HTMLDivElement>('.inner');
@@ -230,7 +296,42 @@ const About: React.FC = () => {
                 if (arrowEl) {
                     arrowEl.removeEventListener('click', handleArrowClick);
                 }
+                // ✨ 등록된 리스너 제거
+                card.removeEventListener('click', handleCardRegionClick);
             });
+        };
+    }, []); // 의존성 배열은 초기 설정대로 비워둡니다.
+
+
+    useEffect(() => {
+        const cardItems = Array.from(
+            containerRef.current?.querySelectorAll<HTMLDivElement>('.stack-cards__item') || []
+        );
+
+        if (cardItems.length === 0) return;
+
+        // IntersectionObserver 콜백: entry.isIntersecting 지표로 visible 토글
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    const el = entry.target as HTMLDivElement;
+                    if (entry.isIntersecting) {
+                        el.classList.add('visible');
+                    } else {
+                        el.classList.remove('visible');
+                    }
+                });
+            },
+            {
+                root: null,
+                threshold: 0.3, // 카드가 30% 보이기 시작하면 콜백 실행
+            }
+        );
+
+        cardItems.forEach(card => observer.observe(card));
+
+        return () => {
+            observer.disconnect();
         };
     }, []);
 
@@ -245,7 +346,14 @@ const About: React.FC = () => {
                             <p>{card.content}</p>
 
                             {/* 카드 하단에 화살표 아이콘(또는 텍스트) */}
-                            <div className="arrow-down">⬇</div>
+                            <div className="arrow-down">
+                                ⬇
+                                {card.id === 1 && ( // 첫 번째 카드에만 안내 문구 추가
+                                    <span className="navigation-hint">
+                                        아래로 스크롤하거나 화살표를 클릭해 보세요!
+                                    </span>
+                                )}
+                            </div>
                             <div className="counter">
                                 {card.id}/{cards.length}
                             </div>
