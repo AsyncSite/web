@@ -71,7 +71,6 @@ const Contribution: React.FC = () => {
                         </a>
                     </div>
 
-                    {/* vvoohhee 카드 */}
                     <div className="contributor-card">
                         <a
                             href="https://github.com/vvoohhee"
@@ -88,6 +87,25 @@ const Contribution: React.FC = () => {
                                 />
                             </div>
                             <span className="contributor-name">vvoohhee</span>
+                        </a>
+                    </div>
+
+                    <div className="contributor-card">
+                        <a
+                            href="https://github.com/KrongDev"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="contributor-link"
+                        >
+                            <div className="profile-wrapper">
+                                <img
+                                    src={process.env.PUBLIC_URL + '/images/face/KrongDev.png'}
+                                    alt="KrongDev 프로필"
+                                    className="profile-img"
+                                    onError={handleImgError}
+                                />
+                            </div>
+                            <span className="contributor-name">KrongDev</span>
                         </a>
                     </div>
 
