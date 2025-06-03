@@ -64,7 +64,7 @@ const Routine: React.FC = () => {
                     </div>
                     <div className="section-image-col">
                         <img
-                            src="/images/developers.png"
+                            src={process.env.PUBLIC_URL + '/images/developers.png'}
                             alt="주 1회 온라인 코어타임 이미지"
                         />
                     </div>
@@ -78,7 +78,7 @@ const Routine: React.FC = () => {
                 <div className="white-box-inner reverse">
                     <div className="section-image-col">
                         <img
-                            src="/images/005%20(1).png"
+                            src={process.env.PUBLIC_URL + '/images/005%20(1).png'}
                             alt="테코테코 코테 모임 이미지"
                         />
                     </div>
@@ -112,7 +112,7 @@ const Routine: React.FC = () => {
                     </div>
                     <div className="section-image-col">
                         <img
-                            src="/images/devlog-14.png"
+                            src={process.env.PUBLIC_URL + '/images/devlog-14.png'}
                             alt="DEVLOG-14 이미지"
                         />
                     </div>
@@ -138,7 +138,7 @@ const Routine: React.FC = () => {
                     </div>
                     <div className="section-image-col">
                         <img
-                            src="/images/no-answer2.png"
+                            src={process.env.PUBLIC_URL + '/images/no-answer2.png'}
                             alt="노앤써 시스템 디자인 스터디 이미지"
                         />
                     </div>
@@ -152,7 +152,7 @@ const Routine: React.FC = () => {
                 <div className="white-box-inner reverse">
                     <div className="section-image-col">
                         <img
-                            src="/images/any-question.png"
+                            src={process.env.PUBLIC_URL + '/images/any-question.png'}
                             alt="무엇이든 물어보살 채널 이미지"
                         />
                     </div>
@@ -182,7 +182,7 @@ const Routine: React.FC = () => {
                     </div>
                     <div className="section-image-col">
                         <img
-                            src="/images/turning-page.png"
+                            src={process.env.PUBLIC_URL + '/images/turning-page.png'}
                             alt="터닝페이지 정기적 회고 모임 이미지"
                         />
                     </div>

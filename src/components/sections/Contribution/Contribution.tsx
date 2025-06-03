@@ -37,7 +37,7 @@ const Contribution: React.FC = () => {
                     <div className="contributor-card">
                         <div className="profile-wrapper">
                             <img
-                                src="/images/face/rene.png"
+                                src={process.env.PUBLIC_URL + '/images/face/rene.png'}
                                 alt="renechoi 프로필"
                                 className="profile-img"
                                 onError={handleImgError}
@@ -49,7 +49,7 @@ const Contribution: React.FC = () => {
                     <div className="contributor-card">
                         <div className="profile-wrapper">
                             <img
-                                src="/images/face/kdelay.png"
+                                src={process.env.PUBLIC_URL + '/images/face/kdelay.png'}
                                 alt="kdelay 프로필"
                                 className="profile-img"
                                 onError={handleImgError}
@@ -61,7 +61,7 @@ const Contribution: React.FC = () => {
                     <div className="contributor-card">
                         <div className="profile-wrapper">
                             <img
-                                src="/images/face/vvoohhee.png"
+                                src={process.env.PUBLIC_URL + '/images/face/vvoohhee.png'}
                                 alt="vvoohhee 프로필"
                                 className="profile-img"
                                 onError={handleImgError}
@@ -73,7 +73,7 @@ const Contribution: React.FC = () => {
                     <div className="contributor-card">
                         <div className="profile-wrapper">
                             <img
-                                src="/images/face/another.png"
+                                src={process.env.PUBLIC_URL + '/images/face/another.png'}
                                 alt="another 프로필"
                                 className="profile-img"
                                 onError={handleImgError}

@@ -45,7 +45,7 @@ const Header: React.FC = () => {
                 {/* --- 여기서 "ㅇㅇㅁ" 로고를 SVG 파일로 삽입 --- */}
                 <div className="logo">
                     <img
-                        src="/assets/IlilmanLogo.svg"
+                        src={process.env.PUBLIC_URL + '/assets/IlilmanLogo.svg'}
                         alt="ㅇㅇㅁ 로고"
                         style={{ height: '40px' }}
                     />
