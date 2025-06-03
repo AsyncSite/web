@@ -1,8 +1,8 @@
 // src/App.tsx
 import React from 'react';
 import Footer from './components/layout/Footer';
-import Intro from './components/sections/Intro';
-import About from './components/sections/About';
+import Intro from './components/sections/Intro/Intro';
+import About from './components/sections/About/About';
 import Routine from './components/sections/Routine/Routine';
 
 import './App.css';

@@ -4,7 +4,7 @@ import React from 'react';
 const Footer: React.FC = () => {
     return (
         <footer>
-            <p>© 2025 11men | 작은 습관이 모여 큰 변화를 만드는 공간</p>
+            <p>© 2025 11men </p>
         </footer>
     );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Intro.css';
-import Header from "../layout/Header";
+import Header from "../../layout/Header";
 
 const Intro: React.FC = () => {
     // 별똥별 표시 여부

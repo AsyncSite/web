@@ -18,8 +18,8 @@ const About: React.FC = () => {
     const cards: CardContent[] = [
         {
             id: 1,
-            title: '🪴 11맨: 함께 성장하는 공간', // 간결한 제목
-            subtitle: '“배우고, 공유하고, 함께 나아가는 개발자 커뮤니티”', // 부제 유지 또는 미세 조정
+            title: '🪴 11맨: 함께 성장하는 공간',
+            subtitle: '“배우고, 공유하고, 함께 나아가는 개발자 커뮤니티”',
             content: (
                 <div className="card-content-redesign">
                     <div className="card-point">
