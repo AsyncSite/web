@@ -1,0 +1,433 @@
+/***********************
+ *   Intro 섹션
+ ***********************/
+.intro-section {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: center;
+
+    padding-top: 0;
+
+    /*background:*/
+    /*        url('../../../images/intro-grain-texture.png') no-repeat center / cover,*/
+    /*        linear-gradient(315deg, #05060A 0%, #0D0F14 100%);*/
+    background-blend-mode: soft-light;
+}
+
+
+.intro-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 60px;
+}
+
+/* “느슨히…” 문구 */
+.loose-catchphrase {
+    font-size: 0.5rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.typingLineLoose {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 두 번째 문구는 기존 스타일 유지 */
+.typingLineMain {
+    white-space: pre-wrap;
+    color: #ffffff;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 타이핑 영역 */
+.text-typing-container {
+    margin: 10px auto;
+}
+
+.typing-loose {
+    margin-bottom: 5px; /* 느슨히 문구와 아래 텍스트 사이 간격 축소 */
+}
+.typing-main {
+    margin-top: 5px;
+}
+
+.type-line {
+    white-space: pre-wrap;
+    color: #ffffff;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+.blink-cursor {
+    display: inline-block;
+    margin-left: 2px;
+    width: 1ch;
+    color: #ffffff;
+    font-weight: bold;
+    animation: blink 0.7s infinite step-start;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/***********************
+ *   11MenZ 텍스트 (스큐 + 낙하 애니메이션)
+ ***********************/
+body {
+    background: #05060A;
+    margin: 0;
+    padding: 0;
+    font-family: 'Source Code Pro', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.skew-heading-wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: visible;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+.skew-heading-wrapper h1 {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+/* drop-bounce: 느리게 */
+.skew-heading-wrapper.drop-bounce h1 {
+    text-transform: uppercase;
+    position: absolute;
+
+    /* top 위치를 40%로 조정해 너무 위로 가지 않도록 */
+    top: 35%;
+    left: 50%;
+
+    /* 브라우저 크기에 따라 적절히 변하도록 clamp */
+    font-size: clamp(3rem, 8vw, 6rem);
+
+    margin: 0;
+    font-weight: 900;
+    color: rgba(195, 232, 141, 0.5);
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5), 0 0 4px #8fd67a;
+    white-space: nowrap;
+
+    animation: dropBounce 5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    opacity: 1;
+}
+
+@keyframes dropBounce {
+    0% {
+        transform: translate(-50%, -500%) skew(10deg) rotate(-10deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(-50%, -200%) skew(10deg) rotate(-10deg) scale(0.8);
+        opacity: 0;
+    }
+    30% {
+        transform: translate(-50%, -5%) skew(10deg) rotate(-10deg) scale(1.2);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, 10%) skew(10deg) rotate(-10deg) scale(0.9);
+    }
+    70% {
+        transform: translate(-50%, 0%) skew(10deg) rotate(-10deg) scale(1.05);
+    }
+    100% {
+        transform: translate(-50%, 0%) skew(10deg) rotate(-10deg) scale(1);
+    }
+}
+
+/* ::before, ::after - 기존 그대로 */
+.skew-heading-wrapper h1::before {
+    content: attr(data-heading);
+    position: absolute;
+    left: 0;
+    top: -4.8%;
+    overflow: hidden;
+    width: 100%;
+    height: 50%;
+    color: #fbf7f4;
+    transform: translate(1.6vw, 0) skew(-13deg) scale(1, 1.2);
+    z-index: 2;
+    text-shadow: 2px -1px 6px rgba(0,0,0,0.2);
+}
+.skew-heading-wrapper h1::after {
+    content: attr(data-heading);
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    color: #d3cfcc;
+    transform: translate(0vw, 0) skew(13deg) scale(1, 0.8);
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0% 100%);
+    text-shadow: 2px -1px 6px rgba(0,0,0,0.3);
+}
+
+/***********************
+ *   코스믹 배경
+ ***********************/
+.cosmic-scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* 별 깜빡임 */
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate ease-in-out;
+    top: calc(100% * var(--star-top, 0.5));
+    left: calc(100% * var(--star-left, 0.5));
+}
+@keyframes twinkle {
+    0%   { opacity: 0.3; transform: scale(0.8); }
+    100% { opacity: 1;   transform: scale(1.2); }
+}
+
+/* 행성 궤도: 초반 투명 → 서서히 등장 */
+.fade-in-orbit {
+    opacity: 0;
+    animation: fadeOrbit 7s ease forwards; /* 더 여유롭게 3s */
+    animation-delay: 7s; /* 텍스트 끝난 뒤 천천히 등장 */
+}
+@keyframes fadeOrbit {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* 궤도/행성 - 세팅 (크기, 속도 등) */
+.orbit-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.orbit {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+}
+.planet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #C3E88D, #8FD67A);
+    box-shadow: 0 0 10px rgba(195,232,141,0.6);
+    transform: translateX(130px);
+}
+
+/* orbit-1: 더 크게 */
+.orbit-1 {
+    width: 400px;
+    height: 400px;
+}
+.orbit-1-anim {
+    animation: orbit-1-rotate 10s linear infinite;
+}
+@keyframes orbit-1-rotate {
+    0%   { transform: rotate(0deg);   }
+    100% { transform: rotate(360deg); }
+}
+.planet-1 {
+    width: 25px;
+    height: 25px;
+    margin: -12.5px 0 0 -12.5px;
+    background: linear-gradient(145deg, #afff8f, #8fd67a);
+}
+
+/* orbit-2 */
+.orbit-2 {
+    width: 220px;
+    height: 220px;
+}
+.orbit-2-anim {
+    animation: orbit-2-rotate 6s linear infinite;
+}
+@keyframes orbit-2-rotate {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+}
+.planet-2 {}
+.planet-3 {
+    transform: rotate(180deg) translateX(80px) rotate(-180deg);
+    background: linear-gradient(145deg, #88ffc3, #6ed3a3);
+    box-shadow: 0 0 8px rgba(136,255,195,0.5);
+}
+
+/* orbit-3 (타원형) */
+.orbit-3 {
+    width: 350px;
+    height: 350px;
+}
+.elliptical-orbit {
+    animation: elliptical-rotate 12s linear infinite;
+}
+@keyframes elliptical-rotate {
+    0%   { transform: rotate(0deg) scale(1,0.7); }
+    50%  { transform: rotate(180deg) scale(1,1.2); }
+    100% { transform: rotate(360deg) scale(1,0.7); }
+}
+.planet-4 {
+    transform: translateX(170px);
+    background: linear-gradient(145deg, #ffd2a6, #e8a76e);
+}
+.planet-5 {
+    width: 18px;
+    height: 18px;
+    margin: -9px 0 0 -9px;
+    transform: rotate(120deg) translateX(120px) rotate(-120deg);
+    background: linear-gradient(145deg, #ff9ff3, #d67adc);
+}
+
+/* orbit-4 */
+.orbit-4 {
+    width: 500px;
+    height: 500px;
+}
+.orbit-4-anim {
+    animation: orbit-4-rotate 20s linear infinite;
+}
+@keyframes orbit-4-rotate {
+    0%   { transform: rotate(0deg);   }
+    50%  { transform: rotate(180deg); }
+    100% { transform: rotate(360deg); }
+}
+.planet-6 {
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    transform: translateX(230px);
+    background: linear-gradient(145deg, #bbb, #999);
+}
+
+/* 혜성 */
+.comet {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    top: 10%;
+    left: -10%;
+    box-shadow: 0 0 20px rgba(255,255,255,0.8);
+    animation: comet-move 5s ease-in-out infinite;
+}
+.comet-delay {
+    animation-delay: 2.5s;
+}
+@keyframes comet-move {
+    0%   { transform: translateX(0) translateY(0) scale(1); opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { transform: translateX(120%) translateY(60%) scale(1.2); opacity: 1; }
+    70%  { opacity: 0.6; transform: translateX(140%) translateY(70%) scale(0.8); }
+    100% { opacity: 0; transform: translateX(170%) translateY(85%) scale(0.5); }
+}
+
+/***********************
+ *   반응형
+ ***********************/
+@media (max-width: 768px) {
+    .intro-section {
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+    }
+    .intro-content {
+        margin-top: 20px;
+        padding: 0 1rem;
+    }
+
+    .loose-catchphrase {
+        font-size: 1.6rem;
+    }
+    .type-line {
+        font-size: 1.3rem;
+    }
+
+    .skew-heading-wrapper {
+        height: 120px;
+    }
+    /* clamp: 모바일에서도 적용, 상한/하한에 걸릴 수 있음 */
+    .skew-heading-wrapper.drop-bounce h1 {
+        font-size: clamp(2rem, 8vw, 5rem);
+    }
+
+    .orbit-1 { width: 280px; height: 280px; }
+    .orbit-2 { width: 180px; height: 180px; }
+    .orbit-3 { width: 250px; height: 250px; }
+    .orbit-4 { width: 350px; height: 350px; }
+}
+
+
+
+
+
+
+
+
+/* ... 기존 CSS 생략 ... */
+
+/* 별똥별 슈팅 스타(최초 2초간만 등장) */
+.shooting-star {
+    position: absolute;
+    top: 30%;      /* 시작 위치 조정 */
+    left: -10%;    /* 화면 밖 왼쪽에서 시작 */
+    width: 9px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+
+    animation: shootingStarMove 1500ms ease-out forwards;
+    z-index: 9999; /* 다른 요소 위로 */
+}
+
+@keyframes shootingStarMove {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        /* 가로로 화면 끝 + 세로로 좀 더 올라가는 느낌 */
+        transform: translate(110vw, -15vh) scale(0.5);
+        opacity: 0;
+    }
+}

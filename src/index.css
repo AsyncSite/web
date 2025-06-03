@@ -11,3 +11,39 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('../fonts/DungGeunMo.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Moneygraphy-Rounded';
+  src: url('../fonts/Moneygraphy-Rounded.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NoonnuBasicGothicRegular';
+  src: url('../fonts/NoonnuBasicGothicRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PretendardVariable';
+  src: url('../fonts/PretendardVariable.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LINESeedKR-Rg';
+  src: url('../fonts/LINESeedKR-Rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

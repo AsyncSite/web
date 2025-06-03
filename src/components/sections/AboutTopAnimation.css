@@ -1,0 +1,40 @@
+.about-top-animation {
+  margin: 60px auto 80px auto;
+  text-align: center;
+}
+
+/* 타이핑될 영역 */
+.type-line {
+  display: inline-block; /* 가운데 정렬 대비 */
+  white-space: pre-wrap;
+  color: #ffffff;
+  font-size: 1.8rem;
+  line-height: 1.4;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* 큰 인용구 스타일 (글자 한 개씩 감싸는 용도) */
+.big-quote {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow:
+      2px 2px 4px rgba(0,0,0,0.3),
+      0 0 5px rgba(195, 232, 141, 0.5);
+}
+
+/* 깜빡이는 커서 */
+.blink-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  width: 1ch;
+  color: #ffffff;
+  font-weight: bold;
+  animation: blink 0.7s infinite step-start;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

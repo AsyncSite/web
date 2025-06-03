@@ -10,7 +10,7 @@ html, body {
   height: 100%;
   background: #000; /* 배경 검정 */
   color: #C3E88D;   /* 글자 연녹 */
-  font-family: Consolas, 'Courier New', monospace;
+  font-family: 'Moneygraphy-Rounded', Consolas, 'Courier New', monospace;
   scroll-behavior: smooth;
 }
 

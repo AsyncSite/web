@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>일일맨 ㅇㅇㅁ 로고 예시</title>
+    </head>
+    <body style="background-color: #f0f0f0; margin: 0; padding: 20px;">
+
+        <!-- SVG 시작 -->
+        <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- 그라데이션 정의 -->
+            <defs>
+                <linearGradient id="circle1Gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#4FACFE"/>
+                    <stop offset="100%" stop-color="#00F2FE"/>
+                </linearGradient>
+
+                <linearGradient id="circle2Gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#F093FB"/>
+                    <stop offset="100%" stop-color="#F5576C"/>
+                </linearGradient>
+
+                <linearGradient id="rectGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#F6D365"/>
+                    <stop offset="100%" stop-color="#FDA085"/>
+                </linearGradient>
+            </defs>
+
+            <!-- 그림자 효과(filter) 정의 -->
+            <defs>
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.2"/>
+                </filter>
+            </defs>
+
+            <!-- 로고 그룹 -->
+            <g filter="url(#shadow)">
+                <!-- 첫 번째 원 (ㅇ) -->
+                <circle cx="100" cy="100" r="40" fill="url(#circle1Gradient)" />
+                <!-- 두 번째 원 (ㅇ) -->
+                <circle cx="200" cy="100" r="40" fill="url(#circle2Gradient)" />
+                <!-- 둥근 사각형 (ㅁ) -->
+                <rect x="280" y="60" rx="12" ry="12" width="80" height="80" fill="url(#rectGradient)" />
+            </g>
+
+        </svg>
+        <!-- SVG 끝 -->
+
+    </body>
+</html>

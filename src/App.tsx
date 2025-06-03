@@ -1,6 +1,5 @@
 // src/App.tsx
 import React from 'react';
-import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import Intro from './components/sections/Intro';
 import About from './components/sections/About';
@@ -9,6 +8,7 @@ import Routine from './components/sections/Routine';
 import Extra from './components/sections/Extra';
 
 import './App.css';
+import FAQ from "./components/sections/FAQ";
 
 const App: React.FC = () => {
     return (
@@ -16,11 +16,9 @@ const App: React.FC = () => {
 
             <Intro/>
             <About/>
-            {/* 헤더 (처음엔 화면 아래 깔려 있다가, 스크롤 시 상단 고정) */}
-            <Header/>
-            <Worldview/>
             <Routine/>
-            <Extra/>
+            <FAQ/>
+
             <Footer/>
         </div>
     );

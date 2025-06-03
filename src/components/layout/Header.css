@@ -1,0 +1,51 @@
+.main-header {
+    /* 기본적으로 .intro-section(부모) 기준 absolute 배치 */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(17, 17, 17, 0.8); /* 약간의 투명도 추가 */
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+/* 스크롤이 인트로 끝을 넘어가면 .fixed-top 추가 → 화면 상단 고정 */
+.main-header.fixed-top {
+    position: fixed;
+    top: 0;
+    bottom: auto;
+    background-color: rgba(34, 34, 34, 0.95); /* 고정될 때 배경색 약간 변경 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* 고정될 때 그림자 추가 */
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #0f0;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+nav a {
+    color: #C3E88D;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #0f0;
+}
