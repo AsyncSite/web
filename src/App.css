@@ -6,6 +6,37 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+html {
+  /* 기본 폰트 크기를 설정합니다. 브라우저 기본값은 보통 16px입니다. */
+  /* 이 값을 기준으로 rem 단위가 계산됩니다. */
+  font-size: 16px; /* 데스크탑 기본 */
+}
+
+@media (max-width: 1200px) { /* 화면 너비가 1200px 이하일 때 */
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 992px) { /* 화면 너비가 992px 이하일 때 (일반적인 태블릿 가로) */
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) { /* 화면 너비가 768px 이하일 때 (일반적인 태블릿 세로, 큰 모바일) */
+  html {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 576px) { /* 화면 너비가 576px 이하일 때 (작은 모바일) */
+  html {
+    font-size: 12px;
+  }
+}
+
 html, body {
   height: 100%;
   background: #000; /* 배경 검정 */
@@ -20,6 +51,9 @@ section {
   min-height: 100vh;
   padding: 40px 20px;
 }
+
+
+
 
 
 /***********************
