@@ -3,7 +3,6 @@ import React from 'react';
 import './Contribution.css';
 
 const Contribution: React.FC = () => {
-    // 랜덤 색상을 생성하는 헬퍼 함수
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
         let color = '#';
@@ -13,10 +12,8 @@ const Contribution: React.FC = () => {
         return color;
     };
 
-    // onError 시마다 호출되어, 랜덤 배경색의 SVG로 교체해주는 핸들러
     const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         const bg = getRandomColor();
-        // 연보라 대신 bg를 사용한 SVG 문자열
         const svg = `
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
                 <circle cx="32" cy="32" r="32" fill="${bg}"/>
@@ -34,52 +31,84 @@ const Contribution: React.FC = () => {
             <div className="contribution-container">
                 <span className="contribution-label">Contributed by</span>
                 <div className="contributors-list">
+                    {/* renechoi 카드 */}
                     <div className="contributor-card">
-                        <div className="profile-wrapper">
-                            <img
-                                src={process.env.PUBLIC_URL + '/images/face/rene.png'}
-                                alt="renechoi 프로필"
-                                className="profile-img"
-                                onError={handleImgError}
-                            />
-                        </div>
-                        <span className="contributor-name">renechoi</span>
+                        <a
+                            href="https://github.com/renechoi"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="contributor-link"
+                        >
+                            <div className="profile-wrapper">
+                                <img
+                                    src={process.env.PUBLIC_URL + '/images/face/rene.png'}
+                                    alt="renechoi 프로필"
+                                    className="profile-img"
+                                    onError={handleImgError}
+                                />
+                            </div>
+                            <span className="contributor-name">renechoi</span>
+                        </a>
                     </div>
 
+                    {/* kdelay 카드 */}
                     <div className="contributor-card">
-                        <div className="profile-wrapper">
-                            <img
-                                src={process.env.PUBLIC_URL + '/images/face/kdelay.png'}
-                                alt="kdelay 프로필"
-                                className="profile-img"
-                                onError={handleImgError}
-                            />
-                        </div>
-                        <span className="contributor-name">kdelay</span>
+                        <a
+                            href="https://github.com/kdelay"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="contributor-link"
+                        >
+                            <div className="profile-wrapper">
+                                <img
+                                    src={process.env.PUBLIC_URL + '/images/face/kdelay.png'}
+                                    alt="kdelay 프로필"
+                                    className="profile-img"
+                                    onError={handleImgError}
+                                />
+                            </div>
+                            <span className="contributor-name">kdelay</span>
+                        </a>
                     </div>
 
+                    {/* vvoohhee 카드 */}
                     <div className="contributor-card">
-                        <div className="profile-wrapper">
-                            <img
-                                src={process.env.PUBLIC_URL + '/images/face/vvoohhee.png'}
-                                alt="vvoohhee 프로필"
-                                className="profile-img"
-                                onError={handleImgError}
-                            />
-                        </div>
-                        <span className="contributor-name">vvoohhee</span>
+                        <a
+                            href="https://github.com/vvoohhee"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="contributor-link"
+                        >
+                            <div className="profile-wrapper">
+                                <img
+                                    src={process.env.PUBLIC_URL + '/images/face/vvoohhee.png'}
+                                    alt="vvoohhee 프로필"
+                                    className="profile-img"
+                                    onError={handleImgError}
+                                />
+                            </div>
+                            <span className="contributor-name">vvoohhee</span>
+                        </a>
                     </div>
 
+                    {/* who's next? 카드 */}
                     <div className="contributor-card">
-                        <div className="profile-wrapper">
-                            <img
-                                src={process.env.PUBLIC_URL + '/images/face/another.png'}
-                                alt="another 프로필"
-                                className="profile-img"
-                                onError={handleImgError}
-                            />
-                        </div>
-                        <span className="contributor-name">who's next?</span>
+                        <a
+                            href="https://github.com/your-next-profile"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="contributor-link"
+                        >
+                            <div className="profile-wrapper">
+                                <img
+                                    src={process.env.PUBLIC_URL + '/images/face/another.png'}
+                                    alt="another 프로필"
+                                    className="profile-img"
+                                    onError={handleImgError}
+                                />
+                            </div>
+                            <span className="contributor-name">who's next?</span>
+                        </a>
                     </div>
                 </div>
             </div>

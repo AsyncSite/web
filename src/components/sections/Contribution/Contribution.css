@@ -68,6 +68,17 @@
     background-color: rgba(255, 255, 255, 0.08);
 }
 
+.contributor-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;     /* 밑줄 제거 */
+    color: inherit;             /* 부모에서 지정된 색상 그대로 상속 */
+    width: 100%;                /* 카드 너비 전체를 클릭 영역으로 만들기 */
+    height: 100%;               /* 세로 역시 전체 영역으로 */
+}
+
+
 /* 프로필 래퍼 크기 조정 */
 .profile-wrapper {
     width: 48px;
