@@ -1,0 +1,159 @@
+<svg width="400" height="120" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- A -->
+        <linearGradient id="gradientA" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#4FACFE"/>
+            <stop offset="100%" stop-color="#00F2FE"/>
+        </linearGradient>
+        <!-- S -->
+        <linearGradient id="gradientS" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#F093FB"/>
+            <stop offset="100%" stop-color="#F5576C"/>
+        </linearGradient>
+        <!-- Y -->
+        <linearGradient id="gradientY" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#F6D365"/>
+            <stop offset="100%" stop-color="#FDA085"/>
+        </linearGradient>
+        <!-- N -->
+        <linearGradient id="gradientN" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ABDCFF"/>
+            <stop offset="100%" stop-color="#0396FF"/>
+        </linearGradient>
+        <!-- C -->
+        <linearGradient id="gradientC" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#84FAB0"/>
+            <stop offset="100%" stop-color="#8FD3F4"/>
+        </linearGradient>
+        <!-- S2 (마지막 S, 다른 느낌으로) -->
+        <linearGradient id="gradientS2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#FF9A9E"/>
+            <stop offset="100%" stop-color="#FAD0C4"/>
+        </linearGradient>
+    </defs>
+
+    <!-- A -->
+    <!-- 삼각형 형태 위에 가로획이 있는 A를 약간 둥글게 변형한 예시 -->
+    <path
+            fill="url(#gradientA)"
+            d="
+      M 30 90
+      L 50 10
+      Q 52 5 54 10
+      L 74 90
+      Q 75 95 70 95
+      L 63 95
+      L 58 70
+      Q 57 65 52 65
+      L 46 65
+      L 41 90
+      Q 40 95 35 95
+      L 30 95
+      Z
+    "
+    />
+
+    <!-- S -->
+    <!-- 부드러운 곡선을 크게 두 번 꺾어 S 모양으로 만든 예시 -->
+    <path
+            fill="url(#gradientS)"
+            d="
+      M 90 80
+      C 75 75, 70 45, 95 40
+      C 115 35, 115 15, 95 15
+      C 70 15, 65 45, 80 50
+      C 100 55, 105 85, 80 85
+      Q 75 85, 72 84
+      L 72 90
+      Q 80 92, 90 90
+      Z
+    "
+    />
+
+    <!-- Y -->
+    <!-- 위쪽 가지 두 개가 하나로 합쳐진 Y 형태(약간 라운드) -->
+    <path
+            fill="url(#gradientY)"
+            d="
+      M 120 10
+      Q 125 5, 130 10
+      L 140 30
+      Q 142 35, 140 40
+      L 132 55
+      Q 130 58, 130 60
+      L 130 85
+      Q 130 90, 125 90
+      L 120 90
+      Q 115 90, 115 85
+      L 115 60
+      Q 115 58, 113 55
+      L 105 40
+      Q 103 35, 105 30
+      L 115 10
+      Q 117 5, 120 10
+      Z
+    "
+    />
+
+    <!-- N -->
+    <!-- 왼쪽 직선-대각선-오른쪽 직선으로 구성된 N, 각 모서리는 둥글게 처리 -->
+    <path
+            fill="url(#gradientN)"
+            d="
+      M 160 90
+      Q 155 90, 155 85
+      L 155 15
+      Q 155 10, 160 10
+      L 165 10
+      Q 170 10, 170 15
+      L 170 60
+      Q 170 65, 175 65
+      L 205 15
+      Q 207 10, 210 10
+      L 215 10
+      Q 220 10, 220 15
+      L 220 85
+      Q 220 90, 215 90
+      L 210 90
+      Q 205 90, 205 85
+      L 205 40
+      Q 205 35, 200 35
+      L 170 85
+      Q 167 90, 165 90
+      Z
+    "
+    />
+
+    <!-- C -->
+    <!-- 둥근 원에서 오른쪽 일부가 잘려나간 형태로 C 만들기 -->
+    <path
+            fill="url(#gradientC)"
+            d="
+      M 250 50
+      C 250 20, 280 10, 300 20
+      Q 305 25, 300 30
+      C 285 25, 270 35, 270 50
+      C 270 65, 285 75, 300 70
+      Q 305 75, 300 80
+      C 280 90, 250 80, 250 50
+      Z
+    "
+    />
+
+    <!-- 마지막 S (조금 다른 느낌) -->
+    <path
+            fill="url(#gradientS2)"
+            d="
+      M 320 80
+      C 305 75, 300 45, 325 40
+      C 345 35, 345 15, 325 15
+      C 300 15, 295 45, 310 50
+      C 330 55, 335 85, 310 85
+      Q 305 85, 302 84
+      L 302 90
+      Q 310 92, 320 90
+      Z
+    "
+    />
+
+</svg>
