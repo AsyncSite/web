@@ -89,7 +89,7 @@ const Contribution: React.FC = () => {
                             <span className="contributor-name">vvoohhee</span>
                         </a>
                     </div>
-
+                    
                     <div className="contributor-card">
                         <a
                             href="https://github.com/KrongDev"
@@ -99,7 +99,7 @@ const Contribution: React.FC = () => {
                         >
                             <div className="profile-wrapper">
                                 <img
-                                    src={process.env.PUBLIC_URL + '/images/face/KrongDev.png'}
+                                    src={'https://avatars.githubusercontent.com/u/138358867?s=40&v=4'}
                                     alt="KrongDev 프로필"
                                     className="profile-img"
                                     onError={handleImgError}

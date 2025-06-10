@@ -1,0 +1,75 @@
+.item-box {
+    background: rgba(34, 34, 34, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(195, 232, 141, 0.1);
+}
+
+.item-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(195, 232, 141, 0.1);
+    border-color: rgba(195, 232, 141, 0.3);
+}
+
+.item-box-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;           /* 추가 */
+    align-items: center;     /* 추가 */
+    justify-content: center; /* 추가 */
+    background: #000;        /* 추가 */
+}
+
+.item-box-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    padding: 10px;          /* 추가 */
+}
+
+.item-box:hover .item-box-image img {
+    transform: scale(1.05);
+}
+
+.item-box-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-box-title {
+    color: #C3E88D;
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+.item-box-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 15px 0;
+    flex: 1;
+}
+
+.item-box-link {
+    color: #C3E88D;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-block;
+    transition: color 0.3s ease;
+    margin-top: auto;
+}
+
+.item-box-link:hover {
+    color: #fff;
+} 
