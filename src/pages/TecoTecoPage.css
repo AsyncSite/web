@@ -1,0 +1,786 @@
+/* src/pages/TecoTecoPage.css */
+
+/* 기본 페이지 및 콘텐츠 컨테이너 스타일 */
+.tecoteco-page {
+    background-color: #000; /* 11맨 기본 검정 배경 */
+    color: #f0f0f0; /* 밝은 회색 텍스트 (가독성 위해) */
+    font-family: 'PretendardVariable', sans-serif; /* 11맨에서 사용되는 폰트 */
+    min-height: 100vh;
+    padding-top: 80px; /* TemplateHeader 높이만큼 여백 */
+    line-height: 1.6;
+}
+
+.tecoteco-content {
+    max-width: 1000px; /* 트레바리 페이지와 유사하게 중앙 정렬 및 최대 너비 설정 */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 섹션 공통 스타일 */
+.tecoteco-content section {
+    padding: 60px 20px; /* 각 섹션별 상하 패딩 */
+    margin-bottom: 40px; /* 각 섹션별 하단 여백 */
+    background-color: #1a1a1a; /* 섹션 배경을 살짝 어둡게 (레이어 구분) */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.tecoteco-content section:last-of-type {
+    margin-bottom: 0; /* 마지막 섹션은 하단 여백 없음 */
+}
+
+/* 섹션 타이틀 및 서브타이틀 */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #C3E88D; /* 11맨 포인트 컬러 */
+    text-align: center;
+    margin-bottom: 15px;
+    font-family: 'Source Code Pro', monospace; /* 코드 폰트 느낌 */
+    letter-spacing: -1px;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: #abb2bf; /* 서브타이틀은 살짝 연한 색 */
+    text-align: center;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+.subsection-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #C3E88D;
+    margin-top: 40px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+
+/* 1. 메인 슬로건 / 이미지 섹션 (Hero Section) */
+.tecoteco-hero-section {
+    background-color: #0d0d0d; /* 더 어두운 배경 */
+    text-align: center;
+    padding: 80px 20px 60px;
+    border-radius: 0; /* 상단 섹션은 둥근 모서리 없음 */
+    box-shadow: none; /* 그림자 없음 */
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #C3E88D;
+    margin-bottom: 10px;
+    font-family: 'Moneygraphy-Rounded', monospace; /* Intro 페이지의 11men 로고 폰트 활용 */
+    text-shadow: 0 0 15px rgba(195, 232, 141, 0.4);
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    margin-bottom: 40px;
+    font-weight: 300;
+}
+
+.hero-image-wrapper img {
+    max-width: 300px; /* 이미지 크기 조정 */
+    height: auto;
+    border-radius: 50%; /* 원형 이미지 */
+    border: 5px solid #C3E88D;
+    box-shadow: 0 0 20px rgba(195, 232, 141, 0.6);
+    transition: transform 0.3s ease-in-out;
+}
+
+.hero-image-wrapper img:hover {
+    transform: scale(1.05);
+}
+
+
+/* 2. 우리의 지향점 (Philosophy Section) */
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.philosophy-item {
+    background-color: #2a2a2a;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid rgba(195, 232, 141, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.philosophy-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(195, 232, 141, 0.2);
+}
+
+.philosophy-item h3 {
+    font-size: 1.3rem;
+    color: #82AAFF; /* 강조 색상 (파랑) */
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.philosophy-item p {
+    font-size: 1rem;
+    color: #ddd;
+}
+
+.final-goal {
+    background-color: #2a2a2a;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 40px;
+    border: 2px dashed #C3E88D; /* 점선 테두리로 강조 */
+    text-align: center;
+}
+
+.final-goal h3 {
+    font-size: 1.5rem;
+    color: #C3E88D;
+    margin-bottom: 15px;
+}
+
+.final-goal p {
+    font-size: 1.1rem;
+    color: #f0f0f0;
+}
+
+.final-goal strong {
+    color: #ffcb6b; /* 강조 텍스트 색상 */
+}
+
+
+/* 3. 스터디 운영 방식 (How We Roll) */
+.operation-details p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #ddd;
+}
+
+.operation-details p strong {
+    color: #C3E88D;
+}
+
+.operation-details a {
+    color: #82AAFF; /* 링크 색상 */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.operation-details a:hover {
+    text-decoration: underline;
+    color: #6a95e7;
+}
+
+.activity-table {
+    overflow-x: auto; /* 작은 화면에서 테이블 스크롤 가능하도록 */
+    margin-top: 25px;
+}
+
+.activity-table table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 400px; /* 테이블 최소 너비 */
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden; /* border-radius 적용을 위해 */
+}
+
+.activity-table th, .activity-table td {
+    padding: 15px;
+    border: 1px solid #3a3a3a;
+    text-align: left;
+    color: #f0f0f0;
+}
+
+.activity-table th {
+    background-color: #3a3a3a;
+    color: #C3E88D;
+    font-weight: 600;
+}
+
+.activity-table td strong {
+    color: #ffcb6b;
+}
+
+
+/* 4. 참여 방법 (How to Join) */
+.join-description {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #f0f0f0;
+    padding: 20px;
+}
+
+
+/* 5. GitHub 레포지토리 가이드라인 (Repository Guidelines) */
+.guideline-intro {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #ddd;
+    text-align: center;
+}
+
+.guideline-item {
+    background-color: #2a2a2a;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #3a3a3a;
+}
+
+.guideline-item h3 {
+    font-size: 1.4rem;
+    color: #82AAFF;
+    margin-bottom: 15px;
+}
+
+.guideline-item p {
+    font-size: 1rem;
+    color: #ddd;
+    margin-bottom: 10px;
+}
+
+.guideline-item pre.code-example {
+    background-color: #000;
+    color: #C3E88D;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Fira Code', monospace; /* 코드 폰트 */
+    font-size: 0.9rem;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.guideline-item .warning-text {
+    color: #F5576C; /* 경고 메시지 색상 */
+    font-weight: 600;
+}
+
+
+/* 6. 우리의 발자취 (Our Journey) */
+.journey-list {
+    list-style: none; /* 기본 리스트 스타일 제거 */
+    padding: 0;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.journey-list li {
+    font-size: 1.1rem;
+    color: #ddd;
+    margin-bottom: 15px;
+    position: relative;
+    padding-left: 25px;
+}
+
+.journey-list li::before {
+    content: '★'; /* 별 아이콘 */
+    position: absolute;
+    left: 0;
+    color: #ffcb6b; /* 노란색 별 */
+    font-size: 1.2rem;
+    top: 0;
+}
+
+.journey-list li strong {
+    color: #C3E88D;
+}
+
+.journey-image-wrapper {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.journey-image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* 7. 함께하는 사람들 (Members) */
+.members-intro {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #ddd;
+    margin-bottom: 10px;
+}
+
+.members-hint {
+    font-size: 0.9rem;
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .tecoteco-page {
+        padding-top: 60px; /* 모바일 헤더 높이 고려 */
+    }
+
+    .tecoteco-content {
+        padding: 15px;
+    }
+
+    .tecoteco-content section {
+        padding: 40px 15px;
+        margin-bottom: 30px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+    }
+
+    .subsection-title {
+        font-size: 1.5rem;
+    }
+
+    .philosophy-item h3 {
+        font-size: 1.2rem;
+    }
+
+    .philosophy-item p,
+    .operation-details p,
+    .guideline-item p,
+    .journey-list li {
+        font-size: 0.95rem;
+    }
+
+    .final-goal p {
+        font-size: 1rem;
+    }
+
+    .activity-table table {
+        min-width: unset; /* 모바일에서는 최소 너비 해제 */
+    }
+
+    .guideline-item pre.code-example {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .philosophy-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+/* 7. 함께하는 사람들 (Members) */
+.members-intro {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #ddd;
+    margin-bottom: 30px; /* 기존 10px에서 30px로 변경하여 멤버 카드들과 간격 둠 */
+}
+
+/* Contribution.css에서 벤치마킹한 스타일 적용 */
+.tecoteco-contributors-list {
+    display: flex;
+    flex-wrap: wrap; /* 카드가 넘칠 경우 다음 줄로 넘어가도록 */
+    justify-content: center; /* 가운데 정렬 */
+    gap: 1.2rem; /* 카드 간 간격 */
+    margin-top: 20px;
+}
+
+.tecoteco-contributor-card {
+    background-color: rgba(255, 255, 255, 0.03); /* 아주 옅은 흰색 */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px; /* 기존 Contribution은 4px, 좀 더 둥글게 8px */
+    padding: 0.7rem; /* 패딩 조정 */
+    width: 90px; /* 카드 너비 조정 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tecoteco-contributor-card:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px); /* 호버 시 살짝 위로 */
+}
+
+.tecoteco-contributor-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+.tecoteco-profile-wrapper {
+    width: 60px; /* 프로필 이미지 크기 조정 */
+    height: 60px;
+    margin-bottom: 0.5rem;
+}
+
+.tecoteco-profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #C3E88D; /* 11맨 포인트 컬러 테두리 */
+    box-shadow: 0 0 8px rgba(195, 232, 141, 0.4);
+}
+
+.tecoteco-contributor-name {
+    font-size: 0.85rem; /* 폰트 크기 조정 */
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden; /* 이름이 길어지면 ... 처리 */
+    text-overflow: ellipsis;
+    max-width: 100%; /* 부모 너비에 맞춤 */
+}
+
+/* 모바일 대응: 더욱 작게 축소 */
+@media (max-width: 480px) {
+    .tecoteco-contributors-list {
+        gap: 0.8rem;
+    }
+    .tecoteco-contributor-card {
+        width: 75px;
+        padding: 0.5rem;
+    }
+    .tecoteco-profile-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+    .tecoteco-contributor-name {
+        font-size: 0.75rem;
+    }
+}
+
+
+/* 8. 주요 키워드 (Key Tags) 섹션 */
+.tecoteco-keywords-section {
+    /* section 공통 스타일 적용됨 */
+}
+
+.tecoteco-keywords-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px; /* 태그 간 간격 */
+    margin-top: 30px;
+}
+
+.tecoteco-keyword-tag {
+    background-color: #2a2a2a; /* 어두운 배경에 맞는 태그 배경색 */
+    color: #C3E88D; /* 11맨 포인트 컬러 */
+    border: 1px solid rgba(195, 232, 141, 0.3); /* 테두리 */
+    border-radius: 20px; /* 둥근 모서리 */
+    padding: 8px 15px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap; /* 태그 내용 줄바꿈 방지 */
+}
+
+.tecoteco-keyword-tag:hover {
+    background-color: rgba(195, 232, 141, 0.1); /* 호버 시 배경색 변경 */
+    transform: translateY(-3px); /* 살짝 떠오르는 효과 */
+    box-shadow: 0 3px 8px rgba(195, 232, 141, 0.2);
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    /* ... (기존 반응형 CSS 내용 유지) ... */
+
+    .tecoteco-keyword-tag {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* ... (기존 반응형 CSS 내용 유지) ... */
+
+    .tecoteco-keywords-list {
+        gap: 8px;
+    }
+    .tecoteco-keyword-tag {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+}
+
+
+
+
+
+/* 9. 멤버 후기 (Reviews) 섹션 */
+.tecoteco-reviews-section {
+    /* section 공통 스타일 적용됨 */
+}
+
+.tecoteco-reviews-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 300px 이상이면 여러 열로 */
+    gap: 25px; /* 카드 간 간격 */
+    margin-top: 30px;
+}
+
+.tecoteco-review-card {
+    background-color: #2a2a2a; /* 어두운 배경에 맞는 카드 배경색 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tecoteco-review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+.tecoteco-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.tecoteco-reviewer-name {
+    font-weight: 600;
+    color: #C3E88D; /* 이름 강조 */
+    font-size: 1.1rem;
+}
+
+.tecoteco-review-meta {
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.tecoteco-review-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 10px;
+}
+
+.tecoteco-review-content {
+    font-size: 0.95rem;
+    color: #ddd;
+    line-height: 1.6;
+    flex-grow: 1; /* 내용이 길어져도 카드 높이 맞춰지도록 */
+    margin-bottom: 15px;
+}
+
+.tecoteco-review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto; /* 하단에 붙도록 */
+}
+
+.tecoteco-review-emojis span {
+    font-size: 1.2rem;
+    margin-right: 5px;
+}
+
+.tecoteco-review-likes {
+    font-size: 0.9rem;
+    color: #ffcb6b; /* 좋아요 색상 */
+    font-weight: 500;
+}
+
+.tecoteco-view-all-reviews-wrapper {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.tecoteco-view-all-reviews-button {
+    background-color: #C3E88D;
+    color: #000;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.tecoteco-view-all-reviews-button:hover {
+    background-color: #b5d97f;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    /* ... (기존 반응형 CSS 내용 유지) ... */
+
+    .tecoteco-reviews-list {
+        grid-template-columns: 1fr; /* 모바일에서는 1열로 */
+        gap: 20px;
+    }
+
+    .tecoteco-review-title {
+        font-size: 1.1rem;
+    }
+
+    .tecoteco-review-content {
+        font-size: 0.9rem;
+    }
+
+    .tecoteco-reviewer-name {
+        font-size: 1rem;
+    }
+
+    .tecoteco-review-meta {
+        font-size: 0.8rem;
+    }
+
+    .tecoteco-view-all-reviews-button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+}
+
+
+/* 10. 자주 묻는 질문 (FAQ) 섹션 */
+.tecoteco-faq-section {
+    /* section 공통 스타일 적용됨 */
+}
+
+.tecoteco-faq-items {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* FAQ 항목 간 간격 */
+}
+
+.tecoteco-faq-item {
+    background-color: #2a2a2a; /* FAQ 항목 배경색 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden; /* 답변이 펼쳐질 때 부드럽게 */
+    transition: all 0.3s ease;
+}
+
+.tecoteco-faq-item.open {
+    border-color: #C3E88D; /* 열렸을 때 테두리 색상 변경 */
+    box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
+}
+
+.tecoteco-faq-question {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #1f2a44; /* 질문 바 배경색 (IntelliJ 코드 블록 색상 벤치마킹) */
+    cursor: pointer;
+    font-weight: 600;
+    color: #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.tecoteco-faq-question:hover {
+    background-color: #2b3a58;
+}
+
+.tecoteco-faq-icon {
+    font-size: 1.1rem;
+    color: #ffcb6b; /* Q. A. 아이콘 색상 (노랑) */
+    margin-right: 10px;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.tecoteco-faq-question-text {
+    flex-grow: 1; /* 질문 텍스트가 공간을 차지하도록 */
+    font-size: 1rem;
+}
+
+.tecoteco-faq-toggle-icon {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-left: 15px;
+    transition: transform 0.2s ease;
+}
+
+.tecoteco-faq-item.open .tecoteco-faq-toggle-icon {
+    transform: rotate(180deg); /* 열렸을 때 아이콘 회전 */
+}
+
+.tecoteco-faq-answer {
+    padding: 15px 20px 15px 45px; /* Q. A. 아이콘 공간만큼 왼쪽 패딩 추가 */
+    background-color: #2a2a2a; /* 답변 배경색 */
+    color: #ddd;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease-out; /* 부드럽게 나타나는 애니메이션 */
+    display: flex; /* A. 아이콘과 텍스트 정렬 */
+    align-items: flex-start;
+}
+
+.tecoteco-faq-answer p {
+    margin: 0;
+    flex-grow: 1;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    /* ... (기존 반응형 CSS 내용 유지) ... */
+
+    .tecoteco-faq-question {
+        padding: 12px 15px;
+    }
+    .tecoteco-faq-question-text {
+        font-size: 0.95rem;
+    }
+    .tecoteco-faq-icon {
+        font-size: 1rem;
+        margin-right: 8px;
+    }
+    .tecoteco-faq-answer {
+        padding: 12px 15px 12px 38px;
+        font-size: 0.9rem;
+    }
+}
