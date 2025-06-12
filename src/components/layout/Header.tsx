@@ -5,6 +5,7 @@ const Header: React.FC = () => {
     const [isFixedTop, setIsFixedTop] = useState(false);
     const headerRef = useRef<HTMLElement | null>(null);
     const [headerHeight, setHeaderHeight] = useState(0);
+    const [isMoimDropdownOpen, setIsMoimDropdownOpen] = useState(false); // 드롭다운 상태 추가
 
     useEffect(() => {
         // Header의 높이를 측정
@@ -59,8 +60,19 @@ const Header: React.FC = () => {
                         <li>
                             <a href="#about">ABOUT</a>
                         </li>
-                        <li>
-                            <a href="#routine">MOIM</a>
+                        <li
+                            className="dropdown"
+                            onMouseEnter={() => setIsMoimDropdownOpen(true)}
+                            onMouseLeave={() => setIsMoimDropdownOpen(false)}
+                        >
+                            <a href="#routine" className="dropbtn">MOIM</a>
+                            {isMoimDropdownOpen && (
+                                <div className="dropdown-content">
+                                    <a href="#routine">MOIM</a>
+                                    <a href="/web/tecoteco">테코테코</a> {/* 테코테코 링크를 드롭다운 안에 추가 */}
+                                    {/* 다른 모임 링크들도 여기에 추가 가능 */}
+                                </div>
+                            )}
                         </li>
                         <li>
                             <a href="#faq">FAQ</a>

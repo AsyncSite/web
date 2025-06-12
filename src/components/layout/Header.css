@@ -1,3 +1,5 @@
+/* src/components/layout/Header.css */
+
 .main-header {
     /* 기본적으로 .intro-section(부모) 기준 absolute 배치 */
     position: absolute;
@@ -37,15 +39,119 @@ nav ul {
     display: flex;
     list-style: none;
     gap: 20px;
+    padding: 0;
+    margin: 0;
+    align-items: center; /* 모든 flex 자식들을 중앙으로 정렬 */
 }
+
+/* nav ul의 모든 li에 공통 Flex 아이템 속성 부여 */
+nav ul li {
+    display: flex; /* 모든 li를 flex 컨테이너로 만들어 내부 아이템 정렬 용이 */
+    align-items: center; /* li 내부의 a 태그 등을 수직 중앙 정렬 */
+    height: 100%; /* 부모 nav ul과 동일한 높이 기준선 공유 */
+}
+
 
 nav a {
     color: #C3E88D;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s;
+    /* 높이와 line-height를 명시적으로 설정하여 텍스트 기준선 통일 */
+    height: 40px; /* 로고 높이에 맞춰 적절한 높이 설정 (예시) */
+    line-height: 40px; /* 텍스트를 수직 중앙에 정렬 */
+    padding: 0 10px; /* 좌우 패딩만 유지 */
+    display: flex; /* 텍스트를 수직 중앙 정렬하기 위해 flex 사용 */
+    align-items: center;
+    justify-content: center;
 }
 
 nav a:hover {
     color: #0f0;
+}
+
+/* 드롭다운 관련 CSS */
+.dropdown {
+    position: relative;
+    /* display: flex; align-items: center; <-- 이전에 추가된 것은 li에 이미 적용됨 */
+    height: 100%; /* 부모 li와 동일한 높이 기준선 공유 */
+}
+
+.dropbtn {
+    /* nav a의 공통 스타일을 상속받으므로, 여기서는 특별한 display/height/line-height 불필요 */
+    /* 다만, 드롭다운임을 시각적으로 나타내기 위한 패딩 등은 유지 */
+    padding: 0 10px; /* nav a의 패딩과 동일하게 설정 */
+    height: 40px; /* nav a와 동일한 높이 */
+    line-height: 40px; /* nav a와 동일한 line-height */
+    /* display와 align-items는 nav a에서 이미 적용됨 */
+    white-space: nowrap;
+}
+
+.dropdown-content {
+    display: none; /* 기본적으로 숨김 */
+    position: absolute;
+    background-color: rgba(34, 34, 34, 0.95); /* 헤더와 유사한 배경색 */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    z-index: 1000; /* 헤더보다 위에 위치하도록 */
+    border-radius: 4px;
+    padding: 8px 0; /* 내부 패딩 */
+    top: calc(100% + 5px); /* 드롭다운 버튼 바로 아래가 아닌 약간 떨어진 위치에 */
+    left: 50%; /* 중앙 정렬을 위해 */
+    transform: translateX(-50%); /* 중앙 정렬을 위해 */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dropdown-content a {
+    color: #C3E88D;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left; /* 왼쪽 정렬 */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(195, 232, 141, 0.1); /* 호버 시 배경색 */
+    color: #fff;
+}
+
+/* 드롭다운 호버 시 나타나도록 */
+.dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 모바일 반응형 고려 (필요시 추가 조정) */
+@media (max-width: 768px) {
+    /* 기존 nav ul, nav a 스타일은 그대로 유지 */
+    nav ul {
+        gap: 10px; /* 모바일에서 간격 조정 */
+    }
+    nav a {
+        font-size: 0.85rem;
+    }
+
+    /* 모바일에서는 드롭다운 대신 스크롤 등으로 처리하거나, 드롭다운 방식 변경 필요 */
+    /* 현재는 마우스 호버 방식이라 터치 환경에서는 다르게 작동할 수 있음 */
+    .dropdown-content {
+        position: static; /* 모바일에서는 정적으로 배치하여 아래로 내려오게 */
+        width: 100%;
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+        transform: none;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+    }
+    .dropdown-content a {
+        padding: 8px 10px; /* 모바일 드롭다운 링크 패딩 */
+        font-size: 0.8rem;
+    }
 }
