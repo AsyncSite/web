@@ -1,0 +1,1511 @@
+// src/pages/TecoTecoPage.tsx - 최종 완성본
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { TemplateHeader } from '../components/layout';
+import { Footer } from '../components/layout';
+import './TecoTecoPage.css';
+import { useInView } from 'react-intersection-observer'; // npm install react-intersection-observer
+
+// ===========================
+// 1. 인터페이스 정의
+// ===========================
+interface Contributor {
+    name: string;
+    githubId: string;
+    imageUrl?: string;
+}
+
+interface Review {
+    name: string;
+    attendCount: number;
+    timeAgo: string;
+    title: string;
+    content: string;
+    emojis: string[];
+    likes: number;
+}
+
+interface FAQItem {
+    id: number;
+    question: string;
+    answer: string;
+}
+
+interface StepContent {
+    label: string;
+    title: string;
+    description: string;
+    image: string;
+}
+
+interface Activity {
+    id: number;
+    type: 'solve' | 'review' | 'join' | 'milestone';
+    user: string;
+    content: string;
+    time: string;
+    icon: string;
+}
+
+interface GrowthMetric {
+    label: string;
+    value: number;
+    unit: string;
+    trend: number;
+    icon: string;
+}
+
+interface MemberStory {
+    id: number;
+    name: string;
+    role: string;
+    company?: string;
+    beforeAfter: {
+        before: string;
+        after: string;
+    };
+    quote: string;
+    duration: string;
+    achievements: string[];
+    profileImage?: string;
+}
+
+interface AlgorithmLevel {
+    id: string;
+    title: string;
+    description: string;
+    examples: string[];
+    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    icon: string;
+}
+
+interface WeeklySchedule {
+    week: number;
+    topic: string;
+    keyPoints: string[];
+    problemCount: number;
+    difficulty: string;
+}
+
+interface CodeReviewSample {
+    id: number;
+    title: string;
+    originalCode: string;
+    reviewedCode: string;
+    comments: {
+        line: number;
+        comment: string;
+        author: string;
+    }[];
+}
+
+// ===========================
+// 2. 데이터 정의
+// ===========================
+const tecotecoMembers: Contributor[] = [
+    {
+        name: "renechoi",
+        githubId: "renechoi",
+        imageUrl: process.env.PUBLIC_URL + '/images/face/rene.png'
+    },
+    {
+        name: "kdelay",
+        githubId: "kdelay",
+        imageUrl: process.env.PUBLIC_URL + '/images/face/kdelay.png'
+    },
+    {
+        name: "vvoohhee",
+        githubId: "vvoohhee",
+        imageUrl: process.env.PUBLIC_URL + '/images/face/vvoohhee.png'
+    },
+    {
+        name: "KrongDev",
+        githubId: "KrongDev",
+        imageUrl: 'https://avatars.githubusercontent.com/u/138358867?s=40&v=4'
+    },
+    {
+        name: "who's next?",
+        githubId: "your-next-profile",
+        imageUrl: process.env.PUBLIC_URL + '/images/face/another.png'
+    }
+];
+
+const tecotecoKeywords: string[] = [
+    "😌 편안한 분위기", "💥 사고의 확장", "🤗 배려왕 멤버",
+    "🥳 즐거운 분위기", "📝 꼼꼼한 코드 리뷰", "👩‍💻 실전 코딩",
+    "🧠 논리적 사고력", "🗣️ 커뮤니케이션 역량", "🤖 AI 활용",
+    "🌱 함께 성장"
+];
+
+const tecotecoReviews: Review[] = [
+    {
+        name: "익명1",
+        attendCount: 3,
+        timeAgo: "6달 전",
+        title: "인생의 의미",
+        content: "누가 시킨것도 ..부자가 되는 것도 아닌데 코딩테스트 문제를 풀고 바쁜 일상을 탈탈 털어 진지한 이야기를 나눈 소중한 경험",
+        emojis: ["😃", "✨", "🔥"],
+        likes: 2,
+    },
+    {
+        name: "익명2",
+        attendCount: 10,
+        timeAgo: "2년 전",
+        title: "Better together !",
+        content: "혼자서는 엄두도 못 냈던 어려운 알고리즘 문제들! 테코테코 모임에서 함께 고민하고 해결하며 완독하는 뿌듯함을 느꼈습니다. 함께라면 우린 해낼 수 있어요!",
+        emojis: ["🧡", "😍", "😃"],
+        likes: 1,
+    },
+    {
+        name: "익명3",
+        attendCount: 8,
+        timeAgo: "1년 전",
+        title: "많은 것들을 배운 시간이었습니다!",
+        content: "운이 좋게 좋은 문제, 열정적인 멤버, 그리고 많은 것을 배울 수 있는 동료들이 있는 모임에 참여하게 돼서 정말 의미 있는 시간이었습니다. 감사합니다 :)",
+        emojis: ["☺️", "👍", "💡"],
+        likes: 1,
+    },
+];
+
+const tecotecoFaqs: FAQItem[] = [
+    {
+        id: 1,
+        question: '테코테코는 어떤 스터디인가요?',
+        answer: '테코테코는 코딩 테스트 완전 정복을 목표로 하는 알고리즘 스터디입니다. 단순히 문제를 푸는 것을 넘어, 논리적 사고력과 커뮤니케이션 역량 강화를 지향합니다.'
+    },
+    {
+        id: 2,
+        question: '모임은 언제, 어디서 진행되나요?',
+        answer: '매주 금요일 저녁 7:30 ~ 9:30에 강남역 인근 스터디룸에서 오프라인 모임을 중심으로 진행됩니다. 상황에 따라 온라인(Discord)으로 전환될 수 있습니다.'
+    },
+    {
+        id: 3,
+        question: '스터디 비용은 어떻게 되나요?',
+        answer: '스터디룸 대관료는 참석자끼리 N/1로 정산합니다. 별도의 회비나 멤버십 비용은 없습니다.'
+    },
+    {
+        id: 4,
+        question: '참여하려면 어떻게 해야 하나요?',
+        answer: '현재는 공식 모집은 진행하고 있지 않아요. 관심 있으신 분들은 @renechoi에게 커피챗을 요청해주시면 참여 방법을 안내해 드립니다.'
+    },
+    {
+        id: 5,
+        question: '코딩 테스트 실력이 부족해도 참여할 수 있나요?',
+        answer: '네, 실력에 관계없이 누구나 참여할 수 있습니다. 함께의 가치를 중요하게 생각하며, 서로 돕고 배우며 성장할 수 있는 환경을 지향합니다.'
+    }
+];
+
+const tecotecoSteps: StepContent[] = [
+    {
+        label: "문제를 만나고",
+        title: "새로운 도전, 익숙한 문제",
+        description: "혼자서는 엄두 내지 못했던 문제들. TecoTeco에서는 그 문제들을 피하지 않고, 함께 마주하며 새로운 도전을 시작합니다. 작은 성공들이 쌓여 큰 자신감으로 이어질 거예요.",
+        image: process.env.PUBLIC_URL + '/images/step_problem.png',
+    },
+    {
+        label: "질문하고",
+        title: "멈추지 않는 호기심, 날카로운 질문",
+        description: "막히는 문제, 이해하기 어려운 개념이 있다면 언제든 질문하세요. TecoTeco는 궁금증을 해소하고 지식을 나누는 열린 소통의 장입니다.",
+        image: process.env.PUBLIC_URL + '/images/step_question.png',
+    },
+    {
+        label: "토론하고",
+        title: "다양한 시각, 깊이 있는 통찰",
+        description: "정답은 하나가 아니에요. 다양한 풀이 방식과 아이디어를 공유하고 토론하며 문제 해결 능력을 키웁니다. 때로는 논쟁을 통해 새로운 해답을 찾기도 합니다.",
+        image: process.env.PUBLIC_URL + '/images/step_discuss.png',
+    },
+    {
+        label: "코드 리뷰",
+        title: "완성도를 높이는 꼼꼼함",
+        description: "잘 짠 코드는 아름답습니다. 서로의 코드를 리뷰하며 더 효율적이고 깔끔한 코드를 작성하는 방법을 익히고, 클린 코드 습관을 기릅니다.",
+        image: process.env.PUBLIC_URL + '/images/step_review.png',
+    },
+    {
+        label: "성장하다",
+        title: "함께라서 가능한 성장",
+        description: "혼자였다면 어려웠을 여정도 함께라면 가능합니다. TecoTeco에서 꾸준히 학습하고 교류하며 한 단계 더 성장한 당신을 발견할 수 있을 거예요.",
+        image: process.env.PUBLIC_URL + '/images/step_grow.png',
+    },
+];
+
+// 실시간 활동 피드 데이터
+const recentActivities: Activity[] = [
+    {
+        id: 1,
+        type: 'solve',
+        user: 'renechoi',
+        content: 'LeetCode 322. Coin Change 문제를 해결했어요',
+        time: '방금 전',
+        icon: '✅'
+    },
+    {
+        id: 2,
+        type: 'review',
+        user: 'kdelay',
+        content: 'DFS/BFS 주제로 코드 리뷰를 진행했어요',
+        time: '5분 전',
+        icon: '💬'
+    },
+    {
+        id: 3,
+        type: 'milestone',
+        user: 'vvoohhee',
+        content: '100일 연속 출석 달성! 🎉',
+        time: '1시간 전',
+        icon: '🏆'
+    },
+    {
+        id: 4,
+        type: 'join',
+        user: '새로운 멤버',
+        content: 'TecoTeco에 합류했어요',
+        time: '2시간 전',
+        icon: '👋'
+    }
+];
+
+// 성장 지표 데이터
+const growthMetrics: GrowthMetric[] = [
+    {
+        label: '이번 주 해결 문제',
+        value: 127,
+        unit: '개',
+        trend: 15,
+        icon: '📝'
+    },
+    {
+        label: '활발한 멤버',
+        value: 24,
+        unit: '명',
+        trend: 8,
+        icon: '👥'
+    },
+    {
+        label: '코드 리뷰',
+        value: 89,
+        unit: '건',
+        trend: 23,
+        icon: '🔍'
+    },
+    {
+        label: '평균 출석률',
+        value: 92,
+        unit: '%',
+        trend: 5,
+        icon: '📊'
+    }
+];
+
+// 멤버 성장 스토리 데이터
+const memberStories: MemberStory[] = [
+    {
+        id: 1,
+        name: "김개발",
+        role: "백엔드 개발자",
+        company: "네카라쿠배",
+        beforeAfter: {
+            before: "알고리즘 문제만 보면 막막했던",
+            after: "이제는 문제 패턴이 보이는"
+        },
+        quote: "혼자였다면 포기했을 문제들도 함께라서 해결할 수 있었어요. 특히 DP 문제는 이제 자신있게 접근할 수 있습니다.",
+        duration: "6개월",
+        achievements: ["코딩테스트 3사 합격", "리트코드 300문제 해결", "알고리즘 스터디 리더"],
+        profileImage: process.env.PUBLIC_URL + '/images/face/member1.png'
+    },
+    {
+        id: 2,
+        name: "이프론트",
+        role: "프론트엔드 개발자",
+        beforeAfter: {
+            before: "자료구조가 약했던",
+            after: "최적화를 고민하는"
+        },
+        quote: "TecoTeco에서 배운 자료구조 지식이 실무에서도 큰 도움이 됐어요. 이제는 성능을 고려한 코드를 짤 수 있게 됐습니다.",
+        duration: "4개월",
+        achievements: ["Big-O 마스터", "트리/그래프 정복", "팀내 성능 개선 주도"],
+        profileImage: process.env.PUBLIC_URL + '/images/face/member2.png'
+    }
+];
+
+// 알고리즘 레벨 데이터
+const algorithmLevels: AlgorithmLevel[] = [
+    {
+        id: 'beginner',
+        title: '🌱 입문자',
+        description: '자료구조가 뭔지 잘 모르겠어요',
+        examples: ['배열과 리스트의 차이', '시간복잡도 개념', 'for문 최적화'],
+        difficulty: 'beginner',
+        icon: '🌱'
+    },
+    {
+        id: 'intermediate',
+        title: '🌿 중급자',
+        description: '기본 자료구조는 알지만 응용이 어려워요',
+        examples: ['BFS/DFS 구현', '이진탐색 활용', 'DP 기초 문제'],
+        difficulty: 'intermediate',
+        icon: '🌿'
+    },
+    {
+        id: 'advanced',
+        title: '🌳 고급자',
+        description: '복잡한 문제도 접근은 가능해요',
+        examples: ['세그먼트 트리', '다익스트라 최적화', 'DP 심화'],
+        difficulty: 'advanced',
+        icon: '🌳'
+    }
+];
+
+// 주간 스케줄 데이터
+const weeklySchedules: WeeklySchedule[] = [
+    {
+        week: 1,
+        topic: '스택과 큐',
+        keyPoints: ['LIFO vs FIFO', '실제 활용 사례', '문제 패턴 인식'],
+        problemCount: 5,
+        difficulty: '★★☆☆☆'
+    },
+    {
+        week: 2,
+        topic: '해시테이블',
+        keyPoints: ['해시 함수의 이해', '충돌 해결 방법', 'Map vs Set'],
+        problemCount: 6,
+        difficulty: '★★★☆☆'
+    },
+    {
+        week: 3,
+        topic: '그래프 탐색',
+        keyPoints: ['BFS vs DFS', '최단 경로 찾기', '사이클 검출'],
+        problemCount: 7,
+        difficulty: '★★★★☆'
+    }
+];
+
+// 코드 리뷰 샘플 데이터
+const codeReviewSamples: CodeReviewSample[] = [
+    {
+        id: 1,
+        title: '두 수의 합 - 시간복잡도 개선',
+        originalCode: `// 처음 작성한 코드
+for (int i = 0; i < nums.length; i++) {
+    for (int j = i + 1; j < nums.length; j++) {
+        if (nums[i] + nums[j] == target) {
+            return new int[] {i, j};
+        }
+    }
+}`,
+        reviewedCode: `// 리뷰 후 개선된 코드
+Map<Integer, Integer> map = new HashMap<>();
+for (int i = 0; i < nums.length; i++) {
+    int complement = target - nums[i];
+    if (map.containsKey(complement)) {
+        return new int[] {map.get(complement), i};
+    }
+    map.put(nums[i], i);
+}`,
+        comments: [
+            { line: 2, comment: 'O(n²) → O(n)으로 개선 가능해요!', author: 'renechoi' },
+            { line: 5, comment: '해시맵을 사용하면 한 번의 순회로 해결됩니다', author: 'kdelay' }
+        ]
+    }
+];
+
+// 누락된 handleImgError 함수
+const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = process.env.PUBLIC_URL + '/images/default-profile.png'; // 대체 이미지 경로
+    e.currentTarget.onerror = null; // 무한 루프 방지
+};
+
+// ===========================
+// Lazy 로딩 컴포넌트
+// ===========================
+const ActivityFeed = lazy(() => import('../pages/tecoteco/components/ActivityFeed'));
+const GrowthDashboard = lazy(() => import('../pages/tecoteco/components/GrowthDashboard'));
+const MemberStoryCarousel = lazy(() => import('../pages/tecoteco/components/MemberStoryCarousel'));
+
+// ===========================
+// 컴포넌트 정의 (부분 2, 3에서 가져온 컴포넌트들)
+// ===========================
+
+// 로딩 스피너 컴포넌트
+const LoadingSpinner: React.FC = () => (
+    <div className="loading-spinner">
+        <div className="spinner"></div>
+    </div>
+);
+
+// 이미지 레이지 로딩 훅
+const useLazyImage = (src: string) => {
+    const [imageSrc, setImageSrc] = useState<string>('');
+    const [imageRef, isInView] = useInView({
+        threshold: 0.1,
+        triggerOnce: true
+    });
+
+    useEffect(() => {
+        if (isInView && src) {
+            setImageSrc(src);
+        }
+    }, [isInView, src]);
+
+    return { imageSrc, imageRef };
+};
+
+// 최적화된 이미지 컴포넌트
+const OptimizedImage: React.FC<{
+    src: string;
+    alt: string;
+    className?: string;
+    placeholder?: string;
+}> = ({ src, alt, className, placeholder }) => {
+    const { imageSrc, imageRef } = useLazyImage(src);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    return (
+        <div ref={imageRef} className={`image-wrapper ${className}`}>
+            {placeholder && !isLoaded && (
+                <img
+                    src={placeholder}
+                    alt={alt}
+                    className="image-placeholder"
+                />
+            )}
+            {imageSrc && (
+                <img
+                    src={imageSrc}
+                    alt={alt}
+                    className={`lazy-image ${isLoaded ? 'loaded' : ''}`}
+                    onLoad={() => setIsLoaded(true)}
+                    onError={handleImgError}
+                />
+            )}
+        </div>
+    );
+};
+
+// 모바일 터치 개선을 위한 훅
+const useMobileTouch = () => {
+    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+    const minSwipeDistance = 50;
+
+    const onTouchStart = (e: React.TouchEvent) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        return { isLeftSwipe, isRightSwipe };
+    };
+
+    return { onTouchStart, onTouchMove, onTouchEnd };
+};
+
+// 성능 최적화된 애니메이션 훅
+const useOptimizedAnimation = () => {
+    const [isPrefersReducedMotion, setIsPrefersReducedMotion] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        setIsPrefersReducedMotion(mediaQuery.matches);
+
+        const handleChange = () => {
+            setIsPrefersReducedMotion(mediaQuery.matches);
+        };
+
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+    }, []);
+
+    return { isPrefersReducedMotion };
+};
+
+// 모바일 최적화된 네비게이션 컴포넌트
+const MobileNav: React.FC<{
+    sections: Array<{ id: string; title: string; icon: string }>;
+}> = ({ sections }) => {
+    const [activeSection, setActiveSection] = useState('');
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY + 100;
+
+            for (const section of sections) {
+                const element = document.getElementById(section.id);
+                if (element) {
+                    const { offsetTop, offsetHeight } = element;
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+                        setActiveSection(section.id);
+                        break;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [sections]);
+
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
+    return (
+        <nav className="mobile-nav">
+            {sections.map((section) => (
+                <button
+                    key={section.id}
+                    className={`nav-item ${activeSection === section.id ? 'active' : ''}`}
+                    onClick={() => scrollToSection(section.id)}
+                    aria-label={`${section.title}로 이동`}
+                >
+                    <span className="nav-icon">{section.icon}</span>
+                    <span className="nav-title">{section.title}</span>
+                </button>
+            ))}
+        </nav>
+    );
+};
+
+// 스와이프 가능한 캐러셀 컴포넌트
+const SwipeableCarousel: React.FC<{
+    items: any[];
+    renderItem: (item: any, index: number) => React.ReactNode;
+}> = ({ items, renderItem }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const { onTouchStart, onTouchMove, onTouchEnd } = useMobileTouch();
+    const carouselRef = useRef<HTMLDivElement>(null);
+
+    const handleSwipe = () => {
+        const swipeResult = onTouchEnd();
+        if (!swipeResult) return;
+
+        if (swipeResult.isLeftSwipe && currentIndex < items.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+        } else if (swipeResult.isRightSwipe && currentIndex > 0) {
+            setCurrentIndex(prev => prev - 1);
+        }
+    };
+
+    useEffect(() => {
+        if (carouselRef.current) {
+            carouselRef.current.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+    }, [currentIndex]);
+
+    return (
+        <div className="swipeable-carousel">
+            <div
+                ref={carouselRef}
+                className="carousel-inner"
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={handleSwipe}
+            >
+                {items.map((item, index) => (
+                    <div key={index} className="carousel-item">
+                        {renderItem(item, index)}
+                    </div>
+                ))}
+            </div>
+            <div className="carousel-dots">
+                {items.map((_, index) => (
+                    <button
+                        key={index}
+                        className={`dot ${currentIndex === index ? 'active' : ''}`}
+                        onClick={() => setCurrentIndex(index)}
+                        aria-label={`슬라이드 ${index + 1}로 이동`}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+// 모바일 최적화된 FAQ 컴포넌트
+const MobileFAQ: React.FC<{ faqs: FAQItem[] }> = ({ faqs }) => {
+    const [openId, setOpenId] = useState<number | null>(null);
+
+    return (
+        <div className="mobile-faq">
+            {faqs.map((faq) => (
+                <div
+                    key={faq.id}
+                    className={`faq-item ${openId === faq.id ? 'open' : ''}`}
+                >
+                    <button
+                        className="faq-button"
+                        onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
+                        aria-expanded={openId === faq.id}
+                        aria-controls={`faq-answer-${faq.id}`}
+                    >
+                        <span className="faq-question">{faq.question}</span>
+                        <span className="faq-icon" aria-hidden="true">
+                            {openId === faq.id ? '−' : '+'}
+                        </span>
+                    </button>
+                    <div
+                        id={`faq-answer-${faq.id}`}
+                        className="faq-answer"
+                        style={{
+                            maxHeight: openId === faq.id ? '500px' : '0',
+                            opacity: openId === faq.id ? 1 : 0
+                        }}
+                    >
+                        <p>{faq.answer}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+// 성능 모니터링 컴포넌트
+const PerformanceMonitor: React.FC = () => {
+    useEffect(() => {
+        // 성능 측정
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                const perfData = window.performance.timing;
+                const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+                const domReadyTime = perfData.domContentLoadedEventEnd - perfData.navigationStart;
+
+                console.log('Performance Metrics:', {
+                    pageLoadTime: `${pageLoadTime}ms`,
+                    domReadyTime: `${domReadyTime}ms`,
+                    resources: performance.getEntriesByType('resource').length
+                });
+
+                // 성능이 느린 경우 경고
+                if (pageLoadTime > 3000) {
+                    console.warn('Page load time is slow. Consider optimizing assets.');
+                }
+            });
+        }
+
+        // Largest Contentful Paint 측정
+        if ('PerformanceObserver' in window) {
+            const observer = new PerformanceObserver((list) => {
+                const entries = list.getEntries();
+                const lastEntry = entries[entries.length - 1];
+                console.log('LCP:', (lastEntry as PerformanceEntry).startTime); // Type assertion for PerformanceEntry
+            });
+            observer.observe({ entryTypes: ['largest-contentful-paint'] });
+        }
+    }, []);
+
+    return null;
+};
+
+// 모바일 뷰포트 높이 조정
+const useMobileViewportHeight = () => {
+    useEffect(() => {
+        const setViewportHeight = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
+
+        return () => {
+            window.removeEventListener('resize', setViewportHeight);
+            window.removeEventListener('orientationchange', setViewportHeight);
+        };
+    }, []);
+};
+
+// 실시간 활동 피드 컴포넌트 (부분 2에서 가져옴)
+const ActivityFeedLocal: React.FC = () => {
+    const [activities, setActivities] = useState(recentActivities);
+    const [isLive, setIsLive] = useState(true);
+
+    useEffect(() => {
+        if (!isLive) return;
+
+        const interval = setInterval(() => {
+            const newActivity: Activity = {
+                id: Date.now(),
+                type: ['solve', 'review', 'join', 'milestone'][Math.floor(Math.random() * 4)] as Activity['type'],
+                user: ['새로운 멤버', 'renechoi', 'kdelay', 'vvoohhee'][Math.floor(Math.random() * 4)],
+                content: '새로운 활동이 있어요',
+                time: '방금 전',
+                icon: ['✅', '💬', '👋', '🏆'][Math.floor(Math.random() * 4)]
+            };
+
+            setActivities(prev => [newActivity, ...prev.slice(0, 4)]);
+        }, 10000);
+
+        return () => clearInterval(interval);
+    }, [isLive]);
+
+    return (
+        <div className="activity-feed">
+            <div className="feed-header">
+                <h3>🔥 지금 이 순간, TecoTeco는</h3>
+                <button
+                    className={`live-toggle ${isLive ? 'active' : ''}`}
+                    onClick={() => setIsLive(!isLive)}
+                >
+                    <span className="live-dot"></span>
+                    {isLive ? 'LIVE' : 'PAUSED'}
+                </button>
+            </div>
+            <div className="activities-list">
+                {activities.map((activity, index) => (
+                    <div
+                        key={activity.id}
+                        className={`activity-item ${index === 0 ? 'new' : ''}`}
+                        style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                        <span className="activity-icon">{activity.icon}</span>
+                        <div className="activity-content">
+                            <p>
+                                <strong>{activity.user}</strong>
+                                {activity.content}
+                            </p>
+                            <span className="activity-time">{activity.time}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+// 성장 지표 대시보드 컴포넌트 (부분 2에서 가져옴)
+const GrowthDashboardLocal: React.FC = () => {
+    const [animatedValues, setAnimatedValues] = useState<{[key: string]: number}>({});
+
+    useEffect(() => {
+        growthMetrics.forEach((metric, index) => {
+            setTimeout(() => {
+                const duration = 2000;
+                const start = 0;
+                const end = metric.value;
+                const startTime = Date.now();
+
+                const animate = () => {
+                    const now = Date.now();
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    const value = Math.floor(start + (end - start) * progress);
+
+                    setAnimatedValues(prev => ({ ...prev, [metric.label]: value }));
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+                animate();
+            }, index * 200);
+        });
+    }, []);
+
+    return (
+        <div className="growth-dashboard">
+            <h3 className="dashboard-title">📈 이번 주 TecoTeco</h3>
+            <div className="metrics-grid">
+                {growthMetrics.map((metric, index) => (
+                    <div
+                        key={metric.label}
+                        className="metric-card"
+                        style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                        <div className="metric-icon">{metric.icon}</div>
+                        <div className="metric-content">
+                            <div className="metric-value">
+                                <span className="value-number">
+                                    {animatedValues[metric.label] || 0}
+                                </span>
+                                <span className="value-unit">{metric.unit}</span>
+                            </div>
+                            <p className="metric-label">{metric.label}</p>
+                            <div className={`metric-trend ${metric.trend > 0 ? 'up' : 'down'}`}>
+                                {metric.trend > 0 ? '↑' : '↓'} {Math.abs(metric.trend)}%
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+// 멤버 성장 스토리 캐러셀 컴포넌트 (부분 2에서 가져옴)
+const MemberStoryCarouselLocal: React.FC = () => {
+    const [currentStory, setCurrentStory] = useState(0);
+
+    const nextStory = () => {
+        setCurrentStory((prev) => (prev + 1) % memberStories.length);
+    };
+
+    const prevStory = () => {
+        setCurrentStory((prev) => (prev - 1 + memberStories.length) % memberStories.length);
+    };
+
+    return (
+        <div className="member-story-carousel">
+            <h3 className="story-title">🌟 TecoTeco와 함께 성장한 이야기</h3>
+            <div className="story-container">
+                <button className="story-nav prev" onClick={prevStory}>‹</button>
+                <div className="story-content">
+                    {memberStories.map((story, index) => (
+                        <div
+                            key={story.id}
+                            className={`story-card ${index === currentStory ? 'active' : ''}`}
+                            style={{ display: index === currentStory ? 'block' : 'none' }}
+                        >
+                            <div className="story-header">
+                                <img
+                                    src={story.profileImage}
+                                    alt={story.name}
+                                    className="story-profile"
+                                    onError={handleImgError}
+                                />
+                                <div className="story-info">
+                                    <h4>{story.name}</h4>
+                                    <p>{story.role} {story.company && `@ ${story.company}`}</p>
+                                    <span className="story-duration">TecoTeco {story.duration}</span>
+                                </div>
+                            </div>
+                            <div className="story-transformation">
+                                <p className="before">{story.beforeAfter.before}</p>
+                                <span className="arrow">→</span>
+                                <p className="after">{story.beforeAfter.after}</p>
+                            </div>
+                            <blockquote className="story-quote">
+                                "{story.quote}"
+                            </blockquote>
+                            <div className="story-achievements">
+                                {story.achievements.map((achievement, idx) => (
+                                    <span key={idx} className="achievement-badge">
+                                        {achievement}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <button className="story-nav next" onClick={nextStory}>›</button>
+            </div>
+            <div className="story-dots">
+                {memberStories.map((_, index) => (
+                    <span
+                        key={index}
+                        className={`dot ${index === currentStory ? 'active' : ''}`}
+                        onClick={() => setCurrentStory(index)}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+// 알고리즘 레벨 체크 컴포넌트 (부분 3에서 가져옴)
+const AlgorithmLevelCheck: React.FC = () => {
+    const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+    const [isRevealed, setIsRevealed] = useState(false);
+
+    const handleLevelSelect = (levelId: string) => {
+        setSelectedLevel(levelId);
+        setTimeout(() => setIsRevealed(true), 300);
+    };
+
+    return (
+        <div className="algorithm-level-check">
+            <h3 className="level-check-title">🎯 나의 현재 위치는?</h3>
+            <p className="level-check-subtitle">
+                테코테코에서는 모든 레벨이 환영받습니다. 당신의 시작점을 선택해보세요!
+            </p>
+
+            <div className="level-cards">
+                {algorithmLevels.map((level) => (
+                    <div
+                        key={level.id}
+                        className={`level-card ${selectedLevel === level.id ? 'selected' : ''}`}
+                        onClick={() => handleLevelSelect(level.id)}
+                    >
+                        <div className="level-icon">{level.icon}</div>
+                        <h4>{level.title}</h4>
+                        <p>{level.description}</p>
+                        <div className="level-examples">
+                            {level.examples.map((example, idx) => (
+                                <span key={idx} className="example-tag">{example}</span>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {selectedLevel && isRevealed && (
+                <div className="level-result">
+                    <p className="result-message">
+                        <strong>완벽해요!</strong> TecoTeco는{' '}
+                        <span className="highlight">모든 레벨의 개발자가 함께 성장</span>하는 곳입니다.
+                        {selectedLevel === 'beginner' && ' 기초부터 차근차근 다져나가요.'}
+                        {selectedLevel === 'intermediate' && ' 실전 문제로 실력을 한 단계 끌어올려요.'}
+                        {selectedLevel === 'advanced' && ' 더 깊이 있는 토론과 최적화를 추구해요.'}
+                    </p>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// 주간 스케줄 미리보기 컴포넌트 (부분 3에서 가져옴)
+const WeeklySchedulePreview: React.FC = () => {
+    const [expandedWeek, setExpandedWeek] = useState<number | null>(1);
+    const scheduleRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (scheduleRef.current && expandedWeek !== null) {
+            const expandedElement = scheduleRef.current.querySelector(`.week-card:nth-child(${expandedWeek})`);
+            expandedElement?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [expandedWeek]);
+
+    return (
+        <div className="weekly-schedule-preview" ref={scheduleRef}>
+            <h3 className="schedule-title">📅 앞으로의 여정 미리보기</h3>
+            <p className="schedule-subtitle">
+                매주 새로운 주제로 <span className="highlight">체계적으로 성장</span>합니다
+            </p>
+
+            <div className="schedule-timeline">
+                {weeklySchedules.map((schedule) => (
+                    <div
+                        key={schedule.week}
+                        className={`week-card ${expandedWeek === schedule.week ? 'expanded' : ''}`}
+                        onClick={() => setExpandedWeek(schedule.week)}
+                    >
+                        <div className="week-header">
+                            <span className="week-number">Week {schedule.week}</span>
+                            <h4 className="week-topic">{schedule.topic}</h4>
+                            <span className="week-difficulty">{schedule.difficulty}</span>
+                        </div>
+
+                        {expandedWeek === schedule.week && (
+                            <div className="week-details">
+                                <div className="key-points">
+                                    <h5>핵심 학습 포인트</h5>
+                                    <ul>
+                                        {schedule.keyPoints.map((point, idx) => (
+                                            <li key={idx}>{point}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div className="problem-info">
+                                    <span className="problem-count">
+                                        🎯 {schedule.problemCount}개 문제 도전
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            <div className="schedule-cta">
+                <p>이 외에도 <strong>DP, 그리디, 백트래킹</strong> 등 다양한 주제가 준비되어 있어요!</p>
+            </div>
+        </div>
+    );
+};
+
+// 코드 리뷰 체험 컴포넌트 (부분 3에서 가져옴)
+const CodeReviewExperience: React.FC = () => {
+    const [currentSample, setCurrentSample] = useState(0);
+    const [showComments, setShowComments] = useState(false);
+    const [activeTab, setActiveTab] = useState<'before' | 'after'>('before');
+
+    const sample = codeReviewSamples[currentSample];
+
+    return (
+        <div className="code-review-experience">
+            <h3 className="review-title">💬 TecoTeco의 따뜻한 코드 리뷰 문화</h3>
+            <p className="review-subtitle">
+                서로의 코드를 보며 <span className="highlight">함께 더 나은 해답</span>을 찾아갑니다
+            </p>
+
+            <div className="review-container">
+                <div className="review-header">
+                    <h4>{sample.title}</h4>
+                    <div className="tab-buttons">
+                        <button
+                            className={`tab-btn ${activeTab === 'before' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('before')}
+                        >
+                            Before
+                        </button>
+                        <button
+                            className={`tab-btn ${activeTab === 'after' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('after')}
+                        >
+                            After
+                        </button>
+                    </div>
+                </div>
+
+                <div className="code-display">
+                    <pre className="code-block">
+                        <code>
+                            {activeTab === 'before' ? sample.originalCode : sample.reviewedCode}
+                        </code>
+                    </pre>
+
+                    {activeTab === 'after' && (
+                        <button
+                            className="show-comments-btn"
+                            onClick={() => setShowComments(!showComments)}
+                        >
+                            {showComments ? '댓글 숨기기' : '리뷰 댓글 보기'}
+                        </button>
+                    )}
+                </div>
+
+                {showComments && activeTab === 'after' && (
+                    <div className="review-comments">
+                        {sample.comments.map((comment, idx) => (
+                            <div key={idx} className="comment-item">
+                                <span className="comment-author">@{comment.author}</span>
+                                <p className="comment-text">{comment.comment}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <div className="review-impact">
+                    <div className="impact-item">
+                        <span className="impact-label">시간복잡도</span>
+                        <span className="impact-change">O(n²) → O(n)</span>
+                    </div>
+                    <div className="impact-item">
+                        <span className="impact-label">가독성</span>
+                        <span className="impact-change">⭐⭐⭐ → ⭐⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// 참여 체험 플로우 컴포넌트 (부분 3에서 가져옴)
+const JoinExperienceFlow: React.FC = () => {
+    const [currentStep, setCurrentStep] = useState(0);
+    const [userInfo, setUserInfo] = useState({
+        experience: '',
+        goal: '',
+        availability: ''
+    });
+
+    const steps = [
+        {
+            question: '현재 개발 경력은 어떻게 되시나요?',
+            options: ['학생/취준생', '주니어 (1-3년)', '미드/시니어 (3년+)'],
+            field: 'experience'
+        },
+        {
+            question: 'TecoTeco에서 이루고 싶은 목표는?',
+            options: ['코딩테스트 합격', '실력 향상', '네트워킹'],
+            field: 'goal'
+        },
+        {
+            question: '금요일 저녁 참여가 가능하신가요?',
+            options: ['매주 가능', '격주 가능', '온라인 선호'],
+            field: 'availability'
+        }
+    ];
+
+    const handleAnswer = (answer: string) => {
+        setUserInfo(prev => ({ ...prev, [steps[currentStep].field]: answer }));
+        if (currentStep < steps.length - 1) {
+            setCurrentStep(prev => prev + 1);
+        }
+    };
+
+    const isComplete = currentStep === steps.length - 1 && userInfo.availability;
+
+    return (
+        <div className="join-experience-flow">
+            <h3 className="flow-title">🚀 TecoTeco 참여 체험하기</h3>
+
+            <div className="progress-bar">
+                <div
+                    className="progress-fill"
+                    style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+                />
+            </div>
+
+            {!isComplete ? (
+                <div className="question-step">
+                    <h4>{steps[currentStep].question}</h4>
+                    <div className="answer-options">
+                        {steps[currentStep].options.map((option) => (
+                            <button
+                                key={option}
+                                className="answer-btn"
+                                onClick={() => handleAnswer(option)}
+                            >
+                                {option}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div className="result-step">
+                    <h4>🎉 TecoTeco가 당신을 기다리고 있어요!</h4>
+                    <div className="result-summary">
+                        <p>
+                            <strong>{userInfo.experience}</strong>인 당신이{' '}
+                            <strong>{userInfo.goal}</strong>을 목표로{' '}
+                            <strong>{userInfo.availability}</strong>로 참여한다면,
+                        </p>
+                        <p className="result-message">
+                            TecoTeco에서 <span className="highlight">확실한 성장</span>을 경험할 수 있을 거예요!
+                        </p>
+                    </div>
+                    <button className="cta-button" onClick={() => alert('@renechoi에게 연락하기!')}>
+                        지금 바로 시작하기
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
+
+
+// ===========================
+// 메인 TecoTecoPage 컴포넌트
+// ===========================
+const TecoTecoPage: React.FC = () => {
+    const [isMobile, setIsMobile] = useState(false);
+    const { isPrefersReducedMotion } = useOptimizedAnimation();
+    useMobileViewportHeight();
+
+    const introSectionRef = useRef<HTMLElement>(null);
+    const philosophySectionRef = useRef<HTMLElement>(null);
+    const scheduleSectionRef = useRef<HTMLElement>(null);
+    const membersSectionRef = useRef<HTMLElement>(null);
+    const reviewsSectionRef = useRef<HTMLElement>(null);
+    const faqSectionRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // 부분 1의 useEffect 애니메이션 코드 통합
+    useEffect(() => {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        const animateElements = document.querySelectorAll('.animate-on-scroll');
+        animateElements.forEach(el => observer.observe(el));
+
+        const typeWriter = (element: HTMLElement, text: string, speed: number = 50) => {
+            let i = 0;
+            element.textContent = '';
+            const typing = () => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typing, speed);
+                }
+            };
+            typing();
+        };
+
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle && !heroTitle.classList.contains('typed') && !isPrefersReducedMotion) {
+            heroTitle.classList.add('typed');
+            // typeWriter(heroTitle as HTMLElement, '💯 코딩테스트 스터디, 테코테코', 100); // 이미 JSX에 있으므로 주석 처리 또는 제거
+        }
+
+        const countUp = (element: HTMLElement, end: number, duration: number = 2000) => {
+            const start = 0;
+            const increment = end / (duration / 16);
+            let current = start;
+
+            const updateCount = () => {
+                current += increment;
+                if (current < end) {
+                    element.textContent = Math.floor(current).toString();
+                    requestAnimationFrame(updateCount);
+                } else {
+                    element.textContent = end.toString();
+                }
+            };
+            updateCount();
+        };
+
+        const statsElements = document.querySelectorAll('[data-count]');
+        statsElements.forEach(el => {
+            const target = parseInt(el.getAttribute('data-count') || '0');
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !el.classList.contains('counted')) {
+                    el.classList.add('counted');
+                    countUp(el as HTMLElement, target);
+                }
+            });
+            observer.observe(el);
+        });
+
+        const heroSection = document.querySelector('.tecoteco-hero-section') as HTMLElement;
+        if (heroSection) {
+            heroSection.addEventListener('mousemove', (e) => {
+                const rect = heroSection.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+                heroSection.style.setProperty('--mouse-x', `${x}%`);
+                heroSection.style.setProperty('--mouse-y', `${y}%`);
+            });
+        }
+
+        return () => {
+            animateElements.forEach(el => observer.unobserve(el));
+            if (heroSection) {
+                heroSection.removeEventListener('mousemove', (e) => {}); // Clean up listener
+            }
+        };
+    }, [isPrefersReducedMotion]);
+
+    const handleCtaClick = () => {
+        // CTA 버튼 클릭 시 동작 (예: FAQ 섹션으로 스크롤)
+        faqSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const navSections = [
+        { id: 'intro', title: '소개', icon: '🎯' },
+        { id: 'philosophy', title: '가치', icon: '🤝' },
+        { id: 'schedule', title: '일정', icon: '📅' },
+        { id: 'members', title: '멤버', icon: '👥' },
+        { id: 'faq', title: 'FAQ', icon: '❓' }
+    ];
+
+    return (
+        <div className="tecoteco-page">
+            <TemplateHeader />
+            <PerformanceMonitor />
+            {isMobile && <MobileNav sections={navSections} />}
+
+            {/* Hero 섹션 - 최적화된 이미지 사용 */}
+            <section className="tecoteco-hero-section">
+                <div className="hero-content">
+                    <h1 className={`hero-title ${!isPrefersReducedMotion ? 'animated' : ''}`}>
+                        💯 코딩테스트 스터디, 테코테코
+                    </h1>
+                    <p className="hero-subtitle">
+                        함께 <span className="highlight gradient-text">코딩테스트 뿌시고 성장하는</span> 알고리즘 스터디
+                    </p>
+                    <OptimizedImage
+                        src={process.env.PUBLIC_URL + '/images/tecoteco-profile.png'}
+                        alt="테코테코 프로필"
+                        className="hero-image"
+                        placeholder={process.env.PUBLIC_URL + '/images/tecoteco-profile-placeholder.png'}
+                    />
+                    <div className="hero-stats">
+                        <div className="stat-item">
+                            <span className="stat-number" data-count="100">0</span>
+                            <span className="stat-label">주간 문제</span>
+                        </div>
+                        <div className="stat-item">
+                            <span className="stat-number" data-count="50">0</span>
+                            <span className="stat-label">활발한 멤버</span>
+                        </div>
+                        <div className="stat-item">
+                            <span className="stat-number" data-count="3">0</span>
+                            <span className="stat-label">시즌 진행</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="scroll-indicator" onClick={handleCtaClick}></div>
+            </section>
+
+            {/* Suspense로 레이지 로딩된 Social Proof 섹션 */}
+            <Suspense fallback={<LoadingSpinner />}>
+                <section className="tecoteco-social-proof-section animate-on-scroll">
+                    <div className="social-proof-container">
+                        <ActivityFeedLocal />
+                        <GrowthDashboardLocal />
+                    </div>
+                </section>
+            </Suspense>
+
+            {/* 소개 섹션 */}
+            <section id="intro" className="tecoteco-intro-section animate-on-scroll" ref={introSectionRef}>
+                <div className="intro-content">
+                    <h2>👩‍💻 TecoTeco, 왜 시작해야 할까요?</h2>
+                    <p>
+                        <span className="highlight">코딩 테스트는 이제 개발자의 필수 역량</span>입니다.<br />
+                        하지만 혼자서 꾸준히 공부하기는 쉽지 않죠.
+                        TecoTeco는 함께 목표를 향해 나아가며 <span className="highlight">지속적인 성장</span>을 돕는 스터디입니다.
+                    </p>
+                    <div className="intro-keywords">
+                        {tecotecoKeywords.map((keyword, index) => (
+                            <span key={index} className="keyword-bubble">{keyword}</span>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 모임 진행 방식 섹션 */}
+            <section id="philosophy" className="tecoteco-how-it-works-section animate-on-scroll" ref={philosophySectionRef}>
+                <h2>🤝 TecoTeco 모임을 한다는 건</h2>
+                <div className="steps-container">
+                    {tecotecoSteps.map((step, index) => (
+                        <div key={index} className="step-card">
+                            <div className="step-header">
+                                <span className="step-label">{step.label}</span>
+                                <h3>{step.title}</h3>
+                            </div>
+                            <p>{step.description}</p>
+                            <OptimizedImage
+                                src={step.image}
+                                alt={step.label}
+                                className="step-image"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* 인터랙티브 섹션 (알고리즘 레벨 체크, 주간 스케줄 미리보기) */}
+            <section className="tecoteco-interactive-section animate-on-scroll">
+                <AlgorithmLevelCheck />
+                <WeeklySchedulePreview />
+            </section>
+
+            {/* 코드 리뷰 체험 섹션 */}
+            <section className="tecoteco-culture-section animate-on-scroll">
+                <CodeReviewExperience />
+            </section>
+
+            {/* 멤버 성장 스토리 섹션 */}
+            <Suspense fallback={<LoadingSpinner />}>
+                <section className="tecoteco-success-stories-section animate-on-scroll">
+                    <MemberStoryCarouselLocal />
+                </section>
+            </Suspense>
+
+            {/* 멤버 소개 섹션 */}
+            <section id="members" className="tecoteco-members-section animate-on-scroll" ref={membersSectionRef}>
+                <h2>👥 TecoTeco 멤버들을 소개합니다</h2>
+                <div className="members-grid">
+                    {tecotecoMembers.map((member, index) => (
+                        <a key={index} href={`https://github.com/${member.githubId}`} target="_blank" rel="noopener noreferrer" className="member-card">
+                            <OptimizedImage
+                                src={member.imageUrl || 'https://avatars.githubusercontent.com/u/9919?s=400&v=4'} // fallback image
+                                alt={member.name}
+                                className="member-profile-img"
+                            />
+                            <h4>{member.name}</h4>
+                            <p>@{member.githubId}</p>
+                        </a>
+                    ))}
+                </div>
+            </section>
+
+            {/* 리뷰 섹션 */}
+            <section id="reviews" className="tecoteco-reviews-section animate-on-scroll" ref={reviewsSectionRef}>
+                <h2>✨ 멤버들이 말하는 TecoTeco</h2>
+                {isMobile ? (
+                    <SwipeableCarousel
+                        items={tecotecoReviews}
+                        renderItem={(review: Review) => (
+                            <div className="review-card">
+                                <div className="review-header">
+                                    <span className="review-name">{review.name}</span>
+                                    <span className="review-attend-count">✨ {review.attendCount}회 참석</span>
+                                </div>
+                                <h3>{review.title}</h3>
+                                <p className="review-content">{review.content}</p>
+                                <div className="review-footer">
+                                    <span className="review-emojis">{review.emojis.join('')}</span>
+                                    <span className="review-likes">❤️ {review.likes}</span>
+                                    <span className="review-time-ago">{review.timeAgo}</span>
+                                </div>
+                            </div>
+                        )}
+                    />
+                ) : (
+                    <div className="reviews-grid">
+                        {tecotecoReviews.map((review, index) => (
+                            <div key={index} className="review-card">
+                                <div className="review-header">
+                                    <span className="review-name">{review.name}</span>
+                                    <span className="review-attend-count">✨ {review.attendCount}회 참석</span>
+                                </div>
+                                <h3>{review.title}</h3>
+                                <p className="review-content">{review.content}</p>
+                                <div className="review-footer">
+                                    <span className="review-emojis">{review.emojis.join('')}</span>
+                                    <span className="review-likes">❤️ {review.likes}</span>
+                                    <span className="review-time-ago">{review.timeAgo}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </section>
+
+            {/* 참여 체험 플로우 섹션 */}
+            <section className="tecoteco-join-flow-section animate-on-scroll">
+                <JoinExperienceFlow />
+            </section>
+
+            {/* FAQ 섹션 */}
+            <section id="faq" className="tecoteco-faq-section animate-on-scroll" ref={faqSectionRef}>
+                <h2>🤔 자주 묻는 질문</h2>
+                {isMobile ? (
+                    <MobileFAQ faqs={tecotecoFaqs} />
+                ) : (
+                    <div className="tecoteco-faq-items">
+                        {tecotecoFaqs.map(faq => (
+                            <details key={faq.id} className="faq-item">
+                                <summary className="faq-question">{faq.question}</summary>
+                                <p className="faq-answer">{faq.answer}</p>
+                            </details>
+                        ))}
+                    </div>
+                )}
+                <div className="faq-contact">
+                    <p>여전히 궁금한 점이 있으신가요? 언제든지 문의해주세요!</p>
+                    <button className="cta-button" onClick={() => alert('문의하기 기능 구현 예정!')}>문의하기</button>
+                </div>
+            </section>
+
+            <Footer />
+        </div>
+    );
+};
+
+export default TecoTecoPage;

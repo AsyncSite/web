@@ -1,0 +1,113 @@
+/* src/pages/TecoTecoPage/TecoTecoPage.css */
+
+/* 기본 페이지 및 콘텐츠 컨테이너 스타일 */
+.tecoteco-page {
+    background-color: #000; /* 11맨 기본 검정 배경 */
+    color: #f0f0f0; /* 밝은 회색 텍스트 (가독성 위해) */
+    font-family: 'PretendardVariable', sans-serif; /* 11맨에서 사용되는 폰트 */
+    min-height: 50vh;
+    padding-top: 80px; /* TemplateHeader 높이만큼 여백 */
+    line-height: 1.6;
+}
+
+.tecoteco-content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 섹션 공통 스타일 */
+.tecoteco-content section {
+    padding: 30px 25px;
+    margin-bottom: 15px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.tecoteco-content section:last-of-type {
+    margin-bottom: 0;
+}
+
+/* 섹션 타이틀 및 서브타이틀 공통 스타일 */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #C3E88D;
+    text-align: center;
+    margin-bottom: 10px;
+    font-family: 'Source Code Pro', monospace;
+    letter-spacing: -1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1.2;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: #abb2bf;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.subsection-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #C3E88D;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* 텍스트 강조를 위한 하이라이트 클래스 */
+.highlight {
+    color: #FFEA00;
+    font-weight: 600;
+}
+
+/* 모바일 전용 줄바꿈 */
+.mobile-only {
+    display: none;
+}
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+}
+
+/* 반응형 디자인 공통 */
+@media (max-width: 768px) {
+    .tecoteco-page {
+        padding-top: 60px;
+    }
+    .tecoteco-content {
+        padding: 15px;
+    }
+    .tecoteco-content section {
+        padding: 20px 15px;
+        margin-bottom: 12px;
+    }
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+    .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+    .subsection-title {
+        font-size: 1.5rem;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 1.6rem;
+    }
+}

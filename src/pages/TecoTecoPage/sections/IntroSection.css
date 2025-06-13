@@ -1,0 +1,51 @@
+/* src/pages/TecoTecoPage/sections/IntroSection.css */
+
+.tecoteco-intro-section {
+    background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
+    border-radius: 12px;
+    padding: 30px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.tecoteco-intro-section .section-title {
+    color: #FFEA00;
+    margin-bottom: 18px;
+    font-size: 2.8rem;
+}
+
+.tecoteco-intro-section .section-description {
+    font-size: 1.25rem;
+    color: #ddd;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-weight: 300;
+}
+
+.tecoteco-intro-section .section-cta-text {
+    font-size: 1.35rem;
+    color: #f0f0f0;
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .tecoteco-intro-section {
+        padding: 25px 20px;
+    }
+    .tecoteco-intro-section .section-title {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    .tecoteco-intro-section .section-description {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+    .tecoteco-intro-section .section-cta-text {
+        font-size: 1.1rem;
+        margin-top: 15px;
+    }
+}

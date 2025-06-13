@@ -1,0 +1,2718 @@
+/* src/pages/TecoTecoPage.css - 최종 완성본 */
+
+/* ===========================
+   1. CSS 변수 및 기본 설정
+   =========================== */
+:root {
+    --vh: 1vh;
+    --color-primary: #C3E88D;
+    --color-secondary: #82AAFF;
+    --color-accent: #FFEA00;
+    --color-error: #FF6B6B;
+    --color-bg-dark: #0d0d0d;
+    --color-bg-section: #1a1a1a;
+    --color-bg-card: #2a2a2a;
+    --color-text-primary: #f0f0f0;
+    --color-text-secondary: #ddd;
+    --color-text-muted: #aaa;
+}
+
+/* 성능 최적화를 위한 will-change */
+.animated {
+    will-change: transform, opacity;
+}
+
+/* ===========================
+   2. 기본 페이지 스타일
+   =========================== */
+.tecoteco-page {
+    background-color: #000;
+    color: var(--color-text-primary);
+    font-family: 'PretendardVariable', sans-serif;
+    min-height: 100vh;
+    padding-top: 80px;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.tecoteco-content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 섹션 공통 스타일 */
+.tecoteco-content section {
+    padding: 30px 25px;
+    margin-bottom: 15px;
+    background-color: var(--color-bg-section);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.tecoteco-content section:last-of-type {
+    margin-bottom: 0;
+}
+
+/* 타이틀 스타일 */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 10px;
+    font-family: 'Source Code Pro', monospace;
+    letter-spacing: -1px;
+    line-height: 1.2;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: #abb2bf;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.subsection-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: 20px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* 텍스트 하이라이트 */
+.highlight {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* 그라데이션 텍스트 효과 */
+.gradient-text {
+    background: linear-gradient(135deg, #C3E88D, #FFEA00, #82AAFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gradientMove 3s ease infinite;
+}
+
+/* 모바일 전용 줄바꿈 */
+.mobile-only {
+    display: none;
+}
+
+/* ===========================
+   3. 히어로 섹션 & 애니메이션
+   =========================== */
+.tecoteco-hero-section {
+    background-color: var(--color-bg-dark);
+    text-align: center;
+    padding: 60px 20px 40px;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 배경 파티클 효과 */
+.tecoteco-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+            radial-gradient(2px 2px at 20% 30%, #C3E88D, transparent),
+            radial-gradient(2px 2px at 60% 70%, #FFEA00, transparent),
+            radial-gradient(1px 1px at 50% 50%, #82AAFF, transparent);
+    background-size: 300px 300px;
+    animation: backgroundMove 20s linear infinite;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.hero-content {
+    max-width: 800px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+    font-family: 'Moneygraphy-Rounded', monospace;
+    text-shadow: 0 0 20px rgba(195, 232, 141, 0.6);
+    line-height: 1.1;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-subtitle {
+    font-size: 1.8rem;
+    color: var(--color-text-primary);
+    margin-bottom: 25px;
+    font-weight: 300;
+    line-height: 1.4;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.hero-subtitle .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #C3E88D, #FFEA00);
+    animation: expandWidth 1s ease-out 1.5s forwards;
+}
+
+.hero-image-wrapper {
+    margin-bottom: 25px;
+}
+
+.hero-image-wrapper img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 50%;
+    border: 5px solid var(--color-primary);
+    box-shadow: 0 0 30px rgba(195, 232, 141, 0.8);
+    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+    animation: float 3s ease-in-out infinite;
+}
+
+.hero-image-wrapper img:hover {
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 0 40px rgba(195, 232, 141, 1);
+}
+
+.hero-cta-button {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+    border: none;
+    border-radius: 50px;
+    padding: 18px 35px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-cta-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.hero-cta-button:hover {
+    background-color: #b5d97f;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
+}
+
+.hero-cta-button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* 스크롤 인디케이터 */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: bounce 2s infinite;
+    cursor: pointer;
+}
+
+.scroll-indicator::before {
+    content: '⌄';
+    font-size: 2rem;
+    color: var(--color-primary);
+    opacity: 0.6;
+}
+
+/* ===========================
+   4. 애니메이션 정의
+   =========================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes expandWidth {
+    to { width: 100%; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes backgroundMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-50px, -50px); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 스크롤 애니메이션 */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===========================
+   5. 도입 섹션 (변화 속에서 변치 않는 본질)
+   =========================== */
+.tecoteco-intro-section {
+    background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
+    border-radius: 12px;
+    padding: 30px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.tecoteco-intro-section .section-title {
+    color: var(--color-accent);
+    margin-bottom: 18px;
+    font-size: 2.8rem;
+}
+
+.tecoteco-intro-section .section-description {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-weight: 300;
+}
+
+.tecoteco-intro-section .section-cta-text {
+    font-size: 1.35rem;
+    color: var(--color-text-primary);
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+/* ===========================
+   6. 우리의 지향점 (Philosophy)
+   =========================== */
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.philosophy-item {
+    background-color: var(--color-bg-card);
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(195, 232, 141, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.philosophy-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(195, 232, 141, 0.3);
+    background-color: #2e2e2e;
+}
+
+.philosophy-item h3 {
+    font-size: 1.5rem;
+    color: var(--color-secondary);
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.philosophy-item .philosophy-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.philosophy-item p {
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* ===========================
+   7. 테코테코 모임을 한다는 건
+   =========================== */
+.tecoteco-experience-section {
+    background: linear-gradient(135deg, #1f1f1f, #0d0d0d);
+    border-radius: 12px;
+    padding: 35px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+.tecoteco-experience-section .section-title {
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.tecoteco-steps-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    flex: 1 1 15%;
+    min-width: 80px;
+    max-width: 100px;
+}
+
+.step-item:hover {
+    transform: translateY(-5px);
+    opacity: 0.8;
+}
+
+.step-item.active .step-button {
+    background-color: var(--color-primary);
+    color: #000;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 15px rgba(195, 232, 141, 0.6);
+}
+
+.step-button {
+    width: 60px;
+    height: 60px;
+    background-color: #3a3a3a;
+    border: 3px solid #666;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-top: 8px;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.step-detail-container {
+    background-color: var(--color-bg-card);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 15px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.7s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
+}
+
+.step-detail-container.active {
+    max-height: 300px;
+    opacity: 1;
+    padding: 20px;
+}
+
+.step-detail-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.step-detail-title {
+    font-size: 1.7rem;
+    color: var(--color-secondary);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.step-detail-image-wrapper {
+    margin-bottom: 15px;
+}
+
+.step-detail-image-wrapper img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(130, 170, 255, 0.4);
+}
+
+.step-detail-text {
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
+
+/* ===========================
+   8. 당신과 TecoTeco의 하루
+   =========================== */
+.operation-details {
+    background-color: var(--color-bg-card);
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.operation-details p {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: var(--color-text-secondary);
+}
+
+.operation-details p strong {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.operation-details a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.operation-details a:hover {
+    text-decoration: underline;
+    color: #6a95e7;
+}
+
+.activity-table {
+    overflow-x: auto;
+    margin-top: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.activity-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 500px;
+    background-color: var(--color-bg-card);
+}
+
+.activity-table th,
+.activity-table td {
+    padding: 10px 15px;
+    text-align: left;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.activity-table th {
+    background-color: #3a3a3a;
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.activity-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.activity-table tbody tr:nth-child(even) {
+    background-color: #2e2e2e;
+}
+
+.activity-table tbody tr:hover {
+    background-color: #383838;
+    transition: background-color 0.2s ease;
+}
+
+.activity-table td strong {
+    color: #ffcb6b;
+    font-weight: 600;
+}
+
+/* ===========================
+   9. 우리의 발자취
+   =========================== */
+.journey-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.journey-list li {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 6px;
+    position: relative;
+    padding-left: 25px;
+}
+
+.journey-list li::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    color: #ffcb6b;
+    font-size: 1.2rem;
+    top: 0;
+}
+
+.journey-list li strong {
+    color: var(--color-primary);
+}
+
+.journey-image-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.journey-image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ===========================
+   10. 함께하는 사람들
+   =========================== */
+.members-intro {
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: 10px;
+}
+
+.tecoteco-contributors-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 8px;
+}
+
+.tecoteco-contributor-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 0.7rem;
+    width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tecoteco-contributor-card:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px);
+}
+
+.tecoteco-contributor-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+.tecoteco-profile-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.5rem;
+}
+
+.tecoteco-profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 8px rgba(195, 232, 141, 0.4);
+}
+
+.tecoteco-contributor-name {
+    font-size: 0.85rem;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* ===========================
+   11. 주요 키워드
+   =========================== */
+.tecoteco-keywords-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.tecoteco-keyword-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    transition: all 0.2s ease;
+}
+
+.tecoteco-keyword-tag:hover {
+    background: rgba(195, 232, 141, 0.1);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+/* ===========================
+   12. 멤버 후기 (캐러셀)
+   =========================== */
+.tecoteco-reviews-section {
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.tecoteco-reviews-carousel-wrapper {
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.tecoteco-reviews-list {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: calc(100% * var(--total-reviews));
+    padding-bottom: 15px;
+}
+
+.tecoteco-review-card {
+    background-color: var(--color-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.tecoteco-reviews-list .tecoteco-review-card:not(:last-child) {
+    margin-right: 20px;
+}
+
+.tecoteco-review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+.tecoteco-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.tecoteco-reviewer-name {
+    font-weight: 600;
+    color: var(--color-primary);
+    font-size: 1.1rem;
+}
+
+.tecoteco-review-meta {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.tecoteco-review-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+}
+
+.tecoteco-review-content {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-bottom: 12px;
+}
+
+.tecoteco-review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.tecoteco-review-emojis span {
+    font-size: 1.2rem;
+    margin-right: 5px;
+}
+
+.tecoteco-review-likes {
+    font-size: 0.9rem;
+    color: #ffcb6b;
+    font-weight: 500;
+}
+
+.tecoteco-carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.carousel-nav-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.carousel-nav-button.prev {
+    left: 0px;
+}
+
+.carousel-nav-button.next {
+    right: 0px;
+}
+
+.carousel-nav-button:hover {
+    background-color: var(--color-primary);
+    color: #000;
+}
+
+.carousel-indicators {
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+.indicator-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.indicator-dot.active {
+    background-color: var(--color-primary);
+    transform: scale(1.2);
+}
+
+.tecoteco-view-all-reviews-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.tecoteco-view-all-reviews-button {
+    background-color: var(--color-primary);
+    color: #000;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.tecoteco-view-all-reviews-button:hover {
+    background-color: #b5d97f;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ===========================
+   13. FAQ + 참여 방법
+   =========================== */
+.tecoteco-faq-join-section .section-title {
+    font-size: 2.2rem;
+}
+
+.tecoteco-faq-items {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tecoteco-faq-item {
+    background-color: var(--color-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.tecoteco-faq-item.open {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
+}
+
+.tecoteco-faq-question {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #1f2a44;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    transition: background-color 0.2s ease;
+}
+
+.tecoteco-faq-question:hover {
+    background-color: #2b3a58;
+}
+
+.tecoteco-faq-icon {
+    font-size: 1.1rem;
+    color: #ffcb6b;
+    margin-right: 10px;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.tecoteco-faq-question-text {
+    flex-grow: 1;
+    font-size: 1rem;
+}
+
+.tecoteco-faq-toggle-icon {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-left: 15px;
+    transition: transform 0.2s ease;
+}
+
+.tecoteco-faq-item.open .tecoteco-faq-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.tecoteco-faq-answer {
+    padding: 15px 20px 15px 45px;
+    background-color: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease-out;
+    display: flex;
+    align-items: flex-start;
+}
+
+.tecoteco-faq-answer p {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.join-cta-block {
+    text-align: center;
+    margin-top: 25px;
+    padding: 18px;
+    background-color: var(--color-bg-dark);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.join-cta-block .join-description {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.join-cta-block .join-contact-button {
+    background-color: var(--color-secondary);
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 15px rgba(130, 170, 255, 0.4);
+}
+
+.join-cta-block .join-contact-button:hover {
+    background-color: #6a95e7;
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 5px 20px rgba(130, 170, 255, 0.6);
+}
+
+/* ===========================
+   14. 소셜 프루프 섹션
+   =========================== */
+.tecoteco-social-proof-section {
+    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+    padding: 60px 20px;
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-proof-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* 실시간 활동 피드 */
+.activity-feed {
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid rgba(195, 232, 141, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.feed-header h3 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin: 0;
+    font-weight: 600;
+}
+
+.live-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(195, 232, 141, 0.3);
+    border-radius: 20px;
+    padding: 6px 16px;
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.live-toggle.active {
+    background: rgba(195, 232, 141, 0.2);
+    border-color: var(--color-primary);
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #ff4444;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.activities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: start;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    animation: slideIn 0.5s ease-out;
+}
+
+.activity-item.new {
+    border-color: rgba(195, 232, 141, 0.3);
+    background: rgba(195, 232, 141, 0.05);
+}
+
+.activity-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(5px);
+}
+
+.activity-icon {
+    font-size: 1.5rem;
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-content p {
+    margin: 0 0 5px 0;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.activity-content strong {
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.activity-time {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* 성장 지표 대시보드 */
+.growth-dashboard {
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid rgba(130, 170, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-title {
+    font-size: 1.5rem;
+    color: var(--color-secondary);
+    margin: 0 0 25px 0;
+    font-weight: 600;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+.metric-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.metric-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(130, 170, 255, 0.1);
+    border-radius: 12px;
+}
+
+.metric-content {
+    flex: 1;
+}
+
+.metric-value {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.value-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    font-family: 'Source Code Pro', monospace;
+}
+
+.value-unit {
+    font-size: 1rem;
+    color: #888;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.metric-trend {
+    display: inline-block;
+    font-size: 0.85rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+.metric-trend.up {
+    background: rgba(195, 232, 141, 0.2);
+    color: var(--color-primary);
+}
+
+.metric-trend.down {
+    background: rgba(255, 107, 107, 0.2);
+    color: var(--color-error);
+}
+
+/* ===========================
+   15. 멤버 성장 스토리
+   =========================== */
+.tecoteco-success-stories-section {
+    background: var(--color-bg-dark);
+    padding: 60px 20px;
+    margin: 40px 0;
+}
+
+.member-story-carousel {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.story-title {
+    font-size: 2rem;
+    color: var(--color-accent);
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+.story-container {
+    position: relative;
+    background: rgba(26, 26, 26, 0.8);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid rgba(255, 234, 0, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.story-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 2rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.story-nav:hover {
+    background: rgba(255, 234, 0, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.story-nav.prev {
+    left: -25px;
+}
+
+.story-nav.next {
+    right: -25px;
+}
+
+.story-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.story-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.story-profile {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-accent);
+    box-shadow: 0 0 20px rgba(255, 234, 0, 0.3);
+}
+
+.story-info h4 {
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    margin: 0 0 5px 0;
+}
+
+.story-info p {
+    color: var(--color-text-muted);
+    margin: 0 0 5px 0;
+}
+
+.story-duration {
+    display: inline-block;
+    background: rgba(255, 234, 0, 0.2);
+    color: var(--color-accent);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.story-transformation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+}
+
+.story-transformation p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.before {
+    color: #888;
+    text-decoration: line-through;
+}
+
+.arrow {
+    font-size: 1.5rem;
+    color: var(--color-accent);
+}
+
+.after {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.story-quote {
+    font-size: 1.2rem;
+    color: var(--color-text-primary);
+    font-style: italic;
+    text-align: center;
+    margin: 30px 0;
+    padding: 0 20px;
+    line-height: 1.6;
+}
+
+.story-achievements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.achievement-badge {
+    background: rgba(130, 170, 255, 0.2);
+    color: var(--color-secondary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(130, 170, 255, 0.3);
+}
+
+.story-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+}
+
+.story-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.story-dots .dot.active {
+    background: var(--color-accent);
+    transform: scale(1.3);
+}
+
+/* ===========================
+   16. 인터랙티브 섹션들
+   =========================== */
+.tecoteco-interactive-section,
+.tecoteco-culture-section,
+.tecoteco-join-flow-section {
+    background: var(--color-bg-section);
+    padding: 60px 20px;
+    margin: 40px 0;
+    border-radius: 20px;
+}
+
+/* 알고리즘 레벨 체크 */
+.algorithm-level-check {
+    max-width: 900px;
+    margin: 0 auto 60px;
+}
+
+.level-check-title {
+    font-size: 2rem;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.level-check-subtitle {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.level-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.level-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+}
+
+.level-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: linear-gradient(45deg, transparent, rgba(195, 232, 141, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.level-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(195, 232, 141, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.level-card:hover::after {
+    opacity: 1;
+}
+
+.level-card.selected {
+    border-color: var(--color-primary);
+    background: rgba(195, 232, 141, 0.1);
+    transform: scale(1.05);
+}
+
+.level-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.level-card h4 {
+    font-size: 1.4rem;
+    color: var(--color-text-primary);
+    margin-bottom: 10px;
+}
+
+.level-card p {
+    color: var(--color-text-muted);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.level-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.example-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    color: var(--color-secondary);
+    border: 1px solid rgba(130, 170, 255, 0.2);
+}
+
+.level-result {
+    background: rgba(195, 232, 141, 0.1);
+    border: 1px solid rgba(195, 232, 141, 0.3);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.result-message {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+}
+
+/* 주간 스케줄 미리보기 */
+.weekly-schedule-preview {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.schedule-title {
+    font-size: 2rem;
+    color: var(--color-secondary);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.schedule-subtitle {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.schedule-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.week-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.week-card:hover {
+    border-color: rgba(130, 170, 255, 0.3);
+    transform: translateX(10px);
+}
+
+.week-card.expanded {
+    border-color: var(--color-secondary);
+    background: rgba(130, 170, 255, 0.05);
+}
+
+.week-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+}
+
+.week-number {
+    background: var(--color-secondary);
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.week-topic {
+    font-size: 1.3rem;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.week-difficulty {
+    color: var(--color-accent);
+    font-size: 1.1rem;
+}
+
+.week-details {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    animation: expandDown 0.3s ease-out;
+}
+
+@keyframes expandDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 200px;
+    }
+}
+
+.key-points h5 {
+    color: var(--color-secondary);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.key-points ul {
+    list-style: none;
+    padding: 0;
+}
+
+.key-points li {
+    color: var(--color-text-secondary);
+    padding-left: 25px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.key-points li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-secondary);
+}
+
+.problem-count {
+    display: inline-block;
+    background: rgba(255, 234, 0, 0.1);
+    border: 1px solid rgba(255, 234, 0, 0.3);
+    padding: 8px 20px;
+    border-radius: 20px;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.schedule-cta {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+}
+
+.schedule-cta strong {
+    color: var(--color-primary);
+}
+
+/* 코드 리뷰 체험 */
+.code-review-experience {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.review-title {
+    font-size: 2rem;
+    color: var(--color-accent);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.review-subtitle {
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.review-container {
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid rgba(255, 234, 0, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.review-header h4 {
+    color: var(--color-text-primary);
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.tab-btn.active {
+    background: var(--color-accent);
+    color: #000;
+    border-color: var(--color-accent);
+}
+
+.code-display {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.code-block {
+    background: var(--color-bg-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    overflow-x: auto;
+    margin: 0;
+}
+
+.code-block code {
+    color: var(--color-primary);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.code-block code::selection {
+    background: rgba(195, 232, 141, 0.3);
+    color: #fff;
+}
+
+.show-comments-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(255, 234, 0, 0.2);
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    padding: 6px 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.show-comments-btn:hover {
+    background: var(--color-accent);
+    color: #000;
+}
+
+.review-comments {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.comment-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.comment-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.comment-author {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.comment-text {
+    color: var(--color-text-secondary);
+    margin: 5px 0 0 0;
+    font-size: 0.95rem;
+}
+
+.review-impact {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+}
+
+.impact-item {
+    text-align: center;
+}
+
+.impact-label {
+    display: block;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.impact-change {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* 참여 체험 플로우 */
+.join-experience-flow {
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(195, 232, 141, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+}
+
+.flow-title {
+    font-size: 2rem;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #C3E88D, #FFEA00);
+    transition: width 0.5s ease;
+    border-radius: 4px;
+}
+
+.question-step h4 {
+    font-size: 1.4rem;
+    color: var(--color-text-primary);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.answer-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.answer-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary);
+    padding: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.answer-btn:hover {
+    border-color: var(--color-primary);
+    background: rgba(195, 232, 141, 0.1);
+    transform: translateX(10px);
+}
+
+.result-step {
+    text-align: center;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.result-step h4 {
+    font-size: 1.6rem;
+    color: var(--color-accent);
+    margin-bottom: 25px;
+}
+
+.result-summary {
+    background: rgba(195, 232, 141, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.result-summary p {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.result-summary p:last-child {
+    margin-bottom: 0;
+}
+
+.result-summary strong {
+    color: var(--color-primary);
+}
+
+.result-message {
+    font-size: 1.2rem;
+    color: var(--color-text-primary);
+}
+
+.join-experience-flow .cta-button {
+    background: var(--color-primary);
+    color: #000;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+}
+
+.join-experience-flow .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
+}
+
+/* ===========================
+   17. 모바일 최적화 스타일
+   =========================== */
+
+/* 로딩 스피너 */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(195, 232, 141, 0.2);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* 이미지 레이지 로딩 */
+.image-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.image-placeholder {
+    filter: blur(10px);
+    transform: scale(1.1);
+}
+
+.lazy-image {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+}
+
+/* 모바일 네비게이션 */
+.mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(13, 13, 13, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 1000;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.mobile-nav.hidden {
+    transform: translateY(100%);
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    color: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-item.active {
+    color: var(--color-primary);
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-primary);
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+}
+
+.nav-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* 스와이프 가능한 캐러셀 */
+.swipeable-carousel {
+    overflow: hidden;
+    position: relative;
+    touch-action: pan-y;
+}
+
+.carousel-inner {
+    display: flex;
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+.carousel-item {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.carousel-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.carousel-dots .dot.active {
+    background: var(--color-primary);
+    transform: scale(1.3);
+}
+
+/* 모바일 최적화 FAQ */
+.mobile-faq {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mobile-faq .faq-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-faq .faq-item.open {
+    border-color: var(--color-primary);
+    background: rgba(195, 232, 141, 0.05);
+}
+
+.faq-button {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.faq-icon {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    padding: 0 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-answer p {
+    padding-bottom: 20px;
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* 터치 친화적 버튼 */
+@media (hover: none) {
+    button, .clickable {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+}
+
+/* ===========================
+   18. 반응형 디자인
+   =========================== */
+@media (max-width: 1024px) {
+    .social-proof-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+
+    /* 복잡한 애니메이션 비활성화 */
+    * {
+        animation-duration: 0.3s !important;
+    }
+
+    /* 그림자 간소화 */
+    .tecoteco-content section {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 배경 효과 제거 */
+    .tecoteco-hero-section::before {
+        display: none;
+    }
+
+    /* 터치 타겟 크기 확대 */
+    button, a, .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* 폰트 크기 최적화 */
+    html {
+        font-size: 16px;
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .section-title {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    /* 패딩 조정 */
+    .tecoteco-page {
+        padding-top: 60px;
+    }
+
+    .tecoteco-content {
+        padding: 15px;
+        padding-bottom: 80px;
+    }
+
+    .tecoteco-content section {
+        padding: 20px 15px;
+        margin-bottom: 12px;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    .hero-image-wrapper {
+        margin-bottom: 20px;
+    }
+
+    .hero-cta-button {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .subsection-title {
+        font-size: 1.5rem;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+
+    /* Intro Section Mobile */
+    .tecoteco-intro-section {
+        padding: 25px 20px;
+    }
+
+    .tecoteco-intro-section .section-title {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .tecoteco-intro-section .section-description {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .tecoteco-intro-section .section-cta-text {
+        font-size: 1.1rem;
+        margin-top: 15px;
+    }
+
+    .philosophy-item h3 {
+        font-size: 1.2rem;
+    }
+
+    .philosophy-item p,
+    .operation-details p,
+    .journey-list li {
+        font-size: 0.95rem;
+    }
+
+    .activity-table table {
+        min-width: unset;
+        font-size: 0.875rem;
+    }
+
+    .activity-table th,
+    .activity-table td {
+        padding: 8px 12px;
+    }
+
+    /* Social Proof Mobile */
+    .tecoteco-social-proof-section,
+    .tecoteco-success-stories-section {
+        padding: 40px 15px;
+    }
+
+    .activity-feed,
+    .growth-dashboard {
+        padding: 20px;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .story-container {
+        padding: 30px 20px;
+    }
+
+    .story-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+
+    .story-nav.prev {
+        left: -15px;
+    }
+
+    .story-nav.next {
+        right: -15px;
+    }
+
+    .story-transformation {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .story-quote {
+        font-size: 1.1rem;
+        padding: 0 10px;
+    }
+
+    /* Interactive Sections Mobile */
+    .tecoteco-interactive-section,
+    .tecoteco-culture-section,
+    .tecoteco-join-flow-section {
+        padding: 40px 15px;
+    }
+
+    .level-cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .week-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .review-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .review-impact {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .join-experience-flow {
+        padding: 30px 20px;
+    }
+
+    .code-block {
+        padding: 15px;
+        font-size: 0.85rem;
+    }
+
+    .show-comments-btn {
+        position: static;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    /* Reviews Mobile */
+    .tecoteco-reviews-section {
+        padding-bottom: 30px;
+    }
+
+    .tecoteco-reviews-list {
+        gap: 15px;
+    }
+
+    .tecoteco-review-card {
+        padding: 18px;
+    }
+
+    .tecoteco-review-title {
+        font-size: 1.1rem;
+    }
+
+    .tecoteco-review-content {
+        font-size: 0.9rem;
+    }
+
+    .tecoteco-reviewer-name {
+        font-size: 1.0rem;
+    }
+
+    .tecoteco-review-meta {
+        font-size: 0.8rem;
+    }
+
+    .tecoteco-carousel-container {
+        margin-bottom: 5px;
+    }
+
+    .carousel-nav-button {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+    }
+
+    .carousel-nav-button.prev {
+        left: 0px;
+    }
+
+    .carousel-nav-button.next {
+        right: 0px;
+    }
+
+    .carousel-indicators {
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+    .indicator-dot {
+        width: 8px;
+        height: 8px;
+        margin: 0 4px;
+    }
+
+    .tecoteco-view-all-reviews-button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+
+    /* FAQ + Join Section Mobile */
+    .tecoteco-faq-join-section .section-title {
+        font-size: 1.6rem;
+    }
+
+    .tecoteco-faq-question-text {
+        font-size: 0.95rem;
+    }
+
+    .tecoteco-faq-icon {
+        font-size: 1rem;
+        margin-right: 8px;
+    }
+
+    .tecoteco-faq-answer {
+        padding: 12px 15px 12px 38px;
+        font-size: 0.9rem;
+    }
+
+    .join-cta-block {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .join-cta-block .join-description {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .join-cta-block .join-contact-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+
+    /* Contributors Mobile */
+    .tecoteco-contributors-list {
+        gap: 0.8rem;
+    }
+
+    .tecoteco-contributor-card {
+        width: 75px;
+        padding: 0.5rem;
+    }
+
+    .tecoteco-profile-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .tecoteco-contributor-name {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .philosophy-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .carousel-nav-button {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+
+    .carousel-nav-button.prev {
+        left: -5px;
+    }
+
+    .carousel-nav-button.next {
+        right: -5px;
+    }
+
+    .level-check-title,
+    .schedule-title,
+    .review-title,
+    .flow-title {
+        font-size: 1.6rem;
+    }
+
+    .level-check-subtitle,
+    .schedule-subtitle,
+    .review-subtitle {
+        font-size: 1rem;
+    }
+
+    .answer-btn {
+        padding: 15px;
+        font-size: 1rem;
+    }
+
+    .join-experience-flow .cta-button {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ===========================
+   19. 기타 유틸리티 스타일
+   =========================== */
+
+/* 다크모드 최적화 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+    }
+}
+
+/* 모션 감소 설정 지원 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .hero-image-wrapper img {
+        animation: none;
+    }
+}
+
+/* 고해상도 디스플레이 지원 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .tecoteco-content section {
+        border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* 접근성 개선 */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* 포커스 스타일 개선 */
+*:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* 키보드 네비게이션 사용자를 위한 스킵 링크 */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: #000;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* 인쇄 스타일 */
+@media print {
+    .mobile-nav,
+    .hero-cta-button,
+    .carousel-nav-button,
+    .scroll-indicator {
+        display: none;
+    }
+
+    .tecoteco-page {
+        background: white;
+        color: black;
+    }
+
+    .tecoteco-content section {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

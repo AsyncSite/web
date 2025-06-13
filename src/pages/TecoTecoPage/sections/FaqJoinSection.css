@@ -1,0 +1,148 @@
+/* src/pages/TecoTecoPage/sections/FaqJoinSection.css */
+
+.tecoteco-faq-join-section .section-title {
+    font-size: 2.2rem;
+}
+
+.tecoteco-faq-items {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tecoteco-faq-item {
+    background-color: #2a2a2a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.tecoteco-faq-item.open {
+    border-color: #C3E88D;
+    box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
+}
+
+.tecoteco-faq-question {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #1f2a44;
+    cursor: pointer;
+    font-weight: 600;
+    color: #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.tecoteco-faq-question:hover {
+    background-color: #2b3a58;
+}
+
+.tecoteco-faq-icon {
+    font-size: 1.1rem;
+    color: #ffcb6b;
+    margin-right: 10px;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.tecoteco-faq-question-text {
+    flex-grow: 1;
+    font-size: 1rem;
+}
+
+.tecoteco-faq-toggle-icon {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-left: 15px;
+    transition: transform 0.2s ease;
+}
+
+.tecoteco-faq-item.open .tecoteco-faq-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.tecoteco-faq-answer {
+    padding: 15px 20px 15px 45px;
+    background-color: #2a2a2a;
+    color: #ddd;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease-out;
+    display: flex;
+    align-items: flex-start;
+}
+
+.tecoteco-faq-answer p {
+    margin: 0;
+    flex-grow: 1;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.join-cta-block {
+    text-align: center;
+    margin-top: 25px;
+    padding: 18px;
+    background-color: #0d0d0d;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.join-cta-block .join-description {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.join-cta-block .join-contact-button {
+    background-color: #82AAFF;
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 15px rgba(130, 170, 255, 0.4);
+}
+
+.join-cta-block .join-contact-button:hover {
+    background-color: #6a95e7;
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 5px 20px rgba(130, 170, 255, 0.6);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .tecoteco-faq-join-section .section-title {
+        font-size: 1.6rem;
+    }
+    .tecoteco-faq-question-text {
+        font-size: 0.95rem;
+    }
+    .tecoteco-faq-icon {
+        font-size: 1rem;
+        margin-right: 8px;
+    }
+    .tecoteco-faq-answer {
+        padding: 12px 15px 12px 38px;
+        font-size: 0.9rem;
+    }
+    .join-cta-block {
+        padding: 15px;
+        margin-top: 20px;
+    }
+    .join-cta-block .join-description {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    .join-cta-block .join-contact-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}

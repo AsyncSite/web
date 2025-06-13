@@ -6,7 +6,7 @@ import { SubContentsTemplate } from "../components/layout";
 
 
 const MainPage = lazy(() => import("../pages/MainPage"));
-const TecoTecoPage = lazy(() => import("../pages/TecoTecoPage")); // 새로 추가된 TecoTecoPage import
+const TecoTecoPage = lazy(() => import("../pages/TecoTecoPage/TecoTecoPage"));
 
 
 const router = createBrowserRouter([
