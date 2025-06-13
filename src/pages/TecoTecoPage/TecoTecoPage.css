@@ -1,5 +1,22 @@
 /* src/pages/TecoTecoPage/TecoTecoPage.css */
 
+:root {
+    --vh: 1vh;
+    --color-primary: #C3E88D; /* 연한 연두색 */
+    --color-secondary: #82AAFF; /* 밝은 파란색 */
+    --color-accent: #FFEA00; /* 노란색 */
+    --color-error: #FF6B6B;
+    --color-bg-dark: #0d0d0d;
+    --color-bg-section: #1a1a1a;
+    --color-bg-card: #2a2a2a;
+    --color-text-primary: #f0f0f0; /* 거의 흰색 */
+    --color-text-secondary: #ddd; /* 살짝 어두운 흰색 */
+    --color-text-muted: #aaa;
+}
+
+
+
+
 /* 기본 페이지 및 콘텐츠 컨테이너 스타일 */
 .tecoteco-page {
     background-color: #000; /* 11맨 기본 검정 배경 */
@@ -111,3 +128,8 @@
         font-size: 1.6rem;
     }
 }
+
+
+
+
+
