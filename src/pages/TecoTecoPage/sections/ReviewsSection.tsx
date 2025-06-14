@@ -1,5 +1,5 @@
 // src/pages/TecoTecoPage/sections/ReviewsSection.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { tecotecoKeywords, tecotecoReviews } from '../utils/constants';
 import { Review } from '../utils/types';
 import './ReviewsSection.css';
@@ -24,30 +24,52 @@ const ReviewCard: React.FC<{ review: Review }> = ({ review }) => (
 );
 
 export const ReviewsSection: React.FC = () => {
-    const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+    const [visibleReviewsCount, setVisibleReviewsCount] = useState(3); // 초기 3개만 표시
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+    const sectionRef = useRef<HTMLElement>(null);
 
-    const goToNextReview = () => {
-        setCurrentReviewIndex((prevIndex) =>
-            (prevIndex + 1) % tecotecoReviews.length
-        );
+    const handleViewMore = () => {
+        setIsLoading(true);
+
+        // 자연스러운 로딩 효과를 위한 딜레이
+        setTimeout(() => {
+            const nextCount = Math.min(visibleReviewsCount + 5, tecotecoReviews.length);
+            setVisibleReviewsCount(nextCount);
+            setIsLoading(false);
+        }, 500);
     };
 
-    const goToPrevReview = () => {
-        setCurrentReviewIndex((prevIndex) =>
-            (prevIndex - 1 + tecotecoReviews.length) % tecotecoReviews.length
-        );
-    };
+    // 새로운 리뷰가 로드되면 스크롤을 새로운 리뷰 위치로 부드럽게 이동
+    useEffect(() => {
+        if (visibleReviewsCount > 3 && sectionRef.current) {
+            const newReviewsStartIndex = visibleReviewsCount - 5;
+            const reviewCards = sectionRef.current.querySelectorAll('.tecoteco-review-card');
+            const targetCard = reviewCards[Math.max(newReviewsStartIndex, 3)];
 
-    const goToReview = (index: number) => {
-        setCurrentReviewIndex(index);
-    };
+            if (targetCard) {
+                setTimeout(() => {
+                    targetCard.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 100);
+            }
+        }
+    }, [visibleReviewsCount]);
+
+    const hasMoreReviews = visibleReviewsCount < tecotecoReviews.length;
+    const remainingReviews = tecotecoReviews.length - visibleReviewsCount;
 
     return (
-        <section className="tecoteco-reviews-section">
-            <h2 className="section-title">💬 TecoTeco 멤버들은 이렇게 느꼈어요.</h2>
+        <section className="tecoteco-reviews-section" ref={sectionRef}>
+            <div className="section-tag-header">솔직한 후기</div>
+            <h2 className="section-title">
+                가장 진솔한 이야기, <br/> TecoTeco 멤버들의 목소리 🗣️
+            </h2>
             <p className="section-subtitle">
-                우리 모임을 가장 잘 표현하는 <span className="highlight">생생한 이야기들</span>입니다.
+                숫자와 코드만으로는 설명할 수 없는 <span className="highlight">우리 모임의 진짜 가치</span>를 들어보세요.
             </p>
+
             <div className="tecoteco-keywords-list">
                 {tecotecoKeywords.map((keyword, index) => (
                     <span key={index} className="tecoteco-keyword-tag">
@@ -55,36 +77,71 @@ export const ReviewsSection: React.FC = () => {
                     </span>
                 ))}
             </div>
-            <div className="tecoteco-carousel-container">
-                <button className="carousel-nav-button prev" onClick={goToPrevReview}>
-                    &lt;
-                </button>
-                <div className="tecoteco-reviews-carousel-wrapper">
-                    <div
-                        className="tecoteco-reviews-list"
-                        style={{ transform: `translateX(-${currentReviewIndex * 100}%)` }}
-                    >
-                        {tecotecoReviews.map((review, index) => (
-                            <ReviewCard key={index} review={review} />
-                        ))}
-                    </div>
-                </div>
-                <button className="carousel-nav-button next" onClick={goToNextReview}>
-                    &gt;
-                </button>
-            </div>
-            <div className="carousel-indicators">
-                {tecotecoReviews.map((_, index) => (
-                    <span
+
+            <div className={`tecoteco-reviews-grid ${isLoading ? 'loading' : ''}`}>
+                {tecotecoReviews.slice(0, visibleReviewsCount).map((review, index) => (
+                    <ReviewCard
                         key={index}
-                        className={`indicator-dot ${currentReviewIndex === index ? 'active' : ''}`}
-                        onClick={() => goToReview(index)}
-                    ></span>
+                        review={review}
+                    />
+                ))}
+
+                {/* 로딩 중일 때 스켈레톤 카드들 */}
+                {isLoading && Array.from({ length: Math.min(5, remainingReviews) }).map((_, index) => (
+                    <div key={`skeleton-${index}`} className="tecoteco-review-card skeleton-card">
+                        <div className="skeleton-header">
+                            <div className="skeleton-name"></div>
+                            <div className="skeleton-meta"></div>
+                        </div>
+                        <div className="skeleton-title"></div>
+                        <div className="skeleton-content">
+                            <div className="skeleton-line"></div>
+                            <div className="skeleton-line"></div>
+                            <div className="skeleton-line short"></div>
+                        </div>
+                        <div className="skeleton-footer">
+                            <div className="skeleton-emojis"></div>
+                            <div className="skeleton-likes"></div>
+                        </div>
+                    </div>
                 ))}
             </div>
-            <div className="tecoteco-view-all-reviews-wrapper">
-                <button className="tecoteco-view-all-reviews-button">후기 전체 보기 (N개)</button>
-            </div>
+
+            {hasMoreReviews && !isLoading && (
+                <div className="tecoteco-view-all-reviews-wrapper">
+                    <button
+                        className="tecoteco-view-all-reviews-button"
+                        onClick={handleViewMore}
+                        disabled={isLoading}
+                    >
+                        <span className="button-text">
+                            후기 더 보기
+                            <span className="remaining-count">
+                                ({remainingReviews}개 남음)
+                            </span>
+                        </span>
+                        <span className="button-icon">📝</span>
+                    </button>
+                </div>
+            )}
+
+            {isLoading && (
+                <div className="loading-indicator">
+                    <div className="loading-spinner"></div>
+                    <span>더 많은 후기를 불러오는 중...</span>
+                </div>
+            )}
+
+            {!hasMoreReviews && visibleReviewsCount > 3 && (
+                <div className="all-reviews-loaded">
+                    <span className="completion-message">
+                        ✨ 모든 후기를 확인했어요!
+                    </span>
+                    <p className="thank-you-message">
+                        소중한 후기를 남겨주신 모든 멤버분들께 감사드려요 💝
+                    </p>
+                </div>
+            )}
         </section>
     );
 };

@@ -2,15 +2,50 @@
 
 .tecoteco-reviews-section {
     position: relative;
-    padding-bottom: 40px;
+    padding: 50px 30px 40px;
+    margin-bottom: 25px;
+    background: linear-gradient(135deg, #1f1f1f, #0d0d0d);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    text-align: left;
+    min-height: auto;
+}
+
+.section-tag-header {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-secondary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.tecoteco-reviews-section .section-title {
+    color: var(--color-text-primary);
+    font-size: 2.5rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    text-align: left;
+    display: block;
+}
+
+.tecoteco-reviews-section .section-subtitle {
+    margin-bottom: 25px;
+    text-align: left;
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    line-height: 1.6;
 }
 
 .tecoteco-keywords-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 35px;
+    padding-left: 0;
 }
 
 .tecoteco-keyword-tag {
@@ -21,34 +56,25 @@
     font-size: 0.9rem;
     font-weight: 500;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
 .tecoteco-keyword-tag:hover {
     background-color: #4a4a4a;
+    transform: translateY(-3px);
+    border-color: var(--color-primary);
 }
 
-.tecoteco-carousel-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 8px;
+.tecoteco-reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    transition: all 0.5s ease;
 }
 
-.tecoteco-reviews-carousel-wrapper {
-    overflow: hidden;
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-}
-
-.tecoteco-reviews-list {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    width: calc(100% * var(--total-reviews, 1)); /* JS에서 --total-reviews 변수 설정 필요 */
-    padding-bottom: 15px;
+.tecoteco-reviews-grid.loading {
+    pointer-events: none;
 }
 
 .tecoteco-review-card {
@@ -56,21 +82,29 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 25px;
-    flex-shrink: 0;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     box-sizing: border-box;
+    height: 100%;
+    animation: fadeInUp 0.6s ease-out;
 }
 
-.tecoteco-reviews-list .tecoteco-review-card:not(:last-child) {
-    margin-right: 20px;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .tecoteco-review-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    background-color: #2e2e2e;
 }
 
 .tecoteco-review-header {
@@ -82,25 +116,25 @@
 
 .tecoteco-reviewer-name {
     font-weight: 600;
-    color: #C3E88D;
+    color: var(--color-primary);
     font-size: 1.1rem;
 }
 
 .tecoteco-review-meta {
     font-size: 0.85rem;
-    color: #aaa;
+    color: var(--color-text-muted);
 }
 
 .tecoteco-review-title {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #f0f0f0;
+    color: var(--color-text-primary);
     margin-bottom: 8px;
 }
 
 .tecoteco-review-content {
     font-size: 0.95rem;
-    color: #ddd;
+    color: var(--color-text-secondary);
     line-height: 1.5;
     flex-grow: 1;
     margin-bottom: 12px;
@@ -124,145 +158,319 @@
     font-weight: 500;
 }
 
-.carousel-nav-button {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #f0f0f0;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
-    cursor: pointer;
+/* 스켈레톤 로딩 카드 */
+.skeleton-card {
+    background-color: #2a2a2a !important;
+    pointer-events: none;
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.skeleton-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.skeleton-name {
+    width: 60px;
+    height: 20px;
+    background-color: rgba(195, 232, 141, 0.3);
+    border-radius: 4px;
+}
+
+.skeleton-meta {
+    width: 120px;
+    height: 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.skeleton-title {
+    width: 80%;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-content {
+    flex-grow: 1;
+    margin-bottom: 12px;
+}
+
+.skeleton-line {
+    height: 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-line.short {
+    width: 60%;
+}
+
+.skeleton-footer {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.carousel-nav-button.prev {
-    left: 0px;
+.skeleton-emojis {
+    width: 80px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
-.carousel-nav-button.next {
-    right: 0px;
+.skeleton-likes {
+    width: 40px;
+    height: 16px;
+    background-color: rgba(255, 203, 107, 0.3);
+    border-radius: 4px;
 }
 
-.carousel-nav-button:hover {
-    background-color: #C3E88D;
-    color: #000;
-}
-
-.carousel-indicators {
-    text-align: center;
-    margin-top: 8px;
-    margin-bottom: 20px;
-}
-
-.indicator-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    margin: 0 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.indicator-dot.active {
-    background-color: #C3E88D;
-    transform: scale(1.2);
-}
-
+/* 더보기 버튼 */
 .tecoteco-view-all-reviews-wrapper {
     text-align: center;
     margin-top: 20px;
 }
 
 .tecoteco-view-all-reviews-button {
-    background-color: #C3E88D;
+    background: linear-gradient(135deg, var(--color-primary), #a8d378);
     color: #000;
     border: none;
     border-radius: 25px;
-    padding: 12px 25px;
+    padding: 15px 30px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(195, 232, 141, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto;
+    min-width: 200px;
 }
 
 .tecoteco-view-all-reviews-button:hover {
-    background-color: #b5d97f;
-    transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #a8d378, var(--color-primary));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(195, 232, 141, 0.4);
+}
+
+.tecoteco-view-all-reviews-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.button-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.remaining-count {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.button-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.tecoteco-view-all-reviews-button:hover .button-icon {
+    transform: scale(1.1);
+}
+
+/* 로딩 인디케이터 */
+.loading-indicator {
+    text-align: center;
+    padding: 20px;
+    color: var(--color-text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(195, 232, 141, 0.3);
+    border-top: 3px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 모든 리뷰 로드 완료 메시지 */
+.all-reviews-loaded {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(195, 232, 141, 0.1);
+    border-radius: 12px;
+    margin-top: 20px;
+    border: 1px solid rgba(195, 232, 141, 0.2);
+}
+
+.completion-message {
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.thank-you-message {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .tecoteco-reviews-section {
-        padding-bottom: 30px;
+        padding: 40px 20px 30px;
     }
-    .tecoteco-reviews-list {
+
+    .section-tag-header {
+        top: 15px;
+        left: 20px;
+        font-size: 1rem;
+    }
+
+    .tecoteco-reviews-section .section-title {
+        font-size: 2.2rem;
+        margin-top: 25px;
+        margin-bottom: 12px;
+    }
+
+    .tecoteco-reviews-section .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .tecoteco-keywords-list {
+        justify-content: center;
+        margin-bottom: 25px;
+    }
+
+    .tecoteco-keyword-tag {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .tecoteco-reviews-grid {
+        grid-template-columns: 1fr;
         gap: 15px;
     }
+
     .tecoteco-review-card {
         padding: 18px;
     }
+
     .tecoteco-review-title {
         font-size: 1.1rem;
     }
+
     .tecoteco-review-content {
         font-size: 0.9rem;
     }
+
     .tecoteco-reviewer-name {
         font-size: 1.0rem;
     }
+
     .tecoteco-review-meta {
         font-size: 0.8rem;
     }
-    .tecoteco-carousel-container {
-        margin-bottom: 5px;
-    }
-    .carousel-nav-button {
-        width: 30px;
-        height: 30px;
-        font-size: 1.2rem;
-    }
-    .carousel-nav-button.prev {
-        left: 0px;
-    }
-    .carousel-nav-button.next {
-        right: 0px;
-    }
-    .carousel-indicators {
-        margin-top: 5px;
-        margin-bottom: 10px;
-    }
-    .indicator-dot {
-        width: 8px;
-        height: 8px;
-        margin: 0 4px;
-    }
+
     .tecoteco-view-all-reviews-button {
-        padding: 10px 20px;
+        padding: 12px 25px;
         font-size: 0.95rem;
+        min-width: 180px;
+    }
+
+    .all-reviews-loaded {
+        padding: 25px 15px;
+    }
+
+    .completion-message {
+        font-size: 1rem;
+    }
+
+    .thank-you-message {
+        font-size: 0.9rem;
     }
 }
 
 @media (max-width: 480px) {
-    .carousel-nav-button {
-        width: 28px;
-        height: 28px;
+    .tecoteco-reviews-section {
+        padding: 30px 15px 25px;
+    }
+
+    .section-tag-header {
+        top: 10px;
+        left: 15px;
+        font-size: 0.9rem;
+    }
+
+    .tecoteco-reviews-section .section-title {
+        font-size: 1.8rem;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .tecoteco-reviews-section .section-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .tecoteco-keyword-tag {
+        font-size: 0.8rem;
+    }
+
+    .tecoteco-review-card {
+        padding: 15px;
+    }
+
+    .tecoteco-review-title {
         font-size: 1rem;
     }
-    .carousel-nav-button.prev {
-        left: -5px;
+
+    .tecoteco-review-content {
+        font-size: 0.85rem;
     }
-    .carousel-nav-button.next {
-        right: -5px;
+
+    .tecoteco-view-all-reviews-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        min-width: 160px;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .button-text {
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    .all-reviews-loaded {
+        padding: 20px 12px;
     }
 }
