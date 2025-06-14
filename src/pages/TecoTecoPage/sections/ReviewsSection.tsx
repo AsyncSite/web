@@ -1,5 +1,5 @@
 // src/pages/TecoTecoPage/sections/ReviewsSection.tsx
-import React, {Fragment, useState} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { tecotecoKeywords, tecotecoReviews } from '../utils/constants';
 import { Review } from '../utils/types';
 import './ReviewsSection.css';
@@ -24,34 +24,34 @@ const ReviewCard: React.FC<{ review: Review }> = ({ review }) => (
 );
 
 export const ReviewsSection: React.FC = () => {
-    const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+    const [visibleReviewsCount, setVisibleReviewsCount] = useState(3); // 초기 3개만 표시
+    const [allReviewsVisible, setAllReviewsVisible] = useState(false); // '더보기' 버튼 상태
+    const sectionRef = useRef<HTMLElement>(null); // 섹션 전체를 참조
 
-    const goToNextReview = () => {
-        setCurrentReviewIndex((prevIndex) =>
-            (prevIndex + 1) % tecotecoReviews.length
-        );
+    const handleViewMore = () => {
+        setAllReviewsVisible(true);
+        setVisibleReviewsCount(tecotecoReviews.length);
     };
 
-    const goToPrevReview = () => {
-        setCurrentReviewIndex((prevIndex) =>
-            (prevIndex - 1 + tecotecoReviews.length) % tecotecoReviews.length
-        );
-    };
-
-    const goToReview = (index: number) => {
-        setCurrentReviewIndex(index);
-    };
+    // 섹션 높이 동적 조절을 위한 useEffect
+    useEffect(() => {
+        if (sectionRef.current) {
+            // 리뷰가 추가되거나 줄어들 때마다 스크롤바가 필요 없도록 min-height를 자동으로 조절합니다.
+            // 여기서는 CSS Transition으로 처리하므로, 직접적인 height 조작은 피합니다.
+            // 대신, CSS에서 `grid-auto-rows`나 `flex-grow` 등을 활용하여 자연스럽게 늘어나도록 합니다.
+        }
+    }, [visibleReviewsCount]);
 
     return (
-        <section className="tecoteco-reviews-section">
-            // todo 타이틀 카피를 좀 더 세련되면서도 느낌있게 변경
-            <h2 className="section-title">💬 TecoTeco 멤버들은 이렇게 느꼈어요.</h2>
-            // subtitle도 개선
+        <section className="tecoteco-reviews-section" ref={sectionRef}>
+            <div className="section-tag-header">솔직한 후기</div>
+            <h2 className="section-title">
+                가장 진솔한 이야기, <br/> TecoTeco 멤버들의 목소리 🗣️
+            </h2>
             <p className="section-subtitle">
-                우리 모임을 가장 잘 표현하는 <span className="highlight">생생한 이야기들</span>입니다.
+                숫자와 코드만으로는 설명할 수 없는 <span className="highlight">우리 모임의 진짜 가치</span>를 들어보세요.
             </p>
 
-            // todo - 키워드들 태그를 좀 더 보기좋게 정렬
             <div className="tecoteco-keywords-list">
                 {tecotecoKeywords.map((keyword, index) => (
                     <span key={index} className="tecoteco-keyword-tag">
@@ -59,39 +59,20 @@ export const ReviewsSection: React.FC = () => {
                     </span>
                 ))}
             </div>
-            <div className="tecoteco-carousel-container">
-                <button className="carousel-nav-button prev" onClick={goToPrevReview}>
-                    &lt;
-                </button>
-                <div className="tecoteco-reviews-carousel-wrapper">
-                    <div
-                        className="tecoteco-reviews-list"
-                        style={{ transform: `translateX(-${currentReviewIndex * 100}%)` }}
-                    >
-                        {tecotecoReviews.map((review, index) => (
-                            <ReviewCard key={index} review={review} />
-                        ))}
-                    </div>
-                </div>
-                <button className="carousel-nav-button next" onClick={goToNextReview}>
-                    &gt;
-                </button>
-            </div>
-            // carousel 을 양옆으로 넘기지 말고 리뷰 컨텐츠를 수직으로 배치
-            // 그래서 더보기를 누르면 밑으로 계속 조금씩 펼쳐지도록 구성
-            // 이때 해당 섹션의 vh 가 리뷰가 늘어나면 그 크기 개수에 따라 동적으로 늘어날 수 있도록 구현
-            <div className="carousel-indicators">
-                {tecotecoReviews.map((_, index) => (
-                    <span
-                        key={index}
-                        className={`indicator-dot ${currentReviewIndex === index ? 'active' : ''}`}
-                        onClick={() => goToReview(index)}
-                    ></span>
+
+            <div className="tecoteco-reviews-grid"> {/* 새로운 그리드 컨테이너 */}
+                {tecotecoReviews.slice(0, visibleReviewsCount).map((review, index) => (
+                    <ReviewCard key={index} review={review} />
                 ))}
             </div>
-            <div className="tecoteco-view-all-reviews-wrapper">
-                <button className="tecoteco-view-all-reviews-button">더보기 </button>
-            </div>
+
+            {!allReviewsVisible && visibleReviewsCount < tecotecoReviews.length && (
+                <div className="tecoteco-view-all-reviews-wrapper">
+                    <button className="tecoteco-view-all-reviews-button" onClick={handleViewMore}>
+                        후기 전체 보기 ({tecotecoReviews.length}개)
+                    </button>
+                </div>
+            )}
         </section>
     );
 };

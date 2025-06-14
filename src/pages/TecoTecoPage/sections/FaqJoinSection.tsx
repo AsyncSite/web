@@ -1,7 +1,7 @@
 // src/pages/TecoTecoPage/sections/FaqJoinSection.tsx
 import React, { useState } from 'react';
-import { tecotecoFaqs } from '../utils/constants';
-import './FaqJoinSection.css';
+import { tecotecoFaqs } from '../utils/constants'; //
+import './FaqJoinSection.css'; //
 
 export const FaqJoinSection: React.FC = () => {
     const [openFaqId, setOpenFaqId] = useState<number | null>(null);
@@ -12,7 +12,11 @@ export const FaqJoinSection: React.FC = () => {
 
     return (
         <section className="tecoteco-faq-join-section">
-            <h2 className="section-title">FAQ </h2>
+            <div className="section-tag-header">궁금증 해결</div>
+            <h2 className="section-title">
+                FAQ
+            </h2>
+
 
             <div className="tecoteco-faq-items">
                 {tecotecoFaqs.map(faq => (
@@ -41,12 +45,13 @@ export const FaqJoinSection: React.FC = () => {
                     </div>
                 ))}
             </div>
+
             <div className="join-cta-block">
+                <h3 className="join-cta-title">TecoTeco, 당신의 합류를 기다려요!</h3>
                 <p className="join-description">
-                    현재는 공식 모집을 진행하고 있지는 않지만, <span className="highlight">테코테코의 여정에 함께하고 싶다면</span> 주저하지 마세요!
                 </p>
-                <button className="join-contact-button" onClick={() => alert('renechoi에게 커피챗 요청!')}>
-                    @renechoi에게 커피챗 요청하기
+                <button className="join-contact-button" onClick={() => alert('@renechoi에게 커피챗 요청!')}>
+                    @renechoi에게 커피챗 요청하기 ☕
                 </button>
             </div>
         </section>

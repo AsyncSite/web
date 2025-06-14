@@ -1,14 +1,49 @@
 /* src/pages/TecoTecoPage/sections/FaqJoinSection.css */
 
+.tecoteco-faq-join-section {
+    position: relative;
+    padding: 50px 30px 40px; /* 섹션 상단 여백 및 하단 여백 조정 */
+    margin-bottom: 25px; /* 다음 섹션과의 간격 */
+    background: linear-gradient(135deg, #0d0d0d, #1a1a1a); /* 배경 그라데이션 */
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* 그림자 강화 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    min-height: auto; /* 내용에 따라 높이 자동 조절 */
+}
+
+.section-tag-header {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-secondary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
 .tecoteco-faq-join-section .section-title {
-    font-size: 2.2rem;
+    color: var(--color-text-primary);
+    font-size: 2.5rem; /* 기존 유지 */
+    margin-top: 30px; /* 태그 헤더 아래 여백 */
+    margin-bottom: 15px; /* 서브타이틀과의 여백 */
+    text-align: left; /* 왼쪽 정렬 */
+    display: block;
+}
+
+.tecoteco-faq-join-section .section-subtitle {
+    margin-bottom: 30px; /* FAQ 아이템 목록과의 간격 */
+    text-align: left; /* 왼쪽 정렬 */
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    line-height: 1.6;
 }
 
 .tecoteco-faq-items {
     margin-top: 15px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px; /* FAQ 아이템 간 간격 */
 }
 
 .tecoteco-faq-item {
@@ -20,18 +55,18 @@
 }
 
 .tecoteco-faq-item.open {
-    border-color: #C3E88D;
+    border-color: var(--color-primary); /* 활성화 시 포인트 색상 */
     box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
 }
 
 .tecoteco-faq-question {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
+    padding: 18px 20px; /* 패딩 조정 */
     background-color: #1f2a44;
     cursor: pointer;
     font-weight: 600;
-    color: #f0f0f0;
+    color: var(--color-text-primary);
     transition: background-color 0.2s ease;
 }
 
@@ -40,20 +75,20 @@
 }
 
 .tecoteco-faq-icon {
-    font-size: 1.1rem;
-    color: #ffcb6b;
-    margin-right: 10px;
+    font-size: 1.2rem; /* 아이콘 크기 조정 */
+    color: #ffcb6b; /* 주황-노랑 계열 */
+    margin-right: 12px; /* 마진 조정 */
     font-family: 'Source Code Pro', monospace;
 }
 
 .tecoteco-faq-question-text {
     flex-grow: 1;
-    font-size: 1rem;
+    font-size: 1.05rem; /* 폰트 크기 조정 */
 }
 
 .tecoteco-faq-toggle-icon {
-    font-size: 0.8rem;
-    color: #aaa;
+    font-size: 0.9rem; /* 아이콘 크기 조정 */
+    color: var(--color-text-muted);
     margin-left: 15px;
     transition: transform 0.2s ease;
 }
@@ -63,9 +98,9 @@
 }
 
 .tecoteco-faq-answer {
-    padding: 15px 20px 15px 45px;
+    padding: 15px 20px 15px 50px; /* 아이콘 패딩 고려 조정 */
     background-color: #2a2a2a;
-    color: #ddd;
+    color: var(--color-text-secondary);
     font-size: 0.95rem;
     line-height: 1.6;
     animation: fadeIn 0.3s ease-out;
@@ -83,63 +118,152 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Join CTA Block 개선 */
 .join-cta-block {
     text-align: center;
-    margin-top: 25px;
-    padding: 18px;
-    background-color: #0d0d0d;
+    margin-top: 50px; /* FAQ 목록과의 간격 증가 */
+    padding: 30px; /* 패딩 증가 */
+    background: rgba(130, 170, 255, 0.1); /* 파란색 계열의 옅은 배경 */
+    border: 1px solid rgba(130, 170, 255, 0.3); /* 파란색 계열 테두리 */
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    display: flex; /* 내부 요소 정렬을 위해 flex 사용 */
+    flex-direction: column;
+    align-items: center;
+}
+
+.join-cta-title {
+    font-size: 1.8rem; /* 제목 크기 */
+    color: var(--color-secondary); /* 파란색 계열 */
+    margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .join-cta-block .join-description {
-    font-size: 1.25rem;
-    margin-bottom: 12px;
-    line-height: 1.5;
+    font-size: 1.15rem; /* 설명 텍스트 크기 */
+    margin-bottom: 25px; /* 버튼과의 간격 */
+    line-height: 1.6;
+    color: var(--color-text-primary); /* 밝은 텍스트 색상 */
+}
+
+.join-cta-block .highlight {
+    color: var(--color-accent); /* 노란색 강조 */
 }
 
 .join-cta-block .join-contact-button {
-    background-color: #82AAFF;
+    background-color: var(--color-primary); /* 녹색 계열 버튼 */
     color: #000;
     border: none;
     border-radius: 50px;
-    padding: 15px 30px;
-    font-size: 1.1rem;
+    padding: 16px 35px; /* 패딩 증가 */
+    font-size: 1.2rem; /* 폰트 크기 증가 */
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 3px 15px rgba(130, 170, 255, 0.4);
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4); /* 녹색 계열 그림자 */
+    display: flex; /* 아이콘과 텍스트 중앙 정렬 */
+    align-items: center;
+    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
 }
 
 .join-cta-block .join-contact-button:hover {
-    background-color: #6a95e7;
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 5px 20px rgba(130, 170, 255, 0.6);
+    background-color: #b5d97f; /* 호버 시 연한 녹색 */
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+    .tecoteco-faq-join-section {
+        padding: 40px 20px 30px;
+    }
+    .section-tag-header {
+        top: 15px;
+        left: 20px;
+        font-size: 1rem;
+    }
     .tecoteco-faq-join-section .section-title {
-        font-size: 1.6rem;
+        font-size: 2.2rem;
+        margin-top: 25px;
+        margin-bottom: 12px;
+    }
+    .tecoteco-faq-join-section .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+    .tecoteco-faq-question {
+        padding: 15px 18px;
     }
     .tecoteco-faq-question-text {
         font-size: 0.95rem;
+    }
+    .tecoteco-faq-icon {
+        font-size: 1.1rem;
+        margin-right: 10px;
+    }
+    .tecoteco-faq-answer {
+        padding: 12px 18px 12px 45px;
+        font-size: 0.9rem;
+    }
+    .join-cta-block {
+        margin-top: 40px;
+        padding: 25px;
+    }
+    .join-cta-title {
+        font-size: 1.5rem;
+    }
+    .join-cta-block .join-description {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+    .join-cta-block .join-contact-button {
+        padding: 14px 30px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tecoteco-faq-join-section {
+        padding: 30px 15px 25px;
+    }
+    .section-tag-header {
+        top: 10px;
+        left: 15px;
+        font-size: 0.9rem;
+    }
+    .tecoteco-faq-join-section .section-title {
+        font-size: 1.8rem;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    .tecoteco-faq-join-section .section-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    .tecoteco-faq-question {
+        padding: 12px 15px;
+    }
+    .tecoteco-faq-question-text {
+        font-size: 0.9rem;
     }
     .tecoteco-faq-icon {
         font-size: 1rem;
         margin-right: 8px;
     }
     .tecoteco-faq-answer {
-        padding: 12px 15px 12px 38px;
-        font-size: 0.9rem;
+        padding: 10px 15px 10px 40px;
+        font-size: 0.85rem;
     }
     .join-cta-block {
-        padding: 15px;
-        margin-top: 20px;
+        margin-top: 30px;
+        padding: 20px;
+    }
+    .join-cta-title {
+        font-size: 1.3rem;
     }
     .join-cta-block .join-description {
-        font-size: 1.1rem;
-        margin-bottom: 12px;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
     }
     .join-cta-block .join-contact-button {
         padding: 12px 25px;
