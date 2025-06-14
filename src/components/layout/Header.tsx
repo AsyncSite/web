@@ -80,6 +80,9 @@ const Header: React.FC = () => {
                         <li>
                             <a href="#contact-cta">CONTACT</a>
                         </li>
+                        <li>
+                            <a href="/web/lab">LAB</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
