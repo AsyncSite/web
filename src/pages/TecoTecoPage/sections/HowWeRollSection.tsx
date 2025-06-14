@@ -1,5 +1,6 @@
 // src/pages/TecoTecoPage/sections/HowWeRollSection.tsx
 import React from 'react';
+import { HOW_WE_ROLL_DATA } from '../utils/constants';
 import './HowWeRollSection.css';
 
 export const HowWeRollSection: React.FC = () => {
@@ -10,99 +11,100 @@ export const HowWeRollSection: React.FC = () => {
             <h2 className="section-title">특별한 건 없어요. <br/>  <span className="highlight">그냥 계속</span> 모일 뿐이에요.</h2>
 
             <div className="meeting-overview">
-                <div className="overview-card main-meeting">
-                    <div className="card-icon">🏢</div>
-                    <div className="card-content">
-                        <h3>정기 모임</h3>
-                        <p><span className="highlight">매주 금요일 저녁 7:30 ~ 9:30</span></p>
-                        <p>강남역 인근 스터디룸에서 만나 <span className="color-primary-text">오프라인 중심</span>으로 진행해요</p>
-                        <p className="sub-note">상황에 따라 온라인(Discord)으로도 진행합니다</p>
+                {HOW_WE_ROLL_DATA.meetingOverview.map((item, index) => (
+                    <div key={index} className={`overview-card ${item.type}`}>
+                        <div className="card-icon">{item.icon}</div>
+                        <div className="card-content">
+                            <h3>{item.title}</h3>
+                            {item.link ? (
+                                <p>
+                                    <a href={item.link} target="_blank" rel="noopener noreferrer">
+                                        <span className="highlight">{item.highlight}</span>
+                                    </a>
+                                </p>
+                            ) : (
+                                <p><span className="highlight">{item.highlight}</span></p>
+                            )}
+                            {item.description && (
+                                <p>
+                                    {item.description.split(' ').map((word, i) =>
+                                        word === '오프라인' || word === '중심으로' ? (
+                                            <span key={i} className="color-primary-text">{word} </span>
+                                        ) : word === '백준,' || word === '프로그래머스를' ? (
+                                            <span key={i} className="color-secondary-text">{word} </span>
+                                        ) : (
+                                            word + ' '
+                                        )
+                                    )}
+                                </p>
+                            )}
+                            {item.subNote && (
+                                <p className="sub-note">{item.subNote}</p>
+                            )}
+                        </div>
                     </div>
-                </div>
-
-                <div className="overview-card study-material">
-                    <div className="card-icon">📚</div>
-                    <div className="card-content">
-                        <h3>함께 공부하는 교재</h3>
-                        <p><a href="https://product.kyobobook.co.kr/detail/S000212576322" target="_blank" rel="noopener noreferrer">
-                            <span className="highlight">코딩 테스트 합격자 되기: 자바 편</span>
-                        </a></p>
-                        <p>온라인 저지는 <span className="color-secondary-text">백준, 프로그래머스</span>를 활용하고 있어요</p>
-                    </div>
-                </div>
-
-                <div className="overview-card cost-info">
-                    <div className="card-icon">💰</div>
-                    <div className="card-content">
-                        <h3>참여 비용</h3>
-                        <p>스터디룸 대관료 1/N 정산</p>
-                    </div>
-                </div>
+                ))}
             </div>
 
             <h3 className="intro-sub-heading">몰입, 해본 적 있으세요?</h3>
             <p className="schedule-intro">
-                // todo 적절한 문구 작성
+                {HOW_WE_ROLL_DATA.scheduleIntro}
             </p>
 
-            // 이 밑에 전체적인 개선
             <div className="activity-table">
                 <table>
                     <thead>
                     <tr>
                         <th>시간</th>
-                        <th>우리가 하는 일</th>
-                        <th>왜 이 시간이 소중한지</th>
+                        <th>무엇을</th>
+                        {/*<th>어떻게</th>*/}
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td><strong>19:30 ~ 20:20</strong></td>
-                        <td>
-                            <span className="color-primary-text"><strong>이론/코드 리뷰</strong></span>
-                            <br/>
-                            <span className="activity-detail">선정된 리뷰어의 깊이 있는 주제/문제 발표</span>
-                        </td>
-                        <td>
-                            서로의 <span className="highlight">통찰을 나누고</span><br/>
-                            새로운 관점을 발견하는 시간
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>20:20 ~ 20:30</strong></td>
-                        <td>
-                            <span className="color-secondary-text"><strong>잠깐의 휴식 & 자유로운 네트워킹</strong></span>
-                            <br/>
-                            <span className="activity-detail">커피 한 잔과 함께하는 소소한 대화</span>
-                        </td>
-                        <td>
-                            알고리즘을 넘어 <span className="highlight">진짜 이야기</span>를<br/>
-                            나누며 관계를 쌓아가는 시간
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>20:30 ~ 21:30</strong></td>
-                        <td>
-                            <span className="color-primary-text"><strong>함께 문제 풀이</strong></span>
-                            <br/>
-                            <span className="activity-detail">실시간으로 머리를 맞대고 해결하는 문제들</span>
-                        </td>
-                        <td>
-                            혼자라면 포기했을 문제도<br/>
-                            <span className="highlight">함께라면 해낼 수 있다</span>는 경험
-                        </td>
-                    </tr>
+                    {HOW_WE_ROLL_DATA.schedule.map((item, index) => (
+                        <tr key={index}>
+                            <td><strong>{item.time}</strong></td>
+                            <td>
+                                    <span className={item.type === 'primary' ? 'color-primary-text' : 'color-secondary-text'}>
+                                        <strong>{item.activity}</strong>
+                                    </span>
+                                <br/>
+                                <span className="activity-detail">{item.detail}</span>
+                            </td>
+                            {/*<td>*/}
+                            {/*    {item.value.split(' ').map((word, i) => {*/}
+                            {/*        const highlightWords = ['통찰을', '나누고', '진짜', '이야기', '함께라면', '해낼', '수', '있다'];*/}
+                            {/*        return highlightWords.some(hw => word.includes(hw)) ? (*/}
+                            {/*            <span key={i} className="highlight">{word} </span>*/}
+                            {/*        ) : (*/}
+                            {/*            word + ' '*/}
+                            {/*        );*/}
+                            {/*    })}*/}
+                            {/*</td>*/}
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             </div>
 
-            <div className="closing-message">
-                <p>
-                    단순한 스터디가 아닌, <span className="highlight">서로의 성장을 응원하는 따뜻한 커뮤니티</span>입니다.
-                    <br/>
-                    매주 이 시간이 기다려지는 이유, 함께라면 분명 느끼실 수 있을 거예요.
-                </p>
-            </div>
+            {/*<div className="closing-message">*/}
+            {/*    <p>*/}
+            {/*        {HOW_WE_ROLL_DATA.closingMessage.split(' ').map((word, i) => {*/}
+            {/*            const highlightPhrase = '서로의 성장을 응원하는 따뜻한 커뮤니티';*/}
+            {/*            if (word === '단순한' && HOW_WE_ROLL_DATA.closingMessage.includes(highlightPhrase)) {*/}
+            {/*                const parts = HOW_WE_ROLL_DATA.closingMessage.split(highlightPhrase);*/}
+            {/*                return (*/}
+            {/*                    <span key={i}>*/}
+            {/*                        {parts[0]}*/}
+            {/*                        <span className="highlight">{highlightPhrase}</span>*/}
+            {/*                        {parts[1]}*/}
+            {/*                    </span>*/}
+            {/*                );*/}
+            {/*            }*/}
+            {/*            return null;*/}
+            {/*        }).filter(Boolean)[0] || HOW_WE_ROLL_DATA.closingMessage}*/}
+            {/*    </p>*/}
+            {/*</div>*/}
         </section>
     );
 };

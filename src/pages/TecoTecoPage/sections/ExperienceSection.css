@@ -3,11 +3,11 @@
 .tecoteco-experience-section {
     background: linear-gradient(135deg, #1f1f1f, #0d0d0d);
     border-radius: 12px;
-    padding: 50px 30px 40px; /* IntroSection과 유사하게 패딩 조정 */
+    padding: 50px 30px 40px;
     margin-bottom: 30px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    text-align: left; /* 중앙 정렬 -> 왼쪽 정렬 */
-    position: relative; /* section-tag-header를 위한 absolute 포지션 기준 */
+    text-align: left;
+    position: relative;
     min-height: 50vh;
 }
 
@@ -17,50 +17,50 @@
     left: 30px;
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--color-secondary); /* IntroSection과 동일한 색상 */
+    color: var(--color-secondary);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
 .tecoteco-experience-section .section-title {
-    color: var(--color-text-primary); /* IntroSection 타이틀 색상과 동일 */
+    color: var(--color-text-primary);
     font-size: 2.5rem;
-    margin-top: 30px; /* 태그 헤더 아래 여백 */
-    margin-bottom: 25px; /* 서브타이틀과의 여백 */
-    text-align: left; /* 왼쪽 정렬 */
+    margin-top: 30px;
+    margin-bottom: 25px;
+    text-align: left;
     display: block;
-    /* 기존 font-weight, letter-spacing, line-height 상속 */
 }
 
 .tecoteco-experience-section .section-subtitle {
     margin-bottom: 25px;
-    text-align: left; /* 왼쪽 정렬 */
-    color: var(--color-text-secondary); /* 텍스트 색상 */
-    /* 기존 font-size 등 상속 */
+    text-align: left;
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    line-height: 1.6;
 }
 
 /* 단계별 진행(숫자)을 선으로 표현 */
 .tecoteco-steps-nav {
     display: flex;
-    justify-content: space-between; /* 항목들을 균등하게 분배 */
-    align-items: center; /* 항목들을 수직 중앙 정렬 */
-    margin: 40px auto 40px; /* 중앙 정렬 및 상하 여백 */
-    position: relative; /* 가로선 배치를 위한 기준 */
-    padding: 0 20px; /* 내부 패딩 (선이 가장자리 닿지 않도록) */
-    max-width: 900px; /* 최대 너비 제한 */
-    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 허용 */
-    gap: 20px; /* 줄바꿈 시 항목 간 간격 */
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px auto 40px;
+    position: relative;
+    padding: 0 20px;
+    max-width: 900px;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.tecoteco-steps-nav::before { /* 가로 연결선 */
+.tecoteco-steps-nav::before {
     content: '';
     position: absolute;
-    top: 50%; /* 수직 중앙 */
+    top: 50%;
     left: 0;
     right: 0;
-    height: 2px; /* 선 두께 */
-    background-color: rgba(195, 232, 141, 0.3); /* 연한 녹색 */
-    z-index: 0; /* step-item 뒤에 위치 */
+    height: 2px;
+    background-color: rgba(195, 232, 141, 0.3);
+    z-index: 0;
     transform: translateY(-50%);
 }
 
@@ -70,15 +70,15 @@
     align-items: center;
     cursor: pointer;
     transition: transform 0.2s ease, opacity 0.2s ease;
-    flex: 0 0 auto; /* 유연하게 크기 조절하되, 콘텐츠가 너비 결정 */
-    min-width: 80px; /* 단계 항목 최소 너비 */
-    max-width: 120px; /* 단계 항목 최대 너비 */
-    position: relative; /* 선 위에 위치하기 위함 */
-    z-index: 1; /* 선 위에 위치 */
+    flex: 0 0 auto;
+    min-width: 80px;
+    max-width: 120px;
+    position: relative;
+    z-index: 1;
 }
 
 .step-item.active .step-button {
-    background-color: var(--color-primary); /* 활성화된 버튼 색상 */
+    background-color: var(--color-primary);
     color: #000;
     border-color: var(--color-primary);
     box-shadow: 0 0 15px rgba(195, 232, 141, 0.6);
@@ -97,7 +97,7 @@
     font-weight: 700;
     color: #f0f0f0;
     transition: all 0.3s ease;
-    flex-shrink: 0; /* 줄어들지 않도록 방지 */
+    flex-shrink: 0;
 }
 
 .step-label {
@@ -108,14 +108,70 @@
     line-height: 1.3;
 }
 
-/* 스텝 상세 내용 컨테이너 (정렬 유지) */
+/* 스텝 상세 내용 컨테이너 - 중앙 정렬 */
 .step-detail-container {
-    text-align: left; /* 내부 텍스트 왼쪽 정렬 유지 */
-    /* ... (기존 스타일 상속) ... */
+    text-align: center;
+    margin-top: 40px;
+    padding: 30px;
+    background: rgba(26, 26, 26, 0.5);
+    border-radius: 16px;
+    border: 1px solid rgba(195, 232, 141, 0.2);
+    animation: fadeInUp 0.5s ease-out;
 }
 
-.step-detail-title, .step-detail-text {
-    text-align: left; /* 내부 텍스트 왼쪽 정렬 유지 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-detail-content {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.step-detail-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.step-illustration {
+    width: 200px;
+    height: 200px;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.step-illustration:hover {
+    transform: scale(1.05);
+}
+
+.step-detail-title {
+    color: var(--color-primary);
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.step-detail-text {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    text-align: center;
+    margin: 0;
+    max-width: 500px;
 }
 
 /* 반응형 디자인 */
@@ -123,40 +179,63 @@
     .tecoteco-experience-section {
         padding: 40px 20px 30px;
     }
+
     .section-tag-header {
         top: 15px;
         left: 20px;
         font-size: 1rem;
     }
+
     .tecoteco-experience-section .section-title {
         font-size: 2.2rem;
         margin-top: 25px;
         margin-bottom: 20px;
     }
+
     .tecoteco-experience-section .section-subtitle {
         font-size: 1rem;
         margin-bottom: 15px;
     }
+
     .tecoteco-steps-nav {
         margin: 30px auto 30px;
         padding: 0 10px;
     }
+
     .step-item {
         min-width: 60px;
         max-width: 100px;
-        flex: 1 1 auto; /* 작은 화면에서 더 유연한 너비 허용 */
+        flex: 1 1 auto;
     }
+
     .step-button {
         width: 50px;
         height: 50px;
         font-size: 1.5rem;
     }
+
     .step-label {
         font-size: 0.8rem;
     }
-    .step-detail-title {
-        font-size: 1.5rem;
+
+    .step-detail-container {
+        margin-top: 30px;
+        padding: 25px 20px;
     }
+
+    .step-detail-content {
+        gap: 20px;
+    }
+
+    .step-illustration {
+        width: 160px;
+        height: 160px;
+    }
+
+    .step-detail-title {
+        font-size: 1.6rem;
+    }
+
     .step-detail-text {
         font-size: 1rem;
     }
@@ -166,41 +245,65 @@
     .tecoteco-experience-section {
         padding: 30px 15px 25px;
     }
+
     .section-tag-header {
         top: 10px;
         left: 15px;
         font-size: 0.9rem;
     }
+
     .tecoteco-experience-section .section-title {
         font-size: 1.8rem;
         margin-top: 20px;
         margin-bottom: 15px;
     }
+
     .tecoteco-experience-section .section-subtitle {
         font-size: 0.9rem;
         margin-bottom: 12px;
     }
+
     .tecoteco-steps-nav {
         margin: 20px auto 20px;
         padding: 0 5px;
         gap: 10px;
     }
+
     .step-item {
         min-width: 50px;
         max-width: 80px;
     }
+
     .step-button {
         width: 40px;
         height: 40px;
         font-size: 1.2rem;
     }
+
     .step-label {
         font-size: 0.7rem;
     }
-    .step-detail-title {
-        font-size: 1.3rem;
+
+    .step-detail-container {
+        margin-top: 25px;
+        padding: 20px 15px;
     }
+
+    .step-detail-content {
+        gap: 15px;
+    }
+
+    .step-illustration {
+        width: 140px;
+        height: 140px;
+    }
+
+    .step-detail-title {
+        font-size: 1.4rem;
+    }
+
     .step-detail-text {
         font-size: 0.9rem;
+        line-height: 1.6;
     }
 }

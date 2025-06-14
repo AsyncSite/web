@@ -11,7 +11,9 @@ import { MembersSection } from './sections/MembersSection';
 import { ReviewsSection } from './sections/ReviewsSection';
 import { FaqJoinSection } from './sections/FaqJoinSection';
 
-import './TecoTecoPage.css'; // 전역 및 공통 스타일
+import './TecoTecoPage.css';
+import {WhyTogetherSection} from "./sections/WhyTogetherSection";
+import {TextEncoderStream} from "node:stream/web";
 
 const TecoTecoPage: React.FC = () => {
     const introSectionRef = useRef<HTMLDivElement>(null);
@@ -32,6 +34,7 @@ const TecoTecoPage: React.FC = () => {
             <main className="tecoteco-content">
                 <HeroSection onCtaClick={handleCtaClick} />
                 <IntroSection ref={introSectionRef} />
+                {/*<WhyTogetherSection />*/}
                 <MembersSection />
                 <HowWeRollSection />
                 <JourneySection />

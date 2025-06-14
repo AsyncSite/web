@@ -1,10 +1,11 @@
 // src/pages/TecoTecoPage/sections/JourneySection.tsx
 import React from 'react';
+import { JOURNEY_DATA } from '../utils/constants';
 import './JourneySection.css';
 
 export const JourneySection: React.FC = () => {
     const calculateDays = () => {
-        const startDate = new Date('2024-09-01');
+        const startDate = new Date(JOURNEY_DATA.startDate);
         const today = new Date('2025-06-14'); // Current date is June 14, 2025
         const diffTime = Math.abs(today.getTime() - startDate.getTime());
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -15,35 +16,70 @@ export const JourneySection: React.FC = () => {
 
     return (
         <section className="tecoteco-journey-section">
-            {/* 상단 태그 헤더 추가 */}
             <div className="section-tag-header">우리의 여정</div>
 
-            <h2 className="section-title">하루하루가 쌓이니 벌써 {daysSinceStart}일이 되었어요.</h2>
+            <h2 className="section-title">하루하루가 쌓이니 벌써 <span className="highlight">{daysSinceStart}일</span>이 되었어요.</h2>
 
-            // todo - 전체적인 내용 변경 
             <p className="section-subtitle">
-                우리는 <span className="highlight">지속적인 개선과 성장을 위해</span> 꾸준히 나아가고 있습니다.
+                {JOURNEY_DATA.subtitle}
             </p>
+
+            {/* 현재 성과 요약 */}
+            {/*<div className="journey-stats">*/}
+            {/*    <div className="stat-card">*/}
+            {/*        <span className="stat-number">{JOURNEY_DATA.currentStats.totalProblems}</span>*/}
+            {/*        <span className="stat-label">해결한 문제</span>*/}
+            {/*    </div>*/}
+            {/*    <div className="stat-card">*/}
+            {/*        <span className="stat-number">{JOURNEY_DATA.currentStats.studyHours}</span>*/}
+            {/*        <span className="stat-label">함께한 시간</span>*/}
+            {/*    </div>*/}
+            {/*    <div className="stat-card">*/}
+            {/*        <span className="stat-number">50%</span>*/}
+            {/*        <span className="stat-label">평균 실력 향상</span>*/}
+            {/*    </div>*/}
+            {/*    <div className="stat-card">*/}
+            {/*        <span className="stat-number">100%</span>*/}
+            {/*        <span className="stat-label">함께하는 즐거움</span>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+
+            {/* 시즌별 여정 */}
             <ul className="journey-list">
-                <li>
-                    <strong>시즌 1 (2024.09 ~ 2024.12)</strong><br />
-                    <span className="journey-description">자료구조의 기본기를 다지고, 알고리즘 문제 해결의 첫 발을 내디뎠습니다.</span>
-                </li>
-                <li>
-                    <strong>시즌 1.5 (2025.01 ~ 2025.03)</strong><br />
-                    <span className="journey-description">기존 학습 내용을 복습하며 문제 풀이 역량을 강화하고, 실전에 대비했습니다.</span>
-                </li>
-                <li>
-                    <strong>시즌 2 (2025.04 ~ 진행중)</strong><br />
-                    <span className="journey-description">심화 알고리즘 주제를 탐구하며, 더 복잡한 문제에 대한 해결 능력을 키워나가고 있습니다.</span>
-                </li>
+                {JOURNEY_DATA.seasons.map((season, index) => (
+                    <li key={index} className="journey-item">
+                        <div className="season-header">
+                            <span className="season-icon">{season.icon}</span>
+                            <strong>{season.title}</strong>
+                        </div>
+                        <span className="journey-description">{season.description}</span>
+                        <div className="achievements">
+                            {season.achievements.map((achievement, i) => (
+                                <span key={i} className="achievement-badge">{achievement}</span>
+                            ))}
+                        </div>
+                    </li>
+                ))}
             </ul>
+
+            {/* 미래 계획 이미지 */}
             <div className="journey-image-wrapper">
-                <img src={process.env.PUBLIC_URL + '/images/tecoteco/tecoteco2025-3q4q.png'} alt="2025년 3분기 4분기 스케줄" />
+                <div className="image-header">
+                    <h4>앞으로의 계획</h4>
+                    <p>체계적이고 지속적인 성장을 위한 로드맵</p>
+                </div>
+                <img
+                    src={process.env.PUBLIC_URL + JOURNEY_DATA.imagePath}
+                    alt={JOURNEY_DATA.imageAlt}
+                />
             </div>
-            {/* <p className="journey-cta-text">
-                TecoTeco의 여정은 계속됩니다. <span className="highlight">다음 발자취를 함께 만들어갈 분을 기다립니다.</span>
-            </p> */}
+
+            {/*/!* 마무리 메시지 *!/*/}
+            {/*<div className="journey-closing">*/}
+            {/*    <p>*/}
+            {/*        작은 걸음이지만 꾸준히, 의미 있게.*/}
+            {/*    </p>*/}
+            {/*</div>*/}
         </section>
     );
 };
