@@ -15,7 +15,7 @@ export const JourneySection: React.FC = () => {
                 <li><strong>시즌 2 (2025.04 ~ 진행중):</strong> 심화 알고리즘 정복 (집합, 그래프, 백트래킹, DP, 그리디)</li>
             </ul>
             <div className="journey-image-wrapper">
-                <img src={process.env.PUBLIC_URL + '/images/2025-3q4q-schedule.png'} alt="2025년 3분기 4분기 스케줄" />
+                <img src={process.env.PUBLIC_URL + '/images/tecoteco/tecoteco2025-3q4q.png'} alt="2025년 3분기 4분기 스케줄" />
             </div>
         </section>
     );
