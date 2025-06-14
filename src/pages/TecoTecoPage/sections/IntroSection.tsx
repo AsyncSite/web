@@ -44,7 +44,7 @@ export const IntroSection = forwardRef<HTMLDivElement>((props, ref) => {
 
             {/* 최종 목표 & Call to Action */}
             <p className="section-cta-text">
-                변화 속에서도 흔들리지 않는 개발자로서의 <span className="highlight">핵심 역량</span>을 키워나가고 싶다면, TecoTeco의 문을 두드려 보세요!
+                <span>todo - 10자 이내로 깔끔한 마무리</span>
             </p>
         </section>
     );

@@ -26,7 +26,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
                     <div className="info-line-item">
                         <span className="line-icon">💡</span>
                         <p className="line-text">
-                            기술 변화 속 <span className="highlight">흔들리지 않는 개발자 사고의 뿌리</span>를 깊이 탐구해요.
+                            기술 변화 속 <span className="highlight">흔들리지 않는 개발자 사고의 뿌리</span>를 탐구해요.
                         </p>
                     </div>
                     <div className="info-line-item">

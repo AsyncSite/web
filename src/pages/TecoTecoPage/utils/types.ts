@@ -4,6 +4,8 @@ export interface Contributor {
     name: string;
     githubId: string;
     imageUrl?: string;
+    tecotecoContribution?: string; // 새 필드 추가
+    joinDate?: string;
 }
 
 export interface Review {

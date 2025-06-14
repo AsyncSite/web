@@ -5,18 +5,20 @@ import { handleImgError } from '../utils/helpers';
 import './ExperienceSection.css';
 
 export const ExperienceSection: React.FC = () => {
-    const [activeStepIndex, setActiveStepIndex] = useState<number | null>(0); // 0번째 스텝을 기본 활성화
+    const [activeStepIndex, setActiveStepIndex] = useState<number | null>(0);
 
-    // 스텝 클릭 핸들러
     const handleStepClick = (index: number) => {
-        setActiveStepIndex(index === activeStepIndex ? null : index); // 같은 스텝 클릭 시 닫기
+        setActiveStepIndex(index === activeStepIndex ? null : index);
     };
 
     return (
         <section className="tecoteco-experience-section">
+            {/* 상단 태그 헤더 추가 */}
+            <div className="section-tag-header">성장을 위한 스텝</div>
+
             <h2 className="section-title">테코테코 모임을 한다는 건</h2>
             <p className="section-subtitle">
-                우리는 매주 금요일, <span className="highlight">이런 단계</span>를 거쳐 함께 성장합니다.
+                매주 금요일 저녁, <span className="highlight">이런 루틴</span>으로 함께 성장해요.
             </p>
 
             <div className="tecoteco-steps-nav">
@@ -36,7 +38,7 @@ export const ExperienceSection: React.FC = () => {
 
             {/* 선택된 스텝의 상세 내용 */}
             {activeStepIndex !== null && (
-                <div className={`step-detail-container ${activeStepIndex !== null ? 'active' : ''}`}>
+                <div className="step-detail-container">
                     <div className="step-detail-content">
                         <h3 className="step-detail-title">{tecotecoSteps[activeStepIndex].title}</h3>
                         <div className="step-detail-image-wrapper">
@@ -52,6 +54,8 @@ export const ExperienceSection: React.FC = () => {
                     </div>
                 </div>
             )}
+            {/* 선택된 스텝의 상세 내용 */}
+
         </section>
     );
 };

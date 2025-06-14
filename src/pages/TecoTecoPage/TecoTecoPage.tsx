@@ -32,11 +32,10 @@ const TecoTecoPage: React.FC = () => {
             <main className="tecoteco-content">
                 <HeroSection onCtaClick={handleCtaClick} />
                 <IntroSection ref={introSectionRef} />
-                <PhilosophySection />
+                <MembersSection />
                 <ExperienceSection />
                 <HowWeRollSection />
                 <JourneySection />
-                <MembersSection />
                 <ReviewsSection />
                 <FaqJoinSection />
             </main>

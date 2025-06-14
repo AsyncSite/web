@@ -8,6 +8,7 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     text-align: left; /* 중앙 정렬 -> 왼쪽 정렬 */
     position: relative; /* section-tag-header의 absolute 위치 기준 */
+    min-height: 50vh;
 }
 
 .section-tag-header { /* 새로운 섹션 태그 헤더 스타일 */

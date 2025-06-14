@@ -1,5 +1,41 @@
 /* src/pages/TecoTecoPage/sections/HowWeRollSection.css */
 
+.tecoteco-how-we-roll-section {
+    background: linear-gradient(135deg, #1f1f1f, #0d0d0d);
+    border-radius: 12px;
+    padding: 50px 30px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    text-align: left;
+    position: relative;
+    min-height: 50vh;
+}
+
+.section-tag-header {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-secondary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.tecoteco-how-we-roll-section .section-title {
+    color: var(--color-text-primary);
+    font-size: 2.5rem;
+    margin-top: 30px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.tecoteco-how-we-roll-section .section-subtitle {
+    margin-bottom: 25px;
+    text-align: left;
+    color: var(--color-text-secondary);
+}
+
 .operation-details {
     background-color: #2a2a2a;
     padding: 18px;
@@ -12,16 +48,16 @@
 .operation-details p {
     font-size: 1.1rem;
     margin-bottom: 6px;
-    color: #ddd;
+    color: var(--color-text-secondary);
 }
 
 .operation-details p strong {
-    color: #C3E88D;
+    color: var(--color-primary);
     font-weight: 600;
 }
 
 .operation-details a {
-    color: #82AAFF;
+    color: var(--color-secondary);
     text-decoration: none;
     transition: color 0.2s ease;
 }
@@ -29,6 +65,15 @@
 .operation-details a:hover {
     text-decoration: underline;
     color: #6a95e7;
+}
+
+.intro-sub-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: 35px;
+    margin-bottom: 15px;
+    text-align: left;
 }
 
 .activity-table {
@@ -50,13 +95,13 @@
 .activity-table th, .activity-table td {
     padding: 10px 15px;
     text-align: left;
-    color: #f0f0f0;
+    color: var(--color-text-primary);
     border-bottom: 1px solid #3a3a3a;
 }
 
 .activity-table th {
     background-color: #3a3a3a;
-    color: #C3E88D;
+    color: var(--color-primary);
     font-weight: 700;
     font-size: 1.1rem;
     position: sticky;
@@ -78,16 +123,82 @@
 }
 
 .activity-table td strong {
-    color: #ffcb6b;
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+.activity-table td .color-primary-text {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+.activity-table td .color-secondary-text {
+    color: var(--color-secondary);
     font-weight: 600;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+    .tecoteco-how-we-roll-section {
+        padding: 40px 20px 30px;
+    }
+    .section-tag-header {
+        top: 15px;
+        left: 20px;
+        font-size: 1rem;
+    }
+    .tecoteco-how-we-roll-section .section-title {
+        font-size: 2.2rem;
+        margin-top: 25px;
+        margin-bottom: 20px;
+    }
+    .tecoteco-how-we-roll-section .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
     .operation-details p {
         font-size: 0.95rem;
     }
+    .intro-sub-heading {
+        font-size: 1.3rem;
+        margin-top: 25px;
+        margin-bottom: 10px;
+    }
     .activity-table table {
         min-width: unset;
+    }
+    .activity-table th, .activity-table td {
+        padding: 8px 12px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tecoteco-how-we-roll-section {
+        padding: 30px 15px 25px;
+    }
+    .section-tag-header {
+        top: 10px;
+        left: 15px;
+        font-size: 0.9rem;
+    }
+    .tecoteco-how-we-roll-section .section-title {
+        font-size: 1.8rem;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+    .tecoteco-how-we-roll-section .section-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+    .operation-details p {
+        font-size: 0.9rem;
+    }
+    .intro-sub-heading {
+        font-size: 1.2rem;
+        margin-top: 20px;
+        margin-bottom: 8px;
+    }
+    .activity-table th, .activity-table td {
+        padding: 6px 10px;
+        font-size: 0.8rem;
     }
 }

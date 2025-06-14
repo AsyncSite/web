@@ -2,31 +2,42 @@
 
 import { Contributor, Review, FAQItem, StepContent } from './types';
 
+
 export const tecotecoMembers: Contributor[] = [
     {
         name: "renechoi",
         githubId: "renechoi",
-        imageUrl: process.env.PUBLIC_URL + '/images/face/rene.png'
+        imageUrl: process.env.PUBLIC_URL + '/images/face/rene.png',
+        tecotecoContribution: "알고리즘 문제 해결사 🏆",
+        joinDate: "2024-11-01" // 예시 날짜
     },
     {
         name: "kdelay",
         githubId: "kdelay",
-        imageUrl: process.env.PUBLIC_URL + '/images/face/kdelay.png'
+        imageUrl: process.env.PUBLIC_URL + '/images/face/kdelay.png',
+        tecotecoContribution: "꼼꼼한 코드 리뷰어 📝",
+        joinDate: "2024-12-15"
     },
     {
         name: "vvoohhee",
         githubId: "vvoohhee",
-        imageUrl: process.env.PUBLIC_URL + '/images/face/vvoohhee.png'
+        imageUrl: process.env.PUBLIC_URL + '/images/face/vvoohhee.png',
+        tecotecoContribution: "성장하는 AI 스터디 리더 💡",
+        joinDate: "2025-01-20"
     },
     {
         name: "KrongDev",
         githubId: "KrongDev",
-        imageUrl: 'https://avatars.githubusercontent.com/u/138358867?s=40&v=4'
+        imageUrl: 'https://avatars.githubusercontent.com/u/138358867?s=40&v=4',
+        tecotecoContribution: "질문과 답변의 오작교 💬",
+        joinDate: "2025-02-28"
     },
     {
         name: "who's next?",
         githubId: "your-next-profile",
-        imageUrl: process.env.PUBLIC_URL + '/images/face/another.png'
+        imageUrl: process.env.PUBLIC_URL + '/images/face/another.png',
+        tecotecoContribution: "당신의 합류를 기다려요 👋",
+        joinDate: undefined // 아직 합류하지 않음
     }
 ];
 
@@ -121,9 +132,9 @@ export const tecotecoSteps: StepContent[] = [
         image: process.env.PUBLIC_URL + '/images/step_review.png',
     },
     {
-        label: "대화해요",
+        label: "성장해요",
         title: "코드를 넘어, 삶의 이야기",
-        description: "알고리즘을 넘어 개발 문화, 커리어 고민, 소소한 일상까지. 코드를 매개로 연결된 소중한 인연들이 함께 성장하는 깊이 있는 대화의 장입니다.",
+        description: "알고리즘을 넘어 개발 문화, 커리어 고민, 소소한 일상까지. 코드를 매개로 연결된 소중한 인연들이 함께 성장해요.",
         image: process.env.PUBLIC_URL + '/images/step_talk.png',
     },
 ];
