@@ -36,7 +36,9 @@ export const ExperienceSection: React.FC = () => {
                 ))}
             </div>
 
-            {/* 선택된 스텝의 상세 내용 */}
+            // todo 이 이하에는 가운데 정렬
+            // 그리고 그림도 원안의 물음표가 아니라 제대로된 그림으로 대체할 것
+
             {activeStepIndex !== null && (
                 <div className="step-detail-container">
                     <div className="step-detail-content">

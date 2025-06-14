@@ -33,9 +33,11 @@ const TecoTecoPage: React.FC = () => {
                 <HeroSection onCtaClick={handleCtaClick} />
                 <IntroSection ref={introSectionRef} />
                 <MembersSection />
-                <ExperienceSection />
                 <HowWeRollSection />
                 <JourneySection />
+                <ExperienceSection />
+
+
                 <ReviewsSection />
                 <FaqJoinSection />
             </main>

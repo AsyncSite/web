@@ -12,10 +12,8 @@ export const FaqJoinSection: React.FC = () => {
 
     return (
         <section className="tecoteco-faq-join-section">
-            <h2 className="section-title">궁금한 점이 있다면? <br className="mobile-only"/>TecoTeco에 참여하고 싶다면! 🚀</h2>
-            <p className="section-subtitle">
-                여러분의 <span className="highlight">궁금증을 해소</span>하고, <span className="highlight">성장 여정</span>에 함께할 준비가 되어있습니다.
-            </p>
+            <h2 className="section-title">FAQ </h2>
+
             <div className="tecoteco-faq-items">
                 {tecotecoFaqs.map(faq => (
                     <div

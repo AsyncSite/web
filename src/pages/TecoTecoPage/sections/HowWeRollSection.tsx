@@ -7,10 +7,7 @@ export const HowWeRollSection: React.FC = () => {
         <section className="tecoteco-how-we-roll-section">
             <div className="section-tag-header">모임 상세 안내</div>
 
-            <h2 className="section-title">🗓️ 테코테코와 함께하는 특별한 시간</h2>
-            <p className="section-subtitle">
-                매주 금요일 저녁, 우리는 이렇게 <span className="highlight">의미 있는 시간</span>을 함께 만들어갑니다.
-            </p>
+            <h2 className="section-title">특별한 건 없어요. <br/>  <span className="highlight">그냥 계속</span> 모일 뿐이에요.</h2>
 
             <div className="meeting-overview">
                 <div className="overview-card main-meeting">
@@ -28,9 +25,9 @@ export const HowWeRollSection: React.FC = () => {
                     <div className="card-content">
                         <h3>함께 공부하는 교재</h3>
                         <p><a href="https://product.kyobobook.co.kr/detail/S000212576322" target="_blank" rel="noopener noreferrer">
-                            <span className="highlight">코딩 테스트 합격자 되기: 자바 편</span> (골드래빗)
+                            <span className="highlight">코딩 테스트 합격자 되기: 자바 편</span>
                         </a></p>
-                        <p>체계적인 커리큘럼과 함께 <span className="color-secondary-text">다양한 온라인 저지</span>도 활용해요</p>
+                        <p>온라인 저지는 <span className="color-secondary-text">백준, 프로그래머스</span>를 활용하고 있어요</p>
                     </div>
                 </div>
 
@@ -43,11 +40,12 @@ export const HowWeRollSection: React.FC = () => {
                 </div>
             </div>
 
-            <h3 className="intro-sub-heading">금요일 저녁, 우리의 <span className="highlight">성장 루틴</span></h3>
+            <h3 className="intro-sub-heading">몰입, 해본 적 있으세요?</h3>
             <p className="schedule-intro">
-                짧은 2시간이지만, 매주 이 시간을 통해 우리는 <span className="color-primary-text">확실한 성장</span>을 경험하고 있어요.
+                // todo 적절한 문구 작성
             </p>
 
+            // 이 밑에 전체적인 개선
             <div className="activity-table">
                 <table>
                     <thead>

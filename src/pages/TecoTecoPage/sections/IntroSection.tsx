@@ -19,16 +19,14 @@ export const IntroSection = forwardRef<HTMLDivElement>((props, ref) => {
                 TecoTeco는 바로 그 <span className="highlight">본질적인 가치에 집중</span>합니다. 우리는 이 질문에 답하며 두 가지 중요한 가치를 추구합니다.
             </p>
 
-            {/* 서브 헤딩 1: 물고기를 잡는 방법 */}
-            <h3 className="intro-sub-heading">1. 중요한 가치를 캐내는 능력: 물고기를 잡는 법 🎣</h3>
+            <h3 className="intro-sub-heading">1. 물고기 잡는 법을 익히고 연습해요. 🎣</h3>
             <p>
-                우리는 '물고기 그 자체'가 아닌, <strong><span className="highlight">'물고기를 잡는 방법'</span></strong>에 집중합니다. 매주 문제를 깊이 파고들고, 동료와 리뷰하며 토론합니다. 정답 코드를 넘어, 문제의 본질을 이해하고 <span className="highlight">견고한 사고력과 논리력</span>을 단련하는 것이 목표죠.
+                우리는 '물고기 그 자체'가 아닌, <strong><span className="subtle-highlight">'물고기를 잡는 방법'</span></strong>에 집중합니다. 매주 문제를 깊이 파고들고, 동료와 리뷰하며 토론합니다. 정답 코드를 넘어, 문제의 본질을 이해하고 <span className="subtle-highlight">견고한 사고력과 논리력</span>을 단련하는 것이 목표죠.
             </p>
 
-            {/* 서브 헤딩 2: AI와 함께하는 페어 코딩 */}
-            <h3 className="intro-sub-heading">2. 물고기를 잘 잡기 위한 도구: AI를 활용하기 🤖</h3>
+            <h3 className="intro-sub-heading">2. 물고기를 '잘' 잡는 법: <br/> AI를 잘 사용하기 위해 실험하고 시도해요 🤖</h3>
             <p>
-                AI를 배척하지 않고 <span className="highlight">현명하게 활용하는 방법</span>을 함께 모색합니다. AI와 페어 코딩하고, 비판적으로 분석하며 코드를 개선합니다. AI가 <span className="highlight">우리의 통찰력을 확장시키는 강력한 파트너</span>가 될 수 있음을 증명할 거예요.
+                AI를 배척하지 않고 <span className="subtle-highlight">현명하게 활용하는 방법</span>을 함께 모색합니다. AI와 페어 코딩하고, 비판적으로 분석하며 코드를 개선합니다. AI가 <span className="subtle-highlight">우리의 통찰력을 확장시키는 강력한 파트너</span>가 될 수 있음을 증명할 거예요.
             </p>
 
             {/* 테코테코는 이런 공간입니다 (가치들을 목록화) */}
