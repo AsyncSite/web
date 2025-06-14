@@ -81,6 +81,9 @@ const Header: React.FC = () => {
                             <a href="#contact-cta">CONTACT</a>
                         </li>
                         <li>
+                            <a href="/web/tecoteco">테코테코</a>
+                        </li>
+                        <li>
                             <a href="/web/lab">LAB</a>
                         </li>
                     </ul>

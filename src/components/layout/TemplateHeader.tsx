@@ -25,7 +25,10 @@ const TemplateHeader: React.FC<TemplateHeaderProps> = () => {
                             <Link to="/">HOME</Link>
                         </li>
                         <li>
-                            <Link to="lab">LAB</Link>
+                            <Link to="/web/tecoteco">테코테코</Link>
+                        </li>
+                        <li>
+                            <Link to="/web/lab">LAB</Link>
                         </li>
                     </ul>
                 </nav>
