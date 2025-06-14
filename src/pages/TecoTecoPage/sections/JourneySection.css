@@ -1,0 +1,48 @@
+/* src/pages/TecoTecoPage/sections/JourneySection.css */
+
+.journey-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.journey-list li {
+    font-size: 1.1rem;
+    color: #ddd;
+    margin-bottom: 6px;
+    position: relative;
+    padding-left: 25px;
+}
+
+.journey-list li::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    color: #ffcb6b;
+    font-size: 1.2rem;
+    top: 0;
+}
+
+.journey-list li strong {
+    color: #C3E88D;
+}
+
+.journey-image-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.journey-image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .journey-list li {
+        font-size: 0.95rem;
+    }
+}

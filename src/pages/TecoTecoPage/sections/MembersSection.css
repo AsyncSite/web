@@ -1,0 +1,235 @@
+/* src/pages/TecoTecoPage/sections/MembersSection.css */
+
+.members-intro {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #ddd;
+    margin-bottom: 10px;
+}
+
+.tecoteco-members-section {
+    position: relative;
+    padding-top: 50px;
+    min-height: 20vh;
+}
+
+.section-tag-header {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-secondary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.tecoteco-members-section .section-title {
+    margin-top: 30px;
+    text-align: left;
+    display: block;
+}
+
+.members-intro {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.scrolling-members-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.scrolling-members-inner {
+    display: flex;
+    width: max-content;
+    animation: infiniteScroll 30s linear infinite;
+    will-change: transform;
+}
+
+.scrolling-members-inner:hover {
+    animation-play-state: paused;
+}
+
+.tecoteco-contributors-list {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0 10px;
+    flex-shrink: 0;
+}
+
+/* 멤버 카드 스타일 조정 (텍스트 잘림 방지) */
+.tecoteco-contributor-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 0.7rem;
+    width: 100px; /* 너비 증가 */
+    min-width: 100px; /* 최소 너비 설정 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.tecoteco-contributor-card:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-5px);
+}
+
+.tecoteco-contributor-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+.tecoteco-profile-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.5rem;
+}
+
+.tecoteco-profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #C3E88D;
+    box-shadow: 0 0 8px rgba(195, 232, 141, 0.4);
+}
+
+.tecoteco-contributor-name {
+    font-size: 0.85rem;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* 새로운 "함께한 기간" 스타일 */
+.tecoteco-contributor-duration {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    margin-top: 0.3rem; /* 이름과의 간격 */
+    margin-bottom: 0.3rem; /* 기여 문구와의 간격 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* 말줄임표 표시 */
+    max-width: 100%; /* 최대 너비 설정 */
+}
+
+.tecoteco-contributor-contribution {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
+    margin-top: 0.3rem;
+    padding: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 2.4em;
+}
+
+@keyframes infiniteScroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .tecoteco-members-section {
+        padding-top: 40px;
+    }
+    .section-tag-header {
+        top: 15px;
+        left: 20px;
+        font-size: 1rem;
+    }
+    .tecoteco-members-section .section-title {
+        margin-top: 25px;
+    }
+    .members-intro {
+        margin-top: 10px;
+    }
+
+    .scrolling-members-inner {
+        animation-duration: 20s;
+    }
+    .members-intro {
+        font-size: 0.95rem;
+    }
+    .tecoteco-contributor-card {
+        width: 90px; /* 너비 유지 */
+        min-width: 90px; /* 최소 너비 유지 */
+        padding: 0.6rem;
+    }
+    .tecoteco-profile-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+    .tecoteco-contributor-name {
+        font-size: 0.8rem;
+    }
+    .tecoteco-contributor-contribution {
+        font-size: 0.65rem;
+    }
+    .tecoteco-contributor-duration {
+        font-size: 0.65rem; /* 폰트 크기 조정 */
+    }
+}
+
+@media (max-width: 480px) {
+    .tecoteco-members-section {
+        padding-top: 30px;
+    }
+    .section-tag-header {
+        top: 10px;
+        left: 15px;
+        font-size: 0.9rem;
+    }
+    .tecoteco-members-section .section-title {
+        margin-top: 20px;
+    }
+    .members-intro {
+        margin-top: 8px;
+    }
+
+    .scrolling-members-inner {
+        animation-duration: 15s;
+    }
+    .tecoteco-contributor-card {
+        width: 80px; /* 너비 더 줄임 */
+        min-width: 80px; /* 최소 너비 */
+        padding: 0.5rem;
+    }
+    .tecoteco-profile-wrapper {
+        width: 45px;
+        height: 45px;
+    }
+    .tecoteco-contributor-name {
+        font-size: 0.7rem;
+    }
+    .tecoteco-contributor-contribution {
+        font-size: 0.6rem;
+    }
+    .tecoteco-contributor-duration {
+        font-size: 0.6rem; /* 폰트 크기 조정 */
+    }
+}

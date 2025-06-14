@@ -1,0 +1,197 @@
+/* src/pages/TecoTecoPage/sections/IntroSection.css */
+
+.tecoteco-intro-section {
+    background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
+    border-radius: 12px;
+    padding: 50px 30px 40px; /* 상단 태그 헤더 공간 확보를 위한 패딩 조정 */
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    text-align: left; /* 중앙 정렬 -> 왼쪽 정렬 */
+    position: relative; /* section-tag-header의 absolute 위치 기준 */
+    min-height: 50vh;
+}
+
+.section-tag-header { /* 새로운 섹션 태그 헤더 스타일 */
+    position: absolute;
+    top: 20px; /* 섹션 상단에서 20px 아래 */
+    left: 30px; /* 섹션 왼쪽에서 30px 안쪽 */
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-secondary); /* 프로젝트의 파란색 계열 사용 */
+    letter-spacing: 0.5px;
+    text-transform: uppercase; /* 대문자 */
+}
+
+.tecoteco-intro-section .section-title {
+    color: var(--color-text-primary); /* 흰색 기본 텍스트 색상 */
+    margin-top: 30px; /* 섹션 태그 헤더로부터 여백 */
+    margin-bottom: 25px; /* 본문과의 여백 */
+    font-size: 2.8rem;
+    font-weight: 700;
+    /* letter-spacing: -1px; (기존 값 유지) */
+    /* line-height: 1.2; (기존 값 유지) */
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+.tecoteco-intro-section p { /* 모든 p 태그에 적용 (기존 .section-description 대체) */
+    font-size: 1.15rem; /* 본문 텍스트 크기 증가 */
+    color: var(--color-text-secondary); /* 본문 텍스트 색상 (옅은 회색) */
+    line-height: 1.7; /* 줄 간격 넓힘 */
+    margin-bottom: 18px; /* 문단 간 여백 */
+    font-weight: 300;
+}
+
+.tecoteco-intro-section p strong { /* 본문 내 strong 태그 강조 */
+    color: var(--color-text-primary); /* 기본 텍스트 색상보다 더 밝게 */
+    font-weight: 600;
+}
+
+.tecoteco-intro-section .highlight { /* 메인 하이라이트 (연한 녹색) */
+    color: var(--color-primary); /* 연한 녹색 계열 */
+    font-weight: 600;
+}
+
+.tecoteco-intro-section .subtle-highlight { /* 보조/미묘한 하이라이트 (옅은 파란색) */
+    color: var(--color-secondary); /* 옅은 파란색 계열 */
+    font-weight: 500; /* 메인 하이라이트보다 살짝 덜 강조 */
+}
+
+/* 새로운 텍스트 색상 클래스 */
+.tecoteco-intro-section .color-primary-text {
+    color: var(--color-primary); /* 연한 녹색 */
+    font-weight: 500; /* 살짝 강조 */
+}
+
+.tecoteco-intro-section .color-secondary-text {
+    color: var(--color-secondary); /* 연한 파란색 */
+    font-weight: 500; /* 살짝 강조 */
+}
+
+
+.intro-sub-heading { /* 새로운 서브 헤딩 스타일 */
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary); /* 연한 녹색 */
+    margin-top: 35px; /* 이전 문단과의 여백 */
+    margin-bottom: 15px; /* 다음 문단과의 여백 */
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+.tecoteco-intro-section .section-cta-text { /* CTA 문구 스타일 */
+    font-size: 1.25rem; /* 크기 조정 */
+    color: var(--color-text-primary);
+    margin-top: 30px; /* 여백 조정 */
+    font-weight: 500;
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+/* ul/li 목록 스타일 추가 */
+.tecoteco-intro-section ul {
+    list-style: none; /* 기본 불릿 제거 */
+    padding: 0;
+    margin: 20px 0; /* 문단과의 여백 */
+}
+
+.tecoteco-intro-section ul li {
+    position: relative;
+    padding-left: 25px; /* 커스텀 불릿을 위한 여백 */
+    margin-bottom: 12px; /* 항목 간 여백 */
+    font-size: 1.15rem; /* p 태그와 동일한 폰트 크기 */
+    color: var(--color-text-secondary); /* 본문 텍스트 색상 */
+    line-height: 1.6;
+}
+
+.tecoteco-intro-section ul li::before { /* 커스텀 불릿 (삼각형) */
+    content: '‣'; /* 또는 '▸', '▶' 등 */
+    position: absolute;
+    left: 0;
+    color: var(--color-primary); /* 불릿 색상 (연한 녹색) */
+    font-size: 1.3rem;
+    line-height: 1;
+    top: 2px; /* 불릿 위치 미세 조정 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .tecoteco-intro-section {
+        padding: 40px 20px 30px; /* 패딩 조정 */
+    }
+    .section-tag-header {
+        top: 15px;
+        left: 20px;
+        font-size: 1rem;
+    }
+    .tecoteco-intro-section .section-title {
+        font-size: 2.2rem;
+        margin-top: 25px;
+        margin-bottom: 20px;
+    }
+    .tecoteco-intro-section p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    .intro-sub-heading {
+        font-size: 1.3rem;
+        margin-top: 25px;
+        margin-bottom: 10px;
+    }
+    .tecoteco-intro-section .section-cta-text {
+        font-size: 1.1rem;
+        margin-top: 20px;
+    }
+    .tecoteco-intro-section ul {
+        margin: 15px 0;
+    }
+    .tecoteco-intro-section ul li {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        padding-left: 20px;
+    }
+    .tecoteco-intro-section ul li::before {
+        font-size: 1.1rem;
+        top: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tecoteco-intro-section {
+        padding: 30px 15px 25px;
+    }
+    .section-tag-header {
+        top: 10px;
+        left: 15px;
+        font-size: 0.9rem;
+    }
+    .tecoteco-intro-section .section-title {
+        font-size: 1.8rem;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+    .tecoteco-intro-section p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+    .intro-sub-heading {
+        font-size: 1.2rem;
+        margin-top: 20px;
+        margin-bottom: 8px;
+    }
+    .tecoteco-intro-section .section-cta-text {
+        font-size: 1rem;
+        margin-top: 15px;
+    }
+    .tecoteco-intro-section ul {
+        margin: 10px 0;
+    }
+    .tecoteco-intro-section ul li {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        padding-left: 18px;
+    }
+    .tecoteco-intro-section ul li::before {
+        font-size: 1rem;
+        top: 0;
+    }
+}

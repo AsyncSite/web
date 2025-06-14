@@ -1,0 +1,210 @@
+/* src/pages/TecoTecoPage/sections/HeroSection.css */
+
+.tecoteco-hero-section {
+    background-color: #0d0d0d;
+    text-align: center;
+    /* padding: 60px 20px 40px; */ /* 기존 패딩 제거 */
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 컨텐츠를 위로 올림 */
+    align-items: center;
+    min-height: 60vh; /* 섹션 최소 높이 증가 (새로운 박스 공간 확보) */
+    padding-top: 100px; /* 상단 고정 헤더를 고려하여 여백 추가 */
+}
+
+.hero-content {
+    max-width: 800px;
+    width: 100%;
+    margin-top: 40px; /* 섹션 상단에서 hero-content를 살짝 내림 */
+    margin-bottom: 40px; /* CTA 버튼 아래에 공간 확보 */
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: #C3E88D;
+    margin-bottom: 15px;
+    font-family: 'Moneygraphy-Rounded', monospace;
+    text-shadow: 0 0 20px rgba(195, 232, 141, 0.6);
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.8rem;
+    color: #f0f0f0;
+    margin-bottom: 40px;
+    font-weight: 300;
+    line-height: 1.4;
+}
+
+.hero-image-wrapper {
+    margin-bottom: 25px;
+}
+
+.hero-image-wrapper img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 50%;
+    border: 5px solid #C3E88D;
+    box-shadow: 0 0 30px rgba(195, 232, 141, 0.8);
+    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+}
+
+.hero-image-wrapper img:hover {
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 0 40px rgba(195, 232, 141, 1);
+}
+
+.hero-cta-button {
+    background-color: #C3E88D;
+    color: #0d0d0d;
+    border: none;
+    border-radius: 50px;
+    padding: 18px 35px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+    letter-spacing: 1px;
+}
+
+.hero-cta-button:hover {
+    background-color: #b5d97f;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
+}
+
+/* New Info Box Styling */
+.hero-info-box {
+    width: 90%;
+    max-width: 700px; /* 컨텐츠 최대 너비와 일치 */
+    margin-top: 40px; /* CTA 버튼 아래 여백 */
+    background-color: rgba(26, 26, 26, 0.7);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(195, 232, 141, 0.3); /* 연한 포인트 색상 테두리 */
+}
+
+.info-section-header {
+    background-color: rgba(30, 30, 30, 0.9); /* 약간 더 어두운 헤더 배경 */
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #C3E88D; /* 포인트 색상 */
+    text-align: left;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1); /* 점선 구분선 */
+}
+
+.info-content-area {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 각 설명 항목 사이 간격 */
+    color: #f0f0f0;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.info-line-item {
+    display: flex;
+    align-items: flex-start; /* 아이콘과 텍스트 상단 정렬 */
+    gap: 10px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.line-icon {
+    font-size: 1.2rem;
+    color: #82AAFF; /* 보조 포인트 색상 (파란 계열) */
+    flex-shrink: 0;
+    width: 20px; /* 아이콘 고정 너비 (정렬 용이) */
+    text-align: center;
+}
+
+.line-text {
+    flex: 1; /* 남은 공간 차지 */
+    line-height: 1.5;
+}
+
+.line-text .highlight {
+    color: #FFEA00; /* 강조 텍스트 색상 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .tecoteco-hero-section {
+        min-height: 90vh; /* 모바일에서 높이 조정 */
+        padding-top: 80px;
+    }
+    .hero-content {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .hero-title {
+        font-size: 3rem;
+    }
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+    .hero-image-wrapper {
+        margin-bottom: 20px;
+    }
+    .hero-cta-button {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+
+    .hero-info-box {
+        width: 95%; /* 모바일에서 너비 약간 증가 */
+        margin-top: 30px;
+        border-radius: 10px;
+    }
+    .info-section-header {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+    .info-content-area {
+        padding: 15px;
+        font-size: 0.95rem;
+        gap: 10px;
+    }
+    .line-icon {
+        font-size: 1rem;
+        width: 18px;
+    }
+    .line-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tecoteco-hero-section {
+        min-height: 100vh; /* 작은 모바일에서 화면 전체 높이 사용 */
+    }
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    .hero-info-box {
+        border-radius: 8px;
+    }
+    .info-content-area {
+        padding: 10px;
+        gap: 8px;
+    }
+    .info-line-item {
+        flex-direction: column; /* 아이콘과 텍스트 세로로 쌓기 */
+        align-items: flex-start;
+        gap: 2px;
+    }
+    .line-icon {
+        margin-bottom: 5px;
+        font-size: 1.1rem;
+    }
+}

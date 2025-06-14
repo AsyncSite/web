@@ -69,7 +69,7 @@ const Header: React.FC = () => {
                             {isMoimDropdownOpen && (
                                 <div className="dropdown-content">
                                     <a href="#routine">MOIM</a>
-                                    <a href="/web/tecoteco">테코테코</a> {/* 테코테코 링크를 드롭다운 안에 추가 */}
+                                    <a href="/web/tecoteco">테코테코</a>
                                     {/* 다른 모임 링크들도 여기에 추가 가능 */}
                                 </div>
                             )}
