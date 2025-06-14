@@ -2,6 +2,38 @@
 import React from 'react';
 import './Contribution.css';
 
+interface ContributionUser {
+    gitUserId: string;
+    gitName: string;
+    userName: string;
+}
+
+/**
+ * Contribution user정보
+ */
+const contributionUsers: ContributionUser[] = [
+        {
+            gitUserId: '115696395',
+            gitName: 'renechoi',
+            userName: ''
+        },
+        {
+            gitUserId: '90545043',
+            gitName: 'kdelay',
+            userName: ''
+        },
+        {
+            gitUserId: '150509394',
+            gitName: 'vvoohhee',
+            userName: ''
+        },
+        {
+            gitUserId: '138358867',
+            gitName: 'KrongDev',
+            userName: ''
+        },
+    ]
+
 const Contribution: React.FC = () => {
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
@@ -24,90 +56,40 @@ const Contribution: React.FC = () => {
         e.currentTarget.alt = '프로필 이미지 없음';
     };
 
+
+    const renderUserIcon = (user: ContributionUser) => {
+        return (
+            <div className="contributor-card">
+                <a
+                    href={`https://github.com/${user.gitName}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contributor-link"
+                >
+                    <div className="profile-wrapper">
+                        <img
+                            src={`https://avatars.githubusercontent.com/u/${user.gitUserId}?v=4`}
+                            alt={`${user.gitName} 프로필`}
+                            className="profile-img"
+                            onError={handleImgError}
+                        />
+                    </div>
+                    <span className="contributor-name">{user.gitName}</span>
+                </a>
+            </div>
+        )
+    }
+
     return (
         <section className="contribution-page">
-            <div className="divider" />
+            <div className="divider"/>
 
             <div className="contribution-container">
                 <span className="contribution-label">Contributed by</span>
                 <div className="contributors-list">
-                    {/* renechoi 카드 */}
-                    <div className="contributor-card">
-                        <a
-                            href="https://github.com/renechoi"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="contributor-link"
-                        >
-                            <div className="profile-wrapper">
-                                <img
-                                    src={process.env.PUBLIC_URL + '/images/face/rene.png'}
-                                    alt="renechoi 프로필"
-                                    className="profile-img"
-                                    onError={handleImgError}
-                                />
-                            </div>
-                            <span className="contributor-name">renechoi</span>
-                        </a>
-                    </div>
-
-                    {/* kdelay 카드 */}
-                    <div className="contributor-card">
-                        <a
-                            href="https://github.com/kdelay"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="contributor-link"
-                        >
-                            <div className="profile-wrapper">
-                                <img
-                                    src={process.env.PUBLIC_URL + '/images/face/kdelay.png'}
-                                    alt="kdelay 프로필"
-                                    className="profile-img"
-                                    onError={handleImgError}
-                                />
-                            </div>
-                            <span className="contributor-name">kdelay</span>
-                        </a>
-                    </div>
-
-                    <div className="contributor-card">
-                        <a
-                            href="https://github.com/vvoohhee"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="contributor-link"
-                        >
-                            <div className="profile-wrapper">
-                                <img
-                                    src={process.env.PUBLIC_URL + '/images/face/vvoohhee.png'}
-                                    alt="vvoohhee 프로필"
-                                    className="profile-img"
-                                    onError={handleImgError}
-                                />
-                            </div>
-                            <span className="contributor-name">vvoohhee</span>
-                        </a>
-                    </div>
-                    
-                    <div className="contributor-card">
-                        <a
-                            href="https://github.com/KrongDev"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="contributor-link"
-                        >
-                            <div className="profile-wrapper">
-                                <img
-                                    src={'https://avatars.githubusercontent.com/u/138358867?s=40&v=4'}
-                                    alt="KrongDev 프로필"
-                                    className="profile-img"
-                                    onError={handleImgError}
-                                />
-                            </div>
-                            <span className="contributor-name">KrongDev</span>
-                        </a>
-                    </div>
+                    {
+                        contributionUsers.map(renderUserIcon)
+                    }
 
                     {/* who's next? 카드 */}
                     <div className="contributor-card">
