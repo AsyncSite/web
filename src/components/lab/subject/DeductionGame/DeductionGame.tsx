@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './DeductionGame.css';
 
 type GameScreen = 'mode-selection' | 'player-setup' | 'game-config' | 'game-preparation' | 'game';
@@ -42,6 +42,7 @@ interface PlayerConfig {
   nickname: string;
   type: 'human' | 'ai';
   aiCode?: string;
+  aiLanguage?: 'javascript' | 'typescript';
 }
 
 const DeductionGame: React.FC = () => {
@@ -76,6 +77,11 @@ const DeductionGame: React.FC = () => {
   const [hintViewingPhase, setHintViewingPhase] = useState(false);
   const [currentViewingPlayer, setCurrentViewingPlayer] = useState(0);
   const [timerIntervalId, setTimerIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [codeEditorModal, setCodeEditorModal] = useState<{ isOpen: boolean; playerId: number | null }>({ 
+    isOpen: false, 
+    playerId: null 
+  });
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -83,7 +89,7 @@ const DeductionGame: React.FC = () => {
       // 솔로 모드는 플레이어 vs 운영진 AI들
       setPlayerCount(1);
       setPlayers([
-        { id: 1, nickname: '', type: 'human' }
+        { id: 1, nickname: '', type: 'human', aiLanguage: 'javascript' }
       ]);
     } else {
       // 멀티 모드는 플레이어 수 선택 후 설정
@@ -99,7 +105,8 @@ const DeductionGame: React.FC = () => {
       newPlayers.push({
         id: i,
         nickname: '',
-        type: 'human'
+        type: 'human',
+        aiLanguage: 'javascript'
       });
     }
     setPlayers(newPlayers);
@@ -199,10 +206,48 @@ const DeductionGame: React.FC = () => {
     setPreparationStep(5); // 완료 상태
   };
 
+  const handleAITurn = (aiPlayerId: number) => {
+    // AI의 추측 로직 - 단순히 랜덤 선택
+    const availableKeywords = gameState.keywords
+      .map((_, index) => index)
+      .filter(index => !gameState.revealedWrongAnswers.includes(index));
+    
+    // 공개된 정답이 있으면 우선 선택
+    const knownAnswers = gameState.revealedAnswers.filter(ans => 
+      availableKeywords.includes(ans)
+    );
+    
+    let aiSelection: number[] = [];
+    
+    // 공개된 정답을 먼저 선택
+    aiSelection = [...knownAnswers];
+    
+    // 나머지는 랜덤 선택
+    const remainingCount = gameConfig.answerCount - aiSelection.length;
+    const otherKeywords = availableKeywords.filter(idx => !knownAnswers.includes(idx));
+    const shuffled = [...otherKeywords].sort(() => Math.random() - 0.5);
+    aiSelection.push(...shuffled.slice(0, remainingCount));
+    
+    // AI 추측 제출
+    submitGuessWithSelection(aiSelection);
+  };
+
   const startActualGame = () => {
     setHintViewingPhase(true);
     setCurrentViewingPlayer(1);
     setCurrentScreen('game');
+    
+    // 첫 번째 플레이어가 인간인 경우 타이머 시작
+    const firstPlayer = players.find(p => p.id === 1);
+    if (firstPlayer?.type === 'human') {
+      setIsMyTurn(true);
+      startTimer();
+    } else if (firstPlayer?.type === 'ai') {
+      // 첫 번째 플레이어가 AI인 경우
+      setTimeout(() => {
+        handleAITurn(1);
+      }, 2000);
+    }
   };
 
   const startTimer = () => {
@@ -231,22 +276,26 @@ const DeductionGame: React.FC = () => {
   };
 
   const handleTimeUp = () => {
-    if (!isMyTurn) return;
+    const currentPlayerId = ((gameState.currentTurn - 1) % players.length) + 1;
+    const currentPlayer = players.find(p => p.id === currentPlayerId);
     
-    // 시간 초과시 랜덤하게 키워드 선택하여 자동 제출
-    const availableKeywords = gameState.keywords
-      .map((_, index) => index)
-      .filter(index => !gameState.revealedWrongAnswers.includes(index));
-    
-    const shuffled = [...availableKeywords].sort(() => Math.random() - 0.5);
-    const autoSelection = shuffled.slice(0, gameConfig.answerCount);
-    
-    setSelectedKeywords(autoSelection);
-    
-    // 잠시 후 자동 제출
-    setTimeout(() => {
-      submitGuessWithSelection(autoSelection);
-    }, 500);
+    // AI가 아닌 현재 플레이어의 턴인 경우만 처리
+    if (currentPlayer?.type !== 'ai') {
+      // 시간 초과시 랜덤하게 키워드 선택하여 자동 제출
+      const availableKeywords = gameState.keywords
+        .map((_, index) => index)
+        .filter(index => !gameState.revealedWrongAnswers.includes(index));
+      
+      const shuffled = [...availableKeywords].sort(() => Math.random() - 0.5);
+      const autoSelection = shuffled.slice(0, gameConfig.answerCount);
+      
+      setSelectedKeywords(autoSelection);
+      
+      // 잠시 후 자동 제출
+      setTimeout(() => {
+        submitGuessWithSelection(autoSelection);
+      }, 500);
+    }
   };
 
   const exitGame = () => {
@@ -310,11 +359,14 @@ const DeductionGame: React.FC = () => {
   };
 
   const submitGuess = () => {
-    if (selectedKeywords.length !== gameConfig.answerCount) return;
+    if (selectedKeywords.length !== gameConfig.answerCount || isSubmitting) return;
     submitGuessWithSelection(selectedKeywords);
   };
 
   const submitGuessWithSelection = (selection: number[]) => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
     clearTimer();
 
     const correctCount = selection.filter(index => 
@@ -337,24 +389,44 @@ const DeductionGame: React.FC = () => {
       timeUsed: gameConfig.timeLimit - timeRemaining
     };
 
+    // 최대 턴 수 확인
+    const isMaxTurnsReached = gameConfig.maxTurns && gameState.currentTurn >= gameConfig.maxTurns;
+    
     setGameState(prev => ({
       ...prev,
       turnHistory: [...prev.turnHistory, turnResult],
       currentTurn: prev.currentTurn + 1,
-      gameStatus: isWinner ? 'finished' : 'playing',
+      gameStatus: isWinner ? 'finished' : (isMaxTurnsReached ? 'finished' : 'playing'),
       winner: isWinner ? currentPlayerId : undefined
     }));
 
     setSelectedKeywords([]);
     
-    if (isWinner) {
+    if (isWinner || isMaxTurnsReached) {
       setIsMyTurn(false);
+      clearTimer();
     } else {
       // 다음 플레이어 턴으로
       const nextPlayerId = (gameState.currentTurn % players.length) + 1;
-      setIsMyTurn(true); // 현재는 모든 턴을 사용자가 플레이
-      startTimer(); // 새 턴 시작시 타이머 시작
+      const nextPlayer = players.find(p => p.id === nextPlayerId);
+      
+      // 다음 플레이어가 현재 유저(플레이어 1)인 경우에만 isMyTurn을 true로 설정
+      setIsMyTurn(nextPlayerId === 1);
+      
+      // 다음 플레이어가 AI인 경우 AI 턴 처리
+      if (nextPlayer?.type === 'ai') {
+        // AI 턴은 잠시 후 자동으로 처리
+        setTimeout(() => {
+          handleAITurn(nextPlayerId);
+        }, 2000); // 2초 후 AI가 추측
+      } else {
+        // 인간 플레이어 턴인 경우 타이머 시작
+        startTimer();
+      }
     }
+    
+    // 제출 상태 리셋
+    setIsSubmitting(false);
   };
 
   const getCurrentPlayer = () => {
@@ -380,6 +452,163 @@ const DeductionGame: React.FC = () => {
 
   const updateGameConfig = (updates: Partial<GameConfig>) => {
     setGameConfig(prev => ({ ...prev, ...updates, difficulty: 'custom' }));
+  };
+
+  // 컴포넌트 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      clearTimer();
+    };
+  }, []);
+
+  const renderCodeEditorModal = () => {
+    if (!codeEditorModal.isOpen || !codeEditorModal.playerId) return null;
+    
+    const player = players.find(p => p.id === codeEditorModal.playerId);
+    if (!player) return null;
+
+    return (
+      <div className="modal-overlay" onClick={() => setCodeEditorModal({ isOpen: false, playerId: null })}>
+        <div className="modal-content code-editor-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h3>{player.nickname} AI 코드 에디터</h3>
+            <button 
+              className="modal-close"
+              onClick={() => setCodeEditorModal({ isOpen: false, playerId: null })}
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="code-editor-container">
+            <div className="editor-toolbar">
+              <div className="editor-left">
+                <span className="editor-info">코드 작성</span>
+                <div className="language-selector">
+                  <button
+                    className={`lang-btn ${player.aiLanguage === 'javascript' ? 'active' : ''}`}
+                    onClick={() => updatePlayer(player.id, { aiLanguage: 'javascript' })}
+                  >
+                    JavaScript
+                  </button>
+                  <button
+                    className={`lang-btn ${player.aiLanguage === 'typescript' ? 'active' : ''}`}
+                    onClick={() => updatePlayer(player.id, { aiLanguage: 'typescript' })}
+                  >
+                    TypeScript
+                  </button>
+                </div>
+              </div>
+              <div className="editor-actions">
+                <button 
+                  className="btn btn-small"
+                  onClick={() => updatePlayer(player.id, { aiCode: '' })}
+                >
+                  초기화
+                </button>
+                <button 
+                  className="btn btn-small"
+                  onClick={() => {
+                    const exampleCode = player.aiLanguage === 'typescript' 
+                      ? `// AI 전략 함수 (TypeScript)
+interface GameState {
+  keywords: string[];
+  myHints: number[];
+  previousGuesses: number[][];
+  revealedAnswers: number[];
+  revealedWrongs: number[];
+  answerCount: number;
+}
+
+function makeGuess(gameState: GameState): number[] {
+  const { keywords, myHints, previousGuesses, revealedAnswers, revealedWrongs, answerCount } = gameState;
+  
+  // 가능한 키워드 인덱스 목록
+  const availableIndices: number[] = keywords
+    .map((_, index) => index)
+    .filter(idx => !revealedWrongs.includes(idx));
+  
+  // 이미 공개된 정답 우선 선택
+  const selectedIndices: number[] = [...revealedAnswers];
+  
+  // 나머지는 랜덤 선택
+  while (selectedIndices.length < answerCount) {
+    const remaining = availableIndices.filter(idx => !selectedIndices.includes(idx));
+    if (remaining.length === 0) break;
+    
+    const randomIdx = remaining[Math.floor(Math.random() * remaining.length)];
+    selectedIndices.push(randomIdx);
+  }
+  
+  return selectedIndices;
+}`
+                      : `// AI 전략 함수 (JavaScript)
+function makeGuess(gameState) {
+  const { keywords, myHints, previousGuesses, revealedAnswers, revealedWrongs, answerCount } = gameState;
+  
+  // 가능한 키워드 인덱스 목록
+  const availableIndices = keywords
+    .map((_, index) => index)
+    .filter(idx => !revealedWrongs.includes(idx));
+  
+  // 이미 공개된 정답 우선 선택
+  const selectedIndices = [...revealedAnswers];
+  
+  // 나머지는 랜덤 선택
+  while (selectedIndices.length < answerCount) {
+    const remaining = availableIndices.filter(idx => !selectedIndices.includes(idx));
+    if (remaining.length === 0) break;
+    
+    const randomIdx = remaining[Math.floor(Math.random() * remaining.length)];
+    selectedIndices.push(randomIdx);
+  }
+  
+  return selectedIndices;
+}`;
+                    updatePlayer(player.id, { aiCode: exampleCode });
+                  }}
+                >
+                  예제 코드
+                </button>
+              </div>
+            </div>
+            
+            <div className="editor-wrapper">
+              <div className="line-numbers">
+                {((player.aiCode || '') + '\n').split('\n').map((_, index) => (
+                  <div key={index} className="line-number">{index + 1}</div>
+                ))}
+              </div>
+              <textarea
+                className="code-editor"
+                value={player.aiCode || ''}
+                onChange={(e) => updatePlayer(player.id, { aiCode: e.target.value })}
+                placeholder={player.aiLanguage === 'typescript' 
+                  ? "// TypeScript AI 전략 코드를 작성하세요\n// 타입 정의와 함께 작성해주세요"
+                  : "// JavaScript AI 전략 코드를 작성하세요\n// function makeGuess(gameState) { ... }"
+                }
+                spellCheck={false}
+              />
+            </div>
+            
+            <div className="editor-footer">
+              <div className="code-stats">
+                <span>줄: {(player.aiCode || '').split('\n').length}</span>
+                <span>문자: {(player.aiCode || '').length}</span>
+              </div>
+              <button 
+                className="btn-large btn-primary"
+                onClick={() => setCodeEditorModal({ isOpen: false, playerId: null })}
+
+
+              >
+                저장
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderModeSelection = () => (
@@ -474,14 +703,18 @@ const DeductionGame: React.FC = () => {
 
                 {player.type === 'ai' && (
                   <div className="form-section">
-                    <textarea
-                      className="input-field"
-                      placeholder="AI 코드를 입력하세요..."
-                      value={player.aiCode || ''}
-                      onChange={(e) => updatePlayer(player.id, { aiCode: e.target.value })}
-                      rows={6}
-                      style={{ resize: 'vertical', minHeight: '100px', fontSize: '0.9rem' }}
-                    />
+                    <button
+                      className="btn-large btn-secondary"
+                      onClick={() => setCodeEditorModal({ isOpen: true, playerId: player.id })}
+                      style={{ width: '100%' }}
+                    >
+                      {player.aiCode ? 'AI 코드 수정' : 'AI 코드 작성'}
+                    </button>
+                    {player.aiCode && (
+                      <div className="code-preview">
+                        <small>코드가 작성되었습니다 ({player.aiCode.split('\n').length}줄)</small>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -1082,17 +1315,21 @@ const DeductionGame: React.FC = () => {
 
   return (
     <div className="deduction-game">
-      <div className="game-header">
-        <h1>Exclusive Deduction Game</h1>
-        <p>서로 다른 단서로 정답을 추론하는 게임</p>
-      </div>
-      
       <div className="game-content">
-        {currentScreen === 'mode-selection' && renderModeSelection()}
-        {currentScreen === 'player-setup' && renderPlayerSetup()}
-        {currentScreen === 'game-config' && renderGameConfig()}
-        {currentScreen === 'game-preparation' && renderGamePreparation()}
-        {currentScreen === 'game' && renderGameScreen()}
+        <div className="game-wrapper">
+          <div className="game-header">
+            <h1>Exclusive Deduction Game</h1>
+            <p>서로 다른 단서로 정답을 추론하는 게임</p>
+          </div>
+          
+          {currentScreen === 'mode-selection' && renderModeSelection()}
+          {currentScreen === 'player-setup' && renderPlayerSetup()}
+          {currentScreen === 'game-config' && renderGameConfig()}
+          {currentScreen === 'game-preparation' && renderGamePreparation()}
+          {currentScreen === 'game' && renderGameScreen()}
+        </div>
+        
+        {renderCodeEditorModal()}
       </div>
     </div>
   );
