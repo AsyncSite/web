@@ -78,6 +78,7 @@ const DeductionGame: React.FC = () => {
   const [currentViewingPlayer, setCurrentViewingPlayer] = useState(0);
   const [timerIntervalId, setTimerIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [aiTimeoutId, setAiTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [codeEditorModal, setCodeEditorModal] = useState<{ isOpen: boolean; playerId: number | null }>({ 
     isOpen: false, 
     playerId: null 
@@ -236,29 +237,24 @@ const DeductionGame: React.FC = () => {
     setHintViewingPhase(true);
     setCurrentViewingPlayer(1);
     setCurrentScreen('game');
-    
-    // 첫 번째 플레이어가 인간인 경우 타이머 시작
-    const firstPlayer = players.find(p => p.id === 1);
-    if (firstPlayer?.type === 'human') {
-      setIsMyTurn(true);
-      startTimer();
-    } else if (firstPlayer?.type === 'ai') {
-      // 첫 번째 플레이어가 AI인 경우
-      setTimeout(() => {
-        handleAITurn(1);
-      }, 2000);
-    }
   };
 
   const startTimer = () => {
+    // 기존 타이머가 있다면 먼저 정리
     clearTimer();
+    
     setTimeRemaining(gameConfig.timeLimit);
     
     const intervalId = setInterval(() => {
       setTimeRemaining(prev => {
         if (prev <= 1) {
-          clearTimer();
-          handleTimeUp();
+          // 타이머를 먼저 정리하고 handleTimeUp 호출
+          clearInterval(intervalId);
+          setTimerIntervalId(null);
+          // setTimeout으로 다음 프레임에서 실행하여 상태 업데이트 충돌 방지
+          setTimeout(() => {
+            handleTimeUp();
+          }, 0);
           return 0;
         }
         return prev - 1;
@@ -276,30 +272,29 @@ const DeductionGame: React.FC = () => {
   };
 
   const handleTimeUp = () => {
-    const currentPlayerId = ((gameState.currentTurn - 1) % players.length) + 1;
-    const currentPlayer = players.find(p => p.id === currentPlayerId);
+    // 시간 초과시 랜덤하게 키워드 선택하여 자동 제출
+    const availableKeywords = gameState.keywords
+      .map((_, index) => index)
+      .filter(index => !gameState.revealedWrongAnswers.includes(index));
     
-    // AI가 아닌 현재 플레이어의 턴인 경우만 처리
-    if (currentPlayer?.type !== 'ai') {
-      // 시간 초과시 랜덤하게 키워드 선택하여 자동 제출
-      const availableKeywords = gameState.keywords
-        .map((_, index) => index)
-        .filter(index => !gameState.revealedWrongAnswers.includes(index));
-      
-      const shuffled = [...availableKeywords].sort(() => Math.random() - 0.5);
-      const autoSelection = shuffled.slice(0, gameConfig.answerCount);
-      
-      setSelectedKeywords(autoSelection);
-      
-      // 잠시 후 자동 제출
-      setTimeout(() => {
-        submitGuessWithSelection(autoSelection);
-      }, 500);
-    }
+    const shuffled = [...availableKeywords].sort(() => Math.random() - 0.5);
+    const autoSelection = shuffled.slice(0, gameConfig.answerCount);
+    
+    setSelectedKeywords(autoSelection);
+    
+    // 잠시 후 자동 제출
+    setTimeout(() => {
+      submitGuessWithSelection(autoSelection);
+    }, 500);
   };
 
   const exitGame = () => {
     clearTimer();
+    // AI 타임아웃도 정리
+    if (aiTimeoutId) {
+      clearTimeout(aiTimeoutId);
+      setAiTimeoutId(null);
+    }
     setCurrentScreen('mode-selection');
     // 게임 상태 초기화
     setGameState({
@@ -319,6 +314,7 @@ const DeductionGame: React.FC = () => {
     setIsMyTurn(false);
     setHintViewingPhase(false);
     setCurrentViewingPlayer(0);
+    setIsSubmitting(false);
   };
 
 
@@ -367,6 +363,8 @@ const DeductionGame: React.FC = () => {
     if (isSubmitting) return;
     
     setIsSubmitting(true);
+    
+    // 타이머 정리 (새로운 타이머 시작 전에)
     clearTimer();
 
     const correctCount = selection.filter(index => 
@@ -402,31 +400,17 @@ const DeductionGame: React.FC = () => {
 
     setSelectedKeywords([]);
     
-    if (isWinner || isMaxTurnsReached) {
-      setIsMyTurn(false);
-      clearTimer();
-    } else {
-      // 다음 플레이어 턴으로
-      const nextPlayerId = (gameState.currentTurn % players.length) + 1;
-      const nextPlayer = players.find(p => p.id === nextPlayerId);
-      
-      // 다음 플레이어가 현재 유저(플레이어 1)인 경우에만 isMyTurn을 true로 설정
-      setIsMyTurn(nextPlayerId === 1);
-      
-      // 다음 플레이어가 AI인 경우 AI 턴 처리
-      if (nextPlayer?.type === 'ai') {
-        // AI 턴은 잠시 후 자동으로 처리
-        setTimeout(() => {
-          handleAITurn(nextPlayerId);
-        }, 2000); // 2초 후 AI가 추측
-      } else {
-        // 인간 플레이어 턴인 경우 타이머 시작
+    if (!isWinner && !isMaxTurnsReached) {
+      // 다음 턴을 위해 타이머 재시작
+      setTimeout(() => {
         startTimer();
-      }
+      }, 100);
     }
     
     // 제출 상태 리셋
-    setIsSubmitting(false);
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 500);
   };
 
   const getCurrentPlayer = () => {
@@ -458,6 +442,9 @@ const DeductionGame: React.FC = () => {
   useEffect(() => {
     return () => {
       clearTimer();
+      if (aiTimeoutId) {
+        clearTimeout(aiTimeoutId);
+      }
     };
   }, []);
 
@@ -970,23 +957,6 @@ function makeGuess(gameState) {
                   </div>
                 </div>
 
-                <div className="summary-item">
-                  <h4>내 힌트 (오답 정보)</h4>
-                  <div className="hint-preview">
-                    {gameState.playerHints[1] ? (
-                      <div className="hint-list">
-                        {gameState.playerHints[1].map(hintIndex => (
-                          <span key={hintIndex} className="hint-chip">
-                            {gameState.keywords[hintIndex]}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <p>힌트를 불러오는 중...</p>
-                    )}
-                    <p className="hint-description">위 키워드들은 정답이 아닙니다.</p>
-                  </div>
-                </div>
               </div>
               
               <div className="game-start-section">
@@ -1074,7 +1044,6 @@ function makeGuess(gameState) {
                         setCurrentViewingPlayer(nextPlayer);
                       } else {
                         setHintViewingPhase(false);
-                        setIsMyTurn(true);
                         startTimer(); // 게임 시작시 타이머 시작
                       }
                     }}
@@ -1199,7 +1168,7 @@ function makeGuess(gameState) {
                       key={index}
                       className={`keyword-btn ${isSelected ? 'selected' : ''} ${isRevealedAnswer ? 'revealed-answer' : ''} ${isRevealedWrong ? 'revealed-wrong' : ''}`}
                       onClick={() => toggleKeywordSelection(index)}
-                      disabled={!isMyTurn}
+                      disabled={isSubmitting}
                     >
                       {keyword}
                       {isRevealedAnswer && <span className="reveal-indicator">✓</span>}
@@ -1226,14 +1195,14 @@ function makeGuess(gameState) {
                 <button 
                   className="btn-large btn-secondary"
                   onClick={() => setSelectedKeywords([])}
-                  disabled={!isMyTurn || selectedKeywords.length === 0}
+                  disabled={selectedKeywords.length === 0}
                 >
                   선택 초기화
                 </button>
                 <button 
                   className="btn-large btn-primary"
                   onClick={submitGuess}
-                  disabled={!isMyTurn || selectedKeywords.length !== gameConfig.answerCount}
+                  disabled={selectedKeywords.length !== gameConfig.answerCount || isSubmitting}
                 >
                   추측 제출
                 </button>
