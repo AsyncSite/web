@@ -5,10 +5,11 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Noto Sans KR', 'Source Code Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #ffffff;
+    background: linear-gradient(135deg, #000 0%, #0a0a0a 100%);
+    overflow-x: hidden;
 }
 
 /* Container */
@@ -78,7 +79,7 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* Hero Section - SIPE + NFYG Hybrid */
+/* Hero Section - 11MEN 우주적 디자인 */
 .hero {
     min-height: 100vh;
     display: flex;
@@ -87,31 +88,172 @@ body {
     position: relative;
     overflow: hidden;
     margin-top: 70px;
+    background: #000;
 }
 
-.hero-background {
+/* 11MEN 특징: 우주적 배경 */
+.cosmic-hero-bg {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-    opacity: 0.03;
-    z-index: -1;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.shooting-star {
+    position: absolute;
+    top: 15%;
+    left: -150px;
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #C3E88D, transparent);
+    transform: rotate(30deg);
+    animation: shootingStar 3s ease-out infinite;
+    animation-delay: 2s;
+}
+
+@keyframes shootingStar {
+    0% { left: -150px; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: calc(100% + 150px); opacity: 0; }
+}
+
+.hero-stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.star {
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    width: 4px;
+    height: 4px;
+    background: #C3E88D;
+    border-radius: 50%;
+    animation: twinkle 4s infinite var(--delay);
+    box-shadow: 0 0 8px #C3E88D;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+}
+
+.orbital-hero-system {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hero-orbit {
+    position: absolute;
+    border: 1px solid rgba(195, 232, 141, 0.2);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hero-orbit-1 {
+    width: 300px;
+    height: 300px;
+    animation: rotate 12s linear infinite;
+}
+
+.hero-orbit-2 {
+    width: 450px;
+    height: 450px;
+    animation: rotate 20s linear infinite reverse;
+}
+
+.hero-orbit-3 {
+    width: 600px;
+    height: 600px;
+    animation: rotate 28s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.hero-planet {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    animation: counterRotate 2s ease-in-out infinite alternate;
+}
+
+@keyframes counterRotate {
+    0% { transform: translateX(-50%) scale(1); }
+    100% { transform: translateX(-50%) scale(1.1); }
+}
+
+.planet-football {
+    filter: drop-shadow(0 0 10px #C3E88D);
+}
+
+.planet-team {
+    filter: drop-shadow(0 0 8px #82aaff);
+}
+
+.planet-growth {
+    filter: drop-shadow(0 0 6px #ffcb6b);
 }
 
 .hero-content {
-    text-align: center;
-    max-width: 900px;
-    padding: 2rem;
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+/* 타이프라이터 효과 */
+.typewriter {
+    font-family: 'Source Code Pro', monospace;
+    position: relative;
+}
+
+.title-accent {
+    color: #C3E88D;
+    font-weight: 700;
+    text-shadow: 0 0 30px #C3E88D;
+    font-size: 4rem;
+}
+
+.title-main {
+    color: #82aaff;
+    font-weight: 700;
+    text-shadow: 0 0 20px #82aaff;
+    font-size: 4rem;
+}
+
+.cursor {
+    animation: blink 1s infinite;
+    color: #C3E88D;
+    font-size: 2rem;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
 }
 
 .hero-title {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 300;
     letter-spacing: -0.03em;
     margin-bottom: 1rem;
     line-height: 1.2;
+    text-align: center;
+    max-width: 900px;
+    padding: 2rem;
 }
 
 .subtitle {
@@ -119,12 +261,12 @@ body {
     font-size: 1.3rem;
     font-weight: 400;
     margin-top: 0.5rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .hero-description {
     font-size: 1.2rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 3rem;
     line-height: 1.8;
 }
@@ -145,12 +287,13 @@ body {
 .stat-number {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #111;
+    color: #C3E88D;
+    text-shadow: 0 0 15px #C3E88D;
 }
 
 .stat-label {
     font-size: 0.9rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .hero-actions {
@@ -197,7 +340,11 @@ body {
 /* Categories - Trevari Style */
 .categories {
     padding: 5rem 0;
-    background: #f8f8f8;
+    background: white;
+    border-radius: 30px 30px 0 0;
+    margin-top: -30px;
+    position: relative;
+    z-index: 3;
 }
 
 .section-title {
@@ -251,22 +398,103 @@ body {
     opacity: 0.8;
 }
 
-/* Teams Section - NFYG + Trevari Hybrid */
+/* Teams Section - 11MEN + NFYG + Trevari Hybrid */
 .teams {
     padding: 5rem 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2b2b2b 100%);
+    color: white;
 }
+
+.teams .section-title {
+    color: white;
+}
+
+/* 11MEN 특징: 연결 네트워크 */
+.team-connector {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 0;
+    position: relative;
+}
+
+.connection-network {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.network-node {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: #C3E88D;
+    border-radius: 50%;
+    box-shadow: 0 0 25px #C3E88D;
+}
+
+.node-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(195, 232, 141, 0.5);
+    border-radius: 50%;
+    animation: networkPulse 3s infinite;
+}
+
+@keyframes networkPulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+
+.network-lines {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+}
+
+.network-line {
+    position: absolute;
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(to right, #C3E88D, transparent);
+    transform-origin: left center;
+}
+
+.line-1 { transform: translate(10px, -1px) rotate(0deg); }
+.line-2 { transform: translate(10px, -1px) rotate(90deg); }
+.line-3 { transform: translate(10px, -1px) rotate(180deg); }
+.line-4 { transform: translate(10px, -1px) rotate(270deg); }
 
 .team-list {
     margin-bottom: 3rem;
 }
 
-/* Featured Card - NFYG Style */
+/* Featured Card - 11MEN + NFYG Style */
 .team-card.featured {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(195, 232, 141, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     padding: 2.5rem;
     margin-bottom: 3rem;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.card-interactive:hover {
+    border-color: #C3E88D;
+    box-shadow: 0 12px 40px rgba(195, 232, 141, 0.2);
+    transform: translateY(-5px);
 }
 
 .host-section {
@@ -319,6 +547,7 @@ body {
     font-size: 1.8rem;
     margin-bottom: 1rem;
     font-weight: 400;
+    color: #C3E88D;
 }
 
 .team-tags {
@@ -363,7 +592,7 @@ body {
 
 .team-description {
     line-height: 1.7;
-    color: #555;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 1.5rem;
 }
 
@@ -381,34 +610,36 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: #111;
+    background: linear-gradient(90deg, #C3E88D, #82aaff);
     transition: width 0.3s;
+    box-shadow: 0 0 10px rgba(195, 232, 141, 0.5);
 }
 
 .status-text {
     font-size: 0.9rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .apply-btn {
     width: 100%;
     padding: 1rem;
-    background: #111;
-    color: white;
+    background: linear-gradient(135deg, #C3E88D, #82aaff);
+    color: #000;
     border: none;
     border-radius: 8px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(195, 232, 141, 0.3);
 }
 
 .apply-btn:hover {
-    background: #222;
-    transform: scale(1.02);
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(195, 232, 141, 0.4);
 }
 
-/* Team Grid - Trevari Style Cards */
+/* Team Grid - 11MEN + Trevari Style Cards */
 .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -416,16 +647,23 @@ body {
     margin-bottom: 2rem;
 }
 
+.card-slide-container {
+    position: relative;
+}
+
 .team-card-simple {
-    background: white;
-    border: 1px solid #e0e0e0;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(195, 232, 141, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.3s;
+    color: white;
 }
 
 .team-card-simple:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 20px rgba(195, 232, 141, 0.2);
+    border-color: #C3E88D;
     transform: translateY(-2px);
 }
 
@@ -459,11 +697,12 @@ body {
     font-size: 1.2rem;
     margin-bottom: 0.75rem;
     font-weight: 600;
+    color: #C3E88D;
 }
 
 .team-card-simple p {
     font-size: 0.95rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 1rem;
     line-height: 1.5;
 }
@@ -488,12 +727,12 @@ body {
 
 .host-mini span {
     font-size: 0.9rem;
-    color: #555;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .card-footer .status {
     font-size: 0.9rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
 }
 
@@ -501,18 +740,20 @@ body {
     display: block;
     margin: 2rem auto;
     padding: 0.75rem 2rem;
-    background: white;
-    border: 2px solid #111;
+    background: transparent;
+    border: 2px solid #C3E88D;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    color: #C3E88D;
 }
 
 .load-more:hover {
-    background: #111;
-    color: white;
+    background: #C3E88D;
+    color: #000;
+    box-shadow: 0 4px 15px rgba(195, 232, 141, 0.3);
 }
 
 /* How It Works - NFYG Style */

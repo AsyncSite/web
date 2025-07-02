@@ -8,7 +8,9 @@ body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #fafafa;
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .container {
@@ -17,30 +19,137 @@ body {
     padding: 0 1rem;
 }
 
-/* Header */
+/* Header - 11MEN 우주적 디자인 */
 header {
+    min-height: 100vh;
     padding: 3rem 0;
     text-align: center;
-    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* 우주적 들러리 */
+.cosmic-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.header-stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.star {
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    width: 4px;
+    height: 4px;
+    background: #C3E88D;
+    border-radius: 50%;
+    animation: twinkle 3s infinite var(--delay);
+    box-shadow: 0 0 10px #C3E88D;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+}
+
+.orbital-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(195, 232, 141, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotate 15s linear infinite;
+}
+
+.orbit-planet {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #82aaff, #5a7de6);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px #82aaff;
+}
+
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+/* 타이프라이터 효과 */
+.typewriter {
+    font-family: 'Source Code Pro', monospace;
+    position: relative;
+}
+
+.title-accent {
+    color: #C3E88D;
+    font-weight: 700;
+    text-shadow: 0 0 20px #C3E88D;
+}
+
+.title-main {
+    color: #82aaff;
+    font-weight: 700;
+}
+
+.cursor {
+    animation: blink 1s infinite;
+    color: #C3E88D;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
 }
 
 .site-title {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 300;
     letter-spacing: -0.02em;
     margin-bottom: 0.5rem;
+    color: white;
 }
 
 .tagline {
-    font-size: 1.1rem;
-    color: #666;
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.8);
     font-weight: 300;
 }
 
 /* Intro Section */
 .intro {
-    padding: 3rem 0;
+    padding: 4rem 0;
     text-align: center;
+    background: white;
+    border-radius: 30px 30px 0 0;
+    margin-top: -30px;
+    position: relative;
+    z-index: 3;
 }
 
 .intro-text {
@@ -50,22 +159,132 @@ header {
     font-weight: 300;
 }
 
-/* Events Section */
+/* Events Section - 11MEN 슬라이딩 카드 */
 .events {
-    padding: 2rem 0;
+    padding: 3rem 0;
+    background: white;
+    position: relative;
+}
+
+/* 카드 스택 컨테이너 */
+.card-stack-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stack-navigation {
+    position: absolute;
+    top: 50%;
+    right: -60px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    z-index: 10;
+}
+
+.nav-indicator {
+    width: 40px;
+    height: 40px;
+    background: rgba(17, 17, 17, 0.8);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1.2rem;
+}
+
+.nav-indicator:hover {
+    background: #111;
+    transform: scale(1.1);
+}
+
+.card-counter {
+    font-size: 0.9rem;
+    color: #666;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+/* 카드 상태 */
+.event-card {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.card-active {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    z-index: 3;
+}
+
+.card-next {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0.7;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.card-hidden {
+    transform: translateY(40px) scale(0.9);
+    opacity: 0.4;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+/* 연결 라인 */
+.connection-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+    gap: 1rem;
+}
+
+.line-segment {
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #C3E88D, transparent);
+}
+
+.line-dot {
+    width: 12px;
+    height: 12px;
+    background: #C3E88D;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #C3E88D;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
 }
 
 .event-card {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
     overflow: hidden;
-    transition: box-shadow 0.3s;
+    border: 1px solid rgba(195, 232, 141, 0.2);
 }
 
-.event-card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+.card-active:hover {
+    box-shadow: 0 8px 30px rgba(195, 232, 141, 0.2);
+    border-color: #C3E88D;
+    transform: translateY(-2px) scale(1.01);
 }
 
 .event-header {

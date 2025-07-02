@@ -5,10 +5,11 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #ffffff;
+    background-color: #000;
+    overflow-x: hidden;
 }
 
 /* Navigation */
@@ -59,23 +60,185 @@ body {
     background-color: #27AE60;
 }
 
-/* Hero Section */
+/* Hero Section - 11MEN 우주적 디자인 */
 .hero {
+    min-height: 100vh;
     padding: 4rem 2rem;
     text-align: center;
-    background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 100%);
+    background: #000;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 11MEN 특징: 우주적 배경 */
+.cosmic-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 별들 애니메이션 */
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.star {
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    width: 3px;
+    height: 3px;
+    background: #C3E88D;
+    border-radius: 50%;
+    animation: twinkle 2s infinite var(--delay);
+    box-shadow: 0 0 6px #C3E88D;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* 유성 애니메이션 */
+.shooting-star {
+    position: absolute;
+    top: 20%;
+    left: -100px;
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #C3E88D, transparent);
+    transform: rotate(45deg);
+    animation: shootingStar 2.5s ease-out;
+}
+
+@keyframes shootingStar {
+    0% { left: -100px; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: calc(100% + 100px); opacity: 0; }
+}
+
+/* 궤도 시스템 */
+.orbital-system {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.orbit {
+    position: absolute;
+    border: 1px solid rgba(195, 232, 141, 0.2);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.orbit-1 {
+    width: 200px;
+    height: 200px;
+    animation: rotate 10s linear infinite;
+}
+
+.orbit-2 {
+    width: 300px;
+    height: 300px;
+    animation: rotate 15s linear infinite reverse;
+}
+
+.orbit-3 {
+    width: 400px;
+    height: 400px;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.planet-1 {
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(135deg, #C3E88D, #8FD67A);
+    box-shadow: 0 0 10px #C3E88D;
+}
+
+.planet-2 {
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, #82aaff, #5a7de6);
+    box-shadow: 0 0 8px #82aaff;
+}
+
+.planet-3 {
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, #ffcb6b, #e6b655);
+    box-shadow: 0 0 6px #ffcb6b;
+}
+
+/* 타이프라이터 효과 */
+.typewriter {
+    font-family: 'Source Code Pro', monospace;
+    position: relative;
+}
+
+.title-accent {
+    color: #C3E88D;
+    font-weight: 700;
+    text-shadow: 0 0 20px #C3E88D;
+}
+
+.title-main {
+    color: #82aaff;
+    font-weight: 700;
+}
+
+.cursor {
+    animation: blink 1s infinite;
+    color: #C3E88D;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
 }
 
 .hero-content h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #333;
+    color: white;
     font-weight: 700;
+    line-height: 1.2;
 }
 
 .hero-subtitle {
     font-size: 1.2rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 3rem;
 }
 
@@ -94,12 +257,13 @@ body {
 .stat-number {
     font-size: 2rem;
     font-weight: 700;
-    color: #2ECC40;
+    color: #C3E88D;
+    text-shadow: 0 0 10px #C3E88D;
 }
 
 .stat-label {
     font-size: 0.9rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Categories Section */
@@ -107,6 +271,11 @@ body {
     padding: 4rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+    z-index: 3;
+    margin-top: -20px;
 }
 
 .section-title {
@@ -155,10 +324,49 @@ body {
     color: #666;
 }
 
-/* Teams Section */
+/* Teams Section - 11MEN 슬라이딩 카드 */
 .teams {
     padding: 4rem 2rem;
-    background-color: #f9f9f9;
+    background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+    color: white;
+}
+
+.teams .section-title {
+    color: white;
+}
+
+/* 연결선 요소 */
+.connector-lines {
+    position: relative;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.connector-line {
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #C3E88D, transparent);
+    position: relative;
+}
+
+.connector-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #C3E88D;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #C3E88D;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
 }
 
 .teams .section-title {
@@ -202,16 +410,20 @@ body {
 }
 
 .team-card {
-    background: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(195, 232, 141, 0.3);
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    color: white;
 }
 
 .team-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(195, 232, 141, 0.2);
+    border-color: #C3E88D;
 }
 
 .team-header {
@@ -248,12 +460,13 @@ body {
 .team-title {
     font-size: 1.3rem;
     margin-bottom: 0.75rem;
-    color: #333;
+    color: #C3E88D;
+    font-weight: 600;
 }
 
 .team-description {
     font-size: 0.95rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 1.5rem;
     line-height: 1.5;
 }
