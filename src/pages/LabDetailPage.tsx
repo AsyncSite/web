@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import './LabPage.css';
 
-import { Tetris } from "../components/lab/subject";
+import { Tetris, DeductionGame } from "../components/lab/subject";
 
 
 const LabDetailPage = () => {
@@ -13,6 +13,8 @@ const LabDetailPage = () => {
         switch (subject) {
             case "tetris":
                 return <Tetris />
+            case "deduction-game":
+                return <DeductionGame />
             default:
                 return (
                     <h1 className="lab-title">준비중...</h1>

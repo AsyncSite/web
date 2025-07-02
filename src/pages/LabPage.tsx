@@ -10,6 +10,12 @@ const labItems = [
         imageUrl: "/lab/images/tetris.png",
         link: "tetris"
     },
+    {
+        title: "추론 게임",
+        description: "서로 다른 오답 정보를 가진 상태에서 정답을 추론하는 브라우저 게임",
+        imageUrl: "/lab/images/deduction-game.png",
+        link: "deduction-game"
+    },
     // 필요한 만큼 아이템 추가
 ];
 
