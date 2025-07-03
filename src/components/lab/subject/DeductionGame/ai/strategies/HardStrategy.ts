@@ -43,7 +43,8 @@ export class HardStrategy implements AIStrategy {
     // Medium 전략을 사용하여 가능성 높은 후보군 추리기 (계산량 감소)
     const mediumStrategy = new MediumStrategy();
     const mediumGuess = mediumStrategy.selectKeywords(gameState);
-    const potentialCandidates = new Set([...mustBeAnswers, ...mediumGuess]);
+    const combinedArray = Array.from(mustBeAnswers).concat(mediumGuess);
+    const potentialCandidates = new Set(combinedArray);
     
     const searchSpace = Array.from(potentialCandidates).filter(idx => !mustBeWrongs.has(idx));
 
