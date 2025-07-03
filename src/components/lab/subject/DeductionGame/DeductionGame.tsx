@@ -88,6 +88,7 @@ const DeductionGame: React.FC = () => {
   const [soloDifficulty, setSoloDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [isAIThinking, setIsAIThinking] = useState(false);
   const gameManagerRef = useRef<GameManager | null>(null);
+  const [turnStartTime, setTurnStartTime] = useState<number>(0);
   const [codeEditorModal, setCodeEditorModal] = useState<{ isOpen: boolean; playerId: number | null }>({ 
     isOpen: false, 
     playerId: null 
@@ -257,6 +258,8 @@ const DeductionGame: React.FC = () => {
           setIsAIThinking(true);
         }
         setIsMyTurn(playerInfo.type === 'human');
+        // 턴 시작 시간 기록
+        setTurnStartTime(Date.now());
         // GameManager의 currentTurn과 동기화
         const context = manager.getGameContext();
         setGameState(prev => ({
@@ -307,6 +310,8 @@ const DeductionGame: React.FC = () => {
     // 기존 타이머가 있다면 먼저 정리
     clearTimer();
     
+    // 턴 시작 시간 기록
+    setTurnStartTime(Date.now());
     setTimeRemaining(gameConfig.timeLimit);
     
     const intervalId = setInterval(() => {
@@ -485,6 +490,9 @@ const DeductionGame: React.FC = () => {
     const currentPlayerId = ((gameState.currentTurn - 1) % players.length) + 1;
     const currentPlayer = players.find(p => p.id === currentPlayerId);
 
+    // 실제 사용 시간 계산
+    const actualTimeUsed = turnStartTime ? Math.round((Date.now() - turnStartTime) / 1000) : gameConfig.timeLimit - timeRemaining;
+    
     const turnResult: TurnResult = {
       playerId: currentPlayerId,
       playerName: currentPlayer?.nickname || `플레이어 ${currentPlayerId}`,
@@ -492,7 +500,7 @@ const DeductionGame: React.FC = () => {
       guessKeywords: selection.map(index => gameState.keywords[index]),
       correctCount,
       turnNumber: gameState.currentTurn,
-      timeUsed: gameConfig.timeLimit - timeRemaining
+      timeUsed: actualTimeUsed
     };
 
     // 최대 턴 수 확인
@@ -1159,6 +1167,15 @@ function makeGuess(gameState) {
               gameState.answers,
               gameState.playerHints
             );
+          } else {
+            // GameManager 없이 게임 시작 시 타이머 시작
+            setTimeout(() => {
+              setGameState(prev => ({
+                ...prev,
+                currentTurn: 1
+              }));
+              startTimer();
+            }, 100);
           }
         }
         return null;
@@ -1219,6 +1236,15 @@ function makeGuess(gameState) {
                             gameState.answers,
                             gameState.playerHints
                           );
+                        } else {
+                          // GameManager 없이 게임 시작 시 타이머 시작
+                          setTimeout(() => {
+                            setGameState(prev => ({
+                              ...prev,
+                              currentTurn: 1
+                            }));
+                            startTimer();
+                          }, 100);
                         }
                       }
                     }}

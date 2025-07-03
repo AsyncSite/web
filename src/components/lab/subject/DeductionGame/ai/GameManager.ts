@@ -18,6 +18,7 @@ export class GameManager {
   private config: GameManagerConfig;
   private isGameRunning: boolean = false;
   private turnTimer?: NodeJS.Timeout;
+  private turnStartTime: number = 0;
   
   private onTurnStart?: (player: IPlayer) => void;
   private onTurnEnd?: (result: TurnResult) => void;
@@ -90,6 +91,9 @@ export class GameManager {
 
     const currentPlayer = this.getCurrentPlayer();
     if (!currentPlayer) return;
+
+    // 턴 시작 시간 기록
+    this.turnStartTime = Date.now();
 
     if (this.onTurnStart) {
       this.onTurnStart(currentPlayer);
@@ -183,6 +187,9 @@ export class GameManager {
     const isWinner = correctCount === this.config.answerCount && 
                      guess.every(idx => this.gameContext.answers.includes(idx));
 
+    // 실제 사용 시간 계산
+    const actualTimeUsed = Math.round((Date.now() - this.turnStartTime) / 1000);
+    
     const turnResult: TurnResult = {
       playerId: currentPlayer.getInfo().id,
       playerName: currentPlayer.getInfo().nickname,
@@ -190,7 +197,7 @@ export class GameManager {
       guessKeywords: guess.map(idx => this.gameContext.keywords[idx]),
       correctCount,
       turnNumber: this.gameContext.currentTurn,
-      timeUsed: this.config.timeLimit // TODO: Track actual time used
+      timeUsed: actualTimeUsed
     };
 
     this.gameContext.turnHistory.push(turnResult);
