@@ -57,28 +57,7 @@ const Contribution: React.FC = () => {
     };
 
 
-    const renderUserIcon = (user: ContributionUser) => {
-        return (
-            <div className="contributor-card">
-                <a
-                    href={`https://github.com/${user.gitName}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="contributor-link"
-                >
-                    <div className="profile-wrapper">
-                        <img
-                            src={`https://avatars.githubusercontent.com/u/${user.gitUserId}?v=4`}
-                            alt={`${user.gitName} 프로필`}
-                            className="profile-img"
-                            onError={handleImgError}
-                        />
-                    </div>
-                    <span className="contributor-name">{user.gitName}</span>
-                </a>
-            </div>
-        )
-    }
+
 
     return (
         <section className="contribution-page">
@@ -88,7 +67,26 @@ const Contribution: React.FC = () => {
                 <span className="contribution-label">Contributed by</span>
                 <div className="contributors-list">
                     {
-                        contributionUsers.map(renderUserIcon)
+                        contributionUsers.map((user, index) => (
+                            <div key={user.gitUserId || index} className="contributor-card">
+                                <a
+                                    href={`https://github.com/${user.gitName}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="contributor-link"
+                                >
+                                    <div className="profile-wrapper">
+                                        <img
+                                            src={`https://avatars.githubusercontent.com/u/${user.gitUserId}?v=4`}
+                                            alt={`${user.gitName} 프로필`}
+                                            className="profile-img"
+                                            onError={handleImgError}
+                                        />
+                                    </div>
+                                    <span className="contributor-name">{user.gitName}</span>
+                                </a>
+                            </div>
+                        ))
                     }
 
                     {/* who's next? 카드 */}

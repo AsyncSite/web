@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '../../ui/Card';
+import Badge from '../../ui/Badge';
+import { Sprout, Globe, Lightbulb, HandHeart, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import './About.css';
 
 interface CardContent {
@@ -6,363 +9,325 @@ interface CardContent {
     title: string;
     subtitle: string;
     content: React.ReactNode;
+    icon: React.ComponentType<{ className?: string }>;
+    badge: string;
+    badgeVariant?: 'default' | 'secondary' | 'outline' | 'destructive';
 }
 
 const About: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement | null>(null);
-
-    // "About 섹션"에 도달했을 때 자동 스크롤을 한 번만 실행하기 위한 상태
-    const [hasForcedScroll, setHasForcedScroll] = useState(false);
+    const [currentCardIndex, setCurrentCardIndex] = useState(0);
+    const [isInView, setIsInView] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragOffset, setDragOffset] = useState(0);
+    const aboutRef = useRef<HTMLDivElement>(null);
+    const startX = useRef(0);
+    const currentX = useRef(0);
 
     // 카드 데이터
     const cards: CardContent[] = [
         {
             id: 1,
-            title: '🪴 11맨: 함께 성장하는 공간',
-            subtitle: '“배우고, 공유하고, 함께 나아가는 개발자 커뮤니티”',
+            title: 'Async Site: 함께 성장하는 공간',
+            subtitle: '배우고, 공유하고, 함께 나아가는 개발자 커뮤니티',
+            icon: Sprout,
+            badge: 'Community',
+            badgeVariant: 'default',
             content: (
-                <div className="card-content-redesign">
-                    <div className="card-point">
-                        <span className="card-point-icon">🌱</span>
-                        <div className="card-point-text">
-                            <h4 className="card-point-keyword">꾸준한 학습과 실천</h4>
-                            <p className="card-point-explanation">
-                                매일 작은 목표를 통해 함께 <strong>성장하며</strong>, 어제보다 나은 오늘을 만들어요.
+                <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-[#6366F1]/5 border border-[#6366F1]/10">
+                        <div className="w-8 h-8 rounded-full bg-[#6366F1]/20 flex items-center justify-center flex-shrink-0">
+                            <Sprout className="w-4 h-4 text-[#6366F1]" />
+                        </div>
+                        <div>
+                            <h4 className="text-[#F8FAFC] font-medium mb-1">꾸준한 학습과 실천</h4>
+                            <p className="text-[#64748B] text-sm">
+                                매일 작은 목표를 통해 함께 <span className="text-[#6366F1] font-medium">성장하며</span>, 어제보다 나은 오늘을 만들어요.
                             </p>
                         </div>
                     </div>
-                    <div className="card-point">
-                        <span className="card-point-icon">💡</span>
-                        <div className="card-point-text">
-                            <h4 className="card-point-keyword">자유로운 지식 공유</h4>
-                            <p className="card-point-explanation">
-                                스터디, 경험담, Q&A로 서로의 성장을 돕는 <strong>집단 지성</strong>을 추구해요.
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-[#06B6D4]/5 border border-[#06B6D4]/10">
+                        <div className="w-8 h-8 rounded-full bg-[#06B6D4]/20 flex items-center justify-center flex-shrink-0">
+                            <Lightbulb className="w-4 h-4 text-[#06B6D4]" />
+                        </div>
+                        <div>
+                            <h4 className="text-[#F8FAFC] font-medium mb-1">자유로운 지식 공유</h4>
+                            <p className="text-[#64748B] text-sm">
+                                스터디, 경험담, Q&A로 서로의 성장을 돕는 <span className="text-[#06B6D4] font-medium">집단 지성</span>을 추구해요.
                             </p>
                         </div>
                     </div>
-                    <div className="card-point">
-                        <span className="card-point-icon">🔗</span>
-                        <div className="card-point-text">
-                            <h4 className="card-point-keyword">수평적 연결과 지지</h4>
-                            <p className="card-point-explanation">
-                                부담 없는 분위기에서 <strong>관심사</strong>를 기반으로 자유롭게 교류하고 응원해요.
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-[#A855F7]/5 border border-[#A855F7]/10">
+                        <div className="w-8 h-8 rounded-full bg-[#A855F7]/20 flex items-center justify-center flex-shrink-0">
+                            <HandHeart className="w-4 h-4 text-[#A855F7]" />
+                        </div>
+                        <div>
+                            <h4 className="text-[#F8FAFC] font-medium mb-1">수평적 연결과 지지</h4>
+                            <p className="text-[#64748B] text-sm">
+                                부담 없는 분위기에서 <span className="text-[#A855F7] font-medium">관심사</span>를 기반으로 자유롭게 교류하고 응원해요.
                             </p>
                         </div>
                     </div>
                 </div>
             ),
         },
-        // {
-        //     id: 2,
-        //     title: '🪴 우리는 이런 사람들이에요',
-        //     subtitle: '“매일 작은 커밋 🌱, 함께 큰 성장을 이루는 11맨입니다!”', // 부제목 수정
-        //     content: (
-        //         <>
-        //             {/* 내용 수정 */}
-        //             우리는 <strong>매일의 작은 실천</strong>(1일 1커밋!)으로 함께 성장하는 개발자 커뮤니티, 11맨입니다.<br />
-        //             각자의 자리에서 찍는 작은 점들이 모여 의미 있는 별자리를 만들듯, <br />
-        //             우리의 꾸준한 기록과 공유는 <strong>집단 지성의 힘</strong>을 발휘합니다. 🚀<br />
-        //             느슨하지만 끈끈한 연결 속에서, 따로 또 같이 시너지를 만들어갑니다.<br />
-        //         </>
-        //     ),
-        // },
         {
             id: 2,
-            title: '🌏 우리의 세계관은 이런 거야!',
-            subtitle: '“따로 또 같이, 느슨히 그럼에도 끈끈히!”',
+            title: '다양한 활동과 프로젝트',
+            subtitle: '실무 경험과 포트폴리오를 쌓아가는 여정',
+            icon: Globe,
+            badge: 'Projects',
+            badgeVariant: 'secondary',
             content: (
-                <>
-                    우리 커뮤니티는 서로의 점(작은 행동)들이 연결되어<br />
-                    <strong>집단 지성의 숲</strong>을 만들어가는 공간이에요.<br />
-                    각자 다른 궤도를 돌지만, 같은 태양(목표)을 향해 움직이고 있죠. 🌟<br />
-                    작은 커밋들이 쌓여 큰 변화를 만든다는 믿음,<br />
-                    이게 바로 우리 세계관의 핵심!
-                </>
+                <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-[#10B981]/5 border border-[#10B981]/10">
+                        <div className="w-8 h-8 rounded-full bg-[#10B981]/20 flex items-center justify-center flex-shrink-0">
+                            <Globe className="w-4 h-4 text-[#10B981]" />
+                        </div>
+                        <div>
+                            <h4 className="text-[#F8FAFC] font-medium mb-1">실무 프로젝트</h4>
+                            <p className="text-[#64748B] text-sm">
+                                실제 서비스 개발을 통해 <span className="text-[#10B981] font-medium">실무 경험</span>을 쌓고 포트폴리오를 만들어요.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-[#F59E0B]/5 border border-[#F59E0B]/10">
+                        <div className="w-8 h-8 rounded-full bg-[#F59E0B]/20 flex items-center justify-center flex-shrink-0">
+                            <Lightbulb className="w-4 h-4 text-[#F59E0B]" />
+                        </div>
+                        <div>
+                            <h4 className="text-[#F8FAFC] font-medium mb-1">스터디 그룹</h4>
+                            <p className="text-[#64748B] text-sm">
+                                관심 분야별로 <span className="text-[#F59E0B] font-medium">스터디 그룹</span>을 만들어 함께 학습하고 성장해요.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             ),
         },
         {
             id: 3,
-            title: '💡 우리 뭐 하고 있냐고?',
-            subtitle: '“작고 꾸준한 행동이 세상을 바꿀지도 몰라요!”',
+            title: '열린 커뮤니티 문화',
+            subtitle: '누구나 환영받는 포용적인 개발자 공간',
+            icon: HandHeart,
+            badge: 'Culture',
+            badgeVariant: 'outline',
             content: (
-                <>
-                    <strong>하루 한 줄</strong>, 11루틴으로 꾸준히 기록하고 공유하며,<br />
-                    각자의 속도로 성장해요. 🌱<br />
-                    디스코드에서 매주 함께 모여 집중 타임도 갖고,<br />
-                    서로의 경험을 나누면서 <strong>공동의 성장</strong>을 만들어가고 있어요.<br />
-                    부담은 적고, 재미는 많아요. 😄
-                </>
-            ),
-        },
-        {
-            id: 4,
-            title: '🤝 함께하면 뭐가 좋을까?',
-            subtitle: '“너랑 같이라면, 더 멋질 거야!”',
-            content: (
-                <>
-                    <ul>
-                        <li>혼자보다 <strong>더 꾸준히</strong> 할 수 있어요.</li>
-                        <li>작은 기록도 <strong>누군가 응원</strong>해줘요.</li>
-                        <li>새로운 아이디어와 <strong>영감이 가득!</strong></li>
-                        <li>느슨하지만 든든한 <strong>동료들</strong>이 생겨요.</li>
-                    </ul>
-                    자, 이제 같이 잔디 심으러 가볼까요? 🌱
-                </>
+                <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-[#EC4899]/5 border border-[#EC4899]/10">
+                        <div className="w-8 h-8 rounded-full bg-[#EC4899]/20 flex items-center justify-center flex-shrink-0">
+                            <HandHeart className="w-4 h-4 text-[#EC4899]" />
+                        </div>
+                        <div>
+                            <h4 className="text-[#F8FAFC] font-medium mb-1">초보자 환영</h4>
+                            <p className="text-[#64748B] text-sm">
+                                경험과 실력에 관계없이 <span className="text-[#EC4899] font-medium">모든 레벨</span>의 개발자를 환영해요.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-[#8B5CF6]/5 border border-[#8B5CF6]/10">
+                        <div className="w-8 h-8 rounded-full bg-[#8B5CF6]/20 flex items-center justify-center flex-shrink-0">
+                            <Globe className="w-4 h-4 text-[#8B5CF6]" />
+                        </div>
+                        <div>
+                            <h4 className="text-[#F8FAFC] font-medium mb-1">다양성 존중</h4>
+                            <p className="text-[#64748B] text-sm">
+                                다양한 배경과 관점을 가진 사람들이 <span className="text-[#8B5CF6] font-medium">함께 어울리는</span> 공간이에요.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             ),
         },
     ];
 
-    /**
-     * (1) IntersectionObserver로 "About" 섹션이 20% 정도 보이기 시작하면
-     *    -> 해당 섹션을 화면 중앙으로 이동. 단, 한 번만 실행
-     */
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
+    const nextCard = () => {
+        setCurrentCardIndex((prev) => (prev + 1) % cards.length);
+    };
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const entry = entries[0];
-                // About 섹션이 threshold(0.2) 이상으로 보이기 시작 && 아직 스크롤 실행 안 했다면
-                if (entry.isIntersecting && !hasForcedScroll) {
-                    // 뷰포트 중앙으로 스크롤하기 위한 계산
-                    const rect = container.getBoundingClientRect();
-                    // 현재 스크롤 위치
-                    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
-                    // 컨테이너 중심 = 컨테이너의 상단 위치 + (컨테이너 높이 / 2)
-                    const containerCenterY = rect.top + currentScrollY + rect.height / 2;
-                    // 뷰포트의 중앙 위치 = 현재 스크롤 + (뷰포트 높이 / 2)
-                    const viewportCenterY = currentScrollY + window.innerHeight / 2;
+    const prevCard = () => {
+        setCurrentCardIndex((prev) => (prev - 1 + cards.length) % cards.length);
+    };
 
-                    // 스크롤해야 하는 위치(컨테이너의 중심 - 뷰포트의 절반)
-                    const offsetToCenter = containerCenterY - window.innerHeight / 2;
+    // 스와이프 핸들러
+    const handleStart = (clientX: number) => {
+        setIsDragging(true);
+        startX.current = clientX;
+        currentX.current = clientX;
+    };
 
-                    window.scrollTo({
-                        top: offsetToCenter,
-                        behavior: 'smooth',
-                    });
-                    setHasForcedScroll(true);
-                }
-            },
-            {
-                threshold: 0.2, // About 섹션이 20% 이상 보이는 지점에서 트리거
-            }
-        );
+    const handleMove = (clientX: number) => {
+        if (!isDragging) return;
+        currentX.current = clientX;
+        const diff = currentX.current - startX.current;
+        setDragOffset(diff);
+    };
 
-        observer.observe(container);
+    const handleEnd = () => {
+        if (!isDragging) return;
+        setIsDragging(false);
 
-        return () => {
-            observer.disconnect();
-        };
-    }, [hasForcedScroll]);
+        const diff = currentX.current - startX.current;
+        const threshold = 100;
 
-    /**
-     * (2) 카드 초기 설정 & wheel/arrow 이벤트
-     */
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        const cardItems = Array.from(
-            container.querySelectorAll<HTMLDivElement>('.stack-cards__item')
-        );
-
-        cardItems.forEach((card, idx) => {
-            if (idx > 0) {
-                card.classList.add('slide-up');
-            }
-        });
-
-        const showNextCard = (currentIndex: number) => {
-            const total = cardItems.length;
-            // 다음 카드로 이동 (마지막 카드에서 처음으로 순환)
-            const nextIndex = (currentIndex + 1) % total;
-            if (currentIndex === cardItems.length -1 && nextIndex === 0) {
-                // 이 부분은 순환을 막고 싶다면 조건을 추가하거나,
-                // 현재는 순환되도록 둡니다 (하단 화살표와 동일한 로직).
-                // 만약 이 클릭 방식으로는 순환시키고 싶지 않다면 아래와 같이 수정:
-                // if (currentIndex < cardItems.length - 1) {
-                //   cardItems[currentIndex].classList.add('slide-up');
-                //   cardItems[currentIndex + 1].classList.remove('slide-up');
-                // }
-                // 여기서는 기존 showNextCard/showPrevCard의 순환 로직을 따르겠습니다.
-            }
-            cardItems[currentIndex].classList.add('slide-up');
-            cardItems[nextIndex].classList.remove('slide-up');
-        };
-
-        const showPrevCard = (currentIndex: number) => {
-            const total = cardItems.length;
-            // 이전 카드로 이동 (첫 카드에서 마지막으로 순환)
-            const prevIndex = (currentIndex - 1 + total) % total;
-            if (currentIndex === 0 && prevIndex === cardItems.length -1) {
-                // 순환을 막고 싶다면 조건 추가
-                // if (currentIndex > 0) {
-                //    cardItems[currentIndex].classList.add('slide-up');
-                //    cardItems[currentIndex - 1].classList.remove('slide-up');
-                // }
-            }
-            cardItems[currentIndex].classList.add('slide-up');
-            cardItems[prevIndex].classList.remove('slide-up');
-        };
-
-        function handleCardWheel(this: HTMLDivElement, e: WheelEvent) {
-            const el = e.currentTarget as HTMLDivElement;
-            const { scrollTop, scrollHeight, clientHeight } = el;
-            const isAtTop = scrollTop === 0;
-            const isAtBottom = scrollTop + clientHeight >= scrollHeight -1; // -1은 스크롤 정밀도 문제 보정
-
-            if (!isAtTop && !isAtBottom) {
-                e.stopPropagation();
-                return;
-            }
-
-            const cardItem = el.closest('.stack-cards__item');
-            if (!cardItem) return;
-            const cardIndex = cardItems.indexOf(cardItem as HTMLDivElement);
-            if (cardIndex < 0) return;
-
-            if (isAtBottom && e.deltaY > 0) {
-                e.preventDefault();
-                showNextCard(cardIndex);
-            }
-            if (isAtTop && e.deltaY < 0) {
-                e.preventDefault();
-                showPrevCard(cardIndex);
-            }
+        if (diff > threshold) {
+            prevCard();
+        } else if (diff < -threshold) {
+            nextCard();
         }
 
-        function handleArrowClick(e: MouseEvent) {
-            e.preventDefault();
-            const arrowEl = e.currentTarget as HTMLDivElement;
-            const cardItem = arrowEl.closest('.stack-cards__item');
-            if (!cardItem) return;
-            const cardIndex = cardItems.indexOf(cardItem as HTMLDivElement);
-            if (cardIndex < 0) return;
-            showNextCard(cardIndex);
-        }
+        setDragOffset(0);
+    };
 
+    // 마우스 이벤트
+    const handleMouseDown = (e: React.MouseEvent) => {
+        e.preventDefault();
+        handleStart(e.clientX);
+    };
 
-        function handleCardRegionClick(this: HTMLDivElement, e: MouseEvent) {
-            const cardItem = this; // '.stack-cards__item'
-            const target = e.target as HTMLElement;
+    const handleMouseMove = (e: React.MouseEvent) => {
+        handleMove(e.clientX);
+    };
 
-            // 클릭된 요소가 화살표(.arrow-down)거나 그 자식이면, 화살표 자체의 클릭 핸들러가 처리
-            if (target.closest('.arrow-down')) {
-                return;
-            }
+    const handleMouseUp = () => {
+        handleEnd();
+    };
 
-            // ✨ 텍스트 영역 클릭 시에도 카드 이동을 허용하기 위해 아래 조건문 제거 또는 주석 처리
-            // const innerElement = cardItem.querySelector<HTMLDivElement>('.inner');
-            // if (innerElement && innerElement.contains(target) && target !== innerElement) {
-            //     return;
-            // }
+    // 터치 이벤트
+    const handleTouchStart = (e: React.TouchEvent) => {
+        handleStart(e.touches[0].clientX);
+    };
 
-            const cardIndex = cardItems.indexOf(cardItem);
-            if (cardIndex < 0) return;
+    const handleTouchMove = (e: React.TouchEvent) => {
+        handleMove(e.touches[0].clientX);
+    };
 
-            const rect = cardItem.getBoundingClientRect();
-            const clickYInCard = e.clientY - rect.top; // 카드 상단 기준 클릭 위치
+    const handleTouchEnd = () => {
+        handleEnd();
+    };
 
-            if (clickYInCard < rect.height / 2) { // 카드 상단 절반 클릭
-                showPrevCard(cardIndex);
-            } else { // 카드 하단 절반 클릭
-                showNextCard(cardIndex);
-            }
-        }
-
-        cardItems.forEach((card) => {
-            const innerEl = card.querySelector<HTMLDivElement>('.inner');
-            const arrowEl = card.querySelector<HTMLDivElement>('.arrow-down');
-
-            if (innerEl) {
-                innerEl.addEventListener('wheel', handleCardWheel, { passive: false });
-            }
-            if (arrowEl) {
-                arrowEl.addEventListener('click', handleArrowClick);
-            }
-            // ✨ 각 카드 아이템에 새로운 클릭 이벤트 리스너 등록
-            card.addEventListener('click', handleCardRegionClick);
-        });
-
-        return () => {
-            cardItems.forEach((card) => {
-                const innerEl = card.querySelector<HTMLDivElement>('.inner');
-                const arrowEl = card.querySelector<HTMLDivElement>('.arrow-down');
-
-                if (innerEl) {
-                    innerEl.removeEventListener('wheel', handleCardWheel);
-                }
-                if (arrowEl) {
-                    arrowEl.removeEventListener('click', handleArrowClick);
-                }
-                // ✨ 등록된 리스너 제거
-                card.removeEventListener('click', handleCardRegionClick);
-            });
-        };
-    }, []); // 의존성 배열은 초기 설정대로 비워둡니다.
-
-
-    useEffect(() => {
-        const cardItems = Array.from(
-            containerRef.current?.querySelectorAll<HTMLDivElement>('.stack-cards__item') || []
-        );
-
-        if (cardItems.length === 0) return;
-
-        // IntersectionObserver 콜백: entry.isIntersecting 지표로 visible 토글
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach(entry => {
-                    const el = entry.target as HTMLDivElement;
-                    if (entry.isIntersecting) {
-                        el.classList.add('visible');
-                    } else {
-                        el.classList.remove('visible');
-                    }
-                });
-            },
-            {
-                root: null,
-                threshold: 0.3, // 카드가 30% 보이기 시작하면 콜백 실행
-            }
-        );
-
-        cardItems.forEach(card => observer.observe(card));
-
-        return () => {
-            observer.disconnect();
-        };
-    }, []);
+    const currentCard = cards[currentCardIndex];
 
     return (
-        <div id="about" className="about-page-container" ref={containerRef}>
-            <div className="stack-cards">
-                {cards.map((card) => (
-                    <div className="stack-cards__item" key={card.id}>
-                        <div className="inner">
-                            <h3>{card.title}</h3>
-                            <blockquote>{card.subtitle}</blockquote>
-                            <p>{card.content}</p>
+        <section id="about" ref={aboutRef} className="py-20 px-4 bg-[#0B0F19]">
+            <div className="max-w-6xl mx-auto">
+                {/* 섹션 헤더 */}
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl md:text-5xl font-bold text-[#F8FAFC] mb-4 font-space-grotesk">
+                        About Us
+                    </h2>
+                    <p className="text-[#64748B] text-lg max-w-2xl mx-auto">
+                        함께 성장하고 배우며 꿈을 실현해나가는 개발자 커뮤니티입니다
+                    </p>
+                </div>
 
-                            {/* 카드 하단에 화살표 아이콘(또는 텍스트) */}
-                            <div className="arrow-down">
-                                ⬇
-                                {card.id === 1 && ( // 첫 번째 카드에만 안내 문구 추가
-                                    <span className="navigation-hint">
-                                        아래로 스크롤하거나 화살표를 클릭해 보세요!
-                                    </span>
-                                )}
-                            </div>
-                            <div className="counter">
-                                {card.id}/{cards.length}
-                            </div>
-                        </div>
-                        <div className="shadow" />
+                {/* Tinder-like 카드 스택 컨테이너 */}
+                <div className="relative max-w-4xl mx-auto">
+                    {/* 카드 스택 */}
+                    <div
+                        className="relative h-[500px] flex items-center justify-center perspective-1000 select-none"
+                        onMouseDown={handleMouseDown}
+                        onMouseMove={isDragging ? handleMouseMove : undefined}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={handleMouseUp}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        {cards.map((card, index) => {
+                            const position = index - currentCardIndex;
+                            const isVisible = Math.abs(position) <= 2;
+                            const isActive = index === currentCardIndex;
+
+                            if (!isVisible) return null;
+
+                            // 드래그 중일 때 추가 변형 적용
+                            const dragTransform = isActive && isDragging ? dragOffset : 0;
+                            const dragRotation = isActive && isDragging ? dragOffset * 0.1 : 0;
+
+                            return (
+                                <div
+                                    key={card.id}
+                                    className={`absolute w-full ${
+                                        isDragging && isActive
+                                            ? 'transition-none'
+                                            : 'transition-all duration-500 ease-out'
+                                    }`}
+                                    style={{
+                                        transform: `
+                                            translateX(${position * 8 + dragTransform}px)
+                                            translateY(${Math.abs(position) * 4}px)
+                                            scale(${1 - Math.abs(position) * 0.05})
+                                            rotate(${position * 2 + dragRotation}deg)
+                                        `,
+                                        zIndex: cards.length - Math.abs(position),
+                                        opacity: 1 - Math.abs(position) * 0.2,
+                                    }}
+                                >
+                                    <Card
+                                        variant="cosmic"
+                                        className={`min-h-[500px] transition-all duration-300 ${
+                                            isActive
+                                                ? 'shadow-[0_0_30px_rgba(99,102,241,0.25)] border-[#6366F1]/40 scale-100'
+                                                : 'shadow-lg'
+                                        }`}
+                                        hover={false}
+                                    >
+                                        <CardHeader>
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className="w-12 h-12 rounded-full bg-[#6366F1]/20 flex items-center justify-center">
+                                                    <card.icon className="w-6 h-6 text-[#6366F1]" />
+                                                </div>
+                                                <Badge variant={card.badgeVariant}>
+                                                    {card.badge}
+                                                </Badge>
+                                            </div>
+                                            <CardTitle className="text-2xl md:text-3xl">
+                                                {card.title}
+                                            </CardTitle>
+                                            <CardDescription className="text-lg">
+                                                {card.subtitle}
+                                            </CardDescription>
+                                        </CardHeader>
+                                        <CardContent>
+                                            {card.content}
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            );
+                        })}
                     </div>
-                ))}
+
+                    {/* 네비게이션 버튼 - 카드 밖으로 이동 */}
+                    <button
+                        onClick={prevCard}
+                        className="absolute -left-16 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full bg-[#0F172A]/90 border border-[#64748B]/20 flex items-center justify-center text-[#64748B] hover:text-[#6366F1] hover:border-[#6366F1]/40 hover:scale-110 transition-all duration-300"
+                    >
+                        <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                        onClick={nextCard}
+                        className="absolute -right-16 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full bg-[#0F172A]/90 border border-[#64748B]/20 flex items-center justify-center text-[#64748B] hover:text-[#6366F1] hover:border-[#6366F1]/40 hover:scale-110 transition-all duration-300"
+                    >
+                        <ChevronRight className="w-6 h-6" />
+                    </button>
+
+                    {/* 인디케이터 */}
+                    <div className="flex justify-center gap-2 mt-8">
+                        {cards.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentCardIndex(index)}
+                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                    index === currentCardIndex
+                                        ? 'bg-[#6366F1] w-8'
+                                        : 'bg-[#64748B]/30 hover:bg-[#64748B]/50'
+                                }`}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 

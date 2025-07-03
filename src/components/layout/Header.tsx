@@ -65,7 +65,7 @@ const Header: React.FC = () => {
                             onMouseEnter={() => setIsMoimDropdownOpen(true)}
                             onMouseLeave={() => setIsMoimDropdownOpen(false)}
                         >
-                            <a href="#routine" className="dropbtn">MOIM</a>
+                            <a href="#routine" className="dropbtn">WAVE</a>
                             {isMoimDropdownOpen && (
                                 <div className="dropdown-content">
                                     <a href="#routine">MOIM</a>
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
                             <a href="#faq">FAQ</a>
                         </li>
                         <li>
-                            <a href="#contact-cta">CONTACT</a>
+                            <a href="#faq">CONTACT</a>
                         </li>
                         <li>
                             <a href="/web/tecoteco">테코테코</a>

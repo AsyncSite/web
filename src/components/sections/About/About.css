@@ -290,3 +290,21 @@
         font-size: 0.95rem;
     }
 }
+
+/* Tinder-like 카드 스택을 위한 스타일 */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+/* 드래그 중 커서 변경 */
+.select-none {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    cursor: grab;
+}
+
+.select-none:active {
+    cursor: grabbing;
+}

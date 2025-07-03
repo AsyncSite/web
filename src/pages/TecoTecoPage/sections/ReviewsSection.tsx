@@ -49,7 +49,7 @@ export const ReviewsSection: React.FC = () => {
             if (targetCard) {
                 setTimeout(() => {
                     targetCard.scrollIntoView({
-                        behavior: 'smooth',
+                        behavior: 'auto',  // 애니메이션 없이 순간이동
                         block: 'center'
                     });
                 }, 100);

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import './FAQ.css';
+import { Card, CardContent } from '../../ui/Card';
+import Button from '../../ui/Button';
+import { Mail, Github, MessageSquare, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface FAQItem {
     id: number;
@@ -26,7 +28,7 @@ const faqData: FAQItem[] = [
         signature: 'public String howOftenDoWeMeet()',
         summary: '모임은 얼마나 자주 진행되나요?',
         answer: `// 기본적으로 <span class="faq-highlight">주 1회 코어타임(온라인 미팅)</span> 형태로 만나고 있습니다.
-// 그 외에도 테코테코, 노앤써 등 오프라인/온라인 스터디나 프로젝트별 추가 모임이 있습니다.
+// 그 외에도 테코테코, DEVLOG-14, 디핑소스 등 오프라인/온라인 스터디나 프로젝트별 추가 모임이 있습니다.
 `
     },
     {
@@ -66,6 +68,23 @@ const FAQ: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [searchTerm, setSearchTerm] = useState<string>('');
 
+    const copyToClipboard = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            alert('이메일 주소가 복사되었습니다!');
+        } catch (err) {
+            console.error('복사 실패:', err);
+            // 폴백: 텍스트 선택
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('이메일 주소가 복사되었습니다!');
+        }
+    };
+
     const toggleFAQ = (id: number) => {
         setOpenFAQIds(prev =>
             prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
@@ -96,109 +115,166 @@ const FAQ: React.FC = () => {
         });
 
     return (
-        <div id="faq" className="faq-page">
-            {/* 헤더 */}
-            <header className="faq-header">
-                <h1 className="faq-title">FAQ</h1>
-                <p className="faq-subtitle">
-                    <strong>자주 묻는 질문들</strong>
-                </p>
-            </header>
-
-            {/* 검색창 */}
-            <div className="faq-search-wrapper">
-                <input
-                    type="text"
-                    className="faq-search-input"
-                    placeholder="키워드로 질문 검색..."
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                />
-            </div>
-
-            {/* 탭 UI */}
-            <div className="faq-tabs">
-                {categories.map(cat => (
-                    <button
-                        key={cat.key}
-                        className={`faq-tab ${
-                            selectedCategory === cat.key ? 'active' : ''
-                        }`}
-                        onClick={() => setSelectedCategory(cat.key)}
-                    >
-                        {cat.label}
-                    </button>
-                ))}
-            </div>
-
-            {/* FAQ 목록 */}
-            <div className="faq-container">
-                {filteredFaqData.length === 0 ? (
-                    <div className="faq-no-results">
-                        해당 조건에 맞는 질문이 없습니다.
+        <section id="faq" className="py-20 px-4 bg-[#0B0F19] pb-32">
+            <div className="max-w-6xl mx-auto">
+                {/* 페이지 헤더 */}
+                <div className="text-center mb-16">
+                    <div className="flex items-center justify-center gap-3 mb-6">
+                        <div className="w-16 h-16 bg-gradient-to-r from-[#6366F1] to-[#A855F7] rounded-full flex items-center justify-center">
+                            <HelpCircle className="w-8 h-8 text-white" />
+                        </div>
                     </div>
-                ) : (
+                    {/* 타이틀: Space Grotesk */}
+                    <h1 className="text-4xl md:text-5xl font-bold text-[#F8FAFC] mb-4 font-space-grotesk">
+                        FAQ
+                    </h1>
+                    {/* 한글 본문: SUIT */}
+                    <p className="text-[#64748B] text-lg max-w-2xl mx-auto font-suit">
+                        자주 묻는 질문들을 확인해보세요
+                    </p>
+                </div>
+
+                {/* 검색창 */}
+                <div className="mb-8">
+                    <div className="max-w-md mx-auto">
+                        <input
+                            type="text"
+                            className="w-full px-4 py-3 bg-[#0F172A]/50 border border-[#64748B]/20 rounded-xl text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#6366F1] transition-colors font-suit"
+                            placeholder="키워드로 질문 검색..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* 카테고리 필터 */}
+                <div className="flex justify-center mb-12">
+                    <div className="bg-[#0F172A]/50 rounded-lg p-1 border border-[#64748B]/10 flex flex-wrap gap-1">
+                        {categories.map(cat => (
+                            <button
+                                key={cat.key}
+                                className={`px-4 py-2 rounded-md transition-all duration-200 font-suit ${
+                                    selectedCategory === cat.key
+                                        ? 'bg-[#6366F1] text-white'
+                                        : 'text-[#64748B] hover:text-[#F8FAFC] hover:bg-[#64748B]/10'
+                                }`}
+                                onClick={() => setSelectedCategory(cat.key)}
+                            >
+                                {cat.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* FAQ 목록 */}
+                <div className="space-y-4 mb-16">
+                    {filteredFaqData.length === 0 ? (
+                        <div className="text-center py-12">
+                            <div className="text-[#64748B] text-lg font-suit">
+                                해당 조건에 맞는 질문이 없습니다.
+                            </div>
+                        </div>
+                    ) : (
                     filteredFaqData.map(faq => (
-                        <div
+                        <Card
                             key={faq.id}
-                            className={`faq-item ${
-                                openFAQIds.includes(faq.id) ? 'open' : ''
+                            variant="cosmic"
+                            className={`mb-4 transition-all duration-300 ${
+                                openFAQIds.includes(faq.id) ? 'ring-2 ring-cosmic-blue/50' : ''
                             }`}
                         >
-                            {/* 질문 줄 (아이콘 + 시그니처) */}
+                            {/* 질문 헤더 */}
                             <div
-                                className="faq-signature-line"
+                                className="flex items-center justify-between p-6 cursor-pointer hover:bg-[#0F172A]/30 transition-colors duration-200"
                                 onClick={() => toggleFAQ(faq.id)}
                                 role="button"
                                 aria-expanded={openFAQIds.includes(faq.id)}
                             >
-                                <span className="faq-icon">❓</span>
-                                <span className="faq-code-block">
-                  {faq.signature} &#123;
-                </span>
-                                <span className="faq-fold-icon">
-                  {openFAQIds.includes(faq.id) ? '▼' : '▶'}
-                </span>
-                                <span className="faq-brace-close">&#125;</span>
+                                <div className="flex items-center space-x-4 flex-1">
+                                    <div className="w-8 h-8 bg-[#6366F1]/20 rounded-full flex items-center justify-center">
+                                        <HelpCircle className="w-4 h-4 text-[#6366F1]" />
+                                    </div>
+                                    {/* 한글 질문: SUIT */}
+                                    <h3 className="text-[#F8FAFC] font-medium text-lg font-suit">
+                                        {faq.signature}
+                                    </h3>
+                                </div>
+                                <div className="transition-transform duration-200">
+                                    {openFAQIds.includes(faq.id) ? (
+                                        <ChevronUp className="w-5 h-5 text-[#64748B]" />
+                                    ) : (
+                                        <ChevronDown className="w-5 h-5 text-[#64748B]" />
+                                    )}
+                                </div>
                             </div>
 
-                            {openFAQIds.includes(faq.id) ? (
-                                /* 펼친 상태: 요약(회색, 이탤릭) + 답변(HTML 포함) */
-                                <div className="faq-answer-block">
-                                    <div
-                                        className="faq-summary"
-                                        style={{
-                                            color: '#aaa',
-                                            fontStyle: 'italic',
-                                            marginBottom: '0.5rem',
-                                        }}
-                                    >
+                            {openFAQIds.includes(faq.id) && (
+                                <CardContent className="pt-0 px-6 pb-6">
+                                    {/* 요약 */}
+                                    <div className="text-[#64748B] italic text-sm mb-4 border-l-2 border-[#6366F1]/30 pl-4 font-suit">
                                         {faq.summary}
                                     </div>
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: `<pre>${faq.answer}</pre>`,
-                                        }}
-                                    />
-                                </div>
-                            ) : (
-                                /* 접힌 상태: summary만 보여주기 */
-                                <div className="faq-summary">{faq.summary}</div>
+                                    {/* 답변 */}
+                                    <div className="bg-[#0F172A]/50 rounded-lg p-4 border border-[#64748B]/10">
+                                        <div
+                                            className="text-[#F8FAFC] text-sm leading-relaxed font-suit"
+                                            dangerouslySetInnerHTML={{
+                                                __html: faq.answer.replace(/\n/g, '<br>')
+                                            }}
+                                        />
+                                    </div>
+                                </CardContent>
                             )}
-                        </div>
+                        </Card>
                     ))
-                )}
-            </div>
+                    )}
+                </div>
 
 
-            <div id="contact-cta" className="faq-cta-section">
-                <h2 className="cta-question">궁금한 게 더 있으신가요?</h2>
-                <div className="cta-button-group">
-                    <button className="cta-button kakao">카카오톡 문의</button>
-                    <button className="cta-button coffee">커피챗 해요 👋🏻</button>
+            {/* CTA 섹션 - Contact 정보 포함 */}
+                <div id="contact-cta" className="mt-16 mb-20">
+                    <div className="text-center mb-12">
+                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 font-space-grotesk">
+                            궁금한 게 더 있으신가요?
+                        </h2>
+                        <p className="text-[#64748B] text-lg font-suit">
+                            언제든지 연락주세요! 함께 성장해나가요 🚀
+                        </p>
+                    </div>
+
+                    {/* Contact 정보 카드들 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
+                        {/* 이메일 카드 */}
+                        <Card variant="cosmic" className="p-6 text-center group cursor-pointer" onClick={() => copyToClipboard('AsyncSite@gmail.com')}>
+                            <div className="flex flex-col items-center space-y-4">
+                                <div className="w-16 h-16 bg-gradient-to-r from-[#6366F1] to-[#06B6D4] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <Mail className="w-8 h-8 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-[#F8FAFC] font-semibold text-lg mb-2 font-space-grotesk">Email</h3>
+                                    <p className="text-[#06B6D4] font-medium font-poppins">AsyncSite@gmail.com</p>
+                                    <p className="text-[#64748B] text-sm mt-1 font-suit">클릭하여 복사하기</p>
+                                </div>
+                            </div>
+                        </Card>
+
+                        {/* 깃헙 카드 */}
+                        <Card variant="cosmic" className="p-6 text-center group cursor-pointer" onClick={() => window.open('https://github.com/AsyncSite', '_blank')}>
+                            <div className="flex flex-col items-center space-y-4">
+                                <div className="w-16 h-16 bg-gradient-to-r from-[#10B981] to-[#06B6D4] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <Github className="w-8 h-8 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-[#F8FAFC] font-semibold text-lg mb-2 font-space-grotesk">GitHub</h3>
+                                    <p className="text-[#10B981] font-medium font-poppins">github.com/AsyncSite</p>
+                                    <p className="text-[#64748B] text-sm mt-1 font-suit">프로젝트와 코드를 확인해보세요</p>
+                                </div>
+                            </div>
+                        </Card>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

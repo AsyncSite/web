@@ -42,7 +42,7 @@ html, body {
   background: #000; /* 배경 검정 */
   color: #C3E88D;   /* 글자 연녹 */
   font-family: 'Moneygraphy-Rounded', Consolas, 'Courier New', monospace;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 /* 섹션 전체 */

@@ -1,15 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+=== ASYNC SITE 폰트 시스템 ===
+- 타이틀: Space Grotesk (영어 제목용)
+- 영어: Poppins (영어 본문용)
+- 한글: SUIT (한글 본문용)
+- 특수: DungGeunMo (픽셀 폰트, 필요시)
+*/
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Poppins', 'SUIT', sans-serif; /* 기본: 영어(Poppins) + 한글(SUIT) */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #0B0F19;
+  color: #F8FAFC;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* 유틸리티 클래스 */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @font-face {

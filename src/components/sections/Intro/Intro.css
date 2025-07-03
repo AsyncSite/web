@@ -232,8 +232,12 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    border: 1px dashed rgba(255, 255, 255, 0.35);
+    border: 1px solid;
     border-radius: 50%;
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 0 6px rgba(255, 255, 255, 0.15),
+        inset 0 0 4px rgba(255, 255, 255, 0.08);
 }
 .planet {
     position: absolute;
@@ -337,22 +341,54 @@ body {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: #fff;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
     border-radius: 50%;
-    top: 10%;
-    left: -10%;
-    box-shadow: 0 0 20px rgba(255,255,255,0.8);
-    animation: comet-move 5s ease-in-out infinite;
+    top: 5%;
+    left: -30%;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 165, 0, 0.4);
+    animation: comet-move 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
 }
 .comet-delay {
     animation-delay: 2.5s;
 }
 @keyframes comet-move {
-    0%   { transform: translateX(0) translateY(0) scale(1); opacity: 0; }
-    10%  { opacity: 1; }
-    50%  { transform: translateX(120%) translateY(60%) scale(1.2); opacity: 1; }
-    70%  { opacity: 0.6; transform: translateX(140%) translateY(70%) scale(0.8); }
-    100% { opacity: 0; transform: translateX(170%) translateY(85%) scale(0.5); }
+    0%   {
+        transform: translateX(-30vw) translateY(-20vh) scale(1);
+        opacity: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    5%   {
+        opacity: 1;
+        background: linear-gradient(45deg, #FFD700, #FFA500);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 165, 0, 0.4);
+    }
+    40%  {
+        transform: translateX(40vw) translateY(25vh) scale(1.2);
+        opacity: 1;
+        background: linear-gradient(45deg, #FFD700, #FFA500);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), 0 0 50px rgba(255, 165, 0, 0.5);
+    }
+    70%  {
+        opacity: 0.5;
+        transform: translateX(80vw) translateY(50vh) scale(0.8);
+        background: linear-gradient(45deg, rgba(255, 215, 0, 0.5), rgba(255, 165, 0, 0.3));
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 165, 0, 0.2);
+    }
+    95%  {
+        opacity: 0.1;
+        transform: translateX(130vw) translateY(80vh) scale(0.3);
+        background: transparent;
+        box-shadow: none;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(150vw) translateY(100vh) scale(0.1);
+        background: transparent;
+        box-shadow: none;
+    }
 }
 
 /***********************
@@ -402,29 +438,34 @@ body {
 /* 별똥별 슈팅 스타(최초 2초간만 등장) */
 .shooting-star {
     position: absolute;
-    top: 30%;      /* 시작 위치 조정 */
-    left: -10%;    /* 화면 밖 왼쪽에서 시작 */
+    top: 10%;      /* 시작 위치를 더 위로 이동 */
+    left: -20%;    /* 화면 밖 더 멀리에서 시작 */
     width: 9px;
     height: 6px;
-    background: #fff;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
     border-radius: 50%;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    opacity: 0;    /* 기본적으로 투명 */
 
-    animation: shootingStarMove 1500ms ease-out forwards;
+    animation: shootingStarMove 1500ms linear forwards;
     z-index: 9999; /* 다른 요소 위로 */
 }
 
 @keyframes shootingStarMove {
     0% {
-        transform: translate(0, 0) scale(1);
+        transform: translate(-10vw, -10vh) scale(1);
+        opacity: 0;
+    }
+    5% {
         opacity: 1;
     }
-    80% {
+    90% {
         opacity: 1;
+        transform: translate(120vw, 50vh) scale(1);
     }
     100% {
-        /* 가로로 화면 끝 + 세로로 좀 더 올라가는 느낌 */
-        transform: translate(110vw, -15vh) scale(0.5);
+        /* 완전히 화면 밖으로 - 동일한 속도 유지 */
+        transform: translate(130vw, 55vh) scale(1);
         opacity: 0;
     }
 }
