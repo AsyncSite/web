@@ -1,11 +1,13 @@
+export interface GuessHistory {
+  playerId: number;
+  guess: number[];
+  correctCount: number;
+}
+
 export interface GameStateForAI {
   keywords: string[];
   myHints: number[];
-  previousGuesses: {
-    playerId: number;
-    guess: number[];
-    correctCount: number;
-  }[];
+  previousGuesses: GuessHistory[];
   revealedAnswers: number[];
   revealedWrongAnswers: number[];
   answerCount: number;
