@@ -1,85 +1,43 @@
 import { BasePlayer } from './BasePlayer';
 import { PlayerInfo } from '../types/PlayerTypes';
 import { GameStateForAI } from '../types/GameTypes';
+import { AIExecutionHandler } from '../sandbox/AIExecutionHandler';
 
 export class CustomAIPlayer extends BasePlayer {
   private aiCode: string;
   private aiLanguage: 'javascript' | 'typescript';
-  private executeTimeout: number = 5000; // 5 seconds max execution time
+  private executionHandler: AIExecutionHandler;
   
   constructor(playerInfo: PlayerInfo) {
     super(playerInfo);
     this.aiCode = playerInfo.customCode || '';
     this.aiLanguage = playerInfo.customLanguage || 'javascript';
+    this.executionHandler = AIExecutionHandler.getInstance();
     this.ready = this.validateCode();
   }
 
   async makeGuess(gameState: GameStateForAI): Promise<number[]> {
     try {
-      const result = await this.executeAICode(gameState);
-      
-      if (!Array.isArray(result)) {
-        throw new Error('AI function must return an array of indices');
-      }
-      
-      const validIndices = result.filter(idx => 
-        typeof idx === 'number' && 
-        idx >= 0 && 
-        idx < gameState.keywords.length &&
-        !gameState.revealedWrongAnswers.includes(idx)
+      // Use the secure sandbox execution
+      const result = await this.executionHandler.executeWithFallback(
+        this.aiCode,
+        gameState,
+        this.playerInfo.id,
+        this.playerInfo.nickname
       );
-      
-      if (validIndices.length > gameState.answerCount) {
-        return validIndices.slice(0, gameState.answerCount);
+
+      if (!result.success) {
+        console.error(`Custom AI execution failed for ${this.playerInfo.nickname}:`, result.error);
+        if (result.logs && result.logs.length > 0) {
+          console.log(`AI logs for ${this.playerInfo.nickname}:`, result.logs);
+        }
       }
-      
-      while (validIndices.length < gameState.answerCount) {
-        const availableIndices = Array.from(
-          { length: gameState.keywords.length }, 
-          (_, i) => i
-        ).filter(idx => 
-          !validIndices.includes(idx) && 
-          !gameState.revealedWrongAnswers.includes(idx)
-        );
-        
-        if (availableIndices.length === 0) break;
-        
-        const randomIdx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-        validIndices.push(randomIdx);
-      }
-      
-      return validIndices;
+
+      return result.guess;
     } catch (error) {
-      console.error('Custom AI execution error:', error);
+      console.error('Unexpected error in Custom AI execution:', error);
       return this.fallbackStrategy(gameState);
     }
-  }
-
-  private async executeAICode(gameState: GameStateForAI): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error('AI code execution timeout'));
-      }, this.executeTimeout);
-
-      try {
-        const func = new Function('gameState', `
-          ${this.aiCode}
-          
-          if (typeof makeGuess === 'function') {
-            return makeGuess(gameState);
-          } else {
-            throw new Error('makeGuess function not found');
-          }
-        `);
-        
-        const result = func(gameState);
-        clearTimeout(timeout);
-        resolve(result);
-      } catch (error) {
-        clearTimeout(timeout);
-        reject(error);
-      }
-    });
   }
 
   private fallbackStrategy(gameState: GameStateForAI): number[] {
@@ -104,13 +62,23 @@ export class CustomAIPlayer extends BasePlayer {
   private validateCode(): boolean {
     if (!this.aiCode.trim()) return false;
     
+    // Use the execution handler's validation
+    const validationPromise = this.executionHandler.validateCode(this.aiCode);
+    
+    // Since constructor can't be async, we'll do a simple check here
+    // and rely on full validation during execution
     try {
-      new Function('gameState', this.aiCode + '\n return typeof makeGuess === "function";');
+      // Basic syntax check
+      new Function(this.aiCode);
       return true;
     } catch (error) {
       console.error('AI code validation error:', error);
       return false;
     }
+  }
+
+  async validateCodeAsync(): Promise<{ valid: boolean; errors?: string[]; warnings?: string[] }> {
+    return await this.executionHandler.validateCode(this.aiCode);
   }
 
   updateCode(code: string, language: 'javascript' | 'typescript'): void {

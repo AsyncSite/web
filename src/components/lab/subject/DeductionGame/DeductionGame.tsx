@@ -254,9 +254,6 @@ const DeductionGame: React.FC = () => {
     manager.setEventHandlers({
       onTurnStart: (player) => {
         const playerInfo = player.getInfo();
-        if (playerInfo.type === 'built-in-ai') {
-          setIsAIThinking(true);
-        }
         setIsMyTurn(playerInfo.type === 'human');
         // 턴 시작 시간 기록
         setTurnStartTime(Date.now());
@@ -291,6 +288,9 @@ const DeductionGame: React.FC = () => {
       },
       onTimerTick: (remainingTime) => {
         setTimeRemaining(remainingTime);
+      },
+      onAIThinking: (thinking) => {
+        setIsAIThinking(thinking);
       }
     });
 
@@ -739,7 +739,7 @@ function makeGuess(gameState) {
 
   const renderDifficultySelection = () => (
     <div className="game-screen difficulty-selection">
-      <div className="setup-actions">
+      <div className="setup-actions" style={{ justifyContent: 'flex-start', marginBottom: '30px' }}>
         <button 
           className="btn-large btn-secondary" 
           onClick={() => setCurrentScreen('mode-selection')}

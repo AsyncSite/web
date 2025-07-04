@@ -24,6 +24,7 @@ export class GameManager {
   private onTurnEnd?: (result: TurnResult) => void;
   private onGameEnd?: (winner?: IPlayer) => void;
   private onTimerTick?: (remainingTime: number) => void;
+  private onAIThinking?: (thinking: boolean) => void;
 
   constructor(config: GameManagerConfig) {
     this.config = config;
@@ -109,8 +110,25 @@ export class GameManager {
         this.processTurn(guess);
       });
     } else {
+      // AI 플레이어의 경우에도 타이머 시작
+      this.startTurnTimer();
+      
+      // AI 플레이어의 경우, 사람처럼 보이도록 약간의 딜레이 추가
+      if (this.onAIThinking) {
+        this.onAIThinking(true);
+      }
+      
+      const thinkingTime = Math.random() * 2000 + 1500; // 1.5초 ~ 3.5초 사이의 랜덤 시간
+      
+      await new Promise(resolve => setTimeout(resolve, thinkingTime));
+      
       const gameStateForAI = this.createGameStateForAI(currentPlayer);
       const guess = await currentPlayer.makeGuess(gameStateForAI);
+      
+      if (this.onAIThinking) {
+        this.onAIThinking(false);
+      }
+      
       await this.processTurn(guess);
     }
   }
@@ -179,6 +197,9 @@ export class GameManager {
   private async processTurn(guess: number[]): Promise<void> {
     const currentPlayer = this.getCurrentPlayer();
     if (!currentPlayer) return;
+
+    // 타이머 중지 (중요: AI 플레이어도 타이머를 사용하므로)
+    this.stopTurnTimer();
 
     const correctCount = guess.filter(idx => 
       this.gameContext.answers.includes(idx)
@@ -304,10 +325,12 @@ export class GameManager {
     onTurnEnd?: (result: TurnResult) => void;
     onGameEnd?: (winner?: IPlayer) => void;
     onTimerTick?: (remainingTime: number) => void;
+    onAIThinking?: (thinking: boolean) => void;
   }): void {
     this.onTurnStart = handlers.onTurnStart;
     this.onTurnEnd = handlers.onTurnEnd;
     this.onGameEnd = handlers.onGameEnd;
     this.onTimerTick = handlers.onTimerTick;
+    this.onAIThinking = handlers.onAIThinking;
   }
 }
