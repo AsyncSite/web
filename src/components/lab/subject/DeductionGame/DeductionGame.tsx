@@ -52,6 +52,8 @@ interface PlayerConfig {
 }
 
 const DeductionGame: React.FC = () => {
+  const [guideSlideIndex, setGuideSlideIndex] = useState(0);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<GameScreen>('mode-selection');
   const [gameMode, setGameMode] = useState<GameMode>('solo');
   const [playerCount, setPlayerCount] = useState(2);
@@ -723,6 +725,9 @@ function makeGuess(gameState) {
 
   const renderModeSelection = () => (
     <div className="game-screen mode-selection">
+      <div className="guide-link-container">
+        <button onClick={() => setIsGuideModalOpen(true)} className="guide-link">?<span>게임 방법</span></button>
+      </div>
       <h2>게임 모드를 선택하세요</h2>
       <div className="mode-cards">
         <div className="mode-card" onClick={() => handleModeSelect('solo')}>
@@ -798,7 +803,7 @@ function makeGuess(gameState) {
         <>
           <h2>{gameMode === 'solo' ? '플레이어 설정' : `${playerCount}명 플레이어 설정`}</h2>
           <div className="players-grid">
-            {players.filter(player => gameMode === 'solo' ? player.type === 'human' : true).map((player) => (
+            {players.filter(player => gameMode === 'solo' ? player.id === 1 : true).map((player) => (
               <div key={player.id} className="player-setup">
                 <h4>{gameMode === 'solo' ? '플레이어' : `플레이어 ${player.id}`}</h4>
                 
@@ -813,7 +818,7 @@ function makeGuess(gameState) {
                   />
                 </div>
 
-                {gameMode === 'multi' && (
+                {(gameMode === 'multi' || (gameMode === 'solo' && player.id === 1)) && (
                   <div className="form-section">
                     <div className="radio-group">
                       <div className="radio-option">
@@ -839,7 +844,7 @@ function makeGuess(gameState) {
                             setCodeEditorModal({ isOpen: true, playerId: player.id });
                           }}
                         />
-                        <label htmlFor={`ai-${player.id}`}>AI</label>
+                        <label htmlFor={`ai-${player.id}`}>{gameMode === 'solo' ? '커스텀 AI' : 'AI'}</label>
                       </div>
                     </div>
                   </div>
@@ -1486,6 +1491,59 @@ function makeGuess(gameState) {
     );
   };
 
+  const renderGuideModal = () => {
+    if (!isGuideModalOpen) return null;
+
+    const guideSlides = [
+      {
+        title: "게임 목표: 숨겨진 키워드를 찾아라!",
+        content: "수많은 키워드 풀에서 정답으로 지정된 몇 개의 키워드를 가장 먼저 찾아내는 플레이어가 승리합니다."
+      },
+      {
+        title: "핵심 규칙: 단서와 추론",
+        content: "각 플레이어는 자신만 아는 '힌트(정답이 아닌 키워드)'를 받습니다. 매 턴, 정답이라 생각하는 키워드들을 추측하면, 그중에 진짜 정답이 '몇 개'인지 결과만 알려줍니다."
+      },
+      {
+        title: "승리 조건: 완벽한 추리",
+        content: "모든 정답 키워드를 정확히 맞추는 추측을 가장 먼저 한 플레이어가 게임의 승자가 됩니다. 제한 시간이 있으니 신속하고 정확한 추리가 필요합니다!"
+      }
+    ];
+
+    const goToNextSlide = () => {
+      setGuideSlideIndex(prev => (prev + 1) % guideSlides.length);
+    };
+
+    const goToPrevSlide = () => {
+      setGuideSlideIndex(prev => (prev - 1 + guideSlides.length) % guideSlides.length);
+    };
+
+    return (
+      <div className="modal-overlay" onClick={() => setIsGuideModalOpen(false)}>
+        <div className="modal-content guide-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h3>게임 가이드</h3>
+            <button className="modal-close" onClick={() => setIsGuideModalOpen(false)}>×</button>
+          </div>
+          <div className="guide-slides-container">
+            <div className="guide-slide">
+              <h4>{guideSlides[guideSlideIndex].title}</h4>
+              <p>{guideSlides[guideSlideIndex].content}</p>
+            </div>
+          </div>
+          <div className="guide-controls">
+            <button onClick={goToPrevSlide}>이전</button>
+            <div className="slide-indicators">
+              {guideSlides.map((_, index) => (
+                <span key={index} className={`indicator ${guideSlideIndex === index ? 'active' : ''}`}></span>
+              ))}
+            </div>
+            <button onClick={goToNextSlide}>다음</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="deduction-game">
       <div className="game-content">
@@ -1504,6 +1562,7 @@ function makeGuess(gameState) {
         </div>
         
         {renderCodeEditorModal()}
+        {renderGuideModal()}
       </div>
     </div>
   );
