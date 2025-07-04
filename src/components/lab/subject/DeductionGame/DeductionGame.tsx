@@ -728,7 +728,7 @@ function makeGuess(gameState) {
       <div className="guide-link-container">
         <button onClick={() => setIsGuideModalOpen(true)} className="guide-link">?<span>게임 방법</span></button>
       </div>
-      <h2>게임 모드를 선택하세요</h2>
+      <h2 style={{ marginTop: '60px' }}>게임 모드를 선택하세요</h2>
       <div className="mode-cards">
         <div className="mode-card" onClick={() => handleModeSelect('solo')}>
           <h3>개인전</h3>
@@ -744,7 +744,7 @@ function makeGuess(gameState) {
 
   const renderDifficultySelection = () => (
     <div className="game-screen difficulty-selection">
-      <div className="setup-actions" style={{ justifyContent: 'flex-start', marginBottom: '30px' }}>
+      <div className="back-button-container">
         <button 
           className="btn-large btn-secondary" 
           onClick={() => setCurrentScreen('mode-selection')}
@@ -773,19 +773,19 @@ function makeGuess(gameState) {
 
   const renderPlayerSetup = () => (
     <div className="game-screen">
-      <div className="setup-actions">
+      <div className="back-button-container">
         <button 
           className="btn-large btn-secondary" 
-          onClick={() => setCurrentScreen('mode-selection')}
+          onClick={() => setCurrentScreen(gameMode === 'solo' ? 'difficulty-selection' : 'mode-selection')}
         >
           ← 뒤로가기
         </button>
       </div>
 
       {gameMode === 'multi' && players.length === 0 && (
-        <div className="form-section">
-          <h2>플레이어 수를 선택하세요</h2>
-          <div className="btn-group" style={{ justifyContent: 'center', marginTop: '20px' }}>
+        <div className="form-section" style={{ marginTop: '60px' }}>
+          <h2 style={{ textAlign: 'center' }}>플레이어 수를 선택하세요</h2>
+          <div className="btn-group" style={{ justifyContent: 'center', marginTop: '40px' }}>
             {[2, 3, 4, 5, 6].map(num => (
               <button
                 key={num}
@@ -801,7 +801,7 @@ function makeGuess(gameState) {
 
       {players.length > 0 && (
         <>
-          <h2>{gameMode === 'solo' ? '플레이어 설정' : `${playerCount}명 플레이어 설정`}</h2>
+          <h2 style={{ textAlign: 'center', marginTop: '60px' }}>{gameMode === 'solo' ? '플레이어 설정' : `${playerCount}명 플레이어 설정`}</h2>
           <div className="players-grid">
             {players.filter(player => gameMode === 'solo' ? player.id === 1 : true).map((player) => (
               <div key={player.id} className="player-setup">
@@ -887,7 +887,7 @@ function makeGuess(gameState) {
 
   const renderGameConfig = () => (
     <div className="game-screen">
-      <div className="setup-actions" style={{ justifyContent: 'flex-start', marginBottom: '30px' }}>
+      <div className="back-button-container">
         <button 
           className="btn-large btn-secondary" 
           onClick={() => setCurrentScreen('player-setup')}
@@ -1128,7 +1128,7 @@ function makeGuess(gameState) {
                   <p>게임을 시작하시겠습니까?</p>
                 </div>
                 
-                <div className="setup-actions">
+                <div className="setup-actions" style={{ justifyContent: 'flex-start' }}>
                   <button 
                     className="btn-large btn-secondary" 
                     onClick={() => setCurrentScreen('game-config')}
