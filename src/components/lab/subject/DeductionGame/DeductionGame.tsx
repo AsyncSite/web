@@ -686,7 +686,10 @@ function makeGuess(gameState) {
             </div>
             
             <div className="editor-wrapper">
-              <div className="line-numbers">
+              <div className="line-numbers" onScroll={(e) => {
+                const textarea = e.currentTarget.nextElementSibling as HTMLTextAreaElement;
+                if (textarea) textarea.scrollTop = e.currentTarget.scrollTop;
+              }}>
                 {((player.aiCode || '') + '\n').split('\n').map((_, index) => (
                   <div key={index} className="line-number">{index + 1}</div>
                 ))}
@@ -695,6 +698,10 @@ function makeGuess(gameState) {
                 className="code-editor"
                 value={player.aiCode || ''}
                 onChange={(e) => updatePlayer(player.id, { aiCode: e.target.value })}
+                onScroll={(e) => {
+                  const lineNumbers = e.currentTarget.previousElementSibling as HTMLDivElement;
+                  if (lineNumbers) lineNumbers.scrollTop = e.currentTarget.scrollTop;
+                }}
                 placeholder={player.aiLanguage === 'typescript' 
                   ? "// TypeScript AI 전략 코드를 작성하세요\n// 타입 정의와 함께 작성해주세요"
                   : "// JavaScript AI 전략 코드를 작성하세요\n// function makeGuess(gameState) { ... }"
@@ -896,11 +903,11 @@ function makeGuess(gameState) {
         </button>
       </div>
 
-      <h2>게임 설정</h2>
+      <h2 style={{ textAlign: 'center' }}>게임 설정</h2>
       
       {/* 난이도 프리셋 */}
       <div className="form-section">
-        <h3>난이도 프리셋</h3>
+        <h3 style={{ textAlign: 'center' }}>난이도 프리셋</h3>
         <div className="btn-group" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
           <button
             className={`btn-large ${gameConfig.difficulty === 'beginner' ? 'btn-primary' : 'btn-secondary'}`}

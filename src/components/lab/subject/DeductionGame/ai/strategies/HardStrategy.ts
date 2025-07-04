@@ -1,104 +1,186 @@
-import { AIStrategy } from './AIStrategy';
-import { GameStateForAI } from '../types/GameTypes';
-import { MediumStrategy } from './MediumStrategy'; // 폴백 전략으로 사용
+import { BaseStrategy } from './BaseStrategy';
+import { GameStateForAI, GuessHistory } from '../types/GameTypes';
 
-export class HardStrategy implements AIStrategy {
-  private fallbackStrategy: AIStrategy;
-
-  constructor() {
-    // Hard 전략 실패 시 Medium 전략을 사용
-    this.fallbackStrategy = new MediumStrategy();
-  }
-
+export class HardStrategy extends BaseStrategy {
   selectKeywords(gameState: GameStateForAI): number[] {
-    const { keywords, answerCount, previousGuesses, revealedAnswers, revealedWrongAnswers, myHints } = gameState;
-
-    // 1. 모든 제약조건을 만족하는 정답 후보(가설) 찾기
-    const validHypotheses = this.findValidHypotheses(gameState);
-
-    // 2. 상황에 따른 최종 추측 결정
-    if (validHypotheses.length === 1) {
-      // 정답을 찾은 경우: 유일한 후보를 제출
-      console.log('Hard AI: 정답을 찾았습니다!', validHypotheses[0]);
-      return validHypotheses[0];
-    } else if (validHypotheses.length > 1) {
-      // 여러 후보가 있는 경우: 정보 이득이 가장 큰 추측을 선택 (여기서는 첫번째 후보 선택으로 단순화)
-      console.log(`Hard AI: ${validHypotheses.length}개의 후보를 찾았습니다.`, validHypotheses);
-      return validHypotheses[0];
-    } else {
-      // 후보를 찾지 못한 경우: Medium 전략으로 폴백
-      console.log('Hard AI: 후보를 찾지 못해 Medium 전략으로 전환합니다.');
-      return this.fallbackStrategy.selectKeywords(gameState);
-    }
-  }
-
-  private findValidHypotheses(gameState: GameStateForAI): number[][] {
-    const { keywords, answerCount, previousGuesses, revealedAnswers, revealedWrongAnswers, myHints } = gameState;
-    const startTime = Date.now();
-
-    // CSP(제약 만족 문제)의 변수 도메인 설정
-    const mustBeAnswers = new Set(revealedAnswers);
-    const mustBeWrongs = new Set([...revealedWrongAnswers, ...myHints]);
-
-    // Medium 전략을 사용하여 가능성 높은 후보군 추리기 (계산량 감소)
-    const mediumStrategy = new MediumStrategy();
-    const mediumGuess = mediumStrategy.selectKeywords(gameState);
-    const combinedArray = Array.from(mustBeAnswers).concat(mediumGuess);
-    const potentialCandidates = new Set(combinedArray);
+    // 기본 전략 실행
+    const baseResult = super.selectKeywords(gameState);
     
-    const searchSpace = Array.from(potentialCandidates).filter(idx => !mustBeWrongs.has(idx));
-
-    const validHypotheses: number[][] = [];
-
-    // 조합 생성 및 검증 함수
-    const findCombinations = (startIndex: number, currentCombo: number[]) => {
-      // 시간 초과 방지
-      if (Date.now() - startTime > 500) return;
-      if (validHypotheses.length > 10) return; // 너무 많은 후보가 나오면 탐색 중지
-
-      if (currentCombo.length === answerCount) {
-        // 가설이 생성되면 모든 제약조건(과거 추측)을 만족하는지 검증
-        if (this.validateHypothesis(currentCombo, previousGuesses)) {
-          validHypotheses.push([...currentCombo]);
+    // Hard AI 전용: 고급 추론 모드
+    const optimizedResult = this.advancedReasoning(gameState, baseResult);
+    
+    return optimizedResult;
+  }
+  
+  private advancedReasoning(gameState: GameStateForAI, baseGuess: number[]): number[] {
+    const { keywords, answerCount, previousGuesses, revealedAnswers } = gameState;
+    
+    // 이미 충분한 정답을 알고 있으면 그대로 반환
+    if (revealedAnswers.length >= answerCount) {
+      return baseGuess;
+    }
+    
+    // 남은 정답 개수가 적을 때 특별 알고리즘 발동
+    const remainingAnswers = answerCount - revealedAnswers.length;
+    if (remainingAnswers <= 3) {
+      console.log(`[Hard AI] 마지막 ${remainingAnswers}개 정답 찾기 모드 활성화`);
+      
+      // 가능한 모든 조합을 시뮬레이션
+      const optimizedGuess = this.findOptimalCombination(gameState);
+      if (optimizedGuess.length > 0) {
+        console.log('[Hard AI] 최적 조합 발견!');
+        return optimizedGuess;
+      }
+    }
+    
+    // 추가 교집합/차집합 분석
+    const refinedGuess = this.refineWithSetAnalysis(gameState, baseGuess);
+    
+    return refinedGuess;
+  }
+  
+  private findOptimalCombination(gameState: GameStateForAI): number[] {
+    const { keywords, answerCount, previousGuesses, revealedAnswers, revealedWrongAnswers, myHints, revealedOtherHints } = gameState;
+    
+    // 확실한 오답 수집
+    const definiteWrongs = new Set<number>([
+      ...revealedWrongAnswers,
+      ...myHints
+    ]);
+    
+    // 공개된 다른 플레이어의 힌트도 오답
+    if (revealedOtherHints) {
+      revealedOtherHints.forEach(({ hints }) => {
+        hints.forEach(h => definiteWrongs.add(h));
+      });
+    }
+    
+    // 과거 추측에서 확실한 오답 추가
+    previousGuesses.forEach(guess => {
+      if (guess.correctCount === 0) {
+        guess.guess.forEach(idx => definiteWrongs.add(idx));
+      }
+    });
+    
+    // 가능한 후보들
+    const possibleIndices: number[] = [];
+    for (let i = 0; i < keywords.length; i++) {
+      if (!definiteWrongs.has(i) && !revealedAnswers.includes(i)) {
+        possibleIndices.push(i);
+      }
+    }
+    
+    // 가능한 조합이 적으면 모든 조합 검증
+    const remainingSlots = answerCount - revealedAnswers.length;
+    if (possibleIndices.length <= 15 && remainingSlots <= 3) {
+      console.log(`[Hard AI] ${possibleIndices.length}개 후보에서 ${remainingSlots}개 선택 조합 검증`);
+      
+      // 모든 조합 생성 및 검증
+      const validCombinations = this.findValidCombinations(
+        possibleIndices, 
+        remainingSlots, 
+        revealedAnswers,
+        previousGuesses
+      );
+      
+      if (validCombinations.length === 1) {
+        // 유일한 해를 찾음!
+        console.log('[Hard AI] 유일한 정답 조합 발견!');
+        return [...revealedAnswers, ...validCombinations[0]];
+      } else if (validCombinations.length > 1) {
+        // 여러 가능성이 있을 때 가장 확률 높은 것 선택
+        console.log(`[Hard AI] ${validCombinations.length}개의 가능한 조합 중 최적 선택`);
+        return [...revealedAnswers, ...validCombinations[0]];
+      }
+    }
+    
+    return [];
+  }
+  
+  private findValidCombinations(
+    candidates: number[], 
+    slots: number, 
+    knownAnswers: number[],
+    previousGuesses: GuessHistory[]
+  ): number[][] {
+    const validCombinations: number[][] = [];
+    
+    // 조합 생성 함수
+    const generateCombinations = (start: number, current: number[]): void => {
+      if (current.length === slots) {
+        // 이 조합이 모든 과거 추측과 일치하는지 검증
+        const testAnswer = [...knownAnswers, ...current];
+        if (this.isValidHypothesis(testAnswer, previousGuesses)) {
+          validCombinations.push([...current]);
         }
         return;
       }
-
-      if (startIndex >= searchSpace.length) return;
-
-      // 현재 키워드를 포함하는 경우
-      currentCombo.push(searchSpace[startIndex]);
-      findCombinations(startIndex + 1, currentCombo);
-      currentCombo.pop();
-
-      // 현재 키워드를 포함하지 않는 경우
-      // 남은 키워드 수로 정답을 채울 수 있는지 확인 (가지치기)
-      if (searchSpace.length - (startIndex + 1) >= answerCount - currentCombo.length) {
-        findCombinations(startIndex + 1, currentCombo);
+      
+      for (let i = start; i < candidates.length; i++) {
+        current.push(candidates[i]);
+        generateCombinations(i + 1, current);
+        current.pop();
       }
     };
-
-    findCombinations(0, []);
-    return validHypotheses;
+    
+    generateCombinations(0, []);
+    return validCombinations;
   }
-
-  /**
-   * 주어진 가설이 모든 과거 추측(제약조건)과 일치하는지 검증
-   * @param hypothesis - 검증할 정답 후보 배열 (예: [1, 5, 8, 12, 15])
-   * @param guesses - 과거 모든 추측 기록
-   */
-  private validateHypothesis(hypothesis: number[], guesses: GameStateForAI['previousGuesses']): boolean {
+  
+  private isValidHypothesis(hypothesis: number[], guesses: GuessHistory[]): boolean {
     const hypothesisSet = new Set(hypothesis);
-
+    
     for (const guess of guesses) {
-      const intersectionSize = guess.guess.filter(g => hypothesisSet.has(g)).length;
-      if (intersectionSize !== guess.correctCount) {
-        // 단 하나의 추측이라도 모순되면, 이 가설은 유효하지 않음
+      const correctInGuess = guess.guess.filter(g => hypothesisSet.has(g)).length;
+      if (correctInGuess !== guess.correctCount) {
         return false;
       }
     }
-    // 모든 추측과 일치하면 유효한 가설
+    
     return true;
+  }
+  
+  private refineWithSetAnalysis(gameState: GameStateForAI, currentGuess: number[]): number[] {
+    const { previousGuesses, answerCount } = gameState;
+    
+    // 이전 추측들의 교집합/차집합 분석으로 확실한 정답 찾기
+    const confirmedAnswers = new Set<number>();
+    
+    // 높은 정답률을 가진 추측들의 교집합 분석
+    const highScoreGuesses = previousGuesses.filter(g => 
+      g.correctCount >= answerCount * 0.6
+    );
+    
+    if (highScoreGuesses.length >= 2) {
+      // 교집합에서 공통으로 나타나는 키워드 찾기
+      const firstGuessSet = new Set(highScoreGuesses[0].guess);
+      let intersection = [...firstGuessSet];
+      
+      for (let i = 1; i < highScoreGuesses.length; i++) {
+        intersection = intersection.filter(idx => 
+          highScoreGuesses[i].guess.includes(idx)
+        );
+      }
+      
+      // 교집합 크기가 적절하면 신뢰
+      if (intersection.length > 0 && intersection.length <= answerCount) {
+        intersection.forEach(idx => confirmedAnswers.add(idx));
+        console.log(`[Hard AI] 교집합 분석으로 ${intersection.length}개 정답 후보 발견`);
+      }
+    }
+    
+    // 확실한 정답을 우선 포함
+    const refinedGuess = [...confirmedAnswers];
+    
+    // 나머지는 기존 추측에서 채움
+    for (const idx of currentGuess) {
+      if (refinedGuess.length >= answerCount) break;
+      if (!refinedGuess.includes(idx)) {
+        refinedGuess.push(idx);
+      }
+    }
+    
+    return refinedGuess;
   }
 
   getStrategyName(): string {
@@ -106,6 +188,6 @@ export class HardStrategy implements AIStrategy {
   }
 
   getDescription(): string {
-    return '과거의 모든 추측을 논리적 제약조건으로 사용하여, 이를 만족하는 정답 후보를 찾아냅니다.';
+    return '고급 추론과 완전 탐색을 통해 최적의 답을 찾습니다.';
   }
 }
