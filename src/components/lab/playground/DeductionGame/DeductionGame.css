@@ -1546,7 +1546,7 @@
 
 /* 가이드 패널이 열릴 때 editor-toolbar 조정 */
 .code-editor-container:has(.ai-guide-panel.expanded) .editor-toolbar {
-  padding-right: 740px; /* 가이드 패널 확장 너비(700px) + 여유 공간 */
+  padding-right: 720px; /* 가이드 패널 확장 너비(700px) + 스크롤바 공간(8px) + 여유 공간 */
 }
 
 .editor-left {
@@ -1683,7 +1683,7 @@
 
 /* 가이드 패널이 열릴 때 editor-footer 조정 */
 .code-editor-container:has(.ai-guide-panel.expanded) .editor-footer {
-  padding-right: 740px; /* 가이드 패널 확장 너비(700px) + 여유 공간 */
+  padding-right: 720px; /* 가이드 패널 확장 너비(700px) + 스크롤바 공간(8px) + 여유 공간 */
 }
 
 .code-stats {
