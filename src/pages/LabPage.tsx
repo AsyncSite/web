@@ -1,5 +1,5 @@
 import { TemplateHeader } from '../components/layout';
-import ItemBox from '../components/lab/ItemBox';
+import { ItemBox } from '../components/lab/common';
 import './LabPage.css';
 
 // 임시 데이터
