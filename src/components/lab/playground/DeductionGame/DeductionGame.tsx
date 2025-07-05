@@ -416,7 +416,7 @@ const DeductionGame: React.FC = () => {
         return;
       }
 
-      // 3. 더 복잡한 테스트 케이스들로 실행
+      // 3. 간단한 결함 검사 및 성능 측정
       const testCode = `
         ${aiCode}
         
@@ -427,95 +427,104 @@ const DeductionGame: React.FC = () => {
               throw new Error('makeGuess 함수가 정의되지 않았습니다');
             }
             
-            // 테스트 케이스 1: 기본 검증
-            const test1 = {
-              keywords: ['사자', '호랑이', '코끼리', '기린', '원숭이', '판다', '코알라', '펭귄'],
-              myHints: [0, 2], // 사자, 코끼리는 정답이 아님
-              answerCount: 3,
-              previousGuesses: [],
-              revealedAnswers: [],
-              revealedWrongAnswers: [],
-              currentTurn: 1,
-              timeLimit: 60
-            };
+            // 다양한 크기의 테스트 데이터
+            const testCases = [
+              {
+                keywords: ['A', 'B', 'C', 'D', 'E'],
+                myHints: [0],
+                answerCount: 2,
+                previousGuesses: [],
+                revealedAnswers: [],
+                revealedWrongAnswers: [],
+                currentTurn: 1,
+                timeLimit: 60
+              },
+              {
+                keywords: ['사자', '호랑이', '코끼리', '기린', '원숭이', '판다', '코알라', '펭귄', '독수리', '상어'],
+                myHints: [0, 2, 5],
+                answerCount: 3,
+                previousGuesses: [{ playerId: 1, guess: [1, 3, 4], correctCount: 1 }],
+                revealedAnswers: [],
+                revealedWrongAnswers: [9],
+                currentTurn: 2,
+                timeLimit: 60
+              },
+              {
+                keywords: Array.from({length: 50}, (_, i) => \`키워드\${i+1}\`),
+                myHints: [0, 5, 10, 15, 20],
+                answerCount: 5,
+                previousGuesses: [],
+                revealedAnswers: [25],
+                revealedWrongAnswers: [1, 2, 3, 4],
+                currentTurn: 1,
+                timeLimit: 60
+              }
+            ];
             
-            const result1 = makeGuess(test1);
-            if (!Array.isArray(result1) || result1.length !== 3) {
-              throw new Error('테스트1 실패: 반환값이 올바르지 않습니다');
-            }
+            let totalTime = 0;
+            const executionTimes = [];
             
-            // 테스트 케이스 2: 이전 추측 정보 활용
-            const test2 = {
-              keywords: ['사과', '바나나', '포도', '딸기', '수박', '멜론', '체리', '복숭아'],
-              myHints: [1, 4], // 바나나, 수박은 정답이 아님
-              answerCount: 3,
-              previousGuesses: [
-                { playerId: 1, guess: [0, 2, 3], correctCount: 1 }, // 1개만 맞음
-                { playerId: 2, guess: [2, 5, 6], correctCount: 2 }  // 2개 맞음
-              ],
-              revealedAnswers: [],
-              revealedWrongAnswers: [7], // 복숭아는 오답으로 공개
-              currentTurn: 3,
-              timeLimit: 60
-            };
-            
-            const result2 = makeGuess(test2);
-            
-            // 힌트를 선택했는지 확인
-            for (const idx of result2) {
-              if (test2.myHints.includes(idx)) {
-                throw new Error('테스트2 실패: 힌트로 받은 키워드를 선택했습니다');
+            // 각 테스트 케이스를 10번씩 실행하여 평균 성능 측정
+            for (let i = 0; i < testCases.length; i++) {
+              const testCase = testCases[i];
+              
+              for (let j = 0; j < 10; j++) {
+                const startTime = performance.now();
+                const result = makeGuess(testCase);
+                const endTime = performance.now();
+                const execTime = endTime - startTime;
+                
+                executionTimes.push(execTime);
+                totalTime += execTime;
+                
+                // 기본 검증
+                if (!Array.isArray(result)) {
+                  throw new Error('반환값이 배열이 아닙니다');
+                }
+                
+                if (result.length !== testCase.answerCount) {
+                  throw new Error(\`잘못된 개수의 선택 (기대: \${testCase.answerCount}, 실제: \${result.length})\`);
+                }
+                
+                // 유효성 검사
+                for (const idx of result) {
+                  if (typeof idx !== 'number' || !Number.isInteger(idx)) {
+                    throw new Error(\`유효하지 않은 인덱스: \${idx}\`);
+                  }
+                  if (idx < 0 || idx >= testCase.keywords.length) {
+                    throw new Error(\`범위를 벗어난 인덱스: \${idx}\`);
+                  }
+                  if (testCase.myHints.includes(idx)) {
+                    throw new Error(\`힌트로 받은 키워드를 선택했습니다 (인덱스: \${idx})\`);
+                  }
+                }
+                
+                // 중복 검사
+                const uniqueSet = new Set(result);
+                if (uniqueSet.size !== result.length) {
+                  throw new Error('중복된 선택이 있습니다');
+                }
               }
             }
             
-            // 테스트 케이스 3: 공개된 정답 활용
-            const test3 = {
-              keywords: ['빨강', '파랑', '노랑', '초록', '보라', '주황', '분홍', '검정'],
-              myHints: [0, 3, 6], // 빨강, 초록, 분홍은 정답이 아님
-              answerCount: 4,
-              previousGuesses: [
-                { playerId: 1, guess: [1, 2, 4, 5], correctCount: 3 }
-              ],
-              revealedAnswers: [1, 4], // 파랑, 보라는 정답으로 공개
-              revealedWrongAnswers: [7], // 검정은 오답으로 공개
-              currentTurn: 2,
-              timeLimit: 60
-            };
+            // 평균 실행 시간 계산
+            const avgTime = totalTime / executionTimes.length;
+            const maxTime = Math.max(...executionTimes);
+            const minTime = Math.min(...executionTimes);
             
-            const result3 = makeGuess(test3);
+            // 첫 번째 테스트의 결과를 샘플로 반환
+            const sampleResult = makeGuess(testCases[0]);
             
-            // 공개된 정답을 포함하는지 확인 (고급 AI는 이를 활용해야 함)
-            const includesRevealedAnswers = test3.revealedAnswers.every(ans => result3.includes(ans));
-            
-            // 점수 계산
-            let score = 0;
-            let feedback = [];
-            
-            // 기본 검증 통과
-            if (result1.length === test1.answerCount) {
-              score += 30;
-              feedback.push('기본 검증 통과');
-            }
-            
-            // 힌트 회피
-            if (!result2.some(idx => test2.myHints.includes(idx))) {
-              score += 30;
-              feedback.push('힌트 회피 성공');
-            }
-            
-            // 공개된 정답 활용
-            if (includesRevealedAnswers) {
-              score += 40;
-              feedback.push('공개된 정답 활용');
-            }
-            
-            // 성공
             return { 
               success: true, 
-              result: result1, 
-              keywords: result1.map(idx => test1.keywords[idx]),
-              score,
-              feedback
+              result: sampleResult, 
+              keywords: sampleResult.map(idx => testCases[0].keywords[idx]),
+              performance: {
+                avgTime: avgTime.toFixed(3),
+                minTime: minTime.toFixed(3),
+                maxTime: maxTime.toFixed(3),
+                totalRuns: executionTimes.length
+              }
             };
           } catch (error) {
             return { success: false, error: error.message };
@@ -535,18 +544,21 @@ const DeductionGame: React.FC = () => {
       const executionTime = Date.now() - startTime;
 
       if (testResult && testResult.success) {
-        const scoreLevel = testResult.score >= 90 ? '우수' : 
-                          testResult.score >= 60 ? '양호' : '기본';
+        const avgTime = parseFloat(testResult.performance.avgTime);
+        const speedLevel = avgTime < 0.5 ? '매우 빠름' : 
+                          avgTime < 2 ? '빠름' : 
+                          avgTime < 5 ? '보통' : '느림';
+        
         const newResult = {
           id: testResultIdCounter,
           success: true,
-          message: `테스트 통과! (점수: ${testResult.score}/100 - ${scoreLevel})`,
+          message: `테스트 통과! AI 코드가 정상적으로 작동합니다.`,
           details: {
             executionTime: `${executionTime}ms`,
             selectedKeywords: testResult.keywords.join(', '),
             selectedIndices: testResult.result,
-            score: testResult.score,
-            feedback: testResult.feedback
+            performance: testResult.performance,
+            speedLevel
           }
         };
         setTestResultIdCounter(prev => prev + 1);
@@ -1026,20 +1038,20 @@ function makeGuess(gameState) {
                     <div className="test-result-details">
                       {result.success ? (
                         <>
-                          <div>실행 시간: {result.details.executionTime}</div>
-                          <div>선택된 키워드: {result.details.selectedKeywords}</div>
-                          {result.details.score !== undefined && (
+                          <div>샘플 선택: {result.details.selectedKeywords}</div>
+                          {result.details.performance && (
                             <>
-                              <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
-                                점수: {result.details.score}/100
+                              <div style={{ marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '10px' }}>
+                                <strong>성능 측정 결과</strong>
                               </div>
                               <div style={{ marginTop: '5px' }}>
-                                평가 항목:
-                                <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
-                                  {result.details.feedback?.map((item: string, idx: number) => (
-                                    <li key={idx} style={{ color: '#4CAF50' }}>✓ {item}</li>
-                                  ))}
-                                </ul>
+                                평균 실행 시간: {result.details.performance.avgTime}ms ({result.details.speedLevel})
+                              </div>
+                              <div>
+                                최소/최대: {result.details.performance.minTime}ms / {result.details.performance.maxTime}ms
+                              </div>
+                              <div style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.7)', marginTop: '5px' }}>
+                                * 30회 실행 (3가지 크기의 데이터 × 10회)
                               </div>
                             </>
                           )}
