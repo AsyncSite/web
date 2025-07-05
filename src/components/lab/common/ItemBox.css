@@ -72,4 +72,21 @@
 
 .item-box-link:hover {
     color: #fff;
+}
+
+/* Link로 감싸진 ItemBox 스타일 */
+a.item-box {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+a.item-box.clickable {
+    cursor: pointer;
+}
+
+/* Coming soon 아이템의 hover 효과 제거 */
+.item-wrapper.coming-soon a.item-box:hover {
+    transform: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 } 

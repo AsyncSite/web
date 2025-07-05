@@ -9,8 +9,8 @@ interface Props {
 }
 
 const ItemBox = ({ title, description, imageUrl, link }: Props) => {
-    return (
-        <div className="item-box">
+    const content = (
+        <>
             {imageUrl && (
                 <div className="item-box-image">
                     <img src={process.env.PUBLIC_URL + imageUrl} alt={title} />
@@ -19,14 +19,23 @@ const ItemBox = ({ title, description, imageUrl, link }: Props) => {
             <div className="item-box-content">
                 <h3 className="item-box-title">{title}</h3>
                 <p className="item-box-description">{description}</p>
-                {link && (
-                    <Link to={link} className="item-box-link">
-                        자세히 보기 →
-                    </Link>
-                )}
             </div>
+        </>
+    );
+
+    if (link) {
+        return (
+            <Link to={link} className="item-box clickable">
+                {content}
+            </Link>
+        );
+    }
+
+    return (
+        <div className="item-box">
+            {content}
         </div>
     );
 };
 
-export default ItemBox; 
+export default ItemBox;
