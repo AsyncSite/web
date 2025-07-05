@@ -9,6 +9,7 @@ export interface GameManagerConfig {
   hintCount: number;
   timeLimit: number;
   maxTurns?: number;
+  globalHintsEnabled?: boolean;
 }
 
 export class GameManager {
@@ -66,6 +67,11 @@ export class GameManager {
 
   getGameContext(): GameContext {
     return { ...this.gameContext };
+  }
+
+  setGlobalHintsEnabled(enabled: boolean): void {
+    this.config.globalHintsEnabled = enabled;
+    console.log(`[GameManager] Global hints ${enabled ? 'enabled' : 'disabled'}`);
   }
 
   async startGame(keywords: string[], answers: number[], playerHints: { [playerId: number]: number[] }): Promise<void> {
@@ -236,6 +242,17 @@ export class GameManager {
     };
 
     this.gameContext.turnHistory.push(turnResult);
+    
+    // Global hints feature: If all guesses are wrong, reveal them as wrong answers
+    if (this.config.globalHintsEnabled && correctCount === 0) {
+      console.log('[Global Hints] All guesses are wrong, revealing as wrong answers');
+      guess.forEach(idx => {
+        if (!this.gameContext.revealedWrongAnswers.includes(idx) && 
+            !this.gameContext.revealedAnswers.includes(idx)) {
+          this.gameContext.revealedWrongAnswers.push(idx);
+        }
+      });
+    }
     
     currentPlayer.onTurnEnd?.({
       selectedIndices: guess,
