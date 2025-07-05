@@ -66,6 +66,14 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative; /* For absolute positioning of back-button-container */
+}
+
+.back-button-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
 }
 
 .form-section {
@@ -198,6 +206,60 @@
 
 .mode-selection {
   text-align: center;
+  position: relative; /* For positioning the guide link */
+  overflow: visible; /* Allow tooltip to show outside the box */
+}
+
+.guide-link-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.guide-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border: none;
+  cursor: pointer;
+}
+
+.guide-link:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
+.guide-link span {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 100;
+  bottom: 110%; /* Adjust position */
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 14px;
+}
+
+.guide-link:hover span {
+  visibility: visible;
+  opacity: 1;
 }
 
 .mode-cards {
@@ -1197,6 +1259,27 @@
     margin: 0 auto;
   }
   
+}
+
+/* Difficulty selection specific styles */
+.difficulty-selection {
+  text-align: center;
+}
+
+.difficulty-selection .setup-actions {
+  margin-top: 0;
+  display: flex; /* 추가: flexbox를 사용하여 내부 요소 정렬 */
+  justify-content: flex-start; /* 추가: 왼쪽 정렬 */
+  width: 100%; /* 추가: 부모 너비만큼 확장 */
+  box-sizing: border-box; /* 추가: 패딩 포함 너비 계산 */
+}
+
+.difficulty-selection h2 {
+  text-align: center;
+  margin-top: 60px; /* Increased margin-top */
+}
+
+@media (max-width: 768px) {
   .keywords-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 8px;
@@ -1274,8 +1357,10 @@
 }
 
 .code-editor-modal {
-  width: 900px;
-  height: 700px;
+  width: 90%;
+  max-width: 900px;
+  height: 80vh;
+  max-height: 700px;
   display: flex;
   flex-direction: column;
 }
@@ -1322,6 +1407,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
+  min-height: 0;
 }
 
 .editor-toolbar {
@@ -1383,6 +1470,7 @@
   display: flex;
   overflow: hidden;
   background: #1e1e2e;
+  position: relative;
 }
 
 .line-numbers {
@@ -1390,17 +1478,25 @@
   background: rgba(30, 30, 40, 0.5);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   padding: 15px 0;
-  overflow-y: auto;
   text-align: right;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.line-numbers::-webkit-scrollbar {
+  display: none;
 }
 
 .line-number {
   color: #666;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   line-height: 1.6;
   padding-right: 10px;
   user-select: none;
+  height: 1.6em;
 }
 
 .code-editor {
@@ -1417,6 +1513,28 @@
   white-space: pre;
   overflow-wrap: normal;
   overflow-x: auto;
+  overflow-y: auto;
+  min-height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.code-editor::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-editor::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-editor::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.code-editor::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .code-editor::placeholder {
@@ -1572,4 +1690,63 @@
 @keyframes pulse {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
+}
+
+.guide-modal {
+    width: 600px;
+}
+
+.guide-slides-container {
+    padding: 20px;
+    min-height: 150px;
+}
+
+.guide-slide h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #FFC107;
+}
+
+.guide-slide p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.guide-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.guide-controls button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.guide-controls button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.slide-indicators {
+    display: flex;
+    gap: 10px;
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: background 0.3s ease;
+}
+
+.indicator.active {
+    background: #FFC107;
 }

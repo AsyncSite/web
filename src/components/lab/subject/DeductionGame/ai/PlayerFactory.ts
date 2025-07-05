@@ -9,15 +9,13 @@ import { MediumStrategy } from './strategies/MediumStrategy';
 import { HardStrategy } from './strategies/HardStrategy';
 
 export class PlayerFactory {
-  private static strategyCache: Map<string, AIStrategy> = new Map();
-
   static createPlayer(playerInfo: PlayerInfo): IPlayer {
     switch (playerInfo.type) {
       case 'human':
         return new HumanPlayer(playerInfo);
         
       case 'built-in-ai':
-        const strategy = this.getStrategy(playerInfo.aiDifficulty || 'medium');
+        const strategy = this.createStrategy(playerInfo.aiDifficulty || 'medium');
         return new BuiltInAIPlayer(playerInfo, strategy);
         
       case 'custom-ai':
@@ -28,28 +26,18 @@ export class PlayerFactory {
     }
   }
 
-  private static getStrategy(difficulty: 'easy' | 'medium' | 'hard'): AIStrategy {
-    if (!this.strategyCache.has(difficulty)) {
-      let strategy: AIStrategy;
-      
-      switch (difficulty) {
-        case 'easy':
-          strategy = new EasyStrategy();
-          break;
-        case 'medium':
-          strategy = new MediumStrategy();
-          break;
-        case 'hard':
-          strategy = new HardStrategy();
-          break;
-        default:
-          strategy = new MediumStrategy();
-      }
-      
-      this.strategyCache.set(difficulty, strategy);
+  private static createStrategy(difficulty: 'easy' | 'medium' | 'hard'): AIStrategy {
+    // 각 플레이어마다 새로운 strategy 인스턴스 생성
+    switch (difficulty) {
+      case 'easy':
+        return new EasyStrategy();
+      case 'medium':
+        return new MediumStrategy();
+      case 'hard':
+        return new HardStrategy();
+      default:
+        return new MediumStrategy();
     }
-    
-    return this.strategyCache.get(difficulty)!;
   }
 
   static createBuiltInAIOpponent(
