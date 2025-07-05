@@ -64,7 +64,6 @@ const TeamShuffle: React.FC = () => {
         setTimeout(() => setIsNewShuffle(false), 700);
     };
     
-    // 다시 섹기
     const handleReshuffle = () => {
         handleShuffle();
     };
@@ -239,7 +238,7 @@ const TeamShuffle: React.FC = () => {
                                             className="action-button reshuffle-button"
                                             onClick={handleReshuffle}
                                         >
-                                            🔄 다시 섹기
+                                            🔄 다시 섞기
                                         </button>
                                         <button 
                                             className="action-button copy-button"
