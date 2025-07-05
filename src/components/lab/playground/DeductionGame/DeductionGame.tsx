@@ -877,7 +877,10 @@ function makeGuess(gameState) {
                 {(gameMode === 'multi' || (gameMode === 'solo' && player.id === 1)) && (
                   <div className="form-section">
                     <div className="radio-group">
-                      <div className="radio-option">
+                      <div 
+                        className="radio-option"
+                        onClick={() => updatePlayer(player.id, { type: 'human', aiCode: '' })}
+                      >
                         <input
                           type="radio"
                           id={`human-${player.id}`}
@@ -888,7 +891,13 @@ function makeGuess(gameState) {
                         />
                         <label htmlFor={`human-${player.id}`}>인간</label>
                       </div>
-                      <div className="radio-option">
+                      <div 
+                        className="radio-option"
+                        onClick={() => {
+                          updatePlayer(player.id, { type: 'custom-ai' });
+                          setCodeEditorModal({ isOpen: true, playerId: player.id });
+                        }}
+                      >
                         <input
                           type="radio"
                           id={`ai-${player.id}`}
