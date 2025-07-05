@@ -430,12 +430,12 @@ const DeductionGame: React.FC = () => {
             // 다양한 크기의 테스트 데이터
             const testCases = [
               {
-                keywords: ['A', 'B', 'C', 'D', 'E'],
-                myHints: [0],
-                answerCount: 2,
+                keywords: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'],
+                myHints: [0, 3, 7],
+                answerCount: 4,
                 previousGuesses: [],
                 revealedAnswers: [],
-                revealedWrongAnswers: [],
+                revealedWrongAnswers: [15, 18],
                 currentTurn: 1,
                 timeLimit: 60
               },
