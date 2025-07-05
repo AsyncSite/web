@@ -1,16 +1,18 @@
 .deduction-game {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: fixed;
   top: 0;
   left: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .game-header {
@@ -33,14 +35,15 @@
 
 .game-content {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2vh 2vw;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
 }
 
@@ -65,7 +68,8 @@
   max-height: 75vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative; /* For absolute positioning of back-button-container */
 }
 
@@ -615,9 +619,12 @@
 .game-playing {
   padding: 40px;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   max-width: 1400px;
   margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .game-header-info {
@@ -1162,16 +1169,32 @@
 }
 
 @media (max-width: 768px) {
+  .deduction-game {
+    position: relative;
+    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
   .game-content {
     max-width: 100%;
-    padding: 0 15px;
+    padding: 5px;
+    min-height: 100vh;
+    height: 100vh;
+    justify-content: flex-start;
+    overflow: hidden;
   }
   
   .game-screen {
-    width: 100%;
+    width: calc(100% - 10px);
     max-width: 100%;
-    padding: 30px 20px;
-    min-height: 400px;
+    padding: 15px;
+    min-height: auto;
+    max-height: calc(100vh - 20px);
+    margin: 5px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   .mode-cards {
@@ -1235,28 +1258,133 @@
     gap: 8px;
   }
   
+  /* 게임 플레이 화면 모바일 최적화 */
+  .game-playing {
+    padding: 0;
+    min-height: calc(100vh - 20px);
+    max-height: calc(100vh - 20px);
+    height: calc(100vh - 20px);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   .game-layout {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: visible;
+    padding-bottom: 80px; /* 토글 버튼 공간 확보 */
+  }
+  
+  .game-main {
+    padding: 15px;
+    height: auto;
+    flex: 1;
+    min-height: auto;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+  
+  .game-sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(30, 30, 40, 0.98);
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    z-index: 100;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .game-sidebar.open {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 15px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* 사이드바 토글 버튼 */
+  .sidebar-toggle {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 101;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar-toggle:active {
+    transform: scale(0.95);
   }
   
   .game-header-info {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
+    flex-direction: row;
+    padding: 10px;
+    margin-bottom: 10px;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  
+  .turn-info {
+    flex: 1;
+  }
+  
+  .turn-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+  }
+  
+  .turn-info p {
+    font-size: 0.9rem;
   }
   
   .header-controls {
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
+    align-items: center;
   }
   
   .timer {
-    text-align: center;
+    text-align: right;
+  }
+  
+  .time-display {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
   }
   
   .timer-bar {
-    margin: 0 auto;
+    width: 100px;
+  }
+  
+  .btn-exit-small {
+    padding: 5px 10px;
+    font-size: 0.75rem;
   }
   
 }
@@ -1280,22 +1408,100 @@
 }
 
 @media (max-width: 768px) {
+  .keyword-selection {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  
+  .keyword-selection h4 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  
   .keywords-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 6px;
+    padding: 5px;
+    margin-bottom: 15px;
+    max-height: 40vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
   .keyword-btn {
-    min-height: 45px;
+    min-height: 44px;
+    font-size: 0.75rem;
+    padding: 8px 4px;
+    border-radius: 8px;
+    word-break: break-word;
+  }
+  
+  .guess-controls {
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+  }
+  
+  .selected-display h5 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  
+  .selected-keywords {
+    min-height: 35px;
+    padding: 6px;
+    margin-bottom: 10px;
     font-size: 0.8rem;
   }
   
-  .control-buttons {
-    flex-direction: column;
+  .selected-chip {
+    font-size: 0.75rem;
+    padding: 4px 8px;
   }
   
-  .game-sidebar {
-    order: -1;
+  .control-buttons {
+    flex-direction: row;
+    gap: 8px;
+  }
+  
+  .control-buttons .btn-large {
+    flex: 1;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+    height: 44px;
+  }
+  
+  /* 사이드바 내부 스타일 */
+  .my-hints, .players-status, .turn-history {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .my-hints h4, .players-status h4, .turn-history h4 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  
+  .global-hints h4 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .hint-buttons {
+    gap: 8px;
+  }
+  
+  .btn-hint {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .history-scroll {
+    max-height: 150px;
   }
   
   .answer-list {
@@ -1305,6 +1511,51 @@
   .answer-chip {
     font-size: 0.9rem;
     padding: 8px 12px;
+  }
+  
+  /* 모달 모바일 최적화 */
+  .code-editor-modal {
+    width: 95%;
+    height: 90vh;
+    max-width: none;
+  }
+  
+  .modal-header {
+    padding: 15px 20px;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .editor-toolbar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 15px;
+  }
+  
+  .editor-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .editor-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .code-editor {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+  
+  .line-numbers {
+    width: 40px;
+  }
+  
+  .line-number {
+    font-size: 0.85rem;
+    padding-right: 5px;
   }
 }
 
@@ -1749,4 +2000,69 @@
 
 .indicator.active {
     background: #FFC107;
+}
+
+/* 추가 모바일 최적화 스타일 */
+@media (max-width: 768px) {
+  .difficulty-cards {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .difficulty-card {
+    width: 100%;
+    max-width: 300px;
+    padding: 25px 20px;
+  }
+  
+  .difficulty-card h3 {
+    font-size: 1.4rem;
+  }
+  
+  .difficulty-card p {
+    font-size: 0.9rem;
+  }
+  
+  .game-header h1 {
+    font-size: 2rem;
+  }
+  
+  .game-header p {
+    font-size: 1rem;
+  }
+  
+  /* 모달 반응형 */
+  .guide-modal {
+    width: 95%;
+    max-width: 500px;
+  }
+  
+  .guide-slide h4 {
+    font-size: 1.3rem;
+  }
+  
+  .guide-slide p {
+    font-size: 1rem;
+  }
+  
+  /* 설정 화면 모바일 최적화 */
+  .number-input-group {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn-small {
+    min-width: 35px;
+    padding: 6px 10px;
+  }
+  
+  /* 준비 단계 화면 */
+  .countdown-info h3 {
+    font-size: 1.3rem;
+  }
+  
+  .countdown-info p {
+    font-size: 1rem;
+  }
 }

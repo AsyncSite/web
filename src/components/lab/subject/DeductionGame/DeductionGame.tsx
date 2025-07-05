@@ -95,6 +95,20 @@ const DeductionGame: React.FC = () => {
     isOpen: false, 
     playerId: null 
   });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -1427,7 +1441,7 @@ function makeGuess(gameState) {
           </div>
 
           {/* 오른쪽: 게임 정보 */}
-          <div className="game-sidebar">
+          <div className={`game-sidebar ${isMobile && isSidebarOpen ? 'open' : ''}`}>
             <div className="global-hints">
               <h4>게임 힌트</h4>
               <div className="hint-buttons">
@@ -1494,6 +1508,17 @@ function makeGuess(gameState) {
             </div>
           </div>
         </div>
+        
+        {/* 모바일 사이드바 토글 버튼 */}
+        {isMobile && (
+          <button 
+            className="sidebar-toggle"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            aria-label={isSidebarOpen ? '정보 패널 닫기' : '정보 패널 열기'}
+          >
+            {isSidebarOpen ? '✕' : '☰'}
+          </button>
+        )}
       </div>
     );
   };

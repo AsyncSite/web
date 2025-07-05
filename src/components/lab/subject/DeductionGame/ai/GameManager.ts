@@ -3,6 +3,7 @@ import { HumanPlayer } from './players/HumanPlayer';
 import { GameContext, GameStateForAI, TurnResult } from './types/GameTypes';
 import { PlayerInfo } from './types/PlayerTypes';
 import { PlayerFactory } from './PlayerFactory';
+import { GlobalGameMemory } from './strategies/BaseStrategy';
 
 export interface GameManagerConfig {
   keywordPoolSize: number;
@@ -73,6 +74,9 @@ export class GameManager {
     if (this.players.length === 0) {
       throw new Error('No players added to the game');
     }
+
+    // 새 게임 시작 시 전역 메모리 초기화
+    GlobalGameMemory.getInstance().reset();
 
     this.gameContext = {
       keywords,
@@ -500,6 +504,9 @@ export class GameManager {
     this.players.forEach(player => player.reset());
     this.revealedHintsPerPlayer.clear();
     this.lastHintRevealTurn.clear();
+    
+    // 게임 종료 시 전역 메모리 초기화
+    GlobalGameMemory.getInstance().reset();
   }
 
   isRunning(): boolean {

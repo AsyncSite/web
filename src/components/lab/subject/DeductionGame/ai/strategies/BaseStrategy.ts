@@ -1,12 +1,98 @@
 import { AIStrategy } from './AIStrategy';
 import { GameStateForAI, GuessHistory } from '../types/GameTypes';
 
+// 전역 게임 메모리 - 모든 AI 인스턴스가 공유
+export class GlobalGameMemory {
+  private static instance: GlobalGameMemory;
+  private allCombinations: Set<string> = new Set();
+  private keywordStats: Map<number, { appearances: number; correctGuesses: number; totalGuesses: number }> = new Map();
+  private playerPatterns: Map<number, Map<number, number>> = new Map(); // playerId -> keywordIdx -> 선택 횟수
+  
+  private constructor() {}
+  
+  static getInstance(): GlobalGameMemory {
+    if (!GlobalGameMemory.instance) {
+      GlobalGameMemory.instance = new GlobalGameMemory();
+    }
+    return GlobalGameMemory.instance;
+  }
+  
+  reset(): void {
+    this.allCombinations.clear();
+    this.keywordStats.clear();
+    this.playerPatterns.clear();
+    console.log('[메모리] 게임 메모리 초기화');
+  }
+  
+  addCombination(combination: number[]): void {
+    const key = [...combination].sort((a, b) => a - b).join(',');
+    this.allCombinations.add(key);
+  }
+  
+  hasCombination(combination: number[]): boolean {
+    const key = [...combination].sort((a, b) => a - b).join(',');
+    return this.allCombinations.has(key);
+  }
+  
+  getAllCombinations(): Set<string> {
+    return new Set(this.allCombinations);
+  }
+  
+  updateKeywordStats(guess: GuessHistory): void {
+    guess.guess.forEach(keywordIdx => {
+      const stats = this.keywordStats.get(keywordIdx) || { appearances: 0, correctGuesses: 0, totalGuesses: 0 };
+      stats.appearances++;
+      stats.totalGuesses += guess.guess.length;
+      stats.correctGuesses += guess.correctCount;
+      this.keywordStats.set(keywordIdx, stats);
+    });
+  }
+  
+  getKeywordScore(keywordIdx: number): number {
+    const stats = this.keywordStats.get(keywordIdx);
+    if (!stats || stats.appearances === 0) return 50; // 중립 점수
+    
+    // 평균 정답률 계산
+    const avgCorrectRate = stats.correctGuesses / stats.totalGuesses;
+    return avgCorrectRate * 100;
+  }
+  
+  updatePlayerPattern(playerId: number, keywords: number[]): void {
+    if (!this.playerPatterns.has(playerId)) {
+      this.playerPatterns.set(playerId, new Map());
+    }
+    const pattern = this.playerPatterns.get(playerId)!;
+    
+    keywords.forEach(keywordIdx => {
+      pattern.set(keywordIdx, (pattern.get(keywordIdx) || 0) + 1);
+    });
+  }
+  
+  getFrequentlyChosenKeywords(minFrequency: number = 3): number[] {
+    const frequentKeywords: Map<number, number> = new Map();
+    
+    this.playerPatterns.forEach((pattern) => {
+      pattern.forEach((count, keywordIdx) => {
+        frequentKeywords.set(keywordIdx, (frequentKeywords.get(keywordIdx) || 0) + count);
+      });
+    });
+    
+    return Array.from(frequentKeywords.entries())
+      .filter(([_, count]) => count >= minFrequency)
+      .sort((a, b) => b[1] - a[1])
+      .map(([idx, _]) => idx);
+  }
+}
+
 export abstract class BaseStrategy implements AIStrategy {
-  private previousExactGuesses: Set<string> = new Set();
+  private gameMemory: GlobalGameMemory = GlobalGameMemory.getInstance();
   
   selectKeywords(gameState: GameStateForAI): number[] {
     console.log('=== 지능형 AI 실행 ===');
     console.log(`턴 ${gameState.currentTurn}: 키워드 ${gameState.keywords.length}개 중 정답 ${gameState.answerCount}개 찾기`);
+    
+    // 게임 메모리 업데이트 - 모든 이전 추측을 전역 메모리에 저장
+    this.updateGlobalMemory(gameState);
     
     // 1. 확실한 정답과 오답 수집
     const definiteAnswers = new Set<number>(gameState.revealedAnswers);
@@ -32,7 +118,11 @@ export abstract class BaseStrategy implements AIStrategy {
     // 2. 이전 추측 분석으로 추가 정보 획득
     this.analyzeAllGuesses(gameState, definiteAnswers, definiteWrongs);
     
-    // 3. 선택 가능한 키워드 목록 생성
+    // 3. 자주 선택되는 키워드 확인
+    const frequentKeywords = this.gameMemory.getFrequentlyChosenKeywords(3);
+    console.log(`자주 선택되는 키워드: ${frequentKeywords.map(i => gameState.keywords[i]).join(', ')}`);
+    
+    // 4. 선택 가능한 키워드 목록 생성
     const possibleKeywords: number[] = [];
     for (let i = 0; i < gameState.keywords.length; i++) {
       if (!definiteWrongs.has(i)) {
@@ -44,27 +134,147 @@ export abstract class BaseStrategy implements AIStrategy {
     console.log(`확실한 오답: ${definiteWrongs.size}개`);
     console.log(`선택 가능한 키워드: ${possibleKeywords.length}개`);
     
-    // 4. 이미 충분한 정답을 아는 경우
+    // 5. 이미 충분한 정답을 아는 경우
     if (definiteAnswers.size >= gameState.answerCount) {
       console.log('모든 정답을 알고 있음! 게임 종료!');
       return Array.from(definiteAnswers).slice(0, gameState.answerCount);
     }
     
-    // 5. 각 키워드의 점수 계산
-    const scores = this.calculateScores(gameState, possibleKeywords, definiteAnswers, definiteWrongs);
+    // 6. 각 키워드의 점수 계산 (메모리 기반 점수 포함)
+    const scores = this.calculateScoresWithMemory(gameState, possibleKeywords, definiteAnswers, definiteWrongs, frequentKeywords);
     
-    // 6. 최종 추측 구성
+    // 7. 최종 추측 구성
     let finalGuess = this.buildFinalGuess(scores, definiteAnswers, gameState.answerCount);
     
-    // 7. 중복 추측 방지: 이전과 동일한 조합인지 확인
-    finalGuess = this.preventDuplicateGuess(finalGuess, gameState, scores);
+    // 8. 중복 추측 방지: 전역 메모리 기반 확인
+    finalGuess = this.preventDuplicateGuessWithGlobalMemory(finalGuess, gameState, scores);
     
-    // 8. 이번 추측을 기록에 추가
-    const guessKey = [...finalGuess].sort((a, b) => a - b).join(',');
-    this.previousExactGuesses.add(guessKey);
+    // 9. 이번 추측을 전역 메모리에 추가
+    this.gameMemory.addCombination(finalGuess);
     
     console.log('최종 선택:', finalGuess.map(i => gameState.keywords[i]));
     return finalGuess;
+  }
+
+  // 전역 메모리 업데이트
+  private updateGlobalMemory(gameState: GameStateForAI): void {
+    // 모든 이전 추측을 전역 메모리에 추가
+    gameState.previousGuesses.forEach(guess => {
+      this.gameMemory.addCombination(guess.guess);
+      this.gameMemory.updateKeywordStats(guess);
+      this.gameMemory.updatePlayerPattern(guess.playerId, guess.guess);
+    });
+  }
+  
+  // 메모리 기반 점수 계산
+  private calculateScoresWithMemory(
+    gameState: GameStateForAI,
+    possibleKeywords: number[],
+    definiteAnswers: Set<number>,
+    definiteWrongs: Set<number>,
+    frequentKeywords: number[]
+  ): Map<number, number> {
+    const scores = new Map<number, number>();
+    
+    // 확실한 정답은 최고 점수
+    definiteAnswers.forEach(idx => {
+      scores.set(idx, 1000);
+    });
+    
+    // 가능한 키워드들의 점수 계산
+    possibleKeywords.forEach(idx => {
+      if (!definiteAnswers.has(idx) && !definiteWrongs.has(idx)) {
+        // 기본 점수 계산
+        let score = this.calculateKeywordScore(idx, gameState, definiteAnswers, definiteWrongs);
+        
+        // 메모리 기반 점수 보정
+        const memoryScore = this.gameMemory.getKeywordScore(idx);
+        score = score * 0.7 + memoryScore * 0.3; // 가중 평균
+        
+        // 자주 선택되는 키워드 보너스
+        if (frequentKeywords.includes(idx)) {
+          score *= 1.5;
+          console.log(`[메모리] ${gameState.keywords[idx]}는 자주 선택됨 - 보너스 적용`);
+        }
+        
+        scores.set(idx, score);
+      }
+    });
+    
+    // 점수별로 정렬하여 출력
+    const sorted = Array.from(scores.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+    
+    console.log('상위 10개 키워드 점수 (메모리 반영):');
+    sorted.forEach(([idx, score]) => {
+      console.log(`  ${gameState.keywords[idx]}: ${score.toFixed(2)}점`);
+    });
+    
+    return scores;
+  }
+  
+  // 전역 메모리 기반 중복 방지
+  private preventDuplicateGuessWithGlobalMemory(
+    guess: number[],
+    gameState: GameStateForAI,
+    scores: Map<number, number>
+  ): number[] {
+    // 전역 메모리에서 중복 확인
+    if (this.gameMemory.hasCombination(guess)) {
+      console.log('[메모리] 전역 중복 감지! 새로운 조합 생성 중...');
+      console.log(`[메모리] 중복 조합: ${guess.map(i => gameState.keywords[i]).join(', ')}`);
+      
+      // 체계적으로 새로운 조합 생성
+      return this.generateNewCombinationWithMemory(guess, gameState, scores);
+    }
+    
+    return guess;
+  }
+  
+  // 메모리 기반 새로운 조합 생성
+  private generateNewCombinationWithMemory(
+    originalGuess: number[],
+    gameState: GameStateForAI,
+    scores: Map<number, number>
+  ): number[] {
+    const allCombinations = this.gameMemory.getAllCombinations();
+    console.log(`[메모리] 현재까지 ${allCombinations.size}개의 조합이 시도됨`);
+    
+    // 확실한 정답은 유지
+    const mustInclude = originalGuess.filter(idx => 
+      gameState.revealedAnswers.includes(idx)
+    );
+    
+    // 점수 높은 순으로 후보 정렬
+    const candidates = Array.from(scores.entries())
+      .filter(([idx]) => !mustInclude.includes(idx))
+      .sort((a, b) => b[1] - a[1]);
+    
+    // 새로운 조합 시도 (최대 50회)
+    for (let attempt = 0; attempt < 50; attempt++) {
+      const newGuess = [...mustInclude];
+      const needed = gameState.answerCount - newGuess.length;
+      
+      // 상위 후보 중에서 선택 (약간의 무작위성 추가)
+      const pool = candidates.slice(0, needed * 2);
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      
+      for (let i = 0; i < needed && i < shuffled.length; i++) {
+        newGuess.push(shuffled[i][0]);
+      }
+      
+      // 중복 확인
+      if (!this.gameMemory.hasCombination(newGuess)) {
+        console.log(`[메모리] ${attempt + 1}번 시도 후 새로운 조합 생성 성공`);
+        console.log(`[메모리] 새 조합: ${newGuess.map(i => gameState.keywords[i]).join(', ')}`);
+        return newGuess;
+      }
+    }
+    
+    // 모든 시도가 실패하면 최선의 선택 반환
+    console.log('[메모리] 경고: 새로운 조합 생성 실패');
+    return originalGuess;
   }
 
   // 모든 추측 분석
@@ -183,40 +393,6 @@ export abstract class BaseStrategy implements AIStrategy {
     }
   }
 
-  // 각 키워드의 점수 계산
-  private calculateScores(
-    gameState: GameStateForAI, 
-    possibleKeywords: number[], 
-    definiteAnswers: Set<number>, 
-    definiteWrongs: Set<number>
-  ): Map<number, number> {
-    const scores = new Map<number, number>();
-    
-    // 확실한 정답은 최고 점수
-    definiteAnswers.forEach(idx => {
-      scores.set(idx, 1000);
-    });
-    
-    // 가능한 키워드들의 점수 계산
-    possibleKeywords.forEach(idx => {
-      if (!definiteAnswers.has(idx) && !definiteWrongs.has(idx)) {
-        const score = this.calculateKeywordScore(idx, gameState, definiteAnswers, definiteWrongs);
-        scores.set(idx, score);
-      }
-    });
-    
-    // 점수별로 정렬하여 출력
-    const sorted = Array.from(scores.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
-    
-    console.log('상위 10개 키워드 점수:');
-    sorted.forEach(([idx, score]) => {
-      console.log(`  ${gameState.keywords[idx]}: ${score.toFixed(2)}점`);
-    });
-    
-    return scores;
-  }
 
   // 개별 키워드 점수 계산
   private calculateKeywordScore(
@@ -285,164 +461,6 @@ export abstract class BaseStrategy implements AIStrategy {
     return finalGuess;
   }
   
-  // 중복 추측 방지 메서드
-  private preventDuplicateGuess(
-    guess: number[], 
-    gameState: GameStateForAI, 
-    scores: Map<number, number>
-  ): number[] {
-    // 추측을 정렬하여 문자열로 변환 (순서 무관하게 비교)
-    const guessKey = [...guess].sort((a, b) => a - b).join(',');
-    
-    // 모든 이전 추측들을 수집 (모든 플레이어의 추측 + 내가 이미 시도한 것들)
-    const allPreviousGuesses = new Set<string>(this.previousExactGuesses);
-    gameState.previousGuesses.forEach(prevGuess => {
-      const prevKey = [...prevGuess.guess].sort((a, b) => a - b).join(',');
-      allPreviousGuesses.add(prevKey);
-    });
-    
-    // 디버깅: 중복 검사 상황 로그
-    console.log(`[중복 검사] 현재 추측: ${guessKey}`);
-    console.log(`[중복 검사] 이전 추측 수: ${allPreviousGuesses.size}`);
-    console.log(`[중복 검사] 내 이전 추측들:`, Array.from(this.previousExactGuesses));
-    console.log(`[중복 검사] 전체 이전 추측들:`, Array.from(allPreviousGuesses));
-    
-    // 현재 추측이 이전에 시도한 것인지 확인
-    if (allPreviousGuesses.has(guessKey)) {
-      console.log('경고: 동일한 조합 재시도 감지! 새로운 조합 생성 중...');
-      console.log(`[중복 발견] 추측 키워드: ${guess.map(i => gameState.keywords[i]).join(', ')}`);
-      
-      // 이전 추측에서 해당 조합 찾기
-      const previousGuess = gameState.previousGuesses.find(pg => {
-        const pgKey = [...pg.guess].sort((a, b) => a - b).join(',');
-        return pgKey === guessKey;
-      });
-      
-      if (previousGuess) {
-        console.log(`[중복 발견] 이전 결과: ${previousGuess.correctCount}/${gameState.answerCount} (플레이어 ${previousGuess.playerId})`);
-        
-        if (previousGuess.correctCount > 0 && previousGuess.correctCount < gameState.answerCount) {
-          // 부분 정답인 경우: 반드시 다른 조합 생성
-          console.log('[중복 해결] 부분 정답이므로 체계적 변형 시도');
-          return this.generateSystematicVariation(guess, previousGuess, gameState, scores, allPreviousGuesses);
-        } else {
-          // 완전 정답이거나 완전 오답인 경우
-          console.log('[중복 해결] 완전히 새로운 조합 생성');
-          return this.generateNewCombination(guess, gameState, scores, allPreviousGuesses);
-        }
-      }
-    }
-    
-    return guess;
-  }
-  
-  // 부분 정답일 때 체계적으로 변형
-  private generateSystematicVariation(
-    originalGuess: number[],
-    previousResult: GuessHistory,
-    gameState: GameStateForAI,
-    scores: Map<number, number>,
-    allPreviousGuesses: Set<string>
-  ): number[] {
-    console.log(`이전 결과: ${previousResult.correctCount}/${gameState.answerCount} 정답`);
-    console.log(`이전 추측: ${previousResult.guess.map(i => gameState.keywords[i]).join(', ')}`);
-    
-    // 공개된 정답은 무조건 포함
-    const mustInclude = gameState.revealedAnswers;
-    
-    // 점수가 가장 낮은 키워드부터 교체 시도 (공개된 정답 제외)
-    const sortedByScore = [...originalGuess]
-      .filter(idx => !mustInclude.includes(idx))
-      .sort((a, b) => (scores.get(a) || 0) - (scores.get(b) || 0));
-    
-    // 사용 가능한 대체 후보들 (점수 높은 순)
-    const availableCandidates = Array.from(scores.entries())
-      .filter(([idx]) => !originalGuess.includes(idx))
-      .sort((a, b) => b[1] - a[1])
-      .map(([idx]) => idx);
-    
-    console.log(`교체 가능 키워드: ${sortedByScore.length}개`);
-    console.log(`대체 후보: ${availableCandidates.length}개`);
-    
-    // 교체할 개수 결정: 틀린 개수만큼 교체
-    const wrongCount = gameState.answerCount - previousResult.correctCount;
-    const toReplace = Math.min(wrongCount, sortedByScore.length);
-    
-    console.log(`${toReplace}개 키워드 교체 시도`);
-    
-    // 여러 개를 한 번에 교체
-    for (let replaceCount = 1; replaceCount <= toReplace; replaceCount++) {
-      // 교체할 키워드 선택
-      const toReplaceIndices = sortedByScore.slice(0, replaceCount);
-      
-      // 가능한 모든 조합 시도
-      const newGuess = [...originalGuess];
-      for (let i = 0; i < toReplaceIndices.length && i < availableCandidates.length; i++) {
-        const indexToReplace = newGuess.indexOf(toReplaceIndices[i]);
-        if (indexToReplace !== -1) {
-          newGuess[indexToReplace] = availableCandidates[i];
-        }
-      }
-      
-      // 이 조합이 시도되지 않았다면 사용
-      const newKey = [...newGuess].sort((a, b) => a - b).join(',');
-      if (!allPreviousGuesses.has(newKey)) {
-        console.log(`체계적 변형 (${replaceCount}개 교체): ${toReplaceIndices.map(i => gameState.keywords[i]).join(', ')} → ${availableCandidates.slice(0, replaceCount).map(i => gameState.keywords[i]).join(', ')}`);
-        return newGuess;
-      }
-    }
-    
-    // 모든 체계적 교체가 실패하면 완전히 새로운 조합
-    return this.generateNewCombination(originalGuess, gameState, scores, allPreviousGuesses);
-  }
-  
-  // 완전히 새로운 조합 생성
-  private generateNewCombination(
-    originalGuess: number[],
-    gameState: GameStateForAI,
-    scores: Map<number, number>,
-    allPreviousGuesses: Set<string>
-  ): number[] {
-    // 확실한 정답은 유지
-    const mustInclude = originalGuess.filter(idx => 
-      gameState.revealedAnswers.includes(idx)
-    );
-    
-    // 나머지는 점수 높은 순으로 새로 선택
-    const candidates = Array.from(scores.entries())
-      .filter(([idx]) => !mustInclude.includes(idx))
-      .sort((a, b) => b[1] - a[1]);
-    
-    const newGuess = [...mustInclude];
-    const needed = gameState.answerCount - newGuess.length;
-    
-    // 이전과 다른 조합이 나올 때까지 시도
-    let attempts = 0;
-    while (attempts < 10) {
-      const tempGuess = [...mustInclude];
-      
-      // 약간의 무작위성을 추가하여 선택
-      const shuffledCandidates = [...candidates.slice(0, needed * 2)]
-        .sort(() => Math.random() - 0.5);
-      
-      for (let i = 0; i < needed && i < shuffledCandidates.length; i++) {
-        tempGuess.push(shuffledCandidates[i][0]);
-      }
-      
-      const tempKey = [...tempGuess].sort((a, b) => a - b).join(',');
-      if (!allPreviousGuesses.has(tempKey)) {
-        console.log('새로운 조합 생성 성공');
-        console.log(`새 조합: ${tempGuess.map(i => gameState.keywords[i]).join(', ')}`);
-        return tempGuess;
-      }
-      
-      attempts++;
-    }
-    
-    // 최후의 수단: 완전 랜덤
-    console.log('경고: 새로운 조합 생성 실패, 최선의 선택 반환');
-    return originalGuess;
-  }
 
   abstract getStrategyName(): string;
   abstract getDescription(): string;
