@@ -1541,6 +1541,12 @@
   padding-right: 60px; /* 가이드 패널 축소 상태(40px) + 여유 공간 */
   background: rgba(50, 50, 60, 0.5);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: padding-right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 가이드 패널이 열릴 때 editor-toolbar 조정 */
+.code-editor-container:has(.ai-guide-panel.expanded) .editor-toolbar {
+  padding-right: 740px; /* 가이드 패널 확장 너비(700px) + 여유 공간 */
 }
 
 .editor-left {
@@ -1672,6 +1678,12 @@
   padding-right: 60px; /* 가이드 패널 축소 상태(40px) + 여유 공간 */
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(50, 50, 60, 0.5);
+  transition: padding-right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 가이드 패널이 열릴 때 editor-footer 조정 */
+.code-editor-container:has(.ai-guide-panel.expanded) .editor-footer {
+  padding-right: 740px; /* 가이드 패널 확장 너비(700px) + 여유 공간 */
 }
 
 .code-stats {
