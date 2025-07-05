@@ -1,5 +1,4 @@
 import { IPlayer } from './players/BasePlayer';
-import { HumanPlayer } from './players/HumanPlayer';
 import { GameContext, GameStateForAI, TurnResult } from './types/GameTypes';
 import { PlayerInfo } from './types/PlayerTypes';
 import { PlayerFactory } from './PlayerFactory';
@@ -297,14 +296,14 @@ export class GameManager {
       // 난이도별 AI 성장 구간 비율 정의 (Medium 강화)
       const difficultyProfiles = {
         easy: { 
-          startRatio: 0.25,      // 25%에서 시작
-          initialInterval: 4,    // 초기 간격
-          accelerationFactor: 1.5 // 가속도 계수
+          startRatio: 0.5,       // 50%에서 시작 (훨씬 늦게)
+          initialInterval: 8,    // 초기 간격 (2배로 증가)
+          accelerationFactor: 1.2 // 가속도 계수 (더 느리게)
         },
         medium: { 
-          startRatio: 0.08,      // 8%에서 시작 (더 빠른 시작)
-          initialInterval: 2,    // 초기 간격 (더 짧게)
-          accelerationFactor: 3.0 // 가속도 계수 (더 빠른 성장)
+          startRatio: 0.25,      // 25%에서 시작 (기존 Easy 값 사용)
+          initialInterval: 4,    // 초기 간격 (기존 Easy 값 사용)
+          accelerationFactor: 1.5 // 가속도 계수 (기존 Easy 값 사용)
         },
         hard: { 
           startRatio: 0.05,      // 5%에서 시작
@@ -366,11 +365,11 @@ export class GameManager {
     ));
     
     // 이번 턴에 공개할 힌트 수 계산: 난이도별로 다르게
-    let revealMultiplier = 0.3;
-    if (schedule.accelerationFactor >= 3.0 && schedule.accelerationFactor < 8.0) { // Medium
-      revealMultiplier = 0.5;
+    let revealMultiplier = 0.15; // Easy: 매우 적게 공개
+    if (schedule.accelerationFactor >= 1.5 && schedule.accelerationFactor < 8.0) { // Medium
+      revealMultiplier = 0.3; // Medium: 기존 Easy 수준으로
     } else if (schedule.accelerationFactor >= 8.0) { // Hard
-      revealMultiplier = 1.5; // 더 많이 공개
+      revealMultiplier = 1.5; // Hard: 더 많이 공개
     }
     const hintsToRevealThisTurn = Math.max(1, Math.floor(turnsPassedSinceStart * revealMultiplier));
     
