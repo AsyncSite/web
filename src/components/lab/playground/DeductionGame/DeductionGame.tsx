@@ -99,10 +99,9 @@ const DeductionGame: React.FC = () => {
   const [globalHintsEnabled, setGlobalHintsEnabled] = useState(true);
   const [isGuideExpanded, setIsGuideExpanded] = useState(true);
   const [isModalExpanded, setIsModalExpanded] = useState(false);
-  const [testResult, setTestResult] = useState<{ success: boolean; message: string; details?: any } | null>(null);
+  const [testResults, setTestResults] = useState<Array<{ id: number; success: boolean; message: string; details?: any; isFading?: boolean }>>([]);
   const [isTestRunning, setIsTestRunning] = useState(false);
-  const [testResultTimeoutId, setTestResultTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const [isTestResultFading, setIsTestResultFading] = useState(false);
+  const [testResultIdCounter, setTestResultIdCounter] = useState(0);
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -373,42 +372,66 @@ const DeductionGame: React.FC = () => {
 
   const runAICodeTest = async (aiCode: string, language: 'javascript' | 'typescript') => {
     setIsTestRunning(true);
-    setTestResult(null);
     
     try {
       // 1. 먼저 기본 문법 검사만 수행
       try {
         new Function(aiCode);
       } catch (e: any) {
-        setTestResult({
+        const newResult = {
+          id: testResultIdCounter,
           success: false,
           message: '문법 오류',
           details: { error: e.message }
-        });
+        };
+        setTestResultIdCounter(prev => prev + 1);
+        setTestResults(prev => [...prev, newResult]);
+        
+        setTimeout(() => {
+          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+          setTimeout(() => {
+            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+          }, 500);
+        }, 2000);
         return;
       }
 
       // 2. makeGuess 함수 존재 확인
       if (!aiCode.includes('function makeGuess') && !aiCode.includes('makeGuess =')) {
-        setTestResult({
+        const newResult = {
+          id: testResultIdCounter,
           success: false,
           message: 'makeGuess 함수를 찾을 수 없습니다',
           details: { tip: 'function makeGuess(gameState) { ... } 형식으로 작성해주세요' }
-        });
+        };
+        setTestResultIdCounter(prev => prev + 1);
+        setTestResults(prev => [...prev, newResult]);
+        
+        setTimeout(() => {
+          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+          setTimeout(() => {
+            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+          }, 500);
+        }, 2000);
         return;
       }
 
-      // 3. 간단한 실행 테스트
+      // 3. 더 복잡한 테스트 케이스들로 실행
       const testCode = `
         ${aiCode}
         
         // 테스트 실행
         (function() {
           try {
-            const testState = {
-              keywords: ['사자', '호랑이', '코끼리', '기린', '원숭이'],
-              myHints: [0], // 사자는 정답이 아님
-              answerCount: 2,
+            if (typeof makeGuess !== 'function') {
+              throw new Error('makeGuess 함수가 정의되지 않았습니다');
+            }
+            
+            // 테스트 케이스 1: 기본 검증
+            const test1 = {
+              keywords: ['사자', '호랑이', '코끼리', '기린', '원숭이', '판다', '코알라', '펭귄'],
+              myHints: [0, 2], // 사자, 코끼리는 정답이 아님
+              answerCount: 3,
               previousGuesses: [],
               revealedAnswers: [],
               revealedWrongAnswers: [],
@@ -416,39 +439,84 @@ const DeductionGame: React.FC = () => {
               timeLimit: 60
             };
             
-            if (typeof makeGuess !== 'function') {
-              throw new Error('makeGuess 함수가 정의되지 않았습니다');
+            const result1 = makeGuess(test1);
+            if (!Array.isArray(result1) || result1.length !== 3) {
+              throw new Error('테스트1 실패: 반환값이 올바르지 않습니다');
             }
             
-            const result = makeGuess(testState);
+            // 테스트 케이스 2: 이전 추측 정보 활용
+            const test2 = {
+              keywords: ['사과', '바나나', '포도', '딸기', '수박', '멜론', '체리', '복숭아'],
+              myHints: [1, 4], // 바나나, 수박은 정답이 아님
+              answerCount: 3,
+              previousGuesses: [
+                { playerId: 1, guess: [0, 2, 3], correctCount: 1 }, // 1개만 맞음
+                { playerId: 2, guess: [2, 5, 6], correctCount: 2 }  // 2개 맞음
+              ],
+              revealedAnswers: [],
+              revealedWrongAnswers: [7], // 복숭아는 오답으로 공개
+              currentTurn: 3,
+              timeLimit: 60
+            };
             
-            if (!Array.isArray(result)) {
-              throw new Error('반환값이 배열이 아닙니다');
-            }
+            const result2 = makeGuess(test2);
             
-            if (result.length !== 2) {
-              throw new Error(\`정답 개수가 맞지 않습니다 (기대: 2개, 실제: \${result.length}개)\`);
-            }
-            
-            // 유효한 인덱스인지 확인
-            for (let i = 0; i < result.length; i++) {
-              const idx = result[i];
-              if (typeof idx !== 'number' || !Number.isInteger(idx) || idx < 0 || idx >= 5) {
-                throw new Error(\`유효하지 않은 인덱스: \${idx}\`);
+            // 힌트를 선택했는지 확인
+            for (const idx of result2) {
+              if (test2.myHints.includes(idx)) {
+                throw new Error('테스트2 실패: 힌트로 받은 키워드를 선택했습니다');
               }
-              if (idx === 0) {
-                throw new Error('힌트로 받은 키워드(사자)를 선택했습니다');
-              }
             }
             
-            // 중복 확인
-            const unique = new Set(result);
-            if (unique.size !== result.length) {
-              throw new Error('중복된 선택이 있습니다');
+            // 테스트 케이스 3: 공개된 정답 활용
+            const test3 = {
+              keywords: ['빨강', '파랑', '노랑', '초록', '보라', '주황', '분홍', '검정'],
+              myHints: [0, 3, 6], // 빨강, 초록, 분홍은 정답이 아님
+              answerCount: 4,
+              previousGuesses: [
+                { playerId: 1, guess: [1, 2, 4, 5], correctCount: 3 }
+              ],
+              revealedAnswers: [1, 4], // 파랑, 보라는 정답으로 공개
+              revealedWrongAnswers: [7], // 검정은 오답으로 공개
+              currentTurn: 2,
+              timeLimit: 60
+            };
+            
+            const result3 = makeGuess(test3);
+            
+            // 공개된 정답을 포함하는지 확인 (고급 AI는 이를 활용해야 함)
+            const includesRevealedAnswers = test3.revealedAnswers.every(ans => result3.includes(ans));
+            
+            // 점수 계산
+            let score = 0;
+            let feedback = [];
+            
+            // 기본 검증 통과
+            if (result1.length === test1.answerCount) {
+              score += 30;
+              feedback.push('기본 검증 통과');
+            }
+            
+            // 힌트 회피
+            if (!result2.some(idx => test2.myHints.includes(idx))) {
+              score += 30;
+              feedback.push('힌트 회피 성공');
+            }
+            
+            // 공개된 정답 활용
+            if (includesRevealedAnswers) {
+              score += 40;
+              feedback.push('공개된 정답 활용');
             }
             
             // 성공
-            return { success: true, result, keywords: result.map(idx => testState.keywords[idx]) };
+            return { 
+              success: true, 
+              result: result1, 
+              keywords: result1.map(idx => test1.keywords[idx]),
+              score,
+              feedback
+            };
           } catch (error) {
             return { success: false, error: error.message };
           }
@@ -467,53 +535,65 @@ const DeductionGame: React.FC = () => {
       const executionTime = Date.now() - startTime;
 
       if (testResult && testResult.success) {
-        const result = {
+        const scoreLevel = testResult.score >= 90 ? '우수' : 
+                          testResult.score >= 60 ? '양호' : '기본';
+        const newResult = {
+          id: testResultIdCounter,
           success: true,
-          message: '테스트 통과! AI 코드가 정상적으로 작동합니다.',
+          message: `테스트 통과! (점수: ${testResult.score}/100 - ${scoreLevel})`,
           details: {
             executionTime: `${executionTime}ms`,
             selectedKeywords: testResult.keywords.join(', '),
-            selectedIndices: testResult.result
+            selectedIndices: testResult.result,
+            score: testResult.score,
+            feedback: testResult.feedback
           }
         };
-        setTestResult(result);
+        setTestResultIdCounter(prev => prev + 1);
+        setTestResults(prev => [...prev, newResult]);
         
-        // 5초 후 자동으로 사라지도록 설정
-        if (testResultTimeoutId) clearTimeout(testResultTimeoutId);
-        const timeoutId = setTimeout(() => {
-          setIsTestResultFading(true);
+        // 2초 후 자동으로 사라지도록 설정
+        setTimeout(() => {
+          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
           setTimeout(() => {
-            setTestResult(null);
-            setIsTestResultFading(false);
-          }, 500); // 페이드아웃 애니메이션 시간
+            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+          }, 500);
         }, 2000);
-        setTestResultTimeoutId(timeoutId);
       } else {
-        const result = {
+        const newResult = {
+          id: testResultIdCounter,
           success: false,
           message: '테스트 실패',
           details: { error: testResult?.error || '알 수 없는 오류' }
         };
-        setTestResult(result);
+        setTestResultIdCounter(prev => prev + 1);
+        setTestResults(prev => [...prev, newResult]);
         
-        // 실패는 7초 후 자동으로 사라지도록 설정 (더 오래 보여주기)
-        if (testResultTimeoutId) clearTimeout(testResultTimeoutId);
-        const timeoutId = setTimeout(() => {
-          setIsTestResultFading(true);
+        // 2초 후 자동으로 사라지도록 설정
+        setTimeout(() => {
+          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
           setTimeout(() => {
-            setTestResult(null);
-            setIsTestResultFading(false);
-          }, 500); // 페이드아웃 애니메이션 시간
+            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+          }, 500);
         }, 2000);
-        setTestResultTimeoutId(timeoutId);
       }
 
     } catch (error) {
-      setTestResult({
+      const newResult = {
+        id: testResultIdCounter,
         success: false,
         message: '테스트 실행 중 오류가 발생했습니다',
         details: { error: error instanceof Error ? error.message : String(error) }
-      });
+      };
+      setTestResultIdCounter(prev => prev + 1);
+      setTestResults(prev => [...prev, newResult]);
+      
+      setTimeout(() => {
+        setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+        setTimeout(() => {
+          setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+        }, 500);
+      }, 2000);
     } finally {
       setIsTestRunning(false);
     }
@@ -814,12 +894,7 @@ const DeductionGame: React.FC = () => {
                   className="btn btn-small"
                   onClick={() => {
                     updatePlayer(player.id, { aiCode: '' });
-                    if (testResultTimeoutId) {
-                      clearTimeout(testResultTimeoutId);
-                      setTestResultTimeoutId(null);
-                    }
-                    setTestResult(null);
-                    setIsTestResultFading(false);
+                    setTestResults([]);
                   }}
                 >
                   초기화
@@ -929,39 +1004,54 @@ function makeGuess(gameState) {
               />
             </div>
             
-            {testResult && (
-              <div className={`test-result-panel ${testResult.success ? 'success' : 'error'} ${isTestResultFading ? 'fade-out' : ''}`}>
-                <div className="test-result-header">
-                  <h4>{testResult.success ? '✅ 테스트 성공' : '❌ 테스트 실패'}</h4>
-                  <button 
-                    className="close-result"
-                    onClick={() => {
-                      if (testResultTimeoutId) {
-                        clearTimeout(testResultTimeoutId);
-                        setTestResultTimeoutId(null);
-                      }
-                      setTestResult(null);
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-                <p className="test-result-message">{testResult.message}</p>
-                {testResult.details && (
-                  <div className="test-result-details">
-                    {testResult.success ? (
-                      <>
-                        <div>실행 시간: {testResult.details.executionTime}</div>
-                        <div>선택된 키워드: {testResult.details.selectedKeywords}</div>
-                        <div>선택된 인덱스: [{Array.isArray(testResult.details.selectedIndices) ? testResult.details.selectedIndices.join(', ') : ''}]</div>
-                      </>
-                    ) : (
-                      <pre>{JSON.stringify(testResult.details, null, 2)}</pre>
-                    )}
+            <div className="test-results-container">
+              {testResults.map((result) => (
+                <div 
+                  key={result.id}
+                  className={`test-result-panel ${result.success ? 'success' : 'error'} ${result.isFading ? 'fade-out' : ''}`}
+                >
+                  <div className="test-result-header">
+                    <h4>{result.success ? '✅ 테스트 성공' : '❌ 테스트 실패'}</h4>
+                    <button 
+                      className="close-result"
+                      onClick={() => {
+                        setTestResults(prev => prev.filter(r => r.id !== result.id));
+                      }}
+                    >
+                      ×
+                    </button>
                   </div>
-                )}
-              </div>
-            )}
+                  <p className="test-result-message">{result.message}</p>
+                  {result.details && (
+                    <div className="test-result-details">
+                      {result.success ? (
+                        <>
+                          <div>실행 시간: {result.details.executionTime}</div>
+                          <div>선택된 키워드: {result.details.selectedKeywords}</div>
+                          {result.details.score !== undefined && (
+                            <>
+                              <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
+                                점수: {result.details.score}/100
+                              </div>
+                              <div style={{ marginTop: '5px' }}>
+                                평가 항목:
+                                <ul style={{ margin: '5px 0', paddingLeft: '20px' }}>
+                                  {result.details.feedback?.map((item: string, idx: number) => (
+                                    <li key={idx} style={{ color: '#4CAF50' }}>✓ {item}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </>
+                          )}
+                        </>
+                      ) : (
+                        <pre>{JSON.stringify(result.details, null, 2)}</pre>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
             
             <div className="editor-footer">
               <div className="code-stats">
@@ -973,7 +1063,7 @@ function makeGuess(gameState) {
                 onClick={() => {
                   setCodeEditorModal({ isOpen: false, playerId: null });
                   setIsModalExpanded(false);
-                  setTestResult(null);
+                  setTestResults([]);
                 }}
               >
                 저장
