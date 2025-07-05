@@ -1,5 +1,4 @@
 import { IPlayer } from './players/BasePlayer';
-import { HumanPlayer } from './players/HumanPlayer';
 import { GameContext, GameStateForAI, TurnResult } from './types/GameTypes';
 import { PlayerInfo } from './types/PlayerTypes';
 import { PlayerFactory } from './PlayerFactory';
@@ -10,6 +9,7 @@ export interface GameManagerConfig {
   hintCount: number;
   timeLimit: number;
   maxTurns?: number;
+  globalHintsEnabled?: boolean;
 }
 
 export class GameManager {
@@ -22,6 +22,8 @@ export class GameManager {
   private turnStartTime: number = 0;
   private revealedHintsPerPlayer: Map<number, { playerId: number; hints: number[] }[]> = new Map();
   private lastHintRevealTurn: Map<number, number> = new Map(); // 각 플레이어의 마지막 힌트 공개 턴
+  private globalHintWrongAnswers: number[] = []; // 글로벌 힌트로 추가된 오답들
+  private temporaryHiddenGlobalHints: number[] = []; // 토글 OFF시 임시 저장소
   
   private onTurnStart?: (player: IPlayer) => void;
   private onTurnEnd?: (result: TurnResult) => void;
@@ -69,6 +71,32 @@ export class GameManager {
     return { ...this.gameContext };
   }
 
+  setGlobalHintsEnabled(enabled: boolean): void {
+    this.config.globalHintsEnabled = enabled;
+    console.log(`[GameManager] Global hints ${enabled ? 'enabled' : 'disabled'}`);
+    
+    if (!enabled) {
+      // 토글 OFF: 글로벌 힌트로 추가된 오답들을 임시 저장소로 이동
+      this.temporaryHiddenGlobalHints = [...this.globalHintWrongAnswers];
+      // revealedWrongAnswers에서 글로벌 힌트 오답들 제거
+      this.gameContext.revealedWrongAnswers = this.gameContext.revealedWrongAnswers.filter(
+        idx => !this.globalHintWrongAnswers.includes(idx)
+      );
+      console.log(`[GameManager] Hiding ${this.temporaryHiddenGlobalHints.length} global hint wrong answers`);
+    } else {
+      // 토글 ON: 임시 저장소에서 글로벌 힌트 오답들 복원
+      if (this.temporaryHiddenGlobalHints.length > 0) {
+        this.temporaryHiddenGlobalHints.forEach(idx => {
+          if (!this.gameContext.revealedWrongAnswers.includes(idx)) {
+            this.gameContext.revealedWrongAnswers.push(idx);
+          }
+        });
+        console.log(`[GameManager] Restored ${this.temporaryHiddenGlobalHints.length} global hint wrong answers`);
+        this.temporaryHiddenGlobalHints = [];
+      }
+    }
+  }
+
   async startGame(keywords: string[], answers: number[], playerHints: { [playerId: number]: number[] }): Promise<void> {
     if (this.players.length === 0) {
       throw new Error('No players added to the game');
@@ -88,6 +116,8 @@ export class GameManager {
     this.isGameRunning = true;
     this.revealedHintsPerPlayer.clear();
     this.lastHintRevealTurn.clear();
+    this.globalHintWrongAnswers = [];
+    this.temporaryHiddenGlobalHints = [];
     
     // 게임 시작 시 설정 정보 로그
     console.log('=== 게임 설정 ===');
@@ -238,6 +268,19 @@ export class GameManager {
 
     this.gameContext.turnHistory.push(turnResult);
     
+    // Global hints feature: If all guesses are wrong, reveal them as wrong answers
+    if (this.config.globalHintsEnabled && correctCount === 0) {
+      console.log('[Global Hints] All guesses are wrong, revealing as wrong answers');
+      guess.forEach(idx => {
+        if (!this.gameContext.revealedWrongAnswers.includes(idx) && 
+            !this.gameContext.revealedAnswers.includes(idx) &&
+            !this.globalHintWrongAnswers.includes(idx)) {
+          this.gameContext.revealedWrongAnswers.push(idx);
+          this.globalHintWrongAnswers.push(idx); // 글로벌 힌트로 추가된 것 추적
+        }
+      });
+    }
+    
     currentPlayer.onTurnEnd?.({
       selectedIndices: guess,
       timeUsed: turnResult.timeUsed,
@@ -297,14 +340,14 @@ export class GameManager {
       // 난이도별 AI 성장 구간 비율 정의 (Medium 강화)
       const difficultyProfiles = {
         easy: { 
-          startRatio: 0.25,      // 25%에서 시작
-          initialInterval: 4,    // 초기 간격
-          accelerationFactor: 1.5 // 가속도 계수
+          startRatio: 0.5,       // 50%에서 시작 (훨씬 늦게)
+          initialInterval: 8,    // 초기 간격 (2배로 증가)
+          accelerationFactor: 1.2 // 가속도 계수 (더 느리게)
         },
         medium: { 
-          startRatio: 0.08,      // 8%에서 시작 (더 빠른 시작)
-          initialInterval: 2,    // 초기 간격 (더 짧게)
-          accelerationFactor: 3.0 // 가속도 계수 (더 빠른 성장)
+          startRatio: 0.25,      // 25%에서 시작 (기존 Easy 값 사용)
+          initialInterval: 4,    // 초기 간격 (기존 Easy 값 사용)
+          accelerationFactor: 1.5 // 가속도 계수 (기존 Easy 값 사용)
         },
         hard: { 
           startRatio: 0.05,      // 5%에서 시작
@@ -366,11 +409,11 @@ export class GameManager {
     ));
     
     // 이번 턴에 공개할 힌트 수 계산: 난이도별로 다르게
-    let revealMultiplier = 0.3;
-    if (schedule.accelerationFactor >= 3.0 && schedule.accelerationFactor < 8.0) { // Medium
-      revealMultiplier = 0.5;
+    let revealMultiplier = 0.15; // Easy: 매우 적게 공개
+    if (schedule.accelerationFactor >= 1.5 && schedule.accelerationFactor < 8.0) { // Medium
+      revealMultiplier = 0.3; // Medium: 기존 Easy 수준으로
     } else if (schedule.accelerationFactor >= 8.0) { // Hard
-      revealMultiplier = 1.5; // 더 많이 공개
+      revealMultiplier = 1.5; // Hard: 더 많이 공개
     }
     const hintsToRevealThisTurn = Math.max(1, Math.floor(turnsPassedSinceStart * revealMultiplier));
     
@@ -500,6 +543,8 @@ export class GameManager {
     this.players.forEach(player => player.reset());
     this.revealedHintsPerPlayer.clear();
     this.lastHintRevealTurn.clear();
+    this.globalHintWrongAnswers = [];
+    this.temporaryHiddenGlobalHints = [];
   }
 
   isRunning(): boolean {

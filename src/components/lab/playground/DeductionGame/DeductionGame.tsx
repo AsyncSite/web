@@ -95,6 +95,7 @@ const DeductionGame: React.FC = () => {
     isOpen: false, 
     playerId: null 
   });
+  const [globalHintsEnabled, setGlobalHintsEnabled] = useState(true);
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -234,7 +235,8 @@ const DeductionGame: React.FC = () => {
       answerCount: gameConfig.answerCount,
       hintCount: gameConfig.hintCount,
       timeLimit: gameConfig.timeLimit,
-      maxTurns: gameConfig.maxTurns
+      maxTurns: gameConfig.maxTurns,
+      globalHintsEnabled: globalHintsEnabled
     });
 
     // 플레이어 생성
@@ -268,9 +270,12 @@ const DeductionGame: React.FC = () => {
       },
       onTurnEnd: (result) => {
         setIsAIThinking(false);
+        // Get updated game context to sync revealed wrong answers from global hints
+        const context = manager.getGameContext();
         setGameState(prev => ({
           ...prev,
-          turnHistory: [...prev.turnHistory, result]
+          turnHistory: [...prev.turnHistory, result],
+          revealedWrongAnswers: context.revealedWrongAnswers
         }));
       },
       onGameEnd: (winner) => {
@@ -394,6 +399,22 @@ const DeductionGame: React.FC = () => {
     setIsSubmitting(false);
   };
 
+  const handleGlobalHintsToggle = () => {
+    const newValue = !globalHintsEnabled;
+    setGlobalHintsEnabled(newValue);
+    
+    // Update GameManager if it exists and sync the game state
+    if (gameManagerRef.current) {
+      gameManagerRef.current.setGlobalHintsEnabled(newValue);
+      
+      // Get updated game context and sync revealedWrongAnswers
+      const updatedContext = gameManagerRef.current.getGameContext();
+      setGameState(prev => ({
+        ...prev,
+        revealedWrongAnswers: [...updatedContext.revealedWrongAnswers]
+      }));
+    }
+  };
 
   const revealAnswerHint = () => {
     if (gameManagerRef.current) {
@@ -1430,6 +1451,23 @@ function makeGuess(gameState) {
           <div className="game-sidebar">
             <div className="global-hints">
               <h4>게임 힌트</h4>
+              <div className="global-hints-toggle">
+                <label className="toggle-label">
+                  <input
+                    type="checkbox"
+                    checked={globalHintsEnabled}
+                    onChange={handleGlobalHintsToggle}
+                    className="toggle-checkbox"
+                  />
+                  <span className="toggle-switch"></span>
+                  <span className="toggle-text">
+                    글로벌 힌트 {globalHintsEnabled ? '켜짐' : '꺼짐'}
+                  </span>
+                </label>
+                <small className="toggle-description">
+                  모든 선택이 오답일 경우 자동으로 오답 표시
+                </small>
+              </div>
               <div className="hint-buttons">
                 <button 
                   className="btn btn-hint"
