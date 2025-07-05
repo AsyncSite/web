@@ -49,8 +49,8 @@ const labCategories: LabCategory[] = [
             {
                 title: "팀 나누기",
                 description: "공정하고 재미있게 팀을 나누는 도구. 다양한 옵션으로 팀 구성하기",
-                link: "team-shuffler",
-                status: 'coming-soon',
+                link: "team-shuffle",
+                status: 'active',
                 tags: ['팀빌딩', '랜덤']
             },
             {
