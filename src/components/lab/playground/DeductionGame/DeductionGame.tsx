@@ -99,6 +99,10 @@ const DeductionGame: React.FC = () => {
   const [globalHintsEnabled, setGlobalHintsEnabled] = useState(true);
   const [isGuideExpanded, setIsGuideExpanded] = useState(true);
   const [isModalExpanded, setIsModalExpanded] = useState(false);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string; details?: any } | null>(null);
+  const [isTestRunning, setIsTestRunning] = useState(false);
+  const [testResultTimeoutId, setTestResultTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [isTestResultFading, setIsTestResultFading] = useState(false);
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -365,6 +369,154 @@ const DeductionGame: React.FC = () => {
     setTimeout(() => {
       submitGuessWithSelection(autoSelection);
     }, 500);
+  };
+
+  const runAICodeTest = async (aiCode: string, language: 'javascript' | 'typescript') => {
+    setIsTestRunning(true);
+    setTestResult(null);
+    
+    try {
+      // 1. 먼저 기본 문법 검사만 수행
+      try {
+        new Function(aiCode);
+      } catch (e: any) {
+        setTestResult({
+          success: false,
+          message: '문법 오류',
+          details: { error: e.message }
+        });
+        return;
+      }
+
+      // 2. makeGuess 함수 존재 확인
+      if (!aiCode.includes('function makeGuess') && !aiCode.includes('makeGuess =')) {
+        setTestResult({
+          success: false,
+          message: 'makeGuess 함수를 찾을 수 없습니다',
+          details: { tip: 'function makeGuess(gameState) { ... } 형식으로 작성해주세요' }
+        });
+        return;
+      }
+
+      // 3. 간단한 실행 테스트
+      const testCode = `
+        ${aiCode}
+        
+        // 테스트 실행
+        (function() {
+          try {
+            const testState = {
+              keywords: ['사자', '호랑이', '코끼리', '기린', '원숭이'],
+              myHints: [0], // 사자는 정답이 아님
+              answerCount: 2,
+              previousGuesses: [],
+              revealedAnswers: [],
+              revealedWrongAnswers: [],
+              currentTurn: 1,
+              timeLimit: 60
+            };
+            
+            if (typeof makeGuess !== 'function') {
+              throw new Error('makeGuess 함수가 정의되지 않았습니다');
+            }
+            
+            const result = makeGuess(testState);
+            
+            if (!Array.isArray(result)) {
+              throw new Error('반환값이 배열이 아닙니다');
+            }
+            
+            if (result.length !== 2) {
+              throw new Error(\`정답 개수가 맞지 않습니다 (기대: 2개, 실제: \${result.length}개)\`);
+            }
+            
+            // 유효한 인덱스인지 확인
+            for (let i = 0; i < result.length; i++) {
+              const idx = result[i];
+              if (typeof idx !== 'number' || !Number.isInteger(idx) || idx < 0 || idx >= 5) {
+                throw new Error(\`유효하지 않은 인덱스: \${idx}\`);
+              }
+              if (idx === 0) {
+                throw new Error('힌트로 받은 키워드(사자)를 선택했습니다');
+              }
+            }
+            
+            // 중복 확인
+            const unique = new Set(result);
+            if (unique.size !== result.length) {
+              throw new Error('중복된 선택이 있습니다');
+            }
+            
+            // 성공
+            return { success: true, result, keywords: result.map(idx => testState.keywords[idx]) };
+          } catch (error) {
+            return { success: false, error: error.message };
+          }
+        })()
+      `;
+
+      const startTime = Date.now();
+      let testResult;
+      
+      try {
+        testResult = eval(testCode);
+      } catch (e: any) {
+        testResult = { success: false, error: e.message };
+      }
+      
+      const executionTime = Date.now() - startTime;
+
+      if (testResult && testResult.success) {
+        const result = {
+          success: true,
+          message: '테스트 통과! AI 코드가 정상적으로 작동합니다.',
+          details: {
+            executionTime: `${executionTime}ms`,
+            selectedKeywords: testResult.keywords.join(', '),
+            selectedIndices: testResult.result
+          }
+        };
+        setTestResult(result);
+        
+        // 5초 후 자동으로 사라지도록 설정
+        if (testResultTimeoutId) clearTimeout(testResultTimeoutId);
+        const timeoutId = setTimeout(() => {
+          setIsTestResultFading(true);
+          setTimeout(() => {
+            setTestResult(null);
+            setIsTestResultFading(false);
+          }, 500); // 페이드아웃 애니메이션 시간
+        }, 2000);
+        setTestResultTimeoutId(timeoutId);
+      } else {
+        const result = {
+          success: false,
+          message: '테스트 실패',
+          details: { error: testResult?.error || '알 수 없는 오류' }
+        };
+        setTestResult(result);
+        
+        // 실패는 7초 후 자동으로 사라지도록 설정 (더 오래 보여주기)
+        if (testResultTimeoutId) clearTimeout(testResultTimeoutId);
+        const timeoutId = setTimeout(() => {
+          setIsTestResultFading(true);
+          setTimeout(() => {
+            setTestResult(null);
+            setIsTestResultFading(false);
+          }, 500); // 페이드아웃 애니메이션 시간
+        }, 2000);
+        setTestResultTimeoutId(timeoutId);
+      }
+
+    } catch (error) {
+      setTestResult({
+        success: false,
+        message: '테스트 실행 중 오류가 발생했습니다',
+        details: { error: error instanceof Error ? error.message : String(error) }
+      });
+    } finally {
+      setIsTestRunning(false);
+    }
   };
 
   const exitGame = () => {
@@ -660,7 +812,15 @@ const DeductionGame: React.FC = () => {
               <div className="editor-actions">
                 <button 
                   className="btn btn-small"
-                  onClick={() => updatePlayer(player.id, { aiCode: '' })}
+                  onClick={() => {
+                    updatePlayer(player.id, { aiCode: '' });
+                    if (testResultTimeoutId) {
+                      clearTimeout(testResultTimeoutId);
+                      setTestResultTimeoutId(null);
+                    }
+                    setTestResult(null);
+                    setIsTestResultFading(false);
+                  }}
                 >
                   초기화
                 </button>
@@ -672,19 +832,21 @@ const DeductionGame: React.FC = () => {
 interface GameState {
   keywords: string[];
   myHints: number[];
-  previousGuesses: number[][];
-  revealedAnswers: number[];
-  revealedWrongs: number[];
   answerCount: number;
+  previousGuesses: { playerId: number; guess: number[]; correctCount: number }[];
+  revealedAnswers: number[];
+  revealedWrongAnswers: number[];
+  currentTurn: number;
+  timeLimit: number;
 }
 
 function makeGuess(gameState: GameState): number[] {
-  const { keywords, myHints, previousGuesses, revealedAnswers, revealedWrongs, answerCount } = gameState;
+  const { keywords, myHints, previousGuesses, revealedAnswers, revealedWrongAnswers, answerCount } = gameState;
   
-  // 가능한 키워드 인덱스 목록
+  // 가능한 키워드 인덱스 목록 (힌트와 공개된 오답 제외)
   const availableIndices: number[] = keywords
     .map((_, index) => index)
-    .filter(idx => !revealedWrongs.includes(idx));
+    .filter(idx => !revealedWrongAnswers.includes(idx) && !myHints.includes(idx));
   
   // 이미 공개된 정답 우선 선택
   const selectedIndices: number[] = [...revealedAnswers];
@@ -702,12 +864,12 @@ function makeGuess(gameState: GameState): number[] {
 }`
                       : `// AI 전략 함수 (JavaScript)
 function makeGuess(gameState) {
-  const { keywords, myHints, previousGuesses, revealedAnswers, revealedWrongs, answerCount } = gameState;
+  const { keywords, myHints, previousGuesses, revealedAnswers, revealedWrongAnswers, answerCount } = gameState;
   
-  // 가능한 키워드 인덱스 목록
+  // 가능한 키워드 인덱스 목록 (힌트와 공개된 오답 제외)
   const availableIndices = keywords
     .map((_, index) => index)
-    .filter(idx => !revealedWrongs.includes(idx));
+    .filter(idx => !revealedWrongAnswers.includes(idx) && !myHints.includes(idx));
   
   // 이미 공개된 정답 우선 선택
   const selectedIndices = [...revealedAnswers];
@@ -727,6 +889,17 @@ function makeGuess(gameState) {
                   }}
                 >
                   예제 코드
+                </button>
+                <button 
+                  className="btn btn-small btn-test"
+                  onClick={() => {
+                    if (player.aiCode) {
+                      runAICodeTest(player.aiCode, player.aiLanguage || 'javascript');
+                    }
+                  }}
+                  disabled={!player.aiCode || isTestRunning}
+                >
+                  {isTestRunning ? '테스트 중...' : '테스트 실행'}
                 </button>
               </div>
             </div>
@@ -756,6 +929,40 @@ function makeGuess(gameState) {
               />
             </div>
             
+            {testResult && (
+              <div className={`test-result-panel ${testResult.success ? 'success' : 'error'} ${isTestResultFading ? 'fade-out' : ''}`}>
+                <div className="test-result-header">
+                  <h4>{testResult.success ? '✅ 테스트 성공' : '❌ 테스트 실패'}</h4>
+                  <button 
+                    className="close-result"
+                    onClick={() => {
+                      if (testResultTimeoutId) {
+                        clearTimeout(testResultTimeoutId);
+                        setTestResultTimeoutId(null);
+                      }
+                      setTestResult(null);
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+                <p className="test-result-message">{testResult.message}</p>
+                {testResult.details && (
+                  <div className="test-result-details">
+                    {testResult.success ? (
+                      <>
+                        <div>실행 시간: {testResult.details.executionTime}</div>
+                        <div>선택된 키워드: {testResult.details.selectedKeywords}</div>
+                        <div>선택된 인덱스: [{Array.isArray(testResult.details.selectedIndices) ? testResult.details.selectedIndices.join(', ') : ''}]</div>
+                      </>
+                    ) : (
+                      <pre>{JSON.stringify(testResult.details, null, 2)}</pre>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+            
             <div className="editor-footer">
               <div className="code-stats">
                 <span>줄: {(player.aiCode || '').split('\n').length}</span>
@@ -766,9 +973,8 @@ function makeGuess(gameState) {
                 onClick={() => {
                   setCodeEditorModal({ isOpen: false, playerId: null });
                   setIsModalExpanded(false);
+                  setTestResult(null);
                 }}
-
-
               >
                 저장
               </button>
