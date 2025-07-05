@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import './LabPage.css';
 
-import { Tetris, DeductionGame } from "../components/lab/games";
+import { Tetris, DeductionGame } from "../components/lab/playground";
 
 
 const LabDetailPage = () => {
