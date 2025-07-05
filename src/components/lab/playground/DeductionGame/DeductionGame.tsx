@@ -1934,8 +1934,33 @@ function makeGuess(gameState) {
     );
   };
 
+  // 테마 결정 함수
+  const getThemeClass = () => {
+    // 모드 선택 화면과 난이도 선택 화면에서는 항상 기본 테마
+    if (currentScreen === 'mode-selection' || currentScreen === 'difficulty-selection') {
+      return 'theme-intermediate';
+    }
+    
+    if (gameMode === 'solo') {
+      // 솔로 모드에서는 난이도에 따라 테마 결정
+      switch (soloDifficulty) {
+        case 'easy':
+          return 'theme-beginner';
+        case 'medium':
+          return 'theme-intermediate';
+        case 'hard':
+          return 'theme-advanced';
+        default:
+          return 'theme-intermediate';
+      }
+    } else {
+      // 멀티플레이어 모드는 항상 커스텀(네온 초록색) 테마
+      return 'theme-custom';
+    }
+  };
+
   return (
-    <div className="deduction-game">
+    <div className={`deduction-game ${getThemeClass()}`}>
       <div className="game-content">
         <div className="game-wrapper">
           <div className="game-header">

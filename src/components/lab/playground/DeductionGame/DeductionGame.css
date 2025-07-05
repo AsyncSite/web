@@ -1,8 +1,128 @@
+/* CSS 변수 정의 - 테마 시스템 */
+:root {
+  /* 기본 테마 (중급) */
+  --primary-gradient-start: #667eea;
+  --primary-gradient-end: #764ba2;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.9);
+  --text-tertiary: rgba(255, 255, 255, 0.7);
+  --surface-primary: rgba(255, 255, 255, 0.1);
+  --surface-secondary: rgba(255, 255, 255, 0.15);
+  --surface-hover: rgba(255, 255, 255, 0.2);
+  --border-primary: rgba(255, 255, 255, 0.2);
+  --border-secondary: rgba(255, 255, 255, 0.3);
+  --border-active: rgba(255, 255, 255, 0.6);
+  --shadow-primary: rgba(0, 0, 0, 0.1);
+  --shadow-strong: rgba(0, 0, 0, 0.3);
+  
+  /* 트랜지션 설정 */
+  --transition-color: 0.3s ease;
+  
+  /* 특수 버튼 색상 */
+  --btn-primary-bg: #ff6b6b;
+  --btn-primary-bg-hover: #ff5252;
+  --btn-danger-bg: #ff6b6b;
+  --btn-danger-bg-hover: #ff5252;
+  
+  /* 특수 요소들을 위한 추가 색상 */
+  --guide-button-bg: #007bff;
+  --guide-button-text: #ffffff;
+  --start-button-gradient-start: #ff6b6b;
+  --start-button-gradient-end: #ff8e8e;
+}
+
+/* 초급 테마 - 밝고 명확한 대비 */
+.deduction-game.theme-beginner {
+  --primary-gradient-start: #f5f5f5;
+  --primary-gradient-end: #e0e0e0;
+  --text-primary: #212121;
+  --text-secondary: #424242;
+  --text-tertiary: #616161;
+  --surface-primary: #ffffff;
+  --surface-secondary: #fafafa;
+  --surface-hover: #f5f5f5;
+  --border-primary: #bdbdbd;
+  --border-secondary: #9e9e9e;
+  --border-active: #757575;
+  --shadow-primary: rgba(0, 0, 0, 0.12);
+  --shadow-strong: rgba(0, 0, 0, 0.24);
+  
+  /* 특수 버튼 색상 */
+  --btn-primary-bg: #2196f3;
+  --btn-primary-bg-hover: #1976d2;
+  --btn-danger-bg: #f44336;
+  --btn-danger-bg-hover: #d32f2f;
+  
+  /* 특수 요소들을 위한 추가 색상 */
+  --guide-button-bg: #2196f3;
+  --guide-button-text: #ffffff;
+  --start-button-gradient-start: #2196f3;
+  --start-button-gradient-end: #1976d2;
+}
+
+/* 중급 테마 - 생동감 있는 색상 (기본) */
+.deduction-game.theme-intermediate {
+  --primary-gradient-start: #667eea;
+  --primary-gradient-end: #764ba2;
+  
+  /* 특수 버튼 색상 */
+  --btn-primary-bg: #ff6b6b;
+  --btn-primary-bg-hover: #ff5252;
+  --btn-danger-bg: #ff6b6b;
+  --btn-danger-bg-hover: #ff5252;
+}
+
+/* 고급 테마 - 다크하고 강렬한 톤 */
+.deduction-game.theme-advanced {
+  --primary-gradient-start: #1a1a2e;
+  --primary-gradient-end: #16213e;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.95);
+  --text-tertiary: rgba(255, 255, 255, 0.8);
+  --surface-primary: rgba(255, 255, 255, 0.05);
+  --surface-secondary: rgba(255, 255, 255, 0.08);
+  --surface-hover: rgba(255, 255, 255, 0.12);
+  --border-primary: rgba(255, 255, 255, 0.1);
+  --border-secondary: rgba(255, 255, 255, 0.15);
+  --border-active: rgba(255, 255, 255, 0.4);
+  --shadow-primary: rgba(0, 0, 0, 0.3);
+  --shadow-strong: rgba(0, 0, 0, 0.5);
+  
+  /* 특수 버튼 색상 */
+  --btn-primary-bg: #e94560;
+  --btn-primary-bg-hover: #c13651;
+  --btn-danger-bg: #ff4757;
+  --btn-danger-bg-hover: #ee5a24;
+}
+
+/* 커스텀 테마 - AI 모드용 */
+.deduction-game.theme-custom {
+  --primary-gradient-start: #0f2027;
+  --primary-gradient-end: #203a43;
+  --text-primary: #00ff88;
+  --text-secondary: rgba(0, 255, 136, 0.9);
+  --text-tertiary: rgba(0, 255, 136, 0.7);
+  --surface-primary: rgba(0, 255, 136, 0.08);
+  --surface-secondary: rgba(0, 255, 136, 0.12);
+  --surface-hover: rgba(0, 255, 136, 0.2);
+  --border-primary: rgba(0, 255, 136, 0.2);
+  --border-secondary: rgba(0, 255, 136, 0.3);
+  --border-active: rgba(0, 255, 136, 0.5);
+  --shadow-primary: rgba(0, 0, 0, 0.4);
+  --shadow-strong: rgba(0, 0, 0, 0.6);
+  
+  /* 특수 버튼 색상 */
+  --btn-primary-bg: #00ff88;
+  --btn-primary-bg-hover: #00cc6f;
+  --btn-danger-bg: #ff0055;
+  --btn-danger-bg-hover: #cc0044;
+}
+
 .deduction-game {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,6 +131,7 @@
   top: 0;
   left: 0;
   overflow: hidden;
+  transition: background var(--transition-color);
 }
 
 .game-header {
@@ -23,12 +144,12 @@
 .game-header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px var(--shadow-strong);
 }
 
 .game-header p {
   font-size: 1.2rem;
-  opacity: 0.9;
+  color: var(--text-secondary);
 }
 
 .game-content {
@@ -53,12 +174,12 @@
 }
 
 .game-screen {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--surface-primary);
   border-radius: 20px;
   padding: 40px;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-primary);
+  box-shadow: 0 8px 32px var(--shadow-primary);
   width: 90%;
   max-width: 1400px;
   min-height: 600px;
@@ -83,28 +204,28 @@
 .form-section h3 {
   font-size: 1.3rem;
   margin-bottom: 15px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .input-field {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--border-secondary);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--surface-primary);
+  color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .input-field::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-tertiary);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--border-active);
+  background: var(--surface-secondary);
 }
 
 .radio-group {
@@ -124,7 +245,7 @@
 }
 
 .radio-option:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--surface-primary);
 }
 
 .radio-option input[type="radio"] {
@@ -140,9 +261,9 @@
 .multi-options {
   margin-top: 20px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-primary);
   border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-primary);
 }
 
 .multi-option-row {
@@ -163,21 +284,21 @@
 
 .btn {
   padding: 8px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--border-secondary);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--surface-primary);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--surface-hover);
 }
 
 .btn.active {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: var(--surface-hover);
+  border-color: var(--border-active);
 }
 
 .start-button {
@@ -185,7 +306,7 @@
   padding: 15px;
   font-size: 1.2rem;
   font-weight: bold;
-  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  background: linear-gradient(45deg, var(--start-button-gradient-start, var(--btn-primary-bg)), var(--start-button-gradient-end, var(--btn-primary-bg-hover)));
   border: none;
   border-radius: 12px;
   color: white;
@@ -222,14 +343,14 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--guide-button-bg, #007bff);
+  color: var(--guide-button-text, white);
   border-radius: 50%;
   text-decoration: none;
   font-size: 24px;
   font-weight: bold;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px var(--shadow-primary);
   border: none;
   cursor: pointer;
 }
@@ -293,7 +414,7 @@
 
 .mode-card p {
   font-size: 1.2rem;
-  opacity: 0.9;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -339,23 +460,609 @@
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border: 1px solid var(--border-secondary);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--surface-secondary);
+  border-color: var(--border-active);
 }
 
 .btn-primary {
-  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  background: var(--btn-primary-bg);
   color: white;
+  border: none;
 }
 
 .btn-primary:hover {
+  background: var(--btn-primary-bg-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 6px 20px var(--shadow-strong);
+}
+
+/* 초급 테마에서 primary 버튼 텍스트 색상 조정 */
+.deduction-game.theme-beginner .btn-primary {
+  color: white;
+}
+
+/* 커스텀 테마에서 primary 버튼 텍스트 색상 조정 */
+.deduction-game.theme-custom .btn-primary {
+  color: #0f2027;
+}
+
+/* 초급 테마 특별 조정 - 완전한 가시성 확보 */
+.deduction-game.theme-beginner .game-screen {
+  background: #ffffff;
+  backdrop-filter: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .btn {
+  background: #e3f2fd;
+  border-color: #2196f3;
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .btn:hover {
+  background: #bbdefb;
+  border-color: #1976d2;
+}
+
+.deduction-game.theme-beginner .btn-primary,
+.deduction-game.theme-beginner .start-button {
+  background: #2196f3 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.deduction-game.theme-beginner .btn-primary:hover,
+.deduction-game.theme-beginner .start-button:hover {
+  background: #1976d2 !important;
+}
+
+.deduction-game.theme-beginner .keyword-btn {
+  background: #ffffff;
+  border: 2px solid #90caf9;
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .keyword-btn:hover:not(:disabled) {
+  background: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.deduction-game.theme-beginner .keyword-btn.selected {
+  background: #2196f3;
+  border-color: #1976d2;
+  color: white;
+}
+
+.deduction-game.theme-beginner .selected-chip {
+  background: #e3f2fd;
+  border: 2px solid #2196f3;
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .player-card {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .config-item {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .game-header-info {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .multi-options {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .summary-item {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .guide-tooltip {
+  background: #424242;
+  color: #ffffff;
+  border: none;
+}
+
+/* 초급 테마 추가 조정 - 모든 텍스트 가시성 확보 */
+.deduction-game.theme-beginner .radio-option {
+  background: #ffffff;
+  color: #212121;
+  border: 1px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .radio-option:hover {
+  background: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.deduction-game.theme-beginner .difficulty-indicator {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  color: #212121;
+}
+
+.deduction-game.theme-beginner .history-entry {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  color: #424242;
+}
+
+.deduction-game.theme-beginner .player-status {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  color: #212121;
+}
+
+.deduction-game.theme-beginner .player-status.current {
+  background: #e3f2fd;
+  border-color: #2196f3;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .timer-display {
+  color: #d32f2f;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.deduction-game.theme-beginner .hint-chip {
+  background: #f44336;
+  color: white;
+  opacity: 1;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .reveal-button {
+  background: #c8e6c9;
+  border: 2px solid #4caf50;
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .reveal-button:hover {
+  background: #a5d6a7;
+  border-color: #388e3c;
+}
+
+.deduction-game.theme-beginner .keyword-btn.revealed-answer {
+  background: #4caf50;
+  border-color: #388e3c;
+  color: white;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .keyword-btn.revealed-wrong {
+  background: #ffcdd2;
+  border-color: #f44336;
+  color: #c62828;
+  opacity: 1;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .turn-history {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .btn-hint {
+  background: #c8e6c9;
+  border: 2px solid #4caf50;
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+.deduction-game.theme-beginner .btn-hint:hover {
+  background: #a5d6a7;
+  border-color: #388e3c;
+}
+
+/* 초급 테마 - 헤더와 타이틀 가시성 */
+.deduction-game.theme-beginner .game-header h1,
+.deduction-game.theme-beginner .game-header p {
+  color: #212121;
+  text-shadow: none;
+}
+
+.deduction-game.theme-beginner h2,
+.deduction-game.theme-beginner h3,
+.deduction-game.theme-beginner h4,
+.deduction-game.theme-beginner h5 {
+  color: #212121;
+}
+
+/* 초급 테마 - 모든 p 태그 */
+.deduction-game.theme-beginner p {
+  color: #424242;
+}
+
+/* 초급 테마 - 입력 필드 */
+.deduction-game.theme-beginner .input-field {
+  background: #ffffff;
+  border: 2px solid #90caf9;
+  color: #212121;
+}
+
+.deduction-game.theme-beginner .input-field:focus {
+  background: #ffffff;
+  border-color: #2196f3;
+}
+
+.deduction-game.theme-beginner .input-field::placeholder {
+  color: #9e9e9e;
+}
+
+/* 초급 테마 - 추가 박스 컴포넌트 불투명 처리 */
+.deduction-game.theme-beginner .mode-selection,
+.deduction-game.theme-beginner .difficulty-selection,
+.deduction-game.theme-beginner .player-setup,
+.deduction-game.theme-beginner .game-config,
+.deduction-game.theme-beginner .game-preparation {
+  background: #ffffff !important;
+}
+
+.deduction-game.theme-beginner .mode-card {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .mode-card:hover {
+  background: #f5f5f5 !important;
+  border-color: #2196f3;
+}
+
+.deduction-game.theme-beginner .difficulty-card {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .difficulty-card:hover {
+  background: #f5f5f5 !important;
+  border-color: #2196f3;
+}
+
+.deduction-game.theme-beginner .game-main,
+.deduction-game.theme-beginner .game-sidebar {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .keyword-selection {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+  padding: 20px;
+}
+
+.deduction-game.theme-beginner .guess-controls {
+  background: #ffffff !important;
+  padding: 20px;
+}
+
+.deduction-game.theme-beginner .selected-display {
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.deduction-game.theme-beginner .hint-section {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .reveal-section {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .players-status {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .progress-bar-container {
+  background: #e0e0e0 !important;
+}
+
+.deduction-game.theme-beginner .progress-step {
+  background: #ffffff !important;
+}
+
+.deduction-game.theme-beginner .step-circle {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0;
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .progress-step.active .step-circle {
+  background: #2196f3 !important;
+  border-color: #1976d2 !important;
+  color: white !important;
+}
+
+/* 초급 테마에서 코드 에디터는 기본 다크 테마 유지 */
+/* 단, 모달 내부의 텍스트는 항상 밝은 색으로 표시 */
+.deduction-game.theme-beginner .code-editor-modal h3,
+.deduction-game.theme-beginner .code-editor-modal h4,
+.deduction-game.theme-beginner .code-editor-modal p,
+.deduction-game.theme-beginner .code-editor-modal label,
+.deduction-game.theme-beginner .code-editor-modal span {
+  color: #ffffff !important;
+}
+
+.deduction-game.theme-beginner .code-editor-modal .modal-header {
+  background: rgba(60, 60, 70, 0.5) !important;
+}
+
+.deduction-game.theme-beginner .code-editor-modal .editor-toolbar,
+.deduction-game.theme-beginner .code-editor-modal .editor-footer {
+  background: rgba(50, 50, 60, 0.5) !important;
+}
+
+.deduction-game.theme-beginner .code-editor-modal .btn {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+}
+
+.deduction-game.theme-beginner .code-editor-modal .btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.deduction-game.theme-beginner .code-editor-modal .code-editor {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+.deduction-game.theme-beginner .code-editor-modal .line-numbers {
+  background: #1e1e1e !important;
+  color: #858585 !important;
+}
+
+.deduction-game.theme-beginner .btn-secondary {
+  background: #e3f2fd !important;
+  border: 2px solid #2196f3 !important;
+  color: #1565c0 !important;
+}
+
+.deduction-game.theme-beginner .btn-secondary:hover {
+  background: #bbdefb !important;
+  border-color: #1976d2 !important;
+}
+
+/* 초급 테마 - 플레이어 설정 박스 불투명 처리 */
+.deduction-game.theme-beginner .player-setup {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+}
+
+.deduction-game.theme-beginner .player-setup h4 {
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .player-form {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+  padding: 20px;
+}
+
+.deduction-game.theme-beginner .player-type-selector {
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0 !important;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.deduction-game.theme-beginner .ai-difficulty-selector {
+  background: #f5f5f5 !important;
+  border: 1px solid #e0e0e0 !important;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.deduction-game.theme-beginner .code-preview {
+  background: #f5f5f5 !important;
+  border: 2px solid #e0e0e0 !important;
+  color: #424242 !important;
+}
+
+.deduction-game.theme-beginner .player-card label {
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .player-card p {
+  color: #424242 !important;
+}
+
+.deduction-game.theme-beginner .player-card small {
+  color: #616161 !important;
+}
+
+.deduction-game.theme-beginner .type-option {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .type-option:hover {
+  background: #e3f2fd !important;
+  border-color: #2196f3 !important;
+}
+
+.deduction-game.theme-beginner .type-option.selected {
+  background: #2196f3 !important;
+  border-color: #1976d2 !important;
+  color: white !important;
+}
+
+/* 초급 테마 - 힌트 확인 단계 불투명 처리 */
+.deduction-game.theme-beginner .hint-viewing-phase {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+  border-radius: 15px;
+}
+
+.deduction-game.theme-beginner .hint-viewing-phase h2 {
+  color: #f57c00 !important;
+}
+
+.deduction-game.theme-beginner .viewing-instructions h3 {
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .viewing-instructions p {
+  color: #424242 !important;
+  opacity: 1 !important;
+}
+
+.deduction-game.theme-beginner .hint-reveal,
+.deduction-game.theme-beginner .hint-display {
+  background: #f5f5f5 !important;
+  border: 2px solid #e0e0e0 !important;
+}
+
+.deduction-game.theme-beginner .hint-display h4 {
+  color: #d32f2f !important;
+}
+
+.deduction-game.theme-beginner .global-hints {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+}
+
+.deduction-game.theme-beginner .global-hints h4 {
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .hint-preview {
+  background: #f5f5f5 !important;
+  border: 2px solid #e0e0e0 !important;
+  color: #424242 !important;
+}
+
+.deduction-game.theme-beginner .my-hints {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+}
+
+.deduction-game.theme-beginner .my-hints h4 {
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .keyword-btn.revealed-answer {
+  background: #4caf50 !important;
+  border-color: #388e3c !important;
+  color: white !important;
+  opacity: 1 !important;
+}
+
+.deduction-game.theme-beginner .keyword-btn.revealed-wrong {
+  background: #ffcdd2 !important;
+  border-color: #f44336 !important;
+  color: #c62828 !important;
+  opacity: 1 !important;
+}
+
+.deduction-game.theme-beginner .reveal-indicator {
+  background: #212121 !important;
+  color: white !important;
+}
+
+/* 초급 테마 - 게임 준비중 화면 불투명 처리 */
+.deduction-game.theme-beginner .preparation-progress {
+  background: #ffffff !important;
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .progress-step {
+  background: #ffffff !important;
+  border: 2px solid #e0e0e0 !important;
+  opacity: 1 !important;
+}
+
+.deduction-game.theme-beginner .progress-step.completed {
+  background: #c8e6c9 !important;
+  border-color: #4caf50 !important;
+}
+
+.deduction-game.theme-beginner .progress-step.active {
+  background: #fff3cd !important;
+  border-color: #ffc107 !important;
+}
+
+.deduction-game.theme-beginner .progress-step.pending {
+  background: #f5f5f5 !important;
+  border-color: #bdbdbd !important;
+  opacity: 1 !important;
+}
+
+.deduction-game.theme-beginner .progress-step.completed .step-circle {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+.deduction-game.theme-beginner .progress-step.active .step-circle {
+  background: #ffc107 !important;
+  color: #212121 !important;
+}
+
+.deduction-game.theme-beginner .progress-step.pending .step-circle {
+  background: #e0e0e0 !important;
+  color: #757575 !important;
+}
+
+.deduction-game.theme-beginner .progress-bar-container {
+  background: #e0e0e0 !important;
+}
+
+.deduction-game.theme-beginner .progress-bar-fill {
+  background: linear-gradient(90deg, #4caf50, #81c784) !important;
+}
+
+.deduction-game.theme-beginner .game-summary {
+  background: #ffffff !important;
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid #e0e0e0;
+}
+
+.deduction-game.theme-beginner .summary-grid {
+  background: transparent !important;
+}
+
+.deduction-game.theme-beginner .countdown-info h3 {
+  color: #4caf50 !important;
+}
+
+.deduction-game.theme-beginner .countdown-info p {
+  color: #424242 !important;
+  opacity: 1 !important;
+}
+
+.deduction-game.theme-beginner .game-start-section {
+  background: #ffffff !important;
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid #e0e0e0;
 }
 
 .config-grid {
@@ -366,8 +1073,8 @@
 }
 
 .config-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
   border-radius: 15px;
   padding: 25px;
   text-align: center;
@@ -376,12 +1083,12 @@
 .config-item h4 {
   font-size: 1.2rem;
   margin-bottom: 8px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .config-item p {
   font-size: 0.9rem;
-  opacity: 0.8;
+  color: var(--text-secondary);
   margin-bottom: 20px;
 }
 
@@ -396,7 +1103,7 @@
   font-size: 1.1rem;
   font-weight: bold;
   min-width: 80px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .btn-small {
@@ -409,9 +1116,10 @@
   text-align: center;
   margin-top: 30px;
   padding: 15px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-primary);
   border-radius: 10px;
   font-size: 1.1rem;
+  border: 1px solid var(--border-primary);
 }
 
 .difficulty-indicator strong {
@@ -484,24 +1192,24 @@
 }
 
 .progress-step.active .step-circle {
-  background: #FFC107;
-  color: #333;
+  background: var(--btn-primary-bg);
+  color: white;
 }
 
 .progress-step.pending .step-circle {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  background: var(--surface-primary);
+  color: var(--text-tertiary);
 }
 
 .step-content h4 {
   font-size: 1.3rem;
   margin-bottom: 5px;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .step-content p {
   font-size: 1rem;
-  opacity: 0.9;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -540,7 +1248,7 @@
 .summary-item h4 {
   font-size: 1.3rem;
   margin-bottom: 15px;
-  color: #fff;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -552,12 +1260,12 @@
 }
 
 .player-chip {
-  background: rgba(33, 150, 243, 0.3);
-  border: 1px solid rgba(33, 150, 243, 0.5);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-secondary);
   padding: 8px 15px;
   border-radius: 20px;
   font-size: 0.9rem;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .game-info-grid {
@@ -580,17 +1288,18 @@
 }
 
 .hint-chip {
-  background: rgba(244, 67, 54, 0.3);
-  border: 1px solid rgba(244, 67, 54, 0.5);
+  background: var(--btn-danger-bg);
+  border: 1px solid var(--btn-danger-bg);
   padding: 6px 12px;
   border-radius: 15px;
   font-size: 0.9rem;
-  color: #fff;
+  color: white;
+  opacity: 0.6;
 }
 
 .hint-description {
   font-size: 0.9rem;
-  opacity: 0.8;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -602,12 +1311,12 @@
 .countdown-info h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: #4CAF50;
+  color: var(--btn-primary-bg);
 }
 
 .countdown-info p {
   font-size: 1.1rem;
-  opacity: 0.9;
+  color: var(--text-secondary);
   margin-bottom: 25px;
 }
 
@@ -626,9 +1335,10 @@
   align-items: center;
   margin-bottom: 30px;
   padding: 20px 30px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-primary);
   border-radius: 15px;
   flex-shrink: 0;
+  border: 1px solid var(--border-primary);
 }
 
 .header-controls {
@@ -640,13 +1350,13 @@
 .turn-info h3 {
   font-size: 1.8rem;
   margin-bottom: 8px;
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .turn-info p {
   font-size: 1.3rem;
-  opacity: 0.9;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -739,10 +1449,10 @@
 .keyword-btn {
   position: relative;
   padding: 15px 10px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--border-secondary);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--surface-primary);
+  color: var(--text-primary);
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -755,19 +1465,23 @@
 }
 
 .keyword-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--surface-hover);
   transform: translateY(-2px);
+  border-color: var(--border-active);
 }
 
 .keyword-btn.selected {
-  background: rgba(33, 150, 243, 0.4);
-  border-color: rgba(33, 150, 243, 0.6);
+  background: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
   transform: scale(1.05);
+  color: white;
 }
 
 .keyword-btn.hint {
-  background: rgba(244, 67, 54, 0.2);
-  border-color: rgba(244, 67, 54, 0.4);
+  background: var(--btn-danger-bg);
+  border-color: var(--btn-danger-bg);
+  opacity: 0.3;
+  color: white;
 }
 
 .keyword-btn:disabled {
@@ -783,14 +1497,14 @@
 }
 
 .guess-controls {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--border-primary);
   padding-top: 20px;
 }
 
 .selected-display h5 {
   font-size: 1.3rem;
   margin-bottom: 20px;
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
