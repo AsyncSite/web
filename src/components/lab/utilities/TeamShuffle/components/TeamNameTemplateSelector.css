@@ -1,0 +1,171 @@
+.team-name-template-selector {
+    margin-top: 20px;
+}
+
+/* 고급 옵션 표시 버튼 */
+.show-advanced-button {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 188, 212, 0.2);
+    border-radius: 8px;
+    color: #00BCD4;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.show-advanced-button:hover {
+    background: rgba(0, 188, 212, 0.1);
+    border-color: #00BCD4;
+}
+
+/* 템플릿 선택 영역 */
+.team-template-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.team-template-header h3 {
+    font-size: 1.125rem;
+    color: #00BCD4;
+    margin: 0;
+}
+
+.hide-advanced-button {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.2s ease;
+}
+
+.hide-advanced-button:hover {
+    color: #fff;
+}
+
+/* 드롭다운 */
+.team-template-dropdown {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.dropdown-toggle {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+}
+
+.dropdown-toggle:hover {
+    border-color: #00BCD4;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-arrow {
+    color: #00BCD4;
+    font-size: 0.875rem;
+}
+
+/* 드롭다운 메뉴 */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #1a1a1a;
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 188, 212, 0.1);
+}
+
+.dropdown-item.active {
+    background: rgba(0, 188, 212, 0.2);
+    color: #00BCD4;
+}
+
+.template-label {
+    font-weight: 500;
+}
+
+.template-preview {
+    font-size: 0.85rem;
+    color: #808080;
+    font-style: italic;
+}
+
+.dropdown-item.active .template-preview {
+    color: #00ACC1;
+}
+
+/* 힌트 텍스트 */
+.team-template-hint {
+    font-size: 0.875rem;
+    color: #a0a0a0;
+    margin: 0;
+    padding: 8px 12px;
+    background: rgba(0, 188, 212, 0.05);
+    border-radius: 4px;
+}
+
+/* 스크롤바 스타일 */
+.dropdown-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(0, 188, 212, 0.3);
+    border-radius: 4px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 188, 212, 0.5);
+}
