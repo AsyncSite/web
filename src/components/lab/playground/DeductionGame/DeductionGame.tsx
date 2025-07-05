@@ -5,6 +5,7 @@ import { PlayerFactory } from './ai/PlayerFactory';
 import { IPlayer } from './ai/players/BasePlayer';
 import { HumanPlayer } from './ai/players/HumanPlayer';
 import { PlayerInfo, PlayerType } from './ai/types/PlayerTypes';
+import AIGuidePanel from './AIGuidePanel';
 
 type GameScreen = 'mode-selection' | 'difficulty-selection' | 'player-setup' | 'game-config' | 'game-preparation' | 'game';
 type GameMode = 'solo' | 'multi';
@@ -96,6 +97,8 @@ const DeductionGame: React.FC = () => {
     playerId: null 
   });
   const [globalHintsEnabled, setGlobalHintsEnabled] = useState(true);
+  const [isGuideExpanded, setIsGuideExpanded] = useState(true);
+  const [isModalExpanded, setIsModalExpanded] = useState(false);
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -601,19 +604,41 @@ const DeductionGame: React.FC = () => {
     if (!player) return null;
 
     return (
-      <div className="modal-overlay" onClick={() => setCodeEditorModal({ isOpen: false, playerId: null })}>
-        <div className="modal-content code-editor-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-overlay" onClick={() => {
+        setCodeEditorModal({ isOpen: false, playerId: null });
+        setIsModalExpanded(false);
+      }}>
+        <div className={`modal-content code-editor-modal ${isModalExpanded ? 'expanded' : ''}`} onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
             <h3>{player.nickname} AI 코드 에디터</h3>
-            <button 
-              className="modal-close"
-              onClick={() => setCodeEditorModal({ isOpen: false, playerId: null })}
-            >
-              ×
-            </button>
+            <div className="modal-header-actions">
+              <button 
+                className="modal-expand-btn"
+                onClick={() => setIsModalExpanded(!isModalExpanded)}
+                title={isModalExpanded ? "기본 크기로" : "전체 화면 모드"}
+              >
+                {isModalExpanded ? '↙' : '↗'}
+              </button>
+              <button 
+                className="modal-close"
+                onClick={() => {
+                  setCodeEditorModal({ isOpen: false, playerId: null });
+                  setIsModalExpanded(false);
+                }}
+              >
+                ×
+              </button>
+            </div>
           </div>
           
-          <div className="code-editor-container">
+          <div className="code-editor-container" style={{ position: 'relative' }}>
+            <AIGuidePanel 
+              isExpanded={isGuideExpanded} 
+              onToggle={() => setIsGuideExpanded(!isGuideExpanded)}
+              onInsertTemplate={(template) => {
+                updatePlayer(player.id, { aiCode: template });
+              }}
+            />
             <div className="editor-toolbar">
               <div className="editor-left">
                 <span className="editor-info">코드 작성</span>
@@ -738,7 +763,10 @@ function makeGuess(gameState) {
               </div>
               <button 
                 className="btn-large btn-primary"
-                onClick={() => setCodeEditorModal({ isOpen: false, playerId: null })}
+                onClick={() => {
+                  setCodeEditorModal({ isOpen: false, playerId: null });
+                  setIsModalExpanded(false);
+                }}
 
 
               >
