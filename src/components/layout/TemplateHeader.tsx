@@ -14,7 +14,7 @@ const TemplateHeader: React.FC<TemplateHeaderProps> = () => {
                 <Link to="/" className="logo">
                     <img
                         src={process.env.PUBLIC_URL + '/assets/IlilmanLogo.svg'}
-                        alt="11men 로고"
+                        alt="asyncsite 로고"
                     />
                 </Link>
 

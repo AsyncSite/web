@@ -15,7 +15,7 @@ const faqData: FAQItem[] = [
         category: 'join',
         signature: 'public boolean isItFreeToJoin()',
         summary: '멤버십 비용 없이 누구나 자유롭게 참여 가능한가요?',
-        answer: `// Yes! 11men은 누구나 자유롭게 참여할 수 있는 오픈 커뮤니티입니다.
+        answer: `// Yes! asyncsite는 누구나 자유롭게 참여할 수 있는 오픈 커뮤니티입니다.
 <span class="faq-highlight">멤버십 비용은 없어요.</span> 다양한 프로젝트와 스터디에 자유롭게 합류 가능합니다.
 // 단, 정식 모집 기간이 따로 있어서 그때 신규 멤버를 모집합니다.
 `

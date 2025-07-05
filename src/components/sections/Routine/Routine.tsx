@@ -42,7 +42,7 @@ const Routine: React.FC = () => {
                     </p>
                     <p className="header-sub">
                         각 자리의 별들이 만나면 별자리가 된다.
-                        <strong className="highlight-11men"> 11men - ★</strong>
+                        <strong className="highlight-asyncsite"> asyncsite - ★</strong>
                     </p>
                 </div>
             </header>

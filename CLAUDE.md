@@ -65,7 +65,7 @@ The DeductionGame feature (`src/components/lab/subject/DeductionGame/`) uses:
 ### Deployment
 - GitHub Pages deployment via `gh-pages` package
 - SPA routing handled in `public/index.html`
-- Homepage: https://11men.github.io/web
+- Homepage: https://asyncsite.github.io/web
 
 
 

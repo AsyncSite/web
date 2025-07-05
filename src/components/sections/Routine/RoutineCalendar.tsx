@@ -175,7 +175,7 @@ const RoutineCalendar: React.FC = () => {
                         </div>
 
                         <div className="calendar-info-bar">
-                            <div className="info-label">11men Routine</div>
+                            <div className="info-label">asyncsite Routine</div>
                             <div className="info-icon"></div>
                         </div>
                     </div>

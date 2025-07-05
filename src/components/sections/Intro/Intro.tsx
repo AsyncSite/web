@@ -10,8 +10,8 @@ const Intro: React.FC = () => {
     const typingLineLooseRef = useRef<HTMLDivElement | null>(null); // "느슨히 느슨히..." 문구
     const typingLineRef = useRef<HTMLDivElement | null>(null);      // "작고 꾸준한..." 문구
 
-    // 11MenZ 노출 상태
-    const [show11MenZ, setShow11MenZ] = useState(false);
+    // AsyncSite 노출 상태
+    const [showAsyncSite, setShowAsyncSite] = useState(false);
 
     useEffect(() => {
         // (1) 초반 2초간 별똥별 애니메이션이 지나가도록
@@ -85,9 +85,9 @@ const Intro: React.FC = () => {
                 typeText(mainText, mainEl, () => {
                     // 타이핑 완료 후 커서 다시 표시
                     addBlinkCursor(mainEl);
-                    // 11MenZ 로고 표시
+                    // AsyncSite 로고 표시
                     setTimeout(() => {
-                        setShow11MenZ(true);
+                        setShowAsyncSite(true);
                     }, 200);
                 });
             }, 1500);
@@ -149,10 +149,10 @@ const Intro: React.FC = () => {
             </div>
 
             <div className="intro-content">
-                {/* 11MenZ - 통통 튀듯 떨어지는 애니메이션 (조건부 클래스 적용) */}
-                <div className={`skew-heading-wrapper ${show11MenZ ? 'drop-bounce' : ''}`}>
-                    <h1 data-heading="11men">
-                        11men
+                {/* AsyncSite - 통통 튀듯 떨어지는 애니메이션 (조건부 클래스 적용) */}
+                <div className={`skew-heading-wrapper ${showAsyncSite ? 'drop-bounce' : ''}`}>
+                    <h1 data-heading="asyncsite">
+                        asyncsite
                     </h1>
                 </div>
 

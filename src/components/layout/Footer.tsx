@@ -4,7 +4,7 @@ import React from 'react';
 const Footer: React.FC = () => {
     return (
         <footer>
-            <p>© 2025 11men </p>
+            <p>© 2025 asyncsite </p>
         </footer>
     );
 };

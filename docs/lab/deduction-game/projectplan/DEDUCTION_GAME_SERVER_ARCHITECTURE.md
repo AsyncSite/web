@@ -381,7 +381,7 @@ DeductionGame의 서버 아키텍처 전환은 단순한 기술적 업그레이�
 ### 6.1 현재 asyncsite 프로젝트 현황 분석
 
 #### 프로젝트 구조
-- **11men 개발자 커뮤니티**: 실험적 프로젝트 쇼케이스 플랫폼
+- **asyncsite 개발자 커뮤니티**: 실험적 프로젝트 쇼케이스 플랫폼
 - **주요 페이지**: MainPage, TecoTecoPage, LabPage (테트리스, DeductionGame)
 - **기술 스택**: React 19 + TypeScript, 순수 프론트엔드 SPA
 - **백엔드**: 현재 없음 (GitHub Pages 정적 호스팅)
