@@ -115,7 +115,7 @@ const LabPage = () => {
             <main className="lab-content">
                 <div className="lab-header">
                     <h1 className="lab-title">🧪 실험실</h1>
-                    <p className="lab-title-sub">11맨 멤버들의 실험실! 다양한 프로젝트를 확인해보세요.</p>
+                    <p className="lab-title-sub">Async Site 실험실! 다양한 프로젝트를 확인해보세요.</p>
                 </div>
 
                 {/* 카테고리 필터 */}

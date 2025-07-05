@@ -2,9 +2,9 @@
 
 /* 기본 페이지 및 콘텐츠 컨테이너 스타일 */
 .tecoteco-page {
-    background-color: #000; /* 11맨 기본 검정 배경 */
+    background-color: #000; /* Async Site 기본 검정 배경 */
     color: #f0f0f0; /* 밝은 회색 텍스트 (가독성 위해) */
-    font-family: 'PretendardVariable', sans-serif; /* 11맨에서 사용되는 폰트 */
+    font-family: 'PretendardVariable', sans-serif; /* Async Site맨에서 사용되는 폰트 */
     min-height: 50vh;
     padding-top: 80px; /* TemplateHeader 높이만큼 여백 */
     line-height: 1.6;
@@ -34,7 +34,7 @@
 .section-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #C3E88D; /* 11맨 포인트 컬러 */
+    color: #C3E88D; /* Async Site 포인트 컬러 */
     text-align: center;
     margin-bottom: 10px; /* 12px->10px */
     font-family: 'Source Code Pro', monospace; /* 코드 폰트 느낌 */

@@ -18,7 +18,7 @@ const About: React.FC = () => {
     const cards: CardContent[] = [
         {
             id: 1,
-            title: '🪴 11맨: 함께 성장하는 공간',
+            title: '🪴 Async Site: 함께 성장하는 공간',
             subtitle: '“배우고, 공유하고, 함께 나아가는 개발자 커뮤니티”',
             content: (
                 <div className="card-content-redesign">
@@ -52,20 +52,7 @@ const About: React.FC = () => {
                 </div>
             ),
         },
-        // {
-        //     id: 2,
-        //     title: '🪴 우리는 이런 사람들이에요',
-        //     subtitle: '“매일 작은 커밋 🌱, 함께 큰 성장을 이루는 11맨입니다!”', // 부제목 수정
-        //     content: (
-        //         <>
-        //             {/* 내용 수정 */}
-        //             우리는 <strong>매일의 작은 실천</strong>(1일 1커밋!)으로 함께 성장하는 개발자 커뮤니티, 11맨입니다.<br />
-        //             각자의 자리에서 찍는 작은 점들이 모여 의미 있는 별자리를 만들듯, <br />
-        //             우리의 꾸준한 기록과 공유는 <strong>집단 지성의 힘</strong>을 발휘합니다. 🚀<br />
-        //             느슨하지만 끈끈한 연결 속에서, 따로 또 같이 시너지를 만들어갑니다.<br />
-        //         </>
-        //     ),
-        // },
+
         {
             id: 2,
             title: '🌏 우리의 세계관은 이런 거야!',
