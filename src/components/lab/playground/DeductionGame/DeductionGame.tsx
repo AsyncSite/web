@@ -5,7 +5,7 @@ import { PlayerFactory } from './ai/PlayerFactory';
 import { IPlayer } from './ai/players/BasePlayer';
 import { HumanPlayer } from './ai/players/HumanPlayer';
 import { PlayerInfo, PlayerType } from './ai/types/PlayerTypes';
-import AIGuidePanel from './AIGuidePanel';
+// import AIGuidePanel from './AIGuidePanel';
 
 type GameScreen = 'mode-selection' | 'difficulty-selection' | 'player-setup' | 'game-config' | 'game-preparation' | 'game';
 type GameMode = 'solo' | 'multi';
@@ -97,7 +97,7 @@ const DeductionGame: React.FC = () => {
     playerId: null 
   });
   const [globalHintsEnabled, setGlobalHintsEnabled] = useState(true);
-  const [isGuideExpanded, setIsGuideExpanded] = useState(true);
+  // const [isGuideExpanded, setIsGuideExpanded] = useState(true);
   const [isModalExpanded, setIsModalExpanded] = useState(false);
   const [testResults, setTestResults] = useState<Array<{ id: number; success: boolean; message: string; details?: any; isFading?: boolean }>>([]);
   const [isTestRunning, setIsTestRunning] = useState(false);
@@ -154,12 +154,10 @@ const DeductionGame: React.FC = () => {
   };
 
   const handleStartGame = () => {
-    console.log('Moving to game config with players:', players);
     setCurrentScreen('game-config');
   };
 
   const handleConfigComplete = () => {
-    console.log('Game config complete:', gameConfig);
     setPreparationStep(0);
     setCurrentScreen('game-preparation');
     initializeGame();
@@ -876,13 +874,13 @@ const DeductionGame: React.FC = () => {
           </div>
           
           <div className="code-editor-container" style={{ position: 'relative' }}>
-            <AIGuidePanel 
+            {/* <AIGuidePanel 
               isExpanded={isGuideExpanded} 
               onToggle={() => setIsGuideExpanded(!isGuideExpanded)}
-              onInsertTemplate={(template) => {
+              onInsertTemplate={(template: any) => {
                 updatePlayer(player.id, { aiCode: template });
               }}
-            />
+            /> */}
             <div className="editor-toolbar">
               <div className="editor-left">
                 <span className="editor-info">코드 작성</span>

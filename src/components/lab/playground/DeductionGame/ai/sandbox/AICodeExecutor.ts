@@ -152,7 +152,6 @@ export class AICodeExecutor {
       worker.onmessage = (event) => {
         const { type, executionId: msgId, result, error, data } = event.data;
 
-        // Handle console.log messages
         if (type === 'log' && msgId === executionId) {
           const logMessage = data.map((arg: any) => 
             typeof arg === 'object' ? JSON.stringify(arg) : String(arg)

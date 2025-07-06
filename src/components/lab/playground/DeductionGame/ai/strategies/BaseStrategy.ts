@@ -5,9 +5,7 @@ export abstract class BaseStrategy implements AIStrategy {
   private previousExactGuesses: Set<string> = new Set();
   
   selectKeywords(gameState: GameStateForAI): number[] {
-    console.log('=== 지능형 AI 실행 ===');
-    console.log(`턴 ${gameState.currentTurn}: 키워드 ${gameState.keywords.length}개 중 정답 ${gameState.answerCount}개 찾기`);
-    
+
     // 1. 확실한 정답과 오답 수집
     const definiteAnswers = new Set<number>(gameState.revealedAnswers);
     const definiteWrongs = new Set<number>();
@@ -25,10 +23,7 @@ export abstract class BaseStrategy implements AIStrategy {
       });
     }
     
-    console.log(`내 힌트 (오답): ${gameState.myHints.map(i => gameState.keywords[i])}`);
-    console.log(`공개된 오답: ${gameState.revealedWrongAnswers.map(i => gameState.keywords[i])}`);
-    console.log(`공개된 정답: ${gameState.revealedAnswers.map(i => gameState.keywords[i])}`);
-    
+
     // 2. 이전 추측 분석으로 추가 정보 획득
     this.analyzeAllGuesses(gameState, definiteAnswers, definiteWrongs);
     

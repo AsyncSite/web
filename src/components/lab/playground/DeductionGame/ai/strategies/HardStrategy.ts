@@ -23,12 +23,10 @@ export class HardStrategy extends BaseStrategy {
     // 남은 정답 개수가 적을 때 특별 알고리즘 발동
     const remainingAnswers = answerCount - revealedAnswers.length;
     if (remainingAnswers <= 3) {
-      console.log(`[Hard AI] 마지막 ${remainingAnswers}개 정답 찾기 모드 활성화`);
-      
+
       // 가능한 모든 조합을 시뮬레이션
       const optimizedGuess = this.findOptimalCombination(gameState);
       if (optimizedGuess.length > 0) {
-        console.log('[Hard AI] 최적 조합 발견!');
         return optimizedGuess;
       }
     }
@@ -73,8 +71,7 @@ export class HardStrategy extends BaseStrategy {
     // 가능한 조합이 적으면 모든 조합 검증
     const remainingSlots = answerCount - revealedAnswers.length;
     if (possibleIndices.length <= 15 && remainingSlots <= 3) {
-      console.log(`[Hard AI] ${possibleIndices.length}개 후보에서 ${remainingSlots}개 선택 조합 검증`);
-      
+
       // 모든 조합 생성 및 검증
       const validCombinations = this.findValidCombinations(
         possibleIndices, 

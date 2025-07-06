@@ -73,8 +73,7 @@ export class GameManager {
 
   setGlobalHintsEnabled(enabled: boolean): void {
     this.config.globalHintsEnabled = enabled;
-    console.log(`[GameManager] Global hints ${enabled ? 'enabled' : 'disabled'}`);
-    
+
     if (!enabled) {
       // 토글 OFF: 글로벌 힌트로 추가된 오답들을 임시 저장소로 이동
       this.temporaryHiddenGlobalHints = [...this.globalHintWrongAnswers];
@@ -82,7 +81,6 @@ export class GameManager {
       this.gameContext.revealedWrongAnswers = this.gameContext.revealedWrongAnswers.filter(
         idx => !this.globalHintWrongAnswers.includes(idx)
       );
-      console.log(`[GameManager] Hiding ${this.temporaryHiddenGlobalHints.length} global hint wrong answers`);
     } else {
       // 토글 ON: 임시 저장소에서 글로벌 힌트 오답들 복원
       if (this.temporaryHiddenGlobalHints.length > 0) {
@@ -91,7 +89,6 @@ export class GameManager {
             this.gameContext.revealedWrongAnswers.push(idx);
           }
         });
-        console.log(`[GameManager] Restored ${this.temporaryHiddenGlobalHints.length} global hint wrong answers`);
         this.temporaryHiddenGlobalHints = [];
       }
     }
@@ -120,14 +117,7 @@ export class GameManager {
     this.temporaryHiddenGlobalHints = [];
     
     // 게임 시작 시 설정 정보 로그
-    console.log('=== 게임 설정 ===');
-    console.log(`키워드 풀: ${this.config.keywordPoolSize}개`);
-    console.log(`정답 개수: ${this.config.answerCount}개`);
-    console.log(`힌트 개수: ${this.config.hintCount}개`);
-    console.log(`플레이어 수: ${this.players.length}명`);
-    console.log(`게임 복잡도: ${this.calculateGameComplexity().toFixed(2)}`);
-    console.log(`예상 게임 길이: ${this.calculateExpectedTurns(this.calculateGameComplexity())}턴`);
-    console.log('================');
+
 
     await this.startNextTurn();
   }
@@ -270,7 +260,6 @@ export class GameManager {
     
     // Global hints feature: If all guesses are wrong, reveal them as wrong answers
     if (this.config.globalHintsEnabled && correctCount === 0) {
-      console.log('[Global Hints] All guesses are wrong, revealing as wrong answers');
       guess.forEach(idx => {
         if (!this.gameContext.revealedWrongAnswers.includes(idx) && 
             !this.gameContext.revealedAnswers.includes(idx) &&
@@ -449,7 +438,6 @@ export class GameManager {
         // 힌트 공개 로그
         const playerInfo = this.players.find(p => p.getInfo().id === playerId)?.getInfo();
         if (playerInfo) {
-          console.log(`[턴 ${currentTurn}] ${playerInfo.nickname}이(가) 플레이어 ${newHint.playerId}의 힌트 ${newHint.hints.length}개를 알게 되었습니다.`);
         }
       }
       
@@ -468,12 +456,10 @@ export class GameManager {
       
       const totalAvailableHints = (this.players.length - 1);
       if ((revealedHints.length >= totalAvailableHints * thresholdRatio || (isHardAI && isEndgame)) && availableHints.length > 0) {
-        console.log(`[턴 ${currentTurn}] ${isHardAI && isEndgame ? 'Hard AI 후반 모드 -' : '임계점 도달 -'} 나머지 모든 힌트 공개`);
         for (const hint of availableHints) {
           revealedHints.push(hint);
           const playerInfo = this.players.find(p => p.getInfo().id === playerId)?.getInfo();
           if (playerInfo) {
-            console.log(`[턴 ${currentTurn}] ${playerInfo.nickname}이(가) 플레이어 ${hint.playerId}의 힌트 ${hint.hints.length}개를 추가로 알게 되었습니다.`);
           }
         }
       }
@@ -485,7 +471,6 @@ export class GameManager {
       const nextInterval = Math.max(1, Math.floor(
         schedule.initialInterval / (1 + (turnsPassedSinceStart + 1) / (10 / schedule.accelerationFactor))
       ));
-      console.log(`[${this.players.find(p => p.getInfo().id === playerId)?.getInfo().nickname}] 다음 힌트 공개까지: ${nextInterval}턴`);
     }
 
     // 업데이트된 힌트 저장

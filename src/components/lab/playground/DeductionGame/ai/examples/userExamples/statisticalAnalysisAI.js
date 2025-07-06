@@ -2,8 +2,7 @@
 // 이전 추측들을 분석하여 각 키워드가 정답일 확률을 계산합니다.
 
 function makeGuess(gameState) {
-  console.log('=== 통계 분석 AI 실행 ===');
-  
+
   // 각 키워드의 점수를 저장할 맵
   const keywordScores = new Map();
   
@@ -26,8 +25,7 @@ function makeGuess(gameState) {
     keywordScores.set(answerIndex, 1000);
   });
   
-  console.log('이전 추측 개수:', gameState.previousGuesses.length);
-  
+
   // 이전 추측들 분석
   gameState.previousGuesses.forEach((guess, guessIndex) => {
     console.log(`추측 ${guessIndex + 1}: ${guess.guess} → 정답 ${guess.correctCount}개`);

@@ -29,7 +29,6 @@ export class CustomAIPlayer extends BasePlayer {
       if (!result.success) {
         console.error(`Custom AI execution failed for ${this.playerInfo.nickname}:`, result.error);
         if (result.logs && result.logs.length > 0) {
-          console.log(`AI logs for ${this.playerInfo.nickname}:`, result.logs);
         }
       }
 
