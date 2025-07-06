@@ -146,6 +146,9 @@
   width: 100%;
   margin-bottom: 40px;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .game-header h1 {
@@ -155,12 +158,17 @@
   margin-bottom: 10px;
   text-shadow: 2px 2px 4px var(--shadow-strong);
   text-transform: uppercase;
+  display: block;
+  width: 100%;
 }
 
 .game-header p {
   font-size: 1.2rem;
   font-weight: 300;
   color: var(--text-secondary);
+  display: block;
+  width: 100%;
+  margin: 0;
 }
 
 .game-content {

@@ -80,6 +80,8 @@ The code in this repository aims for the highest standards of readability, maint
 ### General Readability Principles
 
 * **Clear Naming**: Use clear and descriptive names for variables, functions, and components. Avoid abbreviations and use names that provide context and reveal intent.
+* **도메인 특화 명명 (Domain-Specific Naming)**: 코드의 규모가 커질수록 변수나 함수의 이름이 다른 기능과 충돌하거나 모호해질 수 있습니다. 이를 방지하기 위해, 단순히 일반적인 이름(e.g., `data`, `isLoading`, `handleSave`)을 사용하는 대신, 해당 변수나 함수가 속한 **도메인이나 기능의 맥락을 이름에 명확히 포함**시켜야 합니다.
+  * **좋은 예시**: `isLoading` → `isSnailGameProductListLoading`, `user` → `dudctionGameloggedInUser`, `handleSave` → `shuffleGameSaveUserSettings`
 * **Single Responsibility Principle (SRP)**: Keep functions and components concise and focused on a single responsibility. If a component or function handles multiple tasks, actively consider refactoring it into smaller, more specialized units.
 * **File Length and Refactoring** 📏: As a practical extension of SRP, pay close attention to file length.
   * If a file exceeds **1,000 lines**, it should be reviewed as a strong indicator that it has multiple responsibilities and should be considered for refactoring.
