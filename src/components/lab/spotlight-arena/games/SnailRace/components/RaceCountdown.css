@@ -1,0 +1,48 @@
+@import '../../../shared/styles/variables.css';
+
+.race-countdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--sa-z-modal);
+}
+
+.countdown-content {
+  text-align: center;
+}
+
+.countdown-number {
+  font-size: 10rem;
+  font-weight: 900;
+  color: var(--sa-white);
+  animation: countdown-bounce 1s ease-out;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.countdown-go {
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--sa-success);
+  animation: countdown-bounce 0.5s ease-out;
+  text-shadow: 0 0 30px rgba(150, 206, 180, 0.8);
+}
+
+@keyframes countdown-bounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

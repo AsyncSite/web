@@ -1,0 +1,43 @@
+@import '../../../shared/styles/variables.css';
+
+.event-notification {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--sa-z-tooltip);
+  animation: event-slide-down 0.5s ease-out;
+}
+
+.event-content {
+  background: var(--sa-white);
+  padding: var(--sa-spacing-md) var(--sa-spacing-xl);
+  border-radius: var(--sa-radius-full);
+  box-shadow: var(--sa-shadow-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sa-spacing-sm);
+}
+
+.event-snail {
+  font-size: var(--sa-font-size-lg);
+  font-weight: 700;
+  color: var(--sa-primary);
+}
+
+.event-text {
+  font-size: var(--sa-font-size-xl);
+  color: var(--sa-gray-700);
+}
+
+@keyframes event-slide-down {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

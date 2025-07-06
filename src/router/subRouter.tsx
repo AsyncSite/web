@@ -4,6 +4,7 @@ const LabPage = lazy(() => import("../pages/LabPage"));
 const LabDetailPage = lazy(() => import("../pages/LabDetailPage"));
 const TecoTecoPage = lazy(() => import("../pages/TecoTecoPage/TecoTecoPage"));
 const TeamShuffle = lazy(() => import("../components/lab/utilities/TeamShuffle"));
+const SpotlightArenaPage = lazy(() => import("../pages/lab/spotlight-arena/SpotlightArenaPage"));
 
 
 const subRouter = [
@@ -14,6 +15,10 @@ const subRouter = [
     {
         path: "lab/team-shuffle",
         element: <TeamShuffle />,
+    },
+    {
+        path: "lab/spotlight-arena",
+        element: <SpotlightArenaPage />,
     },
     {
         path: "lab/:subject",

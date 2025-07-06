@@ -1,0 +1,144 @@
+@import './variables.css';
+
+/* Common Styles for Spotlight Arena */
+
+/* Buttons */
+.sa-button {
+  padding: var(--sa-spacing-sm) var(--sa-spacing-lg);
+  border: none;
+  border-radius: var(--sa-radius-full);
+  font-size: var(--sa-font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--sa-transition-normal);
+  font-family: var(--sa-font-family);
+}
+
+.sa-button-primary {
+  background: var(--sa-primary);
+  color: var(--sa-white);
+}
+
+.sa-button-primary:hover:not(:disabled) {
+  background: var(--sa-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--sa-shadow-md);
+}
+
+.sa-button-secondary {
+  background: var(--sa-gray-100);
+  color: var(--sa-gray-700);
+}
+
+.sa-button-secondary:hover:not(:disabled) {
+  background: var(--sa-gray-200);
+}
+
+.sa-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Cards */
+.sa-card {
+  background: var(--sa-white);
+  border-radius: var(--sa-radius-xl);
+  padding: var(--sa-spacing-xl);
+  box-shadow: var(--sa-shadow-lg);
+}
+
+/* Input */
+.sa-input {
+  width: 100%;
+  padding: var(--sa-spacing-md);
+  border: 2px solid var(--sa-gray-200);
+  border-radius: var(--sa-radius-md);
+  font-size: var(--sa-font-size-base);
+  font-family: var(--sa-font-family);
+  transition: border-color var(--sa-transition-fast);
+}
+
+.sa-input:focus {
+  outline: none;
+  border-color: var(--sa-primary);
+}
+
+/* Animations */
+@keyframes sa-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes sa-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes sa-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sa-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Utility Classes */
+.sa-text-center {
+  text-align: center;
+}
+
+.sa-mb-sm {
+  margin-bottom: var(--sa-spacing-sm);
+}
+
+.sa-mb-md {
+  margin-bottom: var(--sa-spacing-md);
+}
+
+.sa-mb-lg {
+  margin-bottom: var(--sa-spacing-lg);
+}
+
+.sa-mt-sm {
+  margin-top: var(--sa-spacing-sm);
+}
+
+.sa-mt-md {
+  margin-top: var(--sa-spacing-md);
+}
+
+.sa-mt-lg {
+  margin-top: var(--sa-spacing-lg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sa-card {
+    padding: var(--sa-spacing-lg);
+  }
+}

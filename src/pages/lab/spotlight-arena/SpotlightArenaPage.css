@@ -1,0 +1,272 @@
+@import '../../../components/lab/spotlight-arena/shared/styles/common.css';
+
+.spotlight-arena {
+  min-height: 100vh;
+  background: var(--sa-gradient-primary);
+  padding: 90px 20px 20px; /* 헤더 높이만큼 상단 패딩 추가 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spotlight-arena-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Lobby Section */
+.lobby-section {
+  /* Styles inherited from sa-card */
+}
+
+.arena-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.arena-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.lobby-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.participant-section h2,
+.settings-section h2 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.participant-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.participant-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.participant-info {
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.setting-item label {
+  font-weight: 500;
+  color: #333;
+}
+
+.setting-item input[type="number"] {
+  width: 80px;
+  padding: 8px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.next-button {
+  display: block;
+  margin: 0 auto;
+  padding: 15px 40px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.next-button:hover:not(:disabled) {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.next-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Arcade Section */
+.arcade-section {
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #e0e0e0;
+}
+
+.arcade-title {
+  font-size: 2rem;
+  text-align: center;
+  margin: 40px 0 20px;
+  color: #333;
+}
+
+.arcade-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+/* Game Section */
+.game-section {
+  position: relative;
+}
+
+.game-placeholder {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.game-info {
+  margin-top: 30px;
+  color: #666;
+}
+
+/* Snail Race Styles */
+.snail-race-container {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.snail-race-title {
+  font-size: 2.5rem;
+  color: var(--sa-gray-800);
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.snail-animation-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+  min-height: 300px;
+  position: relative;
+}
+
+.snail-animation-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.snail-race-info {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.snail-race-description {
+  font-size: 1.2rem;
+  color: var(--sa-gray-600);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.race-details {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 40px;
+}
+
+.race-detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  color: var(--sa-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.detail-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--sa-primary);
+}
+
+.start-race-button {
+  font-size: 1.2rem;
+  padding: 15px 40px;
+  animation: sa-pulse 2s ease-in-out infinite;
+}
+
+.start-race-button:hover {
+  animation: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lobby-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .arena-title {
+    font-size: 2rem;
+  }
+}

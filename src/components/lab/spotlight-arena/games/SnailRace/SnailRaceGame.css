@@ -1,0 +1,58 @@
+@import '../../shared/styles/variables.css';
+
+.snail-race-game {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: var(--sa-spacing-lg);
+}
+
+.game-header .back-button {
+  position: absolute;
+  left: var(--sa-spacing-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: var(--sa-spacing-sm) var(--sa-spacing-lg);
+  background: var(--sa-gray-100);
+  border: none;
+  border-radius: var(--sa-radius-full);
+  cursor: pointer;
+  transition: all var(--sa-transition-fast);
+}
+
+.game-header .back-button:hover {
+  background: var(--sa-gray-200);
+}
+
+.game-title {
+  font-size: var(--sa-font-size-3xl);
+  color: var(--sa-gray-800);
+  margin: 0;
+}
+
+.game-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: var(--sa-spacing-lg);
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sa-spacing-xl);
+}
+
+.start-button {
+  font-size: var(--sa-font-size-xl);
+  padding: var(--sa-spacing-md) var(--sa-spacing-2xl);
+}

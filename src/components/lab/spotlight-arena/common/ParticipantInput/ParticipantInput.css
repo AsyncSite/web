@@ -1,0 +1,200 @@
+@import '../../shared/styles/variables.css';
+
+.participant-input {
+  width: 100%;
+}
+
+/* Mode Selector */
+.input-mode-selector {
+  display: flex;
+  gap: var(--sa-spacing-sm);
+  margin-bottom: var(--sa-spacing-lg);
+}
+
+.mode-button {
+  flex: 1;
+  padding: var(--sa-spacing-md);
+  background: var(--sa-gray-100);
+  border: 2px solid transparent;
+  border-radius: var(--sa-radius-md);
+  cursor: pointer;
+  transition: all var(--sa-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sa-spacing-sm);
+  font-size: var(--sa-font-size-base);
+  font-weight: 500;
+}
+
+.mode-button:hover {
+  background: var(--sa-gray-200);
+}
+
+.mode-button.active {
+  background: var(--sa-primary);
+  color: var(--sa-white);
+  border-color: var(--sa-primary);
+}
+
+.mode-icon {
+  font-size: 1.2rem;
+}
+
+/* Text Input Section */
+.text-input-section {
+  width: 100%;
+}
+
+.participant-textarea {
+  width: 100%;
+  padding: var(--sa-spacing-md);
+  border: 2px solid var(--sa-gray-200);
+  border-radius: var(--sa-radius-md);
+  font-size: var(--sa-font-size-base);
+  font-family: var(--sa-font-family);
+  resize: vertical;
+  min-height: 200px;
+  transition: border-color var(--sa-transition-fast);
+}
+
+.participant-textarea:focus {
+  outline: none;
+  border-color: var(--sa-primary);
+}
+
+.input-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--sa-spacing-md);
+  gap: var(--sa-spacing-md);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sa-spacing-sm);
+  cursor: pointer;
+  font-size: var(--sa-font-size-sm);
+  color: var(--sa-gray-600);
+}
+
+.checkbox-label input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.file-upload-label {
+  cursor: pointer;
+}
+
+.file-upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sa-spacing-sm);
+  padding: var(--sa-spacing-sm) var(--sa-spacing-md);
+  background: var(--sa-gray-100);
+  border-radius: var(--sa-radius-md);
+  font-size: var(--sa-font-size-sm);
+  transition: all var(--sa-transition-fast);
+}
+
+.file-upload-button:hover {
+  background: var(--sa-gray-200);
+}
+
+/* Number Input Section */
+.number-input-section {
+  width: 100%;
+  padding: var(--sa-spacing-xl);
+  background: var(--sa-gray-50);
+  border-radius: var(--sa-radius-md);
+}
+
+.number-range {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--sa-spacing-lg);
+}
+
+.range-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sa-spacing-sm);
+}
+
+.range-input label {
+  font-size: var(--sa-font-size-sm);
+  color: var(--sa-gray-600);
+}
+
+.range-input input[type="number"] {
+  width: 120px;
+  padding: var(--sa-spacing-md);
+  border: 2px solid var(--sa-gray-200);
+  border-radius: var(--sa-radius-md);
+  font-size: var(--sa-font-size-lg);
+  text-align: center;
+  transition: border-color var(--sa-transition-fast);
+}
+
+.range-input input[type="number"]:focus {
+  outline: none;
+  border-color: var(--sa-primary);
+}
+
+.range-separator {
+  font-size: var(--sa-font-size-xl);
+  color: var(--sa-gray-400);
+  margin-bottom: var(--sa-spacing-md);
+}
+
+/* Participant Count */
+.participant-count {
+  display: flex;
+  align-items: center;
+  gap: var(--sa-spacing-sm);
+  margin-top: var(--sa-spacing-lg);
+  padding: var(--sa-spacing-md);
+  background: var(--sa-gray-50);
+  border-radius: var(--sa-radius-md);
+}
+
+.count-label {
+  font-size: var(--sa-font-size-sm);
+  color: var(--sa-gray-600);
+}
+
+.count-number {
+  font-size: var(--sa-font-size-lg);
+  font-weight: 600;
+  color: var(--sa-primary);
+}
+
+.count-warning {
+  font-size: var(--sa-font-size-sm);
+  color: var(--sa-warning);
+  margin-left: var(--sa-spacing-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .input-options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .number-range {
+    flex-direction: column;
+    gap: var(--sa-spacing-md);
+  }
+  
+  .range-separator {
+    display: none;
+  }
+  
+  .range-input input[type="number"] {
+    width: 100%;
+  }
+}

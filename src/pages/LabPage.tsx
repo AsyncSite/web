@@ -54,11 +54,11 @@ const labCategories: LabCategory[] = [
                 tags: ['팀빌딩', '랜덤']
             },
             {
-                title: "추첨기",
-                description: "발표자, 리뷰어, 당첨자를 공정하게 뽑는 랜덤 추첨 도구",
-                link: "random-picker",
-                status: 'coming-soon',
-                tags: ['랜덤', '추첨']
+                title: "스포트라이트 아레나",
+                description: "다양한 미니게임으로 추첨 과정을 하나의 이벤트로 만들어주는 인터랙티브 랜덤 추첨기",
+                link: "spotlight-arena",
+                status: 'active',
+                tags: ['랜덤', '추첨', '게임']
             },
             {
                 title: "코드 공유",
