@@ -19,6 +19,7 @@ const SpotlightArenaContent = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [snailAnimation, setSnailAnimation] = useState<any>(null);
   const [showSnailIntro, setShowSnailIntro] = useState(true);
+  const [gameKey, setGameKey] = useState(0); // 게임 리셋을 위한 key
 
   const snailAnimations = [snail1Animation, snail2Animation];
 
@@ -174,15 +175,19 @@ const SpotlightArenaContent = () => {
               </>
             ) : (
               <SnailRaceGame
+                key={gameKey}
                 participants={participants}
                 winnerCount={winnerCount}
                 onBack={() => {
+                  // 처음으로 (로비로 돌아가기)
                   setShowSnailIntro(true);
-                  handleBackToArcade();
+                  handleBackToLobby();
                 }}
                 onReplay={() => {
                   // 같은 참가자로 다시 시작
-                  setShowSnailIntro(false);
+                  setShowSnailIntro(true);
+                  setGameKey(prev => prev + 1); // key 변경으로 컴포넌트 리마운트
+                  setTimeout(() => setShowSnailIntro(false), 100);
                 }}
                 onNewGame={() => {
                   // 새로운 게임 선택
