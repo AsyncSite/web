@@ -154,12 +154,10 @@ const DeductionGame: React.FC = () => {
   };
 
   const handleStartGame = () => {
-    console.log('Moving to game config with players:', players);
     setCurrentScreen('game-config');
   };
 
   const handleConfigComplete = () => {
-    console.log('Game config complete:', gameConfig);
     setPreparationStep(0);
     setCurrentScreen('game-preparation');
     initializeGame();

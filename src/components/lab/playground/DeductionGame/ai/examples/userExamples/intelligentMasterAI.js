@@ -30,9 +30,7 @@ function makeGuess(gameState) {
     }
   }
   
-  console.log(`확실한 정답: ${definiteAnswers.size}개`);
-  console.log(`확실한 오답: ${definiteWrongs.size}개`);
-  console.log(`선택 가능한 키워드: ${possibleKeywords.length}개`);
+
   
   // 4. 이미 충분한 정답을 아는 경우
   if (definiteAnswers.size >= gameState.answerCount) {
@@ -96,21 +94,17 @@ function compareGuesses(guess1, guess2, definiteAnswers, definiteWrongs, gameSta
       // idx1은 정답, idx2는 오답
       if (!definiteAnswers.has(idx1) && !definiteWrongs.has(idx1)) {
         definiteAnswers.add(idx1);
-        console.log(`비교 분석: ${gameState.keywords[idx1]}는 정답!`);
       }
       if (!definiteWrongs.has(idx2) && !definiteAnswers.has(idx2)) {
         definiteWrongs.add(idx2);
-        console.log(`비교 분석: ${gameState.keywords[idx2]}는 오답!`);
       }
     } else if (guess2.correctCount > guess1.correctCount) {
       // idx2는 정답, idx1은 오답
       if (!definiteAnswers.has(idx2) && !definiteWrongs.has(idx2)) {
         definiteAnswers.add(idx2);
-        console.log(`비교 분석: ${gameState.keywords[idx2]}는 정답!`);
       }
       if (!definiteWrongs.has(idx1) && !definiteAnswers.has(idx1)) {
         definiteWrongs.add(idx1);
-        console.log(`비교 분석: ${gameState.keywords[idx1]}은 오답!`);
       }
     }
   }
@@ -138,7 +132,6 @@ function checkConstraints(guess, definiteAnswers, definiteWrongs, gameState) {
     unknownIndices.forEach(idx => {
       if (!definiteWrongs.has(idx)) {
         definiteWrongs.add(idx);
-        console.log(`제약 조건: ${gameState.keywords[idx]}는 오답 (이미 충분한 정답)`);
       }
     });
   }
@@ -149,7 +142,6 @@ function checkConstraints(guess, definiteAnswers, definiteWrongs, gameState) {
     unknownIndices.forEach(idx => {
       if (!definiteAnswers.has(idx)) {
         definiteAnswers.add(idx);
-        console.log(`제약 조건: ${gameState.keywords[idx]}는 정답 (나머지 모두 정답)`);
       }
     });
   }
@@ -177,9 +169,7 @@ function calculateScores(gameState, possibleKeywords, definiteAnswers, definiteW
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);
   
-  console.log('상위 10개 키워드 점수:');
   sorted.forEach(([idx, score]) => {
-    console.log(`  ${gameState.keywords[idx]}: ${score.toFixed(2)}점`);
   });
   
   return scores;

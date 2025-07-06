@@ -2,24 +2,19 @@
 // 정보 수집, 확률 계산, 전략적 선택을 모두 활용하는 최고 수준의 AI
 
 function makeGuess(gameState) {
-  console.log('=== 전략적 마스터 AI 실행 ===');
-  console.log(`턴 ${gameState.currentTurn}: 분석 시작`);
-  
+
   // 1. 정보 수집 및 분류
   const knowledgeBase = collectKnowledge(gameState);
   
   // 2. 가능한 정답 조합 찾기 (CSP)
   const possibleSolutions = findPossibleSolutions(gameState, knowledgeBase);
-  console.log(`가능한 정답 조합: ${possibleSolutions.length}개`);
-  
+
   // 3. 전략 결정
   const strategy = decideStrategy(gameState, knowledgeBase, possibleSolutions);
-  console.log(`선택한 전략: ${strategy}`);
-  
+
   // 4. 전략에 따른 추측 생성
   const finalGuess = executeStrategy(strategy, gameState, knowledgeBase, possibleSolutions);
   
-  console.log('최종 선택:', finalGuess.map(idx => gameState.keywords[idx]));
   return finalGuess;
 }
 
@@ -44,10 +39,7 @@ function collectKnowledge(gameState) {
   // 추측 기록 분석으로 추가 정보 추출
   analyzeGuessHistory(gameState, knowledge);
   
-  console.log(`확실한 정답: ${knowledge.definiteAnswers.size}개`);
-  console.log(`확실한 오답: ${knowledge.definiteWrongs.size}개`);
-  console.log(`미확정: ${knowledge.unknowns.size}개`);
-  
+
   return knowledge;
 }
 

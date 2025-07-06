@@ -45,7 +45,6 @@ export class AIExecutionHandler {
 
       if (executionResult.success && executionResult.result) {
         // Log successful execution
-        console.log(`AI execution successful for player ${playerId} (${playerName})`, {
           executionTime: executionResult.executionTime,
           guess: executionResult.result,
           logs: executionResult.logs

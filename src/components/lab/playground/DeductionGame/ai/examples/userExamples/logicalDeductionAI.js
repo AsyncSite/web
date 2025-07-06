@@ -2,9 +2,7 @@
 // 추측들 간의 관계를 분석하여 확실한 정답과 오답을 찾아냅니다.
 
 function makeGuess(gameState) {
-  console.log('=== 논리적 추론 AI 실행 ===');
-  console.log(`턴 ${gameState.currentTurn}: 이전 추측 ${gameState.previousGuesses.length}개 분석`);
-  
+
   // 확실한 정답과 오답을 저장할 Set
   const definiteAnswers = new Set(gameState.revealedAnswers);
   const definiteWrongs = new Set([...gameState.myHints, ...gameState.revealedWrongAnswers]);
@@ -45,7 +43,6 @@ function makeGuess(gameState) {
         if (keywordStatus.get(idx) === 'unknown') {
           keywordStatus.set(idx, 'answer');
           definiteAnswers.add(idx);
-          console.log(`추론: ${gameState.keywords[idx]}는 정답 (모두 맞춘 추측에 포함)`);
         }
       });
     }
@@ -71,7 +68,6 @@ function makeGuess(gameState) {
           if (keywordStatus.get(idx1) === 'unknown') {
             keywordStatus.set(idx1, 'answer');
             definiteAnswers.add(idx1);
-            console.log(`추론: ${gameState.keywords[idx1]}는 정답, ${gameState.keywords[idx2]}는 오답`);
           }
           if (keywordStatus.get(idx2) === 'unknown') {
             keywordStatus.set(idx2, 'wrong');
@@ -82,7 +78,6 @@ function makeGuess(gameState) {
           if (keywordStatus.get(idx2) === 'unknown') {
             keywordStatus.set(idx2, 'answer');
             definiteAnswers.add(idx2);
-            console.log(`추론: ${gameState.keywords[idx2]}는 정답, ${gameState.keywords[idx1]}은 오답`);
           }
           if (keywordStatus.get(idx1) === 'unknown') {
             keywordStatus.set(idx1, 'wrong');
@@ -115,7 +110,6 @@ function makeGuess(gameState) {
       unknownIndices.forEach(idx => {
         keywordStatus.set(idx, 'answer');
         definiteAnswers.add(idx);
-        console.log(`추론: ${gameState.keywords[idx]}는 정답 (제약 조건)`);
       });
     }
     
@@ -124,14 +118,11 @@ function makeGuess(gameState) {
       unknownIndices.forEach(idx => {
         keywordStatus.set(idx, 'wrong');
         definiteWrongs.add(idx);
-        console.log(`추론: ${gameState.keywords[idx]}는 오답 (제약 조건)`);
       });
     }
   });
   
-  console.log(`확실한 정답: ${definiteAnswers.size}개`);
-  console.log(`확실한 오답: ${definiteWrongs.size}개`);
-  
+
   // 최종 추측 구성
   const finalGuess = Array.from(definiteAnswers);
   
@@ -153,11 +144,9 @@ function makeGuess(gameState) {
     for (const [idx, prob] of sortedUnknowns) {
       if (finalGuess.length >= gameState.answerCount) break;
       finalGuess.push(idx);
-      console.log(`확률 기반 선택: ${gameState.keywords[idx]} (${Math.round(prob * 100)}%)`);
     }
   }
   
-  console.log('최종 추측:', finalGuess.map(idx => gameState.keywords[idx]));
   return finalGuess;
 }
 

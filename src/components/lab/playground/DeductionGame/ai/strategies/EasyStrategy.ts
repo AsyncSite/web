@@ -5,9 +5,7 @@ export class EasyStrategy implements AIStrategy {
   private recentGuesses: Set<string> = new Set();
   
   selectKeywords(gameState: GameStateForAI): number[] {
-    console.log('=== Easy AI 실행 (무작위 선택) ===');
-    console.log(`턴 ${gameState.currentTurn}: 키워드 ${gameState.keywords.length}개 중 정답 ${gameState.answerCount}개 찾기`);
-    
+
     // 확실한 정답만 수집 (매우 제한적으로만 사용)
     const definiteAnswers = new Set<number>(gameState.revealedAnswers);
     
@@ -23,9 +21,7 @@ export class EasyStrategy implements AIStrategy {
         availableKeywords.push(i);
       }
     }
-    
-    console.log(`선택 가능한 키워드: ${availableKeywords.length}개`);
-    
+
     // Easy AI는 다른 플레이어의 힌트나 이전 추측을 분석하지 않습니다
     // 단순히 무작위로 선택합니다
     
@@ -58,14 +54,12 @@ export class EasyStrategy implements AIStrategy {
       const wrongCandidates = remainingCandidates.filter(idx => !finalGuess.includes(idx));
       if (wrongCandidates.length > 0) {
         finalGuess[wrongIndex] = wrongCandidates[Math.floor(Math.random() * wrongCandidates.length)];
-        console.log('Easy AI가 실수를 했습니다!');
       }
     }
     
     // 중복 방지를 위한 간단한 체크 (최근 3턴만 기억)
     const guessKey = [...finalGuess].sort((a, b) => a - b).join(',');
     if (this.recentGuesses.has(guessKey) && remainingCandidates.length >= gameState.answerCount) {
-      console.log('최근에 시도한 조합입니다. 다시 섞습니다.');
       return this.selectKeywords(gameState); // 재귀적으로 다시 선택
     }
     
@@ -76,7 +70,6 @@ export class EasyStrategy implements AIStrategy {
       this.recentGuesses.delete(oldest);
     }
     
-    console.log('Easy AI 최종 선택:', finalGuess.map(i => gameState.keywords[i]));
     return finalGuess;
   }
   
