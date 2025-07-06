@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsyncSite 벤치마킹 프로토타입 | 2025.07.06</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #05060A;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 우주 배경 */
+        .space-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #1b2735 0%, #05060A 100%);
+            z-index: -2;
+        }
+
+        /* 별 필드 */
+        .starfield {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* 궤도 애니메이션 */
+        .orbit-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 50%;
+            animation: rotate 120s linear infinite;
+        }
+
+        .orbit-1 {
+            width: 600px;
+            height: 600px;
+            top: -300px;
+            left: -300px;
+        }
+
+        .orbit-2 {
+            width: 800px;
+            height: 800px;
+            top: -400px;
+            left: -400px;
+            animation-duration: 180s;
+            animation-direction: reverse;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-tag {
+            display: inline-block;
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #c3e88d;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(195, 232, 141, 0.5);
+        }
+
+        .header-subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #c3e88d;
+        }
+
+        /* Introduction Section */
+        .introduction {
+            background: rgba(11, 12, 16, 0.95);
+            padding: 60px 0;
+            margin-bottom: 80px;
+            border-radius: 20px;
+        }
+
+        .intro-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #c3e88d;
+        }
+
+        .intro-text {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Prototypes Grid */
+        .prototypes {
+            margin-bottom: 100px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .prototype-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .prototype-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .prototype-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.2);
+            border-color: rgba(195, 232, 141, 0.3);
+        }
+
+        .prototype-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-bottom: 1px solid rgba(195, 232, 141, 0.1);
+        }
+
+        .prototype-logo {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .prototype-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #c3e88d;
+        }
+
+        .prototype-type {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .prototype-body {
+            padding: 30px;
+        }
+
+        .prototype-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .prototype-features {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .feature-tag {
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #c3e88d;
+        }
+
+        .prototype-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .prototype-link {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .prototype-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+        }
+
+        .prototype-link.secondary {
+            background: transparent;
+            color: #c3e88d;
+            border: 1px solid #c3e88d;
+        }
+
+        .prototype-link.secondary:hover {
+            background: rgba(195, 232, 141, 0.1);
+        }
+
+        /* Notice Section */
+        .notice {
+            background: rgba(255, 234, 0, 0.05);
+            border: 1px solid rgba(255, 234, 0, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .notice-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .notice-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #FFEA00;
+        }
+
+        .notice-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 60px 0;
+            border-top: 1px solid rgba(195, 232, 141, 0.1);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 42px;
+            }
+            
+            .prototype-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 우주 배경 -->
+    <div class="space-background"></div>
+    <div class="starfield"></div>
+    <div class="orbit-container">
+        <div class="orbit orbit-1"></div>
+        <div class="orbit orbit-2"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-tag">Prototype Collection</div>
+            <h1 class="header-title">AsyncSite 벤치마킹 프로토타입</h1>
+            <p class="header-subtitle">
+                스터디 플랫폼으로의 진화를 위한 벤치마킹 연구<br>
+                우리만의 특색과 타 서비스의 장점을 융합한 프로토타입
+            </p>
+            <div class="header-info">
+                <div class="info-item">
+                    <div class="info-label">작성일</div>
+                    <div class="info-value">2025.01.06</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">프로토타입 수</div>
+                    <div class="info-value">5개</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">목적</div>
+                    <div class="info-value">팀 내부 리뷰</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Introduction -->
+    <div class="container">
+        <section class="introduction">
+            <div class="intro-content">
+                <h2 class="intro-title">프로토타입 제작 배경</h2>
+                <p class="intro-text">
+                    AsyncSite를 스터디 플랫폼으로 고도화하기 위해, 다양한 온라인 커뮤니티 서비스들의 
+                    특징을 분석하고 우리만의 우주 테마와 감성적인 카피라이팅을 결합한 프로토타입을 제작했습니다.
+                </p>
+                <p class="intro-text">
+                    각 프로토타입은 원본 서비스의 핵심 가치를 유지하면서도 AsyncSite의 정체성인 
+                    '느슨히 느슨히, 그리고 끈끈히'라는 철학을 담아냈습니다.
+                </p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🌌</div>
+                        <div class="feature-text">우주 테마 디자인</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✨</div>
+                        <div class="feature-text">감성적 카피라이팅</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-text">다크모드 기반</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-text">반응형 디자인</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prototypes Grid -->
+        <section class="prototypes">
+            <h2 class="section-title">벤치마킹 프로토타입 목록</h2>
+            
+            <div class="prototype-grid">
+                <!-- NFYG Style -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <div class="prototype-logo">🎯</div>
+                        <h3 class="prototype-name">NFYG Style</h3>
+                        <p class="prototype-type">취향 기반 매칭 플랫폼</p>
+                    </div>
+                    <div class="prototype-body">
+                        <p class="prototype-description">
+                            넥스트플레이그라운드의 취향 기반 매칭 시스템과 밝고 친근한 UI를 
+                            AsyncSite의 우주 테마로 재해석한 프로토타입
+                        </p>
+                        <div class="prototype-features">
+                            <span class="feature-tag">#취향매칭</span>
+                            <span class="feature-tag">#인터뷰시스템</span>
+                            <span class="feature-tag">#스터디카테고리</span>
+                        </div>
+                        <div class="prototype-links">
+                            <a href="prototype_nfyg_style.html" class="prototype-link">랜딩 페이지</a>
+                            <a href="detail_nfyg_style.html" class="prototype-link secondary">상세 페이지</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trevari Style -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <div class="prototype-logo">📚</div>
+                        <h3 class="prototype-name">Trevari Style</h3>
+                        <p class="prototype-type">독서 모임 플랫폼</p>
+                    </div>
+                    <div class="prototype-body">
+                        <p class="prototype-description">
+                            트레바리의 아카데믹하고 지적인 분위기를 AsyncSite University 컨셉으로 
+                            재구성한 교육 중심 프로토타입
+                        </p>
+                        <div class="prototype-features">
+                            <span class="feature-tag">#대안대학</span>
+                            <span class="feature-tag">#커리큘럼</span>
+                            <span class="feature-tag">#지적탐구</span>
+                        </div>
+                        <div class="prototype-links">
+                            <a href="prototype_trevari_style.html" class="prototype-link">랜딩 페이지</a>
+                            <a href="detail_trevari_style.html" class="prototype-link secondary">상세 페이지</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIPE Style -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <div class="prototype-logo">🚀</div>
+                        <h3 class="prototype-name">SIPE Style</h3>
+                        <p class="prototype-type">IT 스터디/프로젝트 동아리</p>
+                    </div>
+                    <div class="prototype-body">
+                        <p class="prototype-description">
+                            사이프의 미션 중심적이고 체계적인 운영 방식을 AsyncSite의 
+                            성장 여정 스토리텔링과 결합한 프로토타입
+                        </p>
+                        <div class="prototype-features">
+                            <span class="feature-tag">#미션시스템</span>
+                            <span class="feature-tag">#레벨업</span>
+                            <span class="feature-tag">#성과측정</span>
+                        </div>
+                        <div class="prototype-links">
+                            <a href="prototype_sipe_style.html" class="prototype-link">랜딩 페이지</a>
+                            <a href="detail_sipe_style.html" class="prototype-link secondary">상세 페이지</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOPT Style -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <div class="prototype-logo">💫</div>
+                        <h3 class="prototype-name">SOPT Style</h3>
+                        <p class="prototype-type">IT 창업 동아리</p>
+                    </div>
+                    <div class="prototype-body">
+                        <p class="prototype-description">
+                            솝트의 역동적이고 협업 중심적인 문화를 AsyncSite의 
+                            '함께 빛나는' 철학과 융합한 연합 활동 프로토타입
+                        </p>
+                        <div class="prototype-features">
+                            <span class="feature-tag">#파트활동</span>
+                            <span class="feature-tag">#협업문화</span>
+                            <span class="feature-tag">#네트워킹</span>
+                        </div>
+                        <div class="prototype-links">
+                            <a href="prototype_sopt_style.html" class="prototype-link">랜딩 페이지</a>
+                            <a href="detail_sopt_style.html" class="prototype-link secondary">상세 페이지</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mash-Up Style -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <div class="prototype-logo">🛸</div>
+                        <h3 class="prototype-name">Mash-Up Style</h3>
+                        <p class="prototype-type">IT 프로덕트 제작 동아리</p>
+                    </div>
+                    <div class="prototype-body">
+                        <p class="prototype-description">
+                            매쉬업의 프로덕트 중심 문화와 창의적인 분위기를 
+                            AsyncSite의 우주 탐험 컨셉으로 표현한 프로토타입
+                        </p>
+                        <div class="prototype-features">
+                            <span class="feature-tag">#프로덕트</span>
+                            <span class="feature-tag">#크로스플랫폼</span>
+                            <span class="feature-tag">#실전프로젝트</span>
+                        </div>
+                        <div class="prototype-links">
+                            <a href="prototype_mashup_style.html" class="prototype-link">랜딩 페이지</a>
+                            <a href="detail_mashup_style.html" class="prototype-link secondary">상세 페이지</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notice -->
+        <section class="notice">
+            <div class="notice-icon">⚠️</div>
+            <h3 class="notice-title">내부 리뷰용 프로토타입</h3>
+            <p class="notice-text">
+                이 페이지는 AsyncSite 팀 내부 리뷰를 위한 프로토타입 모음입니다.<br>
+                실제 서비스 페이지가 아니며, 벤치마킹 및 연구 목적으로만 제작되었습니다.
+            </p>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                © 2025 AsyncSite. All prototypes are for internal review only.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // 별 생성
+        const starfield = document.querySelector('.starfield');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            starfield.appendChild(star);
+        }
+
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 프로토타입 카드에 애니메이션 적용
+        document.querySelectorAll('.prototype-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.8s ease';
+            card.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
