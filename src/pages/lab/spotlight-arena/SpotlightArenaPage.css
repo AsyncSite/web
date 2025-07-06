@@ -1,4 +1,4 @@
-@import '../../../components/lab/spotlight-arena/shared/styles/common.css';
+@import '../../../utilities/spotlight-arena/shared/styles/common.css';
 
 .spotlight-arena {
   min-height: 100vh;
