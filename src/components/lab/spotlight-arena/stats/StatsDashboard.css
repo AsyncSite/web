@@ -1,0 +1,183 @@
+@import '../shared/styles/variables.css';
+
+.stats-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--sa-spacing-xl);
+  padding-top: calc(90px + var(--sa-spacing-xl)); /* 헤더 높이 + 패딩 */
+  min-height: 100vh;
+}
+
+/* 헤더 */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sa-spacing-xl);
+  flex-wrap: wrap;
+  gap: var(--sa-spacing-md);
+  position: relative;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  color: var(--sa-text-primary);
+  margin: 0;
+}
+
+.back-button,
+.history-link {
+  padding: var(--sa-spacing-sm) var(--sa-spacing-lg);
+  border: none;
+  border-radius: var(--sa-radius-md);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button {
+  background: var(--sa-gray-200);
+  border: 1px solid var(--sa-gray-400);
+  color: var(--sa-gray-800);
+  font-weight: 500;
+  position: absolute;
+  left: 0;
+  top: -60px; /* 헤더 위쪽에 배치 */
+}
+
+.back-button:hover {
+  background: var(--sa-gray-300);
+  border-color: var(--sa-gray-500);
+  color: var(--sa-gray-900);
+}
+
+.history-link {
+  background: var(--sa-primary);
+  color: white;
+}
+
+.history-link:hover {
+  background: var(--sa-primary-dark);
+}
+
+/* 컨트롤 */
+.dashboard-controls {
+  display: flex;
+  gap: var(--sa-spacing-lg);
+  margin-bottom: var(--sa-spacing-xl);
+  padding: var(--sa-spacing-lg);
+  background: var(--sa-gray-50);
+  border-radius: var(--sa-radius-lg);
+  flex-wrap: wrap;
+}
+
+.period-selector,
+.game-type-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--sa-spacing-sm);
+}
+
+.dashboard-controls label {
+  font-weight: 600;
+  color: var(--sa-text-secondary);
+}
+
+.dashboard-controls select {
+  padding: var(--sa-spacing-sm) var(--sa-spacing-md);
+  border: 1px solid var(--sa-gray-300);
+  border-radius: var(--sa-radius-md);
+  font-size: 0.95rem;
+  background: white;
+  cursor: pointer;
+}
+
+/* 통계 그리드 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--sa-spacing-xl);
+  margin-bottom: var(--sa-spacing-xl);
+}
+
+/* 통계 카드 공통 스타일 */
+.stats-card {
+  background: white;
+  border-radius: var(--sa-radius-xl);
+  padding: var(--sa-spacing-xl);
+  box-shadow: var(--sa-shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  box-shadow: var(--sa-shadow-md);
+  transform: translateY(-2px);
+}
+
+.stats-card h3 {
+  font-size: 1.3rem;
+  color: var(--sa-text-primary);
+  margin-bottom: var(--sa-spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--sa-spacing-sm);
+}
+
+/* 로딩 상태 */
+.stats-dashboard.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.loading-spinner {
+  font-size: 1.2rem;
+  color: var(--sa-text-secondary);
+}
+
+/* 푸터 */
+.dashboard-footer {
+  text-align: center;
+  padding-top: var(--sa-spacing-xl);
+  border-top: 1px solid var(--sa-gray-200);
+}
+
+.last-updated {
+  color: var(--sa-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+    order: -1;
+  }
+
+  .dashboard-controls {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 전체 너비 카드 */
+.stats-card.full-width {
+  grid-column: 1 / -1;
+}
+
+/* 반 너비 카드 */
+@media (min-width: 768px) {
+  .stats-card.half-width {
+    grid-column: span 1;
+  }
+}

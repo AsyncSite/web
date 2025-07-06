@@ -18,6 +18,28 @@
 /* Lobby Section */
 .lobby-section {
   /* Styles inherited from sa-card */
+  position: relative;
+}
+
+.arena-back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background: var(--sa-gray-200);
+  border: 1px solid var(--sa-gray-400);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sa-gray-800);
+  transition: all 0.3s ease;
+}
+
+.arena-back-button:hover {
+  background: var(--sa-gray-300);
+  border-color: var(--sa-gray-500);
+  color: var(--sa-gray-900);
 }
 
 .arena-title {
@@ -31,6 +53,18 @@
   text-align: center;
   color: #666;
   margin-bottom: 40px;
+}
+
+.lobby-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--sa-spacing-xl);
+  gap: var(--sa-spacing-md);
+}
+
+.lobby-header > div {
+  flex: 1;
 }
 
 .lobby-content {

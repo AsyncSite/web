@@ -6,11 +6,13 @@ import { GAMES_LIST } from '../../../components/lab/spotlight-arena/shared/utils
 import ParticipantInput from '../../../components/lab/spotlight-arena/common/ParticipantInput';
 import GameCard from '../../../components/lab/spotlight-arena/common/GameCard';
 import SnailRaceGame from '../../../components/lab/spotlight-arena/games/SnailRace/SnailRaceGame';
+import GameHistoryViewer from '../../../components/lab/spotlight-arena/history/GameHistoryViewer';
+import StatsDashboard from '../../../components/lab/spotlight-arena/stats/StatsDashboard';
 import snail1Animation from '../../../assets/animations/snail/snail_1.json';
 import snail2Animation from '../../../assets/animations/snail/snail_2.json';
 import './SpotlightArenaPage.css';
 
-type Step = 'lobby' | 'arcade' | 'game';
+type Step = 'lobby' | 'arcade' | 'game' | 'history' | 'stats';
 
 const SpotlightArenaContent = () => {
   const [currentStep, setCurrentStep] = useState<Step>('lobby');
@@ -52,6 +54,11 @@ const SpotlightArenaContent = () => {
     setSelectedGame(null);
   };
 
+  const handleBackToLab = () => {
+    // Lab 페이지로 돌아가기
+    window.history.back();
+  };
+
   const handleBackToArcade = () => {
     setCurrentStep('arcade');
     setSelectedGame(null);
@@ -63,8 +70,24 @@ const SpotlightArenaContent = () => {
       <div className="spotlight-arena-container">
         {currentStep === 'lobby' && (
           <div className="lobby-section sa-card">
-            <h1 className="arena-title">🎮 스포트라이트 아레나</h1>
-            <p className="arena-subtitle">다양한 미니게임으로 추첨을 재미있게!</p>
+            <button 
+              className="arena-back-button"
+              onClick={handleBackToLab}
+            >
+              ← Lab으로 돌아가기
+            </button>
+            <div className="lobby-header">
+              <div>
+                <h1 className="arena-title">🎮 스포트라이트 아레나</h1>
+                <p className="arena-subtitle">다양한 미니게임으로 추첨을 재미있게!</p>
+              </div>
+              <button 
+                className="sa-button sa-button-secondary"
+                onClick={() => setCurrentStep('stats')}
+              >
+                📊 통계 대시보드
+              </button>
+            </div>
             
             <div className="lobby-content">
               <div className="participant-section">
@@ -197,6 +220,29 @@ const SpotlightArenaContent = () => {
               />
             )}
           </div>
+        )}
+
+        {/* 히스토리 뷰어 */}
+        {currentStep === 'history' && (
+          <GameHistoryViewer 
+            onBack={() => setCurrentStep('stats')}
+            onSelectParticipant={(participantId) => {
+              // 나중에 참가자 통계 화면으로 이동할 수 있도록 확장 가능
+              console.log('Selected participant:', participantId);
+            }}
+          />
+        )}
+
+        {/* 통계 대시보드 */}
+        {currentStep === 'stats' && (
+          <StatsDashboard 
+            onBack={() => setCurrentStep('lobby')}
+            onViewHistory={() => setCurrentStep('history')}
+            onSelectParticipant={(participantId) => {
+              console.log('Selected participant:', participantId);
+              // 향후 참가자 상세 보기 기능 추가 가능
+            }}
+          />
         )}
       </div>
     </div>

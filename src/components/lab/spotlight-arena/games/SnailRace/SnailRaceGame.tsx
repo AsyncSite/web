@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Participant, SnailRaceState, Snail } from '../../shared/types';
 import { SNAIL_COLORS } from './utils/snailColors';
 import { getEventCommentary } from './utils/commentaryMessages';
+import { gameHistoryService, participantStatsService } from '../../shared/services';
+import { GameResult } from '../../shared/types/storage';
 import RaceTrack from './components/RaceTrack';
 import RaceCountdown from './components/RaceCountdown';
 import EventNotification from './components/EventNotification';
@@ -41,6 +43,7 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
   const [showCountdown, setShowCountdown] = useState(false);
   const [currentEvent, setCurrentEvent] = useState<{ snailId: string; eventName: string } | null>(null);
   const [commentaryMessages, setCommentaryMessages] = useState<Array<{ id: string; text: string; timestamp: number }>>([]);
+  const [gameStartTime, setGameStartTime] = useState<number>(0);
 
   // 게임 초기화
   useEffect(() => {
@@ -63,6 +66,7 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
 
   const handleCountdownComplete = () => {
     setShowCountdown(false);
+    setGameStartTime(Date.now());
     setGameState(prev => ({ ...prev, status: 'playing' }));
     addCommentary('🏁 레이스가 시작되었습니다! 모든 달팽이들이 출발합니다!');
   };
@@ -76,6 +80,27 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
   }, []);
 
   const handleRaceComplete = (winners: Participant[]) => {
+    // 게임 결과 저장
+    const gameResult: GameResult = {
+      gameType: 'snail-race',
+      participants,
+      winners,
+      gameConfig: {
+        winnerCount,
+        trackLength: gameState.trackLength
+      },
+      startTime: gameStartTime,
+      endTime: Date.now()
+    };
+
+    // 히스토리 및 통계 업데이트
+    try {
+      gameHistoryService.saveGameResult(gameResult);
+      participantStatsService.updateStats(gameResult);
+    } catch (error) {
+      console.error('Failed to save game result:', error);
+    }
+
     setGameState(prev => ({ 
       ...prev, 
       status: 'finished',
@@ -110,7 +135,7 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
   return (
     <div className="snail-race-game">
       <div className="game-header">
-        <button className="back-button" onClick={onBack}>
+        <button className="snail-race-back-button" onClick={onBack}>
           ← 뒤로가기
         </button>
         <h2 className="game-title">🐌 달팽이 레이스</h2>

@@ -1,0 +1,284 @@
+@import '../shared/styles/variables.css';
+
+.game-history-viewer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--sa-spacing-xl);
+  padding-top: calc(90px + var(--sa-spacing-xl)); /* 헤더 높이 + 패딩 */
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sa-spacing-xl);
+  position: relative;
+}
+
+.history-header h2 {
+  font-size: 2rem;
+  color: var(--sa-text-primary);
+  margin: 0;
+}
+
+.back-button,
+.clear-button {
+  padding: var(--sa-spacing-sm) var(--sa-spacing-md);
+  border: none;
+  border-radius: var(--sa-radius-md);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button {
+  background: var(--sa-gray-200);
+  border: 1px solid var(--sa-gray-400);
+  color: var(--sa-gray-800);
+  font-weight: 500;
+  position: absolute;
+  left: 0;
+  top: -60px; /* 헤더 위쪽에 배치 */
+}
+
+.back-button:hover {
+  background: var(--sa-gray-300);
+  border-color: var(--sa-gray-500);
+  color: var(--sa-gray-900);
+}
+
+.clear-button {
+  background: var(--sa-danger);
+  color: white;
+}
+
+.clear-button:hover {
+  background: #dc2626;
+}
+
+/* 필터 섹션 */
+.history-filters {
+  display: flex;
+  gap: var(--sa-spacing-md);
+  margin-bottom: var(--sa-spacing-xl);
+  padding: var(--sa-spacing-md);
+  background: var(--sa-gray-50);
+  border-radius: var(--sa-radius-lg);
+}
+
+.history-filters select,
+.history-filters input {
+  padding: var(--sa-spacing-sm) var(--sa-spacing-md);
+  border: 1px solid var(--sa-gray-300);
+  border-radius: var(--sa-radius-md);
+  font-size: 0.9rem;
+}
+
+.history-filters button {
+  padding: var(--sa-spacing-sm) var(--sa-spacing-md);
+  background: var(--sa-primary);
+  color: white;
+  border: none;
+  border-radius: var(--sa-radius-md);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.history-filters button:hover {
+  background: var(--sa-primary-dark);
+}
+
+/* 히스토리 리스트 */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sa-spacing-md);
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sa-spacing-md);
+  padding: var(--sa-spacing-lg);
+  background: var(--sa-white);
+  border: 1px solid var(--sa-gray-200);
+  border-radius: var(--sa-radius-lg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.history-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sa-shadow-md);
+}
+
+.game-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sa-gray-100);
+  border-radius: var(--sa-radius-md);
+}
+
+.game-info {
+  flex: 1;
+}
+
+.game-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--sa-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.game-meta {
+  font-size: 0.85rem;
+  color: var(--sa-text-secondary);
+}
+
+.winners-preview {
+  font-size: 0.95rem;
+  color: var(--sa-primary);
+  font-weight: 500;
+}
+
+/* 빈 상태 */
+.empty-state {
+  text-align: center;
+  padding: var(--sa-spacing-xxl);
+  color: var(--sa-text-secondary);
+}
+
+.empty-state p {
+  margin: var(--sa-spacing-sm) 0;
+}
+
+/* 로딩 */
+.loading {
+  text-align: center;
+  padding: var(--sa-spacing-xxl);
+  color: var(--sa-text-secondary);
+}
+
+/* 상세 모달 */
+.game-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--sa-spacing-xl);
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--sa-radius-xl);
+  padding: var(--sa-spacing-xl);
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: var(--sa-spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--sa-spacing-sm);
+}
+
+.game-date {
+  color: var(--sa-text-secondary);
+  margin-bottom: var(--sa-spacing-xl);
+}
+
+.detail-section {
+  margin-bottom: var(--sa-spacing-xl);
+}
+
+.detail-section h4 {
+  font-size: 1.1rem;
+  margin-bottom: var(--sa-spacing-md);
+  color: var(--sa-text-primary);
+}
+
+.detail-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-section li {
+  padding: var(--sa-spacing-sm) 0;
+  border-bottom: 1px solid var(--sa-gray-100);
+}
+
+.participants-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sa-spacing-sm);
+}
+
+.participant-chip {
+  padding: var(--sa-spacing-xs) var(--sa-spacing-sm);
+  background: var(--sa-gray-100);
+  border-radius: var(--sa-radius-full);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.participant-chip:hover {
+  background: var(--sa-gray-200);
+}
+
+.participant-chip.winner {
+  background: var(--sa-primary);
+  color: white;
+}
+
+.close-button {
+  width: 100%;
+  padding: var(--sa-spacing-md);
+  background: var(--sa-primary);
+  color: white;
+  border: none;
+  border-radius: var(--sa-radius-md);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.close-button:hover {
+  background: var(--sa-primary-dark);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .history-filters {
+    flex-direction: column;
+  }
+
+  .history-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .game-icon {
+    margin: 0 auto;
+  }
+
+  .winners-preview {
+    margin-top: var(--sa-spacing-sm);
+  }
+}

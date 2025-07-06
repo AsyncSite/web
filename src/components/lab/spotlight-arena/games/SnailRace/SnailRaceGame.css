@@ -15,21 +15,25 @@
   padding: var(--sa-spacing-lg);
 }
 
-.game-header .back-button {
+.game-header .snail-race-back-button {
   position: absolute;
   left: var(--sa-spacing-lg);
   top: 50%;
   transform: translateY(-50%);
   padding: var(--sa-spacing-sm) var(--sa-spacing-lg);
-  background: var(--sa-gray-100);
-  border: none;
+  background: var(--sa-gray-200);
+  border: 1px solid var(--sa-gray-400);
   border-radius: var(--sa-radius-full);
   cursor: pointer;
   transition: all var(--sa-transition-fast);
+  color: var(--sa-gray-800);
+  font-weight: 500;
 }
 
-.game-header .back-button:hover {
-  background: var(--sa-gray-200);
+.game-header .snail-race-back-button:hover {
+  background: var(--sa-gray-300);
+  border-color: var(--sa-gray-500);
+  color: var(--sa-gray-900);
 }
 
 .game-title {
