@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11MEN - 트레바리 스타일</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <div class="logo">11MEN</div>
+            <div class="nav-menu">
+                <button class="nav-button">모임 찾기</button>
+                <button class="nav-button">리더 되기</button>
+                <button class="nav-button primary">시작하기</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <!-- 11MEN 특징: 궤도 도는 별들과 우주적 배경 -->
+            <div class="cosmic-background">
+                <div class="shooting-star"></div>
+                <div class="stars">
+                    <div class="star" style="--top: 10%; --left: 15%; --delay: 0s;"></div>
+                    <div class="star" style="--top: 20%; --left: 80%; --delay: 0.5s;"></div>
+                    <div class="star" style="--top: 60%; --left: 10%; --delay: 1s;"></div>
+                    <div class="star" style="--top: 80%; --left: 70%; --delay: 1.5s;"></div>
+                    <div class="star" style="--top: 40%; --left: 90%; --delay: 2s;"></div>
+                </div>
+                <div class="orbital-system">
+                    <div class="orbit orbit-1">
+                        <div class="planet planet-1"></div>
+                    </div>
+                    <div class="orbit orbit-2">
+                        <div class="planet planet-2"></div>
+                    </div>
+                    <div class="orbit orbit-3">
+                        <div class="planet planet-3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-content">
+                <h1 class="typewriter">
+                    <span class="title-accent">11</span><span class="title-main">MEN</span><br>
+                    축구로 읽고, 쓰고, 말하고,<br>친구가 되어요!
+                    <span class="cursor">|</span>
+                </h1>
+                <p class="hero-subtitle">11명이 모여 함께 성장하는 축구 커뮤니티</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">2,400+</span>
+                        <span class="stat-label">활동 중인 선수</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">180+</span>
+                        <span class="stat-label">진행된 경기</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">45+</span>
+                        <span class="stat-label">활성 팀</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="categories">
+            <h2 class="section-title">관심있는 포지션을 선택하세요</h2>
+            <div class="category-grid">
+                <div class="category-card">
+                    <div class="category-icon">⚽</div>
+                    <h3>공격수</h3>
+                    <p>스트라이커, 윙어</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🎯</div>
+                    <h3>미드필더</h3>
+                    <p>중앙, 측면, 수비형</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🛡️</div>
+                    <h3>수비수</h3>
+                    <p>센터백, 풀백</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🥅</div>
+                    <h3>골키퍼</h3>
+                    <p>전문 골키퍼</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">📊</div>
+                    <h3>전술 연구</h3>
+                    <p>전술 분석 모임</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🏃</div>
+                    <h3>피지컬 트레이닝</h3>
+                    <p>체력 향상 그룹</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🎮</div>
+                    <h3>FIFA 게임</h3>
+                    <p>온라인 게임 모임</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">📺</div>
+                    <h3>경기 관람</h3>
+                    <p>함께 보는 축구</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="teams">
+            <h2 class="section-title">곧 시작하는 팀</h2>
+            <div class="filter-tags">
+                <span class="tag active">전체</span>
+                <span class="tag">이번 주</span>
+                <span class="tag">주말</span>
+                <span class="tag">평일</span>
+                <span class="tag">마감임박</span>
+            </div>
+            
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-header">
+                        <span class="team-badge closing">마감임박</span>
+                        <span class="team-category">주말 풋살</span>
+                    </div>
+                    <h3 class="team-title">토요일 아침 풋살 - 강남</h3>
+                    <p class="team-description">매주 토요일 아침 8시, 2시간 풋살로 주말을 시작해요. 초보자도 환영!</p>
+                    <div class="team-info">
+                        <div class="team-leader">
+                            <img src="https://via.placeholder.com/32" alt="리더" class="leader-avatar">
+                            <span>김민수 리더</span>
+                        </div>
+                        <div class="team-meta">
+                            <span>8/10명</span>
+                            <span>매주 토요일</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <span class="team-badge new">신규</span>
+                        <span class="team-category">전술 스터디</span>
+                    </div>
+                    <h3 class="team-title">프리미어리그 전술 분석 모임</h3>
+                    <p class="team-description">매주 경기를 보며 전술을 분석하고 토론해요. 축구 지식을 깊게 만들어봐요.</p>
+                    <div class="team-info">
+                        <div class="team-leader">
+                            <img src="https://via.placeholder.com/32" alt="리더" class="leader-avatar">
+                            <span>박지성 리더</span>
+                        </div>
+                        <div class="team-meta">
+                            <span>5/12명</span>
+                            <span>격주 수요일</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <span class="team-badge">모집중</span>
+                        <span class="team-category">11인 축구</span>
+                    </div>
+                    <h3 class="team-title">일요일 정규리그 - 서울 북부</h3>
+                    <p class="team-description">정식 11인 축구팀입니다. 리그 참가를 목표로 매주 훈련과 경기를 진행해요.</p>
+                    <div class="team-info">
+                        <div class="team-leader">
+                            <img src="https://via.placeholder.com/32" alt="리더" class="leader-avatar">
+                            <span>이강인 리더</span>
+                        </div>
+                        <div class="team-meta">
+                            <span>15/22명</span>
+                            <span>매주 일요일</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <span class="team-badge">모집중</span>
+                        <span class="team-category">피지컬 트레이닝</span>
+                    </div>
+                    <h3 class="team-title">축구 체력 향상 그룹</h3>
+                    <p class="team-description">축구에 필요한 체력과 근력을 함께 키워요. 전문 트레이너와 함께합니다.</p>
+                    <div class="team-info">
+                        <div class="team-leader">
+                            <img src="https://via.placeholder.com/32" alt="리더" class="leader-avatar">
+                            <span>손흥민 리더</span>
+                        </div>
+                        <div class="team-meta">
+                            <span>10/15명</span>
+                            <span>화/목 저녁</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 11MEN 특징: 연결선과 인터랙티브 요소 -->
+            <div class="connector-lines">
+                <div class="connector-line">
+                    <div class="connector-dot"></div>
+                </div>
+            </div>
+
+            <button class="load-more">더 많은 팀 보기</button>
+        </section>
+
+        <section class="leader-recruit">
+            <div class="leader-content">
+                <h2>팀 리더가 되어보세요</h2>
+                <p>자신만의 축구 모임을 만들고 운영해보세요.<br>11MEN이 모든 과정을 지원합니다.</p>
+                <div class="leader-benefits">
+                    <div class="benefit">
+                        <span class="benefit-icon">🏟️</span>
+                        <span>구장 예약 지원</span>
+                    </div>
+                    <div class="benefit">
+                        <span class="benefit-icon">💰</span>
+                        <span>운영비 지원</span>
+                    </div>
+                    <div class="benefit">
+                        <span class="benefit-icon">👥</span>
+                        <span>멤버 모집 지원</span>
+                    </div>
+                </div>
+                <button class="cta-button">리더 신청하기</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>11MEN</h4>
+                <p>축구로 연결되는 커뮤니티</p>
+            </div>
+            <div class="footer-section">
+                <h4>문의</h4>
+                <p>support@11men.com</p>
+                <p>02-1234-5678</p>
+            </div>
+            <div class="footer-section">
+                <h4>소셜</h4>
+                <p>Instagram</p>
+                <p>YouTube</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 11MEN. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

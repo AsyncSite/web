@@ -1,0 +1,623 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #000;
+    overflow-x: hidden;
+}
+
+/* Navigation */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2ECC40;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.nav-button:hover {
+    color: #2ECC40;
+}
+
+.nav-button.primary {
+    background-color: #2ECC40;
+    color: white;
+    border-radius: 4px;
+}
+
+.nav-button.primary:hover {
+    background-color: #27AE60;
+}
+
+/* Hero Section - 11MEN 우주적 디자인 */
+.hero {
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 11MEN 특징: 우주적 배경 */
+.cosmic-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 별들 애니메이션 */
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.star {
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    width: 3px;
+    height: 3px;
+    background: #C3E88D;
+    border-radius: 50%;
+    animation: twinkle 2s infinite var(--delay);
+    box-shadow: 0 0 6px #C3E88D;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* 유성 애니메이션 */
+.shooting-star {
+    position: absolute;
+    top: 20%;
+    left: -100px;
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #C3E88D, transparent);
+    transform: rotate(45deg);
+    animation: shootingStar 2.5s ease-out;
+}
+
+@keyframes shootingStar {
+    0% { left: -100px; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: calc(100% + 100px); opacity: 0; }
+}
+
+/* 궤도 시스템 */
+.orbital-system {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.orbit {
+    position: absolute;
+    border: 1px solid rgba(195, 232, 141, 0.2);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.orbit-1 {
+    width: 200px;
+    height: 200px;
+    animation: rotate 10s linear infinite;
+}
+
+.orbit-2 {
+    width: 300px;
+    height: 300px;
+    animation: rotate 15s linear infinite reverse;
+}
+
+.orbit-3 {
+    width: 400px;
+    height: 400px;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.planet-1 {
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(135deg, #C3E88D, #8FD67A);
+    box-shadow: 0 0 10px #C3E88D;
+}
+
+.planet-2 {
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, #82aaff, #5a7de6);
+    box-shadow: 0 0 8px #82aaff;
+}
+
+.planet-3 {
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, #ffcb6b, #e6b655);
+    box-shadow: 0 0 6px #ffcb6b;
+}
+
+/* 타이프라이터 효과 */
+.typewriter {
+    font-family: 'Source Code Pro', monospace;
+    position: relative;
+}
+
+.title-accent {
+    color: #C3E88D;
+    font-weight: 700;
+    text-shadow: 0 0 20px #C3E88D;
+}
+
+.title-main {
+    color: #82aaff;
+    font-weight: 700;
+}
+
+.cursor {
+    animation: blink 1s infinite;
+    color: #C3E88D;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: white;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 3rem;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #C3E88D;
+    text-shadow: 0 0 10px #C3E88D;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Categories Section */
+.categories {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+    z-index: 3;
+    margin-top: -20px;
+}
+
+.section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #333;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.category-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.category-card:hover {
+    border-color: #2ECC40;
+    box-shadow: 0 4px 12px rgba(46, 204, 64, 0.1);
+    transform: translateY(-2px);
+}
+
+.category-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.category-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.category-card p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Teams Section - 11MEN 슬라이딩 카드 */
+.teams {
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+    color: white;
+}
+
+.teams .section-title {
+    color: white;
+}
+
+/* 연결선 요소 */
+.connector-lines {
+    position: relative;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.connector-line {
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #C3E88D, transparent);
+    position: relative;
+}
+
+.connector-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #C3E88D;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #C3E88D;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+}
+
+.teams .section-title {
+    margin-bottom: 2rem;
+}
+
+.filter-tags {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.tag.active {
+    background-color: #2ECC40;
+    color: white;
+    border-color: #2ECC40;
+}
+
+.tag:hover:not(.active) {
+    border-color: #2ECC40;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+}
+
+.team-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(195, 232, 141, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.team-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(195, 232, 141, 0.2);
+    border-color: #C3E88D;
+}
+
+.team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.team-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.team-badge.closing {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.team-badge.new {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.team-category {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.team-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: #C3E88D;
+    font-weight: 600;
+}
+
+.team-description {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.team-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.team-leader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.leader-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.team-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.load-more {
+    display: block;
+    margin: 2rem auto;
+    padding: 0.75rem 2rem;
+    background-color: #fff;
+    border: 2px solid #2ECC40;
+    border-radius: 4px;
+    color: #2ECC40;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.load-more:hover {
+    background-color: #2ECC40;
+    color: white;
+}
+
+/* Leader Recruit Section */
+.leader-recruit {
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #2ECC40 0%, #27AE60 100%);
+    color: white;
+    text-align: center;
+}
+
+.leader-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.leader-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+}
+
+.leader-benefits {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.benefit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.benefit-icon {
+    font-size: 2rem;
+}
+
+.cta-button {
+    padding: 1rem 2rem;
+    background-color: white;
+    color: #2ECC40;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.cta-button:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 3rem 2rem 1rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.footer-section h4 {
+    margin-bottom: 1rem;
+    color: #2ECC40;
+}
+
+.footer-section p {
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #555;
+    opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .leader-benefits {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}

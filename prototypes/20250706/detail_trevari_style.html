@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테코테코 - AsyncSite University</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #05060A;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 우주 배경 */
+        .space-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top, #1b2735 0%, #05060A 100%);
+            z-index: -2;
+        }
+
+        /* 별 필드 */
+        .starfield {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 행성 궤도 */
+        .planet-orbit {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 50%;
+            animation: rotate 120s linear infinite;
+            z-index: -1;
+        }
+
+        .planet {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #c3e88d, #8fd67a);
+            border-radius: 50%;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+        }
+
+        @keyframes rotate {
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(5, 6, 10, 0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(195, 232, 141, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #c3e88d;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #c3e88d;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .curriculum-badge {
+            display: inline-block;
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #c3e88d;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .highlight {
+            color: #c3e88d;
+            position: relative;
+        }
+
+        .hero-quote {
+            max-width: 800px;
+            margin: 0 auto 60px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #c3e88d;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            font-size: 20px;
+            line-height: 1.8;
+        }
+
+        .quote-author {
+            display: block;
+            text-align: right;
+            margin-top: 20px;
+            font-style: normal;
+            color: #c3e88d;
+            font-size: 16px;
+        }
+
+        /* Course Info */
+        .course-info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto 80px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(195, 232, 141, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.2);
+        }
+
+        .info-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #c3e88d;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .content-section:nth-child(even) {
+            background: rgba(11, 12, 16, 0.95);
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .section-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+        }
+
+        /* Curriculum Section */
+        .curriculum-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .curriculum-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .curriculum-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(195, 232, 141, 0.3);
+            transform: translateX(10px);
+        }
+
+        .curriculum-week {
+            font-size: 48px;
+            font-weight: 900;
+            color: rgba(195, 232, 141, 0.3);
+            min-width: 100px;
+        }
+
+        .curriculum-details h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #c3e88d;
+        }
+
+        .curriculum-topics {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .topic-tag {
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            color: #c3e88d;
+        }
+
+        /* Professor Section */
+        .professor-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 20px;
+            padding: 60px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .professor-image {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            box-shadow: 0 0 30px rgba(195, 232, 141, 0.5);
+        }
+
+        .professor-info h3 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #c3e88d;
+        }
+
+        .professor-title {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .professor-bio {
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Method Section */
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .method-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #c3e88d, #8fd67a);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .method-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.2);
+        }
+
+        .method-step {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .method-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #c3e88d;
+        }
+
+        .method-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+        }
+
+        /* Reviews Section */
+        .reviews-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .review-quote {
+            font-size: 48px;
+            color: rgba(195, 232, 141, 0.2);
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .review-text {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .reviewer-details {
+            text-align: left;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #c3e88d;
+        }
+
+        .reviewer-role {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(195, 232, 141, 0.05));
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #c3e88d, #FFEA00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-description {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .enrollment-info {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .enrollment-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .enrollment-item:last-child {
+            border-bottom: none;
+        }
+
+        .enrollment-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .enrollment-value {
+            font-weight: 600;
+            color: #c3e88d;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #c3e88d;
+            border: 2px solid #c3e88d;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(195, 232, 141, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 48px;
+            }
+            
+            .course-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .curriculum-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .professor-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px;
+            }
+            
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reviews-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 우주 배경 -->
+    <div class="space-background"></div>
+    <div class="starfield"></div>
+    <div class="planet-orbit">
+        <div class="planet"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="prototype_trevari_style.html" class="logo">AsyncSite University</a>
+                <ul class="nav-menu">
+                    <li><a href="#">커리큘럼</a></li>
+                    <li><a href="#">교수진</a></li>
+                    <li><a href="#">수강후기</a></li>
+                    <li><a href="prototype_trevari_style.html">모든 강좌</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="curriculum-badge">ALGORITHM & DATA STRUCTURE</div>
+            <h1 class="hero-title">
+                코드의 <span class="highlight">본질</span>을 탐구하다
+            </h1>
+            <p class="hero-subtitle">
+                테코테코: 개발자의 사고력을 단련하는 알고리즘 스터디
+            </p>
+            
+            <div class="hero-quote">
+                "프로그래밍은 단순히 코드를 작성하는 것이 아니라,
+                문제를 이해하고 해결책을 설계하는 사고의 예술입니다."
+                <span class="quote-author">— 도널드 크누스, 『컴퓨터 프로그래밍의 예술』</span>
+            </div>
+
+            <div class="course-info">
+                <div class="info-card">
+                    <div class="info-icon">📅</div>
+                    <div class="info-label">기간</div>
+                    <div class="info-value">12주 과정</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">🕐</div>
+                    <div class="info-label">일정</div>
+                    <div class="info-value">일요일 10시</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">👥</div>
+                    <div class="info-label">정원</div>
+                    <div class="info-value">15명</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">💻</div>
+                    <div class="info-label">형식</div>
+                    <div class="info-value">온라인</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curriculum Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">
+                    체계적인 커리큘럼으로<br>
+                    단계별 성장을 이끕니다
+                </h2>
+                <p class="section-description">
+                    기초부터 심화까지, 12주간의 여정을 통해
+                    알고리즘적 사고력을 체계적으로 함양합니다.
+                </p>
+            </div>
+
+            <div class="curriculum-content">
+                <div class="curriculum-item">
+                    <div class="curriculum-week">1-3</div>
+                    <div class="curriculum-details">
+                        <h3>Foundation: 기초 다지기</h3>
+                        <p>자료구조의 기본 개념과 시간복잡도 분석을 학습합니다.</p>
+                        <div class="curriculum-topics">
+                            <span class="topic-tag">배열</span>
+                            <span class="topic-tag">스택/큐</span>
+                            <span class="topic-tag">해시</span>
+                            <span class="topic-tag">Big-O</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-week">4-6</div>
+                    <div class="curriculum-details">
+                        <h3>Exploration: 탐색과 정렬</h3>
+                        <p>다양한 탐색 알고리즘과 정렬 기법을 마스터합니다.</p>
+                        <div class="curriculum-topics">
+                            <span class="topic-tag">이분탐색</span>
+                            <span class="topic-tag">DFS/BFS</span>
+                            <span class="topic-tag">정렬</span>
+                            <span class="topic-tag">그래프</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-week">7-9</div>
+                    <div class="curriculum-details">
+                        <h3>Optimization: 최적화 기법</h3>
+                        <p>동적 계획법과 그리디 알고리즘으로 최적해를 찾습니다.</p>
+                        <div class="curriculum-topics">
+                            <span class="topic-tag">DP</span>
+                            <span class="topic-tag">그리디</span>
+                            <span class="topic-tag">분할정복</span>
+                            <span class="topic-tag">최단경로</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-week">10-12</div>
+                    <div class="curriculum-details">
+                        <h3>Mastery: 실전 응용</h3>
+                        <p>복잡한 문제를 해결하며 종합적인 사고력을 기릅니다.</p>
+                        <div class="curriculum-topics">
+                            <span class="topic-tag">트리</span>
+                            <span class="topic-tag">문자열</span>
+                            <span class="topic-tag">구현</span>
+                            <span class="topic-tag">복합문제</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professor Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">
+                    함께하는 멘토와<br>
+                    깊이 있는 학습을
+                </h2>
+            </div>
+
+            <div class="professor-card">
+                <div class="professor-image">🧑‍💻</div>
+                <div class="professor-info">
+                    <h3>테코테코 운영진</h3>
+                    <p class="professor-title">Algorithm Study Facilitators</p>
+                    <p class="professor-bio">
+                        현업에서 활동하는 개발자들이 모여 만든 스터디 그룹입니다.
+                        각자의 경험과 인사이트를 공유하며, 참여자들이 단순한 문제 풀이를 넘어
+                        진정한 문제 해결 능력을 기를 수 있도록 돕고 있습니다.
+                        우리는 '함께 성장'하는 가치를 가장 중요하게 생각합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Method Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">
+                    우리만의 특별한<br>
+                    학습 방법론
+                </h2>
+                <p class="section-description">
+                    단순 암기가 아닌, 이해와 응용을 통한 진정한 학습
+                </p>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <div class="method-step">STEP 01</div>
+                    <h3 class="method-title">개념 이해</h3>
+                    <p class="method-description">
+                        매주 핵심 알고리즘의 원리를 깊이 있게 탐구하고,
+                        실제 적용 사례를 통해 이해도를 높입니다.
+                    </p>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-step">STEP 02</div>
+                    <h3 class="method-title">문제 풀이</h3>
+                    <p class="method-description">
+                        난이도별로 선별된 문제를 통해 단계적으로 실력을 향상시키고,
+                        다양한 접근법을 시도해봅니다.
+                    </p>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-step">STEP 03</div>
+                    <h3 class="method-title">코드 리뷰</h3>
+                    <p class="method-description">
+                        서로의 코드를 리뷰하며 더 나은 해법을 찾고,
+                        읽기 좋은 코드 작성법을 함께 고민합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2 class="section-title">
+                    선배들이 전하는<br>
+                    성장의 이야기
+                </h2>
+            </div>
+
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="review-quote">"</div>
+                    <p class="review-text">
+                        알고리즘은 어렵다고만 생각했는데, 테코테코를 통해
+                        문제를 바라보는 새로운 시각을 갖게 되었어요.
+                        이제는 복잡한 문제도 차근차근 분해해서 해결할 수 있습니다.
+                    </p>
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">👨</div>
+                        <div class="reviewer-details">
+                            <div class="reviewer-name">김개발</div>
+                            <div class="reviewer-role">3기 수료생</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-quote">"</div>
+                    <p class="review-text">
+                        혼자 공부할 때는 포기하고 싶었던 순간들이 많았는데,
+                        함께하는 동료들 덕분에 끝까지 완주할 수 있었습니다.
+                        무엇보다 서로의 코드를 보며 배우는 것이 가장 값진 경험이었어요.
+                    </p>
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">👩</div>
+                        <div class="reviewer-details">
+                            <div class="reviewer-name">이코더</div>
+                            <div class="reviewer-role">2기 수료생</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-quote">"</div>
+                    <p class="review-text">
+                        실무에서도 알고리즘적 사고가 얼마나 중요한지 깨달았어요.
+                        테코테코에서 배운 내용들이 실제 프로젝트에서 큰 도움이 되고 있습니다.
+                    </p>
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">🧑</div>
+                        <div class="reviewer-details">
+                            <div class="reviewer-name">박프로</div>
+                            <div class="reviewer-role">4기 수료생</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-quote">"</div>
+                    <p class="review-text">
+                        체계적인 커리큘럼과 꾸준한 학습 리듬이 정말 좋았어요.
+                        매주 일요일이 기다려질 정도로 즐거운 시간이었습니다.
+                    </p>
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">👤</div>
+                        <div class="reviewer-details">
+                            <div class="reviewer-name">최해커</div>
+                            <div class="reviewer-role">5기 수료생</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">
+                지금, 새로운 도전을<br>
+                시작하세요
+            </h2>
+            <p class="cta-description">
+                알고리즘의 세계로 떠나는 12주간의 지적 여행,
+                당신도 함께하실 준비가 되셨나요?
+            </p>
+
+            <div class="enrollment-info">
+                <div class="enrollment-item">
+                    <span class="enrollment-label">모집 기간</span>
+                    <span class="enrollment-value">~3월 15일</span>
+                </div>
+                <div class="enrollment-item">
+                    <span class="enrollment-label">수강료</span>
+                    <span class="enrollment-value">무료</span>
+                </div>
+                <div class="enrollment-item">
+                    <span class="enrollment-label">선발 방식</span>
+                    <span class="enrollment-value">신청서 검토</span>
+                </div>
+                <div class="enrollment-item">
+                    <span class="enrollment-label">결과 발표</span>
+                    <span class="enrollment-value">3월 18일</span>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">수강 신청하기</a>
+                <a href="#" class="btn btn-secondary">문의하기</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 별 생성
+        const starfield = document.querySelector('.starfield');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 4 + 's';
+            starfield.appendChild(star);
+        }
+
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 모든 섹션에 애니메이션 적용
+        document.querySelectorAll('.content-section, .info-card, .curriculum-item, .method-card, .review-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

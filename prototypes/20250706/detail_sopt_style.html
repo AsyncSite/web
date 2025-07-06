@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테코테코 - 알고리즘 연합 | AsyncSite X SOPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #05060A;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* 우주 배경 */
+        .space-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #05060A 100%);
+            z-index: -2;
+        }
+        
+        /* 별 필드 */
+        .starfield {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+        
+        /* 궤도 애니메이션 */
+        .orbit-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 50%;
+            animation: rotate 120s linear infinite;
+        }
+        
+        .orbit-1 {
+            width: 700px;
+            height: 700px;
+            top: -350px;
+            left: -350px;
+        }
+        
+        .orbit-2 {
+            width: 900px;
+            height: 900px;
+            top: -450px;
+            left: -450px;
+            animation-duration: 180s;
+            animation-direction: reverse;
+        }
+        
+        .orbit-3 {
+            width: 500px;
+            height: 500px;
+            top: -250px;
+            left: -250px;
+            animation-duration: 90s;
+        }
+        
+        .planet {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #c3e88d, #8fd67a);
+            border-radius: 50%;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(5, 6, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(195, 232, 141, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #c3e88d;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #c3e88d;
+        }
+
+        .apply-button {
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            padding: 10px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .apply-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 80px;
+            position: relative;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .part-badge {
+            display: inline-block;
+            background: rgba(255, 234, 0, 0.1);
+            border: 1px solid rgba(255, 234, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #FFEA00;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.1;
+            letter-spacing: -2px;
+        }
+
+        .hero-title-gradient {
+            background: linear-gradient(135deg, #c3e88d, #FFEA00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 50px;
+            line-height: 1.5;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: #c3e88d;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background: rgba(11, 12, 16, 0.95);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(130, 170, 255, 0.1);
+            border: 1px solid rgba(130, 170, 255, 0.3);
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #82AAFF;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-content h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #c3e88d;
+        }
+
+        .about-content p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .about-features {
+            display: grid;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .feature-text {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .about-visual {
+            position: relative;
+        }
+
+        .visual-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visual-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 30px rgba(195, 232, 141, 0.5));
+        }
+
+        .visual-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #c3e88d;
+        }
+
+        /* Curriculum Section */
+        .curriculum-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active,
+        .tab-button:hover {
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(195, 232, 141, 0.3);
+        }
+
+        .curriculum-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .week-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.2);
+            border-color: rgba(195, 232, 141, 0.3);
+        }
+
+        .week-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .week-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #c3e88d;
+        }
+
+        .week-topics {
+            list-style: none;
+        }
+
+        .week-topics li {
+            padding: 8px 0;
+            color: rgba(255, 255, 255, 0.8);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .week-topics li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #82AAFF;
+        }
+
+        /* Team Section */
+        .team-showcase {
+            position: relative;
+        }
+
+        .team-intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .team-intro p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .team-member {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.2);
+            border-color: rgba(195, 232, 141, 0.3);
+            z-index: 10;
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            position: relative;
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 15px;
+            height: 15px;
+            background: #4ade80;
+            border: 2px solid #05060A;
+            border-radius: 50%;
+        }
+
+        .member-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            font-size: 14px;
+            color: #82AAFF;
+            margin-bottom: 10px;
+        }
+
+        .member-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stat strong {
+            color: #FFEA00;
+        }
+
+        /* Activity Section */
+        .activity-timeline {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .activity-time {
+            min-width: 100px;
+            text-align: right;
+            padding-top: 10px;
+        }
+
+        .activity-time-value {
+            font-size: 14px;
+            color: #82AAFF;
+            font-weight: 600;
+        }
+
+        .activity-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .activity-content::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            background: #c3e88d;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+        }
+
+        .activity-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #c3e88d;
+        }
+
+        .activity-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Reviews Section */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.2);
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            color: #FFEA00;
+            font-size: 20px;
+        }
+
+        .review-text {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .reviewer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #82AAFF, #c3e88d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .reviewer-info {
+            text-align: left;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #c3e88d;
+        }
+
+        .reviewer-details {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 0;
+            text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(195, 232, 141, 0.05));
+            position: relative;
+        }
+
+        .cta-decoration {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            border: 2px solid rgba(195, 232, 141, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .cta-gradient {
+            background: linear-gradient(135deg, #c3e88d, #FFEA00, #82AAFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-description {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 50px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c3e88d, #8fd67a);
+            color: #05060A;
+            box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #c3e88d;
+            border: 2px solid #c3e88d;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(195, 232, 141, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 48px;
+            }
+            
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .activity-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .activity-time {
+                text-align: left;
+            }
+            
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 우주 배경 -->
+    <div class="space-background"></div>
+    <div class="starfield"></div>
+    <div class="orbit-container">
+        <div class="orbit orbit-1">
+            <div class="planet"></div>
+        </div>
+        <div class="orbit orbit-2">
+            <div class="planet"></div>
+        </div>
+        <div class="orbit orbit-3">
+            <div class="planet"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="prototype_sopt_style.html" class="logo">
+                AsyncSite
+                <span class="logo-badge">X SOPT</span>
+            </a>
+            <nav class="nav-menu">
+                <a href="#about" class="nav-link">소개</a>
+                <a href="#curriculum" class="nav-link">커리큘럼</a>
+                <a href="#team" class="nav-link">팀원</a>
+                <a href="#reviews" class="nav-link">후기</a>
+                <a href="#apply" class="apply-button">참여 신청</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="part-badge">🎯 ALGORITHM PART</div>
+            <h1 class="hero-title">
+                <span class="hero-title-gradient">테코테코</span><br>
+                알고리즘 연합
+            </h1>
+            <p class="hero-description">
+                혼자서는 어려운 알고리즘, 함께라면 즐거운 도전이 됩니다
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">12</span>
+                    <span class="stat-label">Active Members</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">247</span>
+                    <span class="stat-label">Days Together</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">1.2K</span>
+                    <span class="stat-label">Problems Solved</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">95%</span>
+                    <span class="stat-label">Satisfaction</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">About TecoTeco</div>
+                <h2 class="section-title">
+                    우리가 함께<br>
+                    성장하는 방법
+                </h2>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-content">
+                    <h3>느슨히 느슨히, 그리고 끈끈히</h3>
+                    <p>
+                        테코테코는 단순한 알고리즘 스터디가 아닙니다.
+                        서로의 페이스를 존중하면서도 꾸준히 함께 나아가는,
+                        개발자들의 성장 공동체입니다.
+                    </p>
+                    <p>
+                        매주 일요일 오전, 우리는 온라인 공간에 모여
+                        각자가 풀어온 문제를 공유하고, 서로의 접근 방식을
+                        배우며 함께 성장합니다.
+                    </p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <span class="feature-text">맞춤형 난이도로 개인별 성장 지원</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">💬</div>
+                            <span class="feature-text">활발한 코드 리뷰와 피드백 문화</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🏆</div>
+                            <span class="feature-text">동기부여를 위한 주간 MVP 선정</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🤝</div>
+                            <span class="feature-text">서로를 응원하는 따뜻한 분위기</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-visual">
+                    <div class="visual-card">
+                        <div class="visual-icon">💯</div>
+                        <h3 class="visual-title">Together We Code</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curriculum Section -->
+    <section class="section" id="curriculum">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Curriculum</div>
+                <h2 class="section-title">
+                    12주간의<br>
+                    체계적인 커리큘럼
+                </h2>
+                <p class="section-subtitle">
+                    기초부터 심화까지, 단계별로 성장하는 알고리즘 마스터 과정
+                </p>
+            </div>
+
+            <div class="curriculum-tabs">
+                <button class="tab-button active" data-phase="1">Phase 1: Foundation</button>
+                <button class="tab-button" data-phase="2">Phase 2: Exploration</button>
+                <button class="tab-button" data-phase="3">Phase 3: Optimization</button>
+                <button class="tab-button" data-phase="4">Phase 4: Mastery</button>
+            </div>
+
+            <div class="curriculum-content">
+                <div class="week-grid" id="phase-1">
+                    <div class="week-card">
+                        <span class="week-number">WEEK 1</span>
+                        <h3 class="week-title">자료구조 기초</h3>
+                        <ul class="week-topics">
+                            <li>배열과 리스트</li>
+                            <li>시간복잡도 분석</li>
+                            <li>기본 문제 풀이</li>
+                        </ul>
+                    </div>
+                    <div class="week-card">
+                        <span class="week-number">WEEK 2</span>
+                        <h3 class="week-title">스택과 큐</h3>
+                        <ul class="week-topics">
+                            <li>스택 활용법</li>
+                            <li>큐와 데크</li>
+                            <li>실전 응용 문제</li>
+                        </ul>
+                    </div>
+                    <div class="week-card">
+                        <span class="week-number">WEEK 3</span>
+                        <h3 class="week-title">해시와 맵</h3>
+                        <ul class="week-topics">
+                            <li>해시테이블 이해</li>
+                            <li>맵과 셋 활용</li>
+                            <li>최적화 기법</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="section" id="team">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Our Team</div>
+                <h2 class="section-title">
+                    함께하는<br>
+                    테코테코 크루들
+                </h2>
+            </div>
+
+            <div class="team-showcase">
+                <div class="team-intro">
+                    <p>
+                        각자의 속도로, 하지만 함께 나아가는 우리들의 이야기
+                    </p>
+                </div>
+
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            🦊
+                            <div class="online-indicator"></div>
+                        </div>
+                        <h4 class="member-name">renechoi</h4>
+                        <p class="member-role">Team Lead</p>
+                        <div class="member-stats">
+                            <span class="stat"><strong>87</strong> 연속</span>
+                            <span class="stat"><strong>342</strong> 해결</span>
+                        </div>
+                    </div>
+
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            🐧
+                            <div class="online-indicator"></div>
+                        </div>
+                        <h4 class="member-name">penguin</h4>
+                        <p class="member-role">Core Member</p>
+                        <div class="member-stats">
+                            <span class="stat"><strong>65</strong> 연속</span>
+                            <span class="stat"><strong>287</strong> 해결</span>
+                        </div>
+                    </div>
+
+                    <div class="team-member">
+                        <div class="member-avatar">🦁</div>
+                        <h4 class="member-name">lion_dev</h4>
+                        <p class="member-role">Active Member</p>
+                        <div class="member-stats">
+                            <span class="stat"><strong>43</strong> 연속</span>
+                            <span class="stat"><strong>198</strong> 해결</span>
+                        </div>
+                    </div>
+
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            🐻
+                            <div class="online-indicator"></div>
+                        </div>
+                        <h4 class="member-name">bear_code</h4>
+                        <p class="member-role">Active Member</p>
+                        <div class="member-stats">
+                            <span class="stat"><strong>38</strong> 연속</span>
+                            <span class="stat"><strong>156</strong> 해결</span>
+                        </div>
+                    </div>
+
+                    <div class="team-member">
+                        <div class="member-avatar">🦉</div>
+                        <h4 class="member-name">nightowl</h4>
+                        <p class="member-role">Night Coder</p>
+                        <div class="member-stats">
+                            <span class="stat"><strong>29</strong> 연속</span>
+                            <span class="stat"><strong>134</strong> 해결</span>
+                        </div>
+                    </div>
+
+                    <div class="team-member">
+                        <div class="member-avatar">🐸</div>
+                        <h4 class="member-name">frog_jump</h4>
+                        <p class="member-role">Rising Star</p>
+                        <div class="member-stats">
+                            <span class="stat"><strong>21</strong> 연속</span>
+                            <span class="stat"><strong>89</strong> 해결</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Activity Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Activities</div>
+                <h2 class="section-title">
+                    우리의 일상
+                </h2>
+                <p class="section-subtitle">
+                    매주 이어지는 성장의 발자취
+                </p>
+            </div>
+
+            <div class="activity-timeline">
+                <div class="activity-item">
+                    <div class="activity-time">
+                        <span class="activity-time-value">일요일 10:00</span>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">주간 모임 시작</h3>
+                        <p class="activity-description">
+                            온라인으로 모여 한 주간의 문제 풀이를 공유하고,
+                            서로의 접근 방식에 대해 이야기합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-time">
+                        <span class="activity-time-value">10:30</span>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">코드 리뷰 타임</h3>
+                        <p class="activity-description">
+                            각자의 코드를 리뷰하며 더 나은 방법을 함께 고민하고,
+                            새로운 관점을 배웁니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-time">
+                        <span class="activity-time-value">11:00</span>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">실시간 문제 풀이</h3>
+                        <p class="activity-description">
+                            새로운 문제를 함께 풀어보며 실시간으로 사고 과정을
+                            공유하고 토론합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-time">
+                        <span class="activity-time-value">11:45</span>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">다음 주 계획</h3>
+                        <p class="activity-description">
+                            다음 주 문제 세트를 공유하고, 개인별 목표를 설정합니다.
+                            서로를 응원하며 한 주를 마무리합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="section" id="reviews">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Reviews</div>
+                <h2 class="section-title">
+                    참여자들의<br>
+                    생생한 후기
+                </h2>
+            </div>
+
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-stars">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </div>
+                    <p class="review-text">
+                        "혼자였다면 포기했을 알고리즘 공부를 끝까지 할 수 있었어요.
+                        무엇보다 함께 성장하는 즐거움을 알게 되었습니다."
+                    </p>
+                    <div class="reviewer">
+                        <div class="reviewer-avatar">👨‍💻</div>
+                        <div class="reviewer-info">
+                            <h4 class="reviewer-name">김개발</h4>
+                            <p class="reviewer-details">6개월차 • 프론트엔드 개발자</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-stars">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </div>
+                    <p class="review-text">
+                        "코딩테스트가 두려웠는데, 이제는 문제를 보면 어떻게 접근해야
+                        할지 자연스럽게 떠올라요. 정말 큰 변화입니다!"
+                    </p>
+                    <div class="reviewer">
+                        <div class="reviewer-avatar">👩‍💻</div>
+                        <div class="reviewer-info">
+                            <h4 class="reviewer-name">이코더</h4>
+                            <p class="reviewer-details">4개월차 • 백엔드 개발자</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-stars">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </div>
+                    <p class="review-text">
+                        "매주 일요일이 기다려져요. 좋은 사람들과 함께 성장하는
+                        이 시간이 제 일주일의 활력소가 되었습니다."
+                    </p>
+                    <div class="reviewer">
+                        <div class="reviewer-avatar">🧑‍💻</div>
+                        <div class="reviewer-info">
+                            <h4 class="reviewer-name">박프로</h4>
+                            <p class="reviewer-details">3개월차 • 풀스택 개발자</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="apply">
+        <div class="cta-decoration"></div>
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">
+                    <span class="cta-gradient">함께 성장할<br>
+                    당신을 기다립니다</span>
+                </h2>
+                <p class="cta-description">
+                    매주 일요일, 우리와 함께 알고리즘의 세계를 탐험해요
+                </p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-primary">지금 참여하기</a>
+                    <a href="#" class="btn btn-secondary">더 알아보기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 별 생성
+        const starfield = document.querySelector('.starfield');
+        for (let i = 0; i < 250; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 4 + 's';
+            star.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            
+            // 다양한 크기의 별
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            
+            starfield.appendChild(star);
+        }
+
+        // 탭 기능
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const phases = {
+            '1': [
+                { week: 1, title: '자료구조 기초', topics: ['배열과 리스트', '시간복잡도 분석', '기본 문제 풀이'] },
+                { week: 2, title: '스택과 큐', topics: ['스택 활용법', '큐와 데크', '실전 응용 문제'] },
+                { week: 3, title: '해시와 맵', topics: ['해시테이블 이해', '맵과 셋 활용', '최적화 기법'] }
+            ],
+            '2': [
+                { week: 4, title: '탐색 알고리즘', topics: ['선형 탐색', '이분 탐색', '탐색 최적화'] },
+                { week: 5, title: 'DFS와 BFS', topics: ['깊이 우선 탐색', '너비 우선 탐색', '그래프 순회'] },
+                { week: 6, title: '정렬 알고리즘', topics: ['기본 정렬', '고급 정렬', '정렬 응용'] }
+            ],
+            '3': [
+                { week: 7, title: '동적 계획법', topics: ['DP 기초', '메모이제이션', '최적 부분 구조'] },
+                { week: 8, title: '그리디 알고리즘', topics: ['탐욕적 선택', '최적해 증명', '실전 문제'] },
+                { week: 9, title: '분할 정복', topics: ['문제 분할', '재귀적 해결', '병합 과정'] }
+            ],
+            '4': [
+                { week: 10, title: '고급 자료구조', topics: ['트리와 힙', '트라이', '세그먼트 트리'] },
+                { week: 11, title: '문자열 알고리즘', topics: ['패턴 매칭', 'KMP 알고리즘', '문자열 처리'] },
+                { week: 12, title: '종합 문제 해결', topics: ['복합 문제', '실전 테스트', '최종 프로젝트'] }
+            ]
+        };
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                const phase = this.dataset.phase;
+                const weekGrid = document.querySelector('.week-grid');
+                weekGrid.innerHTML = '';
+                
+                phases[phase].forEach(week => {
+                    const weekCard = document.createElement('div');
+                    weekCard.className = 'week-card';
+                    weekCard.innerHTML = `
+                        <span class="week-number">WEEK ${week.week}</span>
+                        <h3 class="week-title">${week.title}</h3>
+                        <ul class="week-topics">
+                            ${week.topics.map(topic => `<li>${topic}</li>`).join('')}
+                        </ul>
+                    `;
+                    weekGrid.appendChild(weekCard);
+                });
+            });
+        });
+
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 애니메이션 적용
+        document.querySelectorAll('.section, .week-card, .team-member, .activity-item, .review-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+
+        // 부드러운 스크롤
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = 80;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
