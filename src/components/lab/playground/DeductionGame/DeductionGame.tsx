@@ -986,7 +986,13 @@ function makeGuess(gameState) {
                   }}
                   disabled={!player.aiCode || isTestRunning}
                 >
-                  {isTestRunning ? '테스트 중...' : '테스트 실행'}
+                  {isTestRunning ? (
+                    <>
+                      테스트 중<span className="loading-dots"></span>
+                    </>
+                  ) : (
+                    '테스트 실행'
+                  )}
                 </button>
               </div>
             </div>
@@ -1023,7 +1029,13 @@ function makeGuess(gameState) {
                   className={`test-result-panel ${result.success ? 'success' : 'error'} ${result.isFading ? 'fade-out' : ''}`}
                 >
                   <div className="test-result-header">
-                    <h4>{result.success ? '✅ 테스트 성공' : '❌ 테스트 실패'}</h4>
+                    <h4>
+                      {result.success ? (
+                        <><span className="success-icon"></span>테스트 성공</>
+                      ) : (
+                        <><span className="error-icon"></span>테스트 실패</>
+                      )}
+                    </h4>
                     <button 
                       className="close-result"
                       onClick={() => {
@@ -1428,18 +1440,18 @@ function makeGuess(gameState) {
 
   const renderGamePreparation = () => {
     const preparationSteps = [
-      { title: '게임 초기화', description: '게임 환경을 설정하고 있습니다.' },
-      { title: '키워드 생성', description: `${gameConfig.keywordPoolSize}개의 키워드를 생성하고 있습니다.` },
-      { title: '정답 선택', description: `${gameConfig.answerCount}개의 정답을 무작위로 선택하고 있습니다.` },
-      { title: '힌트 배포', description: '각 플레이어에게 오답 힌트를 배포하고 있습니다.' },
-      { title: '최종 확인', description: '게임 준비를 완료하고 있습니다.' }
+      { title: '⚙️ 게임 초기화', description: '게임 환경을 설정하고 있습니다.' },
+      { title: '📚 키워드 생성', description: `${gameConfig.keywordPoolSize}개의 키워드를 생성하고 있습니다.` },
+      { title: '🎯 정답 선택', description: `${gameConfig.answerCount}개의 정답을 무작위로 선택하고 있습니다.` },
+      { title: '💡 힌트 배포', description: '각 플레이어에게 오답 힌트를 배포하고 있습니다.' },
+      { title: '✅ 최종 확인', description: '게임 준비를 완료하고 있습니다.' }
     ];
 
     return (
       <div className="game-screen">
         {preparationStep < 5 ? (
           <>
-            <h2>게임 준비 중...</h2>
+            <h2>게임 준비 중<span className="loading-dots"></span></h2>
             <div className="preparation-progress">
               <div className="progress-steps">
                 {preparationSteps.map((step, index) => (
@@ -1448,7 +1460,12 @@ function makeGuess(gameState) {
                     className={`progress-step ${index < preparationStep ? 'completed' : index === preparationStep ? 'active' : 'pending'}`}
                   >
                     <div className="step-circle">
-                      {index < preparationStep ? '✓' : index + 1}
+                      <span className="step-number">{index + 1}</span>
+                      {index < preparationStep ? (
+                        <span className="success-icon-overlay"></span>
+                      ) : index === preparationStep ? (
+                        <span className="loading-spinner"></span>
+                      ) : null}
                     </div>
                     <div className="step-content">
                       <h4>{step.title}</h4>
@@ -1641,11 +1658,12 @@ function makeGuess(gameState) {
       return (
         <div className="game-screen">
           <div className="game-over">
-            <h2>🎉 게임 종료!</h2>
+            <h2>게임 종료!</h2>
             {gameState.winner ? (
               <div className="winner-announcement">
+                <div className="victory-icon"></div>
                 <h3>{players.find(p => p.id === gameState.winner)?.nickname}님이 승리했습니다!</h3>
-                <p>축하합니다! 정답을 모두 맞추셨습니다.</p>
+                <p>축하합니다! 정답을 모두 맟추셨습니다.</p>
               </div>
             ) : (
               <div className="draw-announcement">
@@ -1705,7 +1723,11 @@ function makeGuess(gameState) {
             <h3>턴 {gameState.currentTurn}{gameConfig.maxTurns && ` / ${gameConfig.maxTurns}`}</h3>
             <p>
               {currentPlayer?.nickname}의 차례
-              {isAIThinking && <span className="ai-thinking"> (생각하는 중...)</span>}
+              {isAIThinking && (
+                <span className="ai-thinking">
+                  생각하는 중<span className="loading-dots"></span>
+                </span>
+              )}
             </p>
           </div>
           <div className="header-controls">
