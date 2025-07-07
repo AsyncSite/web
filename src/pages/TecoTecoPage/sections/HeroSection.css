@@ -1,259 +1,264 @@
 /* src/pages/TecoTecoPage/sections/HeroSection.css */
 
 .tecoteco-hero-section {
-    background-color: #0d0d0d;
-    text-align: center;
-    border-radius: 0;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center; /* Keep this to center hero-content */
-    min-height: 60vh;
-    padding-top: 100px;
+  background-color: #0d0d0d;
+  text-align: center;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center; /* Keep this to center hero-content */
+  min-height: 60vh;
+  padding-top: 100px;
 }
 
 .hero-content {
-    max-width: 800px;
-    width: 100%;
-    margin-top: 40px;
-    margin-bottom: 40px;
+  max-width: 800px;
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .hero-title {
-    font-size: 4.5rem;
-    font-weight: 900;
-    color: #C3E88D;
-    margin-bottom: 15px;
-    font-family: 'Moneygraphy-Rounded', monospace;
-    text-shadow: 0 0 20px rgba(195, 232, 141, 0.6);
-    line-height: 1.1;
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: #c3e88d;
+  margin-bottom: 15px;
+  font-family: 'Moneygraphy-Rounded', monospace;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.6);
+  line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: 1.8rem;
-    color: #f0f0f0;
-    margin-bottom: 40px;
-    font-weight: 300;
-    line-height: 1.4;
+  font-size: 1.8rem;
+  color: #f0f0f0;
+  margin-bottom: 40px;
+  font-weight: 300;
+  line-height: 1.4;
 }
 
 .hero-image-wrapper {
-    margin-bottom: 25px;
+  margin-bottom: 25px;
 }
 
 .hero-image-wrapper img {
-    max-width: 300px;
-    height: auto;
-    border-radius: 50%;
-    border: 5px solid #C3E88D;
-    box-shadow: 0 0 30px rgba(195, 232, 141, 0.8);
-    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+  max-width: 300px;
+  height: auto;
+  border-radius: 50%;
+  border: 5px solid #c3e88d;
+  box-shadow: 0 0 30px rgba(195, 232, 141, 0.8);
+  transition:
+    transform 0.4s ease-in-out,
+    box-shadow 0.4s ease-in-out;
 }
 
 .hero-image-wrapper img:hover {
-    transform: scale(1.08) rotate(3deg);
-    box-shadow: 0 0 40px rgba(195, 232, 141, 1);
+  transform: scale(1.08) rotate(3deg);
+  box-shadow: 0 0 40px rgba(195, 232, 141, 1);
 }
 
 .hero-cta-button {
-    background-color: #C3E88D;
-    color: #0d0d0d;
-    border: none;
-    border-radius: 50px;
-    padding: 18px 35px;
-    font-size: 1.3rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
-    letter-spacing: 1px;
+  background-color: #c3e88d;
+  color: #0d0d0d;
+  border: none;
+  border-radius: 50px;
+  padding: 18px 35px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+  letter-spacing: 1px;
 }
 
 .hero-cta-button:hover {
-    background-color: #b5d97f;
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
+  background-color: #b5d97f;
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
 }
 
 /* 개선된 Info Box - 왼쪽 정렬 및 시각적 균형 */
 .hero-info-box {
-    /* 기존 width: 90%; max-width: 700px; margin-top: 40px; 제거 */
-    max-width: 700px; /* Maintain the max-width */
-    width: calc(100% - 40px); /* Adjust width to account for 20px padding on each side */
-    margin-top: 40px; /* Keep top margin */
-    margin-left: 20px; /* Add 20px left margin for alignment */
-    margin-right: auto; /* Push to the left */
-    background-color: rgba(26, 26, 26, 0.7);
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(195, 232, 141, 0.3);
-    position: relative; /* 장식 요소를 위한 상대 위치 */
-    align-self: flex-start; /* Override parent's align-items: center */
+  /* 기존 width: 90%; max-width: 700px; margin-top: 40px; 제거 */
+  max-width: 700px; /* Maintain the max-width */
+  width: calc(100% - 40px); /* Adjust width to account for 20px padding on each side */
+  margin-top: 40px; /* Keep top margin */
+  margin-left: 20px; /* Add 20px left margin for alignment */
+  margin-right: auto; /* Push to the left */
+  background-color: rgba(26, 26, 26, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  position: relative; /* 장식 요소를 위한 상대 위치 */
+  align-self: flex-start; /* Override parent's align-items: center */
 }
 
 /* 시각적 균형을 위한 장식 요소 추가 */
 .hero-info-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(to bottom, #C3E88D, #82AAFF);
-    border-radius: 0 0 0 12px;;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #c3e88d, #82aaff);
+  border-radius: 0 0 0 12px;
 }
 
 .info-section-header {
-    background-color: rgba(30, 30, 30, 0.9);
-    padding: 12px 20px;
-    font-size: 0.9rem;
-    color: #C3E88D;
-    text-align: left;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-    position: relative;
-    padding-left: 30px;
+  background-color: rgba(30, 30, 30, 0.9);
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  color: #c3e88d;
+  text-align: left;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  position: relative;
+  padding-left: 30px;
 }
 
 .info-section-header::before {
-    content: '✨';
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.8rem;
-    opacity: 0.7;
+  content: '✨';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 .info-content-area {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    color: #f0f0f0;
-    font-size: 1rem;
-    text-align: left;
-    padding-left: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  color: #f0f0f0;
+  font-size: 1rem;
+  text-align: left;
+  padding-left: 30px;
 }
 
 .info-line-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .line-icon {
-    font-size: 1.2rem;
-    color: #82AAFF;
-    flex-shrink: 0;
-    width: 20px;
-    text-align: left;
+  font-size: 1.2rem;
+  color: #82aaff;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: left;
 }
 
 .line-text {
-    flex: 1;
-    line-height: 1.6;
-    text-align: left;
+  flex: 1;
+  line-height: 1.6;
+  text-align: left;
 }
 
 .line-text .highlight {
-    color: #FFEA00;
-    font-weight: 500;
+  color: #ffea00;
+  font-weight: 500;
 }
 
 .hero-info-box::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(255, 234, 0, 0.3), rgba(255, 107, 107, 0.2));
-    border-radius: 0 12px 12px 0;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 234, 0, 0.3), rgba(255, 107, 107, 0.2));
+  border-radius: 0 12px 12px 0;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-    .tecoteco-hero-section {
-        min-height: 90vh;
-        padding-top: 80px;
-    }
-    .hero-content {
-        margin-top: 30px;
-        margin-bottom: 30px;
-    }
-    .hero-title {
-        font-size: 3rem;
-    }
-    .hero-subtitle {
-        font-size: 1.3rem;
-        margin-bottom: 20px;
-    }
-    .hero-image-wrapper {
-        margin-bottom: 20px;
-    }
-    .hero-cta-button {
-        padding: 15px 30px;
-        font-size: 1.1rem;
-    }
+  .tecoteco-hero-section {
+    min-height: 90vh;
+    padding-top: 80px;
+  }
+  .hero-content {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
+  .hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .hero-image-wrapper {
+    margin-bottom: 20px;
+  }
+  .hero-cta-button {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+  }
 
-    .hero-info-box {
-        width: calc(100% - 30px); /* Adjust for 15px padding on each side */
-        margin-top: 30px;
-        margin-left: 15px; /* Adjust left margin for mobile padding */
-        border-radius: 10px;
-    }
-    .info-section-header {
-        padding: 10px 15px;
-        padding-left: 25px;
-        font-size: 0.8rem;
-    }
-    .info-content-area {
-        padding: 15px;
-        padding-left: 25px;
-        font-size: 0.95rem;
-        gap: 10px;
-    }
-    .line-icon {
-        font-size: 1rem;
-        width: 18px;
-    }
-    .line-text {
-        font-size: 0.9rem;
-    }
+  .hero-info-box {
+    width: calc(100% - 30px); /* Adjust for 15px padding on each side */
+    margin-top: 30px;
+    margin-left: 15px; /* Adjust left margin for mobile padding */
+    border-radius: 10px;
+  }
+  .info-section-header {
+    padding: 10px 15px;
+    padding-left: 25px;
+    font-size: 0.8rem;
+  }
+  .info-content-area {
+    padding: 15px;
+    padding-left: 25px;
+    font-size: 0.95rem;
+    gap: 10px;
+  }
+  .line-icon {
+    font-size: 1rem;
+    width: 18px;
+  }
+  .line-text {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .tecoteco-hero-section {
-        min-height: 100vh;
-    }
-    .hero-title {
-        font-size: 2.2rem;
-    }
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-    .hero-info-box {
-        border-radius: 8px;
-    }
-    .info-section-header {
-        padding-left: 20px;
-    }
-    .info-content-area {
-        padding: 10px;
-        padding-left: 20px;
-        gap: 8px;
-    }
-    .info-line-item {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    .line-icon {
-        font-size: 1.1rem;
-        margin-top: 2px;
-    }
+  .tecoteco-hero-section {
+    min-height: 100vh;
+  }
+  .hero-title {
+    font-size: 2.2rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  .hero-info-box {
+    border-radius: 8px;
+  }
+  .info-section-header {
+    padding-left: 20px;
+  }
+  .info-content-area {
+    padding: 10px;
+    padding-left: 20px;
+    gap: 8px;
+  }
+  .info-line-item {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .line-icon {
+    font-size: 1.1rem;
+    margin-top: 2px;
+  }
 }

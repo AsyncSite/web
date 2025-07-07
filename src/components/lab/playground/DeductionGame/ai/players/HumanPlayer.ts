@@ -4,7 +4,7 @@ import { GameStateForAI } from '../types/GameTypes';
 
 export class HumanPlayer extends BasePlayer {
   private resolveGuess?: (indices: number[]) => void;
-  
+
   constructor(playerInfo: PlayerInfo) {
     super(playerInfo);
     this.ready = true;

@@ -9,284 +9,283 @@
 
 /* 페이지 전체 컨테이너: 기존 흰색 배경을 One Dark 느낌으로 변경 */
 .about-page-container {
-    position: relative;
-    /* 카드가 많아도 배경을 충분히 덮도록 */
-    min-height: 85vh;
-    background: #282c34; /* One Dark 테마 배경 */
-    overflow: hidden;
-    display: flex;
+  position: relative;
+  /* 카드가 많아도 배경을 충분히 덮도록 */
+  min-height: 85vh;
+  background: #282c34; /* One Dark 테마 배경 */
+  overflow: hidden;
+  display: flex;
 }
 
 /* 카드들을 담고 있는 래퍼 (sticky)
    뷰포트의 절반 지점에 고정하여,
    translateY(-50%)로 정확히 중앙에 위치시키도록 함 */
 .stack-cards {
-    position: sticky;
-    top: 40%;
-    transform: translateY(-50%);
-    height: 0;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
+  position: sticky;
+  top: 40%;
+  transform: translateY(-50%);
+  height: 0;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 /* 각 카드 */
 .stack-cards__item {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 85%;
-    max-width: 900px;
-    min-height: 400px;
-    /* 약간 더 어두운 배경으로 설정 */
-    background: #2b2b2b;
-    border-radius: 1rem;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
-    /*transform: translate(-50%, -50%);*/
-    /*transition:*/
-    /*        transform 1.0s cubic-bezier(0.9, -0.2, 0.1, 1.2),*/
-    /*        opacity 1.0s cubic-bezier(1, 0, 0, 1) 0s;*/
-    will-change: opacity, transform;
-    color: #eceff1; /* 기본 텍스트를 약간 밝게 */
-    padding: 0;
-    font-family: 'Source Code Pro', Consolas, monospace; /* 개발자 느낌 폰트 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 85%;
+  max-width: 900px;
+  min-height: 400px;
+  /* 약간 더 어두운 배경으로 설정 */
+  background: #2b2b2b;
+  border-radius: 1rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  /*transform: translate(-50%, -50%);*/
+  /*transition:*/
+  /*        transform 1.0s cubic-bezier(0.9, -0.2, 0.1, 1.2),*/
+  /*        opacity 1.0s cubic-bezier(1, 0, 0, 1) 0s;*/
+  will-change: opacity, transform;
+  color: #eceff1; /* 기본 텍스트를 약간 밝게 */
+  padding: 0;
+  font-family: 'Source Code Pro', Consolas, monospace; /* 개발자 느낌 폰트 */
 
-    opacity: 0;
-    transform: translate(-50%, -60%) scale(0.9);
-    transition:
-            opacity 0.5s ease-out 0.1s,
-            transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0;
+  transform: translate(-50%, -60%) scale(0.9);
+  transition:
+    opacity 0.5s ease-out 0.1s,
+    transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .stack-cards__item.visible {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .stack-cards__item.slide-up {
-    transform: translate(-50%, -120%) scale(0.95);
+  transform: translate(-50%, -120%) scale(0.95);
 
-    /* 페이드아웃을 뒷부분 0.4초 동안만 진행 */
-    opacity: 0;
-    /*
+  /* 페이드아웃을 뒷부분 0.4초 동안만 진행 */
+  opacity: 0;
+  /*
      * transform: 0.6초 동안 부드럽게 감속하며 이동,
      * opacity: 0.4초 동안 ease-out으로 뒤쪽에서 사라짐
      */
-    transition:
-            transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
-            opacity 0.4s ease-out 0.2s;
+  transition:
+    transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+    opacity 0.4s ease-out 0.2s;
 }
-
 
 /* 카드 내부 스크롤 박스 */
 .inner {
-    position: relative;
-    z-index: 2;
-    padding: 3rem;
-    border-radius: 1rem;
-    max-height: 60vh;
-    overflow-y: auto;
+  position: relative;
+  z-index: 2;
+  padding: 3rem;
+  border-radius: 1rem;
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 /* 카드 그림자 레이어 */
 .shadow {
-    position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.02); /* 아주 옅은 흰색 */
-    border-radius: 1rem;
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.02); /* 아주 옅은 흰색 */
+  border-radius: 1rem;
 }
 
 /* 카드 제목 */
 .stack-cards__item h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: #82aaff; /* 약간의 파란톤 포인트 */
-    font-size: 2rem;
-    font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #82aaff; /* 약간의 파란톤 포인트 */
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 /* 부제목(인용문), 왼쪽 라인을 #C3E88D로 유지 + 보라톤 색상 적용 */
 .stack-cards__item blockquote {
-    margin: 0 0 1.3rem 0;
-    padding-left: 1.2rem;
-    border-left: 4px solid #c3e88d;
-    color: #c792ea; /* italic 느낌 살릴 보라색 */
-    font-style: italic;
-    font-size: 1.2rem;
+  margin: 0 0 1.3rem 0;
+  padding-left: 1.2rem;
+  border-left: 4px solid #c3e88d;
+  color: #c792ea; /* italic 느낌 살릴 보라색 */
+  font-style: italic;
+  font-size: 1.2rem;
 }
 
 /* 본문 */
 .stack-cards__item .inner > p, /* .inner 직계 p에만 적용 (새로운 카드 디자인과 구분) */
 .stack-cards__item .inner > ul > li {
-    font-size: 1.15rem;
-    line-height: 1.7;
-    margin-bottom: 1.1rem;
-    color: #eceff1;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  margin-bottom: 1.1rem;
+  color: #eceff1;
 }
 .stack-cards__item .inner > p strong,
 .stack-cards__item .inner > ul > li strong {
-    color: #ffcb6b;
+  color: #ffcb6b;
 }
 .stack-cards__item .inner > ul {
-    list-style: disc;
-    margin-left: 1.8rem; /* li의 기본 마커를 위한 공간 */
-    padding-left: 0; /* ul 자체의 왼쪽 패딩은 제거하고 li에서 처리 */
-    margin-bottom: 1rem;
+  list-style: disc;
+  margin-left: 1.8rem; /* li의 기본 마커를 위한 공간 */
+  padding-left: 0; /* ul 자체의 왼쪽 패딩은 제거하고 li에서 처리 */
+  margin-bottom: 1rem;
 }
 
 /* 카드 우측 하단 카운터 */
 .counter {
-    position: absolute;
-    right: 1.5rem;
-    bottom: 1.5rem;
-    font-size: 0.95rem;
-    color: #89ddff; /* 살짝 파랑 계열로 포인트 */
-    letter-spacing: 0.05em;
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  font-size: 0.95rem;
+  color: #89ddff; /* 살짝 파랑 계열로 포인트 */
+  letter-spacing: 0.05em;
 }
 
 /* 스크롤로 인해 위로 사라지는 애니메이션 */
 .stack-cards__item.slide-up {
-    transform: translate(-50%, -200%)  scale(0.95);
-    opacity: 0;
+  transform: translate(-50%, -200%) scale(0.95);
+  opacity: 0;
 }
 
 /* 아래 화살표 */
 .arrow-down {
-    position: relative;
-    margin-top: auto;
-    padding-top: 1.5rem; /* Space above arrow */
-    text-align: center;
-    font-size: 1.5rem;
-    color: #c3e88d; /* 포인트 컬러 */
-    cursor: pointer;
-    animation: arrowBounce 1.5s infinite;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  position: relative;
+  margin-top: auto;
+  padding-top: 1.5rem; /* Space above arrow */
+  text-align: center;
+  font-size: 1.5rem;
+  color: #c3e88d; /* 포인트 컬러 */
+  cursor: pointer;
+  animation: arrowBounce 1.5s infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 
 /* 네비게이션 안내 문구 스타일 */
 .navigation-hint {
-    display: block;
-    font-size: 0.85rem;
-    color: #abb2bf; /* 약간 어두운 텍스트 색상 */
-    margin-top: 8px;
-    font-style: italic;
+  display: block;
+  font-size: 0.85rem;
+  color: #abb2bf; /* 약간 어두운 텍스트 색상 */
+  margin-top: 8px;
+  font-style: italic;
 }
 
 /* arrow-down 내부 요소 정렬을 위해 flex 추가 */
 .arrow-down {
-    position: relative;
-    margin-top: 10%; /* 기존 값 유지 또는 필요시 조정 */
-    text-align: center;
-    font-size: 1.5rem;
-    color: #c3e88d; /* 포인트 컬러 */
-    cursor: pointer;
-    animation: arrowBounce 1.5s infinite;
-    /* 추가된 스타일 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  position: relative;
+  margin-top: 10%; /* 기존 값 유지 또는 필요시 조정 */
+  text-align: center;
+  font-size: 1.5rem;
+  color: #c3e88d; /* 포인트 컬러 */
+  cursor: pointer;
+  animation: arrowBounce 1.5s infinite;
+  /* 추가된 스타일 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 
 /* 카드 콘텐츠 리디자인을 위한 스타일 */
 .card-content-redesign {
-    margin-top: 1.5rem; /* 제목/부제목과의 간격 */
+  margin-top: 1.5rem; /* 제목/부제목과의 간격 */
 }
 
 .card-point {
-    display: flex;
-    align-items: flex-start; /* 아이콘과 텍스트 상단 정렬 */
-    margin-bottom: 1.8rem; /* 각 포인트 사이의 간격 */
+  display: flex;
+  align-items: flex-start; /* 아이콘과 텍스트 상단 정렬 */
+  margin-bottom: 1.8rem; /* 각 포인트 사이의 간격 */
 }
 
 .card-point:last-child {
-    margin-bottom: 0.5rem; /* 마지막 포인트 하단 마진 줄임 */
+  margin-bottom: 0.5rem; /* 마지막 포인트 하단 마진 줄임 */
 }
 
 .card-point-icon {
-    font-size: 2rem; /* 아이콘 크기 */
-    margin-right: 1rem; /* 아이콘과 텍스트 사이 간격 */
-    color: #C3E88D; /* 아이콘 색상 (기존 포인트 컬러 활용) */
-    line-height: 1.2; /* 키워드와의 수직 정렬 미세 조정 */
+  font-size: 2rem; /* 아이콘 크기 */
+  margin-right: 1rem; /* 아이콘과 텍스트 사이 간격 */
+  color: #c3e88d; /* 아이콘 색상 (기존 포인트 컬러 활용) */
+  line-height: 1.2; /* 키워드와의 수직 정렬 미세 조정 */
 }
 
 .card-point-text {
-    flex: 1;
+  flex: 1;
 }
 
 .card-point-keyword {
-    font-size: 1.25rem; /* 키워드 폰트 크기 */
-    font-weight: 700; /* 기존 h3보다 살짝 작게, 하지만 강조 */
-    color: #ECEFF1;   /* 밝은 텍스트 색상 */
-    margin-top: 0;
-    margin-bottom: 0.3rem; /* 키워드와 설명 사이 간격 */
+  font-size: 1.25rem; /* 키워드 폰트 크기 */
+  font-weight: 700; /* 기존 h3보다 살짝 작게, 하지만 강조 */
+  color: #eceff1; /* 밝은 텍스트 색상 */
+  margin-top: 0;
+  margin-bottom: 0.3rem; /* 키워드와 설명 사이 간격 */
 }
 
 .card-point-explanation {
-    font-size: 1.15rem; /* 설명 텍스트 크기 */
-    line-height: 1.6;
-    color: #ABB2BF;     /* 약간 더 어두운 톤의 텍스트 색상 (가독성 고려) */
-    margin-bottom: 0; /* p 태그 기본 마진 제거 */
+  font-size: 1.15rem; /* 설명 텍스트 크기 */
+  line-height: 1.6;
+  color: #abb2bf; /* 약간 더 어두운 톤의 텍스트 색상 (가독성 고려) */
+  margin-bottom: 0; /* p 태그 기본 마진 제거 */
 }
 
-
-
 @keyframes arrowBounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(8px);
-    }
-    60% {
-        transform: translateY(5px);
-    }
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(8px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
 }
 
 /* 반응형: 태블릿 이하 */
 @media (max-width: 768px) {
-    .stack-cards__item {
-        max-width: 90%;
-        min-height: 320px;
-    }
-    .inner {
-        padding: 2rem;
-    }
-    .stack-cards__item h3 {
-        font-size: 1.7rem;
-    }
-    .stack-cards__item blockquote {
-        font-size: 1.1rem;
-    }
-    .stack-cards__item p,
-    .stack-cards__item li {
-        font-size: 1rem;
-    }
-    .counter {
-        font-size: 0.85rem;
-    }
+  .stack-cards__item {
+    max-width: 90%;
+    min-height: 320px;
+  }
+  .inner {
+    padding: 2rem;
+  }
+  .stack-cards__item h3 {
+    font-size: 1.7rem;
+  }
+  .stack-cards__item blockquote {
+    font-size: 1.1rem;
+  }
+  .stack-cards__item p,
+  .stack-cards__item li {
+    font-size: 1rem;
+  }
+  .counter {
+    font-size: 0.85rem;
+  }
 }
 
 /* 모바일 이하 */
 @media (max-width: 480px) {
-    .inner {
-        padding: 1.5rem;
-    }
-    .stack-cards__item h3 {
-        font-size: 1.5rem;
-    }
-    .stack-cards__item blockquote {
-        font-size: 1rem;
-    }
-    .stack-cards__item p,
-    .stack-cards__item li {
-        font-size: 0.95rem;
-    }
+  .inner {
+    padding: 1.5rem;
+  }
+  .stack-cards__item h3 {
+    font-size: 1.5rem;
+  }
+  .stack-cards__item blockquote {
+    font-size: 1rem;
+  }
+  .stack-cards__item p,
+  .stack-cards__item li {
+    font-size: 0.95rem;
+  }
 }

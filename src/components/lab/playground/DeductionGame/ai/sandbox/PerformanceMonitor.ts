@@ -26,20 +26,20 @@ export class PerformanceMonitor {
 
   async measureExecution<T>(
     executor: () => Promise<T>,
-    metadata?: { playerId?: number }
+    metadata?: { playerId?: number },
   ): Promise<[T, PerformanceMetrics]> {
     const startTime = performance.now();
     const startMemory = this.getMemoryUsage();
 
     try {
       const result = await executor();
-      
+
       const endTime = performance.now();
       const endMemory = this.getMemoryUsage();
 
       const metrics: PerformanceMetrics = {
         executionTime: endTime - startTime,
-        memoryUsage: endMemory && startMemory ? endMemory - startMemory : undefined
+        memoryUsage: endMemory && startMemory ? endMemory - startMemory : undefined,
       };
 
       // Record successful execution
@@ -48,7 +48,7 @@ export class PerformanceMonitor {
           ...metrics,
           timestamp: Date.now(),
           playerId: metadata.playerId,
-          success: true
+          success: true,
         });
       }
 
@@ -59,7 +59,7 @@ export class PerformanceMonitor {
 
       const metrics: PerformanceMetrics = {
         executionTime: endTime - startTime,
-        memoryUsage: endMemory && startMemory ? endMemory - startMemory : undefined
+        memoryUsage: endMemory && startMemory ? endMemory - startMemory : undefined,
       };
 
       // Record failed execution
@@ -69,7 +69,7 @@ export class PerformanceMonitor {
           timestamp: Date.now(),
           playerId: metadata.playerId,
           success: false,
-          errorType: error.constructor.name
+          errorType: error.constructor.name,
         });
       }
 
@@ -82,13 +82,13 @@ export class PerformanceMonitor {
     const startMemory = this.getMemoryUsage();
 
     const result = executor();
-    
+
     const endTime = performance.now();
     const endMemory = this.getMemoryUsage();
 
     const metrics: PerformanceMetrics = {
       executionTime: endTime - startTime,
-      memoryUsage: endMemory && startMemory ? endMemory - startMemory : undefined
+      memoryUsage: endMemory && startMemory ? endMemory - startMemory : undefined,
     };
 
     return [result, metrics];
@@ -118,33 +118,33 @@ export class PerformanceMonitor {
     maxExecutionTime: number;
     recentErrors: string[];
   } {
-    const playerMetrics = this.metricsHistory.filter(m => m.playerId === playerId);
-    
+    const playerMetrics = this.metricsHistory.filter((m) => m.playerId === playerId);
+
     if (playerMetrics.length === 0) {
       return {
         totalExecutions: 0,
         successRate: 0,
         averageExecutionTime: 0,
         maxExecutionTime: 0,
-        recentErrors: []
+        recentErrors: [],
       };
     }
 
-    const successful = playerMetrics.filter(m => m.success);
+    const successful = playerMetrics.filter((m) => m.success);
     const totalTime = playerMetrics.reduce((sum, m) => sum + m.executionTime, 0);
-    const maxTime = Math.max(...playerMetrics.map(m => m.executionTime));
-    
+    const maxTime = Math.max(...playerMetrics.map((m) => m.executionTime));
+
     const recentErrors = playerMetrics
-      .filter(m => !m.success && m.errorType)
+      .filter((m) => !m.success && m.errorType)
       .slice(-5)
-      .map(m => m.errorType!);
+      .map((m) => m.errorType!);
 
     return {
       totalExecutions: playerMetrics.length,
       successRate: successful.length / playerMetrics.length,
       averageExecutionTime: totalTime / playerMetrics.length,
       maxExecutionTime: maxTime,
-      recentErrors
+      recentErrors,
     };
   }
 
@@ -161,22 +161,22 @@ export class PerformanceMonitor {
         averageSuccessRate: 0,
         averageExecutionTime: 0,
         peakExecutionTime: 0,
-        activePlayerCount: 0
+        activePlayerCount: 0,
       };
     }
 
-    const successful = this.metricsHistory.filter(m => m.success);
+    const successful = this.metricsHistory.filter((m) => m.success);
     const totalTime = this.metricsHistory.reduce((sum, m) => sum + m.executionTime, 0);
-    const peakTime = Math.max(...this.metricsHistory.map(m => m.executionTime));
-    
-    const uniquePlayers = new Set(this.metricsHistory.map(m => m.playerId));
+    const peakTime = Math.max(...this.metricsHistory.map((m) => m.executionTime));
+
+    const uniquePlayers = new Set(this.metricsHistory.map((m) => m.playerId));
 
     return {
       totalExecutions: this.metricsHistory.length,
       averageSuccessRate: successful.length / this.metricsHistory.length,
       averageExecutionTime: totalTime / this.metricsHistory.length,
       peakExecutionTime: peakTime,
-      activePlayerCount: uniquePlayers.size
+      activePlayerCount: uniquePlayers.size,
     };
   }
 

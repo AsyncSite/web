@@ -7,9 +7,9 @@ interface ParticipantInputProps {
   maxParticipants?: number;
 }
 
-const ParticipantInput: React.FC<ParticipantInputProps> = ({ 
+const ParticipantInput: React.FC<ParticipantInputProps> = ({
   onParticipantsChange,
-  maxParticipants = 20 
+  maxParticipants = 20,
 }) => {
   const [inputMode, setInputMode] = useState<'text' | 'number'>('text');
   const [textInput, setTextInput] = useState('');
@@ -27,17 +27,15 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
     if (inputMode === 'text') {
       const names = textInput
         .split('\n')
-        .map(name => name.trim())
-        .filter(name => name.length > 0);
+        .map((name) => name.trim())
+        .filter((name) => name.length > 0);
 
-      const uniqueNames = removeDuplicates 
-        ? Array.from(new Set(names))
-        : names;
+      const uniqueNames = removeDuplicates ? Array.from(new Set(names)) : names;
 
       return uniqueNames.slice(0, maxParticipants).map((name, index) => ({
         id: `participant-${index}`,
         name,
-        order: index + 1
+        order: index + 1,
       }));
     } else {
       const participants: Participant[] = [];
@@ -48,7 +46,7 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
         participants.push({
           id: `participant-${i}`,
           name: `${i}번`,
-          order: i
+          order: i,
         });
       }
       return participants;
@@ -64,9 +62,9 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
       const content = e.target?.result as string;
       const names = content
         .split(/[\r\n,]+/)
-        .map(name => name.trim())
-        .filter(name => name.length > 0);
-      
+        .map((name) => name.trim())
+        .filter((name) => name.length > 0);
+
       setTextInput(names.join('\n'));
       setInputMode('text');
     };
@@ -113,7 +111,7 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
             onChange={(e) => setTextInput(e.target.value)}
             rows={10}
           />
-          
+
           <div className="input-options">
             <label className="checkbox-label">
               <input
@@ -123,7 +121,7 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
               />
               중복 이름 자동 제거
             </label>
-            
+
             <label className="file-upload-label">
               <input
                 type="file"
@@ -144,10 +142,12 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
                 type="number"
                 min="1"
                 value={numberRange.start}
-                onChange={(e) => setNumberRange({
-                  ...numberRange,
-                  start: Number(e.target.value)
-                })}
+                onChange={(e) =>
+                  setNumberRange({
+                    ...numberRange,
+                    start: Number(e.target.value),
+                  })
+                }
               />
             </div>
             <span className="range-separator">~</span>
@@ -158,10 +158,12 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
                 min={numberRange.start}
                 max={numberRange.start + maxParticipants - 1}
                 value={numberRange.end}
-                onChange={(e) => setNumberRange({
-                  ...numberRange,
-                  end: Number(e.target.value)
-                })}
+                onChange={(e) =>
+                  setNumberRange({
+                    ...numberRange,
+                    end: Number(e.target.value),
+                  })
+                }
               />
             </div>
           </div>
@@ -174,9 +176,7 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
           {currentCount}명
         </span>
         {currentCount > maxParticipants && (
-          <span className="count-warning">
-            (최대 {maxParticipants}명까지만 참가 가능)
-          </span>
+          <span className="count-warning">(최대 {maxParticipants}명까지만 참가 가능)</span>
         )}
       </div>
     </div>

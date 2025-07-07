@@ -1,64 +1,67 @@
 /* src/pages/TecoTecoPage/sections/PhilosophySection.css */
 
 .philosophy-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .philosophy-item {
-    background-color: #2a2a2a;
-    padding: 18px;
-    border-radius: 12px;
-    border: 1px solid rgba(195, 232, 141, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  background-color: #2a2a2a;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .philosophy-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 30px rgba(195, 232, 141, 0.3);
-    background-color: #2e2e2e;
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(195, 232, 141, 0.3);
+  background-color: #2e2e2e;
 }
 
 .philosophy-item h3 {
-    font-size: 1.5rem;
-    color: #82AAFF;
-    margin-bottom: 10px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  font-size: 1.5rem;
+  color: #82aaff;
+  margin-bottom: 10px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .philosophy-item .philosophy-icon {
-    font-size: 2rem;
-    line-height: 1;
+  font-size: 2rem;
+  line-height: 1;
 }
 
 .philosophy-item p {
-    font-size: 1.05rem;
-    color: #ddd;
-    line-height: 1.6;
+  font-size: 1.05rem;
+  color: #ddd;
+  line-height: 1.6;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-    .philosophy-item h3 {
-        font-size: 1.2rem;
-    }
-    .philosophy-item p {
-        font-size: 0.95rem;
-    }
+  .philosophy-item h3 {
+    font-size: 1.2rem;
+  }
+  .philosophy-item p {
+    font-size: 0.95rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .philosophy-grid {
-        grid-template-columns: 1fr;
-    }
+  .philosophy-grid {
+    grid-template-columns: 1fr;
+  }
 }

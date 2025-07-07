@@ -27,20 +27,18 @@ const RaceCommentary: React.FC<RaceCommentaryProps> = ({ messages }) => {
       </div>
       <div className="commentary-messages">
         {displayedMessages.map((message) => (
-          <div 
-            key={message.id} 
+          <div
+            key={message.id}
             className="commentary-message"
             style={{
-              animation: 'commentarySlideIn 0.5s ease-out'
+              animation: 'commentarySlideIn 0.5s ease-out',
             }}
           >
             {message.text}
           </div>
         ))}
         {displayedMessages.length === 0 && (
-          <div className="commentary-message">
-            레이스가 곧 시작됩니다...
-          </div>
+          <div className="commentary-message">레이스가 곧 시작됩니다...</div>
         )}
       </div>
     </div>

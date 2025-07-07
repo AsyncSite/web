@@ -30,9 +30,9 @@ export const exampleAICodes = {
   
   console.log('내 추측:', myGuess);
   return myGuess;
-}`
+}`,
   },
-  
+
   intermediate: {
     name: '중급 AI - 빈도 분석',
     description: '이전 추측들을 분석하여 정답일 가능성이 높은 키워드를 선택합니다.',
@@ -85,9 +85,9 @@ export const exampleAICodes = {
   console.log('점수 분석 결과:', sorted.slice(0, 5));
   console.log('최종 선택:', result);
   return result;
-}`
+}`,
   },
-  
+
   advanced: {
     name: '고급 AI - 논리적 추론',
     description: '추측 간 비교를 통해 확실한 정답을 찾아내는 논리적 AI입니다.',
@@ -172,9 +172,9 @@ export const exampleAICodes = {
   console.log('최종 선택:', result.map(idx => gameState.keywords[idx]));
   
   return result;
-}`
+}`,
   },
-  
+
   expert: {
     name: '전문가 AI - 정보 이론',
     description: '정보 이득을 최대화하는 추측을 선택하는 고도화된 AI입니다.',
@@ -339,8 +339,8 @@ export const exampleAICodes = {
     
     return result;
   }
-}`
-  }
+}`,
+  },
 };
 
 // 테스트용 간단한 AI 코드

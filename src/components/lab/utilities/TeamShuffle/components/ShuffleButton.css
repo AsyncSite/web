@@ -1,91 +1,95 @@
 /* 셔플 버튼 스타일 */
 .shuffle-button {
-    width: 100%;
-    padding: 16px 24px;
-    background: #00BCD4;
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.25rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    position: relative;
-    overflow: hidden;
+  width: 100%;
+  padding: 16px 24px;
+  background: #00bcd4;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
 }
 
 .shuffle-button:hover:not(:disabled) {
-    background: #00ACC1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+  background: #00acc1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
 }
 
 .shuffle-button:active:not(:disabled) {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .shuffle-button:disabled {
-    background: rgba(0, 188, 212, 0.3);
-    color: rgba(255, 255, 255, 0.5);
-    cursor: not-allowed;
+  background: rgba(0, 188, 212, 0.3);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
 }
 
 /* 셔플 중 상태 */
 .shuffle-button.shuffling {
-    background: #00ACC1;
-    pointer-events: none;
+  background: #00acc1;
+  pointer-events: none;
 }
 
 .shuffle-icon {
-    display: inline-block;
-    transition: transform 0.3s ease;
+  display: inline-block;
+  transition: transform 0.3s ease;
 }
 
 .shuffle-button:hover:not(:disabled) .shuffle-icon {
-    transform: translateX(2px);
+  transform: translateX(2px);
 }
 
 /* 로딩 스피너 */
 .shuffle-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid transparent;
-    border-top-color: #000;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 리플 효과 */
 .ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: ripple 0.6s ease-out;
-    background: rgba(255, 255, 255, 0.5);
-    pointer-events: none;
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.6s ease-out;
+  background: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
 }
 
 .shuffle-button:active:not(:disabled) .ripple {
-    width: 300px;
-    height: 300px;
-    margin-top: -150px;
-    margin-left: -150px;
-    left: 50%;
-    top: 50%;
+  width: 300px;
+  height: 300px;
+  margin-top: -150px;
+  margin-left: -150px;
+  left: 50%;
+  top: 50%;
 }
 
 @keyframes ripple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }

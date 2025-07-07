@@ -24,7 +24,7 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
   winnerCount,
   onBack,
   onReplay,
-  onNewGame
+  onNewGame,
 }) => {
   const [gameState, setGameState] = useState<SnailRaceState>({
     status: 'waiting',
@@ -32,17 +32,21 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
     settings: {
       participants,
       winnerCount,
-      allowDuplicates: false
+      allowDuplicates: false,
     },
     snails: [],
     trackLength: 100,
     elapsedTime: 0,
-    events: []
+    events: [],
   });
 
   const [showCountdown, setShowCountdown] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState<{ snailId: string; eventName: string } | null>(null);
-  const [commentaryMessages, setCommentaryMessages] = useState<Array<{ id: string; text: string; timestamp: number }>>([]);
+  const [currentEvent, setCurrentEvent] = useState<{ snailId: string; eventName: string } | null>(
+    null,
+  );
+  const [commentaryMessages, setCommentaryMessages] = useState<
+    Array<{ id: string; text: string; timestamp: number }>
+  >([]);
   const [gameStartTime, setGameStartTime] = useState<number>(0);
 
   // 게임 초기화
@@ -54,10 +58,10 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
       speed: 0,
       baseSpeed: 2 + Math.random() * 3, // 2.0 ~ 5.0
       color: SNAIL_COLORS[index % SNAIL_COLORS.length],
-      activeEvent: undefined
+      activeEvent: undefined,
     }));
 
-    setGameState(prev => ({ ...prev, snails }));
+    setGameState((prev) => ({ ...prev, snails }));
   }, [participants]);
 
   const handleStartGame = () => {
@@ -67,16 +71,19 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
   const handleCountdownComplete = () => {
     setShowCountdown(false);
     setGameStartTime(Date.now());
-    setGameState(prev => ({ ...prev, status: 'playing' }));
+    setGameState((prev) => ({ ...prev, status: 'playing' }));
     addCommentary('🏁 레이스가 시작되었습니다! 모든 달팽이들이 출발합니다!');
   };
 
   const addCommentary = useCallback((text: string) => {
-    setCommentaryMessages(prev => [...prev, {
-      id: `msg-${Date.now()}-${Math.random()}`,
-      text,
-      timestamp: Date.now()
-    }]);
+    setCommentaryMessages((prev) => [
+      ...prev,
+      {
+        id: `msg-${Date.now()}-${Math.random()}`,
+        text,
+        timestamp: Date.now(),
+      },
+    ]);
   }, []);
 
   const handleRaceComplete = (winners: Participant[]) => {
@@ -87,10 +94,10 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
       winners,
       gameConfig: {
         winnerCount,
-        trackLength: gameState.trackLength
+        trackLength: gameState.trackLength,
       },
       startTime: gameStartTime,
-      endTime: Date.now()
+      endTime: Date.now(),
     };
 
     // 히스토리 및 통계 업데이트
@@ -101,19 +108,19 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
       console.error('Failed to save game result:', error);
     }
 
-    setGameState(prev => ({ 
-      ...prev, 
+    setGameState((prev) => ({
+      ...prev,
       status: 'finished',
-      winners 
+      winners,
     }));
   };
 
   const handleEventTrigger = (snailId: string, eventName: string) => {
-    const snail = gameState.snails.find(s => s.id === snailId);
+    const snail = gameState.snails.find((s) => s.id === snailId);
     if (snail) {
       setCurrentEvent({ snailId, eventName });
       setTimeout(() => setCurrentEvent(null), 2000);
-      
+
       // 중계 메시지 추가
       const commentary = getEventCommentary(snail.participant.name, eventName);
       addCommentary(commentary);
@@ -142,13 +149,13 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
       </div>
 
       <div className="game-content">
-        {showCountdown && (
-          <RaceCountdown onComplete={handleCountdownComplete} />
-        )}
+        {showCountdown && <RaceCountdown onComplete={handleCountdownComplete} />}
 
         {currentEvent && (
           <EventNotification
-            snailName={gameState.snails.find(s => s.id === currentEvent.snailId)?.participant.name || ''}
+            snailName={
+              gameState.snails.find((s) => s.id === currentEvent.snailId)?.participant.name || ''
+            }
             eventName={currentEvent.eventName}
           />
         )}
@@ -164,10 +171,7 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
 
         {gameState.status === 'waiting' && (
           <div className="game-controls">
-            <button 
-              className="start-button sa-button sa-button-primary"
-              onClick={handleStartGame}
-            >
+            <button className="start-button sa-button sa-button-primary" onClick={handleStartGame}>
               🏁 레이스 시작하기
             </button>
           </div>

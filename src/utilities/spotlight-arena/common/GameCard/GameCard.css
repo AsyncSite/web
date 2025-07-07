@@ -120,27 +120,27 @@
 }
 
 /* Game-specific Theme Colors */
-.game-card[data-game-id="snail-race"] {
+.game-card[data-game-id='snail-race'] {
   --game-accent: var(--sa-accent-snail);
 }
 
-.game-card[data-game-id="dart-wheel"] {
+.game-card[data-game-id='dart-wheel'] {
   --game-accent: var(--sa-accent-dart);
 }
 
-.game-card[data-game-id="slot-cascade"] {
+.game-card[data-game-id='slot-cascade'] {
   --game-accent: var(--sa-accent-slot);
 }
 
-.game-card[data-game-id="circus-cannon"] {
+.game-card[data-game-id='circus-cannon'] {
   --game-accent: var(--sa-accent-circus);
 }
 
-.game-card[data-game-id="bubble-pop"] {
+.game-card[data-game-id='bubble-pop'] {
   --game-accent: var(--sa-accent-bubble);
 }
 
-.game-card[data-game-id="masquerade"] {
+.game-card[data-game-id='masquerade'] {
   --game-accent: var(--sa-accent-masquerade);
 }
 
@@ -157,11 +157,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    transparent 0%,
-    rgba(102, 126, 234, 0.1) 100%
-  );
+  background: linear-gradient(135deg, transparent 0%, rgba(102, 126, 234, 0.1) 100%);
   opacity: 0;
   transition: opacity var(--sa-transition-normal);
   pointer-events: none;
@@ -169,11 +165,7 @@
 
 .game-card:hover:not(.disabled)::before {
   opacity: 1;
-  background: linear-gradient(
-    135deg,
-    transparent 0%,
-    var(--game-accent, var(--sa-primary)) 100%
-  );
+  background: linear-gradient(135deg, transparent 0%, var(--game-accent, var(--sa-primary)) 100%);
   opacity: 0.1;
 }
 
@@ -188,7 +180,7 @@
   .game-card {
     padding: var(--sa-spacing-lg);
   }
-  
+
   .game-card-icon {
     font-size: 3rem;
   }

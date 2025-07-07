@@ -37,10 +37,7 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 /**
  * 가중치 기반 랜덤 선택
  */
-export const weightedRandom = <T>(
-  items: T[],
-  weights: number[]
-): T | undefined => {
+export const weightedRandom = <T>(items: T[], weights: number[]): T | undefined => {
   if (items.length === 0 || items.length !== weights.length) {
     return undefined;
   }

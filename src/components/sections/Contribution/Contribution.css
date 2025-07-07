@@ -1,20 +1,19 @@
 /* src/sections/Contribution/Contribution.css */
 
 .contribution-page {
-    min-height: auto !important;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    /* FAQ 아래 자연스럽게 이어지도록 배경을 투명 유지 */
-    background: transparent;
-
+  min-height: auto !important;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  /* FAQ 아래 자연스럽게 이어지도록 배경을 투명 유지 */
+  background: transparent;
 }
 
 .divider {
-    width: 80%; /* 화면 너비의 80% 정도로 절취선 길이 조정 */
-    margin: 0 auto 1rem; /* 상단은 0, 하단은 1rem 여백 주기 */
-    opacity: 0.25; /* 매우 연하게 */
-    border-top: 1px dashed rgba(255, 255, 255, 0.3);
-    /* 점-공백 패턴으로도 가능:
+  width: 80%; /* 화면 너비의 80% 정도로 절취선 길이 조정 */
+  margin: 0 auto 1rem; /* 상단은 0, 하단은 1rem 여백 주기 */
+  opacity: 0.25; /* 매우 연하게 */
+  border-top: 1px dashed rgba(255, 255, 255, 0.3);
+  /* 점-공백 패턴으로도 가능:
        background: repeating-linear-gradient(
          to right,
          rgba(255,255,255,0.3) 0,
@@ -26,102 +25,98 @@
     */
 }
 
-
 /* 콘텐츠를 화면 중앙에 붙여두되, 간격을 최소화 */
 .contribution-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: #888; /* 너무 튀지 않는 연한 회색 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #888; /* 너무 튀지 않는 연한 회색 */
 }
 
 /* “Built by” 텍스트 (크게 눈에 띄지 않도록) */
 .contribution-label {
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    opacity: 0.8;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
 }
 
 /* 컨트리뷰터 카드들을 나열 */
 .contributors-list {
-    display: flex;
-    gap: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
 }
 
 /* 개별 카드: 배경/테두리를 거의 투명하게 처리 */
 .contributor-card {
-    background-color: rgba(255, 255, 255, 0.03); /* 아주 옅은 흰색 */
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
-    padding: 0.5rem;
-    width: 72px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: background 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.03); /* 아주 옅은 흰색 */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 0.5rem;
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background 0.2s ease;
 }
 
 /* 카드 위에 커서 올리면 살짝만 강조 */
 .contributor-card:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .contributor-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;     /* 밑줄 제거 */
-    color: inherit;             /* 부모에서 지정된 색상 그대로 상속 */
-    width: 100%;                /* 카드 너비 전체를 클릭 영역으로 만들기 */
-    height: 100%;               /* 세로 역시 전체 영역으로 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none; /* 밑줄 제거 */
+  color: inherit; /* 부모에서 지정된 색상 그대로 상속 */
+  width: 100%; /* 카드 너비 전체를 클릭 영역으로 만들기 */
+  height: 100%; /* 세로 역시 전체 영역으로 */
 }
-
 
 /* 프로필 래퍼 크기 조정 */
 .profile-wrapper {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 0.4rem;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.4rem;
 }
 
 /* 원형 프로필 사진 */
 .profile-img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
-
 
 /* 이름 텍스트를 너무 강조하지 않도록 작게 표시 */
 .contributor-name {
-    font-size: 0.75rem;
-    color: #ccc;
-    white-space: nowrap;
+  font-size: 0.75rem;
+  color: #ccc;
+  white-space: nowrap;
 }
 
 /* 모바일 대응: 더욱 작게 축소 */
 @media (max-width: 480px) {
-    .contribution-container {
-        font-size: 0.8rem;
-    }
-    .contributors-list {
-        gap: 0.5rem;
-    }
-    .contributor-card {
-        width: 60px;
-        padding: 0.4rem;
-    }
-    .profile-wrapper {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 0.3rem;
-    }
-    .contributor-name {
-        font-size: 0.7rem;
-    }
+  .contribution-container {
+    font-size: 0.8rem;
+  }
+  .contributors-list {
+    gap: 0.5rem;
+  }
+  .contributor-card {
+    width: 60px;
+    padding: 0.4rem;
+  }
+  .profile-wrapper {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0.3rem;
+  }
+  .contributor-name {
+    font-size: 0.7rem;
+  }
 }

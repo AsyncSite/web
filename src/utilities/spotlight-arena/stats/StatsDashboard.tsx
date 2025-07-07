@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { gameHistoryService, participantStatsService } from '../shared/services';
 import { GlobalStats, ParticipantStats } from '../shared/types/storage';
-import { 
-  calculateGlobalStats, 
-  getStatsForPeriod, 
+import {
+  calculateGlobalStats,
+  getStatsForPeriod,
   calculateParticipantRankings,
   getGamesByTimeOfDay,
-  getAverageGameDuration
+  getAverageGameDuration,
 } from '../shared/utils/statsUtils';
 import GlobalStatsCard from './components/GlobalStatsCard';
 import TopWinnersCard from './components/TopWinnersCard';
@@ -22,10 +22,10 @@ interface StatsDashboardProps {
   onSelectParticipant: (participantId: string) => void;
 }
 
-const StatsDashboard: React.FC<StatsDashboardProps> = ({ 
-  onBack, 
+const StatsDashboard: React.FC<StatsDashboardProps> = ({
+  onBack,
   onViewHistory,
-  onSelectParticipant 
+  onSelectParticipant,
 }) => {
   const [globalStats, setGlobalStats] = useState<GlobalStats | null>(null);
   const [topWinners, setTopWinners] = useState<ParticipantStats[]>([]);
@@ -82,7 +82,10 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
       <div className="dashboard-controls">
         <div className="period-selector">
           <label>기간:</label>
-          <select value={selectedPeriod} onChange={(e) => setSelectedPeriod(Number(e.target.value))}>
+          <select
+            value={selectedPeriod}
+            onChange={(e) => setSelectedPeriod(Number(e.target.value))}
+          >
             <option value={1}>오늘</option>
             <option value={7}>최근 7일</option>
             <option value={30}>최근 30일</option>
@@ -105,40 +108,31 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
       <div className="stats-grid">
         {/* 전체 통계 카드 */}
         {globalStats && (
-          <GlobalStatsCard 
-            stats={globalStats} 
+          <GlobalStatsCard
+            stats={globalStats}
             periodStats={periodStats}
             avgDuration={avgDuration}
           />
         )}
 
         {/* 상위 당첨자 카드 */}
-        <TopWinnersCard 
+        <TopWinnersCard
           winners={topWinners}
           onSelectParticipant={onSelectParticipant}
           gameType={selectedGameType}
         />
 
         {/* 게임 종류별 차트 */}
-        {globalStats && (
-          <GameTypeChart 
-            gameTypeStats={globalStats.gameTypeStats}
-          />
-        )}
+        {globalStats && <GameTypeChart gameTypeStats={globalStats.gameTypeStats} />}
 
         {/* 최근 게임 카드 */}
-        <RecentGamesCard 
-          limit={5}
-          onViewAll={onViewHistory}
-        />
+        <RecentGamesCard limit={5} onViewAll={onViewHistory} />
 
         {/* 시간대별 히트맵 */}
-        <TimeHeatmap 
-          hourlyStats={hourlyStats}
-        />
+        <TimeHeatmap hourlyStats={hourlyStats} />
 
         {/* 참가자 랭킹 */}
-        <ParticipantRankings 
+        <ParticipantRankings
           rankings={rankings}
           onSelectParticipant={onSelectParticipant}
           gameType={selectedGameType}
@@ -146,9 +140,7 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
       </div>
 
       <div className="dashboard-footer">
-        <p className="last-updated">
-          마지막 업데이트: {new Date().toLocaleString('ko-KR')}
-        </p>
+        <p className="last-updated">마지막 업데이트: {new Date().toLocaleString('ko-KR')}</p>
       </div>
     </div>
   );

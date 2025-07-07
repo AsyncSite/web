@@ -12,18 +12,20 @@ const GameConfig: React.FC<GameConfigProps> = ({ config, onConfigChange }) => {
       <div className="config-options">
         <label>
           키워드 풀 크기:
-          <input 
-            type="number" 
-            value={config.keywordPoolSize} 
-            onChange={(e) => onConfigChange({...config, keywordPoolSize: parseInt(e.target.value)})}
+          <input
+            type="number"
+            value={config.keywordPoolSize}
+            onChange={(e) =>
+              onConfigChange({ ...config, keywordPoolSize: parseInt(e.target.value) })
+            }
           />
         </label>
         <label>
           정답 개수:
-          <input 
-            type="number" 
-            value={config.answerCount} 
-            onChange={(e) => onConfigChange({...config, answerCount: parseInt(e.target.value)})}
+          <input
+            type="number"
+            value={config.answerCount}
+            onChange={(e) => onConfigChange({ ...config, answerCount: parseInt(e.target.value) })}
           />
         </label>
       </div>

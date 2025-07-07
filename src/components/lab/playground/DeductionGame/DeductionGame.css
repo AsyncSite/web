@@ -1,11 +1,11 @@
 /* CSS 변수 정의 - 테마 시스템 */
 :root {
   /* 폰트 패밀리 */
-  --font-primary: 'Orbitron', sans-serif;  /* 메인 제목, 게임 헤더 */
-  --font-secondary: 'Russo One', sans-serif;  /* 부제목, 강조 */
-  --font-body: 'Exo 2', sans-serif;  /* 본문, 일반 텍스트 */
-  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;  /* 코드 에디터 */
-  
+  --font-primary: 'Orbitron', sans-serif; /* 메인 제목, 게임 헤더 */
+  --font-secondary: 'Russo One', sans-serif; /* 부제목, 강조 */
+  --font-body: 'Exo 2', sans-serif; /* 본문, 일반 텍스트 */
+  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; /* 코드 에디터 */
+
   /* 기본 테마 (중급) */
   --primary-gradient-start: #667eea;
   --primary-gradient-end: #764ba2;
@@ -20,16 +20,16 @@
   --border-active: rgba(255, 255, 255, 0.6);
   --shadow-primary: rgba(0, 0, 0, 0.1);
   --shadow-strong: rgba(0, 0, 0, 0.3);
-  
+
   /* 트랜지션 설정 */
   --transition-color: 0.3s ease;
-  
+
   /* 특수 버튼 색상 */
   --btn-primary-bg: #ff6b6b;
   --btn-primary-bg-hover: #ff5252;
   --btn-danger-bg: #ff6b6b;
   --btn-danger-bg-hover: #ff5252;
-  
+
   /* 특수 요소들을 위한 추가 색상 */
   --guide-button-bg: #007bff;
   --guide-button-text: #ffffff;
@@ -52,13 +52,13 @@
   --border-active: #757575;
   --shadow-primary: rgba(0, 0, 0, 0.12);
   --shadow-strong: rgba(0, 0, 0, 0.24);
-  
+
   /* 특수 버튼 색상 */
   --btn-primary-bg: #2196f3;
   --btn-primary-bg-hover: #1976d2;
   --btn-danger-bg: #f44336;
   --btn-danger-bg-hover: #d32f2f;
-  
+
   /* 특수 요소들을 위한 추가 색상 */
   --guide-button-bg: #2196f3;
   --guide-button-text: #ffffff;
@@ -70,7 +70,7 @@
 .deduction-game.theme-intermediate {
   --primary-gradient-start: #667eea;
   --primary-gradient-end: #764ba2;
-  
+
   /* 특수 버튼 색상 */
   --btn-primary-bg: #ff6b6b;
   --btn-primary-bg-hover: #ff5252;
@@ -93,7 +93,7 @@
   --border-active: rgba(255, 255, 255, 0.4);
   --shadow-primary: rgba(0, 0, 0, 0.3);
   --shadow-strong: rgba(0, 0, 0, 0.5);
-  
+
   /* 특수 버튼 색상 */
   --btn-primary-bg: #e94560;
   --btn-primary-bg-hover: #c13651;
@@ -116,7 +116,7 @@
   --border-active: rgba(0, 255, 136, 0.5);
   --shadow-primary: rgba(0, 0, 0, 0.4);
   --shadow-strong: rgba(0, 0, 0, 0.6);
-  
+
   /* 특수 버튼 색상 */
   --btn-primary-bg: #00ff88;
   --btn-primary-bg-hover: #00cc6f;
@@ -127,7 +127,11 @@
 .deduction-game {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-gradient-start) 0%,
+    var(--primary-gradient-end) 100%
+  );
   color: var(--text-primary);
   font-family: var(--font-body);
   display: flex;
@@ -281,7 +285,7 @@
   background: var(--surface-primary);
 }
 
-.radio-option input[type="radio"] {
+.radio-option input[type='radio'] {
   margin: 0;
   cursor: pointer;
 }
@@ -341,7 +345,11 @@
   padding: 15px;
   font-size: 1.2rem;
   font-weight: bold;
-  background: linear-gradient(45deg, var(--start-button-gradient-start, var(--btn-primary-bg)), var(--start-button-gradient-end, var(--btn-primary-bg-hover)));
+  background: linear-gradient(
+    45deg,
+    var(--start-button-gradient-start, var(--btn-primary-bg)),
+    var(--start-button-gradient-end, var(--btn-primary-bg-hover))
+  );
   border: none;
   border-radius: 12px;
   color: white;
@@ -1243,8 +1251,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
 }
 
 .step-circle {
@@ -1310,7 +1323,7 @@
 }
 
 .progress-step.completed .step-circle {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 
@@ -1370,7 +1383,7 @@
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
   transition: width 0.5s ease;
 }
 
@@ -1518,14 +1531,15 @@
 .time-display {
   font-size: 2.6rem;
   font-weight: 900;
-  color: #FFC107;
+  color: #ffc107;
   margin-bottom: 10px;
   transition: color 0.3s ease;
   letter-spacing: 4px;
-  text-shadow: 0 0 10px rgba(255, 193, 7, 0.5),
-               0 0 20px rgba(255, 193, 7, 0.3),
-               0 0 30px rgba(255, 193, 7, 0.2);
-  background: linear-gradient(to bottom, #FFC107 0%, #FF8F00 100%);
+  text-shadow:
+    0 0 10px rgba(255, 193, 7, 0.5),
+    0 0 20px rgba(255, 193, 7, 0.3),
+    0 0 30px rgba(255, 193, 7, 0.2);
+  background: linear-gradient(to bottom, #ffc107 0%, #ff8f00 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1533,24 +1547,38 @@
 }
 
 .time-display.warning {
-  animation: blink 1s infinite, pulse-red 1.5s infinite;
-  background: linear-gradient(to bottom, #FF5722 0%, #D32F2F 100%);
+  animation:
+    blink 1s infinite,
+    pulse-red 1.5s infinite;
+  background: linear-gradient(to bottom, #ff5722 0%, #d32f2f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 10px rgba(255, 87, 34, 0.8),
-               0 0 20px rgba(255, 87, 34, 0.6),
-               0 0 30px rgba(255, 87, 34, 0.4);
+  text-shadow:
+    0 0 10px rgba(255, 87, 34, 0.8),
+    0 0 20px rgba(255, 87, 34, 0.6),
+    0 0 30px rgba(255, 87, 34, 0.4);
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.5; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes pulse-red {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .timer-bar {
@@ -1565,7 +1593,14 @@
 
 .timer-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 30%, #FFC107 60%, #FF9800 80%, #FF5722 100%);
+  background: linear-gradient(
+    90deg,
+    #4caf50 0%,
+    #8bc34a 30%,
+    #ffc107 60%,
+    #ff9800 80%,
+    #ff5722 100%
+  );
   transition: width 1s linear;
   box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
   position: relative;
@@ -1578,7 +1613,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
 }
 
 .game-layout {
@@ -1668,7 +1708,9 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  transition:
+    width 0.6s,
+    height 0.6s;
 }
 
 .keyword-btn:active::after {
@@ -1772,7 +1814,9 @@
   padding-right: 10px;
 }
 
-.my-hints, .players-status, .turn-history {
+.my-hints,
+.players-status,
+.turn-history {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 15px;
   padding: 25px;
@@ -1783,13 +1827,13 @@
 }
 
 .turn-history .history-result {
-  color: #4CAF50;
+  color: #4caf50;
   text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
 /* 중급 테마에서 턴 기록 정답 색상 조정 */
 .deduction-game.theme-intermediate .turn-history .history-result {
-  color: #66BB6A;
+  color: #66bb6a;
   font-weight: 700;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   background: rgba(0, 0, 0, 0.3);
@@ -1798,7 +1842,9 @@
   display: inline-block;
 }
 
-.my-hints h4, .players-status h4, .turn-history h4 {
+.my-hints h4,
+.players-status h4,
+.turn-history h4 {
   font-family: var(--font-secondary);
   font-size: 1.3rem;
   margin-bottom: 20px;
@@ -1884,21 +1930,23 @@
   font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 20px;
-  color: #4CAF50;
+  color: #4caf50;
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
 }
 
-.winner-announcement, .draw-announcement {
+.winner-announcement,
+.draw-announcement {
   margin-bottom: 40px;
 }
 
-.winner-announcement h3, .draw-announcement h3 {
+.winner-announcement h3,
+.draw-announcement h3 {
   font-family: var(--font-secondary);
   font-size: 1.8rem;
   margin-bottom: 10px;
-  color: #FFC107;
+  color: #ffc107;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -1973,7 +2021,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 30px;
-  color: #FFC107;
+  color: #ffc107;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -1990,7 +2038,8 @@
   opacity: 0.9;
 }
 
-.hint-reveal, .hint-display {
+.hint-reveal,
+.hint-display {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 15px;
   padding: 30px;
@@ -2000,7 +2049,7 @@
 .hint-display h4 {
   font-size: 1.3rem;
   margin-bottom: 20px;
-  color: #FF5722;
+  color: #ff5722;
 }
 
 .hint-display .hint-chips {
@@ -2091,14 +2140,14 @@
 /* 턴 기록 업데이트 */
 .history-keywords {
   font-size: 0.8rem;
-  color: #B0BEC5;
+  color: #b0bec5;
   margin-bottom: 5px;
   word-break: break-word;
 }
 
 .turn-keywords {
   font-size: 0.9rem;
-  color: #B0BEC5;
+  color: #b0bec5;
   margin-bottom: 5px;
   word-break: break-word;
 }
@@ -2146,99 +2195,98 @@
     max-width: 100%;
     padding: 0 15px;
   }
-  
+
   .game-screen {
     width: 100%;
     max-width: 100%;
     padding: 30px 20px;
     min-height: 400px;
   }
-  
+
   .mode-cards {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .players-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .config-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .radio-group {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .multi-option-row {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
-  
+
   .setup-actions {
     flex-direction: column;
   }
-  
+
   .btn-group {
     flex-wrap: wrap;
     gap: 10px;
   }
-  
+
   .progress-steps {
     gap: 15px;
   }
-  
+
   .progress-step {
     flex-direction: column;
     text-align: center;
     padding: 15px;
   }
-  
+
   .step-circle {
     margin-bottom: 10px;
   }
-  
+
   .summary-grid {
     gap: 20px;
   }
-  
+
   .summary-item {
     padding: 20px;
   }
-  
+
   .game-info-grid {
     grid-template-columns: 1fr;
     gap: 8px;
   }
-  
+
   .game-layout {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .game-header-info {
     flex-direction: column;
     text-align: center;
     gap: 15px;
   }
-  
+
   .header-controls {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .timer {
     text-align: center;
   }
-  
+
   .timer-bar {
     margin: 0 auto;
   }
-  
 }
 
 /* Global hints toggle styles */
@@ -2271,7 +2319,7 @@
 }
 
 .toggle-switch::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 3px;
   left: 3px;
@@ -2283,7 +2331,7 @@
 }
 
 .toggle-checkbox:checked + .toggle-switch {
-  background: #4CAF50;
+  background: #4caf50;
 }
 
 .toggle-checkbox:checked + .toggle-switch::after {
@@ -2346,24 +2394,24 @@
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 8px;
   }
-  
+
   .keyword-btn {
     min-height: 45px;
     font-size: 0.8rem;
   }
-  
+
   .control-buttons {
     flex-direction: column;
   }
-  
+
   .game-sidebar {
     order: -1;
   }
-  
+
   .answer-list {
     gap: 8px;
   }
-  
+
   .answer-chip {
     font-size: 0.9rem;
     padding: 8px 12px;
@@ -2373,13 +2421,11 @@
 /* 큰 화면 최적화 */
 @media (min-width: 1200px) {
   /* 고정된 너비를 유지하므로 별도 조정 없음 */
-  
 }
 
 /* 초대형 화면 최적화 */
 @media (min-width: 1600px) {
   /* 고정된 너비를 유지하므로 별도 조정 없음 */
-  
 }
 
 /* 코드 에디터 모달 스타일 */
@@ -2398,8 +2444,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-content {
@@ -2417,8 +2467,14 @@
 }
 
 @keyframes slideIn {
-  from { transform: translateY(-30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .code-editor-modal {
@@ -2428,7 +2484,11 @@
   max-height: 800px;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s ease, height 0.3s ease, max-width 0.3s ease, max-height 0.3s ease;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease,
+    max-width 0.3s ease,
+    max-height 0.3s ease;
   animation: fadeIn 0.3s ease;
 }
 
@@ -2706,19 +2766,19 @@
 
 /* 테스트 버튼 스타일 */
 .btn-test {
-  background-color: #2196F3;
+  background-color: #2196f3;
   color: white;
-  border: 1px solid #1976D2;
+  border: 1px solid #1976d2;
 }
 
 .btn-test:hover:not(:disabled) {
-  background-color: #1976D2;
-  border-color: #1565C0;
+  background-color: #1976d2;
+  border-color: #1565c0;
 }
 
 .btn-test:disabled {
-  background-color: #64B5F6;
-  border-color: #42A5F5;
+  background-color: #64b5f6;
+  border-color: #42a5f5;
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -2769,7 +2829,7 @@
 }
 
 .test-result-panel.success {
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
 }
 
 .test-result-panel.error {
@@ -2789,7 +2849,7 @@
 }
 
 .test-result-panel.success .test-result-header h4 {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .test-result-panel.error .test-result-header h4 {
@@ -2873,7 +2933,6 @@
   color: #d0d0d0;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 
 /* 스크롤바 스타일 추가 */
 .keywords-grid::-webkit-scrollbar,
@@ -2961,7 +3020,7 @@
 
 /* AI Thinking Indicator */
 .ai-thinking {
-  color: #FFF176;
+  color: #fff176;
   font-style: italic;
   animation: pulse 1.5s ease-in-out infinite;
   margin-left: 8px;
@@ -2969,8 +3028,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* 로딩 애니메이션 스타일 */
@@ -2994,8 +3058,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-dots {
@@ -3009,11 +3077,21 @@
 }
 
 @keyframes dots {
-  0% { content: ''; }
-  25% { content: '.'; }
-  50% { content: '..'; }
-  75% { content: '...'; }
-  100% { content: ''; }
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '..';
+  }
+  75% {
+    content: '...';
+  }
+  100% {
+    content: '';
+  }
 }
 
 /* 큰 로딩 스피너 */
@@ -3101,7 +3179,7 @@
   transform: translate(-50%, -50%) scale(0);
   font-size: 20px;
   font-weight: bold;
-  color: #4CAF50;
+  color: #4caf50;
   animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
 }
 
@@ -3141,12 +3219,25 @@
 }
 
 @keyframes errorShake {
-  0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
-  10% { transform: translate(-50%, -50%) rotate(-10deg) scale(1.1); }
-  20% { transform: translate(-50%, -50%) rotate(10deg) scale(1.1); }
-  30% { transform: translate(-50%, -50%) rotate(-10deg) scale(1.1); }
-  40% { transform: translate(-50%, -50%) rotate(10deg) scale(1.1); }
-  50% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  10% {
+    transform: translate(-50%, -50%) rotate(-10deg) scale(1.1);
+  }
+  20% {
+    transform: translate(-50%, -50%) rotate(10deg) scale(1.1);
+  }
+  30% {
+    transform: translate(-50%, -50%) rotate(-10deg) scale(1.1);
+  }
+  40% {
+    transform: translate(-50%, -50%) rotate(10deg) scale(1.1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
 }
 
 /* 큰 성공 아이콘 (게임 승리 시) */
@@ -3164,7 +3255,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  animation: victoryBounce 1s ease-out, victoryGlow 2s ease-in-out infinite;
+  animation:
+    victoryBounce 1s ease-out,
+    victoryGlow 2s ease-in-out infinite;
 }
 
 @keyframes victoryBounce {
@@ -3185,7 +3278,8 @@
 }
 
 @keyframes victoryGlow {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
   }
   50% {
@@ -3218,12 +3312,12 @@
 }
 
 .guess-result-popup.success {
-  border: 3px solid #4CAF50;
+  border: 3px solid #4caf50;
   box-shadow: 0 0 50px rgba(76, 175, 80, 0.5);
 }
 
 .guess-result-popup.partial {
-  border: 3px solid #FFC107;
+  border: 3px solid #ffc107;
   box-shadow: 0 0 50px rgba(255, 193, 7, 0.5);
 }
 
@@ -3233,60 +3327,60 @@
 }
 
 .guide-modal {
-    width: 600px;
+  width: 600px;
 }
 
 .guide-slides-container {
-    padding: 20px;
-    min-height: 150px;
+  padding: 20px;
+  min-height: 150px;
 }
 
 .guide-slide h4 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #FFC107;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #ffc107;
 }
 
 .guide-slide p {
-    font-size: 1.1rem;
-    line-height: 1.6;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }
 
 .guide-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .guide-controls button {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .guide-controls button:hover {
-    background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .slide-indicators {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transition: background 0.3s ease;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: background 0.3s ease;
 }
 
 .indicator.active {
-    background: #FFC107;
+  background: #ffc107;
 }

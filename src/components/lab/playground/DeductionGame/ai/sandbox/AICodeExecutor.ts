@@ -39,7 +39,7 @@ export class AICodeExecutor {
   async executeUserAI(
     code: string,
     gameState: GameStateForAI,
-    playerId: number
+    playerId: number,
   ): Promise<ExecutionResult> {
     const startTime = performance.now();
     const logs: string[] = [];
@@ -51,13 +51,13 @@ export class AICodeExecutor {
         return {
           success: false,
           error: `Code validation failed: ${validation.errors.join('; ')}`,
-          executionTime: performance.now() - startTime
+          executionTime: performance.now() - startTime,
         };
       }
 
       // Log warnings if any
       if (validation.warnings) {
-        logs.push(...validation.warnings.map(w => `Warning: ${w}`));
+        logs.push(...validation.warnings.map((w) => `Warning: ${w}`));
       }
 
       // Step 2: Preprocess code
@@ -75,17 +75,16 @@ export class AICodeExecutor {
         success: true,
         result,
         executionTime,
-        logs: logs.length > 0 ? logs : undefined
+        logs: logs.length > 0 ? logs : undefined,
       };
-
     } catch (error: any) {
       const executionTime = performance.now() - startTime;
-      
+
       return {
         success: false,
         error: error.message || 'Unknown error occurred',
         executionTime,
-        logs: logs.length > 0 ? logs : undefined
+        logs: logs.length > 0 ? logs : undefined,
       };
     }
   }
@@ -94,15 +93,18 @@ export class AICodeExecutor {
     // Deep freeze arrays and objects to prevent modification
     const deepFreeze = <T>(obj: T): T => {
       Object.freeze(obj);
-      
-      Object.getOwnPropertyNames(obj).forEach(prop => {
-        if (obj[prop as keyof T] !== null
-            && (typeof obj[prop as keyof T] === 'object' || typeof obj[prop as keyof T] === 'function')
-            && !Object.isFrozen(obj[prop as keyof T])) {
+
+      Object.getOwnPropertyNames(obj).forEach((prop) => {
+        if (
+          obj[prop as keyof T] !== null &&
+          (typeof obj[prop as keyof T] === 'object' ||
+            typeof obj[prop as keyof T] === 'function') &&
+          !Object.isFrozen(obj[prop as keyof T])
+        ) {
           deepFreeze(obj[prop as keyof T]);
         }
       });
-      
+
       return obj;
     };
 
@@ -110,38 +112,38 @@ export class AICodeExecutor {
       keywords: [...gameState.keywords],
       myHints: [...gameState.myHints],
       answerCount: gameState.answerCount,
-      previousGuesses: gameState.previousGuesses.map(g => ({
+      previousGuesses: gameState.previousGuesses.map((g) => ({
         playerId: g.playerId,
         guess: [...g.guess],
-        correctCount: g.correctCount
+        correctCount: g.correctCount,
       })),
       revealedAnswers: [...gameState.revealedAnswers],
       revealedWrongAnswers: [...gameState.revealedWrongAnswers],
       currentTurn: gameState.currentTurn,
-      timeLimit: gameState.timeLimit
+      timeLimit: gameState.timeLimit,
     });
   }
 
   private executeInWorker(
     code: string,
     gameState: SecureGameState,
-    logs: string[]
+    logs: string[],
   ): Promise<number[]> {
     return new Promise((resolve, reject) => {
       const executionId = `exec_${++this.executionCounter}_${Date.now()}`;
-      
+
       // Create worker
       // Get the correct path for the worker file
       const publicUrl = process.env.PUBLIC_URL || '';
       let workerPath = publicUrl + '/ai-worker.js';
-      
+
       // In development, if the path starts with /web, use it directly
       if (window.location.pathname.startsWith('/web') && !workerPath.startsWith('/web')) {
         workerPath = '/web/ai-worker.js';
       }
-      
+
       const worker = new Worker(workerPath);
-      
+
       // Set timeout
       const timeoutId = setTimeout(() => {
         worker.terminate();
@@ -153,9 +155,9 @@ export class AICodeExecutor {
         const { type, executionId: msgId, result, error, data } = event.data;
 
         if (type === 'log' && msgId === executionId) {
-          const logMessage = data.map((arg: any) => 
-            typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-          ).join(' ');
+          const logMessage = data
+            .map((arg: any) => (typeof arg === 'object' ? JSON.stringify(arg) : String(arg)))
+            .join(' ');
           logs.push(logMessage);
           return;
         }
@@ -179,18 +181,19 @@ export class AICodeExecutor {
       worker.onerror = (error) => {
         clearTimeout(timeoutId);
         worker.terminate();
-        
+
         // More detailed error message
         let errorMessage = 'Worker error: ';
         if (error.message) {
           errorMessage += error.message;
         } else {
-          errorMessage += 'Failed to load worker file. Make sure ai-worker.js is in the public directory.';
+          errorMessage +=
+            'Failed to load worker file. Make sure ai-worker.js is in the public directory.';
         }
-        
+
         console.error('Worker load error:', error);
         console.error('Worker path attempted:', workerPath);
-        
+
         reject(new Error(errorMessage));
       };
 
@@ -198,7 +201,7 @@ export class AICodeExecutor {
       worker.postMessage({
         code,
         gameState,
-        executionId
+        executionId,
       });
     });
   }
@@ -216,7 +219,7 @@ export class AICodeExecutor {
     const keywordCount = gameState.keywords.length;
     for (let i = 0; i < guess.length; i++) {
       const idx = guess[i];
-      
+
       if (typeof idx !== 'number' || !Number.isInteger(idx)) {
         return `Element at index ${i} must be an integer`;
       }

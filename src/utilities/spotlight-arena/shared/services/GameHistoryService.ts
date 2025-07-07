@@ -29,7 +29,7 @@ export class GameHistoryService extends BaseStorageService {
       participants: result.participants,
       winners: result.winners,
       gameConfig: result.gameConfig,
-      duration: result.endTime - result.startTime
+      duration: result.endTime - result.startTime,
     };
 
     history.unshift(newGame); // 최신 게임을 앞에 추가
@@ -55,22 +55,22 @@ export class GameHistoryService extends BaseStorageService {
 
     // 게임 타입 필터
     if (filter.gameType) {
-      history = history.filter(game => game.gameType === filter.gameType);
+      history = history.filter((game) => game.gameType === filter.gameType);
     }
 
     // 참가자 필터
     if (filter.participantId) {
-      history = history.filter(game => 
-        game.participants.some(p => p.id === filter.participantId)
+      history = history.filter((game) =>
+        game.participants.some((p) => p.id === filter.participantId),
       );
     }
 
     // 날짜 범위 필터
     if (filter.startDate) {
-      history = history.filter(game => game.timestamp >= filter.startDate!);
+      history = history.filter((game) => game.timestamp >= filter.startDate!);
     }
     if (filter.endDate) {
-      history = history.filter(game => game.timestamp <= filter.endDate!);
+      history = history.filter((game) => game.timestamp <= filter.endDate!);
     }
 
     // 개수 제한
@@ -94,7 +94,7 @@ export class GameHistoryService extends BaseStorageService {
   // 특정 게임 조회
   getGameById(gameId: string): GameHistory | null {
     const history = this.getHistory();
-    return history.find(game => game.id === gameId) || null;
+    return history.find((game) => game.id === gameId) || null;
   }
 
   // 참가자의 게임 이력
@@ -108,7 +108,7 @@ export class GameHistoryService extends BaseStorageService {
 
     games.sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortOptions.field) {
         case 'timestamp':
           comparison = a.timestamp - b.timestamp;
@@ -130,9 +130,9 @@ export class GameHistoryService extends BaseStorageService {
   // 오래된 기록 정리
   clearOldHistory(daysToKeep: number = DEFAULT_DAYS_TO_KEEP): number {
     const history = this.getHistory();
-    const cutoffDate = Date.now() - (daysToKeep * 24 * 60 * 60 * 1000);
-    
-    const filteredHistory = history.filter(game => game.timestamp >= cutoffDate);
+    const cutoffDate = Date.now() - daysToKeep * 24 * 60 * 60 * 1000;
+
+    const filteredHistory = history.filter((game) => game.timestamp >= cutoffDate);
     const removedCount = history.length - filteredHistory.length;
 
     if (removedCount > 0) {
@@ -159,13 +159,14 @@ export class GameHistoryService extends BaseStorageService {
   // 데이터 유효성 검증
   protected validateData(data: any): boolean {
     if (!Array.isArray(data)) return false;
-    
-    return data.every(game => 
-      game.id && 
-      game.gameType && 
-      game.timestamp && 
-      Array.isArray(game.participants) && 
-      Array.isArray(game.winners)
+
+    return data.every(
+      (game) =>
+        game.id &&
+        game.gameType &&
+        game.timestamp &&
+        Array.isArray(game.participants) &&
+        Array.isArray(game.winners),
     );
   }
 
@@ -173,8 +174,8 @@ export class GameHistoryService extends BaseStorageService {
   getStatsSummary() {
     const history = this.getHistory();
     const gameTypes = new Map<string, number>();
-    
-    history.forEach(game => {
+
+    history.forEach((game) => {
       gameTypes.set(game.gameType, (gameTypes.get(game.gameType) || 0) + 1);
     });
 
@@ -182,7 +183,7 @@ export class GameHistoryService extends BaseStorageService {
       totalGames: history.length,
       gameTypeBreakdown: Object.fromEntries(gameTypes),
       oldestGame: history[history.length - 1]?.timestamp,
-      newestGame: history[0]?.timestamp
+      newestGame: history[0]?.timestamp,
     };
   }
 }

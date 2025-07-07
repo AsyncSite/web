@@ -13,14 +13,14 @@ export class PlayerFactory {
     switch (playerInfo.type) {
       case 'human':
         return new HumanPlayer(playerInfo);
-        
+
       case 'built-in-ai':
         const strategy = this.createStrategy(playerInfo.aiDifficulty || 'medium');
         return new BuiltInAIPlayer(playerInfo, strategy);
-        
+
       case 'custom-ai':
         return new CustomAIPlayer(playerInfo);
-        
+
       default:
         throw new Error(`Unknown player type: ${playerInfo.type}`);
     }
@@ -41,16 +41,16 @@ export class PlayerFactory {
   }
 
   static createBuiltInAIOpponent(
-    id: number, 
-    difficulty: 'easy' | 'medium' | 'hard' = 'medium'
+    id: number,
+    difficulty: 'easy' | 'medium' | 'hard' = 'medium',
   ): IPlayer {
     const playerInfo: PlayerInfo = {
       id,
       nickname: `AI (${difficulty === 'easy' ? '쉬움' : difficulty === 'medium' ? '보통' : '어려움'})`,
       type: 'built-in-ai',
-      aiDifficulty: difficulty
+      aiDifficulty: difficulty,
     };
-    
+
     return this.createPlayer(playerInfo);
   }
 

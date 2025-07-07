@@ -7,7 +7,13 @@ import { HumanPlayer } from './ai/players/HumanPlayer';
 import { PlayerInfo, PlayerType } from './ai/types/PlayerTypes';
 // import AIGuidePanel from './AIGuidePanel';
 
-type GameScreen = 'mode-selection' | 'difficulty-selection' | 'player-setup' | 'game-config' | 'game-preparation' | 'game';
+type GameScreen =
+  | 'mode-selection'
+  | 'difficulty-selection'
+  | 'player-setup'
+  | 'game-config'
+  | 'game-preparation'
+  | 'game';
 type GameMode = 'solo' | 'multi';
 
 interface GameConfig {
@@ -65,7 +71,7 @@ const DeductionGame: React.FC = () => {
     hintCount: 5,
     timeLimit: 60,
     maxTurns: 20,
-    difficulty: 'intermediate'
+    difficulty: 'intermediate',
   });
   const [gameState, setGameState] = useState<GameState>({
     keywords: [],
@@ -77,7 +83,7 @@ const DeductionGame: React.FC = () => {
     gameStatus: 'playing',
     revealedAnswers: [],
     revealedWrongAnswers: [],
-    hintsViewed: {}
+    hintsViewed: {},
   });
   const [preparationStep, setPreparationStep] = useState(0);
   const [selectedKeywords, setSelectedKeywords] = useState<number[]>([]);
@@ -92,14 +98,19 @@ const DeductionGame: React.FC = () => {
   const [isAIThinking, setIsAIThinking] = useState(false);
   const gameManagerRef = useRef<GameManager | null>(null);
   const [turnStartTime, setTurnStartTime] = useState<number>(0);
-  const [codeEditorModal, setCodeEditorModal] = useState<{ isOpen: boolean; playerId: number | null }>({ 
-    isOpen: false, 
-    playerId: null 
+  const [codeEditorModal, setCodeEditorModal] = useState<{
+    isOpen: boolean;
+    playerId: number | null;
+  }>({
+    isOpen: false,
+    playerId: null,
   });
   const [globalHintsEnabled, setGlobalHintsEnabled] = useState(true);
   // const [isGuideExpanded, setIsGuideExpanded] = useState(true);
   const [isModalExpanded, setIsModalExpanded] = useState(false);
-  const [testResults, setTestResults] = useState<Array<{ id: number; success: boolean; message: string; details?: any; isFading?: boolean }>>([]);
+  const [testResults, setTestResults] = useState<
+    Array<{ id: number; success: boolean; message: string; details?: any; isFading?: boolean }>
+  >([]);
   const [isTestRunning, setIsTestRunning] = useState(false);
   const [testResultIdCounter, setTestResultIdCounter] = useState(0);
 
@@ -120,7 +131,12 @@ const DeductionGame: React.FC = () => {
     setPlayerCount(2);
     setPlayers([
       { id: 1, nickname: '', type: 'human', aiLanguage: 'javascript' },
-      { id: 2, nickname: `AI (${difficulty === 'easy' ? '쉬움' : difficulty === 'medium' ? '보통' : '어려움'})`, type: 'built-in-ai', aiDifficulty: difficulty }
+      {
+        id: 2,
+        nickname: `AI (${difficulty === 'easy' ? '쉬움' : difficulty === 'medium' ? '보통' : '어려움'})`,
+        type: 'built-in-ai',
+        aiDifficulty: difficulty,
+      },
     ]);
     setCurrentScreen('player-setup');
   };
@@ -133,20 +149,20 @@ const DeductionGame: React.FC = () => {
         id: i,
         nickname: '',
         type: 'human',
-        aiLanguage: 'javascript'
+        aiLanguage: 'javascript',
       });
     }
     setPlayers(newPlayers);
   };
 
   const updatePlayer = (id: number, updates: Partial<PlayerConfig>) => {
-    setPlayers(prev => prev.map(player => 
-      player.id === id ? { ...player, ...updates } : player
-    ));
+    setPlayers((prev) =>
+      prev.map((player) => (player.id === id ? { ...player, ...updates } : player)),
+    );
   };
 
   const canStartGame = () => {
-    return players.every(player => {
+    return players.every((player) => {
       if (!player.nickname.trim()) return false;
       if (player.type === 'custom-ai' && !player.aiCode?.trim()) return false;
       return true;
@@ -165,11 +181,116 @@ const DeductionGame: React.FC = () => {
 
   // 키워드 풀 (실제로는 더 많은 키워드가 필요)
   const keywordCategories = {
-    animals: ['사자', '호랑이', '코끼리', '기린', '원숭이', '코알라', '판다', '펭귄', '독수리', '상어', '고래', '돌고래', '토끼', '고양이', '강아지', '말', '소', '돼지', '양', '염소'],
-    foods: ['피자', '햄버거', '스파게티', '초밥', '김치찌개', '불고기', '치킨', '라면', '떡볶이', '김밥', '샐러드', '스테이크', '카레', '우동', '냉면', '비빔밥', '갈비', '삼겹살', '회', '족발'],
-    objects: ['컴퓨터', '스마트폰', '자동차', '비행기', '기차', '자전거', '책', '연필', '가방', '시계', '안경', '모자', '신발', '옷', '침대', '의자', '책상', '냉장고', '세탁기', '텔레비전'],
-    places: ['학교', '병원', '은행', '카페', '식당', '공원', '해변', '산', '도서관', '박물관', '영화관', '쇼핑몰', '시장', '교회', '지하철역', '공항', '호텔', '집', '회사', '체육관'],
-    actions: ['걷기', '뛰기', '수영', '춤추기', '노래하기', '요리하기', '공부하기', '운전하기', '그림그리기', '글쓰기', '읽기', '잠자기', '먹기', '마시기', '웃기', '울기', '생각하기', '말하기', '듣기', '보기']
+    animals: [
+      '사자',
+      '호랑이',
+      '코끼리',
+      '기린',
+      '원숭이',
+      '코알라',
+      '판다',
+      '펭귄',
+      '독수리',
+      '상어',
+      '고래',
+      '돌고래',
+      '토끼',
+      '고양이',
+      '강아지',
+      '말',
+      '소',
+      '돼지',
+      '양',
+      '염소',
+    ],
+    foods: [
+      '피자',
+      '햄버거',
+      '스파게티',
+      '초밥',
+      '김치찌개',
+      '불고기',
+      '치킨',
+      '라면',
+      '떡볶이',
+      '김밥',
+      '샐러드',
+      '스테이크',
+      '카레',
+      '우동',
+      '냉면',
+      '비빔밥',
+      '갈비',
+      '삼겹살',
+      '회',
+      '족발',
+    ],
+    objects: [
+      '컴퓨터',
+      '스마트폰',
+      '자동차',
+      '비행기',
+      '기차',
+      '자전거',
+      '책',
+      '연필',
+      '가방',
+      '시계',
+      '안경',
+      '모자',
+      '신발',
+      '옷',
+      '침대',
+      '의자',
+      '책상',
+      '냉장고',
+      '세탁기',
+      '텔레비전',
+    ],
+    places: [
+      '학교',
+      '병원',
+      '은행',
+      '카페',
+      '식당',
+      '공원',
+      '해변',
+      '산',
+      '도서관',
+      '박물관',
+      '영화관',
+      '쇼핑몰',
+      '시장',
+      '교회',
+      '지하철역',
+      '공항',
+      '호텔',
+      '집',
+      '회사',
+      '체육관',
+    ],
+    actions: [
+      '걷기',
+      '뛰기',
+      '수영',
+      '춤추기',
+      '노래하기',
+      '요리하기',
+      '공부하기',
+      '운전하기',
+      '그림그리기',
+      '글쓰기',
+      '읽기',
+      '잠자기',
+      '먹기',
+      '마시기',
+      '웃기',
+      '울기',
+      '생각하기',
+      '말하기',
+      '듣기',
+      '보기',
+    ],
   };
 
   const generateKeywords = (size: number): string[] => {
@@ -181,28 +302,30 @@ const DeductionGame: React.FC = () => {
   const initializeGame = async () => {
     // 1단계: 키워드 생성
     setPreparationStep(1);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const keywords = generateKeywords(gameConfig.keywordPoolSize);
-    
+
     // 2단계: 정답 선택
     setPreparationStep(2);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const answerIndices: number[] = [];
-    const shuffledIndices = Array.from({length: keywords.length}, (_, i) => i).sort(() => Math.random() - 0.5);
+    const shuffledIndices = Array.from({ length: keywords.length }, (_, i) => i).sort(
+      () => Math.random() - 0.5,
+    );
     for (let i = 0; i < gameConfig.answerCount; i++) {
       answerIndices.push(shuffledIndices[i]);
     }
-    
+
     // 3단계: 힌트 배포
     setPreparationStep(3);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const playerHints: { [playerId: number]: number[] } = {};
-    const nonAnswerIndices = shuffledIndices.filter(i => !answerIndices.includes(i));
-    
-    players.forEach(player => {
+    const nonAnswerIndices = shuffledIndices.filter((i) => !answerIndices.includes(i));
+
+    players.forEach((player) => {
       const hints: number[] = [];
       const availableHints = [...nonAnswerIndices].sort(() => Math.random() - 0.5);
       for (let i = 0; i < gameConfig.hintCount && i < availableHints.length; i++) {
@@ -210,27 +333,26 @@ const DeductionGame: React.FC = () => {
       }
       playerHints[player.id] = hints;
     });
-    
+
     // 4단계: 준비 완료
     setPreparationStep(4);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     setGameState({
       keywords,
       answers: answerIndices,
       playerHints,
       isReady: true,
-      currentTurn: 0,  // GameManager가 관리하므로 0으로 시작
+      currentTurn: 0, // GameManager가 관리하므로 0으로 시작
       turnHistory: [],
       gameStatus: 'playing',
       revealedAnswers: [],
       revealedWrongAnswers: [],
-      hintsViewed: {}
+      hintsViewed: {},
     });
-    
+
     setPreparationStep(5); // 완료 상태
   };
-
 
   const startActualGame = () => {
     // GameManager 초기화
@@ -240,18 +362,18 @@ const DeductionGame: React.FC = () => {
       hintCount: gameConfig.hintCount,
       timeLimit: gameConfig.timeLimit,
       maxTurns: gameConfig.maxTurns,
-      globalHintsEnabled: globalHintsEnabled
+      globalHintsEnabled: globalHintsEnabled,
     });
 
     // 플레이어 생성
-    const gamePlayers: IPlayer[] = players.map(config => {
+    const gamePlayers: IPlayer[] = players.map((config) => {
       const playerInfo: PlayerInfo = {
         id: config.id,
         nickname: config.nickname,
         type: config.type,
         aiDifficulty: config.aiDifficulty,
         customCode: config.aiCode,
-        customLanguage: config.aiLanguage
+        customLanguage: config.aiLanguage,
       };
       return PlayerFactory.createPlayer(playerInfo);
     });
@@ -267,33 +389,33 @@ const DeductionGame: React.FC = () => {
         setTurnStartTime(Date.now());
         // GameManager의 currentTurn과 동기화
         const context = manager.getGameContext();
-        setGameState(prev => ({
+        setGameState((prev) => ({
           ...prev,
-          currentTurn: context.currentTurn
+          currentTurn: context.currentTurn,
         }));
       },
       onTurnEnd: (result) => {
         setIsAIThinking(false);
         // Get updated game context to sync revealed wrong answers from global hints
         const context = manager.getGameContext();
-        setGameState(prev => ({
+        setGameState((prev) => ({
           ...prev,
           turnHistory: [...prev.turnHistory, result],
-          revealedWrongAnswers: context.revealedWrongAnswers
+          revealedWrongAnswers: context.revealedWrongAnswers,
         }));
       },
       onGameEnd: (winner) => {
         if (winner) {
           const winnerInfo = winner.getInfo();
-          setGameState(prev => ({
+          setGameState((prev) => ({
             ...prev,
             gameStatus: 'finished',
-            winner: winnerInfo.id
+            winner: winnerInfo.id,
           }));
         } else {
-          setGameState(prev => ({
+          setGameState((prev) => ({
             ...prev,
-            gameStatus: 'finished'
+            gameStatus: 'finished',
           }));
         }
       },
@@ -302,7 +424,7 @@ const DeductionGame: React.FC = () => {
       },
       onAIThinking: (thinking) => {
         setIsAIThinking(thinking);
-      }
+      },
     });
 
     gameManagerRef.current = manager;
@@ -317,16 +439,16 @@ const DeductionGame: React.FC = () => {
     if (gameManagerRef.current) {
       return;
     }
-    
+
     // 기존 타이머가 있다면 먼저 정리
     clearTimer();
-    
+
     // 턴 시작 시간 기록
     setTurnStartTime(Date.now());
     setTimeRemaining(gameConfig.timeLimit);
-    
+
     const intervalId = setInterval(() => {
-      setTimeRemaining(prev => {
+      setTimeRemaining((prev) => {
         if (prev <= 1) {
           // 타이머를 먼저 정리하고 handleTimeUp 호출
           clearInterval(intervalId);
@@ -340,7 +462,7 @@ const DeductionGame: React.FC = () => {
         return prev - 1;
       });
     }, 1000);
-    
+
     setTimerIntervalId(intervalId);
   };
 
@@ -355,13 +477,13 @@ const DeductionGame: React.FC = () => {
     // 시간 초과시 랜덤하게 키워드 선택하여 자동 제출
     const availableKeywords = gameState.keywords
       .map((_, index) => index)
-      .filter(index => !gameState.revealedWrongAnswers.includes(index));
-    
+      .filter((index) => !gameState.revealedWrongAnswers.includes(index));
+
     const shuffled = [...availableKeywords].sort(() => Math.random() - 0.5);
     const autoSelection = shuffled.slice(0, gameConfig.answerCount);
-    
+
     setSelectedKeywords(autoSelection);
-    
+
     // 잠시 후 자동 제출
     setTimeout(() => {
       submitGuessWithSelection(autoSelection);
@@ -370,7 +492,7 @@ const DeductionGame: React.FC = () => {
 
   const runAICodeTest = async (aiCode: string, language: 'javascript' | 'typescript') => {
     setIsTestRunning(true);
-    
+
     try {
       // 1. 먼저 기본 문법 검사만 수행
       try {
@@ -380,15 +502,17 @@ const DeductionGame: React.FC = () => {
           id: testResultIdCounter,
           success: false,
           message: '문법 오류',
-          details: { error: e.message }
+          details: { error: e.message },
         };
-        setTestResultIdCounter(prev => prev + 1);
-        setTestResults(prev => [...prev, newResult]);
-        
+        setTestResultIdCounter((prev) => prev + 1);
+        setTestResults((prev) => [...prev, newResult]);
+
         setTimeout(() => {
-          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+          setTestResults((prev) =>
+            prev.map((r) => (r.id === newResult.id ? { ...r, isFading: true } : r)),
+          );
           setTimeout(() => {
-            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+            setTestResults((prev) => prev.filter((r) => r.id !== newResult.id));
           }, 500);
         }, 2000);
         return;
@@ -400,15 +524,17 @@ const DeductionGame: React.FC = () => {
           id: testResultIdCounter,
           success: false,
           message: 'makeGuess 함수를 찾을 수 없습니다',
-          details: { tip: 'function makeGuess(gameState) { ... } 형식으로 작성해주세요' }
+          details: { tip: 'function makeGuess(gameState) { ... } 형식으로 작성해주세요' },
         };
-        setTestResultIdCounter(prev => prev + 1);
-        setTestResults(prev => [...prev, newResult]);
-        
+        setTestResultIdCounter((prev) => prev + 1);
+        setTestResults((prev) => [...prev, newResult]);
+
         setTimeout(() => {
-          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+          setTestResults((prev) =>
+            prev.map((r) => (r.id === newResult.id ? { ...r, isFading: true } : r)),
+          );
           setTimeout(() => {
-            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+            setTestResults((prev) => prev.filter((r) => r.id !== newResult.id));
           }, 500);
         }, 2000);
         return;
@@ -532,21 +658,20 @@ const DeductionGame: React.FC = () => {
 
       const startTime = Date.now();
       let testResult;
-      
+
       try {
         testResult = eval(testCode);
       } catch (e: any) {
         testResult = { success: false, error: e.message };
       }
-      
+
       const executionTime = Date.now() - startTime;
 
       if (testResult && testResult.success) {
         const avgTime = parseFloat(testResult.performance.avgTime);
-        const speedLevel = avgTime < 0.5 ? '매우 빠름' : 
-                          avgTime < 2 ? '빠름' : 
-                          avgTime < 5 ? '보통' : '느림';
-        
+        const speedLevel =
+          avgTime < 0.5 ? '매우 빠름' : avgTime < 2 ? '빠름' : avgTime < 5 ? '보통' : '느림';
+
         const newResult = {
           id: testResultIdCounter,
           success: true,
@@ -556,17 +681,19 @@ const DeductionGame: React.FC = () => {
             selectedKeywords: testResult.keywords.join(', '),
             selectedIndices: testResult.result,
             performance: testResult.performance,
-            speedLevel
-          }
+            speedLevel,
+          },
         };
-        setTestResultIdCounter(prev => prev + 1);
-        setTestResults(prev => [...prev, newResult]);
-        
+        setTestResultIdCounter((prev) => prev + 1);
+        setTestResults((prev) => [...prev, newResult]);
+
         // 2초 후 자동으로 사라지도록 설정
         setTimeout(() => {
-          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+          setTestResults((prev) =>
+            prev.map((r) => (r.id === newResult.id ? { ...r, isFading: true } : r)),
+          );
           setTimeout(() => {
-            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+            setTestResults((prev) => prev.filter((r) => r.id !== newResult.id));
           }, 500);
         }, 2000);
       } else {
@@ -574,34 +701,37 @@ const DeductionGame: React.FC = () => {
           id: testResultIdCounter,
           success: false,
           message: '테스트 실패',
-          details: { error: testResult?.error || '알 수 없는 오류' }
+          details: { error: testResult?.error || '알 수 없는 오류' },
         };
-        setTestResultIdCounter(prev => prev + 1);
-        setTestResults(prev => [...prev, newResult]);
-        
+        setTestResultIdCounter((prev) => prev + 1);
+        setTestResults((prev) => [...prev, newResult]);
+
         // 2초 후 자동으로 사라지도록 설정
         setTimeout(() => {
-          setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+          setTestResults((prev) =>
+            prev.map((r) => (r.id === newResult.id ? { ...r, isFading: true } : r)),
+          );
           setTimeout(() => {
-            setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+            setTestResults((prev) => prev.filter((r) => r.id !== newResult.id));
           }, 500);
         }, 2000);
       }
-
     } catch (error) {
       const newResult = {
         id: testResultIdCounter,
         success: false,
         message: '테스트 실행 중 오류가 발생했습니다',
-        details: { error: error instanceof Error ? error.message : String(error) }
+        details: { error: error instanceof Error ? error.message : String(error) },
       };
-      setTestResultIdCounter(prev => prev + 1);
-      setTestResults(prev => [...prev, newResult]);
-      
+      setTestResultIdCounter((prev) => prev + 1);
+      setTestResults((prev) => [...prev, newResult]);
+
       setTimeout(() => {
-        setTestResults(prev => prev.map(r => r.id === newResult.id ? { ...r, isFading: true } : r));
+        setTestResults((prev) =>
+          prev.map((r) => (r.id === newResult.id ? { ...r, isFading: true } : r)),
+        );
         setTimeout(() => {
-          setTestResults(prev => prev.filter(r => r.id !== newResult.id));
+          setTestResults((prev) => prev.filter((r) => r.id !== newResult.id));
         }, 500);
       }, 2000);
     } finally {
@@ -633,7 +763,7 @@ const DeductionGame: React.FC = () => {
       gameStatus: 'playing',
       revealedAnswers: [],
       revealedWrongAnswers: [],
-      hintsViewed: {}
+      hintsViewed: {},
     });
     setSelectedKeywords([]);
     setTimeRemaining(0);
@@ -647,16 +777,16 @@ const DeductionGame: React.FC = () => {
   const handleGlobalHintsToggle = () => {
     const newValue = !globalHintsEnabled;
     setGlobalHintsEnabled(newValue);
-    
+
     // Update GameManager if it exists and sync the game state
     if (gameManagerRef.current) {
       gameManagerRef.current.setGlobalHintsEnabled(newValue);
-      
+
       // Get updated game context and sync revealedWrongAnswers
       const updatedContext = gameManagerRef.current.getGameContext();
-      setGameState(prev => ({
+      setGameState((prev) => ({
         ...prev,
-        revealedWrongAnswers: [...updatedContext.revealedWrongAnswers]
+        revealedWrongAnswers: [...updatedContext.revealedWrongAnswers],
       }));
     }
   };
@@ -666,18 +796,21 @@ const DeductionGame: React.FC = () => {
       const success = gameManagerRef.current.revealAnswer();
       if (success) {
         const context = gameManagerRef.current.getGameContext();
-        setGameState(prev => ({
+        setGameState((prev) => ({
           ...prev,
-          revealedAnswers: context.revealedAnswers
+          revealedAnswers: context.revealedAnswers,
         }));
       }
     } else {
-      const unrevealedAnswers = gameState.answers.filter(ans => !gameState.revealedAnswers.includes(ans));
+      const unrevealedAnswers = gameState.answers.filter(
+        (ans) => !gameState.revealedAnswers.includes(ans),
+      );
       if (unrevealedAnswers.length > 0) {
-        const randomAnswer = unrevealedAnswers[Math.floor(Math.random() * unrevealedAnswers.length)];
-        setGameState(prev => ({
+        const randomAnswer =
+          unrevealedAnswers[Math.floor(Math.random() * unrevealedAnswers.length)];
+        setGameState((prev) => ({
           ...prev,
-          revealedAnswers: [...prev.revealedAnswers, randomAnswer]
+          revealedAnswers: [...prev.revealedAnswers, randomAnswer],
         }));
       }
     }
@@ -688,30 +821,33 @@ const DeductionGame: React.FC = () => {
       const success = gameManagerRef.current.revealWrongAnswer();
       if (success) {
         const context = gameManagerRef.current.getGameContext();
-        setGameState(prev => ({
+        setGameState((prev) => ({
           ...prev,
-          revealedWrongAnswers: context.revealedWrongAnswers
+          revealedWrongAnswers: context.revealedWrongAnswers,
         }));
       }
     } else {
       const wrongAnswers = gameState.keywords
         .map((_, index) => index)
-        .filter(index => !gameState.answers.includes(index) && !gameState.revealedWrongAnswers.includes(index));
-      
+        .filter(
+          (index) =>
+            !gameState.answers.includes(index) && !gameState.revealedWrongAnswers.includes(index),
+        );
+
       if (wrongAnswers.length > 0) {
         const randomWrong = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
-        setGameState(prev => ({
+        setGameState((prev) => ({
           ...prev,
-          revealedWrongAnswers: [...prev.revealedWrongAnswers, randomWrong]
+          revealedWrongAnswers: [...prev.revealedWrongAnswers, randomWrong],
         }));
       }
     }
   };
 
   const toggleKeywordSelection = (keywordIndex: number) => {
-    setSelectedKeywords(prev => {
+    setSelectedKeywords((prev) => {
       if (prev.includes(keywordIndex)) {
-        return prev.filter(index => index !== keywordIndex);
+        return prev.filter((index) => index !== keywordIndex);
       } else if (prev.length < gameConfig.answerCount) {
         return [...prev, keywordIndex];
       }
@@ -721,7 +857,7 @@ const DeductionGame: React.FC = () => {
 
   const submitGuess = async () => {
     if (selectedKeywords.length !== gameConfig.answerCount || isSubmitting) return;
-    
+
     if (gameManagerRef.current) {
       setIsSubmitting(true);
       try {
@@ -740,57 +876,58 @@ const DeductionGame: React.FC = () => {
   const submitGuessWithSelection = (selection: number[]) => {
     // GameManager를 사용하는 경우 이 함수를 사용하지 않음
     if (gameManagerRef.current) return;
-    
+
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
-    
+
     // 타이머 정리 (새로운 타이머 시작 전에)
     clearTimer();
 
-    const correctCount = selection.filter(index => 
-      gameState.answers.includes(index)
-    ).length;
+    const correctCount = selection.filter((index) => gameState.answers.includes(index)).length;
 
-    const isWinner = correctCount === gameConfig.answerCount && 
-                     selection.every(index => gameState.answers.includes(index));
+    const isWinner =
+      correctCount === gameConfig.answerCount &&
+      selection.every((index) => gameState.answers.includes(index));
 
     const currentPlayerId = ((gameState.currentTurn - 1) % players.length) + 1;
-    const currentPlayer = players.find(p => p.id === currentPlayerId);
+    const currentPlayer = players.find((p) => p.id === currentPlayerId);
 
     // 실제 사용 시간 계산
-    const actualTimeUsed = turnStartTime ? Math.round((Date.now() - turnStartTime) / 1000) : gameConfig.timeLimit - timeRemaining;
-    
+    const actualTimeUsed = turnStartTime
+      ? Math.round((Date.now() - turnStartTime) / 1000)
+      : gameConfig.timeLimit - timeRemaining;
+
     const turnResult: TurnResult = {
       playerId: currentPlayerId,
       playerName: currentPlayer?.nickname || `플레이어 ${currentPlayerId}`,
       guess: [...selection],
-      guessKeywords: selection.map(index => gameState.keywords[index]),
+      guessKeywords: selection.map((index) => gameState.keywords[index]),
       correctCount,
       turnNumber: gameState.currentTurn,
-      timeUsed: actualTimeUsed
+      timeUsed: actualTimeUsed,
     };
 
     // 최대 턴 수 확인
     const isMaxTurnsReached = gameConfig.maxTurns && gameState.currentTurn >= gameConfig.maxTurns;
-    
-    setGameState(prev => ({
+
+    setGameState((prev) => ({
       ...prev,
       turnHistory: [...prev.turnHistory, turnResult],
       currentTurn: prev.currentTurn + 1,
-      gameStatus: isWinner ? 'finished' : (isMaxTurnsReached ? 'finished' : 'playing'),
-      winner: isWinner ? currentPlayerId : undefined
+      gameStatus: isWinner ? 'finished' : isMaxTurnsReached ? 'finished' : 'playing',
+      winner: isWinner ? currentPlayerId : undefined,
     }));
 
     setSelectedKeywords([]);
-    
+
     if (!isWinner && !isMaxTurnsReached) {
       // 다음 턴을 위해 타이머 재시작
       setTimeout(() => {
         startTimer();
       }, 100);
     }
-    
+
     // 제출 상태 리셋
     setTimeout(() => {
       setIsSubmitting(false);
@@ -802,22 +939,30 @@ const DeductionGame: React.FC = () => {
       const currentPlayer = gameManagerRef.current.getCurrentPlayer();
       if (currentPlayer) {
         const playerInfo = currentPlayer.getInfo();
-        return players.find(p => p.id === playerInfo.id);
+        return players.find((p) => p.id === playerInfo.id);
       }
     }
     const currentPlayerId = ((gameState.currentTurn - 1) % players.length) + 1;
-    return players.find(p => p.id === currentPlayerId);
+    return players.find((p) => p.id === currentPlayerId);
   };
 
   const isGameOver = () => {
-    return gameState.gameStatus === 'finished' || 
-           (gameConfig.maxTurns && gameState.currentTurn > gameConfig.maxTurns);
+    return (
+      gameState.gameStatus === 'finished' ||
+      (gameConfig.maxTurns && gameState.currentTurn > gameConfig.maxTurns)
+    );
   };
 
   const difficultyPresets = {
     beginner: { keywordPoolSize: 30, answerCount: 3, hintCount: 5, timeLimit: 90, maxTurns: 15 },
-    intermediate: { keywordPoolSize: 50, answerCount: 5, hintCount: 5, timeLimit: 60, maxTurns: 20 },
-    advanced: { keywordPoolSize: 80, answerCount: 7, hintCount: 4, timeLimit: 45, maxTurns: 25 }
+    intermediate: {
+      keywordPoolSize: 50,
+      answerCount: 5,
+      hintCount: 5,
+      timeLimit: 60,
+      maxTurns: 20,
+    },
+    advanced: { keywordPoolSize: 80, answerCount: 7, hintCount: 4, timeLimit: 45, maxTurns: 25 },
   };
 
   const applyPreset = (difficulty: 'beginner' | 'intermediate' | 'advanced') => {
@@ -826,7 +971,7 @@ const DeductionGame: React.FC = () => {
   };
 
   const updateGameConfig = (updates: Partial<GameConfig>) => {
-    setGameConfig(prev => ({ ...prev, ...updates, difficulty: 'custom' }));
+    setGameConfig((prev) => ({ ...prev, ...updates, difficulty: 'custom' }));
   };
 
   // 컴포넌트 언마운트 시 타이머 정리
@@ -841,27 +986,33 @@ const DeductionGame: React.FC = () => {
 
   const renderCodeEditorModal = () => {
     if (!codeEditorModal.isOpen || !codeEditorModal.playerId) return null;
-    
-    const player = players.find(p => p.id === codeEditorModal.playerId);
+
+    const player = players.find((p) => p.id === codeEditorModal.playerId);
     if (!player) return null;
 
     return (
-      <div className="modal-overlay" onClick={() => {
-        setCodeEditorModal({ isOpen: false, playerId: null });
-        setIsModalExpanded(false);
-      }}>
-        <div className={`modal-content code-editor-modal ${isModalExpanded ? 'expanded' : ''}`} onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-overlay"
+        onClick={() => {
+          setCodeEditorModal({ isOpen: false, playerId: null });
+          setIsModalExpanded(false);
+        }}
+      >
+        <div
+          className={`modal-content code-editor-modal ${isModalExpanded ? 'expanded' : ''}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-header">
             <h3>{player.nickname} AI 코드 에디터</h3>
             <div className="modal-header-actions">
-              <button 
+              <button
                 className="modal-expand-btn"
                 onClick={() => setIsModalExpanded(!isModalExpanded)}
-                title={isModalExpanded ? "기본 크기로" : "전체 화면 모드"}
+                title={isModalExpanded ? '기본 크기로' : '전체 화면 모드'}
               >
                 {isModalExpanded ? '↙' : '↗'}
               </button>
-              <button 
+              <button
                 className="modal-close"
                 onClick={() => {
                   setCodeEditorModal({ isOpen: false, playerId: null });
@@ -872,7 +1023,7 @@ const DeductionGame: React.FC = () => {
               </button>
             </div>
           </div>
-          
+
           <div className="code-editor-container" style={{ position: 'relative' }}>
             {/* <AIGuidePanel 
               isExpanded={isGuideExpanded} 
@@ -900,7 +1051,7 @@ const DeductionGame: React.FC = () => {
                 </div>
               </div>
               <div className="editor-actions">
-                <button 
+                <button
                   className="btn btn-small"
                   onClick={() => {
                     updatePlayer(player.id, { aiCode: '' });
@@ -909,11 +1060,12 @@ const DeductionGame: React.FC = () => {
                 >
                   초기화
                 </button>
-                <button 
+                <button
                   className="btn btn-small"
                   onClick={() => {
-                    const exampleCode = player.aiLanguage === 'typescript' 
-                      ? `// AI 전략 함수 (TypeScript)
+                    const exampleCode =
+                      player.aiLanguage === 'typescript'
+                        ? `// AI 전략 함수 (TypeScript)
 interface GameState {
   keywords: string[];
   myHints: number[];
@@ -947,7 +1099,7 @@ function makeGuess(gameState: GameState): number[] {
   
   return selectedIndices;
 }`
-                      : `// AI 전략 함수 (JavaScript)
+                        : `// AI 전략 함수 (JavaScript)
 function makeGuess(gameState) {
   const { keywords, myHints, previousGuesses, revealedAnswers, revealedWrongAnswers, answerCount } = gameState;
   
@@ -975,7 +1127,7 @@ function makeGuess(gameState) {
                 >
                   예제 코드
                 </button>
-                <button 
+                <button
                   className="btn btn-small btn-test"
                   onClick={() => {
                     if (player.aiCode) {
@@ -994,14 +1146,19 @@ function makeGuess(gameState) {
                 </button>
               </div>
             </div>
-            
+
             <div className="editor-wrapper">
-              <div className="line-numbers" onScroll={(e) => {
-                const textarea = e.currentTarget.nextElementSibling as HTMLTextAreaElement;
-                if (textarea) textarea.scrollTop = e.currentTarget.scrollTop;
-              }}>
+              <div
+                className="line-numbers"
+                onScroll={(e) => {
+                  const textarea = e.currentTarget.nextElementSibling as HTMLTextAreaElement;
+                  if (textarea) textarea.scrollTop = e.currentTarget.scrollTop;
+                }}
+              >
                 {((player.aiCode || '') + '\n').split('\n').map((_, index) => (
-                  <div key={index} className="line-number">{index + 1}</div>
+                  <div key={index} className="line-number">
+                    {index + 1}
+                  </div>
                 ))}
               </div>
               <textarea
@@ -1012,32 +1169,37 @@ function makeGuess(gameState) {
                   const lineNumbers = e.currentTarget.previousElementSibling as HTMLDivElement;
                   if (lineNumbers) lineNumbers.scrollTop = e.currentTarget.scrollTop;
                 }}
-                placeholder={player.aiLanguage === 'typescript' 
-                  ? "// TypeScript AI 전략 코드를 작성하세요\n// 타입 정의와 함께 작성해주세요"
-                  : "// JavaScript AI 전략 코드를 작성하세요\n// function makeGuess(gameState) { ... }"
+                placeholder={
+                  player.aiLanguage === 'typescript'
+                    ? '// TypeScript AI 전략 코드를 작성하세요\n// 타입 정의와 함께 작성해주세요'
+                    : '// JavaScript AI 전략 코드를 작성하세요\n// function makeGuess(gameState) { ... }'
                 }
                 spellCheck={false}
               />
             </div>
-            
+
             <div className="test-results-container">
               {testResults.map((result) => (
-                <div 
+                <div
                   key={result.id}
                   className={`test-result-panel ${result.success ? 'success' : 'error'} ${result.isFading ? 'fade-out' : ''}`}
                 >
                   <div className="test-result-header">
                     <h4>
                       {result.success ? (
-                        <><span className="success-icon"></span>테스트 성공</>
+                        <>
+                          <span className="success-icon"></span>테스트 성공
+                        </>
                       ) : (
-                        <><span className="error-icon"></span>테스트 실패</>
+                        <>
+                          <span className="error-icon"></span>테스트 실패
+                        </>
                       )}
                     </h4>
-                    <button 
+                    <button
                       className="close-result"
                       onClick={() => {
-                        setTestResults(prev => prev.filter(r => r.id !== result.id));
+                        setTestResults((prev) => prev.filter((r) => r.id !== result.id));
                       }}
                     >
                       ×
@@ -1051,16 +1213,30 @@ function makeGuess(gameState) {
                           <div>샘플 선택: {result.details.selectedKeywords}</div>
                           {result.details.performance && (
                             <>
-                              <div style={{ marginTop: '10px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '10px' }}>
+                              <div
+                                style={{
+                                  marginTop: '10px',
+                                  borderTop: '1px solid rgba(255,255,255,0.2)',
+                                  paddingTop: '10px',
+                                }}
+                              >
                                 <strong>성능 측정 결과</strong>
                               </div>
                               <div style={{ marginTop: '5px' }}>
-                                평균 실행 시간: {result.details.performance.avgTime}ms ({result.details.speedLevel})
+                                평균 실행 시간: {result.details.performance.avgTime}ms (
+                                {result.details.speedLevel})
                               </div>
                               <div>
-                                최소/최대: {result.details.performance.minTime}ms / {result.details.performance.maxTime}ms
+                                최소/최대: {result.details.performance.minTime}ms /{' '}
+                                {result.details.performance.maxTime}ms
                               </div>
-                              <div style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.7)', marginTop: '5px' }}>
+                              <div
+                                style={{
+                                  fontSize: '0.85em',
+                                  color: 'rgba(255,255,255,0.7)',
+                                  marginTop: '5px',
+                                }}
+                              >
                                 * 30회 실행 (3가지 크기의 데이터 × 10회)
                               </div>
                             </>
@@ -1074,13 +1250,13 @@ function makeGuess(gameState) {
                 </div>
               ))}
             </div>
-            
+
             <div className="editor-footer">
               <div className="code-stats">
                 <span>줄: {(player.aiCode || '').split('\n').length}</span>
                 <span>문자: {(player.aiCode || '').length}</span>
               </div>
-              <button 
+              <button
                 className="btn-large btn-primary"
                 onClick={() => {
                   setCodeEditorModal({ isOpen: false, playerId: null });
@@ -1100,17 +1276,27 @@ function makeGuess(gameState) {
   const renderModeSelection = () => (
     <div className="game-screen mode-selection">
       <div className="guide-link-container">
-        <button onClick={() => setIsGuideModalOpen(true)} className="guide-link">?<span>게임 방법</span></button>
+        <button onClick={() => setIsGuideModalOpen(true)} className="guide-link">
+          ?<span>게임 방법</span>
+        </button>
       </div>
       <h2 style={{ marginTop: '60px' }}>게임 모드를 선택하세요</h2>
       <div className="mode-cards">
         <div className="mode-card" onClick={() => handleModeSelect('solo')}>
           <h3>개인전</h3>
-          <p>AI와 1:1 대결하는 모드입니다.<br/>난이도를 선택할 수 있어요.</p>
+          <p>
+            AI와 1:1 대결하는 모드입니다.
+            <br />
+            난이도를 선택할 수 있어요.
+          </p>
         </div>
         <div className="mode-card" onClick={() => handleModeSelect('multi')}>
           <h3>멀티플레이</h3>
-          <p>2~6명이 함께 플레이하는 모드입니다.<br/>친구들과 함께 즐겨보세요.</p>
+          <p>
+            2~6명이 함께 플레이하는 모드입니다.
+            <br />
+            친구들과 함께 즐겨보세요.
+          </p>
         </div>
       </div>
     </div>
@@ -1119,27 +1305,39 @@ function makeGuess(gameState) {
   const renderDifficultySelection = () => (
     <div className="game-screen difficulty-selection">
       <div className="back-button-container">
-        <button 
-          className="btn-large btn-secondary" 
+        <button
+          className="btn-large btn-secondary"
           onClick={() => setCurrentScreen('mode-selection')}
         >
           ← 뒤로가기
         </button>
       </div>
-      
+
       <h2>AI 난이도를 선택하세요</h2>
       <div className="difficulty-cards">
         <div className="difficulty-card" onClick={() => handleDifficultySelect('easy')}>
           <h3>🌱 쉬움</h3>
-          <p>AI가 무작위로 키워드를 선택합니다.<br/>편안하게 게임을 즐기세요.</p>
+          <p>
+            AI가 무작위로 키워드를 선택합니다.
+            <br />
+            편안하게 게임을 즐기세요.
+          </p>
         </div>
         <div className="difficulty-card" onClick={() => handleDifficultySelect('medium')}>
           <h3>🌿 보통</h3>
-          <p>AI가 공개된 정답을 활용합니다.<br/>적당한 도전을 원한다면 선택하세요.</p>
+          <p>
+            AI가 공개된 정답을 활용합니다.
+            <br />
+            적당한 도전을 원한다면 선택하세요.
+          </p>
         </div>
         <div className="difficulty-card" onClick={() => handleDifficultySelect('hard')}>
           <h3>🌳 어려움</h3>
-          <p>AI가 이전 추측을 분석합니다.<br/>진정한 실력을 시험해보세요.</p>
+          <p>
+            AI가 이전 추측을 분석합니다.
+            <br />
+            진정한 실력을 시험해보세요.
+          </p>
         </div>
       </div>
     </div>
@@ -1148,9 +1346,11 @@ function makeGuess(gameState) {
   const renderPlayerSetup = () => (
     <div className="game-screen">
       <div className="back-button-container">
-        <button 
-          className="btn-large btn-secondary" 
-          onClick={() => setCurrentScreen(gameMode === 'solo' ? 'difficulty-selection' : 'mode-selection')}
+        <button
+          className="btn-large btn-secondary"
+          onClick={() =>
+            setCurrentScreen(gameMode === 'solo' ? 'difficulty-selection' : 'mode-selection')
+          }
         >
           ← 뒤로가기
         </button>
@@ -1160,7 +1360,7 @@ function makeGuess(gameState) {
         <div className="form-section" style={{ marginTop: '60px' }}>
           <h2 style={{ textAlign: 'center' }}>플레이어 수를 선택하세요</h2>
           <div className="btn-group" style={{ justifyContent: 'center', marginTop: '40px' }}>
-            {[2, 3, 4, 5, 6].map(num => (
+            {[2, 3, 4, 5, 6].map((num) => (
               <button
                 key={num}
                 className="btn-large btn-secondary"
@@ -1175,83 +1375,91 @@ function makeGuess(gameState) {
 
       {players.length > 0 && (
         <>
-          <h2 style={{ textAlign: 'center', marginTop: '60px' }}>{gameMode === 'solo' ? '플레이어 설정' : `${playerCount}명 플레이어 설정`}</h2>
+          <h2 style={{ textAlign: 'center', marginTop: '60px' }}>
+            {gameMode === 'solo' ? '플레이어 설정' : `${playerCount}명 플레이어 설정`}
+          </h2>
           <div className="players-grid">
-            {players.filter(player => gameMode === 'solo' ? player.id === 1 : true).map((player) => (
-              <div key={player.id} className="player-setup">
-                <h4>{gameMode === 'solo' ? '플레이어' : `플레이어 ${player.id}`}</h4>
-                
-                <div className="form-section">
-                  <input
-                    type="text"
-                    className="input-field"
-                    placeholder="닉네임을 입력하세요"
-                    value={player.nickname}
-                    onChange={(e) => updatePlayer(player.id, { nickname: e.target.value })}
-                    maxLength={20}
-                  />
-                </div>
+            {players
+              .filter((player) => (gameMode === 'solo' ? player.id === 1 : true))
+              .map((player) => (
+                <div key={player.id} className="player-setup">
+                  <h4>{gameMode === 'solo' ? '플레이어' : `플레이어 ${player.id}`}</h4>
 
-                {(gameMode === 'multi' || (gameMode === 'solo' && player.id === 1)) && (
                   <div className="form-section">
-                    <div className="radio-group">
-                      <div 
-                        className="radio-option"
-                        onClick={() => updatePlayer(player.id, { type: 'human', aiCode: '' })}
-                      >
-                        <input
-                          type="radio"
-                          id={`human-${player.id}`}
-                          name={`playerType-${player.id}`}
-                          value="human"
-                          checked={player.type === 'human'}
-                          onChange={() => updatePlayer(player.id, { type: 'human', aiCode: '' })}
-                        />
-                        <label htmlFor={`human-${player.id}`}>인간</label>
-                      </div>
-                      <div 
-                        className="radio-option"
-                        onClick={() => {
-                          updatePlayer(player.id, { type: 'custom-ai' });
-                          setCodeEditorModal({ isOpen: true, playerId: player.id });
-                        }}
-                      >
-                        <input
-                          type="radio"
-                          id={`ai-${player.id}`}
-                          name={`playerType-${player.id}`}
-                          value="custom-ai"
-                          checked={player.type === 'custom-ai'}
-                          onChange={() => {
+                    <input
+                      type="text"
+                      className="input-field"
+                      placeholder="닉네임을 입력하세요"
+                      value={player.nickname}
+                      onChange={(e) => updatePlayer(player.id, { nickname: e.target.value })}
+                      maxLength={20}
+                    />
+                  </div>
+
+                  {(gameMode === 'multi' || (gameMode === 'solo' && player.id === 1)) && (
+                    <div className="form-section">
+                      <div className="radio-group">
+                        <div
+                          className="radio-option"
+                          onClick={() => updatePlayer(player.id, { type: 'human', aiCode: '' })}
+                        >
+                          <input
+                            type="radio"
+                            id={`human-${player.id}`}
+                            name={`playerType-${player.id}`}
+                            value="human"
+                            checked={player.type === 'human'}
+                            onChange={() => updatePlayer(player.id, { type: 'human', aiCode: '' })}
+                          />
+                          <label htmlFor={`human-${player.id}`}>인간</label>
+                        </div>
+                        <div
+                          className="radio-option"
+                          onClick={() => {
                             updatePlayer(player.id, { type: 'custom-ai' });
                             setCodeEditorModal({ isOpen: true, playerId: player.id });
                           }}
-                        />
-                        <label htmlFor={`ai-${player.id}`}>{gameMode === 'solo' ? '커스텀 AI' : 'AI'}</label>
+                        >
+                          <input
+                            type="radio"
+                            id={`ai-${player.id}`}
+                            name={`playerType-${player.id}`}
+                            value="custom-ai"
+                            checked={player.type === 'custom-ai'}
+                            onChange={() => {
+                              updatePlayer(player.id, { type: 'custom-ai' });
+                              setCodeEditorModal({ isOpen: true, playerId: player.id });
+                            }}
+                          />
+                          <label htmlFor={`ai-${player.id}`}>
+                            {gameMode === 'solo' ? '커스텀 AI' : 'AI'}
+                          </label>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {player.type === 'custom-ai' && (
-                  <div className="form-section">
-                    <button
-                      className="btn-large btn-ai-code"
-                      onClick={() => setCodeEditorModal({ isOpen: true, playerId: player.id })}
-                      style={{ width: '100%' }}
-                    >
-                      <span className="btn-ai-icon">&lt;/&gt;</span>
-                      <span>{player.aiCode ? 'AI 코드 수정' : 'AI 코드 작성'}</span>
-                    </button>
-                    {player.aiCode && (
-                      <div className="code-preview">
-                        <small>코드가 작성되었습니다 ({player.aiCode.split('\n').length}줄)</small>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+                  {player.type === 'custom-ai' && (
+                    <div className="form-section">
+                      <button
+                        className="btn-large btn-ai-code"
+                        onClick={() => setCodeEditorModal({ isOpen: true, playerId: player.id })}
+                        style={{ width: '100%' }}
+                      >
+                        <span className="btn-ai-icon">&lt;/&gt;</span>
+                        <span>{player.aiCode ? 'AI 코드 수정' : 'AI 코드 작성'}</span>
+                      </button>
+                      {player.aiCode && (
+                        <div className="code-preview">
+                          <small>
+                            코드가 작성되었습니다 ({player.aiCode.split('\n').length}줄)
+                          </small>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
 
           <div className="setup-actions">
@@ -1271,8 +1479,8 @@ function makeGuess(gameState) {
   const renderGameConfig = () => (
     <div className="game-screen">
       <div className="back-button-container">
-        <button 
-          className="btn-large btn-secondary" 
+        <button
+          className="btn-large btn-secondary"
           onClick={() => setCurrentScreen('player-setup')}
         >
           ← 뒤로가기
@@ -1280,7 +1488,7 @@ function makeGuess(gameState) {
       </div>
 
       <h2 style={{ textAlign: 'center' }}>게임 설정</h2>
-      
+
       {/* 난이도 프리셋 */}
       <div className="form-section">
         <h3 style={{ textAlign: 'center' }}>난이도 프리셋</h3>
@@ -1312,16 +1520,22 @@ function makeGuess(gameState) {
           <h4>키워드 풀 크기</h4>
           <p>전체 키워드 개수</p>
           <div className="number-input-group">
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ keywordPoolSize: Math.max(20, gameConfig.keywordPoolSize - 10) })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({ keywordPoolSize: Math.max(20, gameConfig.keywordPoolSize - 10) })
+              }
             >
               -
             </button>
             <span className="number-display">{gameConfig.keywordPoolSize}개</span>
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ keywordPoolSize: Math.min(100, gameConfig.keywordPoolSize + 10) })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({
+                  keywordPoolSize: Math.min(100, gameConfig.keywordPoolSize + 10),
+                })
+              }
             >
               +
             </button>
@@ -1332,16 +1546,20 @@ function makeGuess(gameState) {
           <h4>정답 개수</h4>
           <p>찾아야 할 정답 수</p>
           <div className="number-input-group">
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ answerCount: Math.max(2, gameConfig.answerCount - 1) })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({ answerCount: Math.max(2, gameConfig.answerCount - 1) })
+              }
             >
               -
             </button>
             <span className="number-display">{gameConfig.answerCount}개</span>
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ answerCount: Math.min(15, gameConfig.answerCount + 1) })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({ answerCount: Math.min(15, gameConfig.answerCount + 1) })
+              }
             >
               +
             </button>
@@ -1352,16 +1570,18 @@ function makeGuess(gameState) {
           <h4>힌트 개수</h4>
           <p>각 플레이어별 오답 힌트</p>
           <div className="number-input-group">
-            <button 
-              className="btn btn-small" 
+            <button
+              className="btn btn-small"
               onClick={() => updateGameConfig({ hintCount: Math.max(2, gameConfig.hintCount - 1) })}
             >
               -
             </button>
             <span className="number-display">{gameConfig.hintCount}개</span>
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ hintCount: Math.min(20, gameConfig.hintCount + 1) })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({ hintCount: Math.min(20, gameConfig.hintCount + 1) })
+              }
             >
               +
             </button>
@@ -1372,16 +1592,20 @@ function makeGuess(gameState) {
           <h4>턴 제한시간</h4>
           <p>각 턴당 시간</p>
           <div className="number-input-group">
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ timeLimit: Math.max(15, gameConfig.timeLimit - 15) })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({ timeLimit: Math.max(15, gameConfig.timeLimit - 15) })
+              }
             >
               -
             </button>
             <span className="number-display">{gameConfig.timeLimit}초</span>
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ timeLimit: Math.min(180, gameConfig.timeLimit + 15) })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({ timeLimit: Math.min(180, gameConfig.timeLimit + 15) })
+              }
             >
               +
             </button>
@@ -1392,22 +1616,32 @@ function makeGuess(gameState) {
           <h4>최대 턴 수</h4>
           <p>게임 종료 조건</p>
           <div className="number-input-group">
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ maxTurns: gameConfig.maxTurns ? Math.max(5, gameConfig.maxTurns - 5) : 15 })}
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({
+                  maxTurns: gameConfig.maxTurns ? Math.max(5, gameConfig.maxTurns - 5) : 15,
+                })
+              }
             >
               -
             </button>
-            <span className="number-display">{gameConfig.maxTurns ? `${gameConfig.maxTurns}턴` : '무제한'}</span>
-            <button 
-              className="btn btn-small" 
-              onClick={() => updateGameConfig({ maxTurns: gameConfig.maxTurns ? Math.min(50, gameConfig.maxTurns + 5) : 20 })}
+            <span className="number-display">
+              {gameConfig.maxTurns ? `${gameConfig.maxTurns}턴` : '무제한'}
+            </span>
+            <button
+              className="btn btn-small"
+              onClick={() =>
+                updateGameConfig({
+                  maxTurns: gameConfig.maxTurns ? Math.min(50, gameConfig.maxTurns + 5) : 20,
+                })
+              }
             >
               +
             </button>
           </div>
-          <button 
-            className="btn btn-small" 
+          <button
+            className="btn btn-small"
             onClick={() => updateGameConfig({ maxTurns: gameConfig.maxTurns ? undefined : 20 })}
             style={{ marginTop: '10px' }}
           >
@@ -1418,18 +1652,22 @@ function makeGuess(gameState) {
 
       {/* 현재 난이도 표시 */}
       <div className="difficulty-indicator">
-        <span>현재 난이도: <strong>{
-          gameConfig.difficulty === 'beginner' ? '초급' :
-          gameConfig.difficulty === 'intermediate' ? '중급' :
-          gameConfig.difficulty === 'advanced' ? '고급' : '커스텀'
-        }</strong></span>
+        <span>
+          현재 난이도:{' '}
+          <strong>
+            {gameConfig.difficulty === 'beginner'
+              ? '초급'
+              : gameConfig.difficulty === 'intermediate'
+                ? '중급'
+                : gameConfig.difficulty === 'advanced'
+                  ? '고급'
+                  : '커스텀'}
+          </strong>
+        </span>
       </div>
 
       <div className="setup-actions">
-        <button
-          className="btn-large btn-primary"
-          onClick={handleConfigComplete}
-        >
+        <button className="btn-large btn-primary" onClick={handleConfigComplete}>
           설정 완료
         </button>
       </div>
@@ -1439,22 +1677,30 @@ function makeGuess(gameState) {
   const renderGamePreparation = () => {
     const preparationSteps = [
       { title: '⚙️ 게임 초기화', description: '게임 환경을 설정하고 있습니다.' },
-      { title: '📚 키워드 생성', description: `${gameConfig.keywordPoolSize}개의 키워드를 생성하고 있습니다.` },
-      { title: '🎯 정답 선택', description: `${gameConfig.answerCount}개의 정답을 무작위로 선택하고 있습니다.` },
+      {
+        title: '📚 키워드 생성',
+        description: `${gameConfig.keywordPoolSize}개의 키워드를 생성하고 있습니다.`,
+      },
+      {
+        title: '🎯 정답 선택',
+        description: `${gameConfig.answerCount}개의 정답을 무작위로 선택하고 있습니다.`,
+      },
       { title: '💡 힌트 배포', description: '각 플레이어에게 오답 힌트를 배포하고 있습니다.' },
-      { title: '✅ 최종 확인', description: '게임 준비를 완료하고 있습니다.' }
+      { title: '✅ 최종 확인', description: '게임 준비를 완료하고 있습니다.' },
     ];
 
     return (
       <div className="game-screen">
         {preparationStep < 5 ? (
           <>
-            <h2>게임 준비 중<span className="loading-dots"></span></h2>
+            <h2>
+              게임 준비 중<span className="loading-dots"></span>
+            </h2>
             <div className="preparation-progress">
               <div className="progress-steps">
                 {preparationSteps.map((step, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className={`progress-step ${index < preparationStep ? 'completed' : index === preparationStep ? 'active' : 'pending'}`}
                   >
                     <div className="step-circle">
@@ -1472,10 +1718,10 @@ function makeGuess(gameState) {
                   </div>
                 ))}
               </div>
-              
+
               <div className="progress-bar-container">
-                <div 
-                  className="progress-bar-fill" 
+                <div
+                  className="progress-bar-fill"
                   style={{ width: `${(preparationStep / 5) * 100}%` }}
                 />
               </div>
@@ -1489,44 +1735,56 @@ function makeGuess(gameState) {
                 <div className="summary-item">
                   <h4>참가자</h4>
                   <div className="player-chips">
-                    {players.map(player => (
+                    {players.map((player) => (
                       <span key={player.id} className="player-chip">
-                        {player.nickname} ({player.type === 'built-in-ai' ? 'AI' : player.type === 'custom-ai' ? 'Custom AI' : '인간'})
+                        {player.nickname} (
+                        {player.type === 'built-in-ai'
+                          ? 'AI'
+                          : player.type === 'custom-ai'
+                            ? 'Custom AI'
+                            : '인간'}
+                        )
                       </span>
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="summary-item">
                   <h4>게임 정보</h4>
                   <div className="game-info-grid">
-                    <div>키워드 풀: <strong>{gameConfig.keywordPoolSize}개</strong></div>
-                    <div>정답 개수: <strong>{gameConfig.answerCount}개</strong></div>
-                    <div>힌트 개수: <strong>{gameConfig.hintCount}개</strong></div>
-                    <div>턴 시간: <strong>{gameConfig.timeLimit}초</strong></div>
-                    <div>최대 턴: <strong>{gameConfig.maxTurns || '무제한'}</strong></div>
+                    <div>
+                      키워드 풀: <strong>{gameConfig.keywordPoolSize}개</strong>
+                    </div>
+                    <div>
+                      정답 개수: <strong>{gameConfig.answerCount}개</strong>
+                    </div>
+                    <div>
+                      힌트 개수: <strong>{gameConfig.hintCount}개</strong>
+                    </div>
+                    <div>
+                      턴 시간: <strong>{gameConfig.timeLimit}초</strong>
+                    </div>
+                    <div>
+                      최대 턴: <strong>{gameConfig.maxTurns || '무제한'}</strong>
+                    </div>
                   </div>
                 </div>
-
               </div>
-              
+
               <div className="game-start-section">
                 <div className="countdown-info">
                   <h3>모든 준비가 완료되었습니다!</h3>
                   <p>게임을 시작하시겠습니까?</p>
                 </div>
-                
+
                 <div className="setup-actions" style={{ justifyContent: 'flex-start' }}>
-                  <button 
-                    className="btn-large btn-secondary" 
+                  <button
+                    className="btn-large btn-secondary"
                     onClick={() => setCurrentScreen('game-config')}
                   >
                     ← 설정 변경
                   </button>
-                  <button 
-                    className="btn-large btn-primary" 
-                    onClick={startActualGame}
-                  >
+                  <button className="btn-large btn-primary" onClick={startActualGame}>
                     게임 시작! 🎮
                   </button>
                 </div>
@@ -1544,9 +1802,9 @@ function makeGuess(gameState) {
 
     // 힌트 보기 단계
     if (hintViewingPhase) {
-      const viewingPlayer = players.find(p => p.id === currentViewingPlayer);
+      const viewingPlayer = players.find((p) => p.id === currentViewingPlayer);
       const hasViewedHints = gameState.hintsViewed[currentViewingPlayer];
-      
+
       // AI 플레이어는 건너뛰기
       if (viewingPlayer?.type === 'built-in-ai') {
         const nextPlayer = currentViewingPlayer + 1;
@@ -1558,14 +1816,14 @@ function makeGuess(gameState) {
             gameManagerRef.current.startGame(
               gameState.keywords,
               gameState.answers,
-              gameState.playerHints
+              gameState.playerHints,
             );
           } else {
             // GameManager 없이 게임 시작 시 타이머 시작
             setTimeout(() => {
-              setGameState(prev => ({
+              setGameState((prev) => ({
                 ...prev,
-                currentTurn: 1
+                currentTurn: 1,
               }));
               startTimer();
             }, 100);
@@ -1578,10 +1836,7 @@ function makeGuess(gameState) {
         <div className="game-screen">
           <div className="hint-viewing-phase">
             <div className="exit-button-container">
-              <button 
-                className="btn btn-exit-small"
-                onClick={exitGame}
-              >
+              <button className="btn btn-exit-small" onClick={exitGame}>
                 게임 종료
               </button>
             </div>
@@ -1589,16 +1844,18 @@ function makeGuess(gameState) {
             <div className="viewing-instructions">
               <h3>{viewingPlayer?.nickname}님의 차례입니다</h3>
               <p>다른 플레이어는 화면을 보지 마세요!</p>
-              
+
               {!hasViewedHints ? (
                 <div className="hint-reveal">
                   <p>아래 버튼을 눌러 본인만의 힌트를 확인하세요.</p>
-                  <button 
+                  <button
                     className="btn-large btn-primary"
-                    onClick={() => setGameState(prev => ({
-                      ...prev,
-                      hintsViewed: { ...prev.hintsViewed, [currentViewingPlayer]: true }
-                    }))}
+                    onClick={() =>
+                      setGameState((prev) => ({
+                        ...prev,
+                        hintsViewed: { ...prev.hintsViewed, [currentViewingPlayer]: true },
+                      }))
+                    }
                   >
                     내 힌트 보기
                   </button>
@@ -1607,14 +1864,14 @@ function makeGuess(gameState) {
                 <div className="hint-display">
                   <h4>내 힌트 (이 키워드들은 정답이 아닙니다)</h4>
                   <div className="hint-chips">
-                    {gameState.playerHints[currentViewingPlayer]?.map(hintIndex => (
+                    {gameState.playerHints[currentViewingPlayer]?.map((hintIndex) => (
                       <span key={hintIndex} className="hint-chip">
                         {gameState.keywords[hintIndex]}
                       </span>
                     ))}
                   </div>
                   <p>힌트를 기억하고 다음 버튼을 눌러주세요.</p>
-                  <button 
+                  <button
                     className="btn-large btn-secondary"
                     onClick={() => {
                       const nextPlayer = currentViewingPlayer + 1;
@@ -1627,14 +1884,14 @@ function makeGuess(gameState) {
                           gameManagerRef.current.startGame(
                             gameState.keywords,
                             gameState.answers,
-                            gameState.playerHints
+                            gameState.playerHints,
                           );
                         } else {
                           // GameManager 없이 게임 시작 시 타이머 시작
                           setTimeout(() => {
-                            setGameState(prev => ({
+                            setGameState((prev) => ({
                               ...prev,
-                              currentTurn: 1
+                              currentTurn: 1,
                             }));
                             startTimer();
                           }, 100);
@@ -1660,7 +1917,9 @@ function makeGuess(gameState) {
             {gameState.winner ? (
               <div className="winner-announcement">
                 <div className="victory-icon"></div>
-                <h3>{players.find(p => p.id === gameState.winner)?.nickname}님이 승리했습니다!</h3>
+                <h3>
+                  {players.find((p) => p.id === gameState.winner)?.nickname}님이 승리했습니다!
+                </h3>
                 <p>축하합니다! 정답을 모두 맟추셨습니다.</p>
               </div>
             ) : (
@@ -1669,11 +1928,11 @@ function makeGuess(gameState) {
                 <p>최대 턴 수에 도달했습니다.</p>
               </div>
             )}
-            
+
             <div className="final-answers">
               <h4>정답은:</h4>
               <div className="answer-list">
-                {gameState.answers.map(answerIndex => (
+                {gameState.answers.map((answerIndex) => (
                   <span key={answerIndex} className="answer-chip">
                     {gameState.keywords[answerIndex]}
                   </span>
@@ -1689,9 +1948,7 @@ function makeGuess(gameState) {
                     <div className="turn-info">
                       <strong>턴 {turn.turnNumber}</strong> - {turn.playerName}
                     </div>
-                    <div className="turn-keywords">
-                      선택: {turn.guessKeywords.join(', ')}
-                    </div>
+                    <div className="turn-keywords">선택: {turn.guessKeywords.join(', ')}</div>
                     <div className="turn-result">
                       {turn.correctCount}/{gameConfig.answerCount} 정답 ({turn.timeUsed}초 소요)
                     </div>
@@ -1701,8 +1958,8 @@ function makeGuess(gameState) {
             </div>
 
             <div className="setup-actions">
-              <button 
-                className="btn-large btn-secondary" 
+              <button
+                className="btn-large btn-secondary"
                 onClick={() => setCurrentScreen('mode-selection')}
               >
                 새 게임
@@ -1718,7 +1975,10 @@ function makeGuess(gameState) {
         {/* 게임 상태 헤더 */}
         <div className="game-header-info">
           <div className="turn-info">
-            <h3>턴 {gameState.currentTurn}{gameConfig.maxTurns && ` / ${gameConfig.maxTurns}`}</h3>
+            <h3>
+              턴 {gameState.currentTurn}
+              {gameConfig.maxTurns && ` / ${gameConfig.maxTurns}`}
+            </h3>
             <p>
               {currentPlayer?.nickname}의 차례
               {isAIThinking && (
@@ -1734,21 +1994,17 @@ function makeGuess(gameState) {
                 {timeRemaining}초
               </div>
               <div className="timer-bar">
-                <div 
-                  className="timer-fill" 
-                  style={{ 
+                <div
+                  className="timer-fill"
+                  style={{
                     width: `${(timeRemaining / gameConfig.timeLimit) * 100}%`,
-                    backgroundColor: timeRemaining <= 10 ? '#FF5722' : 
-                                   timeRemaining <= 30 ? '#FFC107' : '#4CAF50'
+                    backgroundColor:
+                      timeRemaining <= 10 ? '#FF5722' : timeRemaining <= 30 ? '#FFC107' : '#4CAF50',
                   }}
                 />
               </div>
             </div>
-            <button 
-              className="btn btn-exit"
-              onClick={exitGame}
-              title="게임 종료"
-            >
+            <button className="btn btn-exit" onClick={exitGame} title="게임 종료">
               나가기
             </button>
           </div>
@@ -1758,13 +2014,15 @@ function makeGuess(gameState) {
           {/* 왼쪽: 키워드 그리드 */}
           <div className="game-main">
             <div className="keyword-selection">
-              <h4>키워드를 선택하세요 ({selectedKeywords.length}/{gameConfig.answerCount})</h4>
+              <h4>
+                키워드를 선택하세요 ({selectedKeywords.length}/{gameConfig.answerCount})
+              </h4>
               <div className="keywords-grid">
                 {gameState.keywords.map((keyword, index) => {
                   const isSelected = selectedKeywords.includes(index);
                   const isRevealedAnswer = gameState.revealedAnswers.includes(index);
                   const isRevealedWrong = gameState.revealedWrongAnswers.includes(index);
-                  
+
                   return (
                     <button
                       key={index}
@@ -1785,23 +2043,23 @@ function makeGuess(gameState) {
               <div className="selected-display">
                 <h5>선택된 키워드:</h5>
                 <div className="selected-keywords">
-                  {selectedKeywords.map(index => (
+                  {selectedKeywords.map((index) => (
                     <span key={index} className="selected-chip">
                       {gameState.keywords[index]}
                     </span>
                   ))}
                 </div>
               </div>
-              
+
               <div className="control-buttons">
-                <button 
+                <button
                   className="btn-large btn-secondary"
                   onClick={() => setSelectedKeywords([])}
                   disabled={selectedKeywords.length === 0}
                 >
                   선택 초기화
                 </button>
-                <button 
+                <button
                   className="btn-large btn-primary"
                   onClick={submitGuess}
                   disabled={selectedKeywords.length !== gameConfig.answerCount || isSubmitting}
@@ -1834,17 +2092,14 @@ function makeGuess(gameState) {
                 </small>
               </div>
               <div className="hint-buttons">
-                <button 
+                <button
                   className="btn btn-hint"
                   onClick={revealAnswerHint}
                   disabled={gameState.answers.length === gameState.revealedAnswers.length}
                 >
                   정답 1개 공개
                 </button>
-                <button 
-                  className="btn btn-hint"
-                  onClick={revealWrongHint}
-                >
+                <button className="btn btn-hint" onClick={revealWrongHint}>
                   오답 1개 공개
                 </button>
               </div>
@@ -1865,13 +2120,21 @@ function makeGuess(gameState) {
             <div className="players-status">
               <h4>플레이어 현황</h4>
               <div className="players-list">
-                {players.map(player => (
-                  <div 
-                    key={player.id} 
+                {players.map((player) => (
+                  <div
+                    key={player.id}
                     className={`player-status ${currentPlayer?.id === player.id ? 'current' : ''}`}
                   >
                     <span className="player-name">{player.nickname}</span>
-                    <span className="player-type">({player.type === 'built-in-ai' ? 'AI' : player.type === 'custom-ai' ? 'Custom AI' : '인간'})</span>
+                    <span className="player-type">
+                      (
+                      {player.type === 'built-in-ai'
+                        ? 'AI'
+                        : player.type === 'custom-ai'
+                          ? 'Custom AI'
+                          : '인간'}
+                      )
+                    </span>
                   </div>
                 ))}
               </div>
@@ -1883,11 +2146,11 @@ function makeGuess(gameState) {
                 {gameState.turnHistory.slice(-5).map((turn, index) => (
                   <div key={index} className="history-entry">
                     <div className="history-header">
-                      <span>턴 {turn.turnNumber}: {turn.playerName}</span>
+                      <span>
+                        턴 {turn.turnNumber}: {turn.playerName}
+                      </span>
                     </div>
-                    <div className="history-keywords">
-                      {turn.guessKeywords.join(', ')}
-                    </div>
+                    <div className="history-keywords">{turn.guessKeywords.join(', ')}</div>
                     <div className="history-result">
                       {turn.correctCount}/{gameConfig.answerCount} 정답
                     </div>
@@ -1906,25 +2169,28 @@ function makeGuess(gameState) {
 
     const guideSlides = [
       {
-        title: "게임 목표: 숨겨진 키워드를 찾아라!",
-        content: "수많은 키워드 풀에서 정답으로 지정된 몇 개의 키워드를 가장 먼저 찾아내는 플레이어가 승리합니다."
+        title: '게임 목표: 숨겨진 키워드를 찾아라!',
+        content:
+          '수많은 키워드 풀에서 정답으로 지정된 몇 개의 키워드를 가장 먼저 찾아내는 플레이어가 승리합니다.',
       },
       {
-        title: "핵심 규칙: 단서와 추론",
-        content: "각 플레이어는 자신만 아는 '힌트(정답이 아닌 키워드)'를 받습니다. 매 턴, 정답이라 생각하는 키워드들을 추측하면, 그중에 진짜 정답이 '몇 개'인지 결과만 알려줍니다."
+        title: '핵심 규칙: 단서와 추론',
+        content:
+          "각 플레이어는 자신만 아는 '힌트(정답이 아닌 키워드)'를 받습니다. 매 턴, 정답이라 생각하는 키워드들을 추측하면, 그중에 진짜 정답이 '몇 개'인지 결과만 알려줍니다.",
       },
       {
-        title: "승리 조건: 완벽한 추리",
-        content: "모든 정답 키워드를 정확히 맞추는 추측을 가장 먼저 한 플레이어가 게임의 승자가 됩니다. 제한 시간이 있으니 신속하고 정확한 추리가 필요합니다!"
-      }
+        title: '승리 조건: 완벽한 추리',
+        content:
+          '모든 정답 키워드를 정확히 맞추는 추측을 가장 먼저 한 플레이어가 게임의 승자가 됩니다. 제한 시간이 있으니 신속하고 정확한 추리가 필요합니다!',
+      },
     ];
 
     const goToNextSlide = () => {
-      setGuideSlideIndex(prev => (prev + 1) % guideSlides.length);
+      setGuideSlideIndex((prev) => (prev + 1) % guideSlides.length);
     };
 
     const goToPrevSlide = () => {
-      setGuideSlideIndex(prev => (prev - 1 + guideSlides.length) % guideSlides.length);
+      setGuideSlideIndex((prev) => (prev - 1 + guideSlides.length) % guideSlides.length);
     };
 
     return (
@@ -1932,7 +2198,9 @@ function makeGuess(gameState) {
         <div className="modal-content guide-modal" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header">
             <h3>게임 가이드</h3>
-            <button className="modal-close" onClick={() => setIsGuideModalOpen(false)}>×</button>
+            <button className="modal-close" onClick={() => setIsGuideModalOpen(false)}>
+              ×
+            </button>
           </div>
           <div className="guide-slides-container">
             <div className="guide-slide">
@@ -1944,7 +2212,10 @@ function makeGuess(gameState) {
             <button onClick={goToPrevSlide}>이전</button>
             <div className="slide-indicators">
               {guideSlides.map((_, index) => (
-                <span key={index} className={`indicator ${guideSlideIndex === index ? 'active' : ''}`}></span>
+                <span
+                  key={index}
+                  className={`indicator ${guideSlideIndex === index ? 'active' : ''}`}
+                ></span>
               ))}
             </div>
             <button onClick={goToNextSlide}>다음</button>
@@ -1960,7 +2231,7 @@ function makeGuess(gameState) {
     if (currentScreen === 'mode-selection' || currentScreen === 'difficulty-selection') {
       return 'theme-intermediate';
     }
-    
+
     if (gameMode === 'solo') {
       // 솔로 모드에서는 난이도에 따라 테마 결정
       switch (soloDifficulty) {
@@ -1987,7 +2258,7 @@ function makeGuess(gameState) {
             <h1>Exclusive Deduction Game</h1>
             <p>서로 다른 단서로 정답을 추론하는 게임</p>
           </div>
-          
+
           {currentScreen === 'mode-selection' && renderModeSelection()}
           {currentScreen === 'difficulty-selection' && renderDifficultySelection()}
           {currentScreen === 'player-setup' && renderPlayerSetup()}
@@ -1995,7 +2266,7 @@ function makeGuess(gameState) {
           {currentScreen === 'game-preparation' && renderGamePreparation()}
           {currentScreen === 'game' && renderGameScreen()}
         </div>
-        
+
         {renderCodeEditorModal()}
         {renderGuideModal()}
       </div>

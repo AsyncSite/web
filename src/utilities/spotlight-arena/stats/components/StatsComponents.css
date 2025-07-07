@@ -253,27 +253,27 @@
 }
 
 .heatmap-cell.intensity-1 {
-  background: #DBEAFE;
-  color: #1E40AF;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 .heatmap-cell.intensity-2 {
-  background: #BFDBFE;
-  color: #1E40AF;
+  background: #bfdbfe;
+  color: #1e40af;
 }
 
 .heatmap-cell.intensity-3 {
-  background: #93C5FD;
-  color: #1E3A8A;
+  background: #93c5fd;
+  color: #1e3a8a;
 }
 
 .heatmap-cell.intensity-4 {
-  background: #60A5FA;
+  background: #60a5fa;
   color: white;
 }
 
 .heatmap-cell.intensity-5 {
-  background: #3B82F6;
+  background: #3b82f6;
   color: white;
 }
 
@@ -406,7 +406,7 @@
   .heatmap-grid {
     grid-template-columns: repeat(6, 1fr);
   }
-  
+
   .stats-grid-internal {
     grid-template-columns: repeat(2, 1fr);
   }

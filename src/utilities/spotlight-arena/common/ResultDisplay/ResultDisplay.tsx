@@ -15,7 +15,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   gameName,
   onReplay,
   onNewGame,
-  onGoHome
+  onGoHome,
 }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
@@ -27,11 +27,15 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   }, []);
 
   const copyResults = () => {
-    const resultText = `🎊 ${gameName} 추첨 결과 🎊\n\n` +
-      winners.map((winner, index) => {
-        const rank = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}등`;
-        return `${rank} ${winner.name}`;
-      }).join('\n');
+    const resultText =
+      `🎊 ${gameName} 추첨 결과 🎊\n\n` +
+      winners
+        .map((winner, index) => {
+          const rank =
+            index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}등`;
+          return `${rank} ${winner.name}`;
+        })
+        .join('\n');
 
     navigator.clipboard.writeText(resultText);
     setCopiedToClipboard(true);
@@ -40,24 +44,28 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
 
   const getRankEmoji = (index: number) => {
     switch (index) {
-      case 0: return '🥇';
-      case 1: return '🥈';
-      case 2: return '🥉';
-      default: return `${index + 1}등`;
+      case 0:
+        return '🥇';
+      case 1:
+        return '🥈';
+      case 2:
+        return '🥉';
+      default:
+        return `${index + 1}등`;
     }
   };
 
   return (
     <div className="result-display">
       {showConfetti && <div className="confetti-container" />}
-      
+
       <div className="result-content">
         <h2 className="result-title">🎊 축하합니다! 🎊</h2>
-        
+
         <div className="winners-list">
           {winners.map((winner, index) => (
-            <div 
-              key={winner.id} 
+            <div
+              key={winner.id}
               className={`winner-item rank-${index + 1}`}
               style={{ animationDelay: `${index * 0.2}s` }}
             >
@@ -68,36 +76,24 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
         </div>
 
         <div className="result-actions">
-          <button
-            className="result-button copy-button"
-            onClick={copyResults}
-          >
+          <button className="result-button copy-button" onClick={copyResults}>
             {copiedToClipboard ? '✅ 복사됨!' : '📋 결과 복사'}
           </button>
-          
+
           {onReplay && (
-            <button
-              className="result-button replay-button"
-              onClick={onReplay}
-            >
+            <button className="result-button replay-button" onClick={onReplay}>
               🔄 다시 추첨
             </button>
           )}
-          
+
           {onNewGame && (
-            <button
-              className="result-button new-game-button"
-              onClick={onNewGame}
-            >
+            <button className="result-button new-game-button" onClick={onNewGame}>
               🎮 다른 게임
             </button>
           )}
-          
+
           {onGoHome && (
-            <button
-              className="result-button home-button"
-              onClick={onGoHome}
-            >
+            <button className="result-button home-button" onClick={onGoHome}>
               🏠 처음으로
             </button>
           )}

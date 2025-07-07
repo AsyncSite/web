@@ -21,9 +21,10 @@ const GameHistoryViewer: React.FC<GameHistoryViewerProps> = ({ onBack, onSelectP
   const loadHistory = () => {
     setIsLoading(true);
     try {
-      const games = filter && Object.keys(filter).length > 0
-        ? gameHistoryService.getFilteredGames(filter)
-        : gameHistoryService.getRecentGames(50);
+      const games =
+        filter && Object.keys(filter).length > 0
+          ? gameHistoryService.getFilteredGames(filter)
+          : gameHistoryService.getRecentGames(50);
       setHistory(games);
     } catch (error) {
       console.error('Failed to load history:', error);
@@ -39,7 +40,7 @@ const GameHistoryViewer: React.FC<GameHistoryViewerProps> = ({ onBack, onSelectP
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -52,19 +53,27 @@ const GameHistoryViewer: React.FC<GameHistoryViewerProps> = ({ onBack, onSelectP
 
   const getGameTypeIcon = (gameType: string) => {
     switch (gameType) {
-      case 'snail-race': return '🐌';
-      case 'slot-machine': return '🎰';
-      case 'dart-wheel': return '🎯';
-      default: return '🎮';
+      case 'snail-race':
+        return '🐌';
+      case 'slot-machine':
+        return '🎰';
+      case 'dart-wheel':
+        return '🎯';
+      default:
+        return '🎮';
     }
   };
 
   const getGameTypeName = (gameType: string) => {
     switch (gameType) {
-      case 'snail-race': return '달팽이 레이스';
-      case 'slot-machine': return '슬롯머신';
-      case 'dart-wheel': return '다트 휠';
-      default: return gameType;
+      case 'snail-race':
+        return '달팽이 레이스';
+      case 'slot-machine':
+        return '슬롯머신';
+      case 'dart-wheel':
+        return '다트 휠';
+      default:
+        return gameType;
     }
   };
 
@@ -88,7 +97,7 @@ const GameHistoryViewer: React.FC<GameHistoryViewerProps> = ({ onBack, onSelectP
       </div>
 
       <div className="history-filters">
-        <select 
+        <select
           value={filter.gameType || ''}
           onChange={(e) => setFilter({ ...filter, gameType: e.target.value || undefined })}
         >
@@ -118,26 +127,17 @@ const GameHistoryViewer: React.FC<GameHistoryViewerProps> = ({ onBack, onSelectP
         </div>
       ) : (
         <div className="history-list">
-          {history.map(game => (
-            <div 
-              key={game.id} 
-              className="history-item"
-              onClick={() => setSelectedGame(game)}
-            >
-              <div className="game-icon">
-                {getGameTypeIcon(game.gameType)}
-              </div>
+          {history.map((game) => (
+            <div key={game.id} className="history-item" onClick={() => setSelectedGame(game)}>
+              <div className="game-icon">{getGameTypeIcon(game.gameType)}</div>
               <div className="game-info">
-                <div className="game-title">
-                  {getGameTypeName(game.gameType)}
-                </div>
+                <div className="game-title">{getGameTypeName(game.gameType)}</div>
                 <div className="game-meta">
-                  {formatDate(game.timestamp)} • {game.participants.length}명 참가 • {formatDuration(game.duration)}
+                  {formatDate(game.timestamp)} • {game.participants.length}명 참가 •{' '}
+                  {formatDuration(game.duration)}
                 </div>
               </div>
-              <div className="winners-preview">
-                🏆 {game.winners.map(w => w.name).join(', ')}
-              </div>
+              <div className="winners-preview">🏆 {game.winners.map((w) => w.name).join(', ')}</div>
             </div>
           ))}
         </div>
@@ -146,9 +146,11 @@ const GameHistoryViewer: React.FC<GameHistoryViewerProps> = ({ onBack, onSelectP
       {selectedGame && (
         <div className="game-detail-modal" onClick={() => setSelectedGame(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>{getGameTypeIcon(selectedGame.gameType)} {getGameTypeName(selectedGame.gameType)}</h3>
+            <h3>
+              {getGameTypeIcon(selectedGame.gameType)} {getGameTypeName(selectedGame.gameType)}
+            </h3>
             <p className="game-date">{formatDate(selectedGame.timestamp)}</p>
-            
+
             <div className="detail-section">
               <h4>🏆 당첨자</h4>
               <ul>
@@ -163,10 +165,10 @@ const GameHistoryViewer: React.FC<GameHistoryViewerProps> = ({ onBack, onSelectP
             <div className="detail-section">
               <h4>👥 전체 참가자</h4>
               <div className="participants-grid">
-                {selectedGame.participants.map(p => (
-                  <span 
-                    key={p.id} 
-                    className={`participant-chip ${selectedGame.winners.some(w => w.id === p.id) ? 'winner' : ''}`}
+                {selectedGame.participants.map((p) => (
+                  <span
+                    key={p.id}
+                    className={`participant-chip ${selectedGame.winners.some((w) => w.id === p.id) ? 'winner' : ''}`}
                     onClick={() => onSelectParticipant?.(p.id)}
                   >
                     {p.name}

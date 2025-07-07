@@ -52,7 +52,9 @@ export class AICodeValidator {
 
     // 1. Check code length
     if (code.length > this.MAX_CODE_LENGTH) {
-      errors.push(`Code exceeds maximum length (${code.length}/${this.MAX_CODE_LENGTH} characters)`);
+      errors.push(
+        `Code exceeds maximum length (${code.length}/${this.MAX_CODE_LENGTH} characters)`,
+      );
     }
 
     // 2. Check line count
@@ -87,7 +89,7 @@ export class AICodeValidator {
       /while\s*\(\s*1\s*\)/g,
       /for\s*\(\s*;\s*;\s*\)/g,
     ];
-    
+
     for (const pattern of loopPatterns) {
       if (pattern.test(code)) {
         warnings.push('Potential infinite loop detected');
@@ -118,7 +120,7 @@ export class AICodeValidator {
     return {
       isValid: errors.length === 0,
       errors,
-      warnings: warnings.length > 0 ? warnings : undefined
+      warnings: warnings.length > 0 ? warnings : undefined,
     };
   }
 
@@ -127,7 +129,7 @@ export class AICodeValidator {
     const loops = (code.match(/\b(for|while|do)\b/g) || []).length;
     const functions = (code.match(/\bfunction\b/g) || []).length;
     const conditionals = (code.match(/\b(if|else|switch|case)\b/g) || []).length;
-    
+
     // Simple cyclomatic complexity estimation
     const complexity = 1 + conditionals + loops;
 
@@ -135,7 +137,7 @@ export class AICodeValidator {
       lines,
       loops,
       functions,
-      complexity
+      complexity,
     };
   }
 
@@ -150,7 +152,8 @@ export class AICodeValidator {
 
     // Ensure code ends with the makeGuess function being accessible
     if (!processed.includes('return makeGuess') && processed.includes('function makeGuess')) {
-      processed += '\n\n// Auto-added by preprocessor\nif (typeof makeGuess === "function") { makeGuess; }';
+      processed +=
+        '\n\n// Auto-added by preprocessor\nif (typeof makeGuess === "function") { makeGuess; }';
     }
 
     return processed;

@@ -18,8 +18,8 @@ const PlayerStatus: React.FC<PlayerStatusProps> = ({ players, currentPlayerId })
       <h3>플레이어 상태</h3>
       <div className="players">
         {players.map((player) => (
-          <div 
-            key={player.id} 
+          <div
+            key={player.id}
             className={`player ${player.id === currentPlayerId ? 'current' : ''}`}
           >
             <span className="name">{player.name}</span>

@@ -12,10 +12,10 @@ interface ParticipantRankingsProps {
   gameType?: string;
 }
 
-const ParticipantRankings: React.FC<ParticipantRankingsProps> = ({ 
-  rankings, 
+const ParticipantRankings: React.FC<ParticipantRankingsProps> = ({
+  rankings,
   onSelectParticipant,
-  gameType 
+  gameType,
 }) => {
   const topRankings = rankings.slice(0, 10);
 
@@ -27,39 +27,35 @@ const ParticipantRankings: React.FC<ParticipantRankingsProps> = ({
     return '🎖️';
   };
 
-  const getScoreDisplay = (item: typeof rankings[0]) => {
+  const getScoreDisplay = (item: (typeof rankings)[0]) => {
     if (gameType && item.participant.gameStats[gameType]) {
       const stats = item.participant.gameStats[gameType];
       return {
         primary: `${((stats.wins / stats.played) * 100).toFixed(1)}%`,
         secondary: `${stats.wins}승 / ${stats.played}게임`,
-        tertiary: stats.avgRank ? `평균 ${stats.avgRank.toFixed(1)}위` : null
+        tertiary: stats.avgRank ? `평균 ${stats.avgRank.toFixed(1)}위` : null,
       };
     }
     return {
       primary: `${item.participant.winRate.toFixed(1)}%`,
       secondary: `${item.participant.wins}승 / ${item.participant.totalGames}게임`,
-      tertiary: null
+      tertiary: null,
     };
   };
 
   return (
     <div className="stats-card participant-rankings-card">
       <h3>🏅 참가자 랭킹</h3>
-      <p className="rankings-subtitle">
-        {gameType ? '게임별 성적 기준' : '전체 성적 기준'}
-      </p>
-      
+      <p className="rankings-subtitle">{gameType ? '게임별 성적 기준' : '전체 성적 기준'}</p>
+
       {topRankings.length === 0 ? (
-        <div className="empty-state">
-          3게임 이상 참가한 플레이어가 없습니다.
-        </div>
+        <div className="empty-state">3게임 이상 참가한 플레이어가 없습니다.</div>
       ) : (
         <div className="rankings-list">
-          {topRankings.map(item => {
+          {topRankings.map((item) => {
             const scoreDisplay = getScoreDisplay(item);
             return (
-              <div 
+              <div
                 key={item.participant.participantId}
                 className="ranking-item"
                 onClick={() => onSelectParticipant(item.participant.participantId)}
@@ -68,11 +64,9 @@ const ParticipantRankings: React.FC<ParticipantRankingsProps> = ({
                   <span className="rank-emoji">{getRankBadge(item.rank)}</span>
                   <span className="rank-number">{item.rank}</span>
                 </div>
-                
+
                 <div className="participant-info">
-                  <div className="participant-name">
-                    {item.participant.name}
-                  </div>
+                  <div className="participant-name">{item.participant.name}</div>
                   <div className="participant-stats">
                     <span className="stat-primary">{scoreDisplay.primary}</span>
                     <span className="stat-secondary">{scoreDisplay.secondary}</span>
@@ -81,10 +75,8 @@ const ParticipantRankings: React.FC<ParticipantRankingsProps> = ({
                     )}
                   </div>
                 </div>
-                
-                <div className="ranking-score">
-                  {Math.round(item.score)}점
-                </div>
+
+                <div className="ranking-score">{Math.round(item.score)}점</div>
               </div>
             );
           })}

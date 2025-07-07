@@ -3,15 +3,15 @@ import { GameStateForAI } from '../types/GameTypes';
 
 export interface IPlayer {
   getInfo(): PlayerInfo;
-  
+
   makeGuess(gameState: GameStateForAI): Promise<number[]>;
-  
+
   isReady(): boolean;
-  
+
   onTurnStart?(): void;
-  
+
   onTurnEnd?(move: PlayerMove): void;
-  
+
   reset(): void;
 }
 

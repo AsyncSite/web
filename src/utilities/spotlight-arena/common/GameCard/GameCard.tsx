@@ -8,9 +8,8 @@ interface GameCardProps {
 }
 
 const GameCard: React.FC<GameCardProps> = ({ game, onClick, participantCount = 0 }) => {
-  const isPlayable = game.available && 
-    participantCount >= game.minPlayers && 
-    participantCount <= game.maxPlayers;
+  const isPlayable =
+    game.available && participantCount >= game.minPlayers && participantCount <= game.maxPlayers;
 
   const getStatusMessage = () => {
     if (!game.available) return 'Coming Soon';
@@ -22,32 +21,34 @@ const GameCard: React.FC<GameCardProps> = ({ game, onClick, participantCount = 0
   const statusMessage = getStatusMessage();
 
   return (
-    <div 
+    <div
       className={`game-card ${!isPlayable ? 'disabled' : ''} ${!game.available ? 'coming-soon' : ''}`}
       onClick={isPlayable ? onClick : undefined}
       data-game-id={game.id}
     >
       <div className="game-card-header">
         <div className="game-card-icon">{game.icon}</div>
-        {statusMessage && (
-          <div className="game-card-status">{statusMessage}</div>
-        )}
+        {statusMessage && <div className="game-card-status">{statusMessage}</div>}
       </div>
-      
+
       <div className="game-card-body">
         <h3 className="game-card-title">{game.name}</h3>
         <p className="game-card-description">{game.description}</p>
       </div>
-      
+
       <div className="game-card-footer">
         <div className="game-card-tags">
           {game.tags.map((tag, index) => (
-            <span key={index} className="game-card-tag">{tag}</span>
+            <span key={index} className="game-card-tag">
+              {tag}
+            </span>
           ))}
         </div>
         <div className="game-card-players">
           <span className="players-icon">👥</span>
-          <span className="players-range">{game.minPlayers}-{game.maxPlayers}명</span>
+          <span className="players-range">
+            {game.minPlayers}-{game.maxPlayers}명
+          </span>
         </div>
       </div>
     </div>

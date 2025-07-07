@@ -18,7 +18,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
   gameState,
   isPlaying,
   onRaceComplete,
-  onEventTrigger
+  onEventTrigger,
 }) => {
   const stageRef = useRef<any>(null);
   const [finishedSnails, setFinishedSnails] = useState<string[]>([]);
@@ -28,7 +28,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
   const snailCount = gameState.snails.length;
   const minLaneHeight = 60; // 최소 레인 높이
   const calculatedHeight = Math.max(600, snailCount * minLaneHeight);
-  const trackHeight = calculatedHeight + (trackPaddingY * 2);
+  const trackHeight = calculatedHeight + trackPaddingY * 2;
   const laneHeight = (trackHeight - trackPaddingY * 2) / snailCount;
   const trackStartX = 100;
   const trackEndX = trackWidth - 100;
@@ -40,7 +40,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
     winnerCount: gameState.settings.winnerCount,
     events: SNAIL_RACE_EVENTS,
     onRaceComplete,
-    onEventTrigger
+    onEventTrigger,
   });
 
   useEffect(() => {
@@ -54,12 +54,12 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
   // 완주한 달팽이 추적
   useEffect(() => {
     const newFinishedSnails = snails
-      .filter(snail => snail.position >= gameState.trackLength)
-      .map(snail => snail.id)
-      .filter(id => !finishedSnails.includes(id));
-    
+      .filter((snail) => snail.position >= gameState.trackLength)
+      .map((snail) => snail.id)
+      .filter((id) => !finishedSnails.includes(id));
+
     if (newFinishedSnails.length > 0) {
-      setFinishedSnails(prev => [...prev, ...newFinishedSnails]);
+      setFinishedSnails((prev) => [...prev, ...newFinishedSnails]);
     }
   }, [snails, gameState.trackLength, finishedSnails]);
 
@@ -72,17 +72,22 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
       <Stage width={trackWidth} height={trackHeight} ref={stageRef}>
         {/* 배경 레이어 */}
         <Layer>
-          <TrackBackground 
-            width={trackWidth} 
-            height={trackHeight} 
+          <TrackBackground
+            width={trackWidth}
+            height={trackHeight}
             laneCount={gameState.snails.length}
           />
-          
+
           {/* 레인 구분선 */}
           {gameState.snails.map((_, index) => (
             <Line
               key={`lane-${index}`}
-              points={[trackStartX, trackPaddingY + (index + 1) * laneHeight, trackEndX, trackPaddingY + (index + 1) * laneHeight]}
+              points={[
+                trackStartX,
+                trackPaddingY + (index + 1) * laneHeight,
+                trackEndX,
+                trackPaddingY + (index + 1) * laneHeight,
+              ]}
               stroke="#C8E6C9"
               strokeWidth={2}
               dash={[10, 5]}
@@ -130,7 +135,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
             const laneTop = trackPaddingY + index * laneHeight;
             const snailY = laneTop + laneHeight / 2;
             const isFinished = snail.position >= gameState.trackLength;
-            
+
             // 완주 순위 계산
             const rank = isFinished ? finishedSnails.indexOf(snail.id) + 1 : 0;
 

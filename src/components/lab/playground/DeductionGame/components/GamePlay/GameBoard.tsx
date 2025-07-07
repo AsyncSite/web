@@ -17,7 +17,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ keywordPool, currentGuess, onGues
             className={`keyword-button ${currentGuess.includes(index) ? 'selected' : ''}`}
             onClick={() => {
               const newGuess = currentGuess.includes(index)
-                ? currentGuess.filter(i => i !== index)
+                ? currentGuess.filter((i) => i !== index)
                 : [...currentGuess, index];
               onGuessChange(newGuess);
             }}

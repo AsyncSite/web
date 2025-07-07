@@ -16,8 +16,13 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
-    repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 35px,
+    rgba(255, 255, 255, 0.05) 35px,
+    rgba(255, 255, 255, 0.05) 70px
+  );
   pointer-events: none;
 }
 
@@ -175,7 +180,7 @@
   color: var(--sa-gray-700);
 }
 
-.setting-item input[type="number"] {
+.setting-item input[type='number'] {
   width: 80px;
   padding: 8px 12px;
   border: 2px solid #e0e0e0;
@@ -373,27 +378,27 @@
   .spotlight-arena {
     padding: 80px var(--sa-spacing-md) var(--sa-spacing-lg);
   }
-  
+
   .lobby-content {
     grid-template-columns: 1fr;
     gap: var(--sa-spacing-lg);
   }
-  
+
   .games-grid {
     grid-template-columns: 1fr;
     gap: var(--sa-spacing-lg);
     padding: var(--sa-spacing-md);
   }
-  
+
   .arena-title {
     font-size: var(--sa-font-size-2xl);
   }
-  
+
   .participant-section,
   .settings-section {
     padding: var(--sa-spacing-lg);
   }
-  
+
   /* 모바일에서 배경 장식 숨기기 */
   .spotlight-arena::after {
     display: none;

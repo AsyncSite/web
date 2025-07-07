@@ -176,15 +176,15 @@
   .result-display {
     padding: var(--sa-spacing-xl);
   }
-  
+
   .result-title {
     font-size: var(--sa-font-size-2xl);
   }
-  
+
   .result-actions {
     grid-template-columns: 1fr;
   }
-  
+
   .copy-button {
     grid-column: 1;
   }

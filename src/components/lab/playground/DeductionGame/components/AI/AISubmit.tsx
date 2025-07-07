@@ -9,13 +9,13 @@ interface AISubmitProps {
   isValidating: boolean;
 }
 
-const AISubmit: React.FC<AISubmitProps> = ({ 
-  aiName, 
-  author, 
-  onNameChange, 
-  onAuthorChange, 
-  onSubmit, 
-  isValidating 
+const AISubmit: React.FC<AISubmitProps> = ({
+  aiName,
+  author,
+  onNameChange,
+  onAuthorChange,
+  onSubmit,
+  isValidating,
 }) => {
   return (
     <div className="ai-submit">
@@ -23,18 +23,18 @@ const AISubmit: React.FC<AISubmitProps> = ({
       <div className="ai-info">
         <label>
           AI 이름:
-          <input 
-            type="text" 
-            value={aiName} 
+          <input
+            type="text"
+            value={aiName}
             onChange={(e) => onNameChange(e.target.value)}
             placeholder="AI 이름을 입력하세요"
           />
         </label>
         <label>
           제작자:
-          <input 
-            type="text" 
-            value={author} 
+          <input
+            type="text"
+            value={author}
             onChange={(e) => onAuthorChange(e.target.value)}
             placeholder="제작자 이름을 입력하세요"
           />

@@ -10,7 +10,7 @@ export const GAMES_LIST: GameInfo[] = [
     tags: ['레이싱', '유머'],
     minPlayers: 2,
     maxPlayers: 20,
-    available: true
+    available: true,
   },
   {
     id: 'dart-wheel',
@@ -20,7 +20,7 @@ export const GAMES_LIST: GameInfo[] = [
     tags: ['카지노', '긴장감'],
     minPlayers: 2,
     maxPlayers: 30,
-    available: false
+    available: false,
   },
   {
     id: 'slot-cascade',
@@ -30,7 +30,7 @@ export const GAMES_LIST: GameInfo[] = [
     tags: ['카지노', '스릴'],
     minPlayers: 2,
     maxPlayers: 50,
-    available: false
+    available: false,
   },
   {
     id: 'circus-cannon',
@@ -40,7 +40,7 @@ export const GAMES_LIST: GameInfo[] = [
     tags: ['액션', '스펙터클'],
     minPlayers: 2,
     maxPlayers: 15,
-    available: false
+    available: false,
   },
   {
     id: 'bubble-pop',
@@ -50,7 +50,7 @@ export const GAMES_LIST: GameInfo[] = [
     tags: ['서바이벌', '팝핑'],
     minPlayers: 2,
     maxPlayers: 25,
-    available: false
+    available: false,
   },
   {
     id: 'masquerade',
@@ -60,25 +60,24 @@ export const GAMES_LIST: GameInfo[] = [
     tags: ['미스터리', '드라마'],
     minPlayers: 2,
     maxPlayers: 20,
-    available: false
-  }
+    available: false,
+  },
 ];
 
 // 게임 찾기 함수
 export const findGameById = (gameId: string): GameInfo | undefined => {
-  return GAMES_LIST.find(game => game.id === gameId);
+  return GAMES_LIST.find((game) => game.id === gameId);
 };
 
 // 카테고리별 게임 필터링
 export const filterGamesByTag = (tag: string): GameInfo[] => {
-  return GAMES_LIST.filter(game => game.tags.includes(tag));
+  return GAMES_LIST.filter((game) => game.tags.includes(tag));
 };
 
 // 플레이 가능한 게임 필터링
 export const getPlayableGames = (participantCount: number): GameInfo[] => {
-  return GAMES_LIST.filter(game => 
-    game.available &&
-    participantCount >= game.minPlayers &&
-    participantCount <= game.maxPlayers
+  return GAMES_LIST.filter(
+    (game) =>
+      game.available && participantCount >= game.minPlayers && participantCount <= game.maxPlayers,
   );
 };

@@ -85,10 +85,7 @@ const SpotlightArenaContent = () => {
       <div className="spotlight-arena-container">
         {currentStep === 'lobby' && (
           <div className="lobby-section sa-card">
-            <button 
-              className="arena-back-button"
-              onClick={handleBackToLab}
-            >
+            <button className="arena-back-button" onClick={handleBackToLab}>
               ← Lab으로 돌아가기
             </button>
             <div className="lobby-header">
@@ -96,23 +93,23 @@ const SpotlightArenaContent = () => {
                 <h1 className="arena-title">🎮 스포트라이트 아레나</h1>
                 <p className="arena-subtitle">다양한 미니게임으로 추첨을 재미있게!</p>
               </div>
-              <button 
+              <button
                 className="sa-button sa-button-secondary"
                 onClick={() => setCurrentStep('stats')}
               >
                 📊 통계 대시보드
               </button>
             </div>
-            
+
             <div className="lobby-content">
               <div className="participant-section">
                 <h2>👥 참가자 명단</h2>
-                <ParticipantInput 
+                <ParticipantInput
                   onParticipantsChange={handleParticipantsChange}
                   maxParticipants={20}
                 />
               </div>
-              
+
               <div className="settings-section">
                 <h2>⚙️ 추첨 설정</h2>
                 <div className="setting-item">
@@ -128,7 +125,7 @@ const SpotlightArenaContent = () => {
                 </div>
               </div>
             </div>
-            
+
             <button
               className="next-button sa-button sa-button-primary"
               onClick={handleNextToArcade}
@@ -144,14 +141,12 @@ const SpotlightArenaContent = () => {
             <button className="back-button" onClick={handleBackToLobby}>
               ← 뒤로가기
             </button>
-            
+
             <h1 className="arcade-title">✨ 어떤 게임으로 추첨할까요?</h1>
-            <p className="arcade-subtitle">
-              현재 {participants.length}명이 참가합니다
-            </p>
-            
+            <p className="arcade-subtitle">현재 {participants.length}명이 참가합니다</p>
+
             <div className="games-grid">
-              {GAMES_LIST.map(game => (
+              {GAMES_LIST.map((game) => (
                 <GameCard
                   key={game.id}
                   game={game}
@@ -170,14 +165,14 @@ const SpotlightArenaContent = () => {
                 <button className="back-button" onClick={handleBackToArcade}>
                   ← 게임 선택으로
                 </button>
-                
+
                 <div className="snail-race-container">
                   <h2 className="snail-race-title">🐌 달팽이 레이스</h2>
-                  
+
                   <div className="snail-animation-wrapper">
                     {snailAnimation && (
                       <div className="snail-animation-container">
-                        <Lottie 
+                        <Lottie
                           animationData={snailAnimation}
                           loop={true}
                           autoplay={true}
@@ -186,7 +181,7 @@ const SpotlightArenaContent = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="snail-race-info">
                     <p className="snail-race-description">
                       세상에서 가장 느린 레이스, 그러나 가장 예측 불가능한 결과!
@@ -201,8 +196,8 @@ const SpotlightArenaContent = () => {
                         <span className="detail-value">{winnerCount}명</span>
                       </div>
                     </div>
-                    
-                    <button 
+
+                    <button
                       className="start-race-button sa-button sa-button-primary"
                       onClick={() => setShowSnailIntro(false)}
                     >
@@ -224,7 +219,7 @@ const SpotlightArenaContent = () => {
                 onReplay={() => {
                   // 같은 참가자로 다시 시작
                   setShowSnailIntro(true);
-                  setGameKey(prev => prev + 1); // key 변경으로 컴포넌트 리마운트
+                  setGameKey((prev) => prev + 1); // key 변경으로 컴포넌트 리마운트
                   setTimeout(() => setShowSnailIntro(false), 100);
                 }}
                 onNewGame={() => {
@@ -239,7 +234,7 @@ const SpotlightArenaContent = () => {
 
         {/* 히스토리 뷰어 */}
         {currentStep === 'history' && (
-          <GameHistoryViewer 
+          <GameHistoryViewer
             onBack={() => setCurrentStep('stats')}
             onSelectParticipant={(participantId) => {
               // 나중에 참가자 통계 화면으로 이동할 수 있도록 확장 가능
@@ -250,7 +245,7 @@ const SpotlightArenaContent = () => {
 
         {/* 통계 대시보드 */}
         {currentStep === 'stats' && (
-          <StatsDashboard 
+          <StatsDashboard
             onBack={() => setCurrentStep('lobby')}
             onViewHistory={() => setCurrentStep('history')}
             onSelectParticipant={(participantId) => {
@@ -263,11 +258,7 @@ const SpotlightArenaContent = () => {
 
       {/* 플로팅 액션 버튼 */}
       {showScrollTop && (
-        <button 
-          className="floating-action-button"
-          onClick={scrollToTop}
-          aria-label="맨 위로 이동"
-        >
+        <button className="floating-action-button" onClick={scrollToTop} aria-label="맨 위로 이동">
           ↑
         </button>
       )}

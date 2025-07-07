@@ -1,55 +1,55 @@
 .about-art-section {
-    background-color: #111;
-    padding: 150px 20px;
-    position: relative;
-    overflow: hidden;
+  background-color: #111;
+  padding: 150px 20px;
+  position: relative;
+  overflow: hidden;
 }
 
 .about-art-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .art-block {
-    margin-bottom: 180px;
+  margin-bottom: 180px;
 }
 
 /* 키워드 */
 .art-keyword {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #C3E88D;
-    margin-bottom: 20px;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #c3e88d;
+  margin-bottom: 20px;
 
-    /* 기본(초기) 상태는 그냥 정상 노출 */
-    opacity: 1;
-    transform: none;
+  /* 기본(초기) 상태는 그냥 정상 노출 */
+  opacity: 1;
+  transform: none;
 }
 
 /* 짧은 설명 */
 .art-desc {
-    font-size: 1.2rem;
-    color: #82AAFF;
-    line-height: 1.6;
+  font-size: 1.2rem;
+  color: #82aaff;
+  line-height: 1.6;
 
-    opacity: 1;
-    transform: none;
+  opacity: 1;
+  transform: none;
 }
 
 /* 반응형 */
 @media (max-width: 768px) {
-    .about-art-section {
-        padding: 100px 20px;
-    }
-    .art-block {
-        margin-bottom: 120px;
-    }
-    .art-keyword {
-        font-size: 2rem;
-        margin-bottom: 15px;
-    }
-    .art-desc {
-        font-size: 1rem;
-    }
+  .about-art-section {
+    padding: 100px 20px;
+  }
+  .art-block {
+    margin-bottom: 120px;
+  }
+  .art-keyword {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  .art-desc {
+    font-size: 1rem;
+  }
 }

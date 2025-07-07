@@ -8,7 +8,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '🌟',
     duration: 2000,
     speedModifier: 2.0,
-    probability: 0.15
+    probability: 0.15,
   },
   {
     id: 'nap-time',
@@ -16,7 +16,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '💤',
     duration: 1500,
     speedModifier: 0,
-    probability: 0.15
+    probability: 0.15,
   },
   {
     id: 'slippery-leaf',
@@ -24,7 +24,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '🍃',
     duration: 1000,
     speedModifier: 1.5,
-    probability: 0.20
+    probability: 0.2,
   },
   {
     id: 'tasty-grass',
@@ -32,7 +32,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '🌿',
     duration: 2000,
     speedModifier: 0,
-    probability: 0.10
+    probability: 0.1,
   },
   {
     id: 'sudden-wind',
@@ -40,7 +40,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '💨',
     duration: 0,
     speedModifier: -2, // 뒤로 2 units
-    probability: 0.10
+    probability: 0.1,
   },
   {
     id: 'super-booster',
@@ -48,7 +48,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '🚀',
     duration: 1000,
     speedModifier: 3.0,
-    probability: 0.05
+    probability: 0.05,
   },
   {
     id: 'confused',
@@ -56,7 +56,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '🔄',
     duration: 1500,
     speedModifier: -0.5, // 뒤로 이동
-    probability: 0.10
+    probability: 0.1,
   },
   {
     id: 'jump',
@@ -64,7 +64,7 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '🏃',
     duration: 0,
     speedModifier: 5, // 앞으로 5 units
-    probability: 0.10
+    probability: 0.1,
   },
   {
     id: 'dance',
@@ -72,6 +72,6 @@ export const SNAIL_RACE_EVENTS: SnailRaceEvent[] = [
     icon: '🎵',
     duration: 1000,
     speedModifier: 0,
-    probability: 0.05
-  }
+    probability: 0.05,
+  },
 ];

@@ -17,7 +17,7 @@ const useGameEngine = ({
   winnerCount,
   events,
   onRaceComplete,
-  onEventTrigger
+  onEventTrigger,
 }: UseGameEngineProps) => {
   const [snails, setSnails] = useState<Snail[]>(initialSnails);
   const animationFrameRef = useRef<number>();
@@ -27,112 +27,116 @@ const useGameEngine = ({
   const isRunningRef = useRef(false);
 
   // 게임 루프
-  const gameLoop = useCallback((timestamp: number) => {
-    if (!isRunningRef.current) return;
+  const gameLoop = useCallback(
+    (timestamp: number) => {
+      if (!isRunningRef.current) return;
 
-    const deltaTime = timestamp - lastTimeRef.current;
-    
-    // 첫 프레임이거나 deltaTime이 너무 큰 경우 처리
-    if (lastTimeRef.current === 0 || deltaTime > 1000) {
-      lastTimeRef.current = timestamp;
-      animationFrameRef.current = requestAnimationFrame(gameLoop);
-      return;
-    }
-    
-    lastTimeRef.current = timestamp;
+      const deltaTime = timestamp - lastTimeRef.current;
 
-    // 달팽이 위치 업데이트
-    setSnails(prevSnails => {
-      const updatedSnails = prevSnails.map(snail => {
-        // 이미 완주한 달팽이는 건너뛰기
-        if (snail.position >= trackLength) {
-          return snail;
-        }
-
-        let speed = snail.baseSpeed;
-
-        // 이벤트 효과 적용
-        if (snail.activeEvent) {
-          const eventElapsed = timestamp - snail.activeEvent.startTime;
-          if (eventElapsed < snail.activeEvent.event.duration) {
-            speed *= snail.activeEvent.event.speedModifier;
-          } else {
-            // 이벤트 종료
-            snail = { ...snail, activeEvent: undefined };
-          }
-        }
-
-        // 랜덤 속도 변화 (자연스러움)
-        speed += randomFloat(-0.2, 0.2);
-        speed = Math.max(0.1, speed); // 최소 속도 보장
-
-        // 위치 업데이트 (deltaTime을 1000으로 나누어 초 단위로 변환)
-        const movement = speed * (deltaTime / 1000) * 10;
-        let newPosition = snail.position + movement;
-        
-        // 즉시 효과 이벤트 처리 (바람, 점프 등)
-        if (snail.activeEvent && snail.activeEvent.event.duration === 0) {
-          newPosition += snail.activeEvent.event.speedModifier;
-          snail = { ...snail, activeEvent: undefined };
-        }
-
-        newPosition = Math.max(0, Math.min(trackLength, newPosition));
-
-        // 완주 체크
-        if (newPosition >= trackLength && snail.position < trackLength) {
-          if (winnersRef.current.length < winnerCount) {
-            winnersRef.current.push(snail.participant);
-          }
-        }
-
-        return { ...snail, position: newPosition };
-      });
-
-      // 승자가 정해졌는지 확인
-      if (winnersRef.current.length >= winnerCount) {
-        isRunningRef.current = false;
-        onRaceComplete(winnersRef.current);
+      // 첫 프레임이거나 deltaTime이 너무 큰 경우 처리
+      if (lastTimeRef.current === 0 || deltaTime > 1000) {
+        lastTimeRef.current = timestamp;
+        animationFrameRef.current = requestAnimationFrame(gameLoop);
+        return;
       }
 
-      return updatedSnails;
-    });
+      lastTimeRef.current = timestamp;
 
-    // 랜덤 이벤트 발생 (2-4초마다)
-    if (timestamp - lastEventTimeRef.current > randomFloat(2000, 4000)) {
-      lastEventTimeRef.current = timestamp;
-      
-      // setSnails 내부에서 이벤트 처리
-      setSnails(prevSnails => {
-        // 아직 완주하지 않은 달팽이 중 선택
-        const activeSnails = prevSnails.filter(s => s.position < trackLength && !s.activeEvent);
-        
-        if (activeSnails.length > 0 && randomChance(0.7)) { // 70% 확률로 이벤트 발생
-          const targetSnail = randomElement(activeSnails);
-          const event = randomElement(events);
-          
-          if (targetSnail && event) {
-            onEventTrigger(targetSnail.id, event.name);
-            
-            return prevSnails.map(s => 
-              s.id === targetSnail.id 
-                ? { 
-                    ...s, 
-                    activeEvent: { 
-                      event, 
-                      startTime: timestamp 
-                    } 
-                  }
-                : s
-            );
+      // 달팽이 위치 업데이트
+      setSnails((prevSnails) => {
+        const updatedSnails = prevSnails.map((snail) => {
+          // 이미 완주한 달팽이는 건너뛰기
+          if (snail.position >= trackLength) {
+            return snail;
           }
-        }
-        
-        return prevSnails;
-      });
-    }
 
-    animationFrameRef.current = requestAnimationFrame(gameLoop);
-  }, [trackLength, winnerCount, events, onRaceComplete, onEventTrigger]);
+          let speed = snail.baseSpeed;
+
+          // 이벤트 효과 적용
+          if (snail.activeEvent) {
+            const eventElapsed = timestamp - snail.activeEvent.startTime;
+            if (eventElapsed < snail.activeEvent.event.duration) {
+              speed *= snail.activeEvent.event.speedModifier;
+            } else {
+              // 이벤트 종료
+              snail = { ...snail, activeEvent: undefined };
+            }
+          }
+
+          // 랜덤 속도 변화 (자연스러움)
+          speed += randomFloat(-0.2, 0.2);
+          speed = Math.max(0.1, speed); // 최소 속도 보장
+
+          // 위치 업데이트 (deltaTime을 1000으로 나누어 초 단위로 변환)
+          const movement = speed * (deltaTime / 1000) * 10;
+          let newPosition = snail.position + movement;
+
+          // 즉시 효과 이벤트 처리 (바람, 점프 등)
+          if (snail.activeEvent && snail.activeEvent.event.duration === 0) {
+            newPosition += snail.activeEvent.event.speedModifier;
+            snail = { ...snail, activeEvent: undefined };
+          }
+
+          newPosition = Math.max(0, Math.min(trackLength, newPosition));
+
+          // 완주 체크
+          if (newPosition >= trackLength && snail.position < trackLength) {
+            if (winnersRef.current.length < winnerCount) {
+              winnersRef.current.push(snail.participant);
+            }
+          }
+
+          return { ...snail, position: newPosition };
+        });
+
+        // 승자가 정해졌는지 확인
+        if (winnersRef.current.length >= winnerCount) {
+          isRunningRef.current = false;
+          onRaceComplete(winnersRef.current);
+        }
+
+        return updatedSnails;
+      });
+
+      // 랜덤 이벤트 발생 (2-4초마다)
+      if (timestamp - lastEventTimeRef.current > randomFloat(2000, 4000)) {
+        lastEventTimeRef.current = timestamp;
+
+        // setSnails 내부에서 이벤트 처리
+        setSnails((prevSnails) => {
+          // 아직 완주하지 않은 달팽이 중 선택
+          const activeSnails = prevSnails.filter((s) => s.position < trackLength && !s.activeEvent);
+
+          if (activeSnails.length > 0 && randomChance(0.7)) {
+            // 70% 확률로 이벤트 발생
+            const targetSnail = randomElement(activeSnails);
+            const event = randomElement(events);
+
+            if (targetSnail && event) {
+              onEventTrigger(targetSnail.id, event.name);
+
+              return prevSnails.map((s) =>
+                s.id === targetSnail.id
+                  ? {
+                      ...s,
+                      activeEvent: {
+                        event,
+                        startTime: timestamp,
+                      },
+                    }
+                  : s,
+              );
+            }
+          }
+
+          return prevSnails;
+        });
+      }
+
+      animationFrameRef.current = requestAnimationFrame(gameLoop);
+    },
+    [trackLength, winnerCount, events, onRaceComplete, onEventTrigger],
+  );
 
   const startRace = useCallback(() => {
     isRunningRef.current = true;
@@ -161,16 +165,18 @@ const useGameEngine = ({
   // 초기 달팽이 설정
   useEffect(() => {
     // baseSpeed가 설정된 초기값 사용
-    setSnails(initialSnails.map(snail => ({
-      ...snail,
-      baseSpeed: snail.baseSpeed || (2 + Math.random() * 3)
-    })));
+    setSnails(
+      initialSnails.map((snail) => ({
+        ...snail,
+        baseSpeed: snail.baseSpeed || 2 + Math.random() * 3,
+      })),
+    );
   }, [initialSnails]);
 
   return {
     snails,
     startRace,
-    stopRace
+    stopRace,
   };
 };
 

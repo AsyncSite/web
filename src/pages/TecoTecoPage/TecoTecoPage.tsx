@@ -12,41 +12,40 @@ import { ReviewsSection } from './sections/ReviewsSection';
 import { FaqJoinSection } from './sections/FaqJoinSection';
 
 import './TecoTecoPage.css';
-import {WhyTogetherSection} from "./sections/WhyTogetherSection";
-import {TextEncoderStream} from "node:stream/web";
+import { WhyTogetherSection } from './sections/WhyTogetherSection';
+import { TextEncoderStream } from 'node:stream/web';
 
 const TecoTecoPage: React.FC = () => {
-    const introSectionRef = useRef<HTMLDivElement>(null);
+  const introSectionRef = useRef<HTMLDivElement>(null);
 
-    // Hero CTA 버튼 클릭 시 동작할 함수: 새로운 도입 섹션으로 스크롤
-    const handleCtaClick = () => {
-        if (introSectionRef.current) {
-            window.scrollTo({
-                top: introSectionRef.current.offsetTop - 80, // 헤더 높이만큼 빼줌
-                behavior: 'smooth'
-            });
-        }
-    };
+  // Hero CTA 버튼 클릭 시 동작할 함수: 새로운 도입 섹션으로 스크롤
+  const handleCtaClick = () => {
+    if (introSectionRef.current) {
+      window.scrollTo({
+        top: introSectionRef.current.offsetTop - 80, // 헤더 높이만큼 빼줌
+        behavior: 'smooth',
+      });
+    }
+  };
 
-    return (
-        <div className="tecoteco-page">
-            <TemplateHeader />
-            <main className="tecoteco-content">
-                <HeroSection onCtaClick={handleCtaClick} />
-                <IntroSection ref={introSectionRef} />
-                {/*<WhyTogetherSection />*/}
-                <MembersSection />
-                <HowWeRollSection />
-                <JourneySection />
-                <ExperienceSection />
+  return (
+    <div className="tecoteco-page">
+      <TemplateHeader />
+      <main className="tecoteco-content">
+        <HeroSection onCtaClick={handleCtaClick} />
+        <IntroSection ref={introSectionRef} />
+        {/*<WhyTogetherSection />*/}
+        <MembersSection />
+        <HowWeRollSection />
+        <JourneySection />
+        <ExperienceSection />
 
-
-                <ReviewsSection />
-                <FaqJoinSection />
-            </main>
-            <Footer />
-        </div>
-    );
+        <ReviewsSection />
+        <FaqJoinSection />
+      </main>
+      <Footer />
+    </div>
+  );
 };
 
 export default TecoTecoPage;

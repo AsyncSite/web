@@ -61,7 +61,7 @@ export interface IInferenceEngine {
    * 추론 수행
    */
   infer(context: InferenceContext): InferenceResult;
-  
+
   /**
    * 추론 엔진 초기화
    */

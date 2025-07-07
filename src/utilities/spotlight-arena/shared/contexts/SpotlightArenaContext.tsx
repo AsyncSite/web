@@ -7,7 +7,7 @@ interface SpotlightArenaContextType {
   gameSettings: GameSettings;
   selectedGame: GameInfo | null;
   currentStep: 'lobby' | 'arcade' | 'game';
-  
+
   // Actions
   setParticipants: (participants: Participant[]) => void;
   updateGameSettings: (settings: Partial<GameSettings>) => void;
@@ -35,13 +35,13 @@ export const SpotlightArenaProvider: React.FC<SpotlightArenaProviderProps> = ({ 
   const [gameSettings, setGameSettings] = useState<GameSettings>({
     participants: [],
     winnerCount: 1,
-    allowDuplicates: false
+    allowDuplicates: false,
   });
   const [selectedGame, setSelectedGame] = useState<GameInfo | null>(null);
   const [currentStep, setCurrentStep] = useState<'lobby' | 'arcade' | 'game'>('lobby');
 
   const updateGameSettings = (settings: Partial<GameSettings>) => {
-    setGameSettings(prev => ({ ...prev, ...settings }));
+    setGameSettings((prev) => ({ ...prev, ...settings }));
   };
 
   const selectGame = (game: GameInfo) => {
@@ -53,7 +53,7 @@ export const SpotlightArenaProvider: React.FC<SpotlightArenaProviderProps> = ({ 
     setGameSettings({
       participants: [],
       winnerCount: 1,
-      allowDuplicates: false
+      allowDuplicates: false,
     });
     setSelectedGame(null);
     setCurrentStep('lobby');
@@ -68,12 +68,8 @@ export const SpotlightArenaProvider: React.FC<SpotlightArenaProviderProps> = ({ 
     updateGameSettings,
     selectGame,
     setCurrentStep,
-    resetGame
+    resetGame,
   };
 
-  return (
-    <SpotlightArenaContext.Provider value={value}>
-      {children}
-    </SpotlightArenaContext.Provider>
-  );
+  return <SpotlightArenaContext.Provider value={value}>{children}</SpotlightArenaContext.Provider>;
 };

@@ -8,12 +8,12 @@ interface GuessInputProps {
   disabled: boolean;
 }
 
-const GuessInput: React.FC<GuessInputProps> = ({ 
-  selectedKeywords, 
-  keywordPool, 
-  onSubmit, 
-  onClear, 
-  disabled 
+const GuessInput: React.FC<GuessInputProps> = ({
+  selectedKeywords,
+  keywordPool,
+  onSubmit,
+  onClear,
+  disabled,
 }) => {
   return (
     <div className="guess-input">
@@ -31,8 +31,8 @@ const GuessInput: React.FC<GuessInputProps> = ({
         <button onClick={onClear} disabled={disabled || selectedKeywords.length === 0}>
           선택 초기화
         </button>
-        <button 
-          onClick={onSubmit} 
+        <button
+          onClick={onSubmit}
           disabled={disabled || selectedKeywords.length === 0}
           className="submit-btn"
         >

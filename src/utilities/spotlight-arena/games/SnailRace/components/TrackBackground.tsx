@@ -9,7 +9,7 @@ interface TrackBackgroundProps {
 
 const TrackBackground: React.FC<TrackBackgroundProps> = ({ width, height, laneCount }) => {
   const trackPaddingY = 80;
-  const trackAreaHeight = height - (trackPaddingY * 2);
+  const trackAreaHeight = height - trackPaddingY * 2;
 
   // 응원하는 캐릭터들 (트랙 영역에 맞게 조정)
   const cheeringPositions = [
@@ -59,7 +59,6 @@ const TrackBackground: React.FC<TrackBackgroundProps> = ({ width, height, laneCo
           fontSize={30}
         />
       ))}
-
     </Group>
   );
 };
