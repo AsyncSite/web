@@ -60,9 +60,10 @@
 
 .result-title {
   font-size: var(--sa-font-size-3xl);
-  color: var(--sa-gray-800);
+  color: var(--sa-gray-900);
   margin-bottom: var(--sa-spacing-2xl);
   animation: sa-pulse 2s ease-in-out infinite;
+  font-weight: var(--sa-font-weight-bold);
 }
 
 /* Winners List */
@@ -78,34 +79,85 @@
   align-items: center;
   justify-content: center;
   gap: var(--sa-spacing-lg);
-  padding: var(--sa-spacing-lg);
+  padding: var(--sa-spacing-lg) var(--sa-spacing-xl);
   background: var(--sa-gray-50);
   border-radius: var(--sa-radius-lg);
   font-size: var(--sa-font-size-xl);
   animation: sa-fade-in 0.5s ease-out forwards;
   opacity: 0;
+  border: 2px solid transparent;
+  transition: all var(--sa-transition-normal);
 }
 
 .winner-item.rank-1 {
   background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
   font-size: var(--sa-font-size-2xl);
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+  border: 2px solid #f9a825;
+}
+
+.winner-item.rank-1 .winner-name {
+  color: #5d4e37;
+}
+
+.winner-item.rank-1 .winner-rank {
+  color: #b8860b;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 215, 0, 0.5);
 }
 
 .winner-item.rank-2 {
   background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 100%);
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(192, 192, 192, 0.4);
+  border: 2px solid #9e9e9e;
+}
+
+.winner-item.rank-2 .winner-name {
+  color: #424242;
+}
+
+.winner-item.rank-2 .winner-rank {
+  color: #595959;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(192, 192, 192, 0.5);
 }
 
 .winner-item.rank-3 {
   background: linear-gradient(135deg, #cd7f32 0%, #e6a55c 100%);
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(205, 127, 50, 0.4);
+  border: 2px solid #a1662f;
+}
+
+.winner-item.rank-3 .winner-name {
+  color: #5d3a1a;
+}
+
+.winner-item.rank-3 .winner-rank {
+  color: #8b4513;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(205, 127, 50, 0.5);
 }
 
 .winner-rank {
-  font-size: 1.5em;
+  font-size: 1.8em;
+  font-weight: var(--sa-font-weight-bold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  font-family: var(--sa-font-family);
+  letter-spacing: -0.02em;
 }
 
 .winner-name {
-  color: var(--sa-gray-800);
+  color: var(--sa-gray-900);
+  font-weight: var(--sa-font-weight-semibold);
 }
 
 /* Actions */

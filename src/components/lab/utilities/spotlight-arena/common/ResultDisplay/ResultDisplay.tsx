@@ -45,11 +45,11 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const getRankEmoji = (index: number) => {
     switch (index) {
       case 0:
-        return '🥇';
+        return '1등';
       case 1:
-        return '🥈';
+        return '2등';
       case 2:
-        return '🥉';
+        return '3등';
       default:
         return `${index + 1}등`;
     }

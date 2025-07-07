@@ -88,17 +88,18 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
                 trackEndX,
                 trackPaddingY + (index + 1) * laneHeight,
               ]}
-              stroke="#C8E6C9"
-              strokeWidth={2}
-              dash={[10, 5]}
+              stroke="#388E3C"
+              strokeWidth={4}
+              dash={[20, 10]}
+              opacity={1}
             />
           ))}
 
           {/* 시작선 */}
           <Line
             points={[trackStartX, trackPaddingY, trackStartX, trackHeight - trackPaddingY]}
-            stroke="#4CAF50"
-            strokeWidth={4}
+            stroke="#1B5E20"
+            strokeWidth={8}
           />
           <Text
             x={trackStartX - 80}
@@ -106,15 +107,15 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
             text="START"
             fontSize={20}
             fontStyle="bold"
-            fill="#4CAF50"
+            fill="#1B5E20"
             rotation={-90}
           />
 
           {/* 결승선 */}
           <Line
             points={[trackEndX, trackPaddingY, trackEndX, trackHeight - trackPaddingY]}
-            stroke="#F44336"
-            strokeWidth={4}
+            stroke="#B71C1C"
+            strokeWidth={8}
           />
           <Text
             x={trackEndX + 20}
@@ -122,7 +123,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
             text="FINISH"
             fontSize={20}
             fontStyle="bold"
-            fill="#F44336"
+            fill="#B71C1C"
             rotation={-90}
           />
         </Layer>

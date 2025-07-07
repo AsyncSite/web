@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Participant } from '../../../utilities/spotlight-arena/shared/types';
+import { Participant } from '../../../../components/lab/utilities/spotlight-arena/shared/types';
 import { Step } from '../types';
 import { LottieAnimationData } from '../types/animation';
 import snail1Animation from '../../../../assets/animations/snail/snail_1.json';

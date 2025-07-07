@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Lottie from 'lottie-react';
-import { Participant } from '../../../../utilities/spotlight-arena/shared/types';
+import { Participant } from '../../../../components/lab/utilities/spotlight-arena/shared/types';
 import { LottieAnimationData } from '../types/animation';
-import SnailRaceGame from '../../../../utilities/spotlight-arena/games/SnailRace/SnailRaceGame';
+import SnailRaceGame from '../../../../components/lab/utilities/spotlight-arena/games/SnailRace/SnailRaceGame';
 
 interface GameStepProps {
   selectedGame: string;

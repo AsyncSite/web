@@ -28,15 +28,15 @@
   --sa-info: #3b82f6;
   --sa-danger: #ef4444;
 
-  /* Neutrals - 더 부드러운 회색 톤 */
+  /* Neutrals - 더 나은 대비를 위한 조정된 회색 톤 */
   --sa-white: #ffffff;
   --sa-gray-50: #fafafa;
   --sa-gray-100: #f4f4f5;
   --sa-gray-200: #e4e4e7;
   --sa-gray-300: #d4d4d8;
   --sa-gray-400: #a1a1aa;
-  --sa-gray-500: #71717a;
-  --sa-gray-600: #52525b;
+  --sa-gray-500: #64646d; /* 대비 개선: 기존 #71717a → #64646d */
+  --sa-gray-600: #47474f; /* 대비 개선: 기존 #52525b → #47474f */
   --sa-gray-700: #3f3f46;
   --sa-gray-800: #27272a;
   --sa-gray-900: #18181b;

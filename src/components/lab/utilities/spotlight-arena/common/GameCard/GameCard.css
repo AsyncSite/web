@@ -12,6 +12,7 @@
   height: 100%;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--sa-shadow-sm);
 }
 
 .game-card:hover:not(.disabled) {
@@ -73,15 +74,15 @@
 
 .game-card-title {
   font-size: var(--sa-font-size-xl);
-  font-weight: 600;
-  color: var(--sa-gray-800);
+  font-weight: var(--sa-font-weight-semibold);
+  color: var(--sa-gray-900);
   margin-bottom: var(--sa-spacing-sm);
 }
 
 .game-card-description {
   font-size: var(--sa-font-size-base);
   color: var(--sa-gray-600);
-  line-height: 1.5;
+  line-height: var(--sa-line-height-relaxed);
 }
 
 /* Footer */
@@ -100,10 +101,11 @@
 
 .game-card-tag {
   padding: var(--sa-spacing-xs) var(--sa-spacing-md);
-  background: var(--sa-gray-100);
+  background: var(--sa-primary-subtle);
   border-radius: var(--sa-radius-full);
   font-size: var(--sa-font-size-sm);
-  color: var(--sa-gray-600);
+  color: var(--sa-primary-dark);
+  font-weight: var(--sa-font-weight-medium);
 }
 
 .game-card-players {
@@ -112,7 +114,8 @@
   justify-content: center;
   gap: var(--sa-spacing-xs);
   font-size: var(--sa-font-size-sm);
-  color: var(--sa-gray-500);
+  color: var(--sa-gray-600);
+  font-weight: var(--sa-font-weight-medium);
 }
 
 .players-icon {

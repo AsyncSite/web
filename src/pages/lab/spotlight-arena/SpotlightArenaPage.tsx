@@ -1,6 +1,6 @@
-import { SpotlightArenaProvider } from '../../../utilities/spotlight-arena/shared/contexts';
-import GameHistoryViewer from '../../../utilities/spotlight-arena/history/GameHistoryViewer';
-import StatsDashboard from '../../../utilities/spotlight-arena/stats/StatsDashboard';
+import { SpotlightArenaProvider } from '../../../components/lab/utilities/spotlight-arena/shared/contexts';
+import GameHistoryViewer from '../../../components/lab/utilities/spotlight-arena/history/GameHistoryViewer';
+import StatsDashboard from '../../../components/lab/utilities/spotlight-arena/stats/StatsDashboard';
 import LobbyStep from './components/LobbyStep';
 import ArcadeStep from './components/ArcadeStep';
 import GameStep from './components/GameStep';

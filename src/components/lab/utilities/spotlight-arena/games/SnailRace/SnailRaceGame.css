@@ -21,25 +21,29 @@
   top: 50%;
   transform: translateY(-50%);
   padding: var(--sa-spacing-sm) var(--sa-spacing-lg);
-  background: var(--sa-gray-200);
-  border: 1px solid var(--sa-gray-400);
+  background: var(--sa-white);
+  border: 2px solid var(--sa-gray-300);
   border-radius: var(--sa-radius-full);
   cursor: pointer;
   transition: all var(--sa-transition-fast);
-  color: var(--sa-gray-800);
-  font-weight: 500;
+  color: var(--sa-gray-700);
+  font-weight: var(--sa-font-weight-medium);
+  box-shadow: var(--sa-shadow-sm);
 }
 
 .game-header .snail-race-back-button:hover {
-  background: var(--sa-gray-300);
-  border-color: var(--sa-gray-500);
-  color: var(--sa-gray-900);
+  background: var(--sa-gray-50);
+  border-color: var(--sa-accent-snail);
+  color: var(--sa-accent-snail);
+  transform: translateY(-50%) translateY(-1px);
+  box-shadow: var(--sa-shadow-md);
 }
 
 .game-title {
   font-size: var(--sa-font-size-3xl);
-  color: var(--sa-gray-800);
+  color: var(--sa-gray-900);
   margin: 0;
+  font-weight: var(--sa-font-weight-bold);
 }
 
 .game-content {

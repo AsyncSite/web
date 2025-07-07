@@ -6,6 +6,7 @@
   box-shadow: var(--sa-shadow-md);
   overflow: hidden;
   margin-top: var(--sa-spacing-lg);
+  position: relative;
 }
 
 .commentary-header {
@@ -28,8 +29,9 @@
 
 .commentary-messages {
   padding: var(--sa-spacing-md);
-  max-height: 150px;
+  max-height: 200px;
   overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 .commentary-message {
@@ -72,4 +74,36 @@
 
 .commentary-messages::-webkit-scrollbar-thumb:hover {
   background: var(--sa-gray-400);
+}
+
+/* 스크롤 버튼 */
+.commentary-scroll-button {
+  position: absolute;
+  bottom: var(--sa-spacing-sm);
+  right: var(--sa-spacing-sm);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--sa-primary);
+  color: var(--sa-white);
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: var(--sa-shadow-md);
+  transition: all var(--sa-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.commentary-scroll-button:hover {
+  background: var(--sa-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--sa-shadow-lg);
+}
+
+.commentary-scroll-button:active {
+  transform: translateY(0);
 }

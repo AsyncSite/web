@@ -28,12 +28,17 @@
 }
 
 .sa-button-secondary {
-  background: var(--sa-gray-100);
+  background: var(--sa-white);
   color: var(--sa-gray-700);
+  border: 2px solid var(--sa-gray-300);
+  box-shadow: var(--sa-shadow-sm);
 }
 
 .sa-button-secondary:hover:not(:disabled) {
-  background: var(--sa-gray-200);
+  background: var(--sa-gray-50);
+  border-color: var(--sa-gray-400);
+  transform: translateY(-2px);
+  box-shadow: var(--sa-shadow-md);
 }
 
 .sa-button:disabled {
@@ -99,12 +104,13 @@
 .sa-input {
   width: 100%;
   padding: var(--sa-spacing-md);
-  border: 2px solid var(--sa-gray-200);
+  border: 2px solid var(--sa-gray-300);
   border-radius: var(--sa-radius-md);
   font-size: var(--sa-font-size-base);
   font-family: var(--sa-font-family);
   transition: all var(--sa-transition-fast);
   background: var(--sa-white);
+  color: var(--sa-gray-800);
 }
 
 .sa-input:focus {
@@ -115,7 +121,8 @@
 }
 
 .sa-input:hover:not(:focus) {
-  border-color: var(--sa-gray-300);
+  border-color: var(--sa-gray-400);
+  background: var(--sa-gray-50);
 }
 
 /* Animations */

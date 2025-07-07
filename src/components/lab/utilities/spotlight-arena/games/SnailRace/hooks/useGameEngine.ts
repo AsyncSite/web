@@ -64,11 +64,12 @@ const useGameEngine = ({
           }
 
           // 랜덤 속도 변화 (자연스러움)
-          speed += randomFloat(-0.2, 0.2);
-          speed = Math.max(0.1, speed); // 최소 속도 보장
+          speed += randomFloat(-0.1, 0.1);
+          speed = Math.max(0.05, speed); // 최소 속도 보장
 
           // 위치 업데이트 (deltaTime을 1000으로 나누어 초 단위로 변환)
-          const movement = speed * (deltaTime / 1000) * 10;
+          // 속도를 더욱 느리게 조정 (달팽이처럼!)
+          const movement = speed * (deltaTime / 1000) * 1.2;
           let newPosition = snail.position + movement;
 
           // 즉시 효과 이벤트 처리 (바람, 점프 등)
@@ -168,7 +169,7 @@ const useGameEngine = ({
     setSnails(
       initialSnails.map((snail) => ({
         ...snail,
-        baseSpeed: snail.baseSpeed || 2 + Math.random() * 3,
+        baseSpeed: snail.baseSpeed || 0.5 + Math.random() * 0.7, // 더 느린 기본 속도
       })),
     );
   }, [initialSnails]);

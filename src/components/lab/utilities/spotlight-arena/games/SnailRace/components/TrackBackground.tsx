@@ -33,7 +33,7 @@ const TrackBackground: React.FC<TrackBackgroundProps> = ({ width, height, laneCo
         height={height}
         fillLinearGradientStartPoint={{ x: 0, y: 0 }}
         fillLinearGradientEndPoint={{ x: 0, y: height }}
-        fillLinearGradientColorStops={[0, '#E8F5E9', 1, '#C8E6C9']}
+        fillLinearGradientColorStops={[0, '#66BB6A', 1, '#4CAF50']}
       />
 
       {/* 잔디 텍스처 - 성능을 위해 개수 감소 */}
@@ -43,8 +43,8 @@ const TrackBackground: React.FC<TrackBackgroundProps> = ({ width, height, laneCo
           x={Math.random() * width}
           y={Math.random() * height}
           data="M0,0 L-2,-5 L0,-8 L2,-5 Z"
-          fill="#81C784"
-          opacity={0.3}
+          fill="#2E7D32"
+          opacity={0.5}
           rotation={Math.random() * 360}
         />
       ))}
