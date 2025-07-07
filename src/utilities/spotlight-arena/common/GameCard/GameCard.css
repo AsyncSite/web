@@ -119,6 +119,36 @@
   font-size: var(--sa-font-size-base);
 }
 
+/* Game-specific Theme Colors */
+.game-card[data-game-id="snail-race"] {
+  --game-accent: var(--sa-accent-snail);
+}
+
+.game-card[data-game-id="dart-wheel"] {
+  --game-accent: var(--sa-accent-dart);
+}
+
+.game-card[data-game-id="slot-cascade"] {
+  --game-accent: var(--sa-accent-slot);
+}
+
+.game-card[data-game-id="circus-cannon"] {
+  --game-accent: var(--sa-accent-circus);
+}
+
+.game-card[data-game-id="bubble-pop"] {
+  --game-accent: var(--sa-accent-bubble);
+}
+
+.game-card[data-game-id="masquerade"] {
+  --game-accent: var(--sa-accent-masquerade);
+}
+
+/* Apply theme color to border on hover */
+.game-card:hover:not(.disabled) {
+  border-color: var(--game-accent, var(--sa-primary));
+}
+
 /* Hover Effects */
 .game-card:not(.disabled)::before {
   content: '';
@@ -139,6 +169,18 @@
 
 .game-card:hover:not(.disabled)::before {
   opacity: 1;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--game-accent, var(--sa-primary)) 100%
+  );
+  opacity: 0.1;
+}
+
+/* Theme color for tags */
+.game-card:hover:not(.disabled) .game-card-tag {
+  background: var(--game-accent, var(--sa-primary));
+  color: var(--sa-white);
 }
 
 /* Responsive */

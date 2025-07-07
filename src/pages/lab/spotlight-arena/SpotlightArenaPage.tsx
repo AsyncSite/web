@@ -22,6 +22,7 @@ const SpotlightArenaContent = () => {
   const [snailAnimation, setSnailAnimation] = useState<any>(null);
   const [showSnailIntro, setShowSnailIntro] = useState(true);
   const [gameKey, setGameKey] = useState(0); // 게임 리셋을 위한 key
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const snailAnimations = [snail1Animation, snail2Animation];
 
@@ -33,6 +34,16 @@ const SpotlightArenaContent = () => {
       setSnailAnimation(snailAnimations[randomIndex]);
     }
   }, [selectedGame, snailAnimation, snailAnimations]);
+
+  // 스크롤 위치 감지
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleParticipantsChange = (newParticipants: Participant[]) => {
     setParticipants(newParticipants);
@@ -63,6 +74,10 @@ const SpotlightArenaContent = () => {
     setCurrentStep('arcade');
     setSelectedGame(null);
     setSnailAnimation(null); // 애니메이션 초기화하여 다시 선택 시 새로운 랜덤 달팽이 로드
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -245,6 +260,17 @@ const SpotlightArenaContent = () => {
           />
         )}
       </div>
+
+      {/* 플로팅 액션 버튼 */}
+      {showScrollTop && (
+        <button 
+          className="floating-action-button"
+          onClick={scrollToTop}
+          aria-label="맨 위로 이동"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 };

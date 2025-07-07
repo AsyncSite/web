@@ -12,6 +12,8 @@
   cursor: pointer;
   transition: all var(--sa-transition-normal);
   font-family: var(--sa-font-family);
+  position: relative;
+  overflow: hidden;
 }
 
 .sa-button-primary {
@@ -39,12 +41,54 @@
   cursor: not-allowed;
 }
 
+/* Ripple Effect */
+.sa-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: width 0.6s, height 0.6s;
+}
+
+.sa-button:active::after {
+  width: 300px;
+  height: 300px;
+}
+
 /* Cards */
 .sa-card {
   background: var(--sa-white);
   border-radius: var(--sa-radius-xl);
-  padding: var(--sa-spacing-xl);
+  padding: var(--sa-spacing-2xl);
   box-shadow: var(--sa-shadow-lg);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--sa-transition-normal);
+}
+
+/* Card hover effect */
+.sa-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sa-shadow-xl);
+}
+
+/* Card inner border for depth */
+.sa-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--sa-radius-xl);
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, transparent 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* Input */
@@ -55,12 +99,19 @@
   border-radius: var(--sa-radius-md);
   font-size: var(--sa-font-size-base);
   font-family: var(--sa-font-family);
-  transition: border-color var(--sa-transition-fast);
+  transition: all var(--sa-transition-fast);
+  background: var(--sa-white);
 }
 
 .sa-input:focus {
   outline: none;
   border-color: var(--sa-primary);
+  box-shadow: 0 0 0 3px var(--sa-primary-subtle);
+  transform: translateY(-1px);
+}
+
+.sa-input:hover:not(:focus) {
+  border-color: var(--sa-gray-300);
 }
 
 /* Animations */
@@ -106,6 +157,30 @@
     opacity: 1;
   }
 }
+
+/* Stagger Animation */
+@keyframes sa-stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sa-stagger-item {
+  opacity: 0;
+  animation: sa-stagger-fade-in 0.6s ease-out forwards;
+}
+
+.sa-stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.sa-stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.sa-stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.sa-stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.sa-stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.sa-stagger-item:nth-child(6) { animation-delay: 0.3s; }
 
 /* Utility Classes */
 .sa-text-center {
