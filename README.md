@@ -2,6 +2,26 @@
 
 React 기반의 모던 웹 애플리케이션으로, 인터랙티브한 UI와 다양한 실험적 기능들을 제공합니다.
 
+## 🤖 AI 에이전트 사용자를 위한 협업 가이드
+
+**이 프로젝트에서 AI 코딩 어시스턴트(Claude, GitHub Copilot, Cursor, ChatGPT 등)를 사용하시는 경우:**
+
+1. **필수로 확인해야 할 문서:**
+   - 📋 **이 README.md 파일** - 프로젝트 설정 및 실행 방법
+   - 📘 **[CLAUDE.md](./CLAUDE.md)** - 코딩 규칙, 아키텍처 가이드, TypeScript 규칙 등 상세 개발 가이드라인
+
+2. **AI 도구에 컨텍스트 제공 방법:**
+   ```
+   이 프로젝트의 README.md와 CLAUDE.md 파일을 참고해서 작업해주세요.
+   React 19, TypeScript 5.8, strict mode를 사용합니다.
+   ```
+
+3. **핵심 규칙:**
+   - ✅ Function Components만 사용 (Class Components 금지)
+   - ✅ TypeScript strict mode 준수
+   - ✅ ESLint/Prettier 규칙 준수
+   - ✅ 모든 props와 state에 타입 정의 필수
+
 ## 🚀 기술 스택
 
 ### Core Dependencies

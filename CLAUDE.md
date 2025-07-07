@@ -32,10 +32,16 @@ npm test -- --watchAll=false # Run tests once without watch mode
 
 ### Routing Structure
 The app uses React Router v7 with lazy loading for all routes. Key points:
-- Base path is `/web` (configured for GitHub Pages deployment)
+- Base path is `/` (configured for Vercel deployment)
 - All routes are lazy-loaded for optimal bundle size
 - Routes are defined in `src/router/router.tsx`
 - Sub-routes use `SubContentsTemplate` layout wrapper
+
+### React 19 Features Usage
+- **Server Components**: Not yet implemented (consider for data-heavy pages)
+- **Actions**: Use for form submissions and async operations
+- **Document Metadata**: Use native `<title>`, `<meta>` tags in components
+- **Concurrent Features**: Leverage Suspense for loading states
 
 ### Component Organization
 ```
@@ -61,9 +67,12 @@ The DeductionGame feature (`src/components/lab/subject/DeductionGame/`) uses:
 - React Intersection Observer for scroll-triggered effects
 
 ### TypeScript Configuration
-- Strict mode enabled
+- Strict mode enabled (`strict: true`)
 - React JSX transform (no React import needed)
 - Target: ES5 for browser compatibility
+- Required type definitions for all props, state, and function parameters
+- Prefer interfaces over types for component props
+- Use generics for reusable components
 
 ### Deployment
 - Vercel deployment (automatic on push)
@@ -71,6 +80,38 @@ The DeductionGame feature (`src/components/lab/subject/DeductionGame/`) uses:
 - Homepage: https://web-cyan-one-95.vercel.app
 
 
+
+---
+
+## Testing Guidelines
+
+### Component Testing
+* Use React Testing Library for component tests
+* Focus on user behavior, not implementation details
+* Mock external dependencies appropriately
+* Aim for high coverage on critical paths
+
+### TypeScript Testing
+* Ensure type safety in tests
+* Use proper type assertions
+* Test edge cases and error scenarios
+
+---
+
+## Code Quality Standards
+
+### Linting and Formatting
+* ESLint configuration is enforced (see `.eslintrc.json`)
+* Prettier formatting is required (see `.prettierrc`)
+* Run `npm run lint` before committing
+* Use `npm run format` to auto-format code
+
+### Pre-commit Checklist
+1. All TypeScript errors resolved
+2. ESLint warnings addressed
+3. Code formatted with Prettier
+4. Tests passing
+5. No console.log statements in production code
 
 ---
 
@@ -102,16 +143,20 @@ While not every language or project requires a strict object-oriented paradigm, 
 #### Core Principles
 
 * **Separation of Concerns (SoC)**
-  Clearly separate concerns, such as logic, data, and presentation. For example, business logic should reside in service layers, data structures in models or DTOs, and user interface representation in components. This ensures that each part can be modified and tested independently.
+  Clearly separate concerns, such as logic, data, and presentation. For example, business logic should reside in custom hooks or service files, data types in interfaces, and UI in components. This ensures that each part can be modified and tested independently.
 
 * **Favor Composition over Inheritance**
-  While inheritance is a powerful tool, it can lead to tight coupling. To build flexible and reusable structures, prioritize composition—combining objects with desired functionality—over extending them through inheritance. This is an especially critical principle in component-based frameworks like React.
+  While inheritance is a powerful tool, it can lead to tight coupling. To build flexible and reusable structures, prioritize composition—combining components and hooks—over extending them through inheritance. This is an especially critical principle in React's functional paradigm.
 
 * **Design by Contract with Interfaces**
   Define clear "contracts" between objects using TypeScript's `interface`. This practice hides implementation details (encapsulation) and exposes a clear specification of an object's capabilities, leading to more predictable and stable code.
 
 * **Use of Appropriate Design Patterns**
-  We encourage the application of well-known design patterns (e.g., Factory, Strategy, Observer, Singleton) where they fit the problem. Using appropriate patterns provides structural consistency, reduces communication overhead among team members, and leads to more predictable and robust architectures.
+  We encourage the application of well-known React patterns:
+  - **Custom Hooks**: For reusable stateful logic
+  - **Compound Components**: For flexible component APIs
+  - **Provider Pattern**: For dependency injection
+  - **HOC (sparingly)**: Only when hooks cannot solve the problem
 
 
 
@@ -124,8 +169,80 @@ A well-defined architecture is crucial for building scalable and maintainable ap
 
 Frontend development **must follow a scalable, feature-based architecture** to ensure clear separation of concerns and reusability. The goal is to avoid creating massive "god components" that handle excessive state, logic, and rendering.
 
-* **Component Structure**: Adhere to the established component organization (e.g., `pages`, `components/ui`, `components/sections`). More importantly, group components, hooks, and related logic by feature or domain wherever possible.
-* **Logic and View Separation**:
-    * **UI Components (Dumb Components)**: Should be primarily responsible for rendering and presentation.
-    * **Container Logic (Smart Components/Hooks)**: Custom hooks or container components should be used to manage state, data fetching, and business logic, passing the necessary data and functions down to UI components as props.
-* **API/Service Abstraction**: API calls and other external service interactions must be abstracted into dedicated modules or service files. They should not be embedded directly within components' rendering logic.
+#### Component Guidelines
+
+* **Function Components Only**: Use function components with hooks. Class components are deprecated.
+* **Component Structure**: Adhere to the established component organization (e.g., `pages`, `components/ui`, `components/sections`). Group components, hooks, and related logic by feature or domain.
+* **TypeScript Props**: Define all component props with interfaces:
+  ```typescript
+  interface ButtonProps {
+    label: string;
+    onClick: () => void;
+    variant?: 'primary' | 'secondary';
+  }
+  ```
+* **Return Type**: Use explicit return types instead of `React.FC`:
+  ```typescript
+  function Button({ label, onClick }: ButtonProps): React.ReactNode {
+    return <button onClick={onClick}>{label}</button>;
+  }
+  ```
+
+#### Custom Hooks Best Practices
+
+* **Naming Convention**: Always start with `use` (e.g., `useAuth`, `useFetch`)
+* **Single Responsibility**: Each hook should have one clear purpose
+* **Type Safety**: Define return types explicitly
+* **Error Handling**: Include error states in hook returns
+* **Example Structure**:
+  ```typescript
+  function useGameData<T>(gameId: string): {
+    data: T | null;
+    loading: boolean;
+    error: Error | null;
+  } {
+    // Implementation
+  }
+  ```
+
+#### State Management
+
+* **Local State First**: Use `useState` for component-specific state
+* **Context for Shared State**: Use Context API for cross-component state
+* **External Libraries**: Use Zustand or Redux Toolkit for complex global state
+* **Server State**: Consider React Query or SWR for server data caching
+
+#### Performance Optimization
+
+* **Memoization**: Use `React.memo`, `useMemo`, and `useCallback` appropriately
+* **Code Splitting**: Implement lazy loading with `React.lazy()` and Suspense
+* **Virtual Lists**: Use virtualization for long lists
+* **Bundle Size**: Monitor and optimize bundle size regularly
+
+#### Error Handling Patterns
+
+* **Error Boundaries**: Implement error boundaries for component trees
+* **Custom Error Hook**: Create `useErrorHandler` for consistent error handling
+* **Async Errors**: Always handle promises and async operations
+* **User Feedback**: Provide clear error messages to users
+
+#### API/Service Layer
+
+* **Separation**: Keep API calls in separate service files
+* **Type Safety**: Define request/response types
+* **Error Handling**: Centralized error handling
+* **Example**:
+  ```typescript
+  // services/gameService.ts
+  export interface GameData {
+    id: string;
+    name: string;
+    // ... other fields
+  }
+  
+  export const gameService = {
+    async getGame(id: string): Promise<GameData> {
+      // Implementation
+    }
+  };
+  ```
