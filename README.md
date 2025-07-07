@@ -26,9 +26,19 @@ React 기반의 모던 웹 애플리케이션으로, 인터랙티브한 UI와 �
 ## 📋 필수 요구사항
 
 ### System Requirements
-- **Node.js**: `22.x` (권장: 22.12.0 이상)
+- **Node.js**: `22.12.0` (`.nvmrc` 파일 참조)
 - **npm**: `10.x` (권장: 10.9.0 이상)
 - **OS**: Windows, macOS, Linux
+
+### Node 버전 관리 (nvm 사용 시)
+```bash
+# .nvmrc 파일의 버전 사용
+nvm use
+
+# 또는 설치 후 사용
+nvm install
+nvm use
+```
 
 ### 브라우저 지원
 - Chrome (latest)
