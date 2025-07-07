@@ -29,9 +29,12 @@
 
 .commentary-messages {
   padding: var(--sa-spacing-md);
-  max-height: 200px;
+  height: 200px; /* max-height 대신 고정 height 사용 */
+  min-height: 200px; /* 최소 높이도 보장 */
   overflow-y: auto;
   scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
 }
 
 .commentary-message {
