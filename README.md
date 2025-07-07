@@ -121,6 +121,7 @@ npm run build
 1. Vercel 프로젝트와 연결
 2. 환경 변수 설정 필요 없음 (vercel.json 설정 완료)
 3. Push 시 자동 배포
+4. `.npmrc` 파일로 peer dependency 충돌 해결 (`legacy-peer-deps=true`)
 
 배포 URL: https://web-cyan-one-95.vercel.app
 
@@ -156,6 +157,7 @@ web/
 
 ### 빌드 관련
 - CRA 5.0.1 사용 중 (더 이상 유지보수되지 않음)
+- TypeScript 5.8.3과 react-scripts 5.0.1 간의 peer dependency 충돌은 `.npmrc` 파일로 해결
 - 향후 Vite로 마이그레이션 권장
 
 ## 🐛 트러블슈팅
