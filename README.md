@@ -46,6 +46,29 @@ nvm use
 - Safari (latest)
 - Edge (Chromium-based)
 
+## 🧹 코드 품질 도구
+
+### ESLint & Prettier
+프로젝트는 일관된 코드 스타일을 위해 ESLint와 Prettier를 사용합니다.
+
+```bash
+# 코드 스타일 검사
+npm run lint
+
+# 코드 스타일 자동 수정
+npm run lint:fix
+
+# Prettier 포맷팅
+npm run format
+
+# Prettier 포맷 체크 (CI용)
+npm run format:check
+```
+
+### 설정 파일
+- `.eslintrc.json`: ESLint 규칙 설정
+- `.prettierrc`: Prettier 포맷팅 규칙
+
 ## 🛠️ 설치 및 실행
 
 ### 1. 프로젝트 클론

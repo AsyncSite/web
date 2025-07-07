@@ -29,7 +29,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\""
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +59,9 @@
     "@types/node": "^22.16.0",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   }
 }
@@ -89,7 +96,11 @@ npm install --save-dev @types/react@18.3.23 @types/react-dom@18.3.7 --legacy-pee
 npm install --save-dev @types/node@22.16.0 --legacy-peer-deps
 npm install --save-dev @testing-library/react@16.3.0 --legacy-peer-deps
 npm install --save-dev @testing-library/user-event@14.6.1 --legacy-peer-deps
-# gh-pages는 더 이상 사용하지 않음 (Vercel 배포로 대체)
+
+# Code Quality Tools
+npm install --save-dev prettier@3.6.2 --legacy-peer-deps
+npm install --save-dev eslint-config-prettier@10.1.5 --legacy-peer-deps
+npm install --save-dev eslint-plugin-prettier@5.5.1 --legacy-peer-deps
 ```
 
 ## 📦 의존성 트리
@@ -141,6 +152,13 @@ react-scripts@5.0.1
 typescript@5.8.3
 ├── @types/node@22.16.0
 └── tslib
+```
+
+### Code Quality
+```
+prettier@3.6.2
+└── eslint-plugin-prettier@5.5.1
+    └── eslint-config-prettier@10.1.5
 ```
 
 ## ⚠️ 버전 고정 이유
