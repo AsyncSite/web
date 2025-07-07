@@ -68,15 +68,17 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
 
   // 완주한 달팽이 추적
   useEffect(() => {
-    const newFinishedSnails = snails
-      .filter((snail) => snail.position >= gameState.trackLength)
-      .map((snail) => snail.id)
-      .filter((id) => !finishedSnails.includes(id));
-
-    if (newFinishedSnails.length > 0) {
-      setFinishedSnails((prev) => [...prev, ...newFinishedSnails]);
-    }
-  }, [snails, gameState.trackLength]); // finishedSnails를 의존성에서 제거
+    setFinishedSnails((prev) => {
+      const currentFinished = snails
+        .filter((snail) => snail.position >= gameState.trackLength)
+        .map((snail) => snail.id);
+      const newFinished = currentFinished.filter((id) => !prev.includes(id));
+      if (newFinished.length > 0) {
+        return [...prev, ...newFinished];
+      }
+      return prev;
+    });
+  }, [snails, gameState.trackLength]);
 
   const getSnailX = (position: number) => {
     return trackStartX + (position / gameState.trackLength) * trackDistance;

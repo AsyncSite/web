@@ -53,16 +53,18 @@ function SnailRaceGame({
   // 게임이 종료되면 녹화 자동 중지
   useEffect(() => {
     if (gameState.status === 'finished' && isRecording) {
-      console.log('[SnailRaceGame] Game finished, stopping recording');
       stopRecording();
     }
   }, [gameState.status, isRecording, stopRecording]);
-
+  // 컴포넌트 언마운트 시 녹화 데이터 정리
+  useEffect(() => {
+    return () => {
+      // 게임을 떠날 때 localStorage 정리
+      localStorage.removeItem('snailRaceRecording');
+      localStorage.removeItem('snailRaceRecordingTime');
+    };
+  }, []);
   if (gameState.status === 'finished') {
-    console.log('[SnailRaceGame] Game finished, resultRecording:', {
-      hasRecording: resultRecording.hasRecording,
-      downloadFn: !!resultRecording.downloadRecording,
-    });
     return (
       <ResultDisplay
         winners={gameState.winners}
@@ -70,8 +72,8 @@ function SnailRaceGame({
         onReplay={onReplay}
         onNewGame={onNewGame}
         onGoHome={onBack}
-        onDownloadRecording={resultRecording.downloadRecording}
-        hasRecording={resultRecording.hasRecording}
+        onDownloadRecording={hasRecording ? downloadRecording : resultRecording.downloadRecording}
+        hasRecording={hasRecording || resultRecording.hasRecording}
       />
     );
   }

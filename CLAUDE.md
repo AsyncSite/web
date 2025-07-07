@@ -107,11 +107,47 @@ src/
 
 ## Code Quality Standards
 
+### ⚠️ IMPORTANT: ESLint and Prettier Compliance
+
+**BEFORE WRITING ANY CODE, you MUST consider the project's ESLint and Prettier configurations.**
+
+This project enforces strict code quality standards through ESLint and Prettier. All code must comply with these configurations to avoid build failures and maintain consistency.
+
+#### Pre-coding Requirements:
+1. **Review Configuration Files**:
+   - `.eslintrc.json` - ESLint rules configuration
+   - `.prettierrc` - Prettier formatting rules
+   - Understand the rules before writing code
+
+2. **Development Workflow**:
+   ```bash
+   # Before starting work
+   npm run lint        # Check current code status
+   npm run format      # Format existing code
+   
+   # During development
+   npm run lint:fix    # Auto-fix ESLint issues
+   npm run format      # Format your code
+   
+   # Before committing
+   npm run lint        # Final lint check
+   npm run format:check # Verify formatting
+   ```
+
+3. **Common Issues to Avoid**:
+   - Unused variables or imports
+   - Missing semicolons (Prettier will add them)
+   - Incorrect indentation (2 spaces, not tabs)
+   - Trailing commas in objects and arrays
+   - Console.log statements (remove before commit)
+   - Missing type definitions in TypeScript
+
 ### Linting and Formatting
 * ESLint configuration is enforced (see `.eslintrc.json`)
 * Prettier formatting is required (see `.prettierrc`)
 * Run `npm run lint` before committing
 * Use `npm run format` to auto-format code
+* Configure your IDE to format on save (recommended)
 
 ### Pre-commit Checklist
 1. All TypeScript errors resolved
@@ -119,6 +155,8 @@ src/
 3. Code formatted with Prettier
 4. Tests passing
 5. No console.log statements in production code
+6. All imports are used
+7. No any types unless absolutely necessary
 
 ---
 

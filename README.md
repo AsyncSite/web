@@ -89,6 +89,24 @@ npm run format:check
 - `.eslintrc.json`: ESLint 규칙 설정
 - `.prettierrc`: Prettier 포맷팅 규칙
 
+### ⚠️ 개발 전 필수 확인 사항
+**모든 코드 작업 전에 반드시 ESLint와 Prettier 설정을 확인하고 준수해주세요.**
+
+1. **커밋 전 필수 실행:**
+   ```bash
+   npm run lint
+   npm run format
+   ```
+
+2. **자동 수정 활용:**
+   - VSCode: ESLint와 Prettier 플러그인 설치 및 자동 저장 시 포맷팅 설정
+   - 코드 수정 후 `npm run lint:fix`로 자동 수정
+
+3. **주의사항:**
+   - Prettier와 ESLint 규칙이 충돌하지 않도록 설정되어 있음
+   - 커밋 전 반드시 lint 와 format 검사 통과 필수
+   - CI/CD 파이프라인에서도 동일한 검사 수행
+
 ## 🛠️ 설치 및 실행
 
 ### 1. 프로젝트 클론

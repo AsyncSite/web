@@ -24,12 +24,6 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   const [showConfetti, setShowConfetti] = useState(false);
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
 
-  console.log('[ResultDisplay] Props:', {
-    hasRecording,
-    hasDownloadFn: !!onDownloadRecording,
-    winnersCount: winners.length,
-  });
-
   useEffect(() => {
     setShowConfetti(true);
     const timer = setTimeout(() => setShowConfetti(false), 5000);

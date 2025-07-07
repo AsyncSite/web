@@ -10,33 +10,35 @@ const useResultRecording = (): UseResultRecordingReturn => {
 
   // 컴포넌트 마운트 시 localStorage 확인
   useEffect(() => {
-    const savedRecording = localStorage.getItem('snailRaceRecording');
-    const recordingTime = localStorage.getItem('snailRaceRecordingTime');
+    const checkRecording = () => {
+      try {
+        const savedRecording = localStorage.getItem('snailRaceRecording');
+        const recordingTime = localStorage.getItem('snailRaceRecordingTime');
 
-    console.log('[useResultRecording] Checking localStorage:', {
-      hasRecording: !!savedRecording,
-      recordingTime,
-      recordingSize: savedRecording ? savedRecording.length : 0,
-    });
+        if (savedRecording && recordingTime) {
+          // 녹화 시간 확인 (24시간 이내)
+          const recordedAt = new Date(recordingTime).getTime();
+          const now = new Date().getTime();
+          const hoursSinceRecording = (now - recordedAt) / (1000 * 60 * 60);
 
-    if (savedRecording && recordingTime) {
-      // 녹화 시간 확인 (24시간 이내)
-      const recordedAt = new Date(recordingTime).getTime();
-      const now = new Date().getTime();
-      const hoursSinceRecording = (now - recordedAt) / (1000 * 60 * 60);
-
-      if (hoursSinceRecording < 24) {
-        console.log('[useResultRecording] Recording is valid, setting hasRecording to true');
-        setHasRecording(true);
-      } else {
-        // 오래된 녹화는 삭제
-        console.log('[useResultRecording] Recording is too old, removing');
-        localStorage.removeItem('snailRaceRecording');
-        localStorage.removeItem('snailRaceRecordingTime');
+          if (hoursSinceRecording < 24) {
+            setHasRecording(true);
+          } else {
+            // 오래된 녹화는 삭제
+            localStorage.removeItem('snailRaceRecording');
+            localStorage.removeItem('snailRaceRecordingTime');
+          }
+        }
+      } catch (e) {
+        // localStorage 접근 실패 시 무시
       }
-    } else {
-      console.log('[useResultRecording] No recording found in localStorage');
-    }
+    };
+
+    checkRecording();
+    // localStorage 변경 감지
+    const handleStorageChange = () => checkRecording();
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const downloadRecording = useCallback(() => {
@@ -64,10 +66,14 @@ const useResultRecording = (): UseResultRecordingReturn => {
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 100);
 
-        // 다운로드 후 정리 (선택사항)
-        // localStorage.removeItem('snailRaceRecording');
-        // localStorage.removeItem('snailRaceRecordingTime');
-        // setHasRecording(false);
+        // 다운로드 후 정리
+        try {
+          localStorage.removeItem('snailRaceRecording');
+          localStorage.removeItem('snailRaceRecordingTime');
+        } catch (e) {
+          // localStorage 정리 실패 시 무시
+        }
+        setHasRecording(false);
       })
       .catch(() => {
         alert('녹화 다운로드 중 오류가 발생했습니다.');

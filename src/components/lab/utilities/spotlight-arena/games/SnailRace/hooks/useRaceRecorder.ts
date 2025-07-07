@@ -48,7 +48,6 @@ const useRaceRecorder = ({
           localStorage.removeItem('snailRaceRecording');
           localStorage.removeItem('snailRaceRecordingTime');
         });
-    } else {
     }
   }, []);
 
@@ -68,10 +67,10 @@ const useRaceRecorder = ({
     try {
       // Canvas에서 스트림 가져오기
       const stream = canvasRef.current.captureStream(30); // 30 FPS
-      // MediaRecorder 설정
+      // MediaRecorder 설정 (낮은 비트레이트로 크기 최소화)
       const options = {
         mimeType: 'video/webm;codecs=vp9',
-        videoBitsPerSecond: 2500000, // 2.5 Mbps
+        videoBitsPerSecond: 500000, // 0.5 Mbps로 줄여서 파일 크기 최소화
       };
 
       // 지원되는 MIME 타입 확인
@@ -100,28 +99,39 @@ const useRaceRecorder = ({
       };
 
       mediaRecorder.onstop = () => {
-        console.log('[useRaceRecorder] Recording stopped, chunks:', chunksRef.current.length);
         setIsRecording(false);
         setIsPaused(false);
 
         // 녹화된 데이터가 있으면 Blob 생성
         if (chunksRef.current.length > 0) {
           const blob = new Blob(chunksRef.current, { type: 'video/webm' });
-          console.log('[useRaceRecorder] Created blob, size:', blob.size);
           setRecordedBlob(blob);
           setHasRecording(true);
 
-          // Blob을 Base64로 변환하여 localStorage에 저장 (임시 해결책)
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            if (reader.result) {
-              localStorage.setItem('snailRaceRecording', reader.result as string);
-              localStorage.setItem('snailRaceRecordingTime', new Date().toISOString());
-            }
-          };
-          reader.readAsDataURL(blob);
-        } else {
-          console.log('[useRaceRecorder] No chunks recorded');
+          // localStorage 저장 시도 (크기 체크)
+          try {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              if (reader.result) {
+                const base64String = reader.result as string;
+                // 크기 체크 (localStorage는 일반적으로 5-10MB 제한)
+                const sizeInMB = (base64String.length * 0.75) / 1024 / 1024;
+                if (sizeInMB > 4) {
+                  // 크기가 너무 크면 메모리에만 보관
+                } else {
+                  try {
+                    localStorage.setItem('snailRaceRecording', base64String);
+                    localStorage.setItem('snailRaceRecordingTime', new Date().toISOString());
+                  } catch (e) {
+                    // localStorage 저장 실패 시 메모리에만 보관
+                  }
+                }
+              }
+            };
+            reader.readAsDataURL(blob);
+          } catch (error) {
+            // 녹화 처리 실패 시 메모리에만 보관
+          }
         }
 
         // 타이머 정리
