@@ -19,7 +19,7 @@ function LobbyStep({
   onNext,
   onBackToLab,
   onViewStats,
-}: LobbyStepProps): React.ReactNode {
+}: LobbyStepProps): React.ReactElement {
   return (
     <div className="lobby-section sa-card">
       <button className="sa-arena-back-button" onClick={onBackToLab}>

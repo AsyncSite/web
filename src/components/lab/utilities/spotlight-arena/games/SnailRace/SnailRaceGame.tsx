@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { Participant } from '../../shared/types';
 import RaceTrack from './components/RaceTrack';
 import RaceCountdown from './components/RaceCountdown';
@@ -24,7 +24,7 @@ function SnailRaceGame({
   onBack,
   onReplay,
   onNewGame,
-}: SnailRaceGameProps): React.ReactNode {
+}: SnailRaceGameProps): React.ReactElement {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { gameState, showCountdown, currentEvent, commentaryMessages, handlers } = useSnailRaceGame(
     { participants, winnerCount },
@@ -38,12 +38,9 @@ function SnailRaceGame({
     pauseRecording,
     resumeRecording,
     downloadRecording,
+    isStarting,
+    hasRecording,
   } = useRaceRecorder({ canvasRef });
-  const [hasRecording, setHasRecording] = useState(false);
-  const handleStopRecording = () => {
-    stopRecording();
-    setHasRecording(true);
-  };
 
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     (canvasRef as any).current = canvas;
@@ -57,6 +54,8 @@ function SnailRaceGame({
         onReplay={onReplay}
         onNewGame={onNewGame}
         onGoHome={onBack}
+        onDownloadRecording={downloadRecording}
+        hasRecording={hasRecording}
       />
     );
   }
@@ -96,11 +95,12 @@ function SnailRaceGame({
           isPaused={isPaused}
           recordingTime={recordingTime}
           onStartRecording={startRecording}
-          onStopRecording={handleStopRecording}
+          onStopRecording={stopRecording}
           onPauseRecording={pauseRecording}
           onResumeRecording={resumeRecording}
           onDownload={downloadRecording}
           hasRecording={hasRecording}
+          isStarting={isStarting}
         />
 
         {gameState.status === 'waiting' && (

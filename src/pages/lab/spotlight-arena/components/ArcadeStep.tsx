@@ -8,7 +8,7 @@ interface ArcadeStepProps {
   onBack: () => void;
 }
 
-function ArcadeStep({ participants, onGameSelect, onBack }: ArcadeStepProps): React.ReactNode {
+function ArcadeStep({ participants, onGameSelect, onBack }: ArcadeStepProps): React.ReactElement {
   return (
     <div className="arcade-section sa-card">
       <button className="sa-arcade-back-button" onClick={onBack}>

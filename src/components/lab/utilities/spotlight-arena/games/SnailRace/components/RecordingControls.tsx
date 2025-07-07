@@ -11,6 +11,7 @@ interface RecordingControlsProps {
   onResumeRecording: () => void;
   onDownload: () => void;
   hasRecording: boolean;
+  isStarting?: boolean;
 }
 
 const RecordingControls: React.FC<RecordingControlsProps> = ({
@@ -23,6 +24,7 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
   onResumeRecording,
   onDownload,
   hasRecording,
+  isStarting = false,
 }) => {
   // 시간 포맷팅
   const formatTime = (seconds: number): string => {
@@ -34,10 +36,12 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
   return (
     <div className="recording-controls">
       <div className="recording-status">
-        {isRecording && (
+        {(isRecording || isStarting) && (
           <div className="recording-indicator">
             <span className="recording-dot" />
-            <span className="recording-time">{formatTime(recordingTime)}</span>
+            <span className="recording-time">
+              {isStarting ? '준비 중...' : formatTime(recordingTime)}
+            </span>
           </div>
         )}
       </div>
@@ -49,9 +53,10 @@ const RecordingControls: React.FC<RecordingControlsProps> = ({
               className="recording-button record-button"
               onClick={onStartRecording}
               title="녹화 시작"
+              disabled={isStarting}
             >
-              <span className="button-icon">🔴</span>
-              <span className="button-text">녹화</span>
+              <span className="button-icon">{isStarting ? '⏳' : '🔴'}</span>
+              <span className="button-text">{isStarting ? '준비 중' : '녹화'}</span>
             </button>
             {hasRecording && (
               <button

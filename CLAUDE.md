@@ -55,11 +55,17 @@ src/
 ```
 
 ### Active Feature Development
-The DeductionGame feature (`src/components/lab/subject/DeductionGame/`) uses:
-- Strategy pattern for AI difficulty levels
-- Factory pattern for player creation
-- TypeScript interfaces for type safety
-- Separate concerns: GameManager, Players, Strategies
+1. **DeductionGame** (`src/components/lab/playground/DeductionGame/`):
+   - Strategy pattern for AI difficulty levels
+   - Factory pattern for player creation
+   - TypeScript interfaces for type safety
+   - Separate concerns: GameManager, Players, Strategies
+
+2. **SpotlightArena** (`src/components/lab/utilities/spotlight-arena/`):
+   - Multi-game platform with participant management
+   - SnailRace game with real-time animations using Konva.js
+   - Video recording feature using MediaRecorder API
+   - Local storage for game history and statistics
 
 ### Styling Approach
 - Component-specific CSS files (e.g., `Component.css`)
@@ -78,6 +84,7 @@ The DeductionGame feature (`src/components/lab/subject/DeductionGame/`) uses:
 - Vercel deployment (automatic on push)
 - SPA routing handled in `vercel.json`
 - Homepage: https://web-cyan-one-95.vercel.app
+- Peer dependency conflicts resolved with `.npmrc` file (`legacy-peer-deps=true`)
 
 
 

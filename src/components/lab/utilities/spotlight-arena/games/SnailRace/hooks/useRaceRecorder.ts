@@ -14,6 +14,8 @@ interface UseRaceRecorderReturn {
   pauseRecording: () => void;
   resumeRecording: () => void;
   downloadRecording: () => void;
+  isStarting: boolean;
+  hasRecording: boolean;
 }
 
 const useRaceRecorder = ({
@@ -23,6 +25,8 @@ const useRaceRecorder = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [isStarting, setIsStarting] = useState(false);
+  const [hasRecording, setHasRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startTimeRef = useRef<number>(0);
@@ -37,7 +41,9 @@ const useRaceRecorder = ({
 
   // 녹화 시작
   const startRecording = useCallback(() => {
-    if (!canvasRef.current || isRecording) return;
+    if (!canvasRef.current || isRecording || isStarting) return;
+
+    setIsStarting(true);
 
     try {
       // Canvas에서 스트림 가져오기
@@ -69,6 +75,7 @@ const useRaceRecorder = ({
         startTimeRef.current = Date.now();
         setIsRecording(true);
         setIsPaused(false);
+        setIsStarting(false);
         // 녹화 시간 타이머 시작
         timerRef.current = window.setInterval(updateRecordingTime, 100);
       };
@@ -77,6 +84,7 @@ const useRaceRecorder = ({
         console.log('Recording stopped');
         setIsRecording(false);
         setIsPaused(false);
+        setHasRecording(chunksRef.current.length > 0);
         // 타이머 정리
         if (timerRef.current) {
           clearInterval(timerRef.current);
@@ -88,9 +96,10 @@ const useRaceRecorder = ({
       mediaRecorder.start(100); // 100ms마다 데이터 수집
     } catch (error) {
       console.error('Failed to start recording:', error);
+      setIsStarting(false);
       alert('녹화를 시작할 수 없습니다. 브라우저가 Canvas 녹화를 지원하는지 확인해주세요.');
     }
-  }, [canvasRef, isRecording, updateRecordingTime]);
+  }, [canvasRef, isRecording, isStarting, updateRecordingTime]);
 
   // 녹화 중지
   const stopRecording = useCallback(() => {
@@ -147,6 +156,8 @@ const useRaceRecorder = ({
     pauseRecording,
     resumeRecording,
     downloadRecording,
+    isStarting,
+    hasRecording,
   };
 };
 

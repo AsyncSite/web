@@ -191,11 +191,17 @@ prettier@3.6.2
 1. **Peer Dependency 경고**
    - 많은 라이브러리가 아직 React 19를 공식 지원하지 않음
    - `--legacy-peer-deps` 플래그로 해결
+   - Vercel 배포 시 `.npmrc` 파일에 `legacy-peer-deps=true` 설정으로 해결
 
 2. **CRA Deprecation**
    - react-scripts는 더 이상 유지보수되지 않음
+   - TypeScript 5.x를 공식 지원하지 않음 (4.x까지만 지원)
    - 향후 Vite로 마이그레이션 권장
 
 3. **TypeScript Strict Mode**
    - undefined/null 체크 필수
    - 기존 코드 수정 필요할 수 있음
+
+4. **TypeScript 5.8.3 사용**
+   - react-scripts 5.0.1은 공식적으로 TypeScript 4.x까지만 지원
+   - `.npmrc`의 `legacy-peer-deps=true` 설정으로 우회하여 사용

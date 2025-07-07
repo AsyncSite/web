@@ -193,6 +193,16 @@
   transform: translateY(-2px);
 }
 
+.download-button {
+  background: var(--sa-secondary);
+  color: var(--sa-white);
+}
+
+.download-button:hover {
+  background: var(--sa-secondary-dark);
+  transform: translateY(-2px);
+}
+
 .replay-button {
   background: var(--sa-warning);
   color: var(--sa-white);

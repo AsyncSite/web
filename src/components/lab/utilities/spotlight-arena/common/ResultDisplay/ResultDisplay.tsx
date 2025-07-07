@@ -8,6 +8,8 @@ interface ResultDisplayProps {
   onReplay?: () => void;
   onNewGame?: () => void;
   onGoHome?: () => void;
+  onDownloadRecording?: () => void;
+  hasRecording?: boolean;
 }
 
 const ResultDisplay: React.FC<ResultDisplayProps> = ({
@@ -16,6 +18,8 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
   onReplay,
   onNewGame,
   onGoHome,
+  onDownloadRecording,
+  hasRecording,
 }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
@@ -79,6 +83,12 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({
           <button className="result-button copy-button" onClick={copyResults}>
             {copiedToClipboard ? '✅ 복사됨!' : '📋 결과 복사'}
           </button>
+
+          {hasRecording && onDownloadRecording && (
+            <button className="result-button download-button" onClick={onDownloadRecording}>
+              🎥 녹화 다운로드
+            </button>
+          )}
 
           {onReplay && (
             <button className="result-button replay-button" onClick={onReplay}>
