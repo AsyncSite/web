@@ -1,10 +1,13 @@
+import { useRef, useState, useCallback } from 'react';
 import { Participant } from '../../shared/types';
 import RaceTrack from './components/RaceTrack';
 import RaceCountdown from './components/RaceCountdown';
 import EventNotification from './components/EventNotification';
 import RaceCommentary from './components/RaceCommentary';
+import RecordingControls from './components/RecordingControls';
 import ResultDisplay from '../../common/ResultDisplay';
 import { useSnailRaceGame } from './hooks/useSnailRaceGame';
+import useRaceRecorder from './hooks/useRaceRecorder';
 import './SnailRaceGame.css';
 
 interface SnailRaceGameProps {
@@ -22,9 +25,29 @@ function SnailRaceGame({
   onReplay,
   onNewGame,
 }: SnailRaceGameProps): React.ReactNode {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { gameState, showCountdown, currentEvent, commentaryMessages, handlers } = useSnailRaceGame(
     { participants, winnerCount },
   );
+  const {
+    isRecording,
+    isPaused,
+    recordingTime,
+    startRecording,
+    stopRecording,
+    pauseRecording,
+    resumeRecording,
+    downloadRecording,
+  } = useRaceRecorder({ canvasRef });
+  const [hasRecording, setHasRecording] = useState(false);
+  const handleStopRecording = () => {
+    stopRecording();
+    setHasRecording(true);
+  };
+
+  const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
+    (canvasRef as any).current = canvas;
+  }, []);
 
   if (gameState.status === 'finished') {
     return (
@@ -64,9 +87,21 @@ function SnailRaceGame({
           isPlaying={gameState.status === 'playing'}
           onRaceComplete={handlers.handleRaceComplete}
           onEventTrigger={handlers.handleEventTrigger}
+          onCanvasReady={handleCanvasReady}
         />
 
         <RaceCommentary messages={commentaryMessages} />
+        <RecordingControls
+          isRecording={isRecording}
+          isPaused={isPaused}
+          recordingTime={recordingTime}
+          onStartRecording={startRecording}
+          onStopRecording={handleStopRecording}
+          onPauseRecording={pauseRecording}
+          onResumeRecording={resumeRecording}
+          onDownload={downloadRecording}
+          hasRecording={hasRecording}
+        />
 
         {gameState.status === 'waiting' && (
           <div className="game-controls">

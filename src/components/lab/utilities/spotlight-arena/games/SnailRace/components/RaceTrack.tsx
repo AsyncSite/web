@@ -12,6 +12,7 @@ interface RaceTrackProps {
   isPlaying: boolean;
   onRaceComplete: (winners: Participant[]) => void;
   onEventTrigger: (snailId: string, eventName: string) => void;
+  onCanvasReady?: (canvas: HTMLCanvasElement) => void;
 }
 
 const RaceTrack: React.FC<RaceTrackProps> = ({
@@ -19,6 +20,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
   isPlaying,
   onRaceComplete,
   onEventTrigger,
+  onCanvasReady,
 }) => {
   const stageRef = useRef<any>(null);
   const [finishedSnails, setFinishedSnails] = useState<string[]>([]);
@@ -50,6 +52,19 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
       stopRace();
     }
   }, [isPlaying, startRace, stopRace]);
+
+  // Canvas를 부모 컴포넌트에 전달
+  useEffect(() => {
+    if (stageRef.current && onCanvasReady) {
+      // react-konva Stage에서 canvas 엘리먼트 가져오기
+      // Stage 컴포넌트의 실제 DOM 노드 접근
+      const container = stageRef.current.container();
+      const canvas = container.querySelector('canvas');
+      if (canvas) {
+        onCanvasReady(canvas);
+      }
+    }
+  }, [onCanvasReady]);
 
   // 완주한 달팽이 추적
   useEffect(() => {
