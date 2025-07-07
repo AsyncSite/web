@@ -20,12 +20,12 @@ function GameStep({
   snailAnimation,
   onBackToLobby,
   onBackToArcade,
-}: GameStepProps): React.ReactNode {
+}: GameStepProps): React.ReactElement {
   const [showSnailIntro, setShowSnailIntro] = useState(true);
   const [gameKey, setGameKey] = useState(0);
 
   if (selectedGame !== 'snail-race') {
-    return null;
+    return <div>게임을 준비 중입니다...</div>;
   }
 
   return (

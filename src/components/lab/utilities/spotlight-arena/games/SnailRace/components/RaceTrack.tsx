@@ -76,7 +76,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
     if (newFinishedSnails.length > 0) {
       setFinishedSnails((prev) => [...prev, ...newFinishedSnails]);
     }
-  }, [snails, gameState.trackLength, finishedSnails]);
+  }, [snails, gameState.trackLength]); // finishedSnails를 의존성에서 제거
 
   const getSnailX = (position: number) => {
     return trackStartX + (position / gameState.trackLength) * trackDistance;

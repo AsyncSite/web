@@ -68,6 +68,10 @@ export function useSnailRaceGame({ participants, winnerCount }: UseSnailRaceGame
   }, []);
 
   const handleStartGame = useCallback(() => {
+    // 새 게임 시작 시 이전 녹화 데이터 정리
+    localStorage.removeItem('snailRaceRecording');
+    localStorage.removeItem('snailRaceRecordingTime');
+
     setShowCountdown(true);
   }, []);
 
@@ -97,7 +101,7 @@ export function useSnailRaceGame({ participants, winnerCount }: UseSnailRaceGame
         gameHistoryService.saveGameResult(gameResult);
         participantStatsService.updateStats(gameResult);
       } catch (error) {
-        console.error('Failed to save game result:', error);
+        // Failed to save game result
       }
 
       setGameState((prev) => ({

@@ -194,13 +194,15 @@
 }
 
 .download-button {
-  background: var(--sa-secondary);
+  background: var(--sa-success);
   color: var(--sa-white);
+  grid-column: 1 / -1;
 }
 
 .download-button:hover {
-  background: var(--sa-secondary-dark);
+  background: #059669;
   transform: translateY(-2px);
+  box-shadow: var(--sa-shadow-md);
 }
 
 .replay-button {

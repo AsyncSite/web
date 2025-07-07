@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { Participant } from '../../shared/types';
 import RaceTrack from './components/RaceTrack';
 import RaceCountdown from './components/RaceCountdown';
@@ -8,6 +8,7 @@ import RecordingControls from './components/RecordingControls';
 import ResultDisplay from '../../common/ResultDisplay';
 import { useSnailRaceGame } from './hooks/useSnailRaceGame';
 import useRaceRecorder from './hooks/useRaceRecorder';
+import useResultRecording from './hooks/useResultRecording';
 import './SnailRaceGame.css';
 
 interface SnailRaceGameProps {
@@ -42,11 +43,26 @@ function SnailRaceGame({
     hasRecording,
   } = useRaceRecorder({ canvasRef });
 
+  // 결과 화면용 녹화 관리
+  const resultRecording = useResultRecording();
+
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     (canvasRef as any).current = canvas;
   }, []);
 
+  // 게임이 종료되면 녹화 자동 중지
+  useEffect(() => {
+    if (gameState.status === 'finished' && isRecording) {
+      console.log('[SnailRaceGame] Game finished, stopping recording');
+      stopRecording();
+    }
+  }, [gameState.status, isRecording, stopRecording]);
+
   if (gameState.status === 'finished') {
+    console.log('[SnailRaceGame] Game finished, resultRecording:', {
+      hasRecording: resultRecording.hasRecording,
+      downloadFn: !!resultRecording.downloadRecording,
+    });
     return (
       <ResultDisplay
         winners={gameState.winners}
@@ -54,8 +70,8 @@ function SnailRaceGame({
         onReplay={onReplay}
         onNewGame={onNewGame}
         onGoHome={onBack}
-        onDownloadRecording={downloadRecording}
-        hasRecording={hasRecording}
+        onDownloadRecording={resultRecording.downloadRecording}
+        hasRecording={resultRecording.hasRecording}
       />
     );
   }

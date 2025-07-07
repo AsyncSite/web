@@ -114,7 +114,10 @@ const useGameEngine = ({
             const event = randomElement(events);
 
             if (targetSnail && event) {
-              onEventTrigger(targetSnail.id, event.name);
+              // onEventTrigger를 다음 틱으로 연기
+              setTimeout(() => {
+                onEventTrigger(targetSnail.id, event.name);
+              }, 0);
 
               return prevSnails.map((s) =>
                 s.id === targetSnail.id
