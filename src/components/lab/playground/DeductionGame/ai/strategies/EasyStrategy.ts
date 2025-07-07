@@ -67,7 +67,9 @@ export class EasyStrategy implements AIStrategy {
     this.recentGuesses.add(guessKey);
     if (this.recentGuesses.size > 3) {
       const oldest = this.recentGuesses.values().next().value;
-      this.recentGuesses.delete(oldest);
+      if (oldest) {
+        this.recentGuesses.delete(oldest);
+      }
     }
     
     return finalGuess;

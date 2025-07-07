@@ -387,6 +387,9 @@ export class LogicalInference implements IInferenceEngine {
     if (solutions.size === 1) {
       // 해가 유일한 경우
       const firstSolution = solutions.values().next().value;
+      if (!firstSolution) {
+        return [];
+      }
       return Array.from(firstSolution);
     }
     
