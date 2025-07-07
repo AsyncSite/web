@@ -12,17 +12,13 @@ const MainPage = lazy(() => import("../pages/MainPage"));
 const router = createBrowserRouter([
     {
         index: true,
-        path: "web",
+        path: "/",
         element: <MainPage />,
     },
     {
-        path: "web",
+        path: "/",
         Component: SubContentsTemplate,
         children: subRouter
-    },
-    {
-        path: "",
-        element: <Navigate to="/web" replace />,
     },
 ]);
 

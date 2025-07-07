@@ -69,7 +69,7 @@ const Header: React.FC = () => {
                             {isMoimDropdownOpen && (
                                 <div className="dropdown-content">
                                     <a href="#routine">MOIM</a>
-                                    <a href="/web/tecoteco">테코테코</a>
+                                    <a href="/tecoteco">테코테코</a>
                                     {/* 다른 모임 링크들도 여기에 추가 가능 */}
                                 </div>
                             )}
@@ -81,10 +81,10 @@ const Header: React.FC = () => {
                             <a href="#contact-cta">CONTACT</a>
                         </li>
                         <li>
-                            <a href="/web/tecoteco">테코테코</a>
+                            <a href="/tecoteco">테코테코</a>
                         </li>
                         <li>
-                            <a href="/web/lab">LAB</a>
+                            <a href="/lab">LAB</a>
                         </li>
                     </ul>
                 </nav>
