@@ -14,7 +14,10 @@ The enhanced prompts will follow the language of the original prompt (e.g., Kore
 npm start          # Start development server on http://localhost:3000
 npm test           # Run tests with Jest in watch mode
 npm run build      # Create production build in ./build directory
-npm run deploy     # Build and deploy to GitHub Pages
+npm run lint       # Run ESLint to check code quality
+npm run lint:fix   # Fix ESLint issues automatically
+npm run format     # Format code with Prettier
+npm run format:check # Check code formatting
 ```
 
 ### Testing
@@ -63,9 +66,9 @@ The DeductionGame feature (`src/components/lab/subject/DeductionGame/`) uses:
 - Target: ES5 for browser compatibility
 
 ### Deployment
-- GitHub Pages deployment via `gh-pages` package
-- SPA routing handled in `public/index.html`
-- Homepage: https://asyncsite.github.io/web
+- Vercel deployment (automatic on push)
+- SPA routing handled in `vercel.json`
+- Homepage: https://web-cyan-one-95.vercel.app
 
 
 
@@ -95,9 +98,6 @@ The code in this repository aims for the highest standards of readability, maint
 While not every language or project requires a strict object-oriented paradigm, the following design principles are to be actively applied when working with these specific technologies to ensure high-quality, reusable, and maintainable code:
 * **TypeScript**
 * **React**
-* **Java**
-* **Kotlin**
-* **Spring Framework**
 
 #### Core Principles
 
@@ -108,7 +108,7 @@ While not every language or project requires a strict object-oriented paradigm, 
   While inheritance is a powerful tool, it can lead to tight coupling. To build flexible and reusable structures, prioritize composition—combining objects with desired functionality—over extending them through inheritance. This is an especially critical principle in component-based frameworks like React.
 
 * **Design by Contract with Interfaces**
-  Define clear "contracts" between objects using TypeScript's `interface` or the `interface`/`abstract class` features in Java and Kotlin. This practice hides implementation details (encapsulation) and exposes a clear specification of an object's capabilities, leading to more predictable and stable code.
+  Define clear "contracts" between objects using TypeScript's `interface`. This practice hides implementation details (encapsulation) and exposes a clear specification of an object's capabilities, leading to more predictable and stable code.
 
 * **Use of Appropriate Design Patterns**
   We encourage the application of well-known design patterns (e.g., Factory, Strategy, Observer, Singleton) where they fit the problem. Using appropriate patterns provides structural consistency, reduces communication overhead among team members, and leads to more predictable and robust architectures.
@@ -118,15 +118,7 @@ While not every language or project requires a strict object-oriented paradigm, 
 
 ## Architecture and Code Organization
 
-A well-defined architecture is crucial for building scalable and maintainable applications. All code must be organized into logical layers and features, avoiding the practice of placing all functionality into a single file (e.g., a single large component or service class).
-
-### Backend (Java, Kotlin, Spring)
-
-Backend development **must follow the principles of Clean Architecture**. While more specific rules will be documented separately, the core mandate is to structure the application into distinct, independent layers.
-
-* **Layered Structure**: The code must be separated into layers such as **Domain** (core business logic and entities), **Application** (use cases), and **Infrastructure** (frameworks, databases, external APIs).
-* **Dependency Rule**: Inner layers (Domain) must not have any knowledge of or dependencies on outer layers (Infrastructure). Dependencies must only point inwards.
-* **Separation**: All business logic cannot be concentrated in a single Controller or Service. Functionality must be properly distributed across use cases, domain services, and entities as appropriate.
+A well-defined architecture is crucial for building scalable and maintainable applications. All code must be organized into logical layers and features, avoiding the practice of placing all functionality into a single file (e.g., a single large component).
 
 ### Frontend (TypeScript, React)
 
