@@ -170,6 +170,25 @@
   font-size: var(--sa-font-size-lg);
   font-weight: 600;
   color: var(--sa-primary);
+  transition: all var(--sa-transition-normal);
+}
+
+/* 카운트 변경 애니메이션 */
+.count-number.count-changing {
+  animation: countPop 0.3s ease-out;
+  color: var(--sa-primary-dark);
+}
+
+@keyframes countPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .count-warning {

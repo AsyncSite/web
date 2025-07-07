@@ -15,6 +15,8 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
   const [textInput, setTextInput] = useState('');
   const [numberRange, setNumberRange] = useState({ start: 1, end: 10 });
   const [removeDuplicates, setRemoveDuplicates] = useState(true);
+  const [prevCount, setPrevCount] = useState(0);
+  const [isCountChanging, setIsCountChanging] = useState(false);
 
   useEffect(() => {
     const participants = parseParticipants();
@@ -72,6 +74,16 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
   };
 
   const currentCount = parseParticipants().length;
+
+  // 카운트 변경 애니메이션
+  useEffect(() => {
+    if (currentCount !== prevCount) {
+      setIsCountChanging(true);
+      setPrevCount(currentCount);
+      const timer = setTimeout(() => setIsCountChanging(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [currentCount, prevCount]);
 
   return (
     <div className="participant-input">
@@ -158,7 +170,9 @@ const ParticipantInput: React.FC<ParticipantInputProps> = ({
 
       <div className="participant-count">
         <span className="count-label">총 참가자:</span>
-        <span className="count-number">{currentCount}명</span>
+        <span className={`count-number ${isCountChanging ? 'count-changing' : ''}`}>
+          {currentCount}명
+        </span>
         {currentCount > maxParticipants && (
           <span className="count-warning">
             (최대 {maxParticipants}명까지만 참가 가능)

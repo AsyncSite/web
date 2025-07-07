@@ -1,0 +1,113 @@
+@import '../styles/variables.css';
+
+.sa-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.sa-tooltip {
+  position: absolute;
+  padding: var(--sa-spacing-sm) var(--sa-spacing-md);
+  background: var(--sa-gray-800);
+  color: var(--sa-white);
+  font-size: var(--sa-font-size-sm);
+  border-radius: var(--sa-radius-md);
+  white-space: nowrap;
+  z-index: var(--sa-z-tooltip);
+  pointer-events: none;
+  opacity: 0;
+  animation: tooltipFadeIn 0.2s ease-out forwards;
+  box-shadow: var(--sa-shadow-md);
+}
+
+/* Arrow */
+.sa-tooltip::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+/* Position variants */
+.sa-tooltip-top {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sa-tooltip-top::after {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0;
+  border-color: var(--sa-gray-800) transparent transparent;
+}
+
+.sa-tooltip-bottom {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sa-tooltip-bottom::after {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 6px 6px;
+  border-color: transparent transparent var(--sa-gray-800);
+}
+
+.sa-tooltip-left {
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sa-tooltip-left::after {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent var(--sa-gray-800);
+}
+
+.sa-tooltip-right {
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sa-tooltip-right::after {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 6px 6px 0;
+  border-color: transparent var(--sa-gray-800) transparent transparent;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Adjust animation for left/right positions */
+.sa-tooltip-left,
+.sa-tooltip-right {
+  animation: tooltipFadeInSide 0.2s ease-out forwards;
+}
+
+@keyframes tooltipFadeInSide {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

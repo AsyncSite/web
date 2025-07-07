@@ -1,42 +1,62 @@
 /* Spotlight Arena Design Tokens */
 :root {
-  /* Colors */
-  --sa-primary: #667eea;
-  --sa-primary-dark: #5a67d8;
-  --sa-primary-light: #7c8ef0;
+  /* Primary Colors - 보라색 계열 세련화 */
+  --sa-primary: #6366f1;
+  --sa-primary-dark: #4f46e5;
+  --sa-primary-light: #818cf8;
+  --sa-primary-lighter: #a5b4fc;
+  --sa-primary-subtle: #e0e7ff;
   
-  --sa-secondary: #ff6b6b;
-  --sa-secondary-dark: #e55555;
-  --sa-secondary-light: #ff8181;
+  /* Secondary Colors - 코랄 계열 */
+  --sa-secondary: #f87171;
+  --sa-secondary-dark: #ef4444;
+  --sa-secondary-light: #fca5a5;
+  --sa-secondary-lighter: #fecaca;
+  --sa-secondary-subtle: #fee2e2;
   
-  --sa-success: #96ceb4;
-  --sa-warning: #feca57;
-  --sa-info: #4ecdc4;
-  --sa-danger: #ee5a6f;
+  /* Accent Colors - 게임별 테마 */
+  --sa-accent-snail: #34d399;      /* 민트 그린 - 달팽이 레이스 */
+  --sa-accent-dart: #f59e0b;       /* 앰버 - 다트 휠 */
+  --sa-accent-slot: #ec4899;       /* 핑크 - 슬롯머신 */
+  --sa-accent-circus: #8b5cf6;     /* 퍼플 - 서커스 */
+  --sa-accent-bubble: #3b82f6;     /* 블루 - 버블 팝 */
+  --sa-accent-masquerade: #a855f7; /* 바이올렛 - 가면무도회 */
   
-  /* Neutrals */
+  /* Status Colors */
+  --sa-success: #10b981;
+  --sa-warning: #f59e0b;
+  --sa-info: #3b82f6;
+  --sa-danger: #ef4444;
+  
+  /* Neutrals - 더 부드러운 회색 톤 */
   --sa-white: #ffffff;
-  --sa-gray-50: #f9fafb;
-  --sa-gray-100: #f0f0f0;
-  --sa-gray-200: #e0e0e0;
-  --sa-gray-300: #d1d5db;
-  --sa-gray-400: #9ca3af;
-  --sa-gray-500: #6b7280;
-  --sa-gray-600: #4b5563;
-  --sa-gray-700: #374151;
-  --sa-gray-800: #1f2937;
-  --sa-gray-900: #111827;
+  --sa-gray-50: #fafafa;
+  --sa-gray-100: #f4f4f5;
+  --sa-gray-200: #e4e4e7;
+  --sa-gray-300: #d4d4d8;
+  --sa-gray-400: #a1a1aa;
+  --sa-gray-500: #71717a;
+  --sa-gray-600: #52525b;
+  --sa-gray-700: #3f3f46;
+  --sa-gray-800: #27272a;
+  --sa-gray-900: #18181b;
   
-  /* Gradients */
-  --sa-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --sa-gradient-secondary: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-  --sa-gradient-success: linear-gradient(135deg, #96ceb4 0%, #6dd5ed 100%);
+  /* Gradients - 미묘한 그라데이션 */
+  --sa-gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --sa-gradient-secondary: linear-gradient(135deg, #f87171 0%, #fb923c 100%);
+  --sa-gradient-success: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+  --sa-gradient-subtle: linear-gradient(180deg, #fafafa 0%, #f4f4f5 100%);
+  --sa-gradient-game-bg: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 50%, #ddd6fe 100%);
   
-  /* Shadows */
-  --sa-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --sa-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --sa-shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
-  --sa-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
+  /* Shadows - 다층 그림자로 깊이감 표현 */
+  --sa-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --sa-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.06), 0 8px 16px rgba(0, 0, 0, 0.08);
+  --sa-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.04), 0 8px 16px rgba(0, 0, 0, 0.06), 0 16px 32px rgba(0, 0, 0, 0.08), 0 24px 48px rgba(0, 0, 0, 0.1);
+  --sa-shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.04), 0 16px 32px rgba(0, 0, 0, 0.06), 0 24px 48px rgba(0, 0, 0, 0.08), 0 32px 64px rgba(0, 0, 0, 0.12);
+  
+  /* Colored Shadows */
+  --sa-shadow-primary: 0 4px 16px rgba(99, 102, 241, 0.2);
+  --sa-shadow-secondary: 0 4px 16px rgba(248, 113, 113, 0.2);
   
   /* Spacing */
   --sa-spacing-xs: 4px;
@@ -55,16 +75,34 @@
   --sa-radius-full: 9999px;
   
   /* Typography */
-  --sa-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --sa-font-size-xs: 0.75rem;
-  --sa-font-size-sm: 0.875rem;
-  --sa-font-size-base: 1rem;
-  --sa-font-size-lg: 1.125rem;
-  --sa-font-size-xl: 1.25rem;
-  --sa-font-size-2xl: 1.5rem;
-  --sa-font-size-3xl: 2rem;
-  --sa-font-size-4xl: 2.5rem;
+  --sa-font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', 
+    'Roboto', 'Helvetica Neue', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  
+  /* Font Sizes - 더 명확한 계층구조 */
+  --sa-font-size-xs: 0.75rem;      /* 12px - 캡션, 작은 라벨 */
+  --sa-font-size-sm: 0.875rem;     /* 14px - 보조 텍스트 */
+  --sa-font-size-base: 1rem;       /* 16px - 본문 */
+  --sa-font-size-lg: 1.125rem;     /* 18px - 중요 본문 */
+  --sa-font-size-xl: 1.375rem;     /* 22px - 소제목 */
+  --sa-font-size-2xl: 1.75rem;     /* 28px - 제목 */
+  --sa-font-size-3xl: 2.25rem;     /* 36px - 주요 제목 */
+  --sa-font-size-4xl: 3rem;        /* 48px - 히어로 제목 */
+  
+  /* Font Weights */
+  --sa-font-weight-normal: 400;
+  --sa-font-weight-medium: 500;
+  --sa-font-weight-semibold: 600;
+  --sa-font-weight-bold: 700;
+  
+  /* Line Heights */
+  --sa-line-height-tight: 1.25;
+  --sa-line-height-normal: 1.5;
+  --sa-line-height-relaxed: 1.75;
+  
+  /* Letter Spacing */
+  --sa-letter-spacing-tight: -0.02em;
+  --sa-letter-spacing-normal: 0;
+  --sa-letter-spacing-wide: 0.02em;
   
   /* Animation */
   --sa-transition-fast: 0.15s ease;
@@ -81,4 +119,47 @@
                      #FF9FF3, #54A0FF, #48DBFB, #A29BFE, #FD79A8,
                      #FDCB6E, #6C5CE7, #A8E6CF, #FFD3B6, #FFAAA5,
                      #B4F8C8, #FBE9E7, #C7ECEE, #778BEB, #F8B500;
+}
+
+/* Dark Mode Colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Primary Colors - 다크모드 */
+    --sa-primary: #818cf8;
+    --sa-primary-dark: #6366f1;
+    --sa-primary-light: #a5b4fc;
+    --sa-primary-lighter: #c7d2fe;
+    --sa-primary-subtle: #312e81;
+    
+    /* Secondary Colors - 다크모드 */
+    --sa-secondary: #fca5a5;
+    --sa-secondary-dark: #f87171;
+    --sa-secondary-light: #fecaca;
+    --sa-secondary-lighter: #fee2e2;
+    --sa-secondary-subtle: #7f1d1d;
+    
+    /* Neutrals - 다크모드 */
+    --sa-white: #18181b;
+    --sa-gray-50: #27272a;
+    --sa-gray-100: #3f3f46;
+    --sa-gray-200: #52525b;
+    --sa-gray-300: #71717a;
+    --sa-gray-400: #a1a1aa;
+    --sa-gray-500: #d4d4d8;
+    --sa-gray-600: #e4e4e7;
+    --sa-gray-700: #f4f4f5;
+    --sa-gray-800: #fafafa;
+    --sa-gray-900: #ffffff;
+    
+    /* Gradients - 다크모드 */
+    --sa-gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --sa-gradient-subtle: linear-gradient(180deg, #27272a 0%, #18181b 100%);
+    --sa-gradient-game-bg: linear-gradient(135deg, #312e81 0%, #701a75 50%, #581c87 100%);
+    
+    /* Shadows - 다크모드 */
+    --sa-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --sa-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --sa-shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+    --sa-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
 }

@@ -25,6 +25,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, onClick, participantCount = 0
     <div 
       className={`game-card ${!isPlayable ? 'disabled' : ''} ${!game.available ? 'coming-soon' : ''}`}
       onClick={isPlayable ? onClick : undefined}
+      data-game-id={game.id}
     >
       <div className="game-card-header">
         <div className="game-card-icon">{game.icon}</div>
