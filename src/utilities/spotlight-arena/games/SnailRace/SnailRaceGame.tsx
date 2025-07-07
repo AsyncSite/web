@@ -1,14 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Participant, SnailRaceState, Snail } from '../../shared/types';
-import { SNAIL_COLORS } from './utils/snailColors';
-import { getEventCommentary } from './utils/commentaryMessages';
-import { gameHistoryService, participantStatsService } from '../../shared/services';
-import { GameResult } from '../../shared/types/storage';
+import { Participant } from '../../shared/types';
 import RaceTrack from './components/RaceTrack';
 import RaceCountdown from './components/RaceCountdown';
 import EventNotification from './components/EventNotification';
 import RaceCommentary from './components/RaceCommentary';
 import ResultDisplay from '../../common/ResultDisplay';
+import { useSnailRaceGame } from './hooks/useSnailRaceGame';
 import './SnailRaceGame.css';
 
 interface SnailRaceGameProps {
@@ -19,113 +15,16 @@ interface SnailRaceGameProps {
   onNewGame: () => void;
 }
 
-const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
+function SnailRaceGame({
   participants,
   winnerCount,
   onBack,
   onReplay,
   onNewGame,
-}) => {
-  const [gameState, setGameState] = useState<SnailRaceState>({
-    status: 'waiting',
-    winners: [],
-    settings: {
-      participants,
-      winnerCount,
-      allowDuplicates: false,
-    },
-    snails: [],
-    trackLength: 100,
-    elapsedTime: 0,
-    events: [],
-  });
-
-  const [showCountdown, setShowCountdown] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState<{ snailId: string; eventName: string } | null>(
-    null,
+}: SnailRaceGameProps): React.ReactNode {
+  const { gameState, showCountdown, currentEvent, commentaryMessages, handlers } = useSnailRaceGame(
+    { participants, winnerCount },
   );
-  const [commentaryMessages, setCommentaryMessages] = useState<
-    Array<{ id: string; text: string; timestamp: number }>
-  >([]);
-  const [gameStartTime, setGameStartTime] = useState<number>(0);
-
-  // 게임 초기화
-  useEffect(() => {
-    const snails: Snail[] = participants.map((participant, index) => ({
-      id: participant.id,
-      participant,
-      position: 0,
-      speed: 0,
-      baseSpeed: 2 + Math.random() * 3, // 2.0 ~ 5.0
-      color: SNAIL_COLORS[index % SNAIL_COLORS.length],
-      activeEvent: undefined,
-    }));
-
-    setGameState((prev) => ({ ...prev, snails }));
-  }, [participants]);
-
-  const handleStartGame = () => {
-    setShowCountdown(true);
-  };
-
-  const handleCountdownComplete = () => {
-    setShowCountdown(false);
-    setGameStartTime(Date.now());
-    setGameState((prev) => ({ ...prev, status: 'playing' }));
-    addCommentary('🏁 레이스가 시작되었습니다! 모든 달팽이들이 출발합니다!');
-  };
-
-  const addCommentary = useCallback((text: string) => {
-    setCommentaryMessages((prev) => [
-      ...prev,
-      {
-        id: `msg-${Date.now()}-${Math.random()}`,
-        text,
-        timestamp: Date.now(),
-      },
-    ]);
-  }, []);
-
-  const handleRaceComplete = (winners: Participant[]) => {
-    // 게임 결과 저장
-    const gameResult: GameResult = {
-      gameType: 'snail-race',
-      participants,
-      winners,
-      gameConfig: {
-        winnerCount,
-        trackLength: gameState.trackLength,
-      },
-      startTime: gameStartTime,
-      endTime: Date.now(),
-    };
-
-    // 히스토리 및 통계 업데이트
-    try {
-      gameHistoryService.saveGameResult(gameResult);
-      participantStatsService.updateStats(gameResult);
-    } catch (error) {
-      console.error('Failed to save game result:', error);
-    }
-
-    setGameState((prev) => ({
-      ...prev,
-      status: 'finished',
-      winners,
-    }));
-  };
-
-  const handleEventTrigger = (snailId: string, eventName: string) => {
-    const snail = gameState.snails.find((s) => s.id === snailId);
-    if (snail) {
-      setCurrentEvent({ snailId, eventName });
-      setTimeout(() => setCurrentEvent(null), 2000);
-
-      // 중계 메시지 추가
-      const commentary = getEventCommentary(snail.participant.name, eventName);
-      addCommentary(commentary);
-    }
-  };
 
   if (gameState.status === 'finished') {
     return (
@@ -149,7 +48,7 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
       </div>
 
       <div className="game-content">
-        {showCountdown && <RaceCountdown onComplete={handleCountdownComplete} />}
+        {showCountdown && <RaceCountdown onComplete={handlers.handleCountdownComplete} />}
 
         {currentEvent && (
           <EventNotification
@@ -163,15 +62,18 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
         <RaceTrack
           gameState={gameState}
           isPlaying={gameState.status === 'playing'}
-          onRaceComplete={handleRaceComplete}
-          onEventTrigger={handleEventTrigger}
+          onRaceComplete={handlers.handleRaceComplete}
+          onEventTrigger={handlers.handleEventTrigger}
         />
 
         <RaceCommentary messages={commentaryMessages} />
 
         {gameState.status === 'waiting' && (
           <div className="game-controls">
-            <button className="start-button sa-button sa-button-primary" onClick={handleStartGame}>
+            <button
+              className="start-button sa-button sa-button-primary"
+              onClick={handlers.handleStartGame}
+            >
               🏁 레이스 시작하기
             </button>
           </div>
@@ -179,6 +81,6 @@ const SnailRaceGame: React.FC<SnailRaceGameProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default SnailRaceGame;
