@@ -51,6 +51,11 @@ function SnailRaceGame({
   const resultRecording = useResultRecording();
   // 녹화가 완료되었는지 추적하는 상태
   const [recordingCompleted, setRecordingCompleted] = useState(false);
+  // 결과를 Canvas에 표시할지 여부
+  const [showCanvasResult, setShowCanvasResult] = useState(false);
+  // 최종 결과 화면으로 전환할지 여부
+  const [showFinalResult, setShowFinalResult] = useState(false);
+  
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
     // Canvas는 사용하지 않고 Stage만 사용
     // (canvasRef as any).current = canvas;
@@ -63,24 +68,32 @@ function SnailRaceGame({
     }
   }, []);
 
-  // 게임이 종료되면 녹화 자동 중지
+  // 게임이 종료되면 Canvas에 결과 표시 후 녹화 중지
   useEffect(() => {
-    if (gameState.status === 'finished') {
+    if (gameState.status === 'finished' && !showCanvasResult) {
+      console.log('Game finished, showing result on canvas...');
+      setShowCanvasResult(true); // Canvas에 결과 표시
+      
       if (isRecording) {
-        console.log('Game finished, will stop recording after delay...');
         setRecordingCompleted(true); // 녹화가 있었음을 기록
-
-        // 최소 1초 후에 녹화 중지하여 데이터가 수집되도록 함
+        
+        // 3초 후에 녹화 중지하고 최종 결과 화면으로 전환
         setTimeout(() => {
-          console.log('Stopping recording after delay');
+          console.log('Stopping recording and showing final result...');
           stopRecording();
-        }, 1000);
-      } else if (hasRecording) {
-        // 이미 녹화가 중지되었지만 데이터가 있는 경우
-        setRecordingCompleted(true);
+          setShowFinalResult(true);
+        }, 3000);
+      } else {
+        // 녹화하지 않은 경우 바로 최종 결과로 전환
+        setTimeout(() => {
+          setShowFinalResult(true);
+        }, 3000);
+        if (hasRecording) {
+          setRecordingCompleted(true);
+        }
       }
     }
-  }, [gameState.status, isRecording, hasRecording, stopRecording]);
+  }, [gameState.status, isRecording, hasRecording, stopRecording, showCanvasResult]);
   // 컴포넌트 언마운트 시 녹화 데이터 정리
   // 주의: 게임 종료 시에는 정리하지 않고, 실제로 페이지를 떠날 때만 정리
   useEffect(() => {
@@ -96,8 +109,8 @@ function SnailRaceGame({
       }
     };
   }, [gameState.status]);
-  if (gameState.status === 'finished') {
-    // 녹화가 있는지 최종 확인
+  if (showFinalResult && gameState.status === 'finished') {
+    // 최종 결과 화면 표시
     const hasAnyRecording =
       recordingCompleted || hasRecording || resultRecording.hasRecording;
     console.log('Rendering ResultDisplay with:', {
@@ -152,9 +165,11 @@ function SnailRaceGame({
           onEventTrigger={handlers.handleEventTrigger}
           onCanvasReady={handleCanvasReady}
           onStageReady={handleStageRef}
+          commentaryMessages={commentaryMessages}
+          showResult={showCanvasResult}
         />
 
-        <RaceCommentary messages={commentaryMessages} />
+        {!showCanvasResult && <RaceCommentary messages={commentaryMessages} />}
         <RecordingControls
           isRecording={isRecording}
           isPaused={isPaused}

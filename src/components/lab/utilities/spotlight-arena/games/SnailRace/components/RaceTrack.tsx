@@ -1,11 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Stage, Layer, Rect, Text, Circle, Line } from 'react-konva';
+import { Stage, Layer, Rect, Text, Circle, Line, Group } from 'react-konva';
 import { SnailRaceState, Participant } from '../../../shared/types';
 import { SNAIL_RACE_EVENTS } from '../utils/eventDefinitions';
 import useGameEngine from '../hooks/useGameEngine';
 import SnailSprite from './SnailSprite';
 import TrackBackground from './TrackBackground';
 import './RaceTrack.css';
+
+interface CommentaryMessage {
+  id: string;
+  text: string;
+  timestamp: number;
+}
 
 interface RaceTrackProps {
   gameState: SnailRaceState;
@@ -14,6 +20,8 @@ interface RaceTrackProps {
   onEventTrigger: (snailId: string, eventName: string) => void;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
   onStageReady?: (stage: any) => void;
+  commentaryMessages?: CommentaryMessage[];
+  showResult?: boolean;
 }
 
 const RaceTrack: React.FC<RaceTrackProps> = ({
@@ -23,17 +31,21 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
   onEventTrigger,
   onCanvasReady,
   onStageReady,
+  commentaryMessages = [],
+  showResult = false,
 }) => {
   const stageRef = useRef<any>(null);
   const [finishedSnails, setFinishedSnails] = useState<string[]>([]);
   const trackWidth = 1000;
   const trackPaddingY = 80; // 상하 패딩 추가
+  const commentaryHeight = 150; // 실시간 중계 영역 높이
   // 달팽이 수에 따라 트랙 높이 동적 조정
   const snailCount = gameState.snails.length;
   const minLaneHeight = 60; // 최소 레인 높이
   const calculatedHeight = Math.max(600, snailCount * minLaneHeight);
-  const trackHeight = calculatedHeight + trackPaddingY * 2;
-  const laneHeight = (trackHeight - trackPaddingY * 2) / snailCount;
+  const trackAreaHeight = calculatedHeight + trackPaddingY * 2;
+  const totalHeight = trackAreaHeight + commentaryHeight; // 전체 높이에 중계 영역 추가
+  const laneHeight = (calculatedHeight) / snailCount;
   const trackStartX = 100;
   const trackEndX = trackWidth - 100;
   const trackDistance = trackEndX - trackStartX;
@@ -109,12 +121,12 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
 
   return (
     <div className="race-track-container">
-      <Stage width={trackWidth} height={trackHeight} ref={stageRef}>
+      <Stage width={trackWidth} height={totalHeight} ref={stageRef}>
         {/* 배경 레이어 */}
         <Layer>
           <TrackBackground
             width={trackWidth}
-            height={trackHeight}
+            height={trackAreaHeight}
             laneCount={gameState.snails.length}
           />
 
@@ -137,13 +149,13 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
 
           {/* 시작선 */}
           <Line
-            points={[trackStartX, trackPaddingY, trackStartX, trackHeight - trackPaddingY]}
+            points={[trackStartX, trackPaddingY, trackStartX, trackAreaHeight - trackPaddingY]}
             stroke="#1B5E20"
             strokeWidth={8}
           />
           <Text
             x={trackStartX - 80}
-            y={trackHeight / 2 - 20}
+            y={trackAreaHeight / 2 - 20}
             text="START"
             fontSize={20}
             fontStyle="bold"
@@ -153,13 +165,13 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
 
           {/* 결승선 */}
           <Line
-            points={[trackEndX, trackPaddingY, trackEndX, trackHeight - trackPaddingY]}
+            points={[trackEndX, trackPaddingY, trackEndX, trackAreaHeight - trackPaddingY]}
             stroke="#B71C1C"
             strokeWidth={8}
           />
           <Text
             x={trackEndX + 20}
-            y={trackHeight / 2 - 20}
+            y={trackAreaHeight / 2 - 20}
             text="FINISH"
             fontSize={20}
             fontStyle="bold"
@@ -225,6 +237,111 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
             );
           })}
         </Layer>
+
+        {/* 실시간 중계 레이어 */}
+        <Layer>
+          {/* 중계 배경 */}
+          <Rect
+            x={0}
+            y={trackAreaHeight}
+            width={trackWidth}
+            height={commentaryHeight}
+            fill="#2C2C2C"
+          />
+          
+          {/* 중계 헤더 */}
+          <Rect
+            x={0}
+            y={trackAreaHeight}
+            width={trackWidth}
+            height={30}
+            fill="#1A1A1A"
+          />
+          <Text
+            x={20}
+            y={trackAreaHeight + 8}
+            text="📢 실시간 중계"
+            fontSize={16}
+            fontStyle="bold"
+            fill="#FFFFFF"
+          />
+          
+          {/* 중계 메시지들 */}
+          {commentaryMessages.slice(-5).map((message, index) => (
+            <Text
+              key={message.id}
+              x={20}
+              y={trackAreaHeight + 40 + (index * 20)}
+              text={message.text}
+              fontSize={14}
+              fill="#E0E0E0"
+              width={trackWidth - 40}
+            />
+          ))}
+          
+          {commentaryMessages.length === 0 && (
+            <Text
+              x={20}
+              y={trackAreaHeight + 40}
+              text="레이스가 곧 시작됩니다..."
+              fontSize={14}
+              fill="#9E9E9E"
+            />
+          )}
+        </Layer>
+
+        {/* 결과 표시 레이어 */}
+        {showResult && gameState.status === 'finished' && (
+          <Layer>
+            {/* 반투명 오버레이 */}
+            <Rect
+              x={0}
+              y={0}
+              width={trackWidth}
+              height={totalHeight}
+              fill="black"
+              opacity={0.7}
+            />
+            
+            {/* 결과 박스 */}
+            <Rect
+              x={trackWidth / 2 - 250}
+              y={totalHeight / 2 - 150}
+              width={500}
+              height={300}
+              fill="#FFFFFF"
+              stroke="#FFD700"
+              strokeWidth={4}
+              cornerRadius={20}
+            />
+            
+            {/* 게임 제목 */}
+            <Text
+              x={trackWidth / 2}
+              y={totalHeight / 2 - 120}
+              text="🐌 달팽이 레이스 결과"
+              fontSize={28}
+              fontStyle="bold"
+              fill="#1A1A1A"
+              align="center"
+              offsetX={120}
+            />
+            
+            {/* 우승자 목록 */}
+            {gameState.winners.map((winner, index) => (
+              <Group key={winner.id}>
+                <Text
+                  x={trackWidth / 2 - 150}
+                  y={totalHeight / 2 - 50 + (index * 40)}
+                  text={`${index + 1}위: ${winner.name}`}
+                  fontSize={24}
+                  fill={index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : '#CD7F32'}
+                  fontStyle="bold"
+                />
+              </Group>
+            ))}
+          </Layer>
+        )}
       </Stage>
     </div>
   );
