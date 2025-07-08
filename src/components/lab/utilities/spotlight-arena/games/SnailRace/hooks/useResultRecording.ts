@@ -15,6 +15,11 @@ const useResultRecording = (): UseResultRecordingReturn => {
         const savedRecording = localStorage.getItem('snailRaceRecording');
         const recordingTime = localStorage.getItem('snailRaceRecordingTime');
 
+        console.log('useResultRecording - checking localStorage:', {
+          hasRecording: !!savedRecording,
+          recordingTime,
+        });
+
         if (savedRecording && recordingTime) {
           // 녹화 시간 확인 (24시간 이내)
           const recordedAt = new Date(recordingTime).getTime();
@@ -22,23 +27,37 @@ const useResultRecording = (): UseResultRecordingReturn => {
           const hoursSinceRecording = (now - recordedAt) / (1000 * 60 * 60);
 
           if (hoursSinceRecording < 24) {
+            console.log('useResultRecording - recording found and valid');
             setHasRecording(true);
           } else {
             // 오래된 녹화는 삭제
+            console.log('useResultRecording - recording too old, removing');
             localStorage.removeItem('snailRaceRecording');
             localStorage.removeItem('snailRaceRecordingTime');
           }
+        } else {
+          console.log('useResultRecording - no recording found');
+          setHasRecording(false);
         }
       } catch (e) {
+        console.error('useResultRecording - localStorage error:', e);
         // localStorage 접근 실패 시 무시
       }
     };
 
     checkRecording();
-    // localStorage 변경 감지
+    // 정기적으로 체크 (녹화가 저장되는 시간을 고려)
+    const intervalId = setInterval(checkRecording, 500);
+    const timeoutId = setTimeout(() => {
+      clearInterval(intervalId);
+    }, 5000);
     const handleStorageChange = () => checkRecording();
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const downloadRecording = useCallback(() => {
