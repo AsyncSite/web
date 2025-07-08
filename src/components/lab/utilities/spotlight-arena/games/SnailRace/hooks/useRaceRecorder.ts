@@ -338,7 +338,7 @@ const useRaceRecorder = ({
                 try {
                   if (canvas.width > 0 && canvas.height > 0) {
                     // 축소해서 그리기 (더 많은 영역 캡처)
-                    const zoomFactor = 0.2; // 60% 크기로 축소하여 더 많은 영역 보이게
+                    const zoomFactor = 0.3; // 60% 크기로 축소하여 더 많은 영역 보이게
                     ctx.save();
                     // 중앙에 축소된 이미지 배치
                     const scaledWidth = canvas.width * zoomFactor;
