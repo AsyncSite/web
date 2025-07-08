@@ -101,3 +101,24 @@
   font-size: 14px;
   text-align: center;
 }
+
+/* 테마별 설정 스타일 */
+[data-theme="casino"] .dart-wheel-checkbox:checked {
+  accent-color: #FFB300;
+}
+
+[data-theme="casino"] .dart-wheel-preset-button.dart-wheel-preset-selected {
+  background: #FFB300;
+  color: #000000;
+  border-color: #FFB300;
+}
+
+[data-theme="circus"] .dart-wheel-checkbox:checked {
+  accent-color: #E53935;
+}
+
+[data-theme="circus"] .dart-wheel-preset-button.dart-wheel-preset-selected {
+  background: #E53935;
+  color: #FFFFFF;
+  border-color: #E53935;
+}

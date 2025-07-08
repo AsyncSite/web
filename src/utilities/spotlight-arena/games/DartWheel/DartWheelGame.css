@@ -6,6 +6,26 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* CSS 변수를 활용한 텍스트 색상 적용 */
+.dart-wheel-game-container * {
+  color: inherit;
+}
+
+.dart-wheel-game-container h1,
+.dart-wheel-game-container h2,
+.dart-wheel-game-container h3,
+.dart-wheel-game-container h4,
+.dart-wheel-game-container h5,
+.dart-wheel-game-container h6 {
+  color: var(--dart-wheel-text);
+}
+
+.dart-wheel-game-container p,
+.dart-wheel-game-container span,
+.dart-wheel-game-container div {
+  color: var(--dart-wheel-secondary-text);
+}
+
 .dart-wheel-game-header {
   display: flex;
   justify-content: space-between;
@@ -288,6 +308,20 @@
     linear-gradient(180deg, var(--dart-wheel-bg) 0%, #1a0a0a 100%);
 }
 
+[data-theme="casino"] .dart-wheel-game-header {
+  background: linear-gradient(90deg, rgba(13, 13, 13, 0.95), rgba(26, 26, 26, 0.95));
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid #FFB300;
+  box-shadow: 0 4px 20px rgba(255, 179, 0, 0.3);
+}
+
+[data-theme="casino"] .dart-wheel-game-title {
+  background: linear-gradient(135deg, #FFB300, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 179, 0, 0.5);
+}
+
 [data-theme="casino"] .dart-wheel-canvas-container {
   background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
   border: 3px solid var(--dart-wheel-accent);
@@ -319,15 +353,88 @@
 [data-theme="casino"] .dart-wheel-results-display,
 [data-theme="casino"] .dart-wheel-settings,
 [data-theme="casino"] .dart-wheel-mode-selector {
-  background: var(--dart-wheel-surface);
-  border: 1px solid var(--dart-wheel-border);
-  box-shadow: 0 4px 12px var(--dart-wheel-shadow);
+  background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+  border: 2px solid #333333;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 179, 0, 0.1);
+}
+
+[data-theme="casino"] .dart-wheel-participant-display h3,
+[data-theme="casino"] .dart-wheel-results-display h3,
+[data-theme="casino"] .dart-wheel-mode-title,
+[data-theme="casino"] .dart-wheel-settings-title {
+  color: #FFB300;
+  text-shadow: 0 0 10px rgba(255, 179, 0, 0.3);
+}
+
+[data-theme="casino"] .dart-wheel-participant-info {
+  background: rgba(255, 179, 0, 0.05);
+  border: 2px solid rgba(255, 179, 0, 0.2);
+}
+
+[data-theme="casino"] .dart-wheel-participant-name {
+  color: #FFD700;
+}
+
+[data-theme="casino"] .dart-wheel-result-item {
+  background: rgba(255, 179, 0, 0.05);
+  border-left-color: #FFB300;
+}
+
+[data-theme="casino"] .dart-wheel-result-value {
+  color: #FFB300;
+  text-shadow: 0 0 5px rgba(255, 179, 0, 0.5);
+}
+
+[data-theme="casino"] .dart-wheel-queue-item {
+  background: rgba(26, 26, 26, 0.8);
+  border-color: #333333;
+  color: #E0E0E0;
+}
+
+[data-theme="casino"] .dart-wheel-mode-card {
+  background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+  border-color: #333333;
+  color: #E0E0E0;
+}
+
+[data-theme="casino"] .dart-wheel-mode-card:hover:not(:disabled) {
+  border-color: #FFB300;
+  box-shadow: 0 8px 24px rgba(255, 179, 0, 0.3);
+}
+
+[data-theme="casino"] .dart-wheel-mode-card.dart-wheel-mode-selected {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-color: #FFB300;
 }
 
 [data-theme="casino"] .dart-wheel-rank-1 .dart-wheel-rank-number {
   background: linear-gradient(135deg, #FFD700, #FFB300);
   color: #000000;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+[data-theme="casino"] .dart-wheel-team-display,
+[data-theme="casino"] .dart-wheel-survival-display,
+[data-theme="casino"] .dart-wheel-target-display {
+  background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+  border: 2px solid #333333;
+  box-shadow: 0 4px 16px rgba(255, 179, 0, 0.2);
+}
+
+[data-theme="casino"] .dart-wheel-team-item {
+  background: rgba(255, 179, 0, 0.05);
+  border-color: rgba(255, 179, 0, 0.3);
+}
+
+[data-theme="casino"] .dart-wheel-survival-display p:first-of-type {
+  color: #FFB300;
+  text-shadow: 0 0 10px rgba(255, 179, 0, 0.5);
+}
+
+[data-theme="casino"] .dart-wheel-target-display h3 {
+  color: #FFD700;
 }
 
 /* 서커스 테마 */
@@ -341,6 +448,36 @@
       rgba(229, 57, 53, 0.03) 40px
     ),
     linear-gradient(180deg, var(--dart-wheel-bg) 0%, #FFF8E1 100%);
+}
+
+[data-theme="circus"] .dart-wheel-game-header {
+  background: linear-gradient(90deg, #FFFFFF, #FFF3E0);
+  border-bottom: 3px solid #E53935;
+  box-shadow: 0 4px 20px rgba(229, 57, 53, 0.2);
+  position: relative;
+}
+
+[data-theme="circus"] .dart-wheel-game-header::after {
+  content: '🎈🎉🎆';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  animation: dartWheelCircusBounce 2s ease-in-out infinite;
+}
+
+@keyframes dartWheelCircusBounce {
+  0%, 100% { transform: translateY(-50%); }
+  50% { transform: translateY(-60%); }
+}
+
+[data-theme="circus"] .dart-wheel-game-title {
+  background: linear-gradient(135deg, #E53935, #FB8C00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Comic Sans MS', cursive;
+  transform: rotate(-2deg);
 }
 
 [data-theme="circus"] .dart-wheel-canvas-container {
@@ -411,10 +548,101 @@
 [data-theme="circus"] .dart-wheel-results-display,
 [data-theme="circus"] .dart-wheel-settings,
 [data-theme="circus"] .dart-wheel-mode-selector {
-  background: var(--dart-wheel-surface);
-  border: 2px solid var(--dart-wheel-border);
+  background: 
+    repeating-linear-gradient(
+      -45deg,
+      #FFFFFF,
+      #FFFFFF 10px,
+      #FFF3E0 10px,
+      #FFF3E0 20px
+    );
+  border: 3px dashed #E53935;
   box-shadow: 0 4px 12px rgba(251, 140, 0, 0.15);
   position: relative;
+}
+
+[data-theme="circus"] .dart-wheel-participant-display h3,
+[data-theme="circus"] .dart-wheel-results-display h3,
+[data-theme="circus"] .dart-wheel-mode-title,
+[data-theme="circus"] .dart-wheel-settings-title {
+  color: #E53935;
+  font-weight: 800;
+  text-shadow: 2px 2px 0 #FFE0B2;
+}
+
+[data-theme="circus"] .dart-wheel-participant-info {
+  background: #FFFFFF;
+  border: 3px solid #FB8C00;
+  box-shadow: 4px 4px 0 #FFE0B2;
+  transform: rotate(-1deg);
+}
+
+[data-theme="circus"] .dart-wheel-participant-info.dart-wheel-spinning {
+  animation: dartWheelCircusShake 0.5s ease-in-out infinite;
+}
+
+@keyframes dartWheelCircusShake {
+  0%, 100% { transform: rotate(-1deg); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(0deg); }
+}
+
+[data-theme="circus"] .dart-wheel-participant-name {
+  color: #E53935;
+  font-weight: 800;
+}
+
+[data-theme="circus"] .dart-wheel-result-item {
+  background: #FFFFFF;
+  border: 2px solid #FFE0B2;
+  border-left: 4px solid #E53935;
+  transform: rotate(0.5deg);
+}
+
+[data-theme="circus"] .dart-wheel-result-item:nth-child(even) {
+  transform: rotate(-0.5deg);
+}
+
+[data-theme="circus"] .dart-wheel-result-value {
+  color: #FB8C00;
+  font-weight: 800;
+}
+
+[data-theme="circus"] .dart-wheel-queue-item {
+  background: #FFFFFF;
+  border: 2px solid #FFE0B2;
+  color: #424242;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="circus"] .dart-wheel-queue-item::before {
+  content: '🎪';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.2;
+  font-size: 20px;
+}
+
+[data-theme="circus"] .dart-wheel-mode-card {
+  background: #FFFFFF;
+  border: 3px solid #FFE0B2;
+  color: #212121;
+  transition: all 0.3s ease;
+}
+
+[data-theme="circus"] .dart-wheel-mode-card:hover:not(:disabled) {
+  border-color: #E53935;
+  transform: scale(1.05) rotate(-2deg);
+  box-shadow: 0 8px 24px rgba(229, 57, 53, 0.2);
+}
+
+[data-theme="circus"] .dart-wheel-mode-card.dart-wheel-mode-selected {
+  background: linear-gradient(135deg, #FFE0B2, #FFFFFF);
+  border-color: #E53935;
+  transform: rotate(-1deg);
 }
 
 [data-theme="circus"] .dart-wheel-participant-display::after,
@@ -442,6 +670,42 @@
   left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
+}
+
+[data-theme="circus"] .dart-wheel-team-display,
+[data-theme="circus"] .dart-wheel-survival-display,
+[data-theme="circus"] .dart-wheel-target-display {
+  background: linear-gradient(135deg, #FFFFFF, #FFF3E0);
+  border: 3px dashed #FB8C00;
+  box-shadow: 0 4px 16px rgba(251, 140, 0, 0.2);
+  position: relative;
+}
+
+[data-theme="circus"] .dart-wheel-team-display::before {
+  content: '🎆';
+  position: absolute;
+  top: -15px;
+  right: 20px;
+  font-size: 24px;
+  transform: rotate(15deg);
+}
+
+[data-theme="circus"] .dart-wheel-team-item {
+  background: #FFFFFF;
+  border: 2px solid;
+  box-shadow: 3px 3px 0 #FFE0B2;
+  font-weight: 600;
+}
+
+[data-theme="circus"] .dart-wheel-survival-display p:first-of-type {
+  color: #E53935;
+  font-weight: 800;
+  text-shadow: 2px 2px 0 #FFE0B2;
+}
+
+[data-theme="circus"] .dart-wheel-target-display h3 {
+  color: #FB8C00;
+  text-shadow: 2px 2px 0 #FFE0B2;
 }
 
 /* 반응형 디자인 */
