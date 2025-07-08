@@ -497,6 +497,7 @@
   transform: translateX(-50%);
   font-size: 40px;
   z-index: 1;
+  pointer-events: none;
 }
 
 [data-theme="circus"] .dart-wheel-start-button,
@@ -535,13 +536,34 @@
   100% { transform: translate(20px, 20px); }
 }
 
-[data-theme="circus"] .dart-wheel-start-button:hover,
-[data-theme="circus"] .dart-wheel-spin-action-button:hover {
+[data-theme="circus"] .dart-wheel-start-button:hover {
   background: linear-gradient(135deg, #EF5350 0%, #E53935 100%);
   transform: translateY(-3px) rotate(-1deg);
   box-shadow: 
     0 8px 25px rgba(229, 57, 53, 0.4),
     inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="circus"] .dart-wheel-spin-action-button:hover {
+  background: linear-gradient(135deg, #EF5350 0%, #E53935 100%);
+  transform: translateX(-50%) translateY(-3px);
+  box-shadow: 
+    0 8px 25px rgba(229, 57, 53, 0.4),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="circus"] .dart-wheel-back-button {
+  background: linear-gradient(135deg, #43A047 0%, #388E3C 100%);
+  color: #FFFFFF;
+  border: 2px solid #2E7D32;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="circus"] .dart-wheel-back-button:hover {
+  background: linear-gradient(135deg, #66BB6A 0%, #43A047 100%);
+  transform: translateX(-2px) rotate(-1deg);
+  border-color: #388E3C;
 }
 
 [data-theme="circus"] .dart-wheel-participant-display,
