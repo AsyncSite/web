@@ -307,7 +307,7 @@ export function dartWheelGetThemeSpecialEffects(theme: string): {
   wheelBorder?: any;
   centerButton?: any;
   sectionStyle?: any;
-  particleType?: string;
+  particleType?: 'default' | 'gold' | 'confetti' | 'stars' | 'sparks' | 'leaves';
 } {
   switch (theme) {
     case 'casino':
