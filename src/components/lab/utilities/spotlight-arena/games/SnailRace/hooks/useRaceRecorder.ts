@@ -110,7 +110,7 @@ const useRaceRecorder = ({
 
         options = {
           mimeType: selectedMimeType,
-          videoBitsPerSecond: 1000000, // 1 Mbps로 증가하여 품질 향상
+          videoBitsPerSecond: 5000000, // 5 Mbps로 증가하여 고품질 녹화
         };
 
         const mediaRecorder = new MediaRecorder(stream, options);
@@ -287,11 +287,22 @@ const useRaceRecorder = ({
         // Stage 크기가 0일 경우 기본값 사용
         const stageWidth = stage.width() || 1000;
         const stageHeight = stage.height() || 600;
-        offscreenCanvas.width = stageWidth;
-        offscreenCanvas.height = stageHeight;
+        
+        // 더 높은 해상도를 위해 2배 크기로 설정
+        const scale = 2;
+        offscreenCanvas.width = stageWidth * scale;
+        offscreenCanvas.height = stageHeight * scale;
         const ctx = offscreenCanvas.getContext('2d');
         
-        console.log('Offscreen canvas size:', stageWidth, 'x', stageHeight);
+        // 고품질 렌더링 설정
+        if (ctx) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          // 스케일 설정
+          ctx.scale(scale, scale);
+        }
+        
+        console.log('Offscreen canvas size:', offscreenCanvas.width, 'x', offscreenCanvas.height, 'Scale:', scale);
 
         if (!ctx) {
           throw new Error('Failed to create offscreen canvas context');
@@ -313,9 +324,12 @@ const useRaceRecorder = ({
               // 에러 무시
             }
             
-            // 배경색으로 초기화
+            // 배경색으로 초기화 (스케일 적용 전 전체 캔버스 크기로)
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0); // 스케일 리셋
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+            ctx.restore();
             
             // Konva의 모든 canvas 레이어를 순서대로 그리기
             if (konvaCanvases.length > 0) {
@@ -323,7 +337,16 @@ const useRaceRecorder = ({
               konvaCanvases.forEach((canvas, index) => {
                 try {
                   if (canvas.width > 0 && canvas.height > 0) {
-                    ctx.drawImage(canvas, 0, 0);
+                    // 축소해서 그리기 (더 많은 영역 캡처)
+                    const zoomFactor = 0.2; // 60% 크기로 축소하여 더 많은 영역 보이게
+                    ctx.save();
+                    // 중앙에 축소된 이미지 배치
+                    const scaledWidth = canvas.width * zoomFactor;
+                    const scaledHeight = canvas.height * zoomFactor;
+                    const offsetX = (stageWidth - scaledWidth) / 2;
+                    const offsetY = (stageHeight - scaledHeight) / 2;
+                    ctx.drawImage(canvas, offsetX, offsetY, scaledWidth, scaledHeight);
+                    ctx.restore();
                     hasDrawnContent = true;
                   }
                 } catch (e) {
@@ -356,19 +379,24 @@ const useRaceRecorder = ({
           if (!callbackCalled) {
             console.log('Stage toCanvas timeout, using offscreen canvas directly');
             
-            // 테스트 패턴 그리기
+            // 테스트 패턴 그리기 (고해상도)
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0); // 스케일 리셋
             ctx.fillStyle = '#f0f0f0';
             ctx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
             ctx.fillStyle = '#333';
-            ctx.font = '30px Arial';
-            ctx.fillText('녹화 준비 중...', offscreenCanvas.width / 2 - 80, offscreenCanvas.height / 2);
+            ctx.font = '60px Arial'; // 2배 크기
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('녹화 준비 중...', offscreenCanvas.width / 2, offscreenCanvas.height / 2);
+            ctx.restore();
             
             // 빈 캔버스로라도 스트림 생성
-            const frameInterval = setInterval(captureFrame, 40);
+            const frameInterval = setInterval(captureFrame, 33); // 30fps
             chunksRef.current = [];
             (chunksRef as any).frameInterval = frameInterval;
             
-            stream = offscreenCanvas.captureStream(25);
+            stream = offscreenCanvas.captureStream(30); // 30fps로 증가
             console.log('Stream created with test pattern, tracks:', stream.getTracks().length);
             
             // 스트림 활성화를 위해 초기 프레임 강제 업데이트
@@ -421,13 +449,13 @@ const useRaceRecorder = ({
               console.log('Initial frame captured via toCanvas');
               
               // 주기적으로 프레임 업데이트 (25fps)
-              const frameInterval = setInterval(captureFrame, 40); // 40ms = 25fps
+              const frameInterval = setInterval(captureFrame, 33); // 33ms = 30fps
 
               // MediaRecorder 종료 시 interval 정리를 위해 저장
               chunksRef.current = []; // 초기화
               (chunksRef as any).frameInterval = frameInterval;
 
-              stream = offscreenCanvas.captureStream(25);
+              stream = offscreenCanvas.captureStream(30); // 30fps로 증가
               console.log(
                 'Stream created from merged Konva layers, tracks:',
                 stream.getTracks().length,
