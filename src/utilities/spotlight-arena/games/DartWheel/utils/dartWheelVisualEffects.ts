@@ -64,7 +64,7 @@ export function dartWheelGetNeonStyle(
 }
 
 /**
- * 무지개 그라데이션 색상 생성
+ * 무지개 그라데이션 색상 생성 (접근성 개선)
  */
 export function dartWheelGenerateRainbowColors(
   sectionCount: number
@@ -73,45 +73,56 @@ export function dartWheelGenerateRainbowColors(
   
   for (let i = 0; i < sectionCount; i++) {
     const hue = (360 / sectionCount) * i;
-    colors.push(`hsl(${hue}, 70%, 50%)`);
+    // 더 나은 대비를 위해 채도와 명도 조정
+    colors.push(`hsl(${hue}, 75%, 45%)`);
   }
   
   return colors;
 }
 
 /**
- * 테마별 색상 팔레트
+ * 테마별 색상 팔레트 (WCAG AA 기준 충족)
  */
 export const DART_WHEEL_THEME_PALETTES = {
   casino: {
-    primary: ['#DC143C', '#000000', '#FFD700', '#006400'],
-    accent: '#FFD700',
+    primary: ['#DC143C', '#2C2C2C', '#FFB300', '#1B5E20'],
+    accent: '#FFB300',
     background: '#1a1a1a',
-    glow: '#FFD700',
+    glow: '#FFB300',
+    text: '#FFFFFF',
+    secondaryText: '#E0E0E0',
   },
   circus: {
-    primary: ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A8E6CF'],
-    accent: '#FF6B6B',
-    background: '#FFF5E1',
-    glow: '#FFE66D',
+    primary: ['#D32F2F', '#0097A7', '#F57C00', '#388E3C'],
+    accent: '#D32F2F',
+    background: '#FAFAFA',
+    glow: '#F57C00',
+    text: '#212121',
+    secondaryText: '#424242',
   },
   space: {
-    primary: ['#6B5B95', '#88B0D3', '#34A0A4', '#52B69A'],
-    accent: '#88B0D3',
-    background: '#0a0a2e',
-    glow: '#88B0D3',
+    primary: ['#5E35B1', '#1976D2', '#00796B', '#388E3C'],
+    accent: '#1976D2',
+    background: '#0D1117',
+    glow: '#1976D2',
+    text: '#FFFFFF',
+    secondaryText: '#B0BEC5',
   },
   neon: {
-    primary: ['#FF006E', '#FB5607', '#FFBE0B', '#8338EC'],
-    accent: '#FF006E',
+    primary: ['#E91E63', '#FF5722', '#FFC107', '#7B1FA2'],
+    accent: '#E91E63',
     background: '#0a0a0a',
-    glow: '#FF006E',
+    glow: '#E91E63',
+    text: '#FFFFFF',
+    secondaryText: '#E0E0E0',
   },
   forest: {
-    primary: ['#2D6A4F', '#40916C', '#52B788', '#74C69D'],
-    accent: '#40916C',
-    background: '#1B4332',
-    glow: '#74C69D',
+    primary: ['#1B5E20', '#2E7D32', '#43A047', '#66BB6A'],
+    accent: '#2E7D32',
+    background: '#F1F8E9',
+    glow: '#66BB6A',
+    text: '#1B5E20',
+    secondaryText: '#33691E',
   },
 };
 

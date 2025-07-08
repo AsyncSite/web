@@ -1,7 +1,9 @@
 .dart-wheel-game-container {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: var(--dart-wheel-bg, #f5f7fa);
+  color: var(--dart-wheel-text, #212121);
   padding: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dart-wheel-game-header {
@@ -21,25 +23,33 @@
 .dart-wheel-game-title {
   font-size: 32px;
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--dart-wheel-text, #212121);
   margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .dart-wheel-back-button {
-  background: #e9ecef;
-  color: #495057;
-  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--dart-wheel-text, #212121);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   padding: 10px 24px;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
 }
 
 .dart-wheel-back-button:hover {
-  background: #dee2e6;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateX(-2px);
+}
+
+.dart-wheel-back-button:focus {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
 }
 
 .dart-wheel-game-content {
@@ -63,7 +73,7 @@
 .dart-wheel-target-display h3 {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: #212121;
   margin: 0 0 16px 0;
 }
 
@@ -92,27 +102,28 @@
 .dart-wheel-team-item span:last-child {
   font-weight: 700;
   font-size: 18px;
-  color: #2c3e50;
+  color: #1a1a1a;
 }
 
 .dart-wheel-survival-display p,
 .dart-wheel-target-display p {
   margin: 8px 0;
   font-size: 16px;
-  color: #495057;
+  color: #424242;
 }
 
 .dart-wheel-survival-display p:first-of-type {
   font-size: 20px;
   font-weight: 600;
-  color: #dc3545;
+  color: #d32f2f;
 }
 
 .dart-wheel-target-display h3 {
   text-align: center;
-  color: #28a745;
+  color: #2e7d32;
   font-size: 22px;
   margin: 12px 0;
+  font-weight: 700;
 }
 
 /* 시작 화면 스타일 */
@@ -147,7 +158,8 @@
 .dart-wheel-participants-preview h3 {
   font-size: 24px;
   margin-bottom: 24px;
-  color: #333;
+  color: #212121;
+  font-weight: 600;
 }
 
 .dart-wheel-participants-list {
@@ -158,18 +170,20 @@
 }
 
 .dart-wheel-participant-item {
-  background: #f8f9fa;
+  background: #f5f5f5;
   padding: 12px 16px;
   border-radius: 8px;
   font-weight: 500;
-  color: #495057;
-  border: 2px solid transparent;
+  color: #424242;
+  border: 2px solid #e0e0e0;
   transition: all 0.2s ease;
 }
 
 .dart-wheel-participant-item:hover {
-  border-color: #4ECDC4;
-  background: #e7fffe;
+  border-color: #0097a7;
+  background: #e0f7fa;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dart-wheel-game-info {
@@ -181,12 +195,13 @@
 
 .dart-wheel-game-info p {
   margin: 0;
-  color: #6c757d;
+  color: #616161;
   font-size: 16px;
+  font-weight: 500;
 }
 
 .dart-wheel-start-button {
-  background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+  background: linear-gradient(135deg, #0097a7 0%, #00796b 100%);
   color: white;
   border: none;
   padding: 20px 60px;
@@ -195,14 +210,25 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 151, 167, 0.3);
   text-transform: uppercase;
   letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
 }
 
 .dart-wheel-start-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 151, 167, 0.4);
+}
+
+.dart-wheel-start-button:focus {
+  outline: 3px solid #4dd0e1;
+  outline-offset: 3px;
+}
+
+.dart-wheel-start-button:active {
+  transform: translateY(-1px);
 }
 
 /* 게임 진행 화면 스타일 */
@@ -228,7 +254,7 @@
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
   color: white;
   border: none;
   border-radius: 50px;

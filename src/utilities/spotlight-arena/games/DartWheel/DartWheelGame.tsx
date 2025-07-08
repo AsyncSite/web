@@ -109,9 +109,13 @@ function DartWheelGame({
     <div 
       className="dart-wheel-game-container"
       style={{
-        background: dartWheelThemeColors.background,
+        '--dart-wheel-bg': dartWheelThemeColors.background,
+        '--dart-wheel-text': dartWheelThemeColors.text,
+        '--dart-wheel-secondary-text': dartWheelThemeColors.secondaryText,
+        '--dart-wheel-accent': dartWheelThemeColors.accent,
+        '--dart-wheel-glow': dartWheelThemeColors.glow,
         minHeight: '100vh',
-      }}
+      } as React.CSSProperties}
     >
       {/* 카운트다운 오버레이 */}
       {dartWheelShowCountdown && (

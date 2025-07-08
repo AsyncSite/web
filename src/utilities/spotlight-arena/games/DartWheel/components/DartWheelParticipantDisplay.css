@@ -1,9 +1,10 @@
 .dart-wheel-participant-display {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   min-width: 280px;
+  border: 1px solid #e0e0e0;
 }
 
 .dart-wheel-participant-header {
@@ -17,15 +18,15 @@
 
 .dart-wheel-participant-title {
   font-size: 18px;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #212121;
   margin: 0;
 }
 
 .dart-wheel-participant-progress {
   font-size: 14px;
-  color: #6c757d;
-  font-weight: 500;
+  color: #616161;
+  font-weight: 600;
 }
 
 .dart-wheel-participant-info {
@@ -46,19 +47,19 @@
 .dart-wheel-participant-name {
   font-size: 24px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin-bottom: 8px;
 }
 
 .dart-wheel-participant-status {
   font-size: 14px;
-  color: #7f8c8d;
+  color: #757575;
   font-style: italic;
 }
 
 .dart-wheel-spinning .dart-wheel-participant-status {
-  color: #4ECDC4;
-  font-weight: 500;
+  color: #0097a7;
+  font-weight: 600;
   animation: dartWheelPulse 1.5s ease-in-out infinite;
 }
 
@@ -68,8 +69,8 @@
 
 .dart-wheel-queue-title {
   font-size: 14px;
-  font-weight: 600;
-  color: #6c757d;
+  font-weight: 700;
+  color: #616161;
   margin: 0 0 12px 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -86,9 +87,10 @@
   padding: 12px 16px;
   border-radius: 6px;
   font-size: 14px;
-  color: #495057;
-  border: 1px solid #e9ecef;
+  color: #424242;
+  border: 1px solid #e0e0e0;
   transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .dart-wheel-queue-item:hover {
@@ -98,7 +100,7 @@
 
 .dart-wheel-queue-empty {
   text-align: center;
-  color: #adb5bd;
+  color: #9e9e9e;
   font-style: italic;
   padding: 20px;
 }

@@ -1,15 +1,17 @@
 .dart-wheel-mode-selector {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .dart-wheel-mode-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #212121;
+  margin: 0 0 24px 0;
   text-align: center;
 }
 
@@ -71,16 +73,16 @@
 .dart-wheel-mode-name {
   font-size: 20px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #1a1a1a;
   margin: 0 0 8px 0;
 }
 
 .dart-wheel-mode-description {
   font-size: 14px;
-  color: #6c757d;
-  line-height: 1.5;
+  color: #616161;
+  line-height: 1.6;
   margin: 0 0 12px 0;
-  min-height: 40px;
+  min-height: 42px;
 }
 
 .dart-wheel-mode-requirement {
@@ -89,14 +91,15 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(33, 33, 33, 0.9);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   border-radius: 12px;
+  backdrop-filter: blur(4px);
 }
 
 .dart-wheel-mode-badge {
@@ -119,8 +122,9 @@
 
 .dart-wheel-mode-info p {
   margin: 0;
-  color: #6c757d;
-  font-size: 14px;
+  color: #616161;
+  font-size: 15px;
+  font-weight: 500;
 }
 
 /* 반응형 */
