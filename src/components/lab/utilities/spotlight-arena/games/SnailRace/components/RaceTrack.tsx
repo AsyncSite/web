@@ -13,6 +13,7 @@ interface RaceTrackProps {
   onRaceComplete: (winners: Participant[]) => void;
   onEventTrigger: (snailId: string, eventName: string) => void;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+  onStageReady?: (stage: any) => void;
 }
 
 const RaceTrack: React.FC<RaceTrackProps> = ({
@@ -21,6 +22,7 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
   onRaceComplete,
   onEventTrigger,
   onCanvasReady,
+  onStageReady,
 }) => {
   const stageRef = useRef<any>(null);
   const [finishedSnails, setFinishedSnails] = useState<string[]>([]);
@@ -53,18 +55,39 @@ const RaceTrack: React.FC<RaceTrackProps> = ({
     }
   }, [isPlaying, startRace, stopRace]);
 
-  // Canvas를 부모 컴포넌트에 전달
+  // Canvas와 Stage를 부모 컴포넌트에 전달
   useEffect(() => {
-    if (stageRef.current && onCanvasReady) {
-      // react-konva Stage에서 canvas 엘리먼트 가져오기
-      // Stage 컴포넌트의 실제 DOM 노드 접근
-      const container = stageRef.current.container();
-      const canvas = container.querySelector('canvas');
-      if (canvas) {
-        onCanvasReady(canvas);
+    if (stageRef.current) {
+      // Stage ref 즉시 전달
+      if (onStageReady) {
+        // Stage를 바로 전달하여 녹화 준비 시간 단축
+        requestAnimationFrame(() => {
+          onStageReady(stageRef.current);
+        });
+      }
+
+      // Canvas 전달 (기존 방식 유지)
+      if (onCanvasReady) {
+        // Konva Stage가 완전히 렌더링된 후 canvas 전달
+        const timer = setTimeout(() => {
+          const stage = stageRef.current;
+          if (stage) {
+            // Stage의 컨테이너에서 실제 canvas 요소 찾기
+            const container = stage.container();
+            const canvases = container.getElementsByTagName('canvas');
+
+            // Konva는 여러 canvas를 사용하므로, 마지막 canvas가 주로 콘텐츠를 담고 있음
+            if (canvases.length > 0) {
+              const contentCanvas = canvases[canvases.length - 1];
+              onCanvasReady(contentCanvas);
+            }
+          }
+        }, 100); // 렌더링 시간 단축
+
+        return () => clearTimeout(timer);
       }
     }
-  }, [onCanvasReady]);
+  }, [onCanvasReady, onStageReady]);
 
   // 완주한 달팽이 추적
   useEffect(() => {

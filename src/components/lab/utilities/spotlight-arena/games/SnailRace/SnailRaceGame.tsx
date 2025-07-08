@@ -47,24 +47,42 @@ function SnailRaceGame({
   const resultRecording = useResultRecording();
 
   const handleCanvasReady = useCallback((canvas: HTMLCanvasElement) => {
-    (canvasRef as any).current = canvas;
+    // Canvas는 사용하지 않고 Stage만 사용
+    // (canvasRef as any).current = canvas;
+  }, []);
+  // Stage ref를 전달받기 위한 callback
+  const handleStageRef = useCallback((stage: any) => {
+    if (stage) {
+      // Stage 자체를 저장하여 toCanvas 메서드 사용 가능
+      (canvasRef as any).current = stage;
+    }
   }, []);
 
   // 게임이 종료되면 녹화 자동 중지
   useEffect(() => {
     if (gameState.status === 'finished' && isRecording) {
+      console.log('Game finished, stopping recording...');
       stopRecording();
     }
   }, [gameState.status, isRecording, stopRecording]);
   // 컴포넌트 언마운트 시 녹화 데이터 정리
+  // 주의: 게임 종료 시에는 정리하지 않고, 실제로 페이지를 떠날 때만 정리
   useEffect(() => {
     return () => {
-      // 게임을 떠날 때 localStorage 정리
-      localStorage.removeItem('snailRaceRecording');
-      localStorage.removeItem('snailRaceRecordingTime');
+      // 게임이 아직 진행 중이거나 기다리는 중일 때만 정리
+      // (결과 화면으로 전환될 때는 정리하지 않음)
+      if (gameState.status !== 'finished') {
+        localStorage.removeItem('snailRaceRecording');
+        localStorage.removeItem('snailRaceRecordingTime');
+      }
     };
-  }, []);
+  }, [gameState.status]);
   if (gameState.status === 'finished') {
+    console.log('Rendering ResultDisplay with:', {
+      hasRecording,
+      resultRecordingHasRecording: resultRecording.hasRecording,
+      combinedHasRecording: hasRecording || resultRecording.hasRecording,
+    });
     return (
       <ResultDisplay
         winners={gameState.winners}
@@ -105,6 +123,7 @@ function SnailRaceGame({
           onRaceComplete={handlers.handleRaceComplete}
           onEventTrigger={handlers.handleEventTrigger}
           onCanvasReady={handleCanvasReady}
+          onStageReady={handleStageRef}
         />
 
         <RaceCommentary messages={commentaryMessages} />

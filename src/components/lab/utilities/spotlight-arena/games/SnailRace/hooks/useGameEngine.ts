@@ -42,9 +42,18 @@ const useGameEngine = ({
 
       lastTimeRef.current = timestamp;
 
-      // 달팽이 위치 업데이트
+      // 랜덤 이벤트 발생 체크
+      let shouldTriggerEvent = false;
+      let pendingEventSnailId: string | null = null;
+      let pendingEventName: string | null = null;
+
+      if (timestamp - lastEventTimeRef.current > randomFloat(2000, 4000)) {
+        lastEventTimeRef.current = timestamp;
+        shouldTriggerEvent = true;
+      }
+
       setSnails((prevSnails) => {
-        const updatedSnails = prevSnails.map((snail) => {
+        let updatedSnails = prevSnails.map((snail) => {
           // 이미 완주한 달팽이는 건너뛰기
           if (snail.position >= trackLength) {
             return snail;
@@ -90,23 +99,12 @@ const useGameEngine = ({
           return { ...snail, position: newPosition };
         });
 
-        // 승자가 정해졌는지 확인
-        if (winnersRef.current.length >= winnerCount) {
-          isRunningRef.current = false;
-          onRaceComplete(winnersRef.current);
-        }
-
-        return updatedSnails;
-      });
-
-      // 랜덤 이벤트 발생 (2-4초마다)
-      if (timestamp - lastEventTimeRef.current > randomFloat(2000, 4000)) {
-        lastEventTimeRef.current = timestamp;
-
-        // setSnails 내부에서 이벤트 처리
-        setSnails((prevSnails) => {
+        // 랜덤 이벤트 처리
+        if (shouldTriggerEvent) {
           // 아직 완주하지 않은 달팽이 중 선택
-          const activeSnails = prevSnails.filter((s) => s.position < trackLength && !s.activeEvent);
+          const activeSnails = updatedSnails.filter(
+            (s) => s.position < trackLength && !s.activeEvent,
+          );
 
           if (activeSnails.length > 0 && randomChance(0.7)) {
             // 70% 확률로 이벤트 발생
@@ -114,12 +112,10 @@ const useGameEngine = ({
             const event = randomElement(events);
 
             if (targetSnail && event) {
-              // onEventTrigger를 다음 틱으로 연기
-              setTimeout(() => {
-                onEventTrigger(targetSnail.id, event.name);
-              }, 0);
+              pendingEventSnailId = targetSnail.id;
+              pendingEventName = event.name;
 
-              return prevSnails.map((s) =>
+              updatedSnails = updatedSnails.map((s) =>
                 s.id === targetSnail.id
                   ? {
                       ...s,
@@ -132,9 +128,20 @@ const useGameEngine = ({
               );
             }
           }
+        }
 
-          return prevSnails;
-        });
+        // 승자가 정해졌는지 확인
+        if (winnersRef.current.length >= winnerCount) {
+          isRunningRef.current = false;
+          onRaceComplete(winnersRef.current);
+        }
+
+        return updatedSnails;
+      });
+
+      // 이벤트 트리거는 setState 밖에서 처리
+      if (pendingEventSnailId && pendingEventName) {
+        onEventTrigger(pendingEventSnailId, pendingEventName);
       }
 
       animationFrameRef.current = requestAnimationFrame(gameLoop);

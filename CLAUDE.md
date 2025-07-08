@@ -14,10 +14,6 @@ The enhanced prompts will follow the language of the original prompt (e.g., Kore
 npm start          # Start development server on http://localhost:3000
 npm test           # Run tests with Jest in watch mode
 npm run build      # Create production build in ./build directory
-npm run lint       # Run ESLint to check code quality
-npm run lint:fix   # Fix ESLint issues automatically
-npm run format     # Format code with Prettier
-npm run format:check # Check code formatting
 ```
 
 ### Testing
@@ -107,56 +103,31 @@ src/
 
 ## Code Quality Standards
 
-### ⚠️ IMPORTANT: ESLint and Prettier Compliance
-
-**BEFORE WRITING ANY CODE, you MUST consider the project's ESLint and Prettier configurations.**
-
-This project enforces strict code quality standards through ESLint and Prettier. All code must comply with these configurations to avoid build failures and maintain consistency.
-
-#### Pre-coding Requirements:
-1. **Review Configuration Files**:
-   - `.eslintrc.json` - ESLint rules configuration
-   - `.prettierrc` - Prettier formatting rules
-   - Understand the rules before writing code
-
-2. **Development Workflow**:
-   ```bash
-   # Before starting work
-   npm run lint        # Check current code status
-   npm run format      # Format existing code
-   
-   # During development
-   npm run lint:fix    # Auto-fix ESLint issues
-   npm run format      # Format your code
-   
-   # Before committing
-   npm run lint        # Final lint check
-   npm run format:check # Verify formatting
-   ```
-
-3. **Common Issues to Avoid**:
-   - Unused variables or imports
-   - Missing semicolons (Prettier will add them)
-   - Incorrect indentation (2 spaces, not tabs)
-   - Trailing commas in objects and arrays
-   - Console.log statements (remove before commit)
-   - Missing type definitions in TypeScript
-
-### Linting and Formatting
-* ESLint configuration is enforced (see `.eslintrc.json`)
-* Prettier formatting is required (see `.prettierrc`)
-* Run `npm run lint` before committing
-* Use `npm run format` to auto-format code
-* Configure your IDE to format on save (recommended)
-
 ### Pre-commit Checklist
 1. All TypeScript errors resolved
-2. ESLint warnings addressed
-3. Code formatted with Prettier
-4. Tests passing
-5. No console.log statements in production code
-6. All imports are used
-7. No any types unless absolutely necessary
+2. Tests passing
+3. No console.log statements in production code
+4. All imports are used
+5. No any types unless absolutely necessary
+
+### ⚠️ Console.log Usage Guidelines
+
+**IMPORTANT: Avoid using console.log in production code**
+
+1. **Remove all console.log statements** before committing code
+2. **Use proper error handling** instead of console.log for debugging
+3. **For debugging during development**:
+   - Use breakpoints in the browser DevTools
+   - Use React Developer Tools
+   - Consider using a proper logging library if logging is necessary
+4. **If temporary debugging is needed**:
+   - Add console.log temporarily
+   - Remove it before committing
+   - Never commit code with console.log statements
+5. **Alternative approaches**:
+   - Use `try-catch` blocks for error handling
+   - Return error states in hooks and components
+   - Use TypeScript's type system to catch errors at compile time
 
 ---
 

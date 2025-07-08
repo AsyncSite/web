@@ -107,6 +107,24 @@ npm run format:check
    - 커밋 전 반드시 lint 와 format 검사 통과 필수
    - CI/CD 파이프라인에서도 동일한 검사 수행
 
+### 🚫 Console.log 사용 금지
+**프로덕션 코드에 console.log를 사용하지 마세요.**
+
+1. **절대 커밋하지 말아야 할 것:**
+   - `console.log()`, `console.error()`, `console.warn()` 등 모든 console 메서드
+   - 디버깅용 임시 코드
+
+2. **대안:**
+   - 에러 처리: `try-catch` 블록 사용
+   - 상태 확인: React Developer Tools 사용
+   - 디버깅: 브라우저 DevTools의 breakpoint 활용
+
+3. **개발 중 사용 시:**
+   ```javascript
+   // 임시로 사용 후 반드시 제거
+   console.log('디버깅용'); // TODO: 커밋 전 제거
+   ```
+
 ## 🛠️ 설치 및 실행
 
 ### 1. 프로젝트 클론
