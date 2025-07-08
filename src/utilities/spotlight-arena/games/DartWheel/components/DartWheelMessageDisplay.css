@@ -1,0 +1,76 @@
+.dart-wheel-message-display {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.dart-wheel-message-display.dart-wheel-message-show {
+  opacity: 1;
+}
+
+.dart-wheel-message-spinning {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px 40px;
+  border-radius: 50px;
+  font-size: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: dartWheelMessagePulse 1.5s ease-in-out infinite;
+}
+
+.dart-wheel-message-result {
+  background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+  color: white;
+  padding: 24px 48px;
+  border-radius: 12px;
+  font-size: 28px;
+  font-weight: 700;
+  box-shadow: 0 8px 32px rgba(78, 205, 196, 0.4);
+  text-align: center;
+  max-width: 600px;
+  animation: dartWheelMessageBounce 0.5s ease-out;
+}
+
+@keyframes dartWheelMessagePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes dartWheelMessageBounce {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 보너스 메시지 특별 효과 */
+.dart-wheel-message-result.dart-wheel-bonus-message {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+  animation: dartWheelBonusShine 2s ease-in-out infinite;
+}
+
+@keyframes dartWheelBonusShine {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 48px rgba(255, 215, 0, 0.8);
+  }
+}

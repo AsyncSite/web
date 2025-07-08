@@ -1,0 +1,164 @@
+.dart-wheel-mode-selector {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.dart-wheel-mode-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.dart-wheel-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.dart-wheel-mode-card {
+  position: relative;
+  background: white;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.dart-wheel-mode-card:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: var(--dart-wheel-mode-color, #e9ecef);
+}
+
+.dart-wheel-mode-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dart-wheel-mode-card.dart-wheel-mode-selected {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.85)
+  );
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.dart-wheel-mode-card.dart-wheel-mode-selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--dart-wheel-mode-color);
+}
+
+.dart-wheel-mode-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.dart-wheel-mode-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+}
+
+.dart-wheel-mode-description {
+  font-size: 14px;
+  color: #6c757d;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+  min-height: 40px;
+}
+
+.dart-wheel-mode-requirement {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.dart-wheel-mode-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--dart-wheel-mode-color);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dart-wheel-mode-info {
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.dart-wheel-mode-info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .dart-wheel-mode-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 모드별 특수 효과 */
+.dart-wheel-mode-card[data-mode="survival"]:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 107, 0.05),
+    rgba(255, 255, 255, 0.95)
+  );
+}
+
+.dart-wheel-mode-card[data-mode="team"]:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(69, 183, 209, 0.05),
+    rgba(255, 255, 255, 0.95)
+  );
+}
+
+.dart-wheel-mode-card[data-mode="target"]:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(150, 206, 180, 0.05),
+    rgba(255, 255, 255, 0.95)
+  );
+}
+
+.dart-wheel-mode-card[data-mode="reverse"]:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(221, 160, 221, 0.05),
+    rgba(255, 255, 255, 0.95)
+  );
+}

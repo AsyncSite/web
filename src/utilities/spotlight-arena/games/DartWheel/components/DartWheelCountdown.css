@@ -1,0 +1,79 @@
+.dart-wheel-countdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: dartWheelFadeIn 0.3s ease-out;
+}
+
+.dart-wheel-countdown-content {
+  text-align: center;
+  color: white;
+}
+
+.dart-wheel-countdown-number {
+  font-size: 120px;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 20px;
+  animation: dartWheelCountdownPulse 1s ease-out;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.dart-wheel-countdown-start {
+  font-size: 100px;
+  font-weight: bold;
+  color: #4ECDC4;
+  animation: dartWheelCountdownBounce 0.5s ease-out;
+  text-shadow: 0 0 30px rgba(78, 205, 196, 0.8);
+}
+
+.dart-wheel-countdown-message {
+  font-size: 24px;
+  margin-top: 30px;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+@keyframes dartWheelFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dartWheelCountdownPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dartWheelCountdownBounce {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

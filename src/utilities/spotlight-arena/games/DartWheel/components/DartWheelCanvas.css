@@ -1,0 +1,71 @@
+.dart-wheel-canvas-container {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: inline-block;
+}
+
+.dart-wheel-canvas-container canvas {
+  border-radius: 12px;
+}
+
+.dart-wheel-controls {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.dart-wheel-spin-button {
+  background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dart-wheel-spin-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+  background: linear-gradient(135deg, #5FD6CE 0%, #4EAA97 100%);
+}
+
+.dart-wheel-spin-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(78, 205, 196, 0.3);
+}
+
+.dart-wheel-spin-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 휠 회전 시 블러 효과 */
+.dart-wheel-spinning {
+  filter: blur(0.5px);
+}
+
+/* 결과 하이라이트 애니메이션 */
+@keyframes dartWheelHighlight {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.dart-wheel-highlight-section {
+  animation: dartWheelHighlight 0.5s ease-in-out 3;
+}

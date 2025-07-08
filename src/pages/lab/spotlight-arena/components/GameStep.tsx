@@ -3,6 +3,7 @@ import Lottie from 'lottie-react';
 import { Participant } from '../../../../components/lab/utilities/spotlight-arena/shared/types';
 import { LottieAnimationData } from '../types/animation';
 import SnailRaceGame from '../../../../components/lab/utilities/spotlight-arena/games/SnailRace/SnailRaceGame';
+import { DartWheelGame } from '../../../../utilities/spotlight-arena/games/DartWheel';
 
 interface GameStepProps {
   selectedGame: string;
@@ -24,6 +25,24 @@ function GameStep({
   const [showSnailIntro, setShowSnailIntro] = useState(true);
   const [gameKey, setGameKey] = useState(0);
 
+  // DartWheel 게임인 경우
+  if (selectedGame === 'dart-wheel') {
+    return (
+      <div className="game-section sa-card">
+        <DartWheelGame
+          participants={participants}
+          winnerCount={winnerCount}
+          onBack={onBackToLobby}
+          onReplay={() => {
+            setGameKey((prev) => prev + 1);
+          }}
+          onNewGame={onBackToArcade}
+        />
+      </div>
+    );
+  }
+
+  // SnailRace 게임이 아닌 경우
   if (selectedGame !== 'snail-race') {
     return <div>게임을 준비 중입니다...</div>;
   }

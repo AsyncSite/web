@@ -1,0 +1,189 @@
+.dart-wheel-sound-settings {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.dart-wheel-sound-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #495057;
+  margin: 0 0 16px 0;
+}
+
+.dart-wheel-sound-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dart-wheel-volume-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dart-wheel-volume-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #495057;
+}
+
+.dart-wheel-volume-icon {
+  font-size: 20px;
+}
+
+.dart-wheel-volume-text {
+  flex: 1;
+  font-weight: 500;
+}
+
+.dart-wheel-volume-value {
+  font-weight: 600;
+  color: #4ECDC4;
+  min-width: 40px;
+  text-align: right;
+}
+
+.dart-wheel-volume-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e9ecef;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.dart-wheel-volume-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dart-wheel-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4ECDC4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dart-wheel-volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: #45B7D1;
+}
+
+.dart-wheel-volume-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4ECDC4;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.dart-wheel-mute-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #4ECDC4;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dart-wheel-mute-button:hover {
+  background: #45B7D1;
+  transform: translateY(-1px);
+}
+
+.dart-wheel-mute-button.dart-wheel-muted {
+  background: #e9ecef;
+  color: #6c757d;
+}
+
+.dart-wheel-mute-button.dart-wheel-muted:hover {
+  background: #dee2e6;
+}
+
+.dart-wheel-sound-info {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.dart-wheel-sound-description {
+  font-size: 12px;
+  color: #6c757d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 컴팩트 버전 */
+.dart-wheel-sound-settings-compact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 25px;
+  padding: 8px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dart-wheel-mute-button-compact {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.dart-wheel-mute-button-compact:hover {
+  transform: scale(1.1);
+}
+
+.dart-wheel-volume-slider-compact {
+  width: 100px;
+  height: 4px;
+  border-radius: 2px;
+  background: #e9ecef;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.dart-wheel-volume-slider-compact::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #4ECDC4;
+  cursor: pointer;
+}
+
+.dart-wheel-volume-slider-compact::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #4ECDC4;
+  cursor: pointer;
+  border: none;
+}

@@ -15,12 +15,12 @@ export const GAMES_LIST: GameInfo[] = [
   {
     id: 'dart-wheel',
     name: '다트 휠',
-    description: '회전하는 휠에 다트를 던져라',
+    description: '행운의 휠을 돌려 점수를 획득하세요',
     icon: '🎯',
     tags: ['카지노', '긴장감'],
     minPlayers: 2,
     maxPlayers: 30,
-    available: false,
+    available: true,
   },
   {
     id: 'slot-cascade',
