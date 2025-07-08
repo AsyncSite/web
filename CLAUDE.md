@@ -110,6 +110,25 @@ src/
 4. All imports are used
 5. No any types unless absolutely necessary
 
+### 📝 Git Commit Message Guidelines
+
+**IMPORTANT: Do not mention AI agents in commit messages**
+
+1. **Never include references to**:
+   - Claude, ChatGPT, or any AI assistant names
+   - "AI-generated", "AI-assisted", or similar terms
+   - Any indication that code was written with AI help
+2. **Write commit messages as if you personally wrote all the code**
+3. **Focus on what changed and why**, not how it was created
+4. **Use conventional commit format**:
+   - `feat:` for new features
+   - `fix:` for bug fixes
+   - `docs:` for documentation changes
+   - `style:` for formatting changes
+   - `refactor:` for code restructuring
+   - `test:` for test additions/changes
+   - `chore:` for maintenance tasks
+
 ### ⚠️ Console.log Usage Guidelines
 
 **IMPORTANT: Avoid using console.log in production code**
