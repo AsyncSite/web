@@ -325,15 +325,12 @@ function DartWheelCanvas({
             fill={dartWheelTheme === 'casino' ? '#FFB300' : '#FF6B6B'}
             stroke={dartWheelTheme === 'casino' ? '#2C2C2C' : '#333'}
             strokeWidth={3}
-            shadowEnabled={dartWheelTheme === 'casino'}
-            shadowColor="#FFB300"
-            shadowBlur={20}
-            shadowOpacity={0.6}
-            closed
-            shadowColor="black"
-            shadowBlur={10}
+            shadowEnabled={true}
+            shadowColor={dartWheelTheme === 'casino' ? '#FFB300' : 'black'}
+            shadowBlur={dartWheelTheme === 'casino' ? 20 : 10}
             shadowOffsetY={5}
-            shadowOpacity={0.3}
+            shadowOpacity={dartWheelTheme === 'casino' ? 0.6 : 0.3}
+            closed
           />
           
           {/* 파티클 효과 */}
