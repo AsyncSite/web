@@ -5,7 +5,10 @@ import { dartWheelCalculateCurrentRotation } from '../utils/dartWheelCalculation
 import { 
   dartWheelCalculate3DShadow, 
   dartWheelGetNeonStyle,
-  dartWheelApplyPulseEffect 
+  dartWheelApplyPulseEffect,
+  dartWheelGetCasinoChipStyle,
+  dartWheelGetThemeSpecialEffects,
+  DART_WHEEL_THEME_PALETTES
 } from '../utils/dartWheelVisualEffects';
 import DartWheelParticles from './DartWheelParticles';
 import { useDartWheelSound } from '../hooks/useDartWheelSound';
@@ -16,6 +19,7 @@ interface DartWheelCanvasProps {
   dartWheelCanvasWidth?: number;
   dartWheelCanvasHeight?: number;
   dartWheelRadius?: number;
+  dartWheelTheme?: string;
   onDartWheelSpinComplete?: (section: DartWheelSection) => void;
 }
 
@@ -24,6 +28,7 @@ function DartWheelCanvas({
   dartWheelCanvasWidth = 600,
   dartWheelCanvasHeight = 600,
   dartWheelRadius = 250,
+  dartWheelTheme = 'casino',
   onDartWheelSpinComplete
 }: DartWheelCanvasProps): React.ReactNode {
   const dartWheelCenterX = dartWheelCanvasWidth / 2;
@@ -122,10 +127,26 @@ function DartWheelCanvas({
     };
   };
 
+  // 테마 효과 가져오기
+  const themeEffects = dartWheelGetThemeSpecialEffects(dartWheelTheme);
+
   return (
     <div className="dart-wheel-canvas-container">
       <Stage width={dartWheelCanvasWidth} height={dartWheelCanvasHeight}>
         <Layer>
+          {/* 외부 링 (테마별) */}
+          <Ring
+            x={dartWheelCenterX}
+            y={dartWheelCenterY}
+            innerRadius={dartWheelRadius}
+            outerRadius={dartWheelRadius + 10}
+            fill={themeEffects.wheelBorder?.stroke || '#333'}
+            shadowEnabled={!!themeEffects.wheelBorder?.shadowColor}
+            shadowColor={themeEffects.wheelBorder?.shadowColor}
+            shadowBlur={themeEffects.wheelBorder?.shadowBlur}
+            shadowOpacity={themeEffects.wheelBorder?.shadowOpacity}
+          />
+          
           {/* 휠 그룹 (회전) */}
           <Group ref={dartWheelGroupRef} x={dartWheelCenterX} y={dartWheelCenterY}>
             {/* 3D 그림자 레이어 */}
@@ -151,11 +172,13 @@ function DartWheelCanvas({
             </Group>
 
             {/* 휠 섹션들 */}
-            {dartWheelGameState.dartWheelSections.map((section) => {
+            {dartWheelGameState.dartWheelSections.map((section, index) => {
               const isSelected = dartWheelSelectedSection?.id === section.id;
               const isHovered = dartWheelHoveredSection === section.id;
               const pulseEffect = isSelected ? dartWheelApplyPulseEffect(section, dartWheelTime) : null;
               const neonStyle = section.isBonus ? dartWheelGetNeonStyle(section.color, 1.5) : null;
+              const themeEffects = dartWheelGetThemeSpecialEffects(dartWheelTheme);
+              const casinoStyle = dartWheelTheme === 'casino' ? dartWheelGetCasinoChipStyle(index, dartWheelGameState.dartWheelSections.length) : null;
               
               return (
                 <Group key={`dart-wheel-section-group-${section.id}`}>
@@ -166,9 +189,9 @@ function DartWheelCanvas({
                     radius={dartWheelRadius}
                     angle={section.angleSize}
                     rotation={section.angle}
-                    fill={section.color}
-                    stroke={section.isBonus ? '#FFD700' : '#333'}
-                    strokeWidth={section.isBonus ? 4 : 2}
+                    fill={casinoStyle ? casinoStyle.innerColor : section.color}
+                    stroke={themeEffects.sectionStyle?.stroke || (section.isBonus ? '#FFD700' : '#333')}
+                    strokeWidth={themeEffects.sectionStyle?.strokeWidth || (section.isBonus ? 4 : 2)}
                     scaleX={pulseEffect?.scale || (isHovered ? 1.05 : 1)}
                     scaleY={pulseEffect?.scale || (isHovered ? 1.05 : 1)}
                     opacity={pulseEffect?.opacity || 1}
@@ -179,6 +202,20 @@ function DartWheelCanvas({
                     onMouseEnter={() => setDartWheelHoveredSection(section.id)}
                     onMouseLeave={() => setDartWheelHoveredSection(null)}
                   />
+                  
+                  {/* 카지노 테마 패턴 */}
+                  {dartWheelTheme === 'casino' && casinoStyle?.pattern === 'stripes' && (
+                    <Wedge
+                      x={0}
+                      y={0}
+                      radius={dartWheelRadius * 0.9}
+                      angle={section.angleSize}
+                      rotation={section.angle}
+                      fill={casinoStyle.outerColor}
+                      opacity={0.3}
+                      listening={false}
+                    />
+                  )}
                   
                   {/* 보너스 섹션 추가 효과 */}
                   {section.isBonus && (
@@ -249,12 +286,12 @@ function DartWheelCanvas({
                 x={0}
                 y={0}
                 radius={30}
-                fill="#333"
-                stroke="#fff"
-                strokeWidth={3}
-                shadowColor="#000"
-                shadowBlur={10}
-                shadowOpacity={0.5}
+                fill={dartWheelTheme === 'casino' ? '#FFB300' : '#333'}
+                stroke={themeEffects.centerButton?.stroke || '#fff'}
+                strokeWidth={themeEffects.centerButton?.strokeWidth || 3}
+                shadowColor={themeEffects.wheelBorder?.shadowColor || '#000'}
+                shadowBlur={themeEffects.wheelBorder?.shadowBlur || 10}
+                shadowOpacity={themeEffects.wheelBorder?.shadowOpacity || 0.5}
               />
               {/* 하이라이트 */}
               <Circle
@@ -264,6 +301,19 @@ function DartWheelCanvas({
                 fill="#fff"
                 opacity={0.3}
               />
+              {/* 카지노 테마 상징 */}
+              {dartWheelTheme === 'casino' && (
+                <Text
+                  x={0}
+                  y={0}
+                  text="$"
+                  fontSize={24}
+                  fontStyle="bold"
+                  fill="#000"
+                  align="center"
+                  verticalAlign="middle"
+                />
+              )}
             </Group>
           </Group>
 
@@ -272,9 +322,13 @@ function DartWheelCanvas({
             x={dartWheelCenterX}
             y={dartWheelCenterY - dartWheelRadius - 20}
             points={[0, 0, -20, 30, 0, 25, 20, 30]}
-            fill="#FF6B6B"
-            stroke="#333"
-            strokeWidth={2}
+            fill={dartWheelTheme === 'casino' ? '#FFB300' : '#FF6B6B'}
+            stroke={dartWheelTheme === 'casino' ? '#2C2C2C' : '#333'}
+            strokeWidth={3}
+            shadowEnabled={dartWheelTheme === 'casino'}
+            shadowColor="#FFB300"
+            shadowBlur={20}
+            shadowOpacity={0.6}
             closed
             shadowColor="black"
             shadowBlur={10}

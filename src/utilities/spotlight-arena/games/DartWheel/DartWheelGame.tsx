@@ -108,12 +108,20 @@ function DartWheelGame({
   return (
     <div 
       className="dart-wheel-game-container"
+      data-theme={dartWheelTheme}
       style={{
         '--dart-wheel-bg': dartWheelThemeColors.background,
+        '--dart-wheel-surface': dartWheelThemeColors.surface || dartWheelThemeColors.background,
         '--dart-wheel-text': dartWheelThemeColors.text,
         '--dart-wheel-secondary-text': dartWheelThemeColors.secondaryText,
         '--dart-wheel-accent': dartWheelThemeColors.accent,
         '--dart-wheel-glow': dartWheelThemeColors.glow,
+        '--dart-wheel-border': dartWheelThemeColors.border || '#e0e0e0',
+        '--dart-wheel-success': dartWheelThemeColors.success || '#4CAF50',
+        '--dart-wheel-warning': dartWheelThemeColors.warning || '#FF9800',
+        '--dart-wheel-error': dartWheelThemeColors.error || '#F44336',
+        '--dart-wheel-hover': dartWheelThemeColors.hover || 'rgba(0, 0, 0, 0.05)',
+        '--dart-wheel-shadow': dartWheelThemeColors.shadow || 'rgba(0, 0, 0, 0.1)',
         minHeight: '100vh',
       } as React.CSSProperties}
     >
@@ -209,6 +217,7 @@ function DartWheelGame({
                   dartWheelCanvasWidth={600}
                   dartWheelCanvasHeight={600}
                   dartWheelRadius={250}
+                  dartWheelTheme={dartWheelTheme}
                 />
                 {!dartWheelIsSpinning && dartWheelGameState.dartWheelStatus === 'idle' && (
                   <button 
