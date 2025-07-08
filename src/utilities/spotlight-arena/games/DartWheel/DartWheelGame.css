@@ -330,6 +330,120 @@
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
 }
 
+/* 서커스 테마 */
+[data-theme="circus"] .dart-wheel-game-container {
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20px,
+      rgba(229, 57, 53, 0.03) 20px,
+      rgba(229, 57, 53, 0.03) 40px
+    ),
+    linear-gradient(180deg, var(--dart-wheel-bg) 0%, #FFF8E1 100%);
+}
+
+[data-theme="circus"] .dart-wheel-canvas-container {
+  background: linear-gradient(145deg, #FFFFFF, #FFF3E0);
+  border: 4px dashed var(--dart-wheel-accent);
+  box-shadow: 
+    0 0 20px rgba(229, 57, 53, 0.2),
+    inset 0 0 15px rgba(255, 183, 77, 0.1);
+  position: relative;
+}
+
+[data-theme="circus"] .dart-wheel-canvas-container::before {
+  content: '🎪';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  z-index: 1;
+}
+
+[data-theme="circus"] .dart-wheel-start-button,
+[data-theme="circus"] .dart-wheel-spin-action-button {
+  background: linear-gradient(135deg, #E53935 0%, #D32F2F 100%);
+  color: #FFFFFF;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 6px 20px rgba(229, 57, 53, 0.3),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="circus"] .dart-wheel-start-button::before,
+[data-theme="circus"] .dart-wheel-spin-action-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.1) 10px,
+    rgba(255, 255, 255, 0.1) 20px
+  );
+  animation: dartWheelCircusStripes 20s linear infinite;
+}
+
+@keyframes dartWheelCircusStripes {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(20px, 20px); }
+}
+
+[data-theme="circus"] .dart-wheel-start-button:hover,
+[data-theme="circus"] .dart-wheel-spin-action-button:hover {
+  background: linear-gradient(135deg, #EF5350 0%, #E53935 100%);
+  transform: translateY(-3px) rotate(-1deg);
+  box-shadow: 
+    0 8px 25px rgba(229, 57, 53, 0.4),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="circus"] .dart-wheel-participant-display,
+[data-theme="circus"] .dart-wheel-results-display,
+[data-theme="circus"] .dart-wheel-settings,
+[data-theme="circus"] .dart-wheel-mode-selector {
+  background: var(--dart-wheel-surface);
+  border: 2px solid var(--dart-wheel-border);
+  box-shadow: 0 4px 12px rgba(251, 140, 0, 0.15);
+  position: relative;
+}
+
+[data-theme="circus"] .dart-wheel-participant-display::after,
+[data-theme="circus"] .dart-wheel-results-display::after {
+  content: '★';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  color: #FB8C00;
+  font-size: 20px;
+  transform: rotate(15deg);
+}
+
+[data-theme="circus"] .dart-wheel-rank-1 .dart-wheel-rank-number {
+  background: linear-gradient(135deg, #FFB74D, #FB8C00);
+  color: #FFFFFF;
+  box-shadow: 0 0 15px rgba(251, 140, 0, 0.5);
+  position: relative;
+}
+
+[data-theme="circus"] .dart-wheel-rank-1 .dart-wheel-rank-number::after {
+  content: '👑';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
   .dart-wheel-playing-screen {

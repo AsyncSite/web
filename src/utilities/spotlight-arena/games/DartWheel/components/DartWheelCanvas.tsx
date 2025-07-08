@@ -8,6 +8,7 @@ import {
   dartWheelApplyPulseEffect,
   dartWheelGetCasinoChipStyle,
   dartWheelGetThemeSpecialEffects,
+  dartWheelCreateCircusDecorations,
   DART_WHEEL_THEME_PALETTES
 } from '../utils/dartWheelVisualEffects';
 import DartWheelParticles from './DartWheelParticles';
@@ -141,11 +142,35 @@ function DartWheelCanvas({
             innerRadius={dartWheelRadius}
             outerRadius={dartWheelRadius + 10}
             fill={themeEffects.wheelBorder?.stroke || '#333'}
+            dash={themeEffects.wheelBorder?.dash}
             shadowEnabled={!!themeEffects.wheelBorder?.shadowColor}
             shadowColor={themeEffects.wheelBorder?.shadowColor}
             shadowBlur={themeEffects.wheelBorder?.shadowBlur}
             shadowOpacity={themeEffects.wheelBorder?.shadowOpacity}
           />
+          
+          {/* 서커스 테마 장식 */}
+          {dartWheelTheme === 'circus' && (() => {
+            const decorations = dartWheelCreateCircusDecorations();
+            return (
+              <>
+                {/* 별 장식 */}
+                {decorations.stars.map((star, index) => (
+                  <Text
+                    key={`circus-star-${index}`}
+                    x={dartWheelCenterX + star.x}
+                    y={dartWheelCenterY + star.y}
+                    text="★"
+                    fontSize={star.size}
+                    fill="#FB8C00"
+                    rotation={star.rotation}
+                    align="center"
+                    verticalAlign="middle"
+                  />
+                ))}
+              </>
+            );
+          })()}
           
           {/* 휠 그룹 (회전) */}
           <Group ref={dartWheelGroupRef} x={dartWheelCenterX} y={dartWheelCenterY}>
@@ -189,9 +214,14 @@ function DartWheelCanvas({
                     radius={dartWheelRadius}
                     angle={section.angleSize}
                     rotation={section.angle}
-                    fill={casinoStyle ? casinoStyle.innerColor : section.color}
+                    fill={
+                      dartWheelTheme === 'circus' 
+                        ? (index % 2 === 0 ? '#E53935' : '#FFFFFF')
+                        : (casinoStyle ? casinoStyle.innerColor : section.color)
+                    }
                     stroke={themeEffects.sectionStyle?.stroke || (section.isBonus ? '#FFD700' : '#333')}
                     strokeWidth={themeEffects.sectionStyle?.strokeWidth || (section.isBonus ? 4 : 2)}
+                    dash={themeEffects.sectionStyle?.dash}
                     scaleX={pulseEffect?.scale || (isHovered ? 1.05 : 1)}
                     scaleY={pulseEffect?.scale || (isHovered ? 1.05 : 1)}
                     opacity={pulseEffect?.opacity || 1}
@@ -301,7 +331,7 @@ function DartWheelCanvas({
                 fill="#fff"
                 opacity={0.3}
               />
-              {/* 카지노 테마 상징 */}
+              {/* 테마별 상징 */}
               {dartWheelTheme === 'casino' && (
                 <Text
                   x={0}
@@ -310,6 +340,16 @@ function DartWheelCanvas({
                   fontSize={24}
                   fontStyle="bold"
                   fill="#000"
+                  align="center"
+                  verticalAlign="middle"
+                />
+              )}
+              {dartWheelTheme === 'circus' && (
+                <Text
+                  x={0}
+                  y={0}
+                  text="🎪"
+                  fontSize={20}
                   align="center"
                   verticalAlign="middle"
                 />
@@ -342,6 +382,7 @@ function DartWheelCanvas({
               dartWheelParticleColor={dartWheelSelectedSection.color}
               dartWheelParticleCount={dartWheelSelectedSection.isBonus ? 50 : 30}
               dartWheelIsBonus={dartWheelSelectedSection.isBonus}
+              dartWheelParticleType={themeEffects.particleType || 'default'}
             />
           )}
         </Layer>

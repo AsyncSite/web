@@ -266,6 +266,41 @@ export function dartWheelCreateGoldParticles(
 }
 
 /**
+ * 서커스 테마 장식 생성
+ */
+export function dartWheelCreateCircusDecorations(): {
+  stars: Array<{ x: number; y: number; size: number; rotation: number }>;
+  flags: Array<{ start: number; end: number; color: string }>;
+} {
+  const stars = [];
+  const flags = [];
+  
+  // 별 장식
+  for (let i = 0; i < 8; i++) {
+    const angle = (Math.PI * 2 * i) / 8;
+    stars.push({
+      x: Math.cos(angle) * 280,
+      y: Math.sin(angle) * 280,
+      size: 10 + Math.random() * 5,
+      rotation: Math.random() * 360,
+    });
+  }
+  
+  // 깃발 장식
+  const flagColors = ['#E53935', '#FB8C00', '#43A047', '#00ACC1'];
+  for (let i = 0; i < 12; i++) {
+    const startAngle = (360 / 12) * i;
+    flags.push({
+      start: startAngle,
+      end: startAngle + 20,
+      color: flagColors[i % flagColors.length],
+    });
+  }
+  
+  return { stars, flags };
+}
+
+/**
  * 테마별 특수 효과 스타일
  */
 export function dartWheelGetThemeSpecialEffects(theme: string): {
@@ -301,6 +336,19 @@ export function dartWheelGetThemeSpecialEffects(theme: string): {
           stroke: '#E53935',
           strokeWidth: 8,
           dash: [10, 5],
+          shadowColor: '#FB8C00',
+          shadowBlur: 15,
+          shadowOpacity: 0.4,
+        },
+        centerButton: {
+          fill: '#E53935',
+          stroke: '#FFFFFF',
+          strokeWidth: 4,
+        },
+        sectionStyle: {
+          strokeWidth: 3,
+          stroke: '#FFFFFF',
+          dash: [5, 3],
         },
         particleType: 'confetti',
       };

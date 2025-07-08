@@ -21,6 +21,7 @@ interface DartWheelParticlesProps {
   dartWheelParticleColor?: string;
   dartWheelParticleCount?: number;
   dartWheelIsBonus?: boolean;
+  dartWheelParticleType?: 'default' | 'gold' | 'confetti' | 'stars' | 'sparks' | 'leaves';
 }
 
 function DartWheelParticles({
@@ -29,7 +30,8 @@ function DartWheelParticles({
   dartWheelEmitActive,
   dartWheelParticleColor = '#FFD700',
   dartWheelParticleCount = 30,
-  dartWheelIsBonus = false
+  dartWheelIsBonus = false,
+  dartWheelParticleType = 'default'
 }: DartWheelParticlesProps): React.ReactNode {
   const dartWheelParticlesRef = useRef<DartWheelParticle[]>([]);
   const dartWheelAnimationRef = useRef<Konva.Animation | null>(null);
@@ -39,9 +41,37 @@ function DartWheelParticles({
   const createDartWheelParticle = (index: number): DartWheelParticle => {
     const angle = (Math.PI * 2 * index) / dartWheelParticleCount + Math.random() * 0.5;
     const speed = dartWheelIsBonus ? 8 + Math.random() * 4 : 4 + Math.random() * 3;
-    const colors = dartWheelIsBonus 
-      ? ['#FFD700', '#FFA500', '#FF6347', '#FF1493'] 
-      : [dartWheelParticleColor, '#FFFFFF'];
+    
+    let colors: string[];
+    let particleSize: number;
+    
+    switch (dartWheelParticleType) {
+      case 'confetti':
+        colors = ['#E53935', '#FB8C00', '#43A047', '#00ACC1', '#FFEB3B', '#9C27B0'];
+        particleSize = 4 + Math.random() * 4;
+        break;
+      case 'gold':
+        colors = ['#FFD700', '#FFA500', '#FF6347', '#FF1493'];
+        particleSize = 3 + Math.random() * 3;
+        break;
+      case 'stars':
+        colors = ['#64B5F6', '#2196F3', '#1976D2', '#E3F2FD'];
+        particleSize = 3 + Math.random() * 2;
+        break;
+      case 'sparks':
+        colors = ['#FF006E', '#FFBE0B', '#06FFB4', '#8338EC'];
+        particleSize = 2 + Math.random() * 2;
+        break;
+      case 'leaves':
+        colors = ['#66BB6A', '#4CAF50', '#388E3C', '#81C784'];
+        particleSize = 5 + Math.random() * 3;
+        break;
+      default:
+        colors = dartWheelIsBonus 
+          ? ['#FFD700', '#FFA500', '#FF6347', '#FF1493'] 
+          : [dartWheelParticleColor, '#FFFFFF'];
+        particleSize = dartWheelIsBonus ? 3 + Math.random() * 3 : 2 + Math.random() * 2;
+    }
     
     return {
       id: `particle-${Date.now()}-${index}`,
@@ -49,7 +79,7 @@ function DartWheelParticles({
       y: 0,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed - Math.random() * 2,
-      radius: dartWheelIsBonus ? 3 + Math.random() * 3 : 2 + Math.random() * 2,
+      radius: particleSize,
       color: colors[Math.floor(Math.random() * colors.length)],
       opacity: 1,
       life: 1,
