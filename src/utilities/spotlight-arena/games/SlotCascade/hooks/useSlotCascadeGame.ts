@@ -89,6 +89,30 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
       const stepScore = matches.reduce((sum, match) => sum + match.points, 0) * multiplier + bonus;
       totalScore += stepScore;
 
+      // 제거할 위치 수집
+      const removingPositions = matches.flatMap(match => match.positions);
+
+      // 제거 애니메이션 상태 설정
+      setGameState(prev => {
+        const playerIndex = prev.players.findIndex(p => p.id === playerId);
+        if (playerIndex === -1) return prev;
+
+        const newPlayers = [...prev.players];
+        newPlayers[playerIndex] = {
+          ...newPlayers[playerIndex],
+          animationState: {
+            removingPositions: removingPositions.map(pos => ({ row: pos.row, col: pos.col })),
+            fallingPositions: [],
+            newPositions: [],
+          },
+        };
+
+        return { ...prev, players: newPlayers };
+      });
+
+      // 제거 애니메이션 대기
+      await new Promise(resolve => setTimeout(resolve, 300));
+
       // 매칭된 심볼 제거하고 캐스케이드 처리
       const gridAfterRemoval = matches.reduce((grid, match) => {
         const newGrid = grid.map(row => [...row]);
@@ -100,10 +124,35 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
 
       // 캐스케이드 (중력 + 새 심볼)
       const cascadeResult = processCascade(gridAfterRemoval);
+
+      // 떨어지기 애니메이션 상태 설정
+      setGameState(prev => {
+        const playerIndex = prev.players.findIndex(p => p.id === playerId);
+        if (playerIndex === -1) return prev;
+
+        const newPlayers = [...prev.players];
+        newPlayers[playerIndex] = {
+          ...newPlayers[playerIndex],
+          grid: gridAfterRemoval, // 빈 그리드 먼저 표시
+          cascadeLevel,
+          score: newPlayers[playerIndex].score + stepScore,
+          animationState: {
+            removingPositions: [],
+            fallingPositions: cascadeResult.droppedPositions,
+            newPositions: cascadeResult.newSymbolPositions,
+          },
+        };
+
+        return { ...prev, players: newPlayers };
+      });
+
+      // 떨어지기 애니메이션 대기
+      await new Promise(resolve => setTimeout(resolve, 400));
+
+      // 최종 그리드 업데이트
       currentGrid = cascadeResult.grid;
       cascadeLevel++;
 
-      // 상태 업데이트
       setGameState(prev => {
         const playerIndex = prev.players.findIndex(p => p.id === playerId);
         if (playerIndex === -1) return prev;
@@ -112,15 +161,14 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
         newPlayers[playerIndex] = {
           ...newPlayers[playerIndex],
           grid: currentGrid,
-          cascadeLevel,
-          score: newPlayers[playerIndex].score + stepScore,
+          animationState: undefined,
         };
 
         return { ...prev, players: newPlayers };
       });
 
-      // 애니메이션을 위한 딜레이
-      await new Promise(resolve => setTimeout(resolve, 700));
+      // 다음 캐스케이드 전 잠시 대기
+      await new Promise(resolve => setTimeout(resolve, 200));
     }
 
     // 최종 상태 업데이트
@@ -132,6 +180,7 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
       newPlayers[playerIndex] = {
         ...newPlayers[playerIndex],
         cascadeLevel: 0,
+        animationState: undefined,
       };
 
       return { ...prev, players: newPlayers };

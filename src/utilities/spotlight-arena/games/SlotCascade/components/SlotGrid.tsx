@@ -1,5 +1,6 @@
 import React from 'react';
 import { SymbolType, SYMBOLS } from '../types/symbol';
+import { CascadeEffects } from './CascadeEffects';
 import './SlotGrid.css';
 
 interface SlotGridProps {
@@ -10,6 +11,11 @@ interface SlotGridProps {
   isSpinning: boolean;
   onSpin?: () => void;
   isPlayer?: boolean;
+  animationState?: {
+    removingPositions: { row: number; col: number }[];
+    fallingPositions: { row: number; col: number; distance: number }[];
+    newPositions: { row: number; col: number }[];
+  };
 }
 
 export const SlotGrid: React.FC<SlotGridProps> = ({
@@ -20,7 +26,40 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
   isSpinning,
   onSpin,
   isPlayer = false,
+  animationState,
 }) => {
+  const getCellAnimationClass = (row: number, col: number): string => {
+    if (!animationState) return '';
+    
+    // 제거 중인 셀
+    if (animationState.removingPositions.some(pos => pos.row === row && pos.col === col)) {
+      return 'removing';
+    }
+    
+    // 떨어지는 셀
+    const fallingPos = animationState.fallingPositions.find(pos => pos.row === row && pos.col === col);
+    if (fallingPos) {
+      return 'falling';
+    }
+    
+    // 새로 생성된 셀
+    if (animationState.newPositions.some(pos => pos.row === row && pos.col === col)) {
+      return 'new-symbol';
+    }
+    
+    return '';
+  };
+  
+  const getCellStyle = (row: number, col: number): React.CSSProperties => {
+    const fallingPos = animationState?.fallingPositions.find(pos => pos.row === row && pos.col === col);
+    if (fallingPos) {
+      return {
+        '--fall-distance': `${fallingPos.distance * 100}%`,
+        '--fall-duration': `${0.3 + fallingPos.distance * 0.1}s`,
+      } as React.CSSProperties;
+    }
+    return {};
+  };
   return (
     <div className={`slot-grid-container ${isPlayer ? 'player-grid' : ''}`}>
       <div className="slot-grid-header">
@@ -34,7 +73,8 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
             {row.map((symbol, colIndex) => (
               <div 
                 key={`${rowIndex}-${colIndex}`} 
-                className={`slot-cell ${symbol ? 'filled' : 'empty'}`}
+                className={`slot-cell ${symbol ? 'filled' : 'empty'} ${getCellAnimationClass(rowIndex, colIndex)}`}
+                style={getCellStyle(rowIndex, colIndex)}
               >
                 {symbol && (
                   <div className="symbol-wrapper">
@@ -47,6 +87,12 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
             ))}
           </div>
         ))}
+        
+        {/* 캐스케이드 효과 */}
+        <CascadeEffects 
+          cascadeLevel={cascadeLevel} 
+          isActive={cascadeLevel > 0 && !!animationState}
+        />
       </div>
       
       {cascadeLevel > 0 && (

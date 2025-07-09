@@ -1,0 +1,113 @@
+.match-highlight {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  animation: matchGlow 0.5s ease-out;
+}
+
+@keyframes matchGlow {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+.match-line {
+  position: absolute;
+  background: linear-gradient(90deg, 
+    transparent,
+    rgba(255, 215, 0, 0.8) 20%,
+    rgba(255, 215, 0, 1) 50%,
+    rgba(255, 215, 0, 0.8) 80%,
+    transparent
+  );
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.8),
+    0 0 40px rgba(255, 215, 0, 0.6),
+    0 0 60px rgba(255, 215, 0, 0.4);
+}
+
+.match-highlight.horizontal .match-line {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.match-highlight.vertical .match-line {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+}
+
+.match-highlight.diagonal .match-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 141.4%; /* sqrt(2) * 100% for diagonal */
+  height: 4px;
+  background: linear-gradient(90deg, 
+    transparent,
+    rgba(255, 215, 0, 0.8) 10%,
+    rgba(255, 215, 0, 1) 50%,
+    rgba(255, 215, 0, 0.8) 90%,
+    transparent
+  );
+  transform-origin: 0 0;
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+/* 특수 효과 */
+.match-highlight::before,
+.match-highlight::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+  animation: pulse 0.5s ease-out;
+}
+
+@keyframes pulse {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+  }
+}
+
+.match-highlight.horizontal::before {
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.match-highlight.horizontal::after {
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.match-highlight.vertical::before {
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.match-highlight.vertical::after {
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
