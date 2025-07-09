@@ -61,8 +61,14 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.leaderboard {
+.game-info-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   margin-bottom: 30px;
+}
+
+.leaderboard {
   padding: 20px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
@@ -185,6 +191,10 @@
 
   .game-timer {
     font-size: 20px;
+  }
+
+  .game-info-section {
+    grid-template-columns: 1fr;
   }
 
   .players-grid {

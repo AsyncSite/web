@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BaseGameProps } from '../../../../components/lab/utilities/spotlight-arena/shared/types/game';
 import { SlotGrid } from './components/SlotGrid';
+import { GameStats } from './components/GameStats';
 import { useSlotCascadeGame } from './hooks/useSlotCascadeGame';
 import './SlotCascadeGame.css';
 
@@ -75,21 +76,33 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
         </div>
       )}
 
-      {/* 리더보드 */}
-      <div className="leaderboard">
-        <h3>실시간 순위</h3>
-        <div className="leaderboard-list">
-          {[...gameState.players]
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 5)
-            .map((player, index) => (
-              <div key={player.id} className="leaderboard-item">
-                <span className="rank">{index + 1}위</span>
-                <span className="name">{player.name}</span>
-                <span className="score">{player.score.toLocaleString()}점</span>
-              </div>
-            ))}
+      {/* 리더보드와 통계 */}
+      <div className="game-info-section">
+        <div className="leaderboard">
+          <h3>실시간 순위</h3>
+          <div className="leaderboard-list">
+            {[...gameState.players]
+              .sort((a, b) => b.score - a.score)
+              .slice(0, 5)
+              .map((player, index) => (
+                <div key={player.id} className="leaderboard-item">
+                  <span className="rank">{index + 1}위</span>
+                  <span className="name">{player.name}</span>
+                  <span className="score">{player.score.toLocaleString()}점</span>
+                </div>
+              ))}
+          </div>
         </div>
+        
+        {/* 첫 번째 플레이어(사용자)의 통계 표시 */}
+        {gameState.players.length > 0 && (
+          <GameStats 
+            totalSpins={gameState.players[0].stats.totalSpins}
+            totalCascades={gameState.players[0].stats.totalCascades}
+            highestCombo={gameState.players[0].stats.highestCombo}
+            specialSymbolsTriggered={gameState.players[0].stats.specialSymbolsTriggered}
+          />
+        )}
       </div>
 
       {/* 플레이어 그리드 */}
@@ -106,6 +119,7 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
             onSpin={index === 0 ? () => spinPlayerSlot(player.id) : undefined}
             animationState={player.animationState}
             specialEffects={player.specialEffects}
+            scoreUpdates={player.scoreUpdates}
           />
         ))}
       </div>

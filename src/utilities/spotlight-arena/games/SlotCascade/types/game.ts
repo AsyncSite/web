@@ -10,6 +10,26 @@ export interface AnimationState {
   newPositions: { row: number; col: number }[];
 }
 
+// 점수 업데이트 기록
+export interface ScoreUpdate {
+  score: number;
+  multiplier: number;
+  cascadeLevel: number;
+  timestamp: number;
+}
+
+// 플레이어 통계
+export interface PlayerStats {
+  totalSpins: number;
+  totalCascades: number;
+  highestCombo: number;
+  specialSymbolsTriggered: {
+    bomb: number;
+    star: number;
+    bonus: number;
+  };
+}
+
 // 플레이어 상태
 export interface PlayerState {
   id: string;
@@ -24,6 +44,8 @@ export interface PlayerState {
     position: { row: number; col: number };
     affectedPositions: Array<{ row: number; col: number }>;
   }>;
+  scoreUpdates: ScoreUpdate[];
+  stats: PlayerStats;
 }
 
 // 게임 설정

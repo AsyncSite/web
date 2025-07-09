@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { SymbolType, SYMBOLS } from '../types/symbol';
+import { ScoreUpdate } from '../types/game';
 import { CascadeEffects } from './CascadeEffects';
 import { SpecialEffects } from './SpecialEffects';
+import { ComboDisplay } from './ComboDisplay';
+import { ScorePopupManager } from './ScorePopupManager';
 import './SlotGrid.css';
 
 interface SlotGridProps {
@@ -22,6 +25,7 @@ interface SlotGridProps {
     position: { row: number; col: number };
     affectedPositions: Array<{ row: number; col: number }>;
   }>;
+  scoreUpdates?: ScoreUpdate[];
 }
 
 export const SlotGrid: React.FC<SlotGridProps> = ({
@@ -34,7 +38,9 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
   isPlayer = false,
   animationState,
   specialEffects = [],
+  scoreUpdates = [],
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const getCellAnimationClass = (row: number, col: number): string => {
     if (!animationState) return '';
     
@@ -68,7 +74,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
     return {};
   };
   return (
-    <div className={`slot-grid-container ${isPlayer ? 'player-grid' : ''}`}>
+    <div ref={containerRef} className={`slot-grid-container ${isPlayer ? 'player-grid' : ''}`}>
       <div className="slot-grid-header">
         <div className="player-name">{playerName} {isPlayer && '(나)'}</div>
         <div className="player-score">{score.toLocaleString()}점</div>
@@ -108,7 +114,19 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
             gridSize={grid.length}
           />
         )}
+        
+        {/* 콤보 표시 */}
+        <ComboDisplay 
+          cascadeLevel={cascadeLevel}
+          isActive={cascadeLevel > 0 && !!animationState}
+        />
       </div>
+      
+      {/* 점수 팝업 매니저 */}
+      <ScorePopupManager 
+        scoreUpdates={scoreUpdates}
+        containerRef={containerRef}
+      />
       
       {cascadeLevel > 0 && (
         <div className="cascade-indicator">

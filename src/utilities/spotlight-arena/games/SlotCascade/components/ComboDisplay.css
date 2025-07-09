@@ -1,0 +1,199 @@
+.combo-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 40;
+  pointer-events: none;
+  animation: comboAppear 2s ease-out forwards;
+}
+
+@keyframes comboAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.5) rotate(10deg);
+    opacity: 1;
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(-5deg);
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+.combo-text {
+  font-size: 48px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.8);
+  margin-bottom: 8px;
+}
+
+.combo-multiplier {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* 콤보 레벨별 스타일 */
+.combo-display.normal .combo-text {
+  color: #4ecdc4;
+  background: linear-gradient(45deg, #4ecdc4, #44a08d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.combo-display.normal .combo-multiplier {
+  color: #44a08d;
+}
+
+.combo-display.super .combo-text {
+  color: #ffd700;
+  background: linear-gradient(45deg, #ffd700, #ffaa00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.combo-display.super .combo-multiplier {
+  color: #ffaa00;
+}
+
+.combo-display.ultra .combo-text {
+  color: #ff6b6b;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.combo-display.ultra .combo-multiplier {
+  color: #ee5a24;
+}
+
+.combo-display.mega .combo-text {
+  background: linear-gradient(
+    45deg,
+    #ff0099,
+    #ff6b6b,
+    #ffd700,
+    #4ecdc4,
+    #ff0099
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: megaGradient 2s linear infinite;
+}
+
+@keyframes megaGradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.combo-display.mega .combo-multiplier {
+  color: #ff0099;
+  animation: megaPulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes megaPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+/* 특수 효과 */
+.combo-flames {
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+}
+
+.flame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 30px;
+  background: linear-gradient(90deg, transparent, #ff6b6b, #ffd700, transparent);
+  transform-origin: 0 50%;
+  transform: rotate(var(--flame-angle)) translateX(50px);
+  animation: flameFlicker 0.5s ease-in-out infinite alternate;
+  animation-delay: var(--flame-delay);
+  opacity: 0.8;
+}
+
+@keyframes flameFlicker {
+  from {
+    transform: rotate(var(--flame-angle)) translateX(50px) scaleY(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: rotate(var(--flame-angle)) translateX(60px) scaleY(1.2);
+    opacity: 0.6;
+  }
+}
+
+.combo-lightning {
+  position: absolute;
+  inset: -100%;
+  pointer-events: none;
+}
+
+.lightning-bolt {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #00ffff,
+    #ffffff,
+    #00ffff,
+    transparent
+  );
+  transform: translateX(-50%);
+  animation: lightningStrike 1s ease-out forwards;
+  animation-delay: var(--bolt-delay);
+  opacity: 0;
+}
+
+@keyframes lightningStrike {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-50%) scaleY(0.5);
+  }
+  20% {
+    opacity: 0.8;
+    transform: translateX(-50%) scaleY(1);
+  }
+  30% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.8;
+    transform: translateX(-50%) scaleY(1) translateX(10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0) translateX(-10px);
+  }
+}

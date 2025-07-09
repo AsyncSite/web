@@ -30,6 +30,17 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
       grid: generateInitialGrid(DEFAULT_GAME_CONFIG.gridSize),
       cascadeLevel: 0,
       isSpinning: false,
+      scoreUpdates: [],
+      stats: {
+        totalSpins: 0,
+        totalCascades: 0,
+        highestCombo: 0,
+        specialSymbolsTriggered: {
+          bomb: 0,
+          star: 0,
+          bonus: 0,
+        },
+      },
     }));
 
     setGameState({
@@ -142,11 +153,31 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
         if (playerIndex === -1) return prev;
 
         const newPlayers = [...prev.players];
+        // 특수 심볼 통계 업데이트
+        const stats = { ...newPlayers[playerIndex].stats };
+        specialEffectsResult.specialEffects.forEach(effect => {
+          if (effect.type === 'bomb') stats.specialSymbolsTriggered.bomb++;
+          if (effect.type === 'star') stats.specialSymbolsTriggered.star++;
+          if (effect.type === 'bonus') stats.specialSymbolsTriggered.bonus++;
+        });
+        stats.totalCascades++;
+        stats.highestCombo = Math.max(stats.highestCombo, cascadeLevel + 1);
+
         newPlayers[playerIndex] = {
           ...newPlayers[playerIndex],
           grid: gridAfterRemoval, // 빈 그리드 먼저 표시
           cascadeLevel,
           score: newPlayers[playerIndex].score + stepScore,
+          scoreUpdates: [
+            ...newPlayers[playerIndex].scoreUpdates,
+            {
+              score: stepScore,
+              multiplier,
+              cascadeLevel,
+              timestamp: Date.now(),
+            },
+          ],
+          stats,
           animationState: {
             removingPositions: [],
             fallingPositions: cascadeResult.droppedPositions,
@@ -214,6 +245,7 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
       player.grid = newGrid;
       player.isSpinning = false;
       player.cascadeLevel = 0;
+      player.stats.totalSpins++;
 
       newPlayers[playerIndex] = player;
       return { ...prev, players: newPlayers };
