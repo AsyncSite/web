@@ -20,7 +20,7 @@ export const GameStats: React.FC<GameStatsProps> = ({
 }) => {
   return (
     <div className="game-stats">
-      <h4 className="stats-title">게임 통계</h4>
+      <h4 className="stats-title">전체 게임 통계</h4>
       
       <div className="stats-grid">
         <div className="stat-item">

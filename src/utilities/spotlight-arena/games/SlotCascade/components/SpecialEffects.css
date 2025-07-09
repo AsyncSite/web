@@ -257,3 +257,249 @@
     opacity: 0;
   }
 }
+
+/* 연쇄 폭탄 효과 */
+.chain-bomb-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.chain-explosion-wave {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border: 3px solid #ff6b6b;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: chainExplosionWave 1s ease-out forwards;
+}
+
+@keyframes chainExplosionWave {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+    border-color: #ff6b6b;
+  }
+  50% {
+    border-color: #ffd700;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(10);
+    opacity: 0;
+    border-color: #ff9f43;
+  }
+}
+
+.chain-fire {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, #ffd700, #ff6b6b, transparent);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: fireGlow 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes fireGlow {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.chain-spark {
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(to top, transparent, #ffd700);
+  top: 50%;
+  left: 50%;
+  transform-origin: bottom;
+  animation: sparkFly 1s ease-out forwards;
+}
+
+@keyframes sparkFly {
+  0% {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-100px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* 메가 잭팟 효과 */
+.mega-jackpot-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.coin-rain {
+  position: absolute;
+  font-size: 30px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: coinFall var(--coin-duration) ease-in forwards;
+  animation-delay: var(--coin-delay);
+}
+
+@keyframes coinFall {
+  0% {
+    transform: translateX(var(--coin-x)) translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(var(--coin-x)) translateY(300px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.jackpot-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
+  animation: jackpotAppear 2s ease-out forwards;
+  white-space: nowrap;
+}
+
+@keyframes jackpotAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+.golden-flash {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: goldenFlash 1s ease-out forwards;
+}
+
+@keyframes goldenFlash {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
+
+/* 역전 효과 */
+.reverse-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.reverse-arrows {
+  position: absolute;
+  font-size: 60px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: reverseRotate 1s ease-in-out;
+}
+
+@keyframes reverseRotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    opacity: 0;
+  }
+}
+
+.reverse-wave {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 3px solid #4caf50;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: reverseWave 1s ease-out forwards;
+}
+
+@keyframes reverseWave {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
+
+.score-absorption {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.absorption-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4caf50;
+  text-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+  animation: absorptionPulse 1s ease-out forwards;
+}
+
+@keyframes absorptionPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}

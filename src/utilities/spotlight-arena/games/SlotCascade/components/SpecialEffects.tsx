@@ -146,6 +146,96 @@ export const SpecialEffects: React.FC<SpecialEffectsProps> = ({
           );
         }
 
+        if (effect.type === 'chainBomb') {
+          return (
+            <div
+              key={`chainBomb-${index}`}
+              className="chain-bomb-effect"
+              style={position}
+            >
+              {/* 연쇄 폭발 웨이브 */}
+              {[...Array(5)].map((_, wave) => (
+                <div
+                  key={wave}
+                  className="chain-explosion-wave"
+                  style={{
+                    animationDelay: `${wave * 0.2}s`,
+                  }}
+                />
+              ))}
+              
+              {/* 화염 효과 */}
+              <div className="chain-fire" />
+              
+              {/* 스파크 효과 */}
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  className="chain-spark"
+                  style={{
+                    transform: `rotate(${i * 30}deg)`,
+                    animationDelay: `${Math.random() * 0.5}s`,
+                  }}
+                />
+              ))}
+            </div>
+          );
+        }
+
+        if (effect.type === 'megaJackpot') {
+          return (
+            <div
+              key={`megaJackpot-${index}`}
+              className="mega-jackpot-effect"
+              style={position}
+            >
+              {/* 금화 비 효과 */}
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="coin-rain"
+                  style={{
+                    '--coin-x': `${(Math.random() - 0.5) * 200}px`,
+                    '--coin-delay': `${Math.random() * 2}s`,
+                    '--coin-duration': `${2 + Math.random()}s`,
+                  } as React.CSSProperties}
+                >
+                  💰
+                </div>
+              ))}
+              
+              {/* 잭팟 텍스트 */}
+              <div className="jackpot-text">MEGA JACKPOT!</div>
+              
+              {/* 황금빛 플래시 */}
+              <div className="golden-flash" />
+            </div>
+          );
+        }
+
+        if (effect.type === 'reverse') {
+          return (
+            <div
+              key={`reverse-${index}`}
+              className="reverse-effect"
+              style={position}
+            >
+              {/* 회전 화살표 */}
+              <div className="reverse-arrows">
+                🔄
+              </div>
+              
+              {/* 역전 웨이브 */}
+              <div className="reverse-wave" />
+              
+              {/* 점수 흡수 효과 */}
+              <div className="score-absorption">
+                <span className="absorption-text">역전!</span>
+              </div>
+            </div>
+          );
+        }
+
         return null;
       })}
     </div>

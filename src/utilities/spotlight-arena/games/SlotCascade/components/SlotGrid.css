@@ -27,6 +27,7 @@
   50% { opacity: 0.8; }
 }
 
+
 .slot-grid-header {
   display: flex;
   justify-content: space-between;
@@ -42,11 +43,27 @@
   color: #fff;
 }
 
+.player-stats {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .player-score {
   font-size: 18px;
   font-weight: bold;
   color: #ffd700;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.remaining-spins {
+  font-size: 14px;
+  font-weight: bold;
+  color: #4caf50;
+  padding: 4px 8px;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid #4caf50;
+  border-radius: 4px;
 }
 
 .slot-grid {
@@ -250,6 +267,57 @@
   background: #6c757d;
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+/* 언더독 부스트 표시 */
+.underdog-boost-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 16px;
+  background: linear-gradient(45deg, #ff6b6b, #ff9f43);
+  color: white;
+  font-weight: bold;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  animation: boostPulse 2s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes boostPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+  }
+}
+
+.boost-icon {
+  font-size: 20px;
+  animation: flameDance 1s ease-in-out infinite;
+}
+
+@keyframes flameDance {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(-5deg); }
+  75% { transform: scale(1.1) rotate(5deg); }
+}
+
+.boost-text {
+  font-size: 14px;
+}
+
+.failure-streak {
+  font-size: 12px;
+  opacity: 0.9;
+  padding-left: 8px;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 /* 반응형 디자인 */

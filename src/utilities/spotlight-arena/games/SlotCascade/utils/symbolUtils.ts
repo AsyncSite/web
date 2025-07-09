@@ -10,11 +10,51 @@ const SPECIAL_SYMBOL_CHANCE = 0.1; // 10%
 /**
  * 랜덤 심볼 생성
  */
-export const generateRandomSymbol = (): SymbolType => {
+export const generateRandomSymbol = (boostMultiplier: number = 1.0, specialOnly: boolean = false): SymbolType => {
+  // 특수 심볼만 모드
+  if (specialOnly) {
+    const rand = Math.random();
+    
+    // 특수 심볼만 모드에서의 분배
+    if (rand < 0.05) {
+      return 'megaJackpot'; // 5%
+    } else if (rand < 0.15) {
+      return 'reverse'; // 10%
+    } else if (rand < 0.30) {
+      return 'chainBomb'; // 15%
+    } else if (rand < 0.50) {
+      return 'bomb'; // 20%
+    } else if (rand < 0.70) {
+      return 'star'; // 20%
+    } else if (rand < 0.85) {
+      return 'bonus'; // 15%
+    } else {
+      return 'wild'; // 15%
+    }
+  }
+  
+  // 부스트가 적용된 특수 심볼 확률
+  const boostedChance = Math.min(SPECIAL_SYMBOL_CHANCE * boostMultiplier, 0.5); // 최대 50%
+  
   // 특수 심볼 확률 체크
-  if (Math.random() < SPECIAL_SYMBOL_CHANCE) {
-    const specialSymbols: SymbolType[] = ['wild', 'bomb', 'star', 'bonus'];
-    return specialSymbols[Math.floor(Math.random() * specialSymbols.length)];
+  if (Math.random() < boostedChance) {
+    const rand = Math.random();
+    
+    // 희귀도에 따른 특수 심볼 분배
+    if (rand < 0.005 * boostMultiplier) {
+      // 0.5% * 부스트: 메가 잭팟 (매우 희귀)
+      return 'megaJackpot';
+    } else if (rand < 0.015 * boostMultiplier) {
+      // 1% * 부스트: 역전 심볼
+      return 'reverse';
+    } else if (rand < 0.035 * boostMultiplier) {
+      // 2% * 부스트: 연쇄 폭탄
+      return 'chainBomb';
+    } else {
+      // 나머지: 기존 특수 심볼들
+      const regularSpecialSymbols: SymbolType[] = ['wild', 'bomb', 'star', 'bonus'];
+      return regularSpecialSymbols[Math.floor(Math.random() * regularSpecialSymbols.length)];
+    }
   }
   
   // 일반 심볼 반환
@@ -24,13 +64,13 @@ export const generateRandomSymbol = (): SymbolType => {
 /**
  * 초기 그리드 생성
  */
-export const generateInitialGrid = (size: number): SymbolType[][] => {
+export const generateInitialGrid = (size: number, boostMultiplier: number = 1.0, specialOnly: boolean = false): SymbolType[][] => {
   const grid: SymbolType[][] = [];
   
   for (let row = 0; row < size; row++) {
     grid[row] = [];
     for (let col = 0; col < size; col++) {
-      grid[row][col] = generateRandomSymbol();
+      grid[row][col] = generateRandomSymbol(boostMultiplier, specialOnly);
     }
   }
   

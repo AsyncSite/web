@@ -26,6 +26,9 @@ interface SlotGridProps {
     affectedPositions: Array<{ row: number; col: number }>;
   }>;
   scoreUpdates?: ScoreUpdate[];
+  remainingSpins?: number;
+  underdogBoost?: number;
+  consecutiveFailures?: number;
 }
 
 export const SlotGrid: React.FC<SlotGridProps> = ({
@@ -39,6 +42,9 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
   animationState,
   specialEffects = [],
   scoreUpdates = [],
+  remainingSpins = 0,
+  underdogBoost = 1.0,
+  consecutiveFailures = 0,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const getCellAnimationClass = (row: number, col: number): string => {
@@ -76,8 +82,11 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
   return (
     <div ref={containerRef} className={`slot-grid-container ${isPlayer ? 'player-grid' : ''}`}>
       <div className="slot-grid-header">
-        <div className="player-name">{playerName} {isPlayer && '(나)'}</div>
-        <div className="player-score">{score.toLocaleString()}점</div>
+        <div className="player-name">{playerName}</div>
+        <div className="player-stats">
+          <div className="player-score">{score.toLocaleString()}점</div>
+          <div className="remaining-spins">남은 스핀: {remainingSpins}회</div>
+        </div>
       </div>
       
       <div className={`slot-grid ${isSpinning ? 'spinning' : ''}`}>
@@ -134,13 +143,24 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
         </div>
       )}
       
+      {/* 언더독 부스트 표시 */}
+      {underdogBoost > 1.1 && (
+        <div className="underdog-boost-indicator">
+          <span className="boost-icon">🔥</span>
+          <span className="boost-text">부스트 x{underdogBoost.toFixed(1)}</span>
+          {consecutiveFailures >= 3 && (
+            <span className="failure-streak">연속 실패 {consecutiveFailures}회</span>
+          )}
+        </div>
+      )}
+      
       {isPlayer && onSpin && (
         <button 
           className="spin-button"
           onClick={onSpin}
-          disabled={isSpinning}
+          disabled={isSpinning || remainingSpins <= 0}
         >
-          {isSpinning ? '회전 중...' : '🎰 스핀!'}
+          {isSpinning ? '회전 중...' : remainingSpins <= 0 ? '스핀 소진' : '🎰 스핀!'}
         </button>
       )}
     </div>

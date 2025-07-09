@@ -67,20 +67,74 @@ export const getStarEffect = (
 };
 
 /**
+ * 연쇄 폭탄 효과 - 전체 그리드 클리어
+ */
+export const getChainBombEffect = (
+  grid: (SymbolType | null)[][],
+  position: SymbolPosition
+): { affectedPositions: SymbolPosition[]; points: number } => {
+  const affectedPositions: SymbolPosition[] = [];
+  let points = 0;
+  const gridSize = grid.length;
+  
+  // 전체 그리드 클리어
+  for (let row = 0; row < gridSize; row++) {
+    for (let col = 0; col < gridSize; col++) {
+      const symbol = grid[row][col];
+      if (symbol) {
+        affectedPositions.push({ row, col, symbol });
+        // 각 심볼당 1000점
+        points += 1000;
+      }
+    }
+  }
+  
+  return { affectedPositions, points };
+};
+
+/**
+ * 메가 잭팟 효과 - 즉시 50000점 + 모든 심볼을 와일드로 변환
+ */
+export const getMegaJackpotEffect = (
+  grid: (SymbolType | null)[][],
+  position: SymbolPosition
+): { transformedGrid: (SymbolType | null)[][]; points: number } => {
+  const transformedGrid = grid.map(row => [...row]);
+  const gridSize = grid.length;
+  
+  // 모든 일반 심볼을 와일드로 변환
+  for (let row = 0; row < gridSize; row++) {
+    for (let col = 0; col < gridSize; col++) {
+      const symbol = transformedGrid[row][col];
+      if (symbol && !['bomb', 'star', 'bonus', 'megaJackpot', 'reverse', 'chainBomb'].includes(symbol)) {
+        transformedGrid[row][col] = 'wild';
+      }
+    }
+  }
+  
+  return { transformedGrid, points: 50000 };
+};
+
+/**
  * 특수 심볼 효과 적용
  */
 export const applySpecialEffects = (
   grid: (SymbolType | null)[][], 
-  matches: { positions: SymbolPosition[]; symbolType: SymbolType; points: number }[]
+  matches: { positions: SymbolPosition[]; symbolType: SymbolType; points: number }[],
+  topPlayerScore?: number
 ): {
   additionalRemovals: SymbolPosition[];
   bonusPoints: number;
   specialEffects: { type: SymbolType; position: SymbolPosition; affectedPositions: SymbolPosition[] }[];
+  hasReverse?: boolean;
+  reverseBonus?: number;
 } => {
   const additionalRemovals: SymbolPosition[] = [];
   let bonusPoints = 0;
   const specialEffects: { type: SymbolType; position: SymbolPosition; affectedPositions: SymbolPosition[] }[] = [];
   const processedPositions = new Set<string>();
+  let hasReverse = false;
+  let reverseBonus = 0;
   
   // 매칭된 심볼 중 특수 심볼 찾기
   matches.forEach(match => {
@@ -119,6 +173,35 @@ export const applySpecialEffects = (
           affectedPositions: [pos],
         });
         processedPositions.add(posKey);
+      } else if (symbol === 'chainBomb') {
+        const effect = getChainBombEffect(grid, pos);
+        additionalRemovals.push(...effect.affectedPositions);
+        bonusPoints += effect.points;
+        specialEffects.push({
+          type: 'chainBomb',
+          position: pos,
+          affectedPositions: effect.affectedPositions,
+        });
+        processedPositions.add(posKey);
+      } else if (symbol === 'megaJackpot') {
+        // 메가 잭팟은 즉시 큰 점수 제공
+        bonusPoints += 50000;
+        specialEffects.push({
+          type: 'megaJackpot',
+          position: pos,
+          affectedPositions: [pos],
+        });
+        processedPositions.add(posKey);
+      } else if (symbol === 'reverse') {
+        // 역전 심볼: 1위 점수의 20% 획득
+        hasReverse = true;
+        reverseBonus = topPlayerScore ? Math.floor(topPlayerScore * 0.2) : 0;
+        specialEffects.push({
+          type: 'reverse',
+          position: pos,
+          affectedPositions: [pos],
+        });
+        processedPositions.add(posKey);
       }
     });
   });
@@ -130,8 +213,10 @@ export const applySpecialEffects = (
   
   return {
     additionalRemovals: uniqueRemovals,
-    bonusPoints,
+    bonusPoints: bonusPoints + reverseBonus,
     specialEffects,
+    hasReverse,
+    reverseBonus,
   };
 };
 

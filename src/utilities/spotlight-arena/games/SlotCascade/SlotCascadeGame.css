@@ -6,14 +6,36 @@
 }
 
 .game-header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
+  gap: 20px;
   margin-bottom: 30px;
   padding: 20px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   backdrop-filter: blur(10px);
+}
+
+.back-button-top {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  background: rgba(108, 117, 125, 0.8);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.back-button-top:hover {
+  background: rgba(90, 98, 104, 0.9);
+  transform: translateX(-5px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 .game-title {
@@ -23,6 +45,98 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+  text-align: center;
+  margin: 0;
+}
+
+/* 이벤트 알림 */
+.event-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 1000;
+  animation: eventSlideIn 0.5s ease-out, eventPulse 2s ease-in-out infinite;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.event-icon {
+  font-size: 48px;
+  animation: eventIconSpin 3s linear infinite;
+}
+
+.event-info h3 {
+  margin: 0;
+  font-size: 24px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.event-info p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.event-timer {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+@keyframes eventSlideIn {
+  from {
+    transform: translateX(-50%) translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes eventPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+@keyframes eventIconSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.game-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.spin-limit {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  background: rgba(76, 175, 80, 0.2);
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
 }
 
 .game-timer {
@@ -33,6 +147,38 @@
   border: 2px solid #ff6b6b;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+}
+
+.game-timer.final-countdown {
+  background: linear-gradient(45deg, #ff0000, #ff6b6b);
+  animation: finalCountdownPulse 1s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+  border-color: #ff0000;
+}
+
+.countdown-label {
+  margin-left: 10px;
+  font-size: 16px;
+  animation: finalCountdownBlink 0.5s ease-in-out infinite;
+}
+
+@keyframes finalCountdownPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes finalCountdownBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .game-message {
@@ -118,6 +264,51 @@
   color: #ffd700;
 }
 
+.global-spin-container {
+  text-align: center;
+  margin: 30px 0;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.global-spin-button {
+  padding: 20px 50px;
+  font-size: 24px;
+  font-weight: bold;
+  background: linear-gradient(45deg, #ff6b6b, #ffd700);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+}
+
+.global-spin-button:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 30px rgba(255, 107, 107, 0.6);
+}
+
+.global-spin-button:active:not(:disabled) {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.global-spin-button:disabled {
+  background: linear-gradient(45deg, #888, #999);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.global-spin-info {
+  margin-top: 15px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .players-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -180,9 +371,13 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .game-header {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 15px;
     text-align: center;
+  }
+
+  .back-button-top {
+    justify-self: start;
   }
 
   .game-title {
@@ -195,6 +390,11 @@
 
   .game-info-section {
     grid-template-columns: 1fr;
+  }
+
+  .global-spin-button {
+    padding: 15px 30px;
+    font-size: 20px;
   }
 
   .players-grid {

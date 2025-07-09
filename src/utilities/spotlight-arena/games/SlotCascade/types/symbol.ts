@@ -1,5 +1,5 @@
 // 심볼 타입 정의
-export type SymbolType = 'cherry' | 'lemon' | 'orange' | 'grape' | 'bell' | 'diamond' | 'wild' | 'bomb' | 'star' | 'bonus';
+export type SymbolType = 'cherry' | 'lemon' | 'orange' | 'grape' | 'bell' | 'diamond' | 'wild' | 'bomb' | 'star' | 'bonus' | 'megaJackpot' | 'reverse' | 'chainBomb';
 
 // 심볼 정보 인터페이스
 export interface SymbolInfo {
@@ -21,6 +21,9 @@ export const SYMBOLS: Record<SymbolType, SymbolInfo> = {
   bomb: { type: 'bomb', icon: '💣', points: 0, isSpecial: true },
   star: { type: 'star', icon: '🌟', points: 0, isSpecial: true },
   bonus: { type: 'bonus', icon: '🎁', points: 0, isSpecial: true },
+  megaJackpot: { type: 'megaJackpot', icon: '💰', points: 50000, isSpecial: true },
+  reverse: { type: 'reverse', icon: '🔄', points: 0, isSpecial: true },
+  chainBomb: { type: 'chainBomb', icon: '🧨', points: 0, isSpecial: true },
 };
 
 // 그리드에서 심볼의 위치

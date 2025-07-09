@@ -34,14 +34,18 @@ export const applyGravity = (grid: (SymbolType | null)[][]): (SymbolType | null)
 /**
  * 빈 공간에 새로운 심볼 채우기
  */
-export const fillEmptySpaces = (grid: (SymbolType | null)[][]): (SymbolType | null)[][] => {
+export const fillEmptySpaces = (
+  grid: (SymbolType | null)[][], 
+  boostMultiplier: number = 1.0,
+  specialOnly: boolean = false
+): (SymbolType | null)[][] => {
   const newGrid = grid.map(row => [...row]);
   const gridSize = grid.length;
 
   for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
       if (newGrid[row][col] === null) {
-        newGrid[row][col] = generateRandomSymbol();
+        newGrid[row][col] = generateRandomSymbol(boostMultiplier, specialOnly);
       }
     }
   }
@@ -75,7 +79,11 @@ export const calculateFallDistance = (
  * 캐스케이드 프로세스 실행
  * @returns { grid: 새 그리드, hasNewMatches: 새 매칭 여부 }
  */
-export const processCascade = (grid: (SymbolType | null)[][]): {
+export const processCascade = (
+  grid: (SymbolType | null)[][], 
+  boostMultiplier: number = 1.0,
+  specialOnly: boolean = false
+): {
   grid: (SymbolType | null)[][];
   droppedPositions: { row: number; col: number; distance: number }[];
   newSymbolPositions: { row: number; col: number }[];
@@ -108,8 +116,8 @@ export const processCascade = (grid: (SymbolType | null)[][]): {
     }
   }
   
-  // 4. 빈 공간 채우기
-  newGrid = fillEmptySpaces(newGrid);
+  // 4. 빈 공간 채우기 (부스트 및 특수 심볼 모드 적용)
+  newGrid = fillEmptySpaces(newGrid, boostMultiplier, specialOnly);
   
   return {
     grid: newGrid,
