@@ -1,0 +1,130 @@
+/* 공통 페이지 스타일 */
+.page-container {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 헤더가 상단 고정되도록 */
+.page-container .header {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: auto !important;
+  background: rgba(5, 6, 10, 0.95) !important;
+  border-top: none !important;
+  border-bottom: 1px solid rgba(195, 232, 141, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  z-index: 1000 !important;
+}
+
+/* 메인 컨텐츠 */
+.page-content {
+  padding-top: 80px; /* 헤더 높이만큼 여백 */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Coming Soon 스타일 */
+.coming-soon {
+  text-align: center;
+  color: #ffffff;
+  max-width: 600px;
+  padding: 60px 40px;
+  background: rgba(5, 6, 10, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.coming-soon h1 {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(195, 232, 141, 0.3);
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.coming-soon p {
+  font-size: 24px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.coming-soon .description {
+  font-size: 16px;
+  opacity: 0.7;
+  line-height: 1.6;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin-bottom: 40px;
+}
+
+/* 네비게이션 버튼들 */
+.nav-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  padding: 12px 24px;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn.home {
+  background: linear-gradient(135deg, #c3e88d, #8fd67a);
+  color: #05060A;
+  box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
+}
+
+.nav-btn.home:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(195, 232, 141, 0.5);
+}
+
+.nav-btn.back {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(195, 232, 141, 0.3);
+}
+
+.nav-btn.back:hover {
+  background: rgba(195, 232, 141, 0.1);
+  border-color: rgba(195, 232, 141, 0.6);
+  transform: translateY(-2px);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .page-content {
+    padding: 100px 20px 20px;
+  }
+  
+  .coming-soon {
+    padding: 40px 20px;
+  }
+  
+  .coming-soon h1 {
+    font-size: 36px;
+  }
+  
+  .coming-soon p {
+    font-size: 20px;
+  }
+}

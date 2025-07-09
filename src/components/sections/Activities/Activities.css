@@ -1,0 +1,200 @@
+/* Activities Section - prototype_sipe_style.html 기반 + 프로젝트 색상 적용 */
+.activities {
+  padding: 120px 0;
+  background: rgba(5, 6, 10, 0.95);
+  position: relative;
+}
+
+/* Activities 전용 섹션 헤더 */
+.activities .section-header {
+  margin-bottom: 80px;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.activity-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  padding: 40px;
+  border: 1px solid rgba(195, 232, 141, 0.15);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.activity-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(195, 232, 141, 0.3);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.activity-card:hover::before {
+  opacity: 1;
+}
+
+.activity-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(195, 232, 141, 0.3));
+}
+
+.activity-title {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+}
+
+.activity-schedule {
+  font-size: 16px;
+  color: #c3e88d;
+  margin-bottom: 20px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+}
+
+.activity-description {
+  opacity: 0.8;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.activity-participants {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.participant-avatars {
+  display: flex;
+  gap: -5px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #05060A;
+  font-size: 14px;
+  margin-left: -5px;
+  border: 2px solid rgba(5, 6, 10, 0.95);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.avatar:first-child {
+  margin-left: 0;
+}
+
+.activity-participants span {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .activities {
+    padding: 80px 0;
+  }
+
+  /* 공통 스타일에서 처리 */
+
+  .activity-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .activity-card {
+    padding: 30px;
+  }
+
+  .activity-icon {
+    font-size: 40px;
+  }
+
+  .activity-title {
+    font-size: 20px;
+  }
+
+  .activity-schedule {
+    font-size: 14px;
+  }
+
+  .activity-description {
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .activities {
+    padding: 60px 0;
+  }
+
+  .section-header {
+    margin-bottom: 60px;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+
+  .section-subtitle {
+    font-size: 16px;
+  }
+
+  .activity-card {
+    padding: 25px;
+  }
+
+  .activity-icon {
+    font-size: 36px;
+  }
+
+  .activity-title {
+    font-size: 18px;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .activity-participants {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

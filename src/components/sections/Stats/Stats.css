@@ -1,0 +1,101 @@
+/* Stats Section - prototype_sopt_style.html 기반 */
+.stats {
+  min-height: 40vh;
+  background: rgba(11, 12, 16, 0.95);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+
+/* Stats 전용 컨테이너 */
+.stats .container {
+  width: 100%;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 30px 20px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-number {
+  font-size: 48px;
+  font-weight: 900;
+  color: #c3e88d;
+  margin-bottom: 15px;
+  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.3);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.stat-label {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .stats {
+    min-height: 40vh;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+  }
+
+  .stat-card {
+    padding: 25px 15px;
+  }
+  
+  .stat-number {
+    font-size: 36px;
+  }
+  
+  .stat-label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    min-height: 35vh;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .stat-card {
+    padding: 20px 10px;
+  }
+  
+  .stat-number {
+    font-size: 28px;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+  }
+}

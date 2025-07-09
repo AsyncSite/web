@@ -1,0 +1,90 @@
+/* Footer - prototype_mashup_style.html 기반 */
+.footer {
+  padding: 50px 0;
+  background: rgba(5, 6, 10, 0.98);
+  text-align: center;
+  border-top: 1px solid rgba(195, 232, 141, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-logo {
+  margin-bottom: 30px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.footer-copyright {
+  opacity: 0.6;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+
+.footer-copyright p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.footer-copyright p:first-child {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 0;
+    margin-bottom: 70px;
+  }
+  
+
+  
+  .social-links {
+    gap: 15px;
+  }
+  
+  .social-link {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 30px 0;
+    margin-bottom: 60px;
+  }
+  
+  .footer-copyright p {
+    font-size: 12px;
+  }
+  
+  .social-links {
+    gap: 12px;
+  }
+  
+  .social-link {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .logo-text {
+    font-size: 18px;
+  }
+}

@@ -1,0 +1,352 @@
+/* Studies Section - prototype_nfyg_style.html study-groups 기반 */
+.studies {
+  padding: 120px 0;
+  background: rgba(11, 12, 16, 0.95);
+  position: relative;
+}
+
+/* Studies 전용 섹션 헤더 */
+.studies .section-header {
+  margin-bottom: 80px;
+}
+
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.group-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  border: 1px solid rgba(195, 232, 141, 0.15);
+  transition: all 0.3s;
+  overflow: hidden;
+  position: relative;
+  height: 400px;
+  cursor: pointer;
+}
+
+.group-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.group-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(195, 232, 141, 0.3);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.group-card:hover::before {
+  opacity: 1;
+}
+
+.group-image-placeholder {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(195, 232, 141, 0.3);
+}
+
+.group-image-placeholder.algorithm {
+  background: rgba(195, 232, 141, 0.1);
+}
+
+.group-image-placeholder.blog {
+  background: rgba(143, 214, 122, 0.1);
+}
+
+.group-image-placeholder.opensource {
+  background: rgba(168, 213, 186, 0.1);
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 40px 20px 20px;
+}
+
+.image-title {
+  text-align: left;
+  color: #ffffff;
+}
+
+.image-title .group-main-title {
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 8px;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.image-title .group-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.group-details {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 6, 10, 0.95);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+.group-card:hover .group-details {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.group-details .group-header {
+  padding: 20px 20px 0;
+}
+
+.group-details .group-type {
+  display: inline-block;
+  padding: 6px 16px;
+  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  color: #05060A;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.group-details .group-main-title {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+}
+
+.group-details .group-body {
+  padding: 10px 20px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.group-details .group-desc {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  flex: 1;
+}
+
+.group-title {
+  font-size: 15px;
+  color: #c3e88d;
+  margin-bottom: 15px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+}
+
+.group-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.group-meta span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+
+
+.group-tags {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 6px 12px;
+  background: rgba(195, 232, 141, 0.15);
+  color: #c3e88d;
+  border-radius: 15px;
+  font-size: 12px;
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+
+.group-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.members-info span {
+  font-size: 14px;
+  color: #c3e88d;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+}
+
+.join-button {
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  color: #05060A;
+  border: none;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+}
+
+.join-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(195, 232, 141, 0.4);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .studies {
+    padding: 80px 0;
+  }
+
+  /* 공통 스타일에서 처리 */
+
+  .group-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .group-card {
+    height: 520px;
+  }
+
+  .group-image-placeholder {
+    height: 240px;
+  }
+
+  .placeholder-content {
+    font-size: 70px;
+  }
+
+  .group-header {
+    padding: 25px 25px 0;
+  }
+
+  .group-body {
+    padding: 15px 25px 25px;
+  }
+
+  .group-main-title {
+    font-size: 20px;
+  }
+
+  .group-title {
+    font-size: 14px;
+  }
+
+  .group-meta {
+    gap: 10px;
+  }
+
+  .group-meta span {
+    font-size: 12px;
+  }
+
+  .group-desc {
+    font-size: 14px;
+  }
+
+  .group-footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .join-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .studies {
+    padding: 60px 0;
+  }
+
+  .section-header {
+    margin-bottom: 60px;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+
+  .section-subtitle {
+    font-size: 16px;
+  }
+
+  .group-card {
+    height: 480px;
+  }
+
+  .group-image-placeholder {
+    height: 200px;
+  }
+
+  .placeholder-content {
+    font-size: 60px;
+  }
+
+  .group-header {
+    padding: 20px 20px 0;
+  }
+
+  .group-body {
+    padding: 15px 20px 20px;
+  }
+
+  .group-main-title {
+    font-size: 18px;
+  }
+
+  .group-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

@@ -2,36 +2,46 @@
 import React from 'react';
 import './Contribution.css';
 
-interface ContributionUser {
-  gitUserId: string;
-  gitName: string;
-  userName: string;
+interface Member {
+  id: string;
+  name: string;
+  githubId: string;
 }
 
 /**
- * Contribution user정보
+ * AsyncSite 멤버 정보
  */
-const contributionUsers: ContributionUser[] = [
+const members: Member[] = [
   {
-    gitUserId: '115696395',
-    gitName: 'renechoi',
-    userName: '',
+    id: 'chadongmin',
+    name: 'Dongmin Cha',
+    githubId: 'chadongmin'
   },
   {
-    gitUserId: '90545043',
-    gitName: 'kdelay',
-    userName: '',
+    id: 'jo94kr',
+    name: 'Jo Jin Woo',
+    githubId: 'jo94kr'
   },
   {
-    gitUserId: '150509394',
-    gitName: 'vvoohhee',
-    userName: '',
+    id: 'kdelay',
+    name: '김지연',
+    githubId: 'kdelay'
   },
   {
-    gitUserId: '138358867',
-    gitName: 'KrongDev',
-    userName: '',
+    id: 'KrongDev',
+    name: 'KrongDev',
+    githubId: 'KrongDev'
   },
+  {
+    id: 'mihioon',
+    name: 'mihioon',
+    githubId: 'mihioon'
+  },
+  {
+    id: 'renechoi',
+    name: 'renechoi',
+    githubId: 'renechoi'
+  }
 ];
 
 const Contribution: React.FC = () => {
@@ -56,56 +66,38 @@ const Contribution: React.FC = () => {
     e.currentTarget.alt = '프로필 이미지 없음';
   };
 
-  const renderUserIcon = (user: ContributionUser) => {
-    return (
-      <div className="contributor-card">
-        <a
-          href={`https://github.com/${user.gitName}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="contributor-link"
-        >
-          <div className="profile-wrapper">
-            <img
-              src={`https://avatars.githubusercontent.com/u/${user.gitUserId}?v=4`}
-              alt={`${user.gitName} 프로필`}
-              className="profile-img"
-              onError={handleImgError}
-            />
-          </div>
-          <span className="contributor-name">{user.gitName}</span>
-        </a>
-      </div>
-    );
-  };
+
 
   return (
-    <section className="contribution-page">
-      <div className="divider" />
+    <section className="members-section">
+      <div className="container">
+        <div className="section-header">
+          <h2 className="section-title">Our Members</h2>
+          <p className="section-subtitle">함께 성장하는 AsyncSite 멤버들</p>
+        </div>
 
-      <div className="contribution-container">
-        <span className="contribution-label">Contributed by</span>
-        <div className="contributors-list">
-          {contributionUsers.map(renderUserIcon)}
-
-          {/* who's next? 카드 */}
-          <div className="contributor-card">
-            <a
-              href="https://github.com/your-next-profile"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contributor-link"
-            >
-              <div className="profile-wrapper">
-                <img
-                  src={process.env.PUBLIC_URL + '/images/face/another.png'}
-                  alt="another 프로필"
-                  className="profile-img"
-                  onError={handleImgError}
-                />
-              </div>
-              <span className="contributor-name">who's next?</span>
-            </a>
+        <div className="members-slider">
+          <div className="members-track">
+            {/* 연속 표시를 위해 3번 반복 */}
+            {Array.from({ length: 3 }).map((_, setIndex) =>
+              members.map((member) => (
+                <a
+                  key={`${member.id}-${setIndex}`}
+                  href={`https://github.com/${member.githubId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="member-item"
+                  title={`${member.name} (@${member.githubId})`}
+                >
+                  <img
+                    src={`https://github.com/${member.githubId}.png?size=120`}
+                    alt={`${member.name} 프로필`}
+                    className="member-avatar"
+                    onError={handleImgError}
+                  />
+                </a>
+              ))
+            )}
           </div>
         </div>
       </div>

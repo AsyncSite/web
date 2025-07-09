@@ -44,10 +44,20 @@ html {
 html,
 body {
   height: 100%;
-  background: #000; /* 배경 검정 */
-  color: #c3e88d; /* 글자 연녹 */
   font-family: 'Moneygraphy-Rounded', Consolas, 'Courier New', monospace;
   scroll-behavior: smooth;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+
+
+/* Hero 섹션만 Consolas 폰트 적용 */
+.hero-badge,
+.hero-subtitle,
+.btn-primary,
+.btn-secondary {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
 /* 섹션 전체 */
