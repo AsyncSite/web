@@ -5,6 +5,7 @@ import { SymbolType } from '../types/symbol';
 import { generateInitialGrid } from '../utils/symbolUtils';
 import { findAllMatches } from '../utils/matchingUtils';
 import { processCascade, getCascadeMultiplier, getCascadeBonus } from '../utils/cascadeUtils';
+import { applySpecialEffects } from '../utils/specialEffectUtils';
 
 interface UseSlotCascadeGameProps {
   participants: Participant[];
@@ -83,14 +84,26 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
       const matches = findAllMatches(currentGrid);
       if (matches.length === 0) break;
 
+      // 특수 심볼 효과 적용
+      const specialEffectsResult = applySpecialEffects(currentGrid, matches);
+      
       // 점수 계산 (배율 적용)
       const multiplier = getCascadeMultiplier(cascadeLevel);
       const bonus = getCascadeBonus(cascadeLevel);
-      const stepScore = matches.reduce((sum, match) => sum + match.points, 0) * multiplier + bonus;
+      const baseScore = matches.reduce((sum, match) => sum + match.points, 0);
+      const stepScore = (baseScore + specialEffectsResult.bonusPoints) * multiplier + bonus;
       totalScore += stepScore;
 
-      // 제거할 위치 수집
-      const removingPositions = matches.flatMap(match => match.positions);
+      // 제거할 위치 수집 (특수 효과 포함)
+      const removingPositions = [
+        ...matches.flatMap(match => match.positions),
+        ...specialEffectsResult.additionalRemovals
+      ];
+      
+      // 중복 제거
+      const uniqueRemovingPositions = Array.from(
+        new Map(removingPositions.map(pos => [`${pos.row},${pos.col}`, pos])).values()
+      );
 
       // 제거 애니메이션 상태 설정
       setGameState(prev => {
@@ -101,10 +114,11 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
         newPlayers[playerIndex] = {
           ...newPlayers[playerIndex],
           animationState: {
-            removingPositions: removingPositions.map(pos => ({ row: pos.row, col: pos.col })),
+            removingPositions: uniqueRemovingPositions.map(pos => ({ row: pos.row, col: pos.col })),
             fallingPositions: [],
             newPositions: [],
           },
+          specialEffects: specialEffectsResult.specialEffects,
         };
 
         return { ...prev, players: newPlayers };
@@ -114,13 +128,10 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
       await new Promise(resolve => setTimeout(resolve, 300));
 
       // 매칭된 심볼 제거하고 캐스케이드 처리
-      const gridAfterRemoval = matches.reduce((grid, match) => {
-        const newGrid = grid.map(row => [...row]);
-        match.positions.forEach(pos => {
-          newGrid[pos.row][pos.col] = null;
-        });
-        return newGrid;
-      }, currentGrid);
+      const gridAfterRemoval = currentGrid.map(row => [...row]);
+      uniqueRemovingPositions.forEach(pos => {
+        gridAfterRemoval[pos.row][pos.col] = null;
+      });
 
       // 캐스케이드 (중력 + 새 심볼)
       const cascadeResult = processCascade(gridAfterRemoval);
@@ -162,6 +173,7 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
           ...newPlayers[playerIndex],
           grid: currentGrid,
           animationState: undefined,
+          specialEffects: undefined,
         };
 
         return { ...prev, players: newPlayers };

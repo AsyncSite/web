@@ -105,6 +105,7 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
             isPlayer={index === 0}
             onSpin={index === 0 ? () => spinPlayerSlot(player.id) : undefined}
             animationState={player.animationState}
+            specialEffects={player.specialEffects}
           />
         ))}
       </div>

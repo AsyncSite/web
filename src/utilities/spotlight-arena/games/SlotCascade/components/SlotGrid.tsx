@@ -1,6 +1,7 @@
 import React from 'react';
 import { SymbolType, SYMBOLS } from '../types/symbol';
 import { CascadeEffects } from './CascadeEffects';
+import { SpecialEffects } from './SpecialEffects';
 import './SlotGrid.css';
 
 interface SlotGridProps {
@@ -16,6 +17,11 @@ interface SlotGridProps {
     fallingPositions: { row: number; col: number; distance: number }[];
     newPositions: { row: number; col: number }[];
   };
+  specialEffects?: Array<{
+    type: SymbolType;
+    position: { row: number; col: number };
+    affectedPositions: Array<{ row: number; col: number }>;
+  }>;
 }
 
 export const SlotGrid: React.FC<SlotGridProps> = ({
@@ -27,6 +33,7 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
   onSpin,
   isPlayer = false,
   animationState,
+  specialEffects = [],
 }) => {
   const getCellAnimationClass = (row: number, col: number): string => {
     if (!animationState) return '';
@@ -93,6 +100,14 @@ export const SlotGrid: React.FC<SlotGridProps> = ({
           cascadeLevel={cascadeLevel} 
           isActive={cascadeLevel > 0 && !!animationState}
         />
+        
+        {/* 특수 심볼 효과 */}
+        {specialEffects.length > 0 && (
+          <SpecialEffects 
+            effects={specialEffects}
+            gridSize={grid.length}
+          />
+        )}
       </div>
       
       {cascadeLevel > 0 && (

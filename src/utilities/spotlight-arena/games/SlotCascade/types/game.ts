@@ -19,6 +19,11 @@ export interface PlayerState {
   cascadeLevel: number;
   isSpinning: boolean;
   animationState?: AnimationState;
+  specialEffects?: Array<{
+    type: SymbolType;
+    position: { row: number; col: number };
+    affectedPositions: Array<{ row: number; col: number }>;
+  }>;
 }
 
 // 게임 설정
