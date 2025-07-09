@@ -30,7 +30,7 @@ export const GAMES_LIST: GameInfo[] = [
     tags: ['카지노', '스릴'],
     minPlayers: 2,
     maxPlayers: 50,
-    available: false,
+    available: true,
   },
   {
     id: 'circus-cannon',

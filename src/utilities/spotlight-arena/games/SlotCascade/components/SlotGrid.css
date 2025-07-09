@@ -1,0 +1,272 @@
+.slot-grid-container {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid #ff6b6b;
+  position: relative;
+  overflow: hidden;
+}
+
+.slot-grid-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24, #ff6b6b);
+  border-radius: 12px;
+  opacity: 0.5;
+  z-index: -1;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.slot-grid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.player-score {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.slot-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.slot-cell {
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #495057;
+  transition: all 0.3s ease;
+}
+
+.slot-cell.filled {
+  background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+  border-color: #6c757d;
+}
+
+.slot-cell.empty {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: #343a40;
+}
+
+.symbol-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: symbolAppear 0.3s ease-out;
+}
+
+@keyframes symbolAppear {
+  from {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* 캐스케이드 애니메이션 */
+.slot-cell.removing {
+  animation: symbolRemove 0.3s ease-out forwards;
+}
+
+@keyframes symbolRemove {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.slot-cell.removing::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+  animation: glow 0.3s ease-out;
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+.slot-cell.falling {
+  animation: symbolFall var(--fall-duration, 0.4s) ease-in forwards;
+}
+
+@keyframes symbolFall {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--fall-distance, 100%));
+  }
+}
+
+.slot-cell.new-symbol {
+  animation: symbolDrop 0.4s ease-out forwards;
+}
+
+@keyframes symbolDrop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.symbol-icon {
+  font-size: 36px;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.slot-grid.spinning .slot-cell {
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+.cascade-indicator {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff6b6b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* 플레이어 그리드 강조 */
+.slot-grid-container.player-grid {
+  border-color: #ffd700;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.slot-grid-container.player-grid::before {
+  background: linear-gradient(45deg, #ffd700, #ff6b6b, #ffd700);
+  opacity: 0.7;
+}
+
+/* 스핀 버튼 */
+.spin-button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.spin-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+}
+
+.spin-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.spin-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .slot-grid-container {
+    padding: 12px;
+  }
+  
+  .symbol-icon {
+    font-size: 28px;
+  }
+  
+  .player-name {
+    font-size: 14px;
+  }
+  
+  .player-score {
+    font-size: 16px;
+  }
+}

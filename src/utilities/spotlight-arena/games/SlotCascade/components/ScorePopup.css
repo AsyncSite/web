@@ -1,0 +1,42 @@
+.score-popup {
+  position: absolute;
+  pointer-events: none;
+  animation: scoreFloat 1.5s ease-out forwards;
+  z-index: 1000;
+}
+
+@keyframes scoreFloat {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-60px) scale(1);
+    opacity: 0;
+  }
+}
+
+.score-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  text-align: center;
+}
+
+.score-multiplier {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff6b6b;
+  text-shadow: 
+    0 0 8px rgba(255, 107, 107, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  margin-top: 4px;
+}

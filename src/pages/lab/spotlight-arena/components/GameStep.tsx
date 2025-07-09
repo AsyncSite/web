@@ -4,6 +4,7 @@ import { Participant } from '../../../../components/lab/utilities/spotlight-aren
 import { LottieAnimationData } from '../types/animation';
 import SnailRaceGame from '../../../../components/lab/utilities/spotlight-arena/games/SnailRace/SnailRaceGame';
 import { DartWheelGame } from '../../../../utilities/spotlight-arena/games/DartWheel';
+import { SlotCascadeGame } from '../../../../utilities/spotlight-arena/games/SlotCascade';
 
 interface GameStepProps {
   selectedGame: string;
@@ -30,6 +31,23 @@ function GameStep({
     return (
       <div className="game-section sa-card">
         <DartWheelGame
+          participants={participants}
+          winnerCount={winnerCount}
+          onBack={onBackToLobby}
+          onReplay={() => {
+            setGameKey((prev) => prev + 1);
+          }}
+          onNewGame={onBackToArcade}
+        />
+      </div>
+    );
+  }
+
+  // SlotCascade 게임인 경우
+  if (selectedGame === 'slot-cascade') {
+    return (
+      <div className="game-section sa-card">
+        <SlotCascadeGame
           participants={participants}
           winnerCount={winnerCount}
           onBack={onBackToLobby}
