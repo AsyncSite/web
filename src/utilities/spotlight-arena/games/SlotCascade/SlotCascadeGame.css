@@ -410,3 +410,73 @@
     width: 100%;
   }
 }
+
+/* 최종 순위 스타일 */
+.final-rankings {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+}
+
+.final-rankings h3 {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 25px;
+  background: linear-gradient(45deg, #ffd700, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ranking-item.winner {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.ranking-item .rank {
+  font-size: 20px;
+  font-weight: bold;
+  min-width: 40px;
+  color: #ffd700;
+}
+
+.ranking-item .name {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ranking-item .final-score {
+  font-size: 20px;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+.ranking-item .winner-badge {
+  font-size: 18px;
+  padding: 5px 15px;
+  background: linear-gradient(45deg, #ffd700, #ff6b6b);
+  border-radius: 20px;
+  font-weight: bold;
+}

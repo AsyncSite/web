@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Participant } from '../../../../../components/lab/utilities/spotlight-arena/shared/types';
 import { GameStatus, SlotCascadeGameState, PlayerState, DEFAULT_GAME_CONFIG } from '../types/game';
 import { SymbolType } from '../types/symbol';
@@ -9,13 +9,18 @@ import { applySpecialEffects, getMegaJackpotEffect } from '../utils/specialEffec
 import { calculateUnderdogBoost, applyUnderdogBoostToCascade } from '../utils/underdogUtils';
 import { determineNextEvent, createActiveEvent, calculateEventRemainingTime, getReversalChanceTargets, shouldApplyEventEffect } from '../utils/eventUtils';
 import { EventType } from '../types/event';
+import { PlayerBet, DEFAULT_BETTING_CONFIG, BettingState } from '../types/betting';
+import { checkBetResult } from '../utils/bettingUtils';
 
 interface UseSlotCascadeGameProps {
   participants: Participant[];
+  winnerCount: number;
   onGameEnd: (winner: Participant) => void;
 }
 
-export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGameProps) => {
+export const useSlotCascadeGame = ({ participants, winnerCount, onGameEnd }: UseSlotCascadeGameProps) => {
+  const processBettingResultsRef = useRef<(() => void) | null>(null);
+  
   const [gameState, setGameState] = useState<SlotCascadeGameState>({
     status: 'waiting',
     players: [],
@@ -27,6 +32,13 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
     eventScoreMultiplier: 1,
     specialSymbolOnlyMode: false,
     currentEvent: undefined,
+    betting: {
+      bets: [],
+      totalBetAmount: 0,
+      potentialPayout: 0,
+      config: DEFAULT_BETTING_CONFIG,
+      isBettingClosed: false,
+    },
   });
 
   // 게임 초기화
@@ -65,6 +77,13 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
       eventScoreMultiplier: 1,
       specialSymbolOnlyMode: false,
       currentEvent: undefined,
+      betting: {
+        bets: [],
+        totalBetAmount: 0,
+        potentialPayout: 0,
+        config: DEFAULT_BETTING_CONFIG,
+        isBettingClosed: false,
+      },
     });
   }, [participants]);
 
@@ -73,6 +92,10 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
     setGameState(prev => ({
       ...prev,
       status: 'playing',
+      betting: prev.betting ? {
+        ...prev.betting,
+        isBettingClosed: true,
+      } : undefined,
     }));
   }, []);
 
@@ -346,13 +369,18 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
         const newTime = prev.remainingTime - 1;
         const elapsedTime = prev.config.gameDuration - newTime;
         
-        // 게임 종료 체크
-        if (newTime <= 0) {
-          const winner = [...prev.players].sort((a, b) => b.score - a.score)[0];
-          const winnerParticipant = participants.find(p => p.id === winner.id);
-          if (winnerParticipant) {
-            onGameEnd(winnerParticipant);
-          }
+        // 게임 종료 체크 - 시간 종료 또는 모든 플레이어의 스핀 소진
+        const allSpinsUsed = prev.players.every(p => p.remainingSpins <= 0);
+        const anyPlayerSpinning = prev.players.some(p => p.isSpinning);
+        
+        // 스핀 중이 아니고, 시간이 종료되었거나 모든 스핀이 소진된 경우
+        if (!anyPlayerSpinning && (newTime <= 0 || allSpinsUsed)) {
+          // 베팅 결과 처리를 위해 setTimeout 사용
+          setTimeout(() => {
+            if (processBettingResultsRef.current) {
+              processBettingResultsRef.current();
+            }
+          }, 0);
           
           return {
             ...prev,
@@ -442,10 +470,99 @@ export const useSlotCascadeGame = ({ participants, onGameEnd }: UseSlotCascadeGa
     });
   }, [gameState.players, spinPlayerSlot]);
 
+  // 베팅 배치
+  const placeBet = useCallback((bet: PlayerBet) => {
+    setGameState(prev => {
+      if (!prev.betting || prev.betting.isBettingClosed) return prev;
+      
+      const newBets = [...prev.betting.bets, bet];
+      const totalBetAmount = newBets.reduce((sum, b) => sum + b.betAmount, 0);
+      const potentialPayout = newBets.reduce((sum, b) => sum + (b.betAmount * b.odds), 0);
+      
+      return {
+        ...prev,
+        betting: {
+          ...prev.betting,
+          bets: newBets,
+          totalBetAmount,
+          potentialPayout,
+        },
+      };
+    });
+  }, []);
+
+  // 베팅 결과 확인 및 처리
+  const processBettingResults = useCallback(() => {
+    if (!gameState.betting || gameState.betting.bets.length === 0) return;
+    
+    const results = gameState.betting.bets.map(bet => {
+      const result = checkBetResult(bet, gameState.players, true);
+      return {
+        bet,
+        ...result,
+      };
+    });
+    
+    // 베팅 결과를 플레이어 점수에 반영
+    const updatedPlayers = gameState.players.map(player => {
+      const playerBets = results.filter(r => r.bet.playerId === player.id);
+      const playerWinnings = playerBets.reduce((sum, r) => sum + (r.isWon ? r.payout : 0), 0);
+      const playerLosses = playerBets.reduce((sum, r) => sum + (r.isWon ? 0 : r.bet.betAmount), 0);
+      
+      return {
+        ...player,
+        score: player.score + playerWinnings - playerLosses, // 베팅 수익/손실을 점수에 반영
+      };
+    });
+    
+    // 최종 순위에서 상위 winnerCount명 선정
+    const sortedPlayers = [...updatedPlayers].sort((a, b) => b.score - a.score);
+    const winners = sortedPlayers.slice(0, winnerCount).map(p => 
+      participants.find(part => part.id === p.id)!
+    ).filter(Boolean);
+    
+    // 결과를 상태에 저장
+    const totalWinnings = results.reduce((sum, r) => sum + r.payout, 0);
+    
+    setGameState(prev => ({
+      ...prev,
+      players: updatedPlayers,
+      betting: prev.betting ? {
+        ...prev.betting,
+        results,
+        totalWinnings,
+      } : undefined,
+    }));
+    
+    // 우승자들 전달
+    if (winners.length > 0) {
+      onGameEnd(winners[0]); // 현재는 1명만 전달, 추후 여러 명 처리 필요
+    }
+  }, [gameState.betting, gameState.players, participants, onGameEnd, winnerCount]);
+
+  // processBettingResults를 ref에 할당
+  useEffect(() => {
+    processBettingResultsRef.current = processBettingResults;
+  }, [processBettingResults]);
+
+  // 베팅 마감
+  const closeBetting = useCallback(() => {
+    setGameState(prev => ({
+      ...prev,
+      betting: prev.betting ? {
+        ...prev.betting,
+        isBettingClosed: true,
+      } : undefined,
+    }));
+  }, []);
+
   return {
     gameState,
     startGame,
     spinPlayerSlot,
     spinAllPlayers,
+    placeBet,
+    processBettingResults,
+    closeBetting,
   };
 };

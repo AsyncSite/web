@@ -1,5 +1,6 @@
 import { SymbolType } from './symbol';
 import { ActiveEvent } from './event';
+import { BettingState } from './betting';
 
 // 게임 상태
 export type GameStatus = 'waiting' | 'playing' | 'finished';
@@ -73,6 +74,7 @@ export interface SlotCascadeGameState {
   nextSpinGuaranteedCascades: number; // 다음 스핀 보장 캐스케이드
   eventScoreMultiplier: number; // 이벤트 점수 배율
   specialSymbolOnlyMode: boolean; // 특수 심볼만 모드
+  betting?: BettingState; // 베팅 상태
 }
 
 // 기본 게임 설정

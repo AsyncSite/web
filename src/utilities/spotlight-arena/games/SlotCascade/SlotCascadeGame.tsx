@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { BaseGameProps } from '../../../../components/lab/utilities/spotlight-arena/shared/types/game';
 import { SlotGrid } from './components/SlotGrid';
 import { GameStats } from './components/GameStats';
+import { BettingPanel } from './components/BettingPanel';
+import { BettingResults } from './components/BettingResults';
 import { useSlotCascadeGame } from './hooks/useSlotCascadeGame';
 import { EVENTS } from './types/event';
 import './SlotCascadeGame.css';
@@ -13,22 +15,23 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
   onReplay,
   onNewGame,
 }) => {
-  const { gameState, startGame, spinPlayerSlot, spinAllPlayers } = useSlotCascadeGame({
+  const { gameState, startGame, spinPlayerSlot, spinAllPlayers, placeBet, processBettingResults, closeBetting } = useSlotCascadeGame({
     participants,
+    winnerCount,
     onGameEnd: (winner) => {
       // 우승자 처리는 상위 컴포넌트에서 처리
     },
   });
 
-  // 게임 시작 (3초 후)
+  // 베팅이 닫힌 후 게임 시작 (3초 후)
   useEffect(() => {
-    if (gameState.status === 'waiting') {
+    if (gameState.status === 'waiting' && gameState.betting?.isBettingClosed) {
       const timer = setTimeout(() => {
         startGame();
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [gameState.status, startGame]);
+  }, [gameState.status, gameState.betting?.isBettingClosed, startGame]);
 
 
   const formatTime = (seconds: number): string => {
@@ -56,19 +59,57 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
         </div>
       </div>
 
+      {/* 베팅 패널 */}
+      {gameState.status === 'waiting' && !gameState.betting?.isBettingClosed && gameState.betting && (
+        <BettingPanel
+          players={gameState.players}
+          bettingState={gameState.betting}
+          onPlaceBet={placeBet}
+          onStartGame={closeBetting}
+        />
+      )}
+
       {/* 게임 상태 메시지 */}
-      {gameState.status === 'waiting' && (
+      {gameState.status === 'waiting' && gameState.betting?.isBettingClosed && (
         <div className="game-message">
-          <h3>게임이 곧 시작됩니다!</h3>
-          <p>3초 후에 슬롯머신이 돌아갑니다</p>
+          <h3>베팅이 마감되었습니다!</h3>
+          <p>3초 후에 게임이 시작됩니다</p>
         </div>
       )}
 
       {gameState.status === 'finished' && (
-        <div className="game-message">
-          <h3>게임 종료!</h3>
-          <p>우승자가 결정되었습니다</p>
-        </div>
+        <>
+          <div className="game-message">
+            <h3>게임 종료!</h3>
+            <p>모든 스핀이 소진되었거나 시간이 종료되었습니다</p>
+          </div>
+          
+          {/* 베팅 결과 표시 */}
+          {gameState.betting?.results && (
+            <BettingResults 
+              results={gameState.betting.results}
+              totalWinnings={gameState.betting.totalWinnings}
+              players={gameState.players}
+            />
+          )}
+          
+          {/* 최종 순위 표시 */}
+          <div className="final-rankings">
+            <h3>🏆 최종 순위 (베팅 포함)</h3>
+            <div className="ranking-list">
+              {[...gameState.players]
+                .sort((a, b) => b.score - a.score)
+                .map((player, index) => (
+                  <div key={player.id} className={`ranking-item ${index < winnerCount ? 'winner' : ''}`}>
+                    <span className="rank">{index + 1}위</span>
+                    <span className="name">{player.name}</span>
+                    <span className="final-score">{player.score.toLocaleString()}점</span>
+                    {index < winnerCount && <span className="winner-badge">🎉 당첨</span>}
+                  </div>
+                ))}
+            </div>
+          </div>
+        </>
       )}
 
       {/* 이벤트 알림 */}
@@ -88,6 +129,7 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
       )}
 
       {/* 리더보드와 통계 */}
+      {(gameState.status === 'playing' || gameState.status === 'finished') && (
       <div className="game-info-section">
         <div className="leaderboard">
           <h3>실시간 순위</h3>
@@ -119,6 +161,7 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
           />
         )}
       </div>
+      )}
 
       {/* 광역 스핀 버튼 */}
       {gameState.status === 'playing' && (
@@ -137,6 +180,7 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
       )}
 
       {/* 플레이어 그리드 */}
+      {gameState.status === 'playing' && (
       <div className="players-grid">
         {gameState.players.map((player, index) => (
           <SlotGrid
@@ -157,6 +201,7 @@ export const SlotCascadeGame: React.FC<BaseGameProps> = ({
           />
         ))}
       </div>
+      )}
 
       {/* 컨트롤 버튼 */}
       {gameState.status === 'finished' && (
