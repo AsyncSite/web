@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './SignupPage.css';
 
@@ -20,6 +20,7 @@ interface SignupFormErrors {
 
 function SignupPage(): React.ReactNode {
   const { register, isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<SignupFormData>({
     email: '',
     password: '',
@@ -31,7 +32,7 @@ function SignupPage(): React.ReactNode {
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/users/me" replace />;
   }
 
   const validateForm = (): boolean => {
@@ -95,6 +96,8 @@ function SignupPage(): React.ReactNode {
         password: formData.password,
         name: formData.name
       });
+      // 회원가입 성공 후 명시적으로 navigate
+      navigate('/users/me', { replace: true });
     } catch (error) {
       const message = error instanceof Error ? error.message : '회원가입에 실패했습니다';
       // Check if it's a duplicate email error

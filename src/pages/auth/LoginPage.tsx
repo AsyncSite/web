@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './LoginPage.css';
 
@@ -17,6 +17,7 @@ interface LoginFormErrors {
 function LoginPage(): React.ReactNode {
   const { login, isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     username: '',
     password: ''
@@ -25,7 +26,7 @@ function LoginPage(): React.ReactNode {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get the redirect path from location state
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || '/users/me';
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -69,6 +70,8 @@ function LoginPage(): React.ReactNode {
         username: formData.username,
         password: formData.password
       });
+      // 로그인 성공 후 명시적으로 navigate
+      navigate(from, { replace: true });
     } catch (error) {
       setErrors({
         general: error instanceof Error ? error.message : '로그인에 실패했습니다'

@@ -8,6 +8,7 @@ import { SubContentsTemplate } from '../components/layout';
 const MainPage = lazy(() => import('../pages/MainPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
+const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignupPage />,
+      },
+      {
+        path: 'users/me',
+        element: <ProfilePage />,
       },
       {
         path: '/',

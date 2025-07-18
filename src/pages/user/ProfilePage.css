@@ -1,0 +1,368 @@
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 64px);
+}
+
+/* 프로필 요약 섹션 */
+.profile-summary {
+  margin-bottom: 3rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile-image {
+  flex-shrink: 0;
+}
+
+.profile-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #4F46E5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.profile-info h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.join-info {
+  color: #6B7280;
+  font-size: 0.95rem;
+}
+
+.highlight {
+  color: #4F46E5;
+  font-weight: 600;
+}
+
+/* 스터디 섹션 */
+.study-section {
+  margin-bottom: 3rem;
+}
+
+.study-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.study-group {
+  margin-bottom: 2rem;
+}
+
+.study-group h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.study-cards {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.study-card {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.study-card:hover {
+  border-color: #4F46E5;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.study-card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.study-meta {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0 0 0.25rem 0;
+}
+
+.next-meeting {
+  font-size: 0.875rem;
+  color: #4F46E5;
+  margin: 0;
+}
+
+.leader-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background-color: #4F46E5;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.view-all-link {
+  display: inline-block;
+  color: #4F46E5;
+  text-decoration: none;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.view-all-link:hover {
+  transform: translateX(4px);
+}
+
+/* 탭 네비게이션 */
+.tab-navigation {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #E5E7EB;
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #6B7280;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab-button:hover {
+  color: #4F46E5;
+}
+
+.tab-button.active {
+  color: #4F46E5;
+  border-bottom-color: #4F46E5;
+}
+
+/* 빈 상태 */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #F9FAFB;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.empty-state p {
+  color: #6B7280;
+  margin: 0.5rem 0;
+}
+
+.empty-state p:first-child {
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+.empty-state .suggestion {
+  color: #4F46E5;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.browse-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #4F46E5;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.browse-button:hover {
+  background-color: #4338CA;
+}
+
+/* 설정 섹션 */
+.settings-section {
+  margin-bottom: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.settings-section h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.settings-nav a {
+  color: #4B5563;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+}
+
+.settings-nav a:hover {
+  color: #4F46E5;
+}
+
+/* 게임 섹션 */
+.game-section {
+  margin-bottom: 3rem;
+}
+
+.game-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.game-cards {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.game-card {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.game-card:hover {
+  border-color: #4F46E5;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.game-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.last-played {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+.game-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.stat-value.ranking {
+  color: #4F46E5;
+}
+
+.play-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #4F46E5;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.play-button:hover {
+  background-color: #4338CA;
+}
+
+/* 격려 메시지 */
+.motivation-message {
+  text-align: center;
+  padding: 2rem;
+  color: #6B7280;
+  font-size: 0.95rem;
+}
+
+/* 반응형 디자인 */
+@media (min-width: 640px) {
+  .profile-container {
+    padding: 3rem 2rem;
+  }
+
+  .study-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .settings-nav {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+/* 다크모드 대응 (향후) */
+@media (prefers-color-scheme: dark) {
+  /* 다크모드 스타일은 추후 구현 */
+}
