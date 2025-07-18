@@ -78,6 +78,14 @@ export interface AuthContextType {
   refreshToken: () => Promise<void>;
 }
 
+// API Response wrapper
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+  timestamp: string;
+}
+
 // Error types
 export interface ApiError {
   code: string;

@@ -4,7 +4,8 @@ import {
   RegisterResponse,
   User,
   UpdateProfileRequest,
-  ChangePasswordRequest
+  ChangePasswordRequest,
+  ApiResponse
 } from '../types/auth';
 
 class UserService {
@@ -12,24 +13,24 @@ class UserService {
    * Register a new user
    */
   async register(data: RegisterRequest): Promise<RegisterResponse> {
-    const response = await apiClient.post<RegisterResponse>('/api/users/register', data);
-    return response.data;
+    const response = await apiClient.post<ApiResponse<RegisterResponse>>('/api/users/register', data);
+    return response.data.data;
   }
 
   /**
    * Get current user profile
    */
   async getProfile(): Promise<User> {
-    const response = await apiClient.get<User>('/api/users/me');
-    return response.data;
+    const response = await apiClient.get<ApiResponse<User>>('/api/users/me');
+    return response.data.data;
   }
 
   /**
    * Update user profile
    */
   async updateProfile(data: UpdateProfileRequest): Promise<User> {
-    const response = await apiClient.put<User>('/api/users/me', data);
-    return response.data;
+    const response = await apiClient.put<ApiResponse<User>>('/api/users/me', data);
+    return response.data.data;
   }
 
   /**

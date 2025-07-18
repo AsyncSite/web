@@ -4,7 +4,8 @@ import {
   LoginResponse,
   RefreshTokenRequest,
   TokenResponse,
-  User
+  User,
+  ApiResponse
 } from '../types/auth';
 
 class AuthService {
@@ -12,8 +13,8 @@ class AuthService {
    * Login user with email/username and password
    */
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>('/api/auth/login', credentials);
-    return response.data;
+    const response = await apiClient.post<ApiResponse<LoginResponse>>('/api/auth/login', credentials);
+    return response.data.data;
   }
 
   /**
@@ -36,16 +37,16 @@ class AuthService {
    */
   async refreshToken(refreshToken: string): Promise<TokenResponse> {
     const request: RefreshTokenRequest = { refreshToken };
-    const response = await apiClient.post<TokenResponse>('/api/auth/refresh', request);
-    return response.data;
+    const response = await apiClient.post<ApiResponse<TokenResponse>>('/api/auth/refresh', request);
+    return response.data.data;
   }
 
   /**
    * Validate current token and get user info
    */
   async validateToken(): Promise<User> {
-    const response = await apiClient.get<User>('/api/auth/validate');
-    return response.data;
+    const response = await apiClient.get<ApiResponse<User>>('/api/auth/validate');
+    return response.data.data;
   }
 
   /**
