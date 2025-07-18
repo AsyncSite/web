@@ -96,6 +96,19 @@
   text-shadow: 0 0 8px rgba(195, 232, 141, 0.4);
 }
 
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-name {
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 .login-btn {
   padding: 12px 24px;
   background: linear-gradient(135deg, #c3e88d, #8fd67a);
@@ -107,6 +120,14 @@
   transition: all 0.3s ease;
   box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  border: none;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(195, 232, 141, 0.5);
+  background: linear-gradient(135deg, #d4f19e, #a0e68b);
 }
 
 .recruit-btn:hover {

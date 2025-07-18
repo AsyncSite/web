@@ -6,6 +6,7 @@
     "@react-spring/web": "^10.0.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@types/jest": "^27.0.1",
+    "axios": "^1.10.0",
     "gsap": "^3.12.5",
     "konva": "^9.3.20",
     "lottie-react": "^2.4.1",

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import './Header.css';
 
 const Header: React.FC = () => {
@@ -7,6 +8,8 @@ const Header: React.FC = () => {
   const headerRef = useRef<HTMLElement | null>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     // Header의 높이를 측정
@@ -46,7 +49,13 @@ const Header: React.FC = () => {
     };
   }, []);
 
-
+  const handleAuthClick = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <header
@@ -62,7 +71,14 @@ const Header: React.FC = () => {
             <li><a href="/lab" className={location.pathname === '/lab' ? 'active' : ''}>LAB</a></li>
             <li><a href="/study-plan" className={location.pathname === '/study-plan' ? 'active' : ''}>STUDY PLAN</a></li>
           </ul>
-          <a className="login-btn">로그인/회원가입</a>
+          <div className="auth-section">
+            {isAuthenticated && user && (
+              <span className="user-name">{user.name || user.email}</span>
+            )}
+            <button className="login-btn" onClick={handleAuthClick}>
+              {isAuthenticated ? '로그아웃' : '로그인/회원가입'}
+            </button>
+          </div>
         </nav>
       </div>
     </header>

@@ -1,21 +1,37 @@
 import { lazy } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
+import App from '../App';
 import subRouter from './subRouter';
 import { SubContentsTemplate } from '../components/layout';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
+const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
+const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
 
 const router = createBrowserRouter([
   {
-    index: true,
     path: '/',
-    element: <MainPage />,
-  },
-  {
-    path: '/',
-    Component: SubContentsTemplate,
-    children: subRouter,
+    element: <App />,
+    children: [
+      {
+        index: true,
+        element: <MainPage />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'signup',
+        element: <SignupPage />,
+      },
+      {
+        path: '/',
+        Component: SubContentsTemplate,
+        children: subRouter,
+      },
+    ],
   },
 ]);
 
