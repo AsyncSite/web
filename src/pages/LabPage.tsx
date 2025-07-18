@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ItemBox } from '../components/lab/common';
 import { LabCategory, CategoryId } from '../components/lab/types';
+import { Header } from '../components/layout';
 import './LabPage.css';
 
 // 카테고리별 데이터
@@ -114,6 +115,7 @@ const LabPage = () => {
 
   return (
     <div className="lab-page">
+      <Header />
       <main className="lab-content">
         <div className="lab-header">
           <h1 className="lab-title">🧪 실험실</h1>
