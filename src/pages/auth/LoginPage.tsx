@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './LoginPage.css';
 
@@ -16,6 +16,7 @@ interface LoginFormErrors {
 
 function LoginPage(): React.ReactNode {
   const { login, isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
   const [formData, setFormData] = useState<LoginFormData>({
     username: '',
     password: ''
@@ -23,9 +24,12 @@ function LoginPage(): React.ReactNode {
   const [errors, setErrors] = useState<LoginFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Get the redirect path from location state
+  const from = location.state?.from?.pathname || '/';
+
   // Redirect if already authenticated
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const validateForm = (): boolean => {

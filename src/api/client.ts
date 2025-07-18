@@ -1,11 +1,9 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
-
-// API base URL from environment variable
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+import { env } from '../config/environment';
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: env.apiBaseUrl,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',

@@ -59,11 +59,11 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       const userProfile = await userService.getProfile();
       setUser(userProfile);
       
-      navigate('/');
+      // Don't navigate here - let the LoginPage handle it
     } catch (error) {
       throw new Error(handleApiError(error));
     }
-  }, [navigate]);
+  }, []);
 
   const logout = useCallback(async () => {
     try {
