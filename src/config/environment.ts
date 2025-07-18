@@ -18,16 +18,15 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
                   window.location.hostname === '127.0.0.1';
   
   // Determine API base URL based on environment
-  let apiBaseUrl = process.env.REACT_APP_API_BASE_URL || '';
+  let apiBaseUrl: string;
   
-  if (!apiBaseUrl) {
-    if (isProduction && !isLocal) {
-      // Production (Vercel deployment)
-      apiBaseUrl = 'https://api.asyncsite.com';
-    } else {
-      // Development or local
-      apiBaseUrl = 'http://localhost:8080';
-    }
+  // Force production URL for Vercel deployments
+  if (isProduction && !isLocal) {
+    // Always use production API for Vercel deployments
+    apiBaseUrl = 'https://api.asyncsite.com';
+  } else {
+    // Use environment variable for local development, fallback to localhost
+    apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
   }
   
   return {
