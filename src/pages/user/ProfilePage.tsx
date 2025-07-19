@@ -22,7 +22,7 @@ interface GameActivities {
   teamShuffle?: TeamShuffleActivity;
 }
 
-const ProfilePage: React.FC = () => {
+function ProfilePage(): React.ReactNode {
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState<'study' | 'game'>('study');
 
@@ -75,7 +75,41 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="profile-container">
+    <div className="profile-page">
+      {/* 움직이는 별 배경 */}
+      <div className="auth-stars">
+        {[...Array(50)].map((_, i) => (
+          <div 
+            key={i} 
+            className="auth-star" 
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${3 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* 별똥별 효과 */}
+      <div className="auth-shooting-stars">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="auth-shooting-star"
+            style={{
+              top: `${Math.random() * 80}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${i * 15 + Math.random() * 10}s`,
+              animationDuration: `${4 + Math.random() * 2}s`,
+              transform: `rotate(${-30 - Math.random() * 30}deg)`
+            }}
+          />
+        ))}
+      </div>
+      
+      <div className="profile-container">
       {/* 프로필 요약 섹션 */}
       <section className="profile-summary">
         <div className="profile-header">
@@ -90,36 +124,39 @@ const ProfilePage: React.FC = () => {
           </div>
           <div className="profile-info">
             <h1>{greeting()}, {user.name}님!</h1>
-            <p className="join-info">AsyncSite와 함께한 지 <span className="highlight">{user.joinedDays}일째</span> 🎉</p>
+            <p className="join-info">AsyncSite와 함께한 지 <span className="highlight">{user.joinedDays}일째</span></p>
           </div>
         </div>
       </section>
 
-      {/* 탭 네비게이션 */}
-      <div className="tab-navigation">
-        <button
-          className={`tab-button ${activeTab === 'study' ? 'active' : ''}`}
-          onClick={() => setActiveTab('study')}
-        >
-          📚 스터디
-        </button>
-        <button
-          className={`tab-button ${activeTab === 'game' ? 'active' : ''}`}
-          onClick={() => setActiveTab('game')}
-        >
-          🎮 게임 활동
-        </button>
-      </div>
+      {/* 탭 섹션 컨테이너 */}
+      <div className="tab-section-container">
+        {/* 탭 네비게이션 */}
+        <div className="tab-navigation">
+          <button
+            className={`tab-button ${activeTab === 'study' ? 'active' : ''}`}
+            onClick={() => setActiveTab('study')}
+          >
+            스터디
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'game' ? 'active' : ''}`}
+            onClick={() => setActiveTab('game')}
+          >
+            게임 활동
+          </button>
+        </div>
 
-      {/* 스터디 탭 콘텐츠 */}
-      {activeTab === 'study' && (
-        <>
+        {/* 탭 콘텐츠 영역 */}
+        <div className="tab-content">
+        {/* 스터디 탭 콘텐츠 */}
+        {activeTab === 'study' && (
           <section className="study-section">
-            <h2>📚 나의 스터디</h2>
+            <h2>나의 스터디</h2>
             
             {studies.participating.length === 0 && studies.leading.length === 0 ? (
               <div className="empty-state">
-                <p>아직 참여 중인 스터디가 없어요 🌱</p>
+                <p>아직 참여 중인 스터디가 없어요</p>
                 <p>스터디를 둘러보고 관심있는 주제에 참여해보세요!</p>
                 <p className="suggestion">게임도 함께 즐기면서 공부하는 건 어떨까요?</p>
                 <a href="/study" className="browse-button">스터디 둘러보기</a>
@@ -159,13 +196,12 @@ const ProfilePage: React.FC = () => {
               </>
             )}
           </section>
-        </>
-      )}
+        )}
 
-      {/* 게임 활동 탭 콘텐츠 */}
-      {activeTab === 'game' && (
+        {/* 게임 활동 탭 콘텐츠 */}
+        {activeTab === 'game' && (
         <section className="game-section">
-          <h2>🎮 게임 활동</h2>
+          <h2>게임 활동</h2>
           
           {gameActivities.spotlightArena || gameActivities.teamShuffle ? (
             <div className="game-cards">
@@ -217,17 +253,19 @@ const ProfilePage: React.FC = () => {
             </div>
           ) : (
             <div className="empty-state">
-              <p>아직 플레이한 게임이 없어요 🎯</p>
+              <p>아직 플레이한 게임이 없어요</p>
               <p>스터디 쉬는 시간에 재미있는 게임 한 판 어떠세요?</p>
               <a href="/lab" className="browse-button">게임 둘러보기</a>
             </div>
           )}
         </section>
-      )}
+        )}
+        </div>
+      </div>
 
       {/* 설정 섹션 */}
       <section className="settings-section">
-        <h3>⚙️ 설정</h3>
+        <h3>설정</h3>
         <nav className="settings-nav">
           <a href="/user/me/edit">프로필 수정</a>
           <a href="#" onClick={(e) => { e.preventDefault(); alert('비밀번호 변경 모달 예정'); }}>비밀번호 변경</a>
@@ -237,10 +275,11 @@ const ProfilePage: React.FC = () => {
 
       {/* 하단 격려 메시지 */}
       <div className="motivation-message">
-        <p>오늘도 열공하세요! 💪</p>
+        <p>오늘도 열공하세요!</p>
       </div>
     </div>
+    </div>
   );
-};
+}
 
 export default ProfilePage;
