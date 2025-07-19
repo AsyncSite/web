@@ -90,62 +90,109 @@ function LoginPage(): React.ReactNode {
   }
 
   return (
-    <div className="login-page">
-      <div className="login-container">
+    <div className="login-page auth-page">
+      {/* 움직이는 별 배경 */}
+      <div className="auth-stars">
+        {[...Array(50)].map((_, i) => (
+          <div 
+            key={i} 
+            className="auth-star" 
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${3 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* 별똥별 효과 */}
+      <div className="auth-shooting-stars">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="auth-shooting-star"
+            style={{
+              top: `${Math.random() * 80}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${i * 15 + Math.random() * 10}s`,
+              animationDuration: `${4 + Math.random() * 2}s`,
+              transform: `rotate(${-30 - Math.random() * 30}deg)`
+            }}
+          />
+        ))}
+      </div>
+      
+      <div className="login-container auth-container auth-fade-in">
+        <div className="login-brand">
+          <div className="login-logo">AS</div>
+        </div>
+        
         <div className="login-header">
           <h1>로그인</h1>
           <p>AsyncSite에 오신 것을 환영합니다</p>
         </div>
 
         {errors.general && (
-          <div className="error-message general-error">
+          <div className="error-message general-error auth-error-shake">
             {errors.general}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="username">이메일 또는 사용자명</label>
+          <div className="form-group auth-form-group">
+            <label htmlFor="username" className="auth-label">
+              이메일 또는 사용자명
+            </label>
             <input
               type="text"
               id="username"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className={errors.username ? 'error' : ''}
+              className={`auth-input ${errors.username ? 'error' : ''}`}
               placeholder="example@email.com"
               autoComplete="username"
               disabled={isSubmitting}
             />
             {errors.username && (
-              <span className="error-message">{errors.username}</span>
+              <span className="error-message auth-error-message">
+                {errors.username}
+              </span>
             )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">비밀번호</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={errors.password ? 'error' : ''}
-              placeholder="비밀번호를 입력하세요"
-              autoComplete="current-password"
-              disabled={isSubmitting}
-            />
+          <div className="form-group auth-form-group">
+            <label htmlFor="password" className="auth-label">
+              비밀번호
+            </label>
+            <div className="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={`auth-input ${errors.password ? 'error' : ''}`}
+                placeholder="비밀번호를 입력하세요"
+                autoComplete="current-password"
+                disabled={isSubmitting}
+              />
+            </div>
             {errors.password && (
-              <span className="error-message">{errors.password}</span>
+              <span className="error-message auth-error-message">
+                {errors.password}
+              </span>
             )}
           </div>
 
           <button
             type="submit"
-            className="login-button"
+            className={`login-button auth-button auth-button-primary ${isSubmitting ? 'loading' : ''}`}
             disabled={isSubmitting}
           >
-            {isSubmitting ? '로그인 중...' : '로그인'}
+            {isSubmitting ? '' : '로그인'}
           </button>
         </form>
 
@@ -156,6 +203,11 @@ function LoginPage(): React.ReactNode {
               회원가입
             </Link>
           </p>
+          <div className="additional-links">
+            <a href="#" onClick={(e) => { e.preventDefault(); alert('비밀번호 찾기 기능은 준비 중입니다.'); }}>
+              비밀번호를 잊으셨나요?
+            </a>
+          </div>
         </div>
       </div>
     </div>
