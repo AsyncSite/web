@@ -109,6 +109,26 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+.profile-link {
+  padding: 8px 16px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 20px;
+  background: rgba(195, 232, 141, 0.05);
+}
+
+.profile-link:hover {
+  color: #C3E88D;
+  border-color: #C3E88D;
+  background: rgba(195, 232, 141, 0.1);
+  box-shadow: 0 0 10px rgba(195, 232, 141, 0.3);
+}
+
 .login-btn {
   padding: 12px 24px;
   background: linear-gradient(135deg, #c3e88d, #8fd67a);
@@ -133,6 +153,44 @@
 .recruit-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 20px rgba(195, 232, 141, 0.5);
+}
+
+/* 투명 헤더 스타일 */
+.header.transparent {
+  position: fixed;
+  top: 0;
+  bottom: auto;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  z-index: 1000;
+}
+
+.header.transparent.scrolled {
+  background: rgba(5, 6, 10, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(195, 232, 141, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* 투명 헤더에서 텍스트 가독성 향상 */
+.header.transparent .logo {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(195, 232, 141, 0.5);
+}
+
+.header.transparent .nav-menu a {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.header.transparent .user-name {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.header.transparent .profile-link {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-color: rgba(195, 232, 141, 0.5);
 }
 
 /* 반응형 */

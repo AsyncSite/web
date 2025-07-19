@@ -148,13 +148,13 @@
 
 .auth-shooting-star {
   position: absolute;
-  width: 150px;
-  height: 2px;
+  width: 100px;
+  height: 1px;
   background: linear-gradient(90deg, 
     transparent 0%, 
-    rgba(195, 232, 141, 0.1) 30%,
-    rgba(195, 232, 141, 0.4) 50%,
-    rgba(195, 232, 141, 0.1) 70%,
+    rgba(195, 232, 141, 0.05) 30%,
+    rgba(195, 232, 141, 0.2) 50%,
+    rgba(195, 232, 141, 0.05) 70%,
     transparent 100%
   );
   opacity: 0;
@@ -167,36 +167,24 @@
   position: absolute;
   top: 50%;
   right: 0;
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   background: var(--auth-primary-green);
   border-radius: 50%;
   box-shadow: 
-    0 0 6px rgba(195, 232, 141, 0.8),
-    0 0 12px rgba(195, 232, 141, 0.4);
+    0 0 4px rgba(195, 232, 141, 0.4),
+    0 0 8px rgba(195, 232, 141, 0.2);
   transform: translateY(-50%);
-  opacity: 1;
+  opacity: 0.7;
 }
 
 /* 다양한 방향의 별똥별 애니메이션 */
 .auth-shooting-star:nth-child(1) {
-  animation: authShootingStarDiagonal1 6s linear infinite;
+  animation: authShootingStarDiagonal1 12s linear infinite;
 }
 
 .auth-shooting-star:nth-child(2) {
-  animation: authShootingStarDiagonal2 8s linear infinite;
-}
-
-.auth-shooting-star:nth-child(3) {
-  animation: authShootingStarVertical 5s linear infinite;
-}
-
-.auth-shooting-star:nth-child(4) {
-  animation: authShootingStarDiagonal3 7s linear infinite;
-}
-
-.auth-shooting-star:nth-child(5) {
-  animation: authShootingStarHorizontal 4s linear infinite;
+  animation: authShootingStarDiagonal2 15s linear infinite;
 }
 
 /* 대각선 방향 1 (좌상단 → 우하단) */
@@ -206,10 +194,10 @@
     opacity: 0;
   }
   5% {
-    opacity: 1;
+    opacity: 0.6;
   }
   95% {
-    opacity: 1;
+    opacity: 0.6;
   }
   100% {
     transform: translate(calc(100vw + 100px), calc(100vh + 100px)) rotate(45deg);
@@ -224,10 +212,10 @@
     opacity: 0;
   }
   5% {
-    opacity: 0.9;
+    opacity: 0.5;
   }
   95% {
-    opacity: 0.9;
+    opacity: 0.5;
   }
   100% {
     transform: translate(-100px, calc(100vh + 100px)) rotate(135deg);
@@ -502,6 +490,51 @@
   align-items: center;
   gap: 0.25rem;
   animation: authSlideDown var(--auth-transition-base);
+}
+
+/* 뒤로가기 버튼 */
+.auth-back-button {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  color: var(--auth-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--auth-transition-base);
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.auth-back-button:hover {
+  background: rgba(195, 232, 141, 0.1);
+  border-color: var(--auth-primary-green);
+  color: var(--auth-primary-green);
+  transform: translateX(-2px);
+  box-shadow: 
+    0 0 20px rgba(195, 232, 141, 0.3),
+    0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.auth-back-button:active {
+  transform: translateX(-1px);
+}
+
+.auth-back-button svg {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--auth-transition-base);
+}
+
+.auth-back-button:hover svg {
+  transform: translateX(-2px);
 }
 
 /* 반응형 디자인 */

@@ -91,6 +91,17 @@ function LoginPage(): React.ReactNode {
 
   return (
     <div className="login-page auth-page">
+      {/* 뒤로가기 버튼 */}
+      <button 
+        className="auth-back-button" 
+        onClick={() => navigate(-1)}
+        aria-label="뒤로가기"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
       {/* 움직이는 별 배경 */}
       <div className="auth-stars">
         {[...Array(50)].map((_, i) => (
@@ -109,12 +120,12 @@ function LoginPage(): React.ReactNode {
       
       {/* 별똥별 효과 */}
       <div className="auth-shooting-stars">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(2)].map((_, i) => (
           <div
             key={i}
             className="auth-shooting-star"
             style={{
-              animationDelay: `${i * 4 + Math.random() * 8}s`
+              animationDelay: `${i * 15 + Math.random() * 10}s`
             }}
           />
         ))}

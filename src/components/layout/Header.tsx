@@ -3,8 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import './Header.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  transparent?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
   const [isFixedTop, setIsFixedTop] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const location = useLocation();
@@ -17,7 +22,17 @@ const Header: React.FC = () => {
       setHeaderHeight(headerRef.current.offsetHeight);
     }
 
-    // Intro 섹션 관찰
+    // 투명 헤더인 경우 스크롤 감지
+    if (transparent) {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 50);
+      };
+      
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+
+    // 기존 Intro 섹션 관찰 로직
     const introSection = document.getElementById('intro');
     if (!introSection) {
       return;
@@ -47,20 +62,23 @@ const Header: React.FC = () => {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [transparent]);
 
   const handleAuthClick = () => {
-    if (isAuthenticated) {
-      logout();
-    } else {
-      navigate('/login');
-    }
+    navigate('/login');
   };
+
+  const headerClasses = [
+    'header',
+    isFixedTop && 'fixed-top',
+    transparent && 'transparent',
+    transparent && isScrolled && 'scrolled'
+  ].filter(Boolean).join(' ');
 
   return (
     <header
       ref={headerRef}
-      className={`header ${isFixedTop ? 'fixed-top' : ''}`}
+      className={headerClasses}
     >
       <div className="container">
         <nav className="nav">
@@ -75,9 +93,13 @@ const Header: React.FC = () => {
             {isAuthenticated && user && (
               <span className="user-name">{user.name || user.email}</span>
             )}
-            <button className="login-btn" onClick={handleAuthClick}>
-              {isAuthenticated ? '로그아웃' : '로그인/회원가입'}
-            </button>
+            {isAuthenticated ? (
+              <a href="/users/me" className="profile-link">프로필</a>
+            ) : (
+              <button className="login-btn" onClick={handleAuthClick}>
+                로그인/회원가입
+              </button>
+            )}
           </div>
         </nav>
       </div>

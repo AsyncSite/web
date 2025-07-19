@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import Header from '../../components/layout/Header';
 import './ProfileEditPage.css';
 
 interface ProfileFormData {
@@ -90,6 +91,9 @@ function ProfileEditPage(): React.ReactNode {
 
   return (
     <div className="profile-edit-page auth-page">
+      {/* 투명 헤더 */}
+      <Header transparent />
+      
       {/* 움직이는 별 배경 */}
       <div className="auth-stars">
         {[...Array(50)].map((_, i) => (
@@ -108,12 +112,12 @@ function ProfileEditPage(): React.ReactNode {
       
       {/* 별똥별 효과 */}
       <div className="auth-shooting-stars">
-        {[...Array(5)].map((_, i) => (
+        {[...Array(2)].map((_, i) => (
           <div
             key={i}
             className="auth-shooting-star"
             style={{
-              animationDelay: `${i * 4 + Math.random() * 8}s`
+              animationDelay: `${i * 15 + Math.random() * 10}s`
             }}
           />
         ))}
