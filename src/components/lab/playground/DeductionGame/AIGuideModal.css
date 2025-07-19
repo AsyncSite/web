@@ -1,0 +1,278 @@
+.ai-guide-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.ai-guide-modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.ai-guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.ai-guide-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-button:hover {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.ai-guide-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0 20px;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 12px 24px;
+  font-size: 15px;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tab-button:hover {
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.tab-button.active {
+  color: #4A90E2;
+  font-weight: 600;
+  border-bottom-color: #4A90E2;
+}
+
+.ai-guide-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.guide-section h3 {
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.guide-section h3:first-child {
+  margin-top: 0;
+}
+
+.code-block {
+  background-color: #f6f8fa;
+  border: 1px solid #d1d5da;
+  border-radius: 8px;
+  padding: 20px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 16px 0;
+  color: #24292e;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+/* 다크 모드 코드 블록 */
+@media (prefers-color-scheme: dark) {
+  .code-block {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+  }
+}
+
+/* 코드 블록 상단 테두리 */
+.code-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0969da 0%, #0860ca 100%);
+  border-radius: 8px 8px 0 0;
+}
+
+/* 코드 내 주석 스타일 */
+.code-comment {
+  color: #6a737d;
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+  .code-comment {
+    color: #8b949e;
+  }
+}
+
+.guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.guide-list li {
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+  color: #555;
+  line-height: 1.6;
+}
+
+.guide-list li::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+  color: #4A90E2;
+  font-weight: bold;
+}
+
+.guide-list code {
+  background-color: #eff2f5;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  color: #0969da;
+  border: 1px solid #d1d5da;
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  .guide-list code {
+    background-color: #30363d;
+    color: #58a6ff;
+    border-color: #30363d;
+  }
+}
+
+.strategy-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.strategy-level {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+}
+
+.level-badge {
+  font-size: 20px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.level-badge.bronze {
+  color: #CD7F32;
+}
+
+.level-badge.silver {
+  color: #C0C0C0;
+}
+
+.level-badge.gold {
+  color: #FFD700;
+}
+
+.level-badge.platinum {
+  color: #E5E4E2;
+}
+
+.strategy-level p {
+  margin: 0;
+  color: #555;
+  flex: 1;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .ai-guide-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .ai-guide-tabs {
+    padding: 0 12px;
+  }
+
+  .tab-button {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .ai-guide-content {
+    padding: 16px;
+  }
+
+  .code-block {
+    font-size: 12px;
+    padding: 12px;
+  }
+}

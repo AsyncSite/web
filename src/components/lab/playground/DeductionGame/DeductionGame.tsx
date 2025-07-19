@@ -5,7 +5,7 @@ import { PlayerFactory } from './ai/PlayerFactory';
 import { IPlayer } from './ai/players/BasePlayer';
 import { HumanPlayer } from './ai/players/HumanPlayer';
 import { PlayerInfo, PlayerType } from './ai/types/PlayerTypes';
-// import AIGuidePanel from './AIGuidePanel';
+import AIGuideModal from './AIGuideModal';
 
 type GameScreen =
   | 'mode-selection'
@@ -1051,6 +1051,12 @@ const DeductionGame: React.FC = () => {
                 </div>
               </div>
               <div className="editor-actions">
+                <button
+                  className="btn btn-small btn-guide"
+                  onClick={() => setIsGuideModalOpen(true)}
+                >
+                  📖 가이드 보기
+                </button>
                 <button
                   className="btn btn-small"
                   onClick={() => {
@@ -2269,6 +2275,7 @@ function makeGuess(gameState) {
 
         {renderCodeEditorModal()}
         {renderGuideModal()}
+        <AIGuideModal isOpen={isGuideModalOpen} onClose={() => setIsGuideModalOpen(false)} />
       </div>
     </div>
   );

@@ -1193,6 +1193,20 @@
   min-width: 40px;
 }
 
+.btn-guide {
+  background: #4A90E2;
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  color: white;
+  border: 1px solid #357ABD;
+}
+
+.btn-guide:hover {
+  background: #357ABD;
+  background: linear-gradient(135deg, #357ABD 0%, #2968A3 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+}
+
 .difficulty-indicator {
   text-align: center;
   margin-top: 30px;
