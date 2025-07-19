@@ -1,5 +1,5 @@
 /* CSS 변수 정의 - 테마 시스템 */
-:root {
+.deduction-game {
   /* 폰트 패밀리 */
   --font-primary: 'Orbitron', sans-serif; /* 메인 제목, 게임 헤더 */
   --font-secondary: 'Russo One', sans-serif; /* 부제목, 강조 */
@@ -126,7 +126,7 @@
 
 .deduction-game {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(
     135deg,
     var(--primary-gradient-start) 0%,
@@ -137,15 +137,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: fixed;
+  justify-content: flex-start;
+  position: relative;
   top: 0;
   left: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   transition: background var(--transition-color);
 }
 
-.game-header {
+.deduction-game .game-header {
   text-align: center;
   width: 100%;
   margin-bottom: 40px;
@@ -155,7 +156,7 @@
   align-items: center;
 }
 
-.game-header h1 {
+.deduction-game .game-header h1 {
   font-size: 2.8rem;
   font-weight: 700;
   letter-spacing: 2px;
@@ -166,7 +167,7 @@
   width: 100%;
 }
 
-.game-header p {
+.deduction-game .game-header p {
   font-size: 1.2rem;
   font-weight: 300;
   color: var(--text-secondary);
@@ -175,20 +176,20 @@
   margin: 0;
 }
 
-.game-content {
+.deduction-game .game-content {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 2vh 2vw;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
 }
 
-.game-wrapper {
+.deduction-game .game-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -196,7 +197,7 @@
   max-width: 1400px;
 }
 
-.game-screen {
+.deduction-game .game-screen {
   background: var(--surface-primary);
   border-radius: 20px;
   padding: 40px;
@@ -206,10 +207,10 @@
   width: 90%;
   max-width: 1400px;
   min-height: 600px;
-  max-height: 75vh;
+  max-height: none;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   position: relative; /* For absolute positioning of back-button-container */
   animation: screenTransition 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -225,18 +226,18 @@
   }
 }
 
-.back-button-container {
+.deduction-game .back-button-container {
   position: absolute;
   top: 20px;
   left: 20px;
   z-index: 10;
 }
 
-.form-section {
+.deduction-game .form-section {
   margin-bottom: 30px;
 }
 
-.form-section h3 {
+.deduction-game .form-section h3 {
   font-family: var(--font-secondary);
   font-size: 1.3rem;
   margin-bottom: 15px;
@@ -244,7 +245,7 @@
   letter-spacing: 0.5px;
 }
 
-.input-field {
+.deduction-game .input-field {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid var(--border-secondary);
@@ -255,23 +256,23 @@
   transition: all 0.3s ease;
 }
 
-.input-field::placeholder {
+.deduction-game .input-field::placeholder {
   color: var(--text-tertiary);
 }
 
-.input-field:focus {
+.deduction-game .input-field:focus {
   outline: none;
   border-color: var(--border-active);
   background: var(--surface-secondary);
 }
 
-.radio-group {
+.deduction-game .radio-group {
   display: flex;
   gap: 20px;
   margin-top: 10px;
 }
 
-.radio-option {
+.deduction-game .radio-option {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -281,21 +282,21 @@
   transition: background 0.3s ease;
 }
 
-.radio-option:hover {
+.deduction-game .radio-option:hover {
   background: var(--surface-primary);
 }
 
-.radio-option input[type='radio'] {
+.deduction-game .radio-option input[type='radio'] {
   margin: 0;
   cursor: pointer;
 }
 
-.radio-option label {
+.deduction-game .radio-option label {
   cursor: pointer;
   font-size: 1rem;
 }
 
-.multi-options {
+.deduction-game .multi-options {
   margin-top: 20px;
   padding: 20px;
   background: var(--surface-primary);
@@ -303,23 +304,23 @@
   border: 1px solid var(--border-primary);
 }
 
-.multi-option-row {
+.deduction-game .multi-option-row {
   display: flex;
   gap: 15px;
   margin-bottom: 15px;
   align-items: center;
 }
 
-.multi-option-row:last-child {
+.deduction-game .multi-option-row:last-child {
   margin-bottom: 0;
 }
 
-.btn-group {
+.deduction-game .btn-group {
   display: flex;
   gap: 10px;
 }
 
-.btn {
+.deduction-game .btn {
   padding: 8px 16px;
   border: 1px solid var(--border-secondary);
   border-radius: 8px;
@@ -331,16 +332,16 @@
   transition: all 0.3s ease;
 }
 
-.btn:hover {
+.deduction-game .btn:hover {
   background: var(--surface-hover);
 }
 
-.btn.active {
+.deduction-game .btn.active {
   background: var(--surface-hover);
   border-color: var(--border-active);
 }
 
-.start-button {
+.deduction-game .start-button {
   width: 100%;
   padding: 15px;
   font-size: 1.2rem;
@@ -358,29 +359,29 @@
   margin-top: 30px;
 }
 
-.start-button:hover:not(:disabled) {
+.deduction-game .start-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
 }
 
-.start-button:disabled {
+.deduction-game .start-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.mode-selection {
+.deduction-game .mode-selection {
   text-align: center;
   position: relative; /* For positioning the guide link */
   overflow: visible; /* Allow tooltip to show outside the box */
 }
 
-.guide-link-container {
+.deduction-game .guide-link-container {
   position: absolute;
   top: 20px;
   right: 20px;
 }
 
-.guide-link {
+.deduction-game .guide-link {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -398,12 +399,12 @@
   cursor: pointer;
 }
 
-.guide-link:hover {
+.deduction-game .guide-link:hover {
   background-color: #0056b3;
   transform: scale(1.1);
 }
 
-.guide-link span {
+.deduction-game .guide-link span {
   visibility: hidden;
   width: 120px;
   background-color: #555;
@@ -421,19 +422,19 @@
   font-size: 14px;
 }
 
-.guide-link:hover span {
+.deduction-game .guide-link:hover span {
   visibility: visible;
   opacity: 1;
 }
 
-.mode-cards {
+.deduction-game .mode-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   margin-top: 40px;
 }
 
-.mode-card {
+.deduction-game .mode-card {
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
@@ -443,13 +444,13 @@
   text-align: center;
 }
 
-.mode-card:hover {
+.deduction-game .mode-card:hover {
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-5px);
 }
 
-.mode-card h3 {
+.deduction-game .mode-card h3 {
   font-family: var(--font-secondary);
   font-size: 1.8rem;
   margin-bottom: 15px;
@@ -458,7 +459,7 @@
   letter-spacing: 1px;
 }
 
-.mode-card p {
+.deduction-game .mode-card p {
   font-family: var(--font-body);
   font-size: 1.2rem;
   font-weight: 400;
@@ -466,7 +467,7 @@
   line-height: 1.6;
 }
 
-.players-grid {
+.deduction-game .players-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
@@ -476,28 +477,28 @@
   margin-right: auto;
 }
 
-.player-setup {
+.deduction-game .player-setup {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   padding: 25px;
 }
 
-.player-setup h4 {
+.deduction-game .player-setup h4 {
   font-size: 1.2rem;
   margin-bottom: 15px;
   color: #fff;
   text-align: center;
 }
 
-.setup-actions {
+.deduction-game .setup-actions {
   display: flex;
   gap: 15px;
   margin-top: 30px;
   justify-content: center;
 }
 
-.btn-large {
+.deduction-game .btn-large {
   padding: 18px 40px;
   font-family: var(--font-secondary);
   font-size: 1.2rem;
@@ -510,29 +511,29 @@
   transition: all 0.3s ease;
 }
 
-.btn-secondary {
+.deduction-game .btn-secondary {
   background: var(--surface-hover);
   color: var(--text-primary);
   border: 1px solid var(--border-secondary);
 }
 
-.btn-secondary:hover {
+.deduction-game .btn-secondary:hover {
   background: var(--surface-secondary);
   border-color: var(--border-active);
 }
 
-.btn-primary {
+.deduction-game .btn-primary {
   background: var(--btn-primary-bg);
   color: white;
   border: none;
 }
 
-.btn-primary {
+.deduction-game .btn-primary {
   position: relative;
   overflow: hidden;
 }
 
-.btn-primary::before {
+.deduction-game .btn-primary::before {
   content: '';
   position: absolute;
   top: 0;
@@ -543,17 +544,17 @@
   transition: left 0.5s;
 }
 
-.btn-primary:hover::before {
+.deduction-game .btn-primary:hover::before {
   left: 100%;
 }
 
-.btn-primary:hover {
+.deduction-game .btn-primary:hover {
   background: var(--btn-primary-bg-hover);
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 20px var(--shadow-strong);
 }
 
-.btn-primary:active {
+.deduction-game .btn-primary:active {
   transform: translateY(0) scale(0.98);
   transition: transform 0.1s;
 }
@@ -1143,14 +1144,14 @@
   border: 2px solid #e0e0e0;
 }
 
-.config-grid {
+.deduction-game .config-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
   margin-top: 30px;
 }
 
-.config-item {
+.deduction-game .config-item {
   background: var(--surface-primary);
   border: 1px solid var(--border-primary);
   border-radius: 15px;
@@ -1158,27 +1159,27 @@
   text-align: center;
 }
 
-.config-item h4 {
+.deduction-game .config-item h4 {
   font-family: var(--font-secondary);
   font-size: 1.2rem;
   margin-bottom: 8px;
   color: var(--text-primary);
 }
 
-.config-item p {
+.deduction-game .config-item p {
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin-bottom: 20px;
 }
 
-.number-input-group {
+.deduction-game .number-input-group {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 15px;
 }
 
-.number-display {
+.deduction-game .number-display {
   font-family: var(--font-primary);
   font-size: 1.1rem;
   font-weight: 700;
@@ -1187,27 +1188,27 @@
   letter-spacing: 0.5px;
 }
 
-.btn-small {
+.deduction-game .btn-small {
   padding: 8px 15px;
   font-size: 1rem;
   min-width: 40px;
 }
 
-.btn-guide {
+.deduction-game .btn-guide {
   background: #4A90E2;
   background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
   color: white;
   border: 1px solid #357ABD;
 }
 
-.btn-guide:hover {
+.deduction-game .btn-guide:hover {
   background: #357ABD;
   background: linear-gradient(135deg, #357ABD 0%, #2968A3 100%);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
 }
 
-.difficulty-indicator {
+.deduction-game .difficulty-indicator {
   text-align: center;
   margin-top: 30px;
   padding: 15px;
@@ -1217,15 +1218,15 @@
   border: 1px solid var(--border-primary);
 }
 
-.difficulty-indicator strong {
+.deduction-game .difficulty-indicator strong {
   color: #ff6b6b;
 }
 
-.preparation-progress {
+.deduction-game .preparation-progress {
   margin-top: 40px;
 }
 
-.progress-steps {
+.deduction-game .progress-steps {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1236,7 +1237,7 @@
   margin-right: auto;
 }
 
-.progress-step {
+.deduction-game .progress-step {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -1247,18 +1248,18 @@
   justify-content: flex-start;
 }
 
-.progress-step.completed {
+.deduction-game .progress-step.completed {
   background: rgba(76, 175, 80, 0.2);
   border: 1px solid rgba(76, 175, 80, 0.4);
 }
 
-.progress-step.active {
+.deduction-game .progress-step.active {
   background: rgba(255, 193, 7, 0.2);
   border: 1px solid rgba(255, 193, 7, 0.4);
   animation: pulse 2s infinite;
 }
 
-.progress-step.pending {
+.deduction-game .progress-step.pending {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   opacity: 0.6;
@@ -1274,7 +1275,7 @@
   }
 }
 
-.step-circle {
+.deduction-game .step-circle {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -1289,7 +1290,7 @@
   position: relative;
 }
 
-.step-number {
+.deduction-game .step-number {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1298,7 +1299,7 @@
   line-height: 1;
 }
 
-.success-icon-overlay {
+.deduction-game .success-icon-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -1310,7 +1311,7 @@
   z-index: 2;
 }
 
-.success-icon-overlay::before {
+.deduction-game .success-icon-overlay::before {
   content: '✓';
   position: absolute;
   top: 50%;
@@ -1336,22 +1337,22 @@
   }
 }
 
-.progress-step.completed .step-circle {
+.deduction-game .progress-step.completed .step-circle {
   background: #4caf50;
   color: white;
 }
 
-.progress-step.completed .step-number {
+.deduction-game .progress-step.completed .step-number {
   opacity: 0.3;
   font-size: 0.9rem;
 }
 
-.progress-step.active .step-circle {
+.deduction-game .progress-step.active .step-circle {
   background: var(--btn-primary-bg);
   color: white;
 }
 
-.progress-step.active .step-circle .loading-spinner {
+.deduction-game .progress-step.active .step-circle .loading-spinner {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1361,25 +1362,25 @@
   margin: 0;
 }
 
-.progress-step.active .step-circle .loading-spinner::after {
+.deduction-game .progress-step.active .step-circle .loading-spinner::after {
   width: 16px;
   height: 16px;
   border-width: 2px;
 }
 
-.progress-step.pending .step-circle {
+.deduction-game .progress-step.pending .step-circle {
   background: var(--surface-primary);
   color: var(--text-tertiary);
 }
 
-.step-content h4 {
+.deduction-game .step-content h4 {
   font-family: var(--font-secondary);
   font-size: 1.3rem;
   margin-bottom: 5px;
   color: var(--text-primary);
 }
 
-.step-content p {
+.deduction-game .step-content p {
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 400;
@@ -1387,7 +1388,7 @@
   margin: 0;
 }
 
-.progress-bar-container {
+.deduction-game .progress-bar-container {
   width: 100%;
   height: 8px;
   background: rgba(255, 255, 255, 0.1);
@@ -1395,45 +1396,45 @@
   overflow: hidden;
 }
 
-.progress-bar-fill {
+.deduction-game .progress-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, #4caf50, #8bc34a);
   transition: width 0.5s ease;
 }
 
-.game-summary {
+.deduction-game .game-summary {
   margin-top: 30px;
 }
 
-.summary-grid {
+.deduction-game .summary-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 25px;
   margin-bottom: 40px;
 }
 
-.summary-item {
+.deduction-game .summary-item {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   padding: 25px;
 }
 
-.summary-item h4 {
+.deduction-game .summary-item h4 {
   font-size: 1.3rem;
   margin-bottom: 15px;
   color: var(--text-primary);
   text-align: center;
 }
 
-.player-chips {
+.deduction-game .player-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
 
-.player-chip {
+.deduction-game .player-chip {
   background: var(--surface-secondary);
   border: 1px solid var(--border-secondary);
   padding: 8px 15px;
@@ -1442,18 +1443,18 @@
   color: var(--text-primary);
 }
 
-.game-info-grid {
+.deduction-game .game-info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
   text-align: center;
 }
 
-.hint-preview {
+.deduction-game .hint-preview {
   text-align: center;
 }
 
-.hint-list {
+.deduction-game .hint-list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -1461,7 +1462,7 @@
   margin-bottom: 15px;
 }
 
-.hint-chip {
+.deduction-game .hint-chip {
   background: var(--btn-danger-bg);
   border: 1px solid var(--btn-danger-bg);
   padding: 6px 12px;
@@ -1471,39 +1472,39 @@
   opacity: 0.6;
 }
 
-.hint-description {
+.deduction-game .hint-description {
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin: 0;
 }
 
-.game-start-section {
+.deduction-game .game-start-section {
   text-align: center;
   margin-top: 30px;
 }
 
-.countdown-info h3 {
+.deduction-game .countdown-info h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
   color: var(--btn-primary-bg);
 }
 
-.countdown-info p {
+.deduction-game .countdown-info p {
   font-size: 1.1rem;
   color: var(--text-secondary);
   margin-bottom: 25px;
 }
 
 /* 게임플레이 화면 */
-.game-playing {
+.deduction-game .game-playing {
   padding: 40px;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.game-header-info {
+.deduction-game .game-header-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1515,13 +1516,13 @@
   border: 1px solid var(--border-primary);
 }
 
-.header-controls {
+.deduction-game .header-controls {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.turn-info h3 {
+.deduction-game .turn-info h3 {
   font-family: var(--font-secondary);
   font-size: 1.8rem;
   margin-bottom: 8px;
@@ -1530,7 +1531,7 @@
   letter-spacing: 1px;
 }
 
-.turn-info p {
+.deduction-game .turn-info p {
   font-family: var(--font-body);
   font-size: 1.3rem;
   font-weight: 500;
@@ -1538,11 +1539,11 @@
   margin: 0;
 }
 
-.timer {
+.deduction-game .timer {
   text-align: right;
 }
 
-.time-display {
+.deduction-game .time-display {
   font-size: 2.6rem;
   font-weight: 900;
   color: #ffc107;
@@ -1560,7 +1561,7 @@
   position: relative;
 }
 
-.time-display.warning {
+.deduction-game .time-display.warning {
   animation:
     blink 1s infinite,
     pulse-red 1.5s infinite;
@@ -1595,7 +1596,7 @@
   }
 }
 
-.timer-bar {
+.deduction-game .timer-bar {
   width: 150px;
   height: 12px;
   background: rgba(0, 0, 0, 0.4);
@@ -1605,22 +1606,11 @@
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.timer-fill {
+.deduction-game .timer-fill {
   height: 100%;
   background: linear-gradient(
     90deg,
-    #4caf50 0%,
-    #8bc34a 30%,
-    #ffc107 60%,
-    #ff9800 80%,
-    #ff5722 100%
-  );
-  transition: width 1s linear;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
-  position: relative;
-}
-
-.timer-fill::after {
+.deduction-game #4caf50 0%, .deduction-game #8bc34a 30%, .deduction-game #ffc107 60%, .deduction-game #ff9800 80%, .deduction-game #ff5722 100%  );  transition: width 1s linear;  box-shadow: 0 0 10px rgba(76, .deduction-game 175, .deduction-game 80, .deduction-game 0.5);  position: relative;}.timer-fill::after {
   content: '';
   position: absolute;
   top: 0;
@@ -1635,36 +1625,37 @@
   );
 }
 
-.game-layout {
+.deduction-game .game-layout {
   display: grid;
   grid-template-columns: 3fr 1.2fr;
   gap: 30px;
   align-items: start;
   width: 100%;
-  height: calc(100% - 120px);
+  min-height: calc(100% - 120px);
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
 }
 
-.game-main {
+.deduction-game .game-main {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
   padding: 30px;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
 }
 
-.keyword-selection {
+.deduction-game .keyword-selection {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+  overflow: visible;
 }
 
-.keyword-selection h4 {
+.deduction-game .keyword-selection h4 {
   font-family: var(--font-secondary);
   font-size: 1.5rem;
   margin-bottom: 25px;
@@ -1675,7 +1666,7 @@
   letter-spacing: 1px;
 }
 
-.keywords-grid {
+.deduction-game .keywords-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 15px;
@@ -1687,7 +1678,7 @@
   min-height: 0;
 }
 
-.keyword-btn {
+.deduction-game .keyword-btn {
   position: relative;
   padding: 15px 10px;
   border: 2px solid var(--border-secondary);
@@ -1707,12 +1698,12 @@
   word-break: break-word;
 }
 
-.keyword-btn {
+.deduction-game .keyword-btn {
   position: relative;
   overflow: hidden;
 }
 
-.keyword-btn::after {
+.deduction-game .keyword-btn::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -1727,19 +1718,19 @@
     height 0.6s;
 }
 
-.keyword-btn:active::after {
+.deduction-game .keyword-btn:active::after {
   width: 300px;
   height: 300px;
 }
 
-.keyword-btn:hover:not(:disabled) {
+.deduction-game .keyword-btn:hover:not(:disabled) {
   background: var(--surface-hover);
   transform: translateY(-3px) scale(1.02);
   border-color: var(--border-active);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.keyword-btn.selected {
+.deduction-game .keyword-btn.selected {
   background: var(--btn-primary-bg);
   border-color: var(--btn-primary-bg);
   transform: scale(1.05);
@@ -1762,38 +1753,38 @@
   }
 }
 
-.keyword-btn.hint {
+.deduction-game .keyword-btn.hint {
   background: var(--btn-danger-bg);
   border-color: var(--btn-danger-bg);
   opacity: 0.3;
   color: white;
 }
 
-.keyword-btn:disabled {
+.deduction-game .keyword-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.hint-indicator {
+.deduction-game .hint-indicator {
   position: absolute;
   top: -5px;
   right: -5px;
   font-size: 0.8rem;
 }
 
-.guess-controls {
+.deduction-game .guess-controls {
   border-top: 1px solid var(--border-primary);
   padding-top: 20px;
 }
 
-.selected-display h5 {
+.deduction-game .selected-display h5 {
   font-size: 1.3rem;
   margin-bottom: 20px;
   color: var(--text-primary);
   font-weight: 500;
 }
 
-.selected-keywords {
+.deduction-game .selected-keywords {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -1804,7 +1795,7 @@
   border-radius: 10px;
 }
 
-.selected-chip {
+.deduction-game .selected-chip {
   background: rgba(33, 150, 243, 0.3);
   border: 1px solid rgba(33, 150, 243, 0.5);
   padding: 8px 12px;
@@ -1813,13 +1804,13 @@
   color: #fff;
 }
 
-.control-buttons {
+.deduction-game .control-buttons {
   display: flex;
   gap: 15px;
   justify-content: center;
 }
 
-.game-sidebar {
+.deduction-game .game-sidebar {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -1828,19 +1819,17 @@
   padding-right: 10px;
 }
 
-.my-hints,
-.players-status,
-.turn-history {
+.deduction-game .my-hints, .deduction-game .players-status, .deduction-game .turn-history {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 15px;
   padding: 25px;
 }
 
-.turn-history .history-entry {
+.deduction-game .turn-history .history-entry {
   position: relative;
 }
 
-.turn-history .history-result {
+.deduction-game .turn-history .history-result {
   color: #4caf50;
   text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
@@ -1856,9 +1845,7 @@
   display: inline-block;
 }
 
-.my-hints h4,
-.players-status h4,
-.turn-history h4 {
+.deduction-game .my-hints h4, .deduction-game .players-status h4, .deduction-game .turn-history h4 {
   font-family: var(--font-secondary);
   font-size: 1.3rem;
   margin-bottom: 20px;
@@ -1869,19 +1856,19 @@
   letter-spacing: 0.5px;
 }
 
-.hint-chips {
+.deduction-game .hint-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.players-list {
+.deduction-game .players-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.player-status {
+.deduction-game .player-status {
   display: flex;
   justify-content: space-between;
   padding: 8px 12px;
@@ -1889,43 +1876,43 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.player-status.current {
+.deduction-game .player-status.current {
   background: rgba(255, 193, 7, 0.2);
   border: 1px solid rgba(255, 193, 7, 0.4);
 }
 
-.player-name {
+.deduction-game .player-name {
   font-weight: bold;
 }
 
-.player-type {
+.deduction-game .player-type {
   opacity: 0.8;
   font-size: 0.9rem;
 }
 
-.history-scroll {
+.deduction-game .history-scroll {
   max-height: 250px;
   overflow-y: auto;
   padding-right: 5px;
 }
 
-.history-entry {
+.deduction-game .history-entry {
   padding: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 8px;
 }
 
-.history-entry:last-child {
+.deduction-game .history-entry:last-child {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-.history-header {
+.deduction-game .history-header {
   font-size: 0.9rem;
   margin-bottom: 5px;
 }
 
-.history-result {
+.deduction-game .history-result {
   font-size: 0.8rem;
   font-weight: 600;
   opacity: 0.8;
@@ -1933,13 +1920,13 @@
 }
 
 /* 게임 종료 화면 */
-.game-over {
+.deduction-game .game-over {
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
 }
 
-.game-over h2 {
+.deduction-game .game-over h2 {
   font-family: var(--font-primary);
   font-size: 2.8rem;
   font-weight: 700;
@@ -1950,13 +1937,11 @@
   text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
 }
 
-.winner-announcement,
-.draw-announcement {
+.deduction-game .winner-announcement, .deduction-game .draw-announcement {
   margin-bottom: 40px;
 }
 
-.winner-announcement h3,
-.draw-announcement h3 {
+.deduction-game .winner-announcement h3, .deduction-game .draw-announcement h3 {
   font-family: var(--font-secondary);
   font-size: 1.8rem;
   margin-bottom: 10px;
@@ -1965,24 +1950,24 @@
   letter-spacing: 1px;
 }
 
-.final-answers {
+.deduction-game .final-answers {
   margin-bottom: 40px;
 }
 
-.final-answers h4 {
+.deduction-game .final-answers h4 {
   font-size: 1.4rem;
   margin-bottom: 20px;
   color: #fff;
 }
 
-.answer-list {
+.deduction-game .answer-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
 
-.answer-chip {
+.deduction-game .answer-chip {
   background: rgba(76, 175, 80, 0.3);
   border: 1px solid rgba(76, 175, 80, 0.5);
   padding: 10px 15px;
@@ -1992,17 +1977,17 @@
   font-weight: bold;
 }
 
-.game-history {
+.deduction-game .game-history {
   margin-bottom: 40px;
 }
 
-.game-history h4 {
+.deduction-game .game-history h4 {
   font-size: 1.4rem;
   margin-bottom: 20px;
   color: #fff;
 }
 
-.history-list {
+.deduction-game .history-list {
   max-height: 300px;
   overflow-y: auto;
   background: rgba(255, 255, 255, 0.05);
@@ -2010,19 +1995,19 @@
   padding: 15px;
 }
 
-.history-item {
+.deduction-game .history-item {
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.history-item:last-child {
+.deduction-game .history-item:last-child {
   border-bottom: none;
 }
 
 /* 힌트 보기 단계 */
-.hint-viewing-phase {
+.deduction-game .hint-viewing-phase {
   text-align: center;
   max-width: 600px;
   margin: 0 auto;
@@ -2030,7 +2015,7 @@
   position: relative;
 }
 
-.hint-viewing-phase h2 {
+.deduction-game .hint-viewing-phase h2 {
   font-family: var(--font-primary);
   font-size: 2rem;
   font-weight: 700;
@@ -2040,51 +2025,50 @@
   letter-spacing: 1px;
 }
 
-.viewing-instructions h3 {
+.deduction-game .viewing-instructions h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
   color: #fff;
 }
 
-.viewing-instructions p {
+.deduction-game .viewing-instructions p {
   font-size: 1.1rem;
   margin-bottom: 30px;
   opacity: 0.9;
 }
 
-.hint-reveal,
-.hint-display {
+.deduction-game .hint-reveal, .deduction-game .hint-display {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 15px;
   padding: 30px;
   margin-top: 20px;
 }
 
-.hint-display h4 {
+.deduction-game .hint-display h4 {
   font-size: 1.3rem;
   margin-bottom: 20px;
   color: #ff5722;
 }
 
-.hint-display .hint-chips {
+.deduction-game .hint-display .hint-chips {
   margin-bottom: 30px;
 }
 
 /* 공개된 키워드 스타일 */
-.keyword-btn.revealed-answer {
+.deduction-game .keyword-btn.revealed-answer {
   background: rgba(76, 175, 80, 0.3);
   border-color: rgba(76, 175, 80, 0.6);
   box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
 }
 
-.keyword-btn.revealed-wrong {
+.deduction-game .keyword-btn.revealed-wrong {
   background: rgba(244, 67, 54, 0.3);
   border-color: rgba(244, 67, 54, 0.6);
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.reveal-indicator {
+.deduction-game .reveal-indicator {
   position: absolute;
   top: -5px;
   right: -5px;
@@ -2100,27 +2084,27 @@
 }
 
 /* 글로벌 힌트 시스템 */
-.global-hints {
+.deduction-game .global-hints {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 15px;
   padding: 20px;
 }
 
-.global-hints h4 {
+.deduction-game .global-hints h4 {
   font-size: 1.1rem;
   margin-bottom: 15px;
   color: #fff;
   text-align: center;
 }
 
-.hint-buttons {
+.deduction-game .hint-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-bottom: 15px;
 }
 
-.btn-hint {
+.deduction-game .btn-hint {
   padding: 12px 15px;
   font-size: 0.95rem;
   background: rgba(255, 193, 7, 0.2);
@@ -2132,34 +2116,34 @@
   text-align: center;
 }
 
-.btn-hint:hover:not(:disabled) {
+.deduction-game .btn-hint:hover:not(:disabled) {
   background: rgba(255, 193, 7, 0.3);
 }
 
-.btn-hint:disabled {
+.deduction-game .btn-hint:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.revealed-info {
+.deduction-game .revealed-info {
   text-align: center;
   opacity: 0.8;
 }
 
-.revealed-info small {
+.deduction-game .revealed-info small {
   display: block;
   margin-bottom: 5px;
 }
 
 /* 턴 기록 업데이트 */
-.history-keywords {
+.deduction-game .history-keywords {
   font-size: 0.8rem;
   color: #b0bec5;
   margin-bottom: 5px;
   word-break: break-word;
 }
 
-.turn-keywords {
+.deduction-game .turn-keywords {
   font-size: 0.9rem;
   color: #b0bec5;
   margin-bottom: 5px;
@@ -2167,7 +2151,7 @@
 }
 
 /* 나가기 버튼 */
-.btn-exit {
+.deduction-game .btn-exit {
   padding: 8px 16px;
   font-size: 0.9rem;
   background: rgba(244, 67, 54, 0.2);
@@ -2178,12 +2162,12 @@
   transition: all 0.3s ease;
 }
 
-.btn-exit:hover {
+.deduction-game .btn-exit:hover {
   background: rgba(244, 67, 54, 0.3);
   transform: translateY(-1px);
 }
 
-.btn-exit-small {
+.deduction-game .btn-exit-small {
   padding: 6px 12px;
   font-size: 0.8rem;
   background: rgba(244, 67, 54, 0.2);
@@ -2194,135 +2178,135 @@
   transition: all 0.3s ease;
 }
 
-.btn-exit-small:hover {
+.deduction-game .btn-exit-small:hover {
   background: rgba(244, 67, 54, 0.3);
 }
 
-.exit-button-container {
+.deduction-game .exit-button-container {
   position: absolute;
   top: 20px;
   right: 20px;
 }
 
 @media (max-width: 768px) {
-  .game-content {
+.deduction-game .game-content {
     max-width: 100%;
     padding: 0 15px;
   }
 
-  .game-screen {
+.deduction-game .game-screen {
     width: 100%;
     max-width: 100%;
     padding: 30px 20px;
     min-height: 400px;
   }
 
-  .mode-cards {
+.deduction-game .mode-cards {
     grid-template-columns: 1fr;
     gap: 20px;
   }
 
-  .players-grid {
+.deduction-game .players-grid {
     grid-template-columns: 1fr;
   }
 
-  .config-grid {
+.deduction-game .config-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
 
-  .radio-group {
+.deduction-game .radio-group {
     flex-direction: column;
     gap: 10px;
   }
 
-  .multi-option-row {
+.deduction-game .multi-option-row {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
 
-  .setup-actions {
+.deduction-game .setup-actions {
     flex-direction: column;
   }
 
-  .btn-group {
+.deduction-game .btn-group {
     flex-wrap: wrap;
     gap: 10px;
   }
 
-  .progress-steps {
+.deduction-game .progress-steps {
     gap: 15px;
   }
 
-  .progress-step {
+.deduction-game .progress-step {
     flex-direction: column;
     text-align: center;
     padding: 15px;
   }
 
-  .step-circle {
+.deduction-game .step-circle {
     margin-bottom: 10px;
   }
 
-  .summary-grid {
+.deduction-game .summary-grid {
     gap: 20px;
   }
 
-  .summary-item {
+.deduction-game .summary-item {
     padding: 20px;
   }
 
-  .game-info-grid {
+.deduction-game .game-info-grid {
     grid-template-columns: 1fr;
     gap: 8px;
   }
 
-  .game-layout {
+.deduction-game .game-layout {
     grid-template-columns: 1fr;
     gap: 20px;
   }
 
-  .game-header-info {
+.deduction-game .game-header-info {
     flex-direction: column;
     text-align: center;
     gap: 15px;
   }
 
-  .header-controls {
+.deduction-game .header-controls {
     flex-direction: column;
     gap: 10px;
   }
 
-  .timer {
+.deduction-game .timer {
     text-align: center;
   }
 
-  .timer-bar {
+.deduction-game .timer-bar {
     margin: 0 auto;
   }
 }
 
 /* Global hints toggle styles */
-.global-hints-toggle {
+.deduction-game .global-hints-toggle {
   margin-bottom: 20px;
   padding: 15px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 }
 
-.toggle-label {
+.deduction-game .toggle-label {
   display: flex;
   align-items: center;
   cursor: pointer;
   user-select: none;
 }
 
-.toggle-checkbox {
+.deduction-game .toggle-checkbox {
   display: none;
 }
 
-.toggle-switch {
+.deduction-game .toggle-switch {
   position: relative;
   width: 50px;
   height: 26px;
@@ -2332,7 +2316,7 @@
   margin-right: 10px;
 }
 
-.toggle-switch::after {
+.deduction-game .toggle-switch::after {
   content: '';
   position: absolute;
   top: 3px;
@@ -2344,20 +2328,20 @@
   transition: transform 0.3s;
 }
 
-.toggle-checkbox:checked + .toggle-switch {
+.deduction-game .toggle-checkbox:checked + .toggle-switch {
   background: #4caf50;
 }
 
-.toggle-checkbox:checked + .toggle-switch::after {
+.deduction-game .toggle-checkbox:checked + .toggle-switch::after {
   transform: translateX(24px);
 }
 
-.toggle-text {
+.deduction-game .toggle-text {
   font-weight: 500;
   font-size: 1rem;
 }
 
-.toggle-description {
+.deduction-game .toggle-description {
   display: block;
   margin-top: 8px;
   margin-left: 60px;
@@ -2368,7 +2352,7 @@
 
 /* 모달 확장 반응형 스타일 */
 @media (max-width: 1600px) {
-  .code-editor-modal.expanded {
+.deduction-game .code-editor-modal.expanded {
     width: 94%;
     max-width: 1600px;
     height: 90vh;
@@ -2377,7 +2361,7 @@
 }
 
 @media (max-width: 1200px) {
-  .code-editor-modal.expanded {
+.deduction-game .code-editor-modal.expanded {
     width: 93%;
     max-width: none;
     height: 88vh;
@@ -2386,11 +2370,11 @@
 }
 
 /* Difficulty selection specific styles */
-.difficulty-selection {
+.deduction-game .difficulty-selection {
   text-align: center;
 }
 
-.difficulty-selection .setup-actions {
+.deduction-game .difficulty-selection .setup-actions {
   margin-top: 0;
   display: flex; /* 추가: flexbox를 사용하여 내부 요소 정렬 */
   justify-content: flex-start; /* 추가: 왼쪽 정렬 */
@@ -2398,35 +2382,35 @@
   box-sizing: border-box; /* 추가: 패딩 포함 너비 계산 */
 }
 
-.difficulty-selection h2 {
+.deduction-game .difficulty-selection h2 {
   text-align: center;
   margin-top: 60px; /* Increased margin-top */
 }
 
 @media (max-width: 768px) {
-  .keywords-grid {
+.deduction-game .keywords-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 8px;
   }
 
-  .keyword-btn {
+.deduction-game .keyword-btn {
     min-height: 45px;
     font-size: 0.8rem;
   }
 
-  .control-buttons {
+.deduction-game .control-buttons {
     flex-direction: column;
   }
 
-  .game-sidebar {
+.deduction-game .game-sidebar {
     order: -1;
   }
 
-  .answer-list {
+.deduction-game .answer-list {
     gap: 8px;
   }
 
-  .answer-chip {
+.deduction-game .answer-chip {
     font-size: 0.9rem;
     padding: 8px 12px;
   }
@@ -2443,7 +2427,7 @@
 }
 
 /* 코드 에디터 모달 스타일 */
-.modal-overlay {
+.deduction-game .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -2466,7 +2450,7 @@
   }
 }
 
-.modal-content {
+.deduction-game .modal-content {
   background: rgba(40, 40, 50, 0.95);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2476,7 +2460,7 @@
   overflow: hidden;
 }
 
-.modal-content:not(.code-editor-modal) {
+.deduction-game .modal-content:not(.code-editor-modal) {
   animation: slideIn 0.3s ease;
 }
 
@@ -2491,7 +2475,7 @@
   }
 }
 
-.code-editor-modal {
+.deduction-game .code-editor-modal {
   width: 90%;
   max-width: 1600px;
   height: 85vh;
@@ -2506,14 +2490,14 @@
   animation: fadeIn 0.3s ease;
 }
 
-.code-editor-modal.expanded {
+.deduction-game .code-editor-modal.expanded {
   width: 95%;
   max-width: 1900px;
   height: 92vh;
   max-height: 950px;
 }
 
-.modal-header {
+.deduction-game .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2522,19 +2506,19 @@
   background: rgba(60, 60, 70, 0.5);
 }
 
-.modal-header h3 {
+.deduction-game .modal-header h3 {
   font-size: 1.4rem;
   color: #fff;
   margin: 0;
 }
 
-.modal-header-actions {
+.deduction-game .modal-header-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.modal-expand-btn {
+.deduction-game .modal-expand-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.8);
@@ -2549,14 +2533,14 @@
   transition: all 0.3s ease;
 }
 
-.modal-expand-btn:hover {
+.deduction-game .modal-expand-btn:hover {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-1px);
 }
 
-.modal-close {
+.deduction-game .modal-close {
   background: none;
   border: none;
   color: #fff;
@@ -2573,12 +2557,12 @@
   border-radius: 50%;
 }
 
-.modal-close:hover {
+.deduction-game .modal-close:hover {
   opacity: 1;
   background: rgba(255, 255, 255, 0.1);
 }
 
-.code-editor-container {
+.deduction-game .code-editor-container {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -2587,7 +2571,7 @@
   min-height: 0;
 }
 
-.editor-toolbar {
+.deduction-game .editor-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2599,17 +2583,17 @@
 }
 
 /* 가이드 패널이 열릴 때 editor-toolbar 조정 */
-.code-editor-container:has(.ai-guide-panel.expanded) .editor-toolbar {
+.deduction-game .code-editor-container:has(.ai-guide-panel.expanded) .editor-toolbar {
   padding-right: 720px; /* 가이드 패널 확장 너비(700px) + 스크롤바 공간(8px) + 여유 공간 */
 }
 
-.editor-left {
+.deduction-game .editor-left {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.language-selector {
+.deduction-game .language-selector {
   display: flex;
   gap: 2px;
   background: rgba(30, 30, 40, 0.5);
@@ -2617,7 +2601,7 @@
   padding: 3px;
 }
 
-.lang-btn {
+.deduction-game .lang-btn {
   padding: 6px 16px;
   background: transparent;
   border: none;
@@ -2628,27 +2612,27 @@
   transition: all 0.3s ease;
 }
 
-.lang-btn.active {
+.deduction-game .lang-btn.active {
   background: rgba(103, 126, 234, 0.4);
   color: #fff;
 }
 
-.lang-btn:hover:not(.active) {
+.deduction-game .lang-btn:hover:not(.active) {
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.8);
 }
 
-.editor-info {
+.deduction-game .editor-info {
   color: #888;
   font-size: 0.9rem;
 }
 
-.editor-actions {
+.deduction-game .editor-actions {
   display: flex;
   gap: 10px;
 }
 
-.editor-wrapper {
+.deduction-game .editor-wrapper {
   flex: 1;
   display: flex;
   overflow: hidden;
@@ -2656,7 +2640,7 @@
   position: relative;
 }
 
-.line-numbers {
+.deduction-game .line-numbers {
   width: 50px;
   background: rgba(30, 30, 40, 0.5);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -2668,11 +2652,11 @@
   -ms-overflow-style: none;
 }
 
-.line-numbers::-webkit-scrollbar {
+.deduction-game .line-numbers::-webkit-scrollbar {
   display: none;
 }
 
-.line-number {
+.deduction-game .line-number {
   color: #666;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 0.95rem;
@@ -2682,7 +2666,7 @@
   height: 1.6em;
 }
 
-.code-editor {
+.deduction-game .code-editor {
   flex: 1;
   background: transparent;
   border: none;
@@ -2702,29 +2686,29 @@
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-.code-editor::-webkit-scrollbar {
+.deduction-game .code-editor::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.code-editor::-webkit-scrollbar-track {
+.deduction-game .code-editor::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.code-editor::-webkit-scrollbar-thumb {
+.deduction-game .code-editor::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
 }
 
-.code-editor::-webkit-scrollbar-thumb:hover {
+.deduction-game .code-editor::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-.code-editor::placeholder {
+.deduction-game .code-editor::placeholder {
   color: #555;
 }
 
-.editor-footer {
+.deduction-game .editor-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2736,24 +2720,24 @@
 }
 
 /* 가이드 패널이 열릴 때 editor-footer 조정 */
-.code-editor-container:has(.ai-guide-panel.expanded) .editor-footer {
+.deduction-game .code-editor-container:has(.ai-guide-panel.expanded) .editor-footer {
   padding-right: 720px; /* 가이드 패널 확장 너비(700px) + 스크롤바 공간(8px) + 여유 공간 */
 }
 
-.code-stats {
+.deduction-game .code-stats {
   display: flex;
   gap: 20px;
   color: #888;
   font-size: 0.9rem;
 }
 
-.code-preview {
+.deduction-game .code-preview {
   margin-top: 10px;
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.player-setup .btn-ai-code {
+.deduction-game .player-setup .btn-ai-code {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2765,32 +2749,32 @@
   font-weight: 600;
 }
 
-.player-setup .btn-ai-code:hover {
+.deduction-game .player-setup .btn-ai-code:hover {
   background-color: #4a505c;
   border-color: #7a818e;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.btn-ai-icon {
+.deduction-game .btn-ai-icon {
   font-size: 1.2em;
   font-weight: bold;
   color: #61dafb; /* React-like blue */
 }
 
 /* 테스트 버튼 스타일 */
-.btn-test {
+.deduction-game .btn-test {
   background-color: #2196f3;
   color: white;
   border: 1px solid #1976d2;
 }
 
-.btn-test:hover:not(:disabled) {
+.deduction-game .btn-test:hover:not(:disabled) {
   background-color: #1976d2;
   border-color: #1565c0;
 }
 
-.btn-test:disabled {
+.deduction-game .btn-test:disabled {
   background-color: #64b5f6;
   border-color: #42a5f5;
   cursor: not-allowed;
@@ -2798,13 +2782,13 @@
 }
 
 /* 테스트 결과 컨테이너 */
-.test-results-container {
+.deduction-game .test-results-container {
   position: relative;
   pointer-events: none;
 }
 
 /* 테스트 결과 패널 */
-.test-result-panel {
+.deduction-game .test-result-panel {
   position: absolute;
   bottom: 20px;
   left: 20px;
@@ -2821,7 +2805,7 @@
   pointer-events: all;
 }
 
-.test-result-panel.fade-out {
+.deduction-game .test-result-panel.fade-out {
   opacity: 0;
   transform: translateY(20px) scale(0.95);
   transition: all 0.5s cubic-bezier(0.4, 0, 1, 1);
@@ -2842,35 +2826,35 @@
   }
 }
 
-.test-result-panel.success {
+.deduction-game .test-result-panel.success {
   border: 2px solid #4caf50;
 }
 
-.test-result-panel.error {
+.deduction-game .test-result-panel.error {
   border: 2px solid #f44336;
 }
 
-.test-result-header {
+.deduction-game .test-result-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
 }
 
-.test-result-header h4 {
+.deduction-game .test-result-header h4 {
   margin: 0;
   font-size: 1.1rem;
 }
 
-.test-result-panel.success .test-result-header h4 {
+.deduction-game .test-result-panel.success .test-result-header h4 {
   color: #4caf50;
 }
 
-.test-result-panel.error .test-result-header h4 {
+.deduction-game .test-result-panel.error .test-result-header h4 {
   color: #f44336;
 }
 
-.close-result {
+.deduction-game .close-result {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.6);
@@ -2886,18 +2870,18 @@
   transition: all 0.2s ease;
 }
 
-.close-result:hover {
+.deduction-game .close-result:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
 }
 
-.test-result-message {
+.deduction-game .test-result-message {
   margin: 10px 0;
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.95rem;
 }
 
-.test-result-details {
+.deduction-game .test-result-details {
   margin-top: 15px;
   padding: 15px;
   background: rgba(0, 0, 0, 0.3);
@@ -2907,37 +2891,37 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.test-result-details pre {
+.deduction-game .test-result-details pre {
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
   color: #ff6b6b;
 }
 
-.test-result-details div {
+.deduction-game .test-result-details div {
   margin: 5px 0;
 }
 
 /* 스크롤바 스타일 */
-.test-result-panel::-webkit-scrollbar {
+.deduction-game .test-result-panel::-webkit-scrollbar {
   width: 6px;
 }
 
-.test-result-panel::-webkit-scrollbar-track {
+.deduction-game .test-result-panel::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
 }
 
-.test-result-panel::-webkit-scrollbar-thumb {
+.deduction-game .test-result-panel::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
 }
 
-.test-result-panel::-webkit-scrollbar-thumb:hover {
+.deduction-game .test-result-panel::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.player-setup .code-preview {
+.deduction-game .player-setup .code-preview {
   margin-top: 10px;
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.25);
@@ -2949,57 +2933,37 @@
 }
 
 /* 스크롤바 스타일 추가 */
-.keywords-grid::-webkit-scrollbar,
-.game-screen::-webkit-scrollbar,
-.history-scroll::-webkit-scrollbar,
-.game-sidebar::-webkit-scrollbar,
-.players-grid::-webkit-scrollbar,
-.config-grid::-webkit-scrollbar {
+.deduction-game .keywords-grid::-webkit-scrollbar, .deduction-game .game-screen::-webkit-scrollbar, .deduction-game .history-scroll::-webkit-scrollbar, .deduction-game .game-sidebar::-webkit-scrollbar, .deduction-game .players-grid::-webkit-scrollbar, .deduction-game .config-grid::-webkit-scrollbar {
   width: 8px;
 }
 
-.keywords-grid::-webkit-scrollbar-track,
-.game-screen::-webkit-scrollbar-track,
-.history-scroll::-webkit-scrollbar-track,
-.game-sidebar::-webkit-scrollbar-track,
-.players-grid::-webkit-scrollbar-track,
-.config-grid::-webkit-scrollbar-track {
+.deduction-game .keywords-grid::-webkit-scrollbar-track, .deduction-game .game-screen::-webkit-scrollbar-track, .deduction-game .history-scroll::-webkit-scrollbar-track, .deduction-game .game-sidebar::-webkit-scrollbar-track, .deduction-game .players-grid::-webkit-scrollbar-track, .deduction-game .config-grid::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
-.keywords-grid::-webkit-scrollbar-thumb,
-.game-screen::-webkit-scrollbar-thumb,
-.history-scroll::-webkit-scrollbar-thumb,
-.game-sidebar::-webkit-scrollbar-thumb,
-.players-grid::-webkit-scrollbar-thumb,
-.config-grid::-webkit-scrollbar-thumb {
+.deduction-game .keywords-grid::-webkit-scrollbar-thumb, .deduction-game .game-screen::-webkit-scrollbar-thumb, .deduction-game .history-scroll::-webkit-scrollbar-thumb, .deduction-game .game-sidebar::-webkit-scrollbar-thumb, .deduction-game .players-grid::-webkit-scrollbar-thumb, .deduction-game .config-grid::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
 }
 
-.keywords-grid::-webkit-scrollbar-thumb:hover,
-.game-screen::-webkit-scrollbar-thumb:hover,
-.history-scroll::-webkit-scrollbar-thumb:hover,
-.game-sidebar::-webkit-scrollbar-thumb:hover,
-.players-grid::-webkit-scrollbar-thumb:hover,
-.config-grid::-webkit-scrollbar-thumb:hover {
+.deduction-game .keywords-grid::-webkit-scrollbar-thumb:hover, .deduction-game .game-screen::-webkit-scrollbar-thumb:hover, .deduction-game .history-scroll::-webkit-scrollbar-thumb:hover, .deduction-game .game-sidebar::-webkit-scrollbar-thumb:hover, .deduction-game .players-grid::-webkit-scrollbar-thumb:hover, .deduction-game .config-grid::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
 
 /* Difficulty Selection */
-.difficulty-selection {
+.deduction-game .difficulty-selection {
   text-align: center;
 }
 
-.difficulty-cards {
+.deduction-game .difficulty-cards {
   display: flex;
   gap: 30px;
   margin-top: 30px;
   justify-content: center;
 }
 
-.difficulty-card {
+.deduction-game .difficulty-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -3011,20 +2975,20 @@
   width: 220px;
 }
 
-.difficulty-card:hover {
+.deduction-game .difficulty-card:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.difficulty-card h3 {
+.deduction-game .difficulty-card h3 {
   font-family: var(--font-secondary);
   font-size: 1.6rem;
   margin-bottom: 15px;
   letter-spacing: 1px;
 }
 
-.difficulty-card p {
+.deduction-game .difficulty-card p {
   font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 400;
@@ -3033,7 +2997,7 @@
 }
 
 /* AI Thinking Indicator */
-.ai-thinking {
+.deduction-game .ai-thinking {
   color: #fff176;
   font-style: italic;
   animation: pulse 1.5s ease-in-out infinite;
@@ -3052,7 +3016,7 @@
 }
 
 /* 로딩 애니메이션 스타일 */
-.loading-spinner {
+.deduction-game .loading-spinner {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -3060,7 +3024,7 @@
   vertical-align: middle;
 }
 
-.loading-spinner::after {
+.deduction-game .loading-spinner::after {
   content: '';
   display: block;
   width: 20px;
@@ -3080,12 +3044,12 @@
   }
 }
 
-.loading-dots {
+.deduction-game .loading-dots {
   display: inline-block;
   margin-left: 5px;
 }
 
-.loading-dots::after {
+.deduction-game .loading-dots::after {
   content: '';
   animation: dots 1.5s steps(4, end) infinite;
 }
@@ -3109,15 +3073,14 @@
 }
 
 /* 큰 로딩 스피너 */
-.loading-spinner-large {
+.deduction-game .loading-spinner-large {
   width: 60px;
   height: 60px;
   margin: 20px auto;
   position: relative;
 }
 
-.loading-spinner-large::before,
-.loading-spinner-large::after {
+.deduction-game .loading-spinner-large::before, .deduction-game .loading-spinner-large::after {
   content: '';
   position: absolute;
   top: 0;
@@ -3128,19 +3091,19 @@
   border: 4px solid transparent;
 }
 
-.loading-spinner-large::before {
+.deduction-game .loading-spinner-large::before {
   border-top-color: var(--btn-primary-bg);
   animation: spin 1.5s linear infinite;
 }
 
-.loading-spinner-large::after {
+.deduction-game .loading-spinner-large::after {
   border-bottom-color: var(--btn-primary-bg-hover);
   animation: spin 1.5s linear infinite reverse;
   opacity: 0.6;
 }
 
 /* 게임 로딩 오버레이 */
-.game-loading-overlay {
+.deduction-game .game-loading-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -3155,12 +3118,12 @@
   backdrop-filter: blur(5px);
 }
 
-.game-loading-content {
+.deduction-game .game-loading-content {
   text-align: center;
   color: white;
 }
 
-.game-loading-content h3 {
+.deduction-game .game-loading-content h3 {
   font-family: var(--font-secondary);
   font-size: 1.5rem;
   margin-bottom: 20px;
@@ -3168,7 +3131,7 @@
   letter-spacing: 1px;
 }
 
-.game-loading-content p {
+.deduction-game .game-loading-content p {
   font-family: var(--font-body);
   font-size: 1rem;
   opacity: 0.8;
@@ -3176,7 +3139,7 @@
 }
 
 /* 성공/실패 아이콘 애니메이션 */
-.success-icon {
+.deduction-game .success-icon {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -3185,7 +3148,7 @@
   vertical-align: middle;
 }
 
-.success-icon::before {
+.deduction-game .success-icon::before {
   content: '✓';
   position: absolute;
   top: 50%;
@@ -3211,7 +3174,7 @@
   }
 }
 
-.error-icon {
+.deduction-game .error-icon {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -3220,7 +3183,7 @@
   vertical-align: middle;
 }
 
-.error-icon::before {
+.deduction-game .error-icon::before {
   content: '✗';
   position: absolute;
   top: 50%;
@@ -3255,14 +3218,14 @@
 }
 
 /* 큰 성공 아이콘 (게임 승리 시) */
-.victory-icon {
+.deduction-game .victory-icon {
   width: 100px;
   height: 100px;
   margin: 20px auto;
   position: relative;
 }
 
-.victory-icon::before {
+.deduction-game .victory-icon::before {
   content: '🏆';
   font-size: 80px;
   position: absolute;
@@ -3302,7 +3265,7 @@
 }
 
 /* 추측 결과 애니메이션 */
-.guess-result-popup {
+.deduction-game .guess-result-popup {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -3325,42 +3288,42 @@
   }
 }
 
-.guess-result-popup.success {
+.deduction-game .guess-result-popup.success {
   border: 3px solid #4caf50;
   box-shadow: 0 0 50px rgba(76, 175, 80, 0.5);
 }
 
-.guess-result-popup.partial {
+.deduction-game .guess-result-popup.partial {
   border: 3px solid #ffc107;
   box-shadow: 0 0 50px rgba(255, 193, 7, 0.5);
 }
 
-.guess-result-popup.fail {
+.deduction-game .guess-result-popup.fail {
   border: 3px solid #f44336;
   box-shadow: 0 0 50px rgba(244, 67, 54, 0.5);
 }
 
-.guide-modal {
+.deduction-game .guide-modal {
   width: 600px;
 }
 
-.guide-slides-container {
+.deduction-game .guide-slides-container {
   padding: 20px;
   min-height: 150px;
 }
 
-.guide-slide h4 {
+.deduction-game .guide-slide h4 {
   font-size: 1.5rem;
   margin-bottom: 10px;
   color: #ffc107;
 }
 
-.guide-slide p {
+.deduction-game .guide-slide p {
   font-size: 1.1rem;
   line-height: 1.6;
 }
 
-.guide-controls {
+.deduction-game .guide-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -3368,7 +3331,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.guide-controls button {
+.deduction-game .guide-controls button {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -3378,16 +3341,16 @@
   transition: background 0.3s ease;
 }
 
-.guide-controls button:hover {
+.deduction-game .guide-controls button:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.slide-indicators {
+.deduction-game .slide-indicators {
   display: flex;
   gap: 10px;
 }
 
-.indicator {
+.deduction-game .indicator {
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -3395,6 +3358,6 @@
   transition: background 0.3s ease;
 }
 
-.indicator.active {
+.deduction-game .indicator.active {
   background: #ffc107;
 }
