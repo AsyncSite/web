@@ -148,47 +148,143 @@
 
 .auth-shooting-star {
   position: absolute;
-  width: 100px;
-  height: 1px;
+  width: 150px;
+  height: 2px;
   background: linear-gradient(90deg, 
     transparent 0%, 
-    rgba(195, 232, 141, 0.15) 40%,
-    rgba(195, 232, 141, 0.35) 50%,
-    rgba(195, 232, 141, 0.15) 60%,
+    rgba(195, 232, 141, 0.1) 30%,
+    rgba(195, 232, 141, 0.4) 50%,
+    rgba(195, 232, 141, 0.1) 70%,
     transparent 100%
   );
-  animation: authShootingStar linear infinite;
   opacity: 0;
-  transform-origin: left center;
+  transform-origin: center center;
+  filter: blur(0.5px);
 }
 
 .auth-shooting-star::before {
   content: '';
   position: absolute;
-  top: 0;
+  top: 50%;
   right: 0;
-  width: 3px;
-  height: 3px;
+  width: 4px;
+  height: 4px;
   background: var(--auth-primary-green);
   border-radius: 50%;
-  box-shadow: 0 0 4px rgba(195, 232, 141, 0.4);
-  transform: translateY(-1px);
-  opacity: 0.7;
+  box-shadow: 
+    0 0 6px rgba(195, 232, 141, 0.8),
+    0 0 12px rgba(195, 232, 141, 0.4);
+  transform: translateY(-50%);
+  opacity: 1;
 }
 
-@keyframes authShootingStar {
+/* 다양한 방향의 별똥별 애니메이션 */
+.auth-shooting-star:nth-child(1) {
+  animation: authShootingStarDiagonal1 6s linear infinite;
+}
+
+.auth-shooting-star:nth-child(2) {
+  animation: authShootingStarDiagonal2 8s linear infinite;
+}
+
+.auth-shooting-star:nth-child(3) {
+  animation: authShootingStarVertical 5s linear infinite;
+}
+
+.auth-shooting-star:nth-child(4) {
+  animation: authShootingStarDiagonal3 7s linear infinite;
+}
+
+.auth-shooting-star:nth-child(5) {
+  animation: authShootingStarHorizontal 4s linear infinite;
+}
+
+/* 대각선 방향 1 (좌상단 → 우하단) */
+@keyframes authShootingStarDiagonal1 {
   0% {
-    transform: translateX(-100px) translateY(0);
+    transform: translate(-100px, -100px) rotate(45deg);
     opacity: 0;
   }
   5% {
-    opacity: 0.7;
+    opacity: 1;
   }
   95% {
-    opacity: 0.7;
+    opacity: 1;
   }
   100% {
-    transform: translateX(calc(100vw + 300px)) translateY(calc(100vh * 0.5));
+    transform: translate(calc(100vw + 100px), calc(100vh + 100px)) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* 대각선 방향 2 (우상단 → 좌하단) */
+@keyframes authShootingStarDiagonal2 {
+  0% {
+    transform: translate(calc(100vw + 100px), -100px) rotate(135deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.9;
+  }
+  95% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-100px, calc(100vh + 100px)) rotate(135deg);
+    opacity: 0;
+  }
+}
+
+/* 수직 방향 (위 → 아래) */
+@keyframes authShootingStarVertical {
+  0% {
+    transform: translate(50vw, -100px) rotate(90deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.8;
+  }
+  95% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(50vw, calc(100vh + 100px)) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+/* 대각선 방향 3 (좌하단 → 우상단) */
+@keyframes authShootingStarDiagonal3 {
+  0% {
+    transform: translate(-100px, calc(100vh + 100px)) rotate(-45deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.95;
+  }
+  95% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(calc(100vw + 100px), -100px) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+/* 수평 방향 (좌 → 우) */
+@keyframes authShootingStarHorizontal {
+  0% {
+    transform: translate(-150px, 60vh) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.85;
+  }
+  95% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(calc(100vw + 150px), 60vh) rotate(0deg);
     opacity: 0;
   }
 }

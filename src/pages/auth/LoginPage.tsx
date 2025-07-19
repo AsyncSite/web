@@ -109,16 +109,12 @@ function LoginPage(): React.ReactNode {
       
       {/* 별똥별 효과 */}
       <div className="auth-shooting-stars">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(5)].map((_, i) => (
           <div
             key={i}
             className="auth-shooting-star"
             style={{
-              top: `${Math.random() * 80}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${i * 15 + Math.random() * 10}s`,
-              animationDuration: `${4 + Math.random() * 2}s`,
-              transform: `rotate(${-30 - Math.random() * 30}deg)`
+              animationDelay: `${i * 4 + Math.random() * 8}s`
             }}
           />
         ))}

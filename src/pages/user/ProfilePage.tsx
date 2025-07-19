@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import PasswordChangeModal from '../../components/auth/PasswordChangeModal';
+import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import './ProfilePage.css';
 
 interface GameActivity {
@@ -23,14 +27,21 @@ interface GameActivities {
 }
 
 function ProfilePage(): React.ReactNode {
+  // Auth context에서 실제 사용자 정보 가져오기
+  const { user: authUser } = useAuth();
+  
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState<'study' | 'game'>('study');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  // 임시 데이터 (나중에 API에서 가져올 예정)
+  // 사용자 정보 (authUser가 있으면 실제 데이터 사용)
   const user = {
-    name: '김스터디',
-    profileImage: null,
-    joinedDays: 42,
+    name: authUser?.name || authUser?.username || '사용자',
+    profileImage: authUser?.profileImage || null,
+    joinedDays: authUser?.createdAt 
+      ? Math.floor((Date.now() - new Date(authUser.createdAt).getTime()) / (1000 * 60 * 60 * 24))
+      : 0,
   };
 
   // 테스트를 위한 토글 변수 (true: 데이터 있음, false: 빈 상태)
@@ -94,16 +105,12 @@ function ProfilePage(): React.ReactNode {
       
       {/* 별똥별 효과 */}
       <div className="auth-shooting-stars">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(5)].map((_, i) => (
           <div
             key={i}
             className="auth-shooting-star"
             style={{
-              top: `${Math.random() * 80}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${i * 15 + Math.random() * 10}s`,
-              animationDuration: `${4 + Math.random() * 2}s`,
-              transform: `rotate(${-30 - Math.random() * 30}deg)`
+              animationDelay: `${i * 4 + Math.random() * 8}s`
             }}
           />
         ))}
@@ -267,9 +274,9 @@ function ProfilePage(): React.ReactNode {
       <section className="settings-section">
         <h3>설정</h3>
         <nav className="settings-nav">
-          <a href="/user/me/edit">프로필 수정</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); alert('비밀번호 변경 모달 예정'); }}>비밀번호 변경</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); alert('로그아웃 기능 예정'); }}>로그아웃</a>
+          <Link to="/users/me/edit">프로필 수정</Link>
+          <a href="#" onClick={(e) => { e.preventDefault(); setShowPasswordModal(true); }}>비밀번호 변경</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); setShowLogoutModal(true); }}>로그아웃</a>
         </nav>
       </section>
 
@@ -278,6 +285,16 @@ function ProfilePage(): React.ReactNode {
         <p>오늘도 열공하세요!</p>
       </div>
     </div>
+
+    {/* 모달 컴포넌트들 */}
+    <PasswordChangeModal 
+      isOpen={showPasswordModal} 
+      onClose={() => setShowPasswordModal(false)} 
+    />
+    <LogoutConfirmModal 
+      isOpen={showLogoutModal} 
+      onClose={() => setShowLogoutModal(false)} 
+    />
     </div>
   );
 }

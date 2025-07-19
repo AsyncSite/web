@@ -9,6 +9,7 @@ const MainPage = lazy(() => import('../pages/MainPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
 const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
+const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: 'users/me',
         element: <ProfilePage />,
+      },
+      {
+        path: 'users/me/edit',
+        element: <ProfileEditPage />,
       },
       {
         path: '/',
