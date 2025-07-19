@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
   const [headerHeight, setHeaderHeight] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
 
   useEffect(() => {
     // Header의 높이를 측정
@@ -90,15 +90,24 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
             <li><a href="/study-plan" className={location.pathname === '/study-plan' ? 'active' : ''}>STUDY PLAN</a></li>
           </ul>
           <div className="auth-section">
-            {isAuthenticated && user && (
-              <span className="user-name">{user.name || user.username || user.email}</span>
-            )}
-            {isAuthenticated ? (
-              <a href="/users/me" className="profile-link">프로필</a>
+            {isLoading ? (
+              // 로딩 중일 때는 스켈레톤 또는 빈 공간 표시
+              <div className="auth-loading">
+                <div className="auth-skeleton"></div>
+              </div>
             ) : (
-              <button className="login-btn" onClick={handleAuthClick}>
-                로그인/회원가입
-              </button>
+              <>
+                {isAuthenticated && user && (
+                  <span className="user-name">{user.name || user.username || user.email}</span>
+                )}
+                {isAuthenticated ? (
+                  <a href="/users/me" className="profile-link">프로필</a>
+                ) : (
+                  <button className="login-btn" onClick={handleAuthClick}>
+                    로그인/회원가입
+                  </button>
+                )}
+              </>
             )}
           </div>
         </nav>

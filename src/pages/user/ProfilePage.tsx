@@ -1,31 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
 import PasswordChangeModal from '../../components/auth/PasswordChangeModal';
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
+import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import './ProfilePage.css';
-
-interface GameActivity {
-  name: string;
-  gamesPlayed: number;
-  lastPlayed: string;
-}
-
-interface SpotlightArenaActivity extends GameActivity {
-  ranking: number;
-  totalPlayers: number;
-  winRate: number;
-}
-
-interface TeamShuffleActivity extends GameActivity {
-  favoriteTeamSize: number;
-}
-
-interface GameActivities {
-  spotlightArena?: SpotlightArenaActivity;
-  teamShuffle?: TeamShuffleActivity;
-}
 
 function ProfilePage(): React.ReactNode {
   // Auth context에서 실제 사용자 정보 가져오기
@@ -35,6 +15,13 @@ function ProfilePage(): React.ReactNode {
   const [activeTab, setActiveTab] = useState<'study' | 'game'>('study');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [gameActivities, setGameActivities] = useState<GameActivity[]>([]);
+  const [gameSummary, setGameSummary] = useState<{
+    totalGames: number;
+    totalWins: number;
+    favoriteGame?: string;
+    lastActivity?: string;
+  }>({ totalGames: 0, totalWins: 0 });
 
   // 사용자 정보 (authUser가 있으면 실제 데이터 사용)
   const user = {
@@ -44,6 +31,16 @@ function ProfilePage(): React.ReactNode {
       ? Math.floor((Date.now() - new Date(authUser.createdAt).getTime()) / (1000 * 60 * 60 * 24))
       : 0,
   };
+
+  // 게임 활동 데이터 로드
+  useEffect(() => {
+    const userId = authUser?.email || authUser?.username || authUser?.name;
+    const activities = gameActivityService.getGameActivities(userId);
+    const summary = gameActivityService.getGameSummary(userId);
+    
+    setGameActivities(activities);
+    setGameSummary(summary);
+  }, [authUser]);
 
   // 테스트를 위한 토글 변수 (true: 데이터 있음, false: 빈 상태)
   const hasData = true; // false로 변경하면 빈 상태를 볼 수 있습니다
@@ -60,24 +57,6 @@ function ProfilePage(): React.ReactNode {
     participating: [],
     leading: [],
   };
-
-  // 게임 활동 데이터
-  const gameActivities: GameActivities = hasData ? {
-    spotlightArena: {
-      name: 'Spotlight Arena',
-      gamesPlayed: 23,
-      ranking: 5,
-      totalPlayers: 128,
-      winRate: 65,
-      lastPlayed: '2일 전',
-    },
-    teamShuffle: {
-      name: 'Team Shuffle',
-      gamesPlayed: 15,
-      favoriteTeamSize: 4,
-      lastPlayed: '1주일 전',
-    },
-  } : {};
 
   const greeting = () => {
     const hour = new Date().getHours();
@@ -214,54 +193,74 @@ function ProfilePage(): React.ReactNode {
         <section className="game-section">
           <h2>게임 활동</h2>
           
-          {gameActivities.spotlightArena || gameActivities.teamShuffle ? (
-            <div className="game-cards">
-              {gameActivities.spotlightArena && (
-                <div className="game-card">
-                  <div className="game-header">
-                    <h3>{gameActivities.spotlightArena.name}</h3>
-                    <span className="last-played">마지막 플레이: {gameActivities.spotlightArena.lastPlayed}</span>
+          {gameActivities.length > 0 ? (
+            <>
+              {/* 전체 요약 통계 */}
+              {gameSummary.totalGames > 0 && (
+                <div className="game-summary">
+                  <div className="summary-item">
+                    <span className="summary-label">총 게임 횟수</span>
+                    <span className="summary-value">{gameSummary.totalGames}회</span>
                   </div>
-                  <div className="game-stats">
-                    <div className="stat-item">
-                      <span className="stat-label">랭킹</span>
-                      <span className="stat-value ranking">
-                        {gameActivities.spotlightArena.ranking}위 / {gameActivities.spotlightArena.totalPlayers}명
-                      </span>
+                  {gameSummary.totalWins > 0 && (
+                    <div className="summary-item">
+                      <span className="summary-label">총 승리</span>
+                      <span className="summary-value">{gameSummary.totalWins}회</span>
                     </div>
-                    <div className="stat-item">
-                      <span className="stat-label">승률</span>
-                      <span className="stat-value">{gameActivities.spotlightArena.winRate}%</span>
+                  )}
+                  {gameSummary.favoriteGame && (
+                    <div className="summary-item">
+                      <span className="summary-label">즐겨하는 게임</span>
+                      <span className="summary-value">{gameSummary.favoriteGame}</span>
                     </div>
-                    <div className="stat-item">
-                      <span className="stat-label">플레이 횟수</span>
-                      <span className="stat-value">{gameActivities.spotlightArena.gamesPlayed}회</span>
-                    </div>
-                  </div>
-                  <a href="/lab/spotlight-arena" className="play-button">게임하러 가기</a>
+                  )}
                 </div>
               )}
-
-              {gameActivities.teamShuffle && (
-                <div className="game-card">
-                  <div className="game-header">
-                    <h3>{gameActivities.teamShuffle.name}</h3>
-                    <span className="last-played">마지막 플레이: {gameActivities.teamShuffle.lastPlayed}</span>
-                  </div>
-                  <div className="game-stats">
-                    <div className="stat-item">
-                      <span className="stat-label">플레이 횟수</span>
-                      <span className="stat-value">{gameActivities.teamShuffle.gamesPlayed}회</span>
+              
+              <div className="game-cards">
+                {gameActivities.map((activity, index) => (
+                  <div key={index} className="game-card">
+                    <div className="game-header">
+                      <h3>{activity.name}</h3>
+                      {activity.lastPlayed && (
+                        <span className="last-played">마지막 플레이: {activity.lastPlayed}</span>
+                      )}
                     </div>
-                    <div className="stat-item">
-                      <span className="stat-label">선호 팀 크기</span>
-                      <span className="stat-value">{gameActivities.teamShuffle.favoriteTeamSize}인</span>
+                    <div className="game-stats">
+                      <div className="stat-item">
+                        <span className="stat-label">플레이 횟수</span>
+                        <span className="stat-value">{activity.totalCount}회</span>
+                      </div>
+                      {activity.myRanking && activity.totalRanking && (
+                        <div className="stat-item">
+                          <span className="stat-label">랭킹</span>
+                          <span className="stat-value ranking">
+                            {activity.myRanking}위 / {activity.totalRanking}명
+                          </span>
+                        </div>
+                      )}
+                      {activity.wins !== undefined && activity.participations !== undefined && (
+                        <div className="stat-item">
+                          <span className="stat-label">승률</span>
+                          <span className="stat-value">
+                            {activity.participations > 0 
+                              ? Math.round((activity.wins / activity.participations) * 100) 
+                              : 0}%
+                          </span>
+                        </div>
+                      )}
+                      {activity.myRanking && !activity.totalRanking && (
+                        <div className="stat-item">
+                          <span className="stat-label">최고 점수</span>
+                          <span className="stat-value">{activity.myRanking}점</span>
+                        </div>
+                      )}
                     </div>
+                    <a href={activity.link} className="play-button">게임하러 가기</a>
                   </div>
-                  <a href="/lab/team-shuffle" className="play-button">게임하러 가기</a>
-                </div>
-              )}
-            </div>
+                ))}
+              </div>
+            </>
           ) : (
             <div className="empty-state">
               <p>아직 플레이한 게임이 없어요</p>

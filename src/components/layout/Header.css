@@ -193,6 +193,48 @@
   border-color: rgba(195, 232, 141, 0.5);
 }
 
+/* 로딩 상태 스타일 */
+.auth-loading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.auth-skeleton {
+  width: 140px;
+  height: 44px;
+  background: linear-gradient(90deg,
+    rgba(195, 232, 141, 0.1) 0%,
+    rgba(195, 232, 141, 0.2) 50%,
+    rgba(195, 232, 141, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  animation: authSkeletonLoading 1.5s ease-in-out infinite;
+  border-radius: 25px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-skeleton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: inherit;
+}
+
+@keyframes authSkeletonLoading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .nav {
@@ -224,5 +266,10 @@
   
   .nav {
     justify-content: space-between;
+  }
+  
+  .auth-skeleton {
+    width: 100px;
+    height: 40px;
   }
 }
