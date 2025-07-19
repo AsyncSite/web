@@ -37,8 +37,11 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       try {
         const token = authService.getStoredToken();
         if (token) {
-          const validatedUser = await authService.validateToken();
-          setUser(validatedUser);
+          // First validate the token
+          await authService.validateToken();
+          // Then get the full user profile with name
+          const userProfile = await userService.getProfile();
+          setUser(userProfile);
         }
       } catch (error) {
         authService.clearAuthData();

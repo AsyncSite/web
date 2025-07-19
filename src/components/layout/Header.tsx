@@ -91,7 +91,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
           </ul>
           <div className="auth-section">
             {isAuthenticated && user && (
-              <span className="user-name">{user.name || user.email}</span>
+              <span className="user-name">{user.name || user.username || user.email}</span>
             )}
             {isAuthenticated ? (
               <a href="/users/me" className="profile-link">프로필</a>

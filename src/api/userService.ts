@@ -21,8 +21,9 @@ class UserService {
    * Get current user profile
    */
   async getProfile(): Promise<User> {
-    const response = await apiClient.get<ApiResponse<User>>('/api/users/me');
-    return response.data.data;
+    const response = await apiClient.get<User>('/api/users/me');
+    // API가 직접 User 객체를 반환하는 경우
+    return response.data;
   }
 
   /**
