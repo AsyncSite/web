@@ -1,0 +1,232 @@
+.game-auth-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: var(--text-primary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(195, 232, 141, 0.2);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Auth Required Screen */
+.game-auth-required,
+.game-auth-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.auth-required-content,
+.auth-prompt-content {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 3rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.auth-icon,
+.guest-icon {
+  font-size: 4rem;
+  margin: 1.5rem 0;
+  filter: drop-shadow(0 0 20px rgba(195, 232, 141, 0.5));
+}
+
+.auth-required-content h2,
+.auth-prompt-content h2 {
+  color: var(--color-primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-display);
+}
+
+.auth-required-content h3,
+.auth-prompt-content h3 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.auth-required-content p,
+.auth-prompt-content p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.auth-features,
+.auth-benefits {
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.auth-features h4,
+.auth-benefits h4 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-features ul,
+.auth-benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.auth-features li,
+.auth-benefits li {
+  padding: 0.5rem 0;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.auth-actions button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-weight: 500;
+}
+
+.auth-actions .btn-primary {
+  background: var(--color-primary);
+  color: var(--bg-primary);
+}
+
+.auth-actions .btn-primary:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.4);
+}
+
+.auth-actions .btn-secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.auth-actions .btn-secondary:hover {
+  background: rgba(195, 232, 141, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Game Wrapper with Auth Status */
+.game-auth-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.auth-status-bar {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.guest-indicator {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.login-prompt-btn {
+  background: var(--color-primary);
+  color: var(--bg-primary);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.login-prompt-btn:hover {
+  background: var(--color-primary-hover);
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-required-content,
+  .auth-prompt-content {
+    padding: 2rem;
+  }
+
+  .auth-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .auth-actions button {
+    width: 100%;
+  }
+
+  .auth-status-bar {
+    top: auto;
+    bottom: 20px;
+    right: 10px;
+    left: 10px;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .login-prompt-btn {
+    width: 100%;
+  }
+}

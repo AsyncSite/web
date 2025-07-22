@@ -29,10 +29,24 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Get the request URL
+      const requestUrl = error.config?.url || '';
+      
+      // Skip redirect for certain endpoints
+      const skipRedirectPaths = [
+        '/api/auth/validate',  // Token validation endpoint
+        '/api/auth/refresh',   // Token refresh endpoint
+        '/api/games/',         // Game service endpoints (guest play allowed)
+      ];
+      
+      const shouldSkipRedirect = skipRedirectPaths.some(path => requestUrl.includes(path));
+      
+      if (!shouldSkipRedirect) {
+        // Token expired or invalid - redirect to login
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
