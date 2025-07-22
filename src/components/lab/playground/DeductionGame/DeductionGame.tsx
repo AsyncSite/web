@@ -61,6 +61,7 @@ interface PlayerConfig {
 const DeductionGame: React.FC = () => {
   const [guideSlideIndex, setGuideSlideIndex] = useState(0);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+  const [isAIGuideModalOpen, setIsAIGuideModalOpen] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<GameScreen>('mode-selection');
   const [gameMode, setGameMode] = useState<GameMode>('solo');
   const [playerCount, setPlayerCount] = useState(2);
@@ -1053,7 +1054,7 @@ const DeductionGame: React.FC = () => {
               <div className="editor-actions">
                 <button
                   className="btn btn-small btn-guide"
-                  onClick={() => setIsGuideModalOpen(true)}
+                  onClick={() => setIsAIGuideModalOpen(true)}
                 >
                   📖 가이드 보기
                 </button>
@@ -2275,7 +2276,7 @@ function makeGuess(gameState) {
 
         {renderCodeEditorModal()}
         {renderGuideModal()}
-        <AIGuideModal isOpen={isGuideModalOpen} onClose={() => setIsGuideModalOpen(false)} />
+        <AIGuideModal isOpen={isAIGuideModalOpen} onClose={() => setIsAIGuideModalOpen(false)} />
       </div>
     </div>
   );
