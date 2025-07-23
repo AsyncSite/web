@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -12,16 +13,7 @@ function PrivateRoute({ children, requiredRoles }: PrivateRouteProps): React.Rea
   const location = useLocation();
 
   if (isLoading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
-      }}>
-        <div>로딩 중...</div>
-      </div>
-    );
+    return <LoadingSpinner message="인증 확인 중..." />;
   }
 
   if (!isAuthenticated) {

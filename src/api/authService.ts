@@ -13,8 +13,12 @@ class AuthService {
    * Login user with email/username and password
    */
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await apiClient.post<ApiResponse<LoginResponse>>('/api/auth/login', credentials);
-    return response.data.data;
+    try {
+      const response = await apiClient.post<ApiResponse<LoginResponse>>('/api/auth/login', credentials);
+      return response.data.data;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**

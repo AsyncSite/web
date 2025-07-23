@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/layout';
 import './TabPage.css';
 
 const StudyPage: React.FC = () => {
@@ -16,7 +15,6 @@ const StudyPage: React.FC = () => {
 
   return (
     <div className="page-container">
-      <Header />
       <main className="page-content">
         <div className="coming-soon">
           <h1>STUDY</h1>

@@ -1,11 +1,15 @@
 import { Outlet } from 'react-router-dom';
-import TemplateHeader from './TemplateHeader';
+import Header from './Header';
+import './Header.css';
+import './SubContentsTemplate.css';
 
 const SubContentsTemplate = () => {
   return (
-    <div className="">
-      <TemplateHeader />
-      <Outlet />
+    <div className="sub-contents-wrapper">
+      <Header alwaysFixed={true} />
+      <div className="sub-contents-body">
+        <Outlet />
+      </div>
     </div>
   );
 };

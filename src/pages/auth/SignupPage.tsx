@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useDebounce } from '../../hooks/useDebounce';
+import userService from '../../api/userService';
 import './SignupPage.css';
 
 interface SignupFormData {
@@ -35,6 +37,12 @@ function SignupPage(): React.ReactNode {
   const [completedSteps, setCompletedSteps] = useState<SignupStep[]>([]);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
+  const [emailCheckTriggered, setEmailCheckTriggered] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Debounce email value for API calls
+  const debouncedEmail = useDebounce(formData.email, 500);
   
   // Refs for input focus management
   const emailRef = useRef<HTMLInputElement>(null);
@@ -65,36 +73,67 @@ function SignupPage(): React.ReactNode {
     }
   }, [currentStep]);
 
-  // Check email availability
-  const checkEmailAvailability = async () => {
-    if (!formData.email || !/^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(formData.email)) {
+  // Check email availability with debounced value
+  useEffect(() => {
+    if (!debouncedEmail || !emailCheckTriggered) {
+      setEmailAvailable(null);
+      return;
+    }
+
+    const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (!emailRegex.test(debouncedEmail)) {
+      setErrors({ email: '올바른 이메일 형식을 입력해주세요' });
+      setEmailAvailable(null);
+      return;
+    }
+
+    const checkEmail = async () => {
+      setIsCheckingEmail(true);
+      setErrors({});
+      
+      try {
+        const isAvailable = await userService.checkEmailAvailability(debouncedEmail);
+        setEmailAvailable(isAvailable);
+        
+        if (!isAvailable) {
+          setErrors({ email: '이미 사용 중인 이메일입니다' });
+        }
+      } catch (error) {
+        setErrors({ email: '이메일 확인 중 오류가 발생했습니다' });
+        setEmailAvailable(null);
+      } finally {
+        setIsCheckingEmail(false);
+      }
+    };
+
+    checkEmail();
+  }, [debouncedEmail, emailCheckTriggered]);
+
+  // Auto-proceed to next step when email is available
+  useEffect(() => {
+    if (emailAvailable === true && currentStep === 'email' && !completedSteps.includes('email')) {
+      setCompletedSteps([...completedSteps, 'email']);
+      setCurrentStep('name');
+    }
+  }, [emailAvailable, currentStep, completedSteps]);
+
+  // Check email availability button handler
+  const checkEmailAvailability = () => {
+    const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (!formData.email || !emailRegex.test(formData.email)) {
       setErrors({ email: '올바른 이메일 형식을 입력해주세요' });
       return;
     }
 
-    setIsCheckingEmail(true);
-    setErrors({});
-    
-    try {
-      // TODO: 실제 API 호출로 대체
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // 임시로 랜덤하게 사용 가능/불가능 설정
-      const isAvailable = Math.random() > 0.3;
-      setEmailAvailable(isAvailable);
-      
-      if (isAvailable) {
-        if (!completedSteps.includes('email')) {
-          setCompletedSteps([...completedSteps, 'email']);
-          setCurrentStep('name');
-        }
-      } else {
-        setErrors({ email: '이미 사용 중인 이메일입니다' });
+    // If already checked and available, move to next step
+    if (emailAvailable === true && !isCheckingEmail) {
+      if (!completedSteps.includes('email')) {
+        setCompletedSteps([...completedSteps, 'email']);
+        setCurrentStep('name');
       }
-    } catch (error) {
-      setErrors({ email: '이메일 확인 중 오류가 발생했습니다' });
-    } finally {
-      setIsCheckingEmail(false);
+    } else {
+      // Trigger email check
+      setEmailCheckTriggered(true);
     }
   };
 
@@ -198,6 +237,12 @@ function SignupPage(): React.ReactNode {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Trigger email check when user types in email field
+    if (name === 'email' && currentStep === 'email') {
+      setEmailCheckTriggered(true);
+      setEmailAvailable(null);
+    }
     // Clear error when user starts typing
     if (errors[name as keyof SignupFormErrors]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
@@ -347,14 +392,14 @@ function SignupPage(): React.ReactNode {
                   {errors.email}
                 </span>
               )}
-              {emailAvailable === true && completedSteps.includes('email') && (
+              {!errors.email && emailAvailable === true && (
                 <span className="success-message auth-success-message">
                   사용 가능한 이메일입니다
                 </span>
               )}
-              {emailAvailable !== null && !completedSteps.includes('email') && (
-                <span className="warning-message auth-warning-message">
-                  이메일이 변경되었습니다. 다시 중복 확인을 해주세요.
+              {isCheckingEmail && (
+                <span className="info-message auth-info-message">
+                  이메일 중복을 확인하고 있습니다...
                 </span>
               )}
             </div>
@@ -402,18 +447,38 @@ function SignupPage(): React.ReactNode {
               <label htmlFor="password" className="auth-label">
                 비밀번호를 설정해주세요
               </label>
-              <input
-                ref={passwordRef}
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                onKeyPress={(e) => e.key === 'Enter' && handleStepComplete('password')}
-                className={`auth-input ${errors.password ? 'error' : ''}`}
-                placeholder="8자 이상, 영문/숫자/특수문자 포함"
-                autoComplete="new-password"
-              />
+              <div className="input-wrapper password-input-wrapper">
+                <input
+                  ref={passwordRef}
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  onKeyPress={(e) => e.key === 'Enter' && handleStepComplete('password')}
+                  className={`auth-input ${errors.password ? 'error' : ''}`}
+                  placeholder="8자 이상, 영문/숫자/특수문자 포함"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  className="password-toggle-button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+                >
+                  {showPassword ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 3L21 21M10.5 10.5C10.5 9.67157 11.1716 9 12 9C12.8284 9 13.5 9.67157 13.5 10.5M10.5 10.5C10.5 11.3284 11.1716 12 12 12C12.8284 12 13.5 11.3284 13.5 10.5M10.5 10.5L13.5 13.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M4.93 4.93C3.12 6.27 2 8.07 2 10C2 14 7 19 12 19C13.93 19 15.73 18.39 17.27 17.38M9.58 9.58C9.22 9.94 9 10.45 9 11C9 12.1 9.9 13 11 13C11.55 13 12.06 12.78 12.42 12.42M19.07 19.07C20.88 17.73 22 15.93 22 14C22 10 17 5 12 5C10.07 5 8.27 5.61 6.73 6.62" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 5C7 5 2 10 2 14C2 18 7 23 12 23C17 23 22 18 22 14C22 10 17 5 12 5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <circle cx="12" cy="14" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
               {formData.password && (
                 <div className="password-strength">
                   <div className={`strength-bar ${formData.password.length >= 8 ? 'filled' : ''}`} />
@@ -443,27 +508,52 @@ function SignupPage(): React.ReactNode {
             </div>
           </div>
 
-          {/* Confirm Password Step */}
-          <div className={`form-step-wrapper ${completedSteps.includes('password') || completedSteps.includes('confirmPassword') || currentStep === 'confirmPassword' ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('confirmPassword') ? 'completed' : ''}`}>
+          {/* Confirm Password Step - Show immediately when password has value */}
+          <div className={`form-step-wrapper ${(formData.password && completedSteps.includes('name')) || completedSteps.includes('password') || completedSteps.includes('confirmPassword') ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('confirmPassword') ? 'completed' : ''}`}>
             <div className="form-group auth-form-group">
               <label htmlFor="confirmPassword" className="auth-label">
                 비밀번호를 한 번 더 입력해주세요
               </label>
-              <input
-                ref={confirmPasswordRef}
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
-                className={`auth-input ${errors.confirmPassword ? 'error' : ''}`}
-                placeholder="비밀번호를 다시 입력하세요"
-                autoComplete="new-password"
-              />
+              <div className="input-wrapper password-input-wrapper">
+                <input
+                  ref={confirmPasswordRef}
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
+                  className={`auth-input ${errors.confirmPassword ? 'error' : ''} ${!errors.confirmPassword && formData.confirmPassword && formData.password === formData.confirmPassword ? 'success' : ''}`}
+                  placeholder="비밀번호를 다시 입력하세요"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  className="password-toggle-button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+                >
+                  {showConfirmPassword ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M3 3L21 21M10.5 10.5C10.5 9.67157 11.1716 9 12 9C12.8284 9 13.5 9.67157 13.5 10.5M10.5 10.5C10.5 11.3284 11.1716 12 12 12C12.8284 12 13.5 11.3284 13.5 10.5M10.5 10.5L13.5 13.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M4.93 4.93C3.12 6.27 2 8.07 2 10C2 14 7 19 12 19C13.93 19 15.73 18.39 17.27 17.38M9.58 9.58C9.22 9.94 9 10.45 9 11C9 12.1 9.9 13 11 13C11.55 13 12.06 12.78 12.42 12.42M19.07 19.07C20.88 17.73 22 15.93 22 14C22 10 17 5 12 5C10.07 5 8.27 5.61 6.73 6.62" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 5C7 5 2 10 2 14C2 18 7 23 12 23C17 23 22 18 22 14C22 10 17 5 12 5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <circle cx="12" cy="14" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
               {errors.confirmPassword && (
                 <span className="error-message auth-error-message">
                   {errors.confirmPassword}
+                </span>
+              )}
+              {!errors.confirmPassword && formData.confirmPassword && formData.password === formData.confirmPassword && (
+                <span className="success-message auth-success-message">
+                  비밀번호가 일치합니다
                 </span>
               )}
               {currentStep === 'confirmPassword' && (

@@ -492,6 +492,16 @@
   animation: authSlideDown var(--auth-transition-base);
 }
 
+.auth-info-message {
+  color: var(--auth-text-secondary);
+  font-size: 0.875rem;
+  margin-top: var(--auth-spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  animation: authSlideDown var(--auth-transition-base);
+}
+
 /* 뒤로가기 버튼 */
 .auth-back-button {
   position: fixed;

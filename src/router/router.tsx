@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import App from '../App';
 import subRouter from './subRouter';
 import { SubContentsTemplate } from '../components/layout';
+import PrivateRoute from '../components/auth/PrivateRoute';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
@@ -30,11 +31,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'users/me',
-        element: <ProfilePage />,
+        element: (
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        ),
       },
       {
         path: 'users/me/edit',
-        element: <ProfileEditPage />,
+        element: (
+          <PrivateRoute>
+            <ProfileEditPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/',

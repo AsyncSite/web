@@ -29,6 +29,8 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [showGuestNotice, setShowGuestNotice] = useState(true);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -121,18 +123,64 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
     }
   }
 
+  // Hide guest notice after 10 seconds
+  React.useEffect(() => {
+    if (!isAuthenticated && showGuestNotice) {
+      const timer = setTimeout(() => {
+        setIsMinimized(true);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, showGuestNotice]);
+
   // Render the game with authentication status indicator
   return (
     <div className="game-auth-wrapper">
-      {!isAuthenticated && (
-        <div className="auth-status-bar">
-          <span className="guest-indicator">👤 게스트로 플레이 중</span>
-          <button 
-            className="login-prompt-btn"
-            onClick={() => navigate('/login', { state: { from: window.location.pathname } })}
-          >
-            로그인하여 진행상황 저장
-          </button>
+      {!isAuthenticated && showGuestNotice && (
+        <div className={`auth-status-bar ${isMinimized ? 'minimized' : ''}`}>
+          {!isMinimized ? (
+            <>
+              <div className="guest-info">
+                <span className="guest-indicator">👤 게스트로 플레이 중</span>
+                <span className="guest-message">점수가 로컬에만 저장됩니다</span>
+              </div>
+              <div className="guest-actions">
+                <button 
+                  className="login-prompt-btn"
+                  onClick={() => navigate('/login', { state: { from: window.location.pathname } })}
+                >
+                  로그인하기
+                </button>
+                <button 
+                  className="minimize-btn"
+                  onClick={() => setIsMinimized(true)}
+                  aria-label="최소화"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button 
+                  className="close-btn"
+                  onClick={() => setShowGuestNotice(false)}
+                  aria-label="닫기"
+                >
+                  ×
+                </button>
+              </div>
+            </>
+          ) : (
+            <button 
+              className="expand-btn"
+              onClick={() => setIsMinimized(false)}
+              aria-label="게스트 알림 펼치기"
+            >
+              <span className="guest-indicator-mini">👤</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 15L12 9L6 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          )}
         </div>
       )}
       {children}

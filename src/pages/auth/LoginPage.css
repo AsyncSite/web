@@ -36,6 +36,40 @@
   to { transform: rotate(360deg); }
 }
 
+/* Password Input Wrapper */
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--auth-text-secondary);
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle-button:hover {
+  color: var(--auth-text-primary);
+}
+
+.password-toggle-button:focus {
+  outline: none;
+  color: var(--auth-primary-green);
+}
+
+.password-input-wrapper .auth-input {
+  padding-right: 48px;
+}
+
 .login-container {
   /* Using auth-container from common */
   padding: 2.5rem;

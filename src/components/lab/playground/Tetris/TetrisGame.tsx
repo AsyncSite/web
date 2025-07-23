@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useGameProgress } from '../../../../contexts/GameProgressContext';
+import { useNavigate } from 'react-router-dom';
 import GameAuthWrapper from '../../../auth/GameAuthWrapper';
 import gameApiService, { TetrisGameResult } from '../../../../api/gameApiService';
 import './TetrisGame.css';
@@ -83,6 +84,7 @@ interface TetrisLeaderboardEntry {
 const TetrisGame: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
   const { startSession, endSession, currentSession } = useGameProgress();
+  const navigate = useNavigate();
   
   // Canvas refs
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -109,6 +111,7 @@ const TetrisGame: React.FC = () => {
   const [personalBest, setPersonalBest] = useState<number>(0);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [showStartScreen, setShowStartScreen] = useState(true);
+  const [notification, setNotification] = useState<string | null>(null);
   
   // Game timing
   const animationIdRef = useRef<number>();
@@ -116,6 +119,12 @@ const TetrisGame: React.FC = () => {
   const dropIntervalRef = useRef(1000);
   const lastTimeRef = useRef(0);
   const startTimeRef = useRef<number>(0);
+
+  // Show notification
+  const showNotification = useCallback((message: string) => {
+    setNotification(message);
+    setTimeout(() => setNotification(null), 3000);
+  }, []);
 
   // Create board
   const createBoard = useCallback(() => {
@@ -514,12 +523,16 @@ const TetrisGame: React.FC = () => {
       if (userStats.length > 0) {
         setPersonalBest(userStats[0].bestScore);
       }
-    } catch (error) {
-      // Handle error silently
+    } catch (error: any) {
+      // Handle 401 error specifically
+      if (error?.response?.status === 401) {
+        // Show notification that login is required for leaderboard
+        showNotification('로그인이 필요한 기능입니다. 게스트로 계속 플레이할 수 있습니다.');
+      }
     } finally {
       setIsLoadingLeaderboard(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, showNotification]);
 
   // Start new game
   const startNewGame = useCallback(async () => {
@@ -527,8 +540,11 @@ const TetrisGame: React.FC = () => {
     if (isAuthenticated) {
       try {
         await startSession('TETRIS');
-      } catch (error) {
+      } catch (error: any) {
         // Continue with game even if session start fails
+        if (error?.response?.status === 401) {
+          showNotification('세션 시작에 실패했습니다. 게스트 모드로 진행합니다.');
+        }
       }
     }
 
@@ -556,7 +572,7 @@ const TetrisGame: React.FC = () => {
     });
 
     setShowStartScreen(false);
-  }, [isAuthenticated, startSession, createBoard, createPlayer]);
+  }, [isAuthenticated, startSession, createBoard, createPlayer, showNotification]);
 
   // Handle game over
   const handleGameOver = useCallback(async () => {
@@ -586,8 +602,11 @@ const TetrisGame: React.FC = () => {
         if (response.isPersonalBest) {
           setPersonalBest(gameState.score);
         }
-      } catch (error) {
-        // Handle error silently
+      } catch (error: any) {
+        // Handle error with notification
+        if (error?.response?.status === 401) {
+          showNotification('점수 저장에 실패했습니다. 로컬에 저장됩니다.');
+        }
       }
     }
 
@@ -600,7 +619,7 @@ const TetrisGame: React.FC = () => {
 
     // Load leaderboard
     loadLeaderboard();
-  }, [isAuthenticated, currentSession, endSession, gameState, loadLeaderboard]);
+  }, [isAuthenticated, currentSession, endSession, gameState, loadLeaderboard, showNotification]);
 
   // Handle keyboard input with improved controls
   useEffect(() => {
@@ -757,6 +776,25 @@ const TetrisGame: React.FC = () => {
       }}
     >
       <div className="tetris-game" onMouseDown={(e) => e.preventDefault()}>
+        {/* Notification */}
+        {notification && (
+          <div className="tetris-notification">
+            {notification}
+          </div>
+        )}
+        
+        <div className="tetris-navigation">
+          <button 
+            className="back-to-lab-button"
+            onClick={() => navigate('/lab')}
+            aria-label="Lab으로 돌아가기"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>Lab으로 돌아가기</span>
+          </button>
+        </div>
         <h1 className="tetris-title">테트리스</h1>
         
         <div className="tetris-container">
@@ -810,17 +848,17 @@ const TetrisGame: React.FC = () => {
                 >
                   게임 시작
                 </button>
-                {isAuthenticated && (
-                  <button 
-                    className="tetris-button tetris-leaderboard-button"
-                    onClick={() => {
-                      setShowLeaderboard(true);
+                <button 
+                  className="tetris-button tetris-leaderboard-button"
+                  onClick={() => {
+                    setShowLeaderboard(true);
+                    if (isAuthenticated) {
                       loadLeaderboard();
-                    }}
-                  >
-                    리더보드
-                  </button>
-                )}
+                    }
+                  }}
+                >
+                  리더보드
+                </button>
               </div>
             </div>
           ) : (
@@ -863,14 +901,17 @@ const TetrisGame: React.FC = () => {
                       >
                         메인 화면
                       </button>
-                      {isAuthenticated && (
-                        <button 
-                          className="tetris-button tetris-leaderboard-button"
-                          onClick={() => setShowLeaderboard(true)}
-                        >
-                          리더보드
-                        </button>
-                      )}
+                      <button 
+                        className="tetris-button tetris-leaderboard-button"
+                        onClick={() => {
+                          setShowLeaderboard(true);
+                          if (isAuthenticated) {
+                            loadLeaderboard();
+                          }
+                        }}
+                      >
+                        리더보드
+                      </button>
                     </div>
                   </div>
                 )}
@@ -966,38 +1007,73 @@ const TetrisGame: React.FC = () => {
           <div className="tetris-modal-overlay" onClick={() => setShowLeaderboard(false)}>
             <div className="tetris-modal" onClick={e => e.stopPropagation()}>
               <h2>리더보드</h2>
-              {isLoadingLeaderboard ? (
-                <div className="tetris-loading">로딩 중...</div>
-              ) : (
-                <div className="tetris-leaderboard">
-                  {leaderboard.length > 0 ? (
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>순위</th>
-                          <th>플레이어</th>
-                          <th>점수</th>
-                          <th>레벨</th>
-                          <th>라인</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {leaderboard.map(entry => (
-                          <tr key={entry.rank} className={entry.userName === user?.username ? 'current-user' : ''}>
-                            <td>{entry.rank}</td>
-                            <td>{entry.userName}</td>
-                            <td>{entry.score.toLocaleString()}</td>
-                            <td>{entry.level}</td>
-                            <td>{entry.linesCleared}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+              
+              {/* Personal Best Display */}
+              <div className="tetris-personal-best">
+                <h3>개인 최고 기록</h3>
+                <div className="personal-best-score">
+                  {personalBest > 0 ? (
+                    <>
+                      <span className="score-label">최고 점수:</span>
+                      <span className="score-value">{personalBest.toLocaleString()}</span>
+                    </>
                   ) : (
-                    <p className="no-records">아직 기록이 없습니다.</p>
+                    <span className="no-score">아직 기록이 없습니다</span>
                   )}
                 </div>
-              )}
+              </div>
+              
+              {/* Global Leaderboard */}
+              <div className="tetris-global-leaderboard">
+                <h3>전체 순위</h3>
+                {!isAuthenticated && (
+                  <div className="guest-notice">
+                    <p>로그인하면 리더보드에 참여할 수 있습니다!</p>
+                    <button 
+                      className="tetris-button tetris-login-button"
+                      onClick={() => navigate('/login', { state: { from: window.location.pathname } })}
+                    >
+                      로그인하기
+                    </button>
+                  </div>
+                )}
+                
+                {isLoadingLeaderboard ? (
+                  <div className="tetris-loading">로딩 중...</div>
+                ) : (
+                  <div className="tetris-leaderboard">
+                    {leaderboard.length > 0 ? (
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>순위</th>
+                            <th>플레이어</th>
+                            <th>점수</th>
+                            <th>레벨</th>
+                            <th>라인</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {leaderboard.map(entry => (
+                            <tr key={entry.rank} className={entry.userName === user?.username ? 'current-user' : ''}>
+                              <td>{entry.rank}</td>
+                              <td>{entry.userName}</td>
+                              <td>{entry.score.toLocaleString()}</td>
+                              <td>{entry.level}</td>
+                              <td>{entry.linesCleared}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <p className="no-records">
+                        {isAuthenticated ? '아직 기록이 없습니다.' : '로그인 후 순위를 확인하세요.'}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+              
               <button 
                 className="tetris-button tetris-close-button"
                 onClick={() => setShowLeaderboard(false)}

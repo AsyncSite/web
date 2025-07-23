@@ -52,5 +52,6 @@
   "eslintConfig": {
     "extends": [],
     "rules": {}
-  }
+  },
+  "proxy": "http://localhost:8080"
 }

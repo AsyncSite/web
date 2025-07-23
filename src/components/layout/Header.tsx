@@ -5,9 +5,10 @@ import './Header.css';
 
 interface HeaderProps {
   transparent?: boolean;
+  alwaysFixed?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
+const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = false }) => {
   const [isFixedTop, setIsFixedTop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
@@ -70,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
 
   const headerClasses = [
     'header',
-    isFixedTop && 'fixed-top',
+    (isFixedTop || alwaysFixed) && 'fixed-top',
     transparent && 'transparent',
     transparent && isScrolled && 'scrolled'
   ].filter(Boolean).join(' ');

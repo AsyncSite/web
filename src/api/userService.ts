@@ -62,10 +62,12 @@ class UserService {
    */
   async checkEmailAvailability(email: string): Promise<boolean> {
     try {
-      const response = await apiClient.get(`/api/users/check-email?email=${encodeURIComponent(email)}`);
-      return response.data.available;
+      const response = await apiClient.post('/api/users/check-email', { email });
+      // Check if response has data.data structure (ApiResponse wrapper)
+      const responseData = response.data.data || response.data;
+      return responseData.available;
     } catch (error) {
-      // If endpoint doesn't exist, return true and let registration handle conflicts
+      // If endpoint doesn't exist or errors, return true and let registration handle conflicts
       return true;
     }
   }

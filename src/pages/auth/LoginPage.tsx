@@ -24,6 +24,7 @@ function LoginPage(): React.ReactNode {
   });
   const [errors, setErrors] = useState<LoginFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Get the redirect path from location state
   const from = location.state?.from?.pathname || '/users/me';
@@ -70,13 +71,13 @@ function LoginPage(): React.ReactNode {
         username: formData.username,
         password: formData.password
       });
-      // 로그인 성공 후 명시적으로 navigate
-      navigate(from, { replace: true });
+      // 로그인 성공 시 AuthContext의 isAuthenticated가 true가 되면서
+      // 위의 Navigate 컴포넌트가 자동으로 리다이렉트를 처리합니다
+      // 따라서 여기서는 추가 navigate 호출이 필요 없습니다
     } catch (error) {
       setErrors({
         general: error instanceof Error ? error.message : '로그인에 실패했습니다'
       });
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -174,9 +175,9 @@ function LoginPage(): React.ReactNode {
             <label htmlFor="password" className="auth-label">
               비밀번호
             </label>
-            <div className="input-wrapper">
+            <div className="input-wrapper password-input-wrapper">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
@@ -186,6 +187,24 @@ function LoginPage(): React.ReactNode {
                 autoComplete="current-password"
                 disabled={isSubmitting}
               />
+              <button
+                type="button"
+                className="password-toggle-button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              >
+                {showPassword ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3L21 21M10.5 10.5C10.5 9.67157 11.1716 9 12 9C12.8284 9 13.5 9.67157 13.5 10.5M10.5 10.5C10.5 11.3284 11.1716 12 12 12C12.8284 12 13.5 11.3284 13.5 10.5M10.5 10.5L13.5 13.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M4.93 4.93C3.12 6.27 2 8.07 2 10C2 14 7 19 12 19C13.93 19 15.73 18.39 17.27 17.38M9.58 9.58C9.22 9.94 9 10.45 9 11C9 12.1 9.9 13 11 13C11.55 13 12.06 12.78 12.42 12.42M19.07 19.07C20.88 17.73 22 15.93 22 14C22 10 17 5 12 5C10.07 5 8.27 5.61 6.73 6.62" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5C7 5 2 10 2 14C2 18 7 23 12 23C17 23 22 18 22 14C22 10 17 5 12 5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="12" cy="14" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
             </div>
             {errors.password && (
               <span className="error-message auth-error-message">

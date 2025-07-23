@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import authService from '../api/authService';
 import userService from '../api/userService';
+import gameApiService, { TetrisGameResult } from '../api/gameApiService';
 import { handleApiError } from '../api/client';
+import { AUTH_EVENTS, addAuthEventListener, dispatchAuthEvent } from '../utils/authEvents';
 import {
   AuthContextType,
   User,
@@ -30,6 +32,65 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Migrate guest scores to logged-in user
+  const migrateGuestScores = useCallback(async () => {
+    try {
+      // Check for Tetris guest score
+      const tetrisHighScore = localStorage.getItem('tetris-high-score');
+      if (tetrisHighScore) {
+        const score = parseInt(tetrisHighScore);
+        const lastPlayed = localStorage.getItem('tetris-last-played') || new Date().toISOString();
+        
+        // Start a session and immediately end it with the guest score
+        try {
+          const session = await gameApiService.startGameSession({
+            gameTypeCode: 'TETRIS'
+          });
+          
+          const tetrisResult: TetrisGameResult = {
+            gameType: 'TETRIS',
+            score: score,
+            level: 1, // Default level for migrated scores
+            linesCleared: 0, // Default lines for migrated scores
+            timeElapsedSeconds: 0, // Default time for migrated scores
+            maxCombo: 0, // Default combo for migrated scores
+            gameData: JSON.stringify({ migratedFromGuest: true, originalPlayedAt: lastPlayed })
+          };
+          
+          await gameApiService.endGameSession({
+            sessionId: session.sessionId,
+            result: tetrisResult
+          });
+          
+          // Clear guest scores after successful migration
+          localStorage.removeItem('tetris-high-score');
+          localStorage.removeItem('tetris-last-played');
+        } catch (error) {
+          // Silently fail - migration failure shouldn't block login
+        }
+      }
+    } catch (error) {
+      // Don't throw error - migration failure shouldn't block login
+    }
+  }, []);
+
+  // Listen for unauthorized events
+  useEffect(() => {
+    const handleUnauthorized = (event: CustomEvent) => {
+      // Clear user state
+      setUser(null);
+      
+      // Only redirect to login if not already there
+      if (location.pathname !== '/login' && location.pathname !== '/') {
+        navigate('/login', { replace: true });
+      }
+    };
+
+    const cleanup = addAuthEventListener(AUTH_EVENTS.UNAUTHORIZED, handleUnauthorized);
+    return cleanup;
+  }, [navigate, location.pathname]);
 
   // Check authentication status on mount
   useEffect(() => {
@@ -62,20 +123,32 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       const userProfile = await userService.getProfile();
       setUser(userProfile);
       
-      // Don't navigate here - let the LoginPage handle it
+      // Migrate guest scores after successful login (don't await to prevent blocking)
+      migrateGuestScores().catch(() => {
+        // Silently fail - migration failure shouldn't block login
+      });
+      
+      // Dispatch login success event
+      dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, { user: userProfile });
     } catch (error) {
       throw new Error(handleApiError(error));
     }
-  }, []);
+  }, [migrateGuestScores]);
 
   const logout = useCallback(async () => {
     try {
       await authService.logout();
     } finally {
       setUser(null);
-      navigate('/login');
+      // Clear auth data
+      authService.clearAuthData();
+      
+      // Only navigate if not already on login or home page
+      if (location.pathname !== '/login' && location.pathname !== '/') {
+        navigate('/login', { replace: true });
+      }
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   const register = useCallback(async (data: RegisterRequest) => {
     try {
@@ -106,10 +179,11 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
 
   const refreshToken = useCallback(async () => {
     try {
-      const refreshToken = authService.getStoredRefreshToken();
-      if (!refreshToken) throw new Error('No refresh token available');
+      const storedRefreshToken = authService.getStoredRefreshToken();
+      if (!storedRefreshToken) throw new Error('No refresh token available');
       
-      const response = await authService.refreshToken(refreshToken);
+      const response = await authService.refreshToken(storedRefreshToken);
+      // Just update the access token, keep other data
       localStorage.setItem('authToken', response.accessToken);
     } catch (error) {
       await logout();

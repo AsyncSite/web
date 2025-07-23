@@ -1,0 +1,18 @@
+.sub-contents-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-contents-body {
+  flex: 1;
+  padding-top: 80px; /* Header 높이만큼 여백 추가 */
+  width: 100%;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .sub-contents-body {
+    padding-top: 60px;
+  }
+}
