@@ -52,12 +52,16 @@ function ProfilePage(): React.ReactNode {
 
   // 게임 활동 데이터 로드
   useEffect(() => {
-    const userId = authUser?.email || authUser?.username || authUser?.name;
-    const activities = gameActivityService.getGameActivities(userId);
-    const summary = gameActivityService.getGameSummary(userId);
+    const loadGameData = async () => {
+      const userId = authUser?.email || authUser?.username || authUser?.name;
+      const activities = await gameActivityService.getGameActivities(userId);
+      const summary = await gameActivityService.getGameSummary(userId);
+      
+      setGameActivities(activities);
+      setGameSummary(summary);
+    };
     
-    setGameActivities(activities);
-    setGameSummary(summary);
+    loadGameData();
   }, [authUser]);
 
   // 테스트를 위한 토글 변수 (true: 데이터 있음, false: 빈 상태)

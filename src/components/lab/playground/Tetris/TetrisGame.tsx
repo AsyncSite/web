@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
-import { useGameProgress } from '../../../../contexts/GameProgressContext';
 import { useNavigate } from 'react-router-dom';
 import GameAuthWrapper from '../../../auth/GameAuthWrapper';
-import gameApiService, { TetrisGameResult } from '../../../../api/gameApiService';
+import { GameManagerFactory, GameDataManager, TetrisGameData } from '../../../../services/game';
 import './TetrisGame.css';
 
 // Constants
@@ -83,8 +82,9 @@ interface TetrisLeaderboardEntry {
 
 const TetrisGame: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
-  const { startSession, endSession, currentSession } = useGameProgress();
   const navigate = useNavigate();
+  const [gameManager, setGameManager] = useState<GameDataManager | null>(null);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   
   // Canvas refs
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -119,6 +119,15 @@ const TetrisGame: React.FC = () => {
   const dropIntervalRef = useRef(1000);
   const lastTimeRef = useRef(0);
   const startTimeRef = useRef<number>(0);
+
+  // Initialize GameManager
+  useEffect(() => {
+    const manager = GameManagerFactory.getGameManager({
+      isAuthenticated,
+      enableFallback: true
+    });
+    setGameManager(manager);
+  }, [isAuthenticated]);
 
   // Show notification
   const showNotification = useCallback((message: string) => {
@@ -500,52 +509,53 @@ const TetrisGame: React.FC = () => {
 
   // Load leaderboard
   const loadLeaderboard = useCallback(async () => {
-    if (!isAuthenticated) return;
+    if (!gameManager) return;
 
     setIsLoadingLeaderboard(true);
     try {
-      const [globalLeaderboard, userStats] = await Promise.all([
-        gameApiService.getGlobalLeaderboard('TETRIS', 10),
-        gameApiService.getUserStatistics('TETRIS')
-      ]);
+      const leaderboardResult = await gameManager.getLeaderboard('TETRIS', 10);
+      const personalBestResult = await gameManager.getPersonalBest('TETRIS');
 
-      // Map API response to TetrisLeaderboardEntry format
-      const mappedLeaderboard: TetrisLeaderboardEntry[] = globalLeaderboard.map(entry => ({
-        rank: entry.rank,
-        userName: entry.userName,
-        score: entry.score,
-        level: entry.additionalData?.level || 1,
-        linesCleared: entry.additionalData?.linesCleared || 0,
-        playedAt: entry.playedAt
-      }));
-      
-      setLeaderboard(mappedLeaderboard);
-      if (userStats.length > 0) {
-        setPersonalBest(userStats[0].bestScore);
-      }
-    } catch (error: any) {
-      // Handle 401 error specifically
-      if (error?.response?.status === 401 && !isAuthenticated) {
-        // Show notification that login is required for leaderboard
+      if (leaderboardResult.success) {
+        // Map to TetrisLeaderboardEntry format
+        const mappedLeaderboard: TetrisLeaderboardEntry[] = leaderboardResult.data.map(entry => ({
+          rank: entry.rank,
+          userName: entry.userName,
+          score: entry.score,
+          level: entry.additionalData?.level || 1,
+          linesCleared: entry.additionalData?.linesCleared || 0,
+          playedAt: entry.playedAt.toISOString()
+        }));
+        
+        setLeaderboard(mappedLeaderboard);
+      } else if (!isAuthenticated) {
         showNotification('로그인이 필요한 기능입니다. 게스트로 계속 플레이할 수 있습니다.');
       }
+
+      if (personalBestResult.success) {
+        setPersonalBest(personalBestResult.data);
+      }
+    } catch (error: any) {
+      console.error('Failed to load leaderboard:', error);
     } finally {
       setIsLoadingLeaderboard(false);
     }
-  }, [isAuthenticated, showNotification]);
+  }, [gameManager, isAuthenticated, showNotification]);
 
   // Start new game
   const startNewGame = useCallback(async () => {
-    // Start game session if authenticated
-    if (isAuthenticated) {
-      try {
-        await startSession('TETRIS');
-      } catch (error: any) {
-        // Continue with game even if session start fails
-        if (error?.response?.status === 401) {
-          showNotification('세션 시작에 실패했습니다. 게스트 모드로 진행합니다.');
-        }
+    if (!gameManager) return;
+
+    // Start game session
+    try {
+      const sessionResult = await gameManager.startGameSession('TETRIS');
+      if (sessionResult.success) {
+        setCurrentSessionId(sessionResult.data.sessionId);
+      } else {
+        showNotification('세션 시작에 실패했습니다. 게스트 모드로 진행합니다.');
       }
+    } catch (error: any) {
+      console.error('Failed to start game session:', error);
     }
 
     startTimeRef.current = Date.now();
@@ -572,7 +582,7 @@ const TetrisGame: React.FC = () => {
     });
 
     setShowStartScreen(false);
-  }, [isAuthenticated, startSession, createBoard, createPlayer, showNotification]);
+  }, [gameManager, createBoard, createPlayer, showNotification]);
 
   // Handle game over
   const handleGameOver = useCallback(async () => {
@@ -580,46 +590,52 @@ const TetrisGame: React.FC = () => {
       cancelAnimationFrame(animationIdRef.current);
     }
 
+    if (!gameManager) return;
+
     const timeElapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
 
-    // Submit score if authenticated
-    if (isAuthenticated && currentSession) {
-      try {
-        const result: TetrisGameResult = {
-          gameType: 'TETRIS',
-          score: gameState.score,
-          linesCleared: gameState.linesCleared,
-          level: gameState.level,
-          maxCombo: gameState.maxCombo,
-          timeElapsedSeconds: timeElapsed,
-          gameData: JSON.stringify({
-            level: gameState.level,
-            linesCleared: gameState.linesCleared
-          })
-        };
+    // Prepare game result
+    const gameResult: TetrisGameData = {
+      gameType: 'TETRIS',
+      score: gameState.score,
+      linesCleared: gameState.linesCleared,
+      level: gameState.level,
+      maxCombo: gameState.maxCombo,
+      timeElapsedSeconds: timeElapsed,
+      playedAt: new Date()
+    };
 
-        const response = await endSession(result);
-        if (response.isPersonalBest) {
-          setPersonalBest(gameState.score);
-        }
-      } catch (error: any) {
-        // Handle error with notification
-        if (error?.response?.status === 401) {
+    // End game session or save result
+    try {
+      if (currentSessionId) {
+        const endResult = await gameManager.endGameSession(currentSessionId, gameResult);
+        if (!endResult.success) {
           showNotification('점수 저장에 실패했습니다. 로컬에 저장됩니다.');
         }
+      } else {
+        // No session, save directly
+        const saveResult = await gameManager.saveGameResult(gameResult);
+        if (!saveResult.success) {
+          showNotification('점수 저장에 실패했습니다.');
+        }
       }
+
+      // Update personal best
+      const personalBestResult = await gameManager.getPersonalBest('TETRIS');
+      if (personalBestResult.success) {
+        setPersonalBest(personalBestResult.data);
+      }
+    } catch (error: any) {
+      console.error('Failed to save game result:', error);
+      showNotification('점수 저장 중 오류가 발생했습니다.');
     }
 
-    // Save to local storage for guests
-    const highScore = parseInt(localStorage.getItem('tetris-high-score') || '0');
-    if (gameState.score > highScore) {
-      localStorage.setItem('tetris-high-score', gameState.score.toString());
-      localStorage.setItem('tetris-last-played', new Date().toISOString());
-    }
+    // Clear session ID
+    setCurrentSessionId(null);
 
     // Load leaderboard
     loadLeaderboard();
-  }, [isAuthenticated, currentSession, endSession, gameState, loadLeaderboard, showNotification]);
+  }, [gameManager, currentSessionId, gameState, loadLeaderboard, showNotification]);
 
   // Handle keyboard input with improved controls
   useEffect(() => {
@@ -748,15 +764,17 @@ const TetrisGame: React.FC = () => {
 
   // Load personal best on mount
   useEffect(() => {
-    if (isAuthenticated) {
+    if (gameManager) {
       loadLeaderboard();
-    } else {
-      const savedHighScore = localStorage.getItem('tetris-high-score');
-      if (savedHighScore) {
-        setPersonalBest(parseInt(savedHighScore));
-      }
+      
+      // Load personal best
+      gameManager.getPersonalBest('TETRIS').then(result => {
+        if (result.success) {
+          setPersonalBest(result.data);
+        }
+      });
     }
-  }, [isAuthenticated, loadLeaderboard]);
+  }, [gameManager, loadLeaderboard]);
 
   // Focus canvas on mount for keyboard input
   useEffect(() => {

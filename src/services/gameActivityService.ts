@@ -1,5 +1,6 @@
 import { gameHistoryService } from '../components/lab/utilities/spotlight-arena/shared/services';
 import { participantStatsService } from '../components/lab/utilities/spotlight-arena/shared/services';
+import { GameManagerFactory } from './game';
 
 export interface GameActivity {
   name: string;
@@ -16,8 +17,11 @@ class GameActivityService {
   /**
    * Get game activities for current user
    */
-  getGameActivities(userId?: string): GameActivity[] {
+  async getGameActivities(userId?: string): Promise<GameActivity[]> {
     const activities: GameActivity[] = [];
+    
+    // Get game manager instance
+    const gameManager = GameManagerFactory.getDefaultGameManager();
     
     // Get Spotlight Arena stats
     const spotlightHistory = gameHistoryService.getHistory();
@@ -54,16 +58,48 @@ class GameActivityService {
       activities.push(teamShuffleData);
     }
     
-    // Get other game stats as they become available
-    // For now, we'll check if there's any stored data
-    const tetrisData = this.getTetrisStats(userId);
-    if (tetrisData) {
-      activities.push(tetrisData);
+    // Get Tetris stats from GameManager
+    try {
+      const tetrisStats = await gameManager.getGameStatistics('TETRIS');
+      const tetrisHistory = await gameManager.getGameHistory('TETRIS', 1);
+      const tetrisRank = await gameManager.getUserRank('TETRIS');
+      
+      if (tetrisStats.success && tetrisStats.data.length > 0) {
+        const stat = tetrisStats.data[0];
+        activities.push({
+          name: 'Tetris',
+          link: '/lab/tetris',
+          totalCount: stat.totalGamesPlayed,
+          myRanking: tetrisRank.success && tetrisRank.data ? tetrisRank.data : stat.bestScore,
+          lastPlayed: stat.lastPlayedAt ? 
+            new Date(stat.lastPlayedAt).toLocaleDateString('ko-KR') : undefined
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load Tetris stats:', error);
     }
     
-    const deductionGameData = this.getDeductionGameStats(userId);
-    if (deductionGameData) {
-      activities.push(deductionGameData);
+    // Get Deduction Game stats from GameManager
+    try {
+      const deductionStats = await gameManager.getGameStatistics('DEDUCTION');
+      const deductionHistory = await gameManager.getGameHistory('DEDUCTION', 1);
+      
+      if (deductionStats.success && deductionStats.data.length > 0) {
+        const stat = deductionStats.data[0];
+        const wins = stat.additionalStats?.wins || 0;
+        
+        activities.push({
+          name: 'Deduction Game',
+          link: '/lab/deduction-game',
+          totalCount: stat.totalGamesPlayed,
+          wins: wins,
+          participations: stat.totalGamesPlayed,
+          lastPlayed: stat.lastPlayedAt ? 
+            new Date(stat.lastPlayedAt).toLocaleDateString('ko-KR') : undefined
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load Deduction Game stats:', error);
     }
     
     return activities;
@@ -147,13 +183,13 @@ class GameActivityService {
   /**
    * Get summary statistics for all games
    */
-  getGameSummary(userId?: string): {
+  async getGameSummary(userId?: string): Promise<{
     totalGames: number;
     totalWins: number;
     favoriteGame?: string;
     lastActivity?: string;
-  } {
-    const activities = this.getGameActivities(userId);
+  }> {
+    const activities = await this.getGameActivities(userId);
     
     const totalGames = activities.reduce((sum, activity) => sum + activity.totalCount, 0);
     const totalWins = activities.reduce((sum, activity) => sum + (activity.wins || 0), 0);

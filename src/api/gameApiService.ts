@@ -122,8 +122,8 @@ class GameApiService {
   }
 
   async getLeaderboardAroundUser(gameType: string, range: number = 5): Promise<LeaderboardEntry[]> {
-    const response = await apiClient.get(`${this.baseUrl}/leaderboards/around-me`, {
-      params: { gameType, range }
+    const response = await apiClient.get(`${this.baseUrl}/leaderboards/${gameType}/around-me`, {
+      params: { range }
     });
     return response.data;
   }

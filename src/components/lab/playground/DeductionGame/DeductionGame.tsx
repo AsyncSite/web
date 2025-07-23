@@ -6,6 +6,8 @@ import { IPlayer } from './ai/players/BasePlayer';
 import { HumanPlayer } from './ai/players/HumanPlayer';
 import { PlayerInfo, PlayerType } from './ai/types/PlayerTypes';
 import AIGuideModal from './AIGuideModal';
+import { useAuth } from '../../../../contexts/AuthContext';
+import { GameManagerFactory, GameDataManager, DeductionGameData } from '../../../../services/game';
 
 type GameScreen =
   | 'mode-selection'
@@ -59,6 +61,10 @@ interface PlayerConfig {
 }
 
 const DeductionGame: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+  const [gameDataManager, setGameDataManager] = useState<GameDataManager | null>(null);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [gameStartTime, setGameStartTime] = useState<number>(0);
   const [guideSlideIndex, setGuideSlideIndex] = useState(0);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [isAIGuideModalOpen, setIsAIGuideModalOpen] = useState(false);
@@ -114,6 +120,15 @@ const DeductionGame: React.FC = () => {
   >([]);
   const [isTestRunning, setIsTestRunning] = useState(false);
   const [testResultIdCounter, setTestResultIdCounter] = useState(0);
+
+  // Initialize GameManager
+  useEffect(() => {
+    const manager = GameManagerFactory.getGameManager({
+      isAuthenticated,
+      enableFallback: true
+    });
+    setGameDataManager(manager);
+  }, [isAuthenticated]);
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -301,6 +316,21 @@ const DeductionGame: React.FC = () => {
   };
 
   const initializeGame = async () => {
+    // Start game session
+    if (gameDataManager) {
+      try {
+        const sessionResult = await gameDataManager.startGameSession('DEDUCTION');
+        if (sessionResult.success) {
+          setCurrentSessionId(sessionResult.data.sessionId);
+        }
+      } catch (error) {
+        console.error('Failed to start game session:', error);
+      }
+    }
+    
+    // Record game start time
+    setGameStartTime(Date.now());
+    
     // 1단계: 키워드 생성
     setPreparationStep(1);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -405,7 +435,47 @@ const DeductionGame: React.FC = () => {
           revealedWrongAnswers: context.revealedWrongAnswers,
         }));
       },
-      onGameEnd: (winner) => {
+      onGameEnd: async (winner) => {
+        const timeElapsed = Math.floor((Date.now() - gameStartTime) / 1000);
+        const humanPlayer = players.find(p => p.type === 'human');
+        const didWin = !!(winner && humanPlayer && winner.getInfo().id === humanPlayer.id);
+        
+        // Calculate score based on various factors
+        const baseScore = 1000;
+        const turnBonus = Math.max(0, (gameConfig.maxTurns || 20) - gameState.currentTurn) * 50;
+        const timeBonus = Math.max(0, 300 - timeElapsed) * 2;
+        const difficultyMultiplier = gameMode === 'solo' 
+          ? (soloDifficulty === 'easy' ? 1 : soloDifficulty === 'medium' ? 1.5 : 2)
+          : 1;
+        const totalScore = didWin 
+          ? Math.floor((baseScore + turnBonus + timeBonus) * difficultyMultiplier)
+          : Math.floor(gameState.turnHistory.filter(t => t.playerId === humanPlayer?.id).length * 50);
+
+        // Save game result
+        if (gameDataManager && humanPlayer) {
+          const gameResult: DeductionGameData = {
+            gameType: 'DEDUCTION',
+            score: totalScore,
+            difficulty: gameMode === 'solo' ? soloDifficulty : 'medium',
+            guessesCount: gameState.turnHistory.filter(t => t.playerId === humanPlayer.id).length,
+            hintsUsed: Object.keys(gameState.hintsViewed[humanPlayer.id] || {}).length,
+            playersCount: players.length,
+            timeElapsedSeconds: timeElapsed,
+            won: didWin,
+            playedAt: new Date()
+          };
+
+          try {
+            if (currentSessionId) {
+              await gameDataManager.endGameSession(currentSessionId, gameResult);
+            } else {
+              await gameDataManager.saveGameResult(gameResult);
+            }
+          } catch (error) {
+            console.error('Failed to save game result:', error);
+          }
+        }
+
         if (winner) {
           const winnerInfo = winner.getInfo();
           setGameState((prev) => ({
