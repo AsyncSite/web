@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { env } from '../config/environment';
 import { AUTH_EVENTS, dispatchAuthEvent } from '../utils/authEvents';
+import { translateErrorMessage } from '../constants/errorMessages';
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
@@ -136,17 +137,27 @@ export const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     if (error.response?.data) {
       const data = error.response.data as any;
+      
       // Handle error response format from backend
-      if (data.error?.message) {
-        return data.error.message;
+      // Backend returns: { success: false, error: { code: "AUTH-1001", message: "..." } }
+      if (data.error) {
+        const errorCode = data.error.code;
+        const errorMessage = data.error.message;
+        return translateErrorMessage(errorCode, errorMessage);
       }
+      
+      // Handle simple message format
       if (data.message) {
-        return data.message;
+        return translateErrorMessage(undefined, data.message);
       }
     }
+    
+    // Handle axios error messages
     if (error.message) {
-      return error.message;
+      return translateErrorMessage(undefined, error.message);
     }
   }
-  return 'An unexpected error occurred';
+  
+  // Default error message
+  return '오류가 발생했습니다. 잠시 후 다시 시도해주세요';
 };

@@ -279,9 +279,10 @@ function SignupPage(): React.ReactNode {
       navigate('/users/me', { replace: true });
     } catch (error) {
       const message = error instanceof Error ? error.message : '회원가입에 실패했습니다';
-      // Check if it's a duplicate email error
-      if (message.includes('already exists')) {
-        setErrors({ email: '이미 사용 중인 이메일입니다' });
+      // The error message is already translated by handleApiError
+      // Check if it's an email-related error
+      if (message.includes('이메일')) {
+        setErrors({ email: message });
       } else {
         setErrors({ general: message });
       }
