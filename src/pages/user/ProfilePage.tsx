@@ -20,6 +20,15 @@ function ProfilePage(): React.ReactNode {
     }
   }, [isAuthenticated, isLoading, navigate]);
   
+  // 로딩 중이거나 사용자 정보가 없는 경우 로딩 화면 표시
+  if (isLoading || !authUser) {
+    return (
+      <div className="profile-page-loading">
+        <div className="loading-spinner">로딩 중...</div>
+      </div>
+    );
+  }
+  
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState<'study' | 'game'>('study');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -91,7 +100,7 @@ function ProfilePage(): React.ReactNode {
               <img src={user.profileImage} alt="프로필" />
             ) : (
               <div className="profile-placeholder">
-                {user.name[0]}
+                {user.name?.[0] || '?'}
               </div>
             )}
           </div>

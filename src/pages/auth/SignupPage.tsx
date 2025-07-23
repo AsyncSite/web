@@ -281,8 +281,9 @@ function SignupPage(): React.ReactNode {
         password: formData.password,
         name: formData.name
       });
-      // 회원가입 성공 후 명시적으로 navigate
-      navigate('/users/me', { replace: true });
+      // register 함수가 내부적으로 login을 호출하므로
+      // navigate는 제거하고 AuthContext의 isAuthenticated 상태에 의존
+      // 성공 시 isSubmitting을 false로 설정하지 않음 - 리다이렉트 될 때까지 로딩 상태 유지
     } catch (error) {
       const message = error instanceof Error ? error.message : '회원가입에 실패했습니다';
       // The error message is already translated by handleApiError
@@ -292,7 +293,7 @@ function SignupPage(): React.ReactNode {
       } else {
         setErrors({ general: message });
       }
-    } finally {
+      // 에러 발생 시에만 isSubmitting을 false로 설정
       setIsSubmitting(false);
     }
   };
