@@ -476,7 +476,7 @@ function SignupPage(): React.ReactNode {
                   {errors.password}
                 </span>
               )}
-              {currentStep === 'password' && !completedSteps.includes('password') && (
+              {currentStep === 'password' && !completedSteps.includes('password') && !formData.confirmPassword && (
                 <button
                   type="button"
                   onClick={() => handleStepComplete('password')}
@@ -489,8 +489,8 @@ function SignupPage(): React.ReactNode {
             </div>
           </div>
 
-          {/* Confirm Password Step - Show when all previous fields are filled */}
-          <div className={`form-step-wrapper ${(formData.email && formData.name && formData.password) || completedSteps.includes('password') || completedSteps.includes('confirmPassword') ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('confirmPassword') ? 'completed' : ''}`}>
+          {/* Confirm Password Step - Show only after password step is completed or being filled */}
+          <div className={`form-step-wrapper ${(completedSteps.includes('password') || (currentStep === 'password' && formData.password && formData.password.length >= 8)) || completedSteps.includes('confirmPassword') ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('confirmPassword') ? 'completed' : ''}`}>
             <div className="form-group auth-form-group">
               <label htmlFor="confirmPassword" className="auth-label">
                 비밀번호를 한 번 더 입력해주세요
