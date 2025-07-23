@@ -58,6 +58,7 @@ apiClient.interceptors.response.use(
       // Skip refresh for certain endpoints
       const skipRefreshPaths = [
         '/api/auth/login',
+        '/api/auth/logout', // Skip refresh on logout to prevent redirect conflicts
         '/api/auth/validate',
         '/api/auth/refresh',
         '/api/games/', // Game service endpoints (guest play allowed)
