@@ -143,12 +143,13 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       // Clear auth data
       authService.clearAuthData();
       
-      // Only navigate if not already on login or home page
-      if (location.pathname !== '/login' && location.pathname !== '/') {
-        navigate('/login', { replace: true });
-      }
+      // Clear session storage as well
+      sessionStorage.clear();
+      
+      // Force navigation to login and reload to clear any cached state
+      window.location.href = '/login';
     }
-  }, [navigate, location.pathname]);
+  }, []);
 
   const register = useCallback(async (data: RegisterRequest) => {
     try {

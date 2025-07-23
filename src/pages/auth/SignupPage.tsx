@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import userService from '../../api/userService';
+import StarBackground from '../../components/common/StarBackground';
 import './SignupPage.css';
 
 interface SignupFormData {
@@ -255,8 +256,13 @@ function SignupPage(): React.ReactNode {
         setErrors(prev => ({ ...prev, email: undefined }));
       }
       // Remove email from completed steps if it was completed
+      // But keep other completed steps intact
       if (completedSteps.includes('email')) {
-        setCompletedSteps(completedSteps.filter(step => step !== 'email'));
+        setCompletedSteps(prev => prev.filter(step => step !== 'email'));
+        // Reset current step to email only if we're past email step
+        if (currentStep !== 'email') {
+          setCurrentStep('email');
+        }
       }
     }
   };
@@ -312,34 +318,8 @@ function SignupPage(): React.ReactNode {
         </svg>
       </button>
 
-      {/* 움직이는 별 배경 */}
-      <div className="auth-stars">
-        {[...Array(50)].map((_, i) => (
-          <div 
-            key={i} 
-            className="auth-star" 
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
-      
-      {/* 별똥별 효과 */}
-      <div className="auth-shooting-stars">
-        {[...Array(2)].map((_, i) => (
-          <div
-            key={i}
-            className="auth-shooting-star"
-            style={{
-              animationDelay: `${i * 15 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
+      {/* 별 배경 효과 */}
+      <StarBackground />
       
       <div className="signup-container auth-container wide auth-fade-in">
         <div className="signup-brand">
@@ -509,8 +489,8 @@ function SignupPage(): React.ReactNode {
             </div>
           </div>
 
-          {/* Confirm Password Step - Show immediately when password has value */}
-          <div className={`form-step-wrapper ${(formData.password && completedSteps.includes('name')) || completedSteps.includes('password') || completedSteps.includes('confirmPassword') ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('confirmPassword') ? 'completed' : ''}`}>
+          {/* Confirm Password Step - Show when all previous fields are filled */}
+          <div className={`form-step-wrapper ${(formData.email && formData.name && formData.password) || completedSteps.includes('password') || completedSteps.includes('confirmPassword') ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('confirmPassword') ? 'completed' : ''}`}>
             <div className="form-group auth-form-group">
               <label htmlFor="confirmPassword" className="auth-label">
                 비밀번호를 한 번 더 입력해주세요
@@ -557,11 +537,11 @@ function SignupPage(): React.ReactNode {
                   비밀번호가 일치합니다
                 </span>
               )}
-              {currentStep === 'confirmPassword' && (
+              {(formData.email && formData.name && formData.password) && (
                 <button
                   type="submit"
                   className={`signup-button auth-button auth-button-primary ${isSubmitting ? 'loading' : ''}`}
-                  disabled={isSubmitting || !formData.confirmPassword}
+                  disabled={isSubmitting || !formData.confirmPassword || formData.password !== formData.confirmPassword}
                 >
                   {isSubmitting ? '' : '회원가입 완료'}
                 </button>

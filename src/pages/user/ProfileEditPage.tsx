@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
+import StarBackground from '../../components/common/StarBackground';
 import './ProfileEditPage.css';
 
 interface ProfileFormData {
@@ -16,8 +17,16 @@ interface ProfileFormErrors {
 }
 
 function ProfileEditPage(): React.ReactNode {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  
+  // 인증되지 않은 경우 로그인 페이지로 리디렉션
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+  
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
     profileImage: ''
@@ -94,34 +103,8 @@ function ProfileEditPage(): React.ReactNode {
       {/* 투명 헤더 */}
       <Header transparent />
       
-      {/* 움직이는 별 배경 */}
-      <div className="auth-stars">
-        {[...Array(50)].map((_, i) => (
-          <div 
-            key={i} 
-            className="auth-star" 
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
-      
-      {/* 별똥별 효과 */}
-      <div className="auth-shooting-stars">
-        {[...Array(2)].map((_, i) => (
-          <div
-            key={i}
-            className="auth-shooting-star"
-            style={{
-              animationDelay: `${i * 15 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
+      {/* 별 배경 효과 */}
+      <StarBackground />
       
       <div className="profile-edit-container auth-container auth-fade-in">
         <div className="profile-edit-header">

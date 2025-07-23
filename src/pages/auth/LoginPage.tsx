@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import StarBackground from '../../components/common/StarBackground';
 import './LoginPage.css';
 
 interface LoginFormData {
@@ -103,34 +104,8 @@ function LoginPage(): React.ReactNode {
         </svg>
       </button>
 
-      {/* 움직이는 별 배경 */}
-      <div className="auth-stars">
-        {[...Array(50)].map((_, i) => (
-          <div 
-            key={i} 
-            className="auth-star" 
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
-      
-      {/* 별똥별 효과 */}
-      <div className="auth-shooting-stars">
-        {[...Array(2)].map((_, i) => (
-          <div
-            key={i}
-            className="auth-shooting-star"
-            style={{
-              animationDelay: `${i * 15 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
+      {/* 별 배경 효과 */}
+      <StarBackground />
       
       <div className="login-container auth-container auth-fade-in">
         <div className="login-brand">
