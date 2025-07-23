@@ -135,7 +135,10 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
     }
   }, [migrateGuestScores]);
 
-  const logout = useCallback(async () => {
+  const logout = useCallback(async (options?: { redirectTo?: string }) => {
+    const currentPath = window.location.pathname;
+    const protectedRoutes = ['/users/me', '/users/me/edit'];
+    
     try {
       await authService.logout();
     } finally {
@@ -146,8 +149,18 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       // Clear session storage as well
       sessionStorage.clear();
       
-      // Force navigation to login and reload to clear any cached state
-      window.location.href = '/login';
+      // Determine redirect path
+      let redirectPath: string;
+      if (options?.redirectTo) {
+        redirectPath = options.redirectTo;
+      } else if (protectedRoutes.includes(currentPath)) {
+        redirectPath = '/';
+      } else {
+        redirectPath = currentPath;
+      }
+      
+      // Force navigation and reload to clear any cached state
+      window.location.href = redirectPath;
     }
   }, []);
 
