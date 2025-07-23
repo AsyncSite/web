@@ -32,6 +32,16 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
   const [showGuestNotice, setShowGuestNotice] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
 
+  // Hide guest notice after 10 seconds - MUST be before any conditional returns
+  React.useEffect(() => {
+    if (!isAuthenticated && showGuestNotice) {
+      const timer = setTimeout(() => {
+        setIsMinimized(true);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, showGuestNotice]);
+
   // Show loading state while checking authentication
   if (isLoading) {
     return (
@@ -120,16 +130,6 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
         </div>
       );
   }
-
-  // Hide guest notice after 10 seconds
-  React.useEffect(() => {
-    if (!isAuthenticated && showGuestNotice) {
-      const timer = setTimeout(() => {
-        setIsMinimized(true);
-      }, 10000);
-      return () => clearTimeout(timer);
-    }
-  }, [isAuthenticated, showGuestNotice]);
 
   // Render the game with authentication status indicator
   return (
