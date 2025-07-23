@@ -110,7 +110,7 @@
   50% { transform: rotate(10deg) translateY(-8px); }
 }
 
-.signup-logo::after {
+/* .signup-logo::after {
   content: '';
   position: absolute;
   inset: -2px;
@@ -124,17 +124,17 @@
   opacity: 0;
   transition: opacity var(--auth-transition-base);
   filter: blur(8px);
-}
+} */
 
 .signup-logo:hover {
   transform: rotate(0deg) scale(1.1);
   animation: none;
 }
 
-.signup-logo:hover::after {
+/* .signup-logo:hover::after {
   opacity: 0.6;
   animation: authGlowRotate 2s linear infinite;
-}
+} */
 
 .signup-header {
   text-align: center;

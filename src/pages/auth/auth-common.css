@@ -296,8 +296,8 @@
   max-width: 520px;
 }
 
-/* 글로우 이펙트 */
-.auth-container::before {
+/* 글로우 이펙트 - 제거됨 */
+/* .auth-container::before {
   content: '';
   position: absolute;
   top: -2px;
@@ -319,11 +319,11 @@
 .auth-container:hover::before {
   opacity: 0.3;
   animation: authGlowRotate 3s linear infinite;
-}
+} */
 
-@keyframes authGlowRotate {
+/* @keyframes authGlowRotate {
   to { filter: hue-rotate(360deg); }
-}
+} */
 
 .auth-container:hover {
   transform: translateY(-4px) scale(1.02);
