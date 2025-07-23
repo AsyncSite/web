@@ -51,11 +51,6 @@ function SignupPage(): React.ReactNode {
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    return <Navigate to="/users/me" replace />;
-  }
-
   // Focus management
   useEffect(() => {
     switch (currentStep) {
@@ -117,6 +112,11 @@ function SignupPage(): React.ReactNode {
       setCurrentStep('name');
     }
   }, [emailAvailable, currentStep, completedSteps]);
+
+  // Redirect if already authenticated - MUST be after all hooks
+  if (isAuthenticated) {
+    return <Navigate to="/users/me" replace />;
+  }
 
   // Check email availability button handler
   const checkEmailAvailability = () => {
