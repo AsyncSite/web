@@ -477,7 +477,8 @@ function SignupPage(): React.ReactNode {
                   {errors.password}
                 </span>
               )}
-              {currentStep === 'password' && !completedSteps.includes('password') && !formData.confirmPassword && (
+              {currentStep === 'password' && !completedSteps.includes('password') && 
+               !(formData.password && formData.password.length >= 8) && (
                 <button
                   type="button"
                   onClick={() => handleStepComplete('password')}

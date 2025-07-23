@@ -80,10 +80,9 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
   }
 
   // If user is not authenticated and guest play is allowed
-  if (!isAuthenticated && !requireAuth) {
+  if (!isAuthenticated && !requireAuth && !showAuthPrompt && !sessionStorage.getItem(`game-auth-prompt-${gameTitle}`)) {
     // Show auth prompt on first load
-    if (!showAuthPrompt && !sessionStorage.getItem(`game-auth-prompt-${gameTitle}`)) {
-      return (
+    return (
         <div className="game-auth-prompt">
           <div className="auth-prompt-content">
             <h2>{gameTitle}</h2>
@@ -120,7 +119,6 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
           </div>
         </div>
       );
-    }
   }
 
   // Hide guest notice after 10 seconds

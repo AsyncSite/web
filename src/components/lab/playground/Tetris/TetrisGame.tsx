@@ -525,7 +525,7 @@ const TetrisGame: React.FC = () => {
       }
     } catch (error: any) {
       // Handle 401 error specifically
-      if (error?.response?.status === 401) {
+      if (error?.response?.status === 401 && !isAuthenticated) {
         // Show notification that login is required for leaderboard
         showNotification('로그인이 필요한 기능입니다. 게스트로 계속 플레이할 수 있습니다.');
       }
