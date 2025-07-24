@@ -1,5 +1,3 @@
-import { gameHistoryService } from '../components/lab/utilities/spotlight-arena/shared/services';
-import { participantStatsService } from '../components/lab/utilities/spotlight-arena/shared/services';
 import { GameManagerFactory } from './game';
 
 export interface GameActivity {
@@ -23,40 +21,6 @@ class GameActivityService {
     // Get game manager instance
     const gameManager = GameManagerFactory.getDefaultGameManager();
     
-    // Get Spotlight Arena stats
-    const spotlightHistory = gameHistoryService.getHistory();
-    const spotlightUserHistory = userId ? 
-      spotlightHistory.filter(game => 
-        game.participants.some(p => p.id === userId || p.name === userId)
-      ) : spotlightHistory;
-    
-    const spotlightUserStats = userId ? 
-      participantStatsService.getParticipantStats(userId) : null;
-    
-    if (spotlightHistory.length > 0) {
-      // Get rankings from top winners
-      const topWinners = participantStatsService.getTopWinners(100);
-      const userRanking = userId ? 
-        topWinners.findIndex(p => p.participantId === userId || p.name === userId) + 1 : 0;
-      
-      activities.push({
-        name: 'Spotlight Arena',
-        link: '/lab/spotlight-arena',
-        totalCount: spotlightUserHistory.length,
-        myRanking: userRanking > 0 ? userRanking : undefined,
-        totalRanking: topWinners.length,
-        wins: spotlightUserStats?.wins || 0,
-        participations: spotlightUserStats?.totalGames || spotlightUserHistory.length,
-        lastPlayed: spotlightUserHistory[0]?.timestamp ? 
-          new Date(spotlightUserHistory[0].timestamp).toLocaleDateString('ko-KR') : undefined
-      });
-    }
-    
-    // Get Team Shuffle stats from localStorage if available
-    const teamShuffleData = this.getTeamShuffleStats(userId);
-    if (teamShuffleData) {
-      activities.push(teamShuffleData);
-    }
     
     // Get Tetris stats from GameManager
     try {
@@ -105,80 +69,6 @@ class GameActivityService {
     return activities;
   }
   
-  /**
-   * Get Team Shuffle stats from localStorage
-   */
-  private getTeamShuffleStats(userId?: string): GameActivity | null {
-    try {
-      const teamShuffleHistory = localStorage.getItem('team-shuffle-history');
-      if (teamShuffleHistory) {
-        const history = JSON.parse(teamShuffleHistory);
-        if (Array.isArray(history) && history.length > 0) {
-          return {
-            name: 'Team Shuffle',
-            link: '/lab/team-shuffle',
-            totalCount: history.length,
-            lastPlayed: history[0].timestamp ? 
-              new Date(history[0].timestamp).toLocaleDateString('ko-KR') : undefined
-          };
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load team shuffle stats:', error);
-    }
-    return null;
-  }
-  
-  /**
-   * Get Tetris stats from localStorage
-   */
-  private getTetrisStats(userId?: string): GameActivity | null {
-    try {
-      const tetrisHighScore = localStorage.getItem('tetris-high-score');
-      const tetrisLastPlayed = localStorage.getItem('tetris-last-played');
-      
-      if (tetrisHighScore || tetrisLastPlayed) {
-        return {
-          name: 'Tetris',
-          link: '/lab/tetris',
-          totalCount: parseInt(localStorage.getItem('tetris-play-count') || '0'),
-          myRanking: tetrisHighScore ? parseInt(tetrisHighScore) : undefined,
-          lastPlayed: tetrisLastPlayed ? 
-            new Date(tetrisLastPlayed).toLocaleDateString('ko-KR') : undefined
-        };
-      }
-    } catch (error) {
-      console.error('Failed to load tetris stats:', error);
-    }
-    return null;
-  }
-  
-  /**
-   * Get Deduction Game stats from localStorage
-   */
-  private getDeductionGameStats(userId?: string): GameActivity | null {
-    try {
-      const deductionHistory = localStorage.getItem('deduction-game-history');
-      if (deductionHistory) {
-        const history = JSON.parse(deductionHistory);
-        if (Array.isArray(history) && history.length > 0) {
-          const wins = history.filter((game: any) => game.won).length;
-          return {
-            name: 'Deduction Game',
-            link: '/lab/deduction-game',
-            totalCount: history.length,
-            wins: wins,
-            participations: history.length,
-            lastPlayed: history[0].timestamp ? 
-              new Date(history[0].timestamp).toLocaleDateString('ko-KR') : undefined
-          };
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load deduction game stats:', error);
-    }
-    return null;
-  }
   
   /**
    * Get summary statistics for all games
