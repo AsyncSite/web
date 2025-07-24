@@ -70,7 +70,7 @@ class GameActivityService {
           name: 'Tetris',
           link: '/lab/tetris',
           totalCount: stat.totalGamesPlayed,
-          myRanking: tetrisRank.success && tetrisRank.data ? tetrisRank.data : stat.bestScore,
+          myRanking: stat.bestScore,
           lastPlayed: stat.lastPlayedAt ? 
             new Date(stat.lastPlayedAt).toLocaleDateString('ko-KR') : undefined
         });
