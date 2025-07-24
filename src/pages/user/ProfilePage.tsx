@@ -145,7 +145,7 @@ function ProfilePage(): React.ReactNode {
                 <p>아직 참여 중인 스터디가 없어요</p>
                 <p>스터디를 둘러보고 관심있는 주제에 참여해보세요!</p>
                 <p className="suggestion">게임도 함께 즐기면서 공부하는 건 어떨까요?</p>
-                <a href="/study" className="browse-button">스터디 둘러보기</a>
+                <Link to="/study" className="browse-button">스터디 둘러보기</Link>
               </div>
             ) : (
               <>
@@ -178,7 +178,7 @@ function ProfilePage(): React.ReactNode {
                   </div>
                 )}
 
-                <a href="/study" className="view-all-link">→ 모든 스터디 보기</a>
+                <Link to="/study" className="view-all-link">→ 모든 스터디 보기</Link>
               </>
             )}
           </section>
@@ -252,7 +252,7 @@ function ProfilePage(): React.ReactNode {
                         </div>
                       )}
                     </div>
-                    <a href={activity.link} className="play-button">게임하러 가기</a>
+                    <Link to={activity.link} className="play-button">게임하러 가기</Link>
                   </div>
                 ))}
               </div>
@@ -261,7 +261,7 @@ function ProfilePage(): React.ReactNode {
             <div className="empty-state">
               <p>아직 플레이한 게임이 없어요</p>
               <p>스터디 쉬는 시간에 재미있는 게임 한 판 어떠세요?</p>
-              <a href="/lab" className="browse-button">게임 둘러보기</a>
+              <Link to="/lab" className="browse-button">게임 둘러보기</Link>
             </div>
           )}
         </section>

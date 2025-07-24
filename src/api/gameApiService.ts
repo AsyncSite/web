@@ -139,13 +139,15 @@ class GameApiService {
     return response.data.entries || [];
   }
 
-  async getLeaderboardAroundUser(gameType: string, range: number = 5): Promise<LeaderboardEntry[]> {
-    const response = await apiClient.get(`${this.baseUrl}/leaderboards/${gameType}/around-me`, {
+  async getLeaderboardAroundUser(gameType: string, range: number = 5): Promise<{ entries: LeaderboardEntry[], userRank?: number }> {
+    const response = await apiClient.get<LeaderboardResponse>(`${this.baseUrl}/leaderboards/${gameType}/around-me`, {
       params: { range }
     });
-    // TODO: Verify if this endpoint also returns LeaderboardResponse structure
-    // Currently assuming it returns LeaderboardEntry[] directly
-    return response.data;
+    // Backend returns full leaderboard object with userRank field
+    return {
+      entries: response.data.entries || [],
+      userRank: response.data.userRank ?? undefined
+    };
   }
 
   async getUserLeaderboard(gameType: string, userId?: number): Promise<LeaderboardEntry[]> {

@@ -272,10 +272,10 @@ export class ApiGameManager implements GameDataManager {
 
   async getUserRank(gameType: GameType): Promise<GameDataResult<number | null>> {
     try {
-      const aroundMe = await gameApiService.getLeaderboardAroundUser(gameType, 1);
-      const myEntry = aroundMe.find(entry => entry.userName === 'me'); // Need to identify current user
+      const result = await gameApiService.getLeaderboardAroundUser(gameType, 1);
       
-      return { success: true, data: myEntry?.rank || null };
+      // Backend provides userRank directly in the response
+      return { success: true, data: result.userRank || null };
     } catch (error: any) {
       const errorCode = error?.response?.status === 401 ? 'NETWORK_ERROR' : 'UNKNOWN_ERROR';
       return {
