@@ -1,4 +1,5 @@
 import apiClient from './client';
+import publicApiClient from './publicClient';
 
 // Game session types
 export interface GameSession {
@@ -115,7 +116,8 @@ class GameApiService {
 
   // Leaderboards
   async getGlobalLeaderboard(gameType: string, limit: number = 10): Promise<LeaderboardEntry[]> {
-    const response = await apiClient.get(`${this.baseUrl}/leaderboards/global`, {
+    // Use publicApiClient for public endpoints
+    const response = await publicApiClient.get(`${this.baseUrl}/leaderboards/global`, {
       params: { gameType, limit }
     });
     return response.data;
@@ -137,9 +139,20 @@ class GameApiService {
 
   // Statistics
   async getUserStatistics(gameType?: string): Promise<GameStatistics[]> {
-    const response = await apiClient.get(`${this.baseUrl}/statistics/user`, {
-      params: { gameType }
-    });
+    // Get authenticated user's statistics
+    const endpoint = gameType 
+      ? `${this.baseUrl}/statistics/my/${gameType}`
+      : `${this.baseUrl}/statistics/my`;
+    
+    const response = await apiClient.get(endpoint);
+    // Ensure we always return an array for consistency
+    return Array.isArray(response.data) ? response.data : [response.data];
+  }
+
+  // Get another user's public statistics
+  async getPublicUserStatistics(userId: string | number): Promise<GameStatistics[]> {
+    // Use publicApiClient for public endpoints
+    const response = await publicApiClient.get(`${this.baseUrl}/statistics/user/${userId}`);
     return response.data;
   }
 

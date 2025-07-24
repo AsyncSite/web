@@ -15,9 +15,15 @@ import gameApiService, {
   GameResultResponse,
   GameSession as ApiGameSession
 } from '../../api/gameApiService';
+import { sessionRecoveryService } from './SessionRecoveryService';
 
 export class ApiGameManager implements GameDataManager {
   private sessionCache: Map<GameType, GameSession> = new Map();
+
+  constructor() {
+    // Migrate any old sessions from localStorage to sessionStorage
+    sessionRecoveryService.migrateFromLocalStorage();
+  }
 
   async startGameSession(gameType: GameType): Promise<GameDataResult<GameSession>> {
     try {
@@ -34,6 +40,9 @@ export class ApiGameManager implements GameDataManager {
 
       // Cache the session
       this.sessionCache.set(gameType, session);
+      
+      // Save to sessionStorage for recovery
+      sessionRecoveryService.saveSession(gameType, session.sessionId);
 
       return { success: true, data: session };
     } catch (error: any) {
@@ -53,10 +62,11 @@ export class ApiGameManager implements GameDataManager {
         result: apiResult
       });
 
-      // Clear cached session
+      // Clear cached session and sessionStorage
       this.sessionCache.forEach((session, gameType) => {
         if (session.sessionId === sessionId) {
           this.sessionCache.delete(gameType);
+          sessionRecoveryService.clearSession(gameType);
         }
       });
 
@@ -74,10 +84,11 @@ export class ApiGameManager implements GameDataManager {
     try {
       await gameApiService.abandonGameSession(sessionId);
 
-      // Clear cached session
+      // Clear cached session and sessionStorage
       this.sessionCache.forEach((session, gameType) => {
         if (session.sessionId === sessionId) {
           this.sessionCache.delete(gameType);
+          sessionRecoveryService.clearSession(gameType);
         }
       });
 
@@ -99,9 +110,22 @@ export class ApiGameManager implements GameDataManager {
         return { success: true, data: cachedSession };
       }
 
-      // If not in cache, try to get from API
-      // Note: This requires implementing a method in gameApiService to get active sessions
-      // For now, return null
+      // Try to recover from sessionStorage
+      const recoveredSession = await sessionRecoveryService.validateAndRecoverSession(gameType);
+      if (recoveredSession) {
+        const session: GameSession = {
+          sessionId: recoveredSession.sessionId,
+          gameType: gameType,
+          startedAt: new Date(recoveredSession.startedAt),
+          status: this.mapApiStatus(recoveredSession.status)
+        };
+        
+        // Update cache
+        this.sessionCache.set(gameType, session);
+        
+        return { success: true, data: session };
+      }
+
       return { success: true, data: null };
     } catch (error: any) {
       return {
@@ -265,9 +289,9 @@ export class ApiGameManager implements GameDataManager {
   }
 
   async clearLocalData(): Promise<GameDataResult<void>> {
-    // API-based storage doesn't need to clear local data
-    // Just clear the session cache
+    // Clear session cache and sessionStorage
     this.sessionCache.clear();
+    sessionRecoveryService.clearAllSessions();
     return { success: true, data: undefined };
   }
 
