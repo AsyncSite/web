@@ -191,12 +191,12 @@ export class ApiGameManager implements GameDataManager {
       const apiStats = await gameApiService.getUserStatistics(gameType);
       
       const statistics: GameStatistics[] = apiStats.map(stat => ({
-        gameType: stat.gameType as GameType,
-        totalGamesPlayed: stat.totalGamesPlayed,
+        gameType: (stat.gameTypeCode || stat.gameType) as GameType,
+        totalGamesPlayed: stat.gamesPlayed || stat.totalGamesPlayed || 0,
         totalScore: stat.totalScore,
         averageScore: stat.averageScore,
-        bestScore: stat.bestScore,
-        lastPlayedAt: new Date(stat.lastPlayedAt),
+        bestScore: stat.highScore || stat.bestScore || 0,
+        lastPlayedAt: stat.lastPlayedAt ? new Date(stat.lastPlayedAt) : undefined,
         additionalStats: stat.additionalStats
       }));
 
@@ -213,9 +213,9 @@ export class ApiGameManager implements GameDataManager {
   async getPersonalBest(gameType: GameType): Promise<GameDataResult<number>> {
     try {
       const stats = await gameApiService.getUserStatistics(gameType);
-      const gameStat = stats.find(s => s.gameType === gameType);
+      const gameStat = stats.find(s => (s.gameTypeCode || s.gameType) === gameType);
       
-      return { success: true, data: gameStat?.bestScore || 0 };
+      return { success: true, data: gameStat?.highScore || gameStat?.bestScore || 0 };
     } catch (error: any) {
       const errorCode = error?.response?.status === 401 ? 'NETWORK_ERROR' : 'UNKNOWN_ERROR';
       return {
@@ -230,11 +230,11 @@ export class ApiGameManager implements GameDataManager {
       const stats = await gameApiService.getUserStatistics(gameType);
       
       if (gameType) {
-        const gameStat = stats.find(s => s.gameType === gameType);
-        return { success: true, data: gameStat?.totalGamesPlayed || 0 };
+        const gameStat = stats.find(s => (s.gameTypeCode || s.gameType) === gameType);
+        return { success: true, data: gameStat?.gamesPlayed || gameStat?.totalGamesPlayed || 0 };
       }
 
-      const total = stats.reduce((sum, stat) => sum + stat.totalGamesPlayed, 0);
+      const total = stats.reduce((sum, stat) => sum + (stat.gamesPlayed || stat.totalGamesPlayed || 0), 0);
       return { success: true, data: total };
     } catch (error: any) {
       const errorCode = error?.response?.status === 401 ? 'NETWORK_ERROR' : 'UNKNOWN_ERROR';
@@ -249,17 +249,19 @@ export class ApiGameManager implements GameDataManager {
     try {
       const apiLeaderboard = await gameApiService.getGlobalLeaderboard(gameType, limit);
       
+      // Empty leaderboard is a valid response
       const leaderboard: LeaderboardEntry[] = apiLeaderboard.map(entry => ({
         rank: entry.rank,
-        userId: entry.userId.toString(),
+        userId: entry.userId, // Already string from backend
         userName: entry.userName,
         score: entry.score,
-        playedAt: new Date(entry.playedAt),
+        playedAt: entry.playedAt ? new Date(entry.playedAt) : new Date(),
         additionalData: entry.additionalData
       }));
 
       return { success: true, data: leaderboard };
     } catch (error: any) {
+      // Only treat actual network errors or auth errors as failures
       const errorCode = error?.response?.status === 401 ? 'NETWORK_ERROR' : 'UNKNOWN_ERROR';
       return {
         success: false,

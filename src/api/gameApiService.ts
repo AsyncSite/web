@@ -65,19 +65,34 @@ export interface GameResultResponse {
 
 export interface LeaderboardEntry {
   rank: number;
-  userId: number;
+  userId: string; // Changed from number to string to match backend
   userName: string;
   score: number;
   playedAt: string;
   additionalData?: any;
 }
 
+// Backend response structure for leaderboard endpoints
+export interface LeaderboardResponse {
+  categoryCode: string;
+  categoryName: string;
+  periodType: string;
+  entries: LeaderboardEntry[];
+  totalEntries: number;
+  totalPages: number;
+  currentPage: number;
+  userRank: number | null;
+}
+
 export interface GameStatistics {
   gameType: string;
+  gameTypeCode?: string; // Backend field
   totalGamesPlayed: number;
+  gamesPlayed?: number; // Backend field
   totalScore: number;
   averageScore: number;
   bestScore: number;
+  highScore?: number; // Backend field
   lastPlayedAt: string;
   additionalStats?: any;
 }
@@ -117,16 +132,19 @@ class GameApiService {
   // Leaderboards
   async getGlobalLeaderboard(gameType: string, limit: number = 10): Promise<LeaderboardEntry[]> {
     // Use publicApiClient for public endpoints
-    const response = await publicApiClient.get(`${this.baseUrl}/leaderboards/global`, {
+    const response = await publicApiClient.get<LeaderboardResponse>(`${this.baseUrl}/leaderboards/global`, {
       params: { gameType, limit }
     });
-    return response.data;
+    // Backend returns full leaderboard object, extract entries array
+    return response.data.entries || [];
   }
 
   async getLeaderboardAroundUser(gameType: string, range: number = 5): Promise<LeaderboardEntry[]> {
     const response = await apiClient.get(`${this.baseUrl}/leaderboards/${gameType}/around-me`, {
       params: { range }
     });
+    // TODO: Verify if this endpoint also returns LeaderboardResponse structure
+    // Currently assuming it returns LeaderboardEntry[] directly
     return response.data;
   }
 
@@ -134,6 +152,8 @@ class GameApiService {
     const response = await apiClient.get(`${this.baseUrl}/leaderboards/user`, {
       params: { gameType, userId }
     });
+    // TODO: Verify if this endpoint also returns LeaderboardResponse structure
+    // Currently assuming it returns LeaderboardEntry[] directly
     return response.data;
   }
 
