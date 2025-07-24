@@ -252,7 +252,9 @@ function ProfilePage(): React.ReactNode {
                         </div>
                       )}
                     </div>
-                    <Link to={activity.link} className="play-button">게임하러 가기</Link>
+                    <Link to={activity.link} className="play-button">
+                      게임하러 가기
+                    </Link>
                   </div>
                 ))}
               </div>

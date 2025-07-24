@@ -5,7 +5,6 @@ import { Tetris, DeductionGame } from '../components/lab/playground';
 
 const LabDetailPage = () => {
   const { subject } = useParams();
-  console.log(subject);
 
   const renderContetns = () => {
     switch (subject) {
