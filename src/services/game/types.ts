@@ -20,9 +20,22 @@ export interface DeductionGameData extends BaseGameResult {
   gameType: 'DEDUCTION';
   difficulty: 'easy' | 'medium' | 'hard';
   guessesCount: number;
-  hintsUsed?: number;
+  hintsUsed?: number; // Deprecated - use wrongAnswerHintsUsed and correctAnswerHintsUsed
+  wrongAnswerHintsUsed: number;
+  correctAnswerHintsUsed: number;
   playersCount: number;
   won: boolean;
+  opponentType: 'AI' | 'HUMAN';
+  opponentDifficulty?: 'easy' | 'medium' | 'hard'; // For AI opponents
+  opponentId?: string; // For human opponents
+  turnDetails?: TurnDetail[];
+}
+
+export interface TurnDetail {
+  turnNumber: number;
+  thinkTimeSeconds: number;
+  wasCorrect: boolean;
+  hintUsedBefore: 'WRONG_ANSWER' | 'CORRECT_ANSWER' | null;
 }
 
 export type GameResult = TetrisGameData | DeductionGameData;

@@ -43,9 +43,14 @@ export interface DeductionGameResult extends GameResult {
   difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   guessesCount: number;
   hintsUsed?: number;
+  wrongAnswerHintsUsed?: number;
+  correctAnswerHintsUsed?: number;
   playersCount: number;
   timeElapsedSeconds: number;
   won: boolean;
+  opponentType?: string;
+  opponentDifficulty?: string;
+  opponentId?: string;
   gameData?: string;
 }
 

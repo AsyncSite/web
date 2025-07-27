@@ -6,8 +6,10 @@ import { IPlayer } from './ai/players/BasePlayer';
 import { HumanPlayer } from './ai/players/HumanPlayer';
 import { PlayerInfo, PlayerType } from './ai/types/PlayerTypes';
 import AIGuideModal from './AIGuideModal';
+import DeductionLeaderboard from './components/DeductionLeaderboard';
+import GameAuthWrapper from '../../../auth/GameAuthWrapper';
 import { useAuth } from '../../../../contexts/AuthContext';
-import { GameManagerFactory, GameDataManager, DeductionGameData } from '../../../../services/game';
+import { GameManagerFactory, GameDataManager, DeductionGameData, TurnDetail } from '../../../../services/game';
 
 type GameScreen =
   | 'mode-selection'
@@ -68,6 +70,7 @@ const DeductionGame: React.FC = () => {
   const [guideSlideIndex, setGuideSlideIndex] = useState(0);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [isAIGuideModalOpen, setIsAIGuideModalOpen] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<GameScreen>('mode-selection');
   const [gameMode, setGameMode] = useState<GameMode>('solo');
   const [playerCount, setPlayerCount] = useState(2);
@@ -105,6 +108,10 @@ const DeductionGame: React.FC = () => {
   const [isAIThinking, setIsAIThinking] = useState(false);
   const gameManagerRef = useRef<GameManager | null>(null);
   const [turnStartTime, setTurnStartTime] = useState<number>(0);
+  // Track hint usage for leaderboard
+  const [correctAnswerHintsUsed, setCorrectAnswerHintsUsed] = useState(0);
+  const [wrongAnswerHintsUsed, setWrongAnswerHintsUsed] = useState(0);
+  const [turnDetailsData, setTurnDetailsData] = useState<TurnDetail[]>([]);
   const [codeEditorModal, setCodeEditorModal] = useState<{
     isOpen: boolean;
     playerId: number | null;
@@ -129,6 +136,20 @@ const DeductionGame: React.FC = () => {
     });
     setGameDataManager(manager);
   }, [isAuthenticated]);
+
+  // Remove lab-content padding for full screen experience
+  useEffect(() => {
+    const labContent = document.querySelector('.lab-content') as HTMLElement;
+    
+    if (labContent) {
+      const originalPadding = labContent.style.padding;
+      labContent.style.padding = '0';
+      
+      return () => {
+        labContent.style.padding = originalPadding;
+      };
+    }
+  }, []);
 
   const handleModeSelect = (mode: GameMode) => {
     setGameMode(mode);
@@ -331,6 +352,11 @@ const DeductionGame: React.FC = () => {
     // Record game start time
     setGameStartTime(Date.now());
     
+    // Reset hint usage counters
+    setCorrectAnswerHintsUsed(0);
+    setWrongAnswerHintsUsed(0);
+    setTurnDetailsData([]);
+    
     // 1단계: 키워드 생성
     setPreparationStep(1);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -451,6 +477,10 @@ const DeductionGame: React.FC = () => {
           ? Math.floor((baseScore + turnBonus + timeBonus) * difficultyMultiplier)
           : Math.floor(gameState.turnHistory.filter(t => t.playerId === humanPlayer?.id).length * 50);
 
+        // Find opponent info
+        const opponent = players.find(p => p.id !== humanPlayer?.id);
+        const isAIOpponent = opponent?.type === 'built-in-ai' || opponent?.type === 'custom-ai';
+        
         // Save game result
         if (gameDataManager && humanPlayer) {
           const gameResult: DeductionGameData = {
@@ -458,11 +488,17 @@ const DeductionGame: React.FC = () => {
             score: totalScore,
             difficulty: gameMode === 'solo' ? soloDifficulty : 'medium',
             guessesCount: gameState.turnHistory.filter(t => t.playerId === humanPlayer.id).length,
-            hintsUsed: Object.keys(gameState.hintsViewed[humanPlayer.id] || {}).length,
+            hintsUsed: correctAnswerHintsUsed + wrongAnswerHintsUsed, // For backward compatibility
+            wrongAnswerHintsUsed: wrongAnswerHintsUsed,
+            correctAnswerHintsUsed: correctAnswerHintsUsed,
             playersCount: players.length,
-            timeElapsedSeconds: timeElapsed,
             won: didWin,
-            playedAt: new Date()
+            opponentType: isAIOpponent ? 'AI' : 'HUMAN',
+            opponentDifficulty: isAIOpponent && opponent ? opponent.aiDifficulty : undefined,
+            opponentId: !isAIOpponent && opponent ? opponent.nickname : undefined,
+            timeElapsedSeconds: timeElapsed,
+            playedAt: new Date(),
+            turnDetails: turnDetailsData
           };
 
           try {
@@ -489,6 +525,9 @@ const DeductionGame: React.FC = () => {
             gameStatus: 'finished',
           }));
         }
+        
+        // Removed automatic leaderboard display
+        // User can click "리더보드 보기" button to view leaderboard
       },
       onTimerTick: (remainingTime) => {
         setTimeRemaining(remainingTime);
@@ -871,6 +910,7 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedAnswers: context.revealedAnswers,
         }));
+        setCorrectAnswerHintsUsed(prev => prev + 1);
       }
     } else {
       const unrevealedAnswers = gameState.answers.filter(
@@ -883,6 +923,7 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedAnswers: [...prev.revealedAnswers, randomAnswer],
         }));
+        setCorrectAnswerHintsUsed(prev => prev + 1);
       }
     }
   };
@@ -896,6 +937,7 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedWrongAnswers: context.revealedWrongAnswers,
         }));
+        setWrongAnswerHintsUsed(prev => prev + 1);
       }
     } else {
       const wrongAnswers = gameState.keywords
@@ -911,6 +953,7 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedWrongAnswers: [...prev.revealedWrongAnswers, randomWrong],
         }));
+        setWrongAnswerHintsUsed(prev => prev + 1);
       }
     }
   };
@@ -963,11 +1006,23 @@ const DeductionGame: React.FC = () => {
 
     const currentPlayerId = ((gameState.currentTurn - 1) % players.length) + 1;
     const currentPlayer = players.find((p) => p.id === currentPlayerId);
+    const isHumanPlayer = currentPlayer?.type === 'human';
 
     // 실제 사용 시간 계산
     const actualTimeUsed = turnStartTime
       ? Math.round((Date.now() - turnStartTime) / 1000)
       : gameConfig.timeLimit - timeRemaining;
+
+    // Record turn detail for human player
+    if (isHumanPlayer) {
+      const turnDetail: TurnDetail = {
+        turnNumber: gameState.currentTurn,
+        thinkTimeSeconds: actualTimeUsed,
+        wasCorrect: isWinner,
+        hintUsedBefore: null // Will be updated in hint functions
+      };
+      setTurnDetailsData(prev => [...prev, turnDetail]);
+    }
 
     const turnResult: TurnResult = {
       playerId: currentPlayerId,
@@ -1807,8 +1862,8 @@ function makeGuess(gameState) {
         ) : (
           <>
             <h2>게임 준비 완료!</h2>
-            <div className="game-summary">
-              <div className="summary-grid">
+            <div className="deduction-game-summary">
+              <div className="deduction-summary-grid">
                 <div className="summary-item">
                   <h4>참가자</h4>
                   <div className="player-chips">
@@ -1848,7 +1903,7 @@ function makeGuess(gameState) {
                 </div>
               </div>
 
-              <div className="game-start-section">
+              <div className="deduction-game-start-section">
                 <div className="countdown-info">
                   <h3>모든 준비가 완료되었습니다!</h3>
                   <p>게임을 시작하시겠습니까?</p>
@@ -2034,7 +2089,19 @@ function makeGuess(gameState) {
               </div>
             </div>
 
+            {!isAuthenticated && (
+              <div className="guest-notice-game-over">
+                <p>💡 게스트로 플레이 중입니다. 로그인하면 리더보드에 점수를 등록할 수 있습니다!</p>
+              </div>
+            )}
+            
             <div className="setup-actions">
+              <button
+                className="btn-large btn-primary"
+                onClick={() => setShowLeaderboard(true)}
+              >
+                리더보드 보기
+              </button>
               <button
                 className="btn-large btn-secondary"
                 onClick={() => setCurrentScreen('mode-selection')}
@@ -2328,27 +2395,42 @@ function makeGuess(gameState) {
   };
 
   return (
-    <div className={`deduction-game ${getThemeClass()}`}>
-      <div className="game-content">
-        <div className="game-wrapper">
+    <GameAuthWrapper 
+      gameTitle="추리 게임" 
+      features={{ 
+        saveProgress: false, 
+        leaderboard: true, 
+        achievements: false 
+      }}
+    >
+      <div className={`deduction-game ${getThemeClass()}`}>
+        <div className="deduction-container">
           <div className="game-header">
             <h1>Exclusive Deduction Game</h1>
             <p>서로 다른 단서로 정답을 추론하는 게임</p>
           </div>
+          <div className="game-content">
+            <div className="game-wrapper">
 
-          {currentScreen === 'mode-selection' && renderModeSelection()}
-          {currentScreen === 'difficulty-selection' && renderDifficultySelection()}
-          {currentScreen === 'player-setup' && renderPlayerSetup()}
-          {currentScreen === 'game-config' && renderGameConfig()}
-          {currentScreen === 'game-preparation' && renderGamePreparation()}
-          {currentScreen === 'game' && renderGameScreen()}
+              {currentScreen === 'mode-selection' && renderModeSelection()}
+              {currentScreen === 'difficulty-selection' && renderDifficultySelection()}
+              {currentScreen === 'player-setup' && renderPlayerSetup()}
+              {currentScreen === 'game-config' && renderGameConfig()}
+              {currentScreen === 'game-preparation' && renderGamePreparation()}
+              {currentScreen === 'game' && renderGameScreen()}
+            </div>
+          </div>
+
+          {renderCodeEditorModal()}
+          {renderGuideModal()}
+          <AIGuideModal isOpen={isAIGuideModalOpen} onClose={() => setIsAIGuideModalOpen(false)} />
+          <DeductionLeaderboard 
+            isVisible={showLeaderboard} 
+            onClose={() => setShowLeaderboard(false)} 
+          />
         </div>
-
-        {renderCodeEditorModal()}
-        {renderGuideModal()}
-        <AIGuideModal isOpen={isAIGuideModalOpen} onClose={() => setIsAIGuideModalOpen(false)} />
       </div>
-    </div>
+    </GameAuthWrapper>
   );
 };
 

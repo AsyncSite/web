@@ -344,12 +344,22 @@ export class ApiGameManager implements GameDataManager {
         difficulty: deductionResult.difficulty.toUpperCase() as 'EASY' | 'MEDIUM' | 'HARD',
         guessesCount: deductionResult.guessesCount,
         hintsUsed: deductionResult.hintsUsed,
+        wrongAnswerHintsUsed: deductionResult.wrongAnswerHintsUsed,
+        correctAnswerHintsUsed: deductionResult.correctAnswerHintsUsed,
         playersCount: deductionResult.playersCount,
         timeElapsedSeconds: deductionResult.timeElapsedSeconds,
         won: deductionResult.won,
+        opponentType: deductionResult.opponentType,
+        opponentDifficulty: deductionResult.opponentDifficulty,
+        opponentId: deductionResult.opponentId,
         gameData: JSON.stringify({
           difficulty: deductionResult.difficulty,
-          won: deductionResult.won
+          won: deductionResult.won,
+          wrongAnswerHintsUsed: deductionResult.wrongAnswerHintsUsed,
+          correctAnswerHintsUsed: deductionResult.correctAnswerHintsUsed,
+          opponentType: deductionResult.opponentType,
+          opponentDifficulty: deductionResult.opponentDifficulty,
+          opponentId: deductionResult.opponentId
         })
       } as ApiDeductionResult;
     }

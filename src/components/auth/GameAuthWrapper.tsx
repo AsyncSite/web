@@ -90,7 +90,7 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
   }
 
   // If user is not authenticated and guest play is allowed
-  if (!isAuthenticated && !requireAuth && !showAuthPrompt && !sessionStorage.getItem(`game-auth-prompt-${gameTitle}`)) {
+  if (!isAuthenticated && !requireAuth && !showAuthPrompt) {
     // Show auth prompt on first load
     return (
         <div className="game-auth-prompt">
@@ -98,13 +98,21 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
             <h2>{gameTitle}</h2>
             <div className="guest-icon">👤</div>
             <h3>게스트로 플레이</h3>
-            <p>게스트로 플레이할 수 있지만, 진행상황이 저장되지 않습니다.</p>
+            <p>{gameTitle === '추리 게임' 
+              ? '게스트로 플레이할 수 있지만, 리더보드에 참여할 수 없습니다.' 
+              : '게스트로 플레이할 수 있지만, 진행상황이 저장되지 않습니다.'}</p>
             <div className="auth-benefits">
               <h4>로그인 시 혜택:</h4>
               <ul>
                 {features.saveProgress && <li>💾 게임 진행상황 저장</li>}
                 {features.leaderboard && <li>🏆 리더보드에 점수 등록</li>}
                 {features.achievements && <li>🎯 업적 잠금해제</li>}
+                {gameTitle === '추리 게임' && (
+                  <>
+                    <li>🎖️ 티어별 랭킹 경쟁</li>
+                    <li>🔍 힌트 사용 전략 분석</li>
+                  </>
+                )}
                 <li>📈 시간별 성과 추적</li>
               </ul>
             </div>
@@ -118,7 +126,6 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
               <button 
                 className="btn-secondary"
                 onClick={() => {
-                  sessionStorage.setItem(`game-auth-prompt-${gameTitle}`, 'true');
                   setShowAuthPrompt(true);
                   onGuestPlay?.();
                 }}
@@ -140,7 +147,9 @@ const GameAuthWrapper: React.FC<GameAuthWrapperProps> = ({
             <>
               <div className="guest-info">
                 <span className="guest-indicator">👤 게스트로 플레이 중</span>
-                <span className="guest-message">점수가 로컬에만 저장됩니다</span>
+                <span className="guest-message">{gameTitle === '추리 게임' 
+                  ? '리더보드에 참여할 수 없습니다' 
+                  : '점수가 로컬에만 저장됩니다'}</span>
               </div>
               <div className="guest-actions">
                 <button 

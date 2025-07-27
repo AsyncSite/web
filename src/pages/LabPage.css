@@ -20,7 +20,7 @@
 .lab-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 120px 20px 40px; /* 헤더 높이(80px) + 여백(40px) */
+  padding: 100px 20px 40px; /* 헤더 높이(80px) + 여백(20px) */
 }
 
 .lab-title {

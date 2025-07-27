@@ -1,148 +1,155 @@
 /* CSS 변수 정의 - 테마 시스템 */
-:root {
-  /* 폰트 패밀리 */
-  --font-primary: 'Orbitron', sans-serif; /* 메인 제목, 게임 헤더 */
-  --font-secondary: 'Russo One', sans-serif; /* 부제목, 강조 */
-  --font-body: 'Exo 2', sans-serif; /* 본문, 일반 텍스트 */
-  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; /* 코드 에디터 */
+.deduction-game {
+  /* Deduction Game 전용 폰트 패밀리 */
+  --deduction-font-primary: 'Orbitron', sans-serif; /* 메인 제목, 게임 헤더 */
+  --deduction-font-secondary: 'Russo One', sans-serif; /* 부제목, 강조 */
+  --deduction-font-body: 'Exo 2', sans-serif; /* 본문, 일반 텍스트 */
+  --deduction-font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; /* 코드 에디터 */
 
   /* 기본 테마 (중급) */
-  --primary-gradient-start: #667eea;
-  --primary-gradient-end: #764ba2;
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.9);
-  --text-tertiary: rgba(255, 255, 255, 0.7);
-  --surface-primary: rgba(255, 255, 255, 0.1);
-  --surface-secondary: rgba(255, 255, 255, 0.15);
-  --surface-hover: rgba(255, 255, 255, 0.2);
-  --border-primary: rgba(255, 255, 255, 0.2);
-  --border-secondary: rgba(255, 255, 255, 0.3);
-  --border-active: rgba(255, 255, 255, 0.6);
-  --shadow-primary: rgba(0, 0, 0, 0.1);
-  --shadow-strong: rgba(0, 0, 0, 0.3);
+  --deduction-primary-gradient-start: #667eea;
+  --deduction-primary-gradient-end: #764ba2;
+  --deduction-text-primary: #ffffff;
+  --deduction-text-secondary: rgba(255, 255, 255, 0.9);
+  --deduction-text-tertiary: rgba(255, 255, 255, 0.7);
+  --deduction-surface-primary: rgba(255, 255, 255, 0.1);
+  --deduction-surface-secondary: rgba(255, 255, 255, 0.15);
+  --deduction-surface-hover: rgba(255, 255, 255, 0.2);
+  --deduction-border-primary: rgba(255, 255, 255, 0.2);
+  --deduction-border-secondary: rgba(255, 255, 255, 0.3);
+  --deduction-border-active: rgba(255, 255, 255, 0.6);
+  --deduction-shadow-primary: rgba(0, 0, 0, 0.1);
+  --deduction-shadow-strong: rgba(0, 0, 0, 0.3);
 
   /* 트랜지션 설정 */
-  --transition-color: 0.3s ease;
+  --deduction-transition-color: 0.3s ease;
 
   /* 특수 버튼 색상 */
-  --btn-primary-bg: #ff6b6b;
-  --btn-primary-bg-hover: #ff5252;
-  --btn-danger-bg: #ff6b6b;
-  --btn-danger-bg-hover: #ff5252;
+  --deduction-btn-primary-bg: #ff6b6b;
+  --deduction-btn-primary-bg-hover: #ff5252;
+  --deduction-btn-danger-bg: #ff6b6b;
+  --deduction-btn-danger-bg-hover: #ff5252;
 
   /* 특수 요소들을 위한 추가 색상 */
-  --guide-button-bg: #007bff;
-  --guide-button-text: #ffffff;
-  --start-button-gradient-start: #ff6b6b;
-  --start-button-gradient-end: #ff8e8e;
+  --deduction-guide-button-bg: #007bff;
+  --deduction-guide-button-text: #ffffff;
+  --deduction-start-button-gradient-start: #ff6b6b;
+  --deduction-start-button-gradient-end: #ff8e8e;
 }
 
 /* 초급 테마 - 밝고 명확한 대비 */
 .deduction-game.theme-beginner {
-  --primary-gradient-start: #f5f5f5;
-  --primary-gradient-end: #e0e0e0;
-  --text-primary: #212121;
-  --text-secondary: #424242;
-  --text-tertiary: #616161;
-  --surface-primary: #ffffff;
-  --surface-secondary: #fafafa;
-  --surface-hover: #f5f5f5;
-  --border-primary: #bdbdbd;
-  --border-secondary: #9e9e9e;
-  --border-active: #757575;
-  --shadow-primary: rgba(0, 0, 0, 0.12);
-  --shadow-strong: rgba(0, 0, 0, 0.24);
+  --deduction-primary-gradient-start: #f5f5f5;
+  --deduction-primary-gradient-end: #e0e0e0;
+  --deduction-text-primary: #212121;
+  --deduction-text-secondary: #424242;
+  --deduction-text-tertiary: #616161;
+  --deduction-surface-primary: #ffffff;
+  --deduction-surface-secondary: #fafafa;
+  --deduction-surface-hover: #f5f5f5;
+  --deduction-border-primary: #bdbdbd;
+  --deduction-border-secondary: #9e9e9e;
+  --deduction-border-active: #757575;
+  --deduction-shadow-primary: rgba(0, 0, 0, 0.12);
+  --deduction-shadow-strong: rgba(0, 0, 0, 0.24);
 
   /* 특수 버튼 색상 */
-  --btn-primary-bg: #2196f3;
-  --btn-primary-bg-hover: #1976d2;
-  --btn-danger-bg: #f44336;
-  --btn-danger-bg-hover: #d32f2f;
+  --deduction-btn-primary-bg: #2196f3;
+  --deduction-btn-primary-bg-hover: #1976d2;
+  --deduction-btn-danger-bg: #f44336;
+  --deduction-btn-danger-bg-hover: #d32f2f;
 
   /* 특수 요소들을 위한 추가 색상 */
-  --guide-button-bg: #2196f3;
-  --guide-button-text: #ffffff;
-  --start-button-gradient-start: #2196f3;
-  --start-button-gradient-end: #1976d2;
+  --deduction-guide-button-bg: #2196f3;
+  --deduction-guide-button-text: #ffffff;
+  --deduction-start-button-gradient-start: #2196f3;
+  --deduction-start-button-gradient-end: #1976d2;
 }
 
 /* 중급 테마 - 생동감 있는 색상 (기본) */
 .deduction-game.theme-intermediate {
-  --primary-gradient-start: #667eea;
-  --primary-gradient-end: #764ba2;
+  --deduction-primary-gradient-start: #667eea;
+  --deduction-primary-gradient-end: #764ba2;
 
   /* 특수 버튼 색상 */
-  --btn-primary-bg: #ff6b6b;
-  --btn-primary-bg-hover: #ff5252;
-  --btn-danger-bg: #ff6b6b;
-  --btn-danger-bg-hover: #ff5252;
+  --deduction-btn-primary-bg: #ff6b6b;
+  --deduction-btn-primary-bg-hover: #ff5252;
+  --deduction-btn-danger-bg: #ff6b6b;
+  --deduction-btn-danger-bg-hover: #ff5252;
 }
 
 /* 고급 테마 - 다크하고 강렬한 톤 */
 .deduction-game.theme-advanced {
-  --primary-gradient-start: #1a1a2e;
-  --primary-gradient-end: #16213e;
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.95);
-  --text-tertiary: rgba(255, 255, 255, 0.8);
-  --surface-primary: rgba(255, 255, 255, 0.05);
-  --surface-secondary: rgba(255, 255, 255, 0.08);
-  --surface-hover: rgba(255, 255, 255, 0.12);
-  --border-primary: rgba(255, 255, 255, 0.1);
-  --border-secondary: rgba(255, 255, 255, 0.15);
-  --border-active: rgba(255, 255, 255, 0.4);
-  --shadow-primary: rgba(0, 0, 0, 0.3);
-  --shadow-strong: rgba(0, 0, 0, 0.5);
+  --deduction-primary-gradient-start: #1a1a2e;
+  --deduction-primary-gradient-end: #16213e;
+  --deduction-text-primary: #ffffff;
+  --deduction-text-secondary: rgba(255, 255, 255, 0.95);
+  --deduction-text-tertiary: rgba(255, 255, 255, 0.8);
+  --deduction-surface-primary: rgba(255, 255, 255, 0.05);
+  --deduction-surface-secondary: rgba(255, 255, 255, 0.08);
+  --deduction-surface-hover: rgba(255, 255, 255, 0.12);
+  --deduction-border-primary: rgba(255, 255, 255, 0.1);
+  --deduction-border-secondary: rgba(255, 255, 255, 0.15);
+  --deduction-border-active: rgba(255, 255, 255, 0.4);
+  --deduction-shadow-primary: rgba(0, 0, 0, 0.3);
+  --deduction-shadow-strong: rgba(0, 0, 0, 0.5);
 
   /* 특수 버튼 색상 */
-  --btn-primary-bg: #e94560;
-  --btn-primary-bg-hover: #c13651;
-  --btn-danger-bg: #ff4757;
-  --btn-danger-bg-hover: #ee5a24;
+  --deduction-btn-primary-bg: #e94560;
+  --deduction-btn-primary-bg-hover: #c13651;
+  --deduction-btn-danger-bg: #ff4757;
+  --deduction-btn-danger-bg-hover: #ee5a24;
 }
 
 /* 커스텀 테마 - AI 모드용 */
 .deduction-game.theme-custom {
-  --primary-gradient-start: #0f2027;
-  --primary-gradient-end: #203a43;
-  --text-primary: #00ff88;
-  --text-secondary: rgba(0, 255, 136, 0.9);
-  --text-tertiary: rgba(0, 255, 136, 0.7);
-  --surface-primary: rgba(0, 255, 136, 0.08);
-  --surface-secondary: rgba(0, 255, 136, 0.12);
-  --surface-hover: rgba(0, 255, 136, 0.2);
-  --border-primary: rgba(0, 255, 136, 0.2);
-  --border-secondary: rgba(0, 255, 136, 0.3);
-  --border-active: rgba(0, 255, 136, 0.5);
-  --shadow-primary: rgba(0, 0, 0, 0.4);
-  --shadow-strong: rgba(0, 0, 0, 0.6);
+  --deduction-primary-gradient-start: #0f2027;
+  --deduction-primary-gradient-end: #203a43;
+  --deduction-text-primary: #00ff88;
+  --deduction-text-secondary: rgba(0, 255, 136, 0.9);
+  --deduction-text-tertiary: rgba(0, 255, 136, 0.7);
+  --deduction-surface-primary: rgba(0, 255, 136, 0.08);
+  --deduction-surface-secondary: rgba(0, 255, 136, 0.12);
+  --deduction-surface-hover: rgba(0, 255, 136, 0.2);
+  --deduction-border-primary: rgba(0, 255, 136, 0.2);
+  --deduction-border-secondary: rgba(0, 255, 136, 0.3);
+  --deduction-border-active: rgba(0, 255, 136, 0.5);
+  --deduction-shadow-primary: rgba(0, 0, 0, 0.4);
+  --deduction-shadow-strong: rgba(0, 0, 0, 0.6);
 
   /* 특수 버튼 색상 */
-  --btn-primary-bg: #00ff88;
-  --btn-primary-bg-hover: #00cc6f;
-  --btn-danger-bg: #ff0055;
-  --btn-danger-bg-hover: #cc0044;
+  --deduction-btn-primary-bg: #00ff88;
+  --deduction-btn-primary-bg-hover: #00cc6f;
+  --deduction-btn-danger-bg: #ff0055;
+  --deduction-btn-danger-bg-hover: #cc0044;
 }
 
 .deduction-game {
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(
     135deg,
-    var(--primary-gradient-start) 0%,
-    var(--primary-gradient-end) 100%
+    var(--deduction-primary-gradient-start) 0%,
+    var(--deduction-primary-gradient-end) 100%
   );
-  color: var(--text-primary);
-  font-family: var(--font-body);
+  color: var(--deduction-text-primary);
+  font-family: var(--deduction-font-body);
+  position: relative;
+  transition: background var(--deduction-transition-color);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  transition: background var(--transition-color);
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+.deduction-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 100px 20px 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
 }
 
 .game-header {
@@ -160,7 +167,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   margin-bottom: 10px;
-  text-shadow: 2px 2px 4px var(--shadow-strong);
+  text-shadow: 2px 2px 4px var(--deduction-shadow-strong);
   text-transform: uppercase;
   display: block;
   width: 100%;
@@ -169,7 +176,7 @@
 .game-header p {
   font-size: 1.2rem;
   font-weight: 300;
-  color: var(--text-secondary);
+  color: var(--deduction-text-secondary);
   display: block;
   width: 100%;
   margin: 0;
@@ -177,15 +184,11 @@
 
 .game-content {
   width: 100%;
-  height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2vh 2vw;
-  box-sizing: border-box;
-  overflow: hidden;
-  position: relative;
+  gap: 40px;
 }
 
 .game-wrapper {
@@ -193,25 +196,24 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1400px;
+  gap: 20px;
 }
 
 .game-screen {
-  background: var(--surface-primary);
+  background: var(--deduction-surface-primary);
   border-radius: 20px;
-  padding: 40px;
+  padding: 60px;
   backdrop-filter: blur(10px);
-  border: 1px solid var(--border-primary);
-  box-shadow: 0 8px 32px var(--shadow-primary);
-  width: 90%;
-  max-width: 1400px;
-  min-height: 600px;
-  max-height: 75vh;
+  border: 1px solid var(--deduction-border-primary);
+  box-shadow: 0 8px 32px var(--deduction-shadow-primary);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  position: relative; /* For absolute positioning of back-button-container */
+  align-items: center;
   animation: screenTransition 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
 }
 
 @keyframes screenTransition {
@@ -227,7 +229,7 @@
 
 .back-button-container {
   position: absolute;
-  top: 20px;
+  top: 40px;
   left: 20px;
   z-index: 10;
 }
@@ -237,32 +239,32 @@
 }
 
 .form-section h3 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.3rem;
   margin-bottom: 15px;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
   letter-spacing: 0.5px;
 }
 
 .input-field {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid var(--border-secondary);
+  border: 2px solid var(--deduction-border-secondary);
   border-radius: 10px;
-  background: var(--surface-primary);
-  color: var(--text-primary);
+  background: var(--deduction-surface-primary);
+  color: var(--deduction-text-primary);
   font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .input-field::placeholder {
-  color: var(--text-tertiary);
+  color: var(--deduction-text-tertiary);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: var(--border-active);
-  background: var(--surface-secondary);
+  border-color: var(--deduction-border-active);
+  background: var(--deduction-surface-secondary);
 }
 
 .radio-group {
@@ -282,7 +284,7 @@
 }
 
 .radio-option:hover {
-  background: var(--surface-primary);
+  background: var(--deduction-surface-primary);
 }
 
 .radio-option input[type='radio'] {
@@ -298,9 +300,9 @@
 .multi-options {
   margin-top: 20px;
   padding: 20px;
-  background: var(--surface-primary);
+  background: var(--deduction-surface-primary);
   border-radius: 15px;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--deduction-border-primary);
 }
 
 .multi-option-row {
@@ -317,27 +319,29 @@
 .btn-group {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .btn {
   padding: 8px 16px;
-  border: 1px solid var(--border-secondary);
+  border: 1px solid var(--deduction-border-secondary);
   border-radius: 8px;
-  background: var(--surface-primary);
-  color: var(--text-primary);
-  font-family: var(--font-body);
+  background: var(--deduction-surface-primary);
+  color: var(--deduction-text-primary);
+  font-family: var(--deduction-font-body);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .btn:hover {
-  background: var(--surface-hover);
+  background: var(--deduction-surface-hover);
 }
 
 .btn.active {
-  background: var(--surface-hover);
-  border-color: var(--border-active);
+  background: var(--deduction-surface-hover);
+  border-color: var(--deduction-border-active);
 }
 
 .start-button {
@@ -347,8 +351,8 @@
   font-weight: bold;
   background: linear-gradient(
     45deg,
-    var(--start-button-gradient-start, var(--btn-primary-bg)),
-    var(--start-button-gradient-end, var(--btn-primary-bg-hover))
+    var(--start-button-gradient-start, var(--deduction-btn-primary-bg)),
+    var(--start-button-gradient-end, var(--deduction-btn-primary-bg-hover))
   );
   border: none;
   border-radius: 12px;
@@ -370,8 +374,10 @@
 
 .mode-selection {
   text-align: center;
-  position: relative; /* For positioning the guide link */
-  overflow: visible; /* Allow tooltip to show outside the box */
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  padding-bottom: 200px;
 }
 
 .guide-link-container {
@@ -393,27 +399,27 @@
   font-size: 24px;
   font-weight: bold;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 5px var(--shadow-primary);
+  box-shadow: 0 2px 5px var(--deduction-shadow-primary);
   border: none;
   cursor: pointer;
 }
 
 .guide-link:hover {
-  background-color: #0056b3;
+  filter: brightness(0.9);
   transform: scale(1.1);
 }
 
 .guide-link span {
   visibility: hidden;
   width: 120px;
-  background-color: #555;
-  color: #fff;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: var(--deduction-text-primary);
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
   position: absolute;
   z-index: 100;
-  bottom: 110%; /* Adjust position */
+  bottom: 110%;
   left: 50%;
   margin-left: -60px;
   opacity: 0;
@@ -431,11 +437,15 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   margin-top: 40px;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mode-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: var(--deduction-surface-primary);
+  border: 2px solid var(--deduction-border-secondary);
   border-radius: 20px;
   padding: 40px 30px;
   cursor: pointer;
@@ -444,49 +454,55 @@
 }
 
 .mode-card:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: var(--deduction-surface-hover);
+  border-color: var(--deduction-border-active);
   transform: translateY(-5px);
 }
 
 .mode-card h3 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.8rem;
   margin-bottom: 15px;
-  color: #fff;
+  color: var(--deduction-text-primary);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .mode-card p {
-  font-family: var(--font-body);
+  font-family: var(--deduction-font-body);
   font-size: 1.2rem;
   font-weight: 400;
-  color: var(--text-secondary);
+  color: var(--deduction-text-secondary);
   line-height: 1.6;
 }
 
 .players-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
+  gap: 25px;
   margin-top: 30px;
+  width: 100%;
+  justify-content: center;
+  justify-items: center;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .player-setup {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--deduction-surface-primary);
+  border: 1px solid var(--deduction-border-primary);
   border-radius: 15px;
   padding: 25px;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .player-setup h4 {
   font-size: 1.2rem;
   margin-bottom: 15px;
-  color: #fff;
+  color: var(--deduction-text-primary);
   text-align: center;
 }
 
@@ -494,12 +510,12 @@
   display: flex;
   gap: 15px;
   margin-top: 30px;
-  justify-content: center;
+  justify-content: center !important;
 }
 
 .btn-large {
   padding: 18px 40px;
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -511,18 +527,18 @@
 }
 
 .btn-secondary {
-  background: var(--surface-hover);
-  color: var(--text-primary);
-  border: 1px solid var(--border-secondary);
+  background: var(--deduction-surface-hover);
+  color: var(--deduction-text-primary);
+  border: 1px solid var(--deduction-border-secondary);
 }
 
 .btn-secondary:hover {
-  background: var(--surface-secondary);
-  border-color: var(--border-active);
+  background: var(--deduction-surface-secondary);
+  border-color: var(--deduction-border-active);
 }
 
 .btn-primary {
-  background: var(--btn-primary-bg);
+  background: var(--deduction-btn-primary-bg);
   color: white;
   border: none;
 }
@@ -548,9 +564,9 @@
 }
 
 .btn-primary:hover {
-  background: var(--btn-primary-bg-hover);
+  background: var(--deduction-btn-primary-bg-hover);
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px var(--shadow-strong);
+  box-shadow: 0 6px 20px var(--deduction-shadow-strong);
 }
 
 .btn-primary:active {
@@ -1066,8 +1082,8 @@
 /* 초급 테마 - 게임 준비중 화면 불투명 처리 */
 .deduction-game.theme-beginner .preparation-progress {
   background: #ffffff !important;
-  padding: 30px;
-  border-radius: 15px;
+  padding: 50px;
+  border-radius: 20px;
   border: 2px solid #e0e0e0;
 }
 
@@ -1116,14 +1132,14 @@
   background: linear-gradient(90deg, #4caf50, #81c784) !important;
 }
 
-.deduction-game.theme-beginner .game-summary {
+.deduction-game.theme-beginner .deduction-game-summary {
   background: #ffffff !important;
-  padding: 30px;
-  border-radius: 15px;
+  padding: 60px;
+  border-radius: 20px;
   border: 2px solid #e0e0e0;
 }
 
-.deduction-game.theme-beginner .summary-grid {
+.deduction-game.theme-beginner .deduction-summary-grid {
   background: transparent !important;
 }
 
@@ -1136,38 +1152,61 @@
   opacity: 1 !important;
 }
 
-.deduction-game.theme-beginner .game-start-section {
+.deduction-game.theme-beginner .deduction-game-start-section {
   background: #ffffff !important;
-  padding: 30px;
-  border-radius: 15px;
+  padding: 50px;
+  border-radius: 20px;
   border: 2px solid #e0e0e0;
 }
 
 .config-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 25px;
   margin-top: 30px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+.config-grid .config-item:nth-child(1),
+.config-grid .config-item:nth-child(2),
+.config-grid .config-item:nth-child(3) {
+  grid-column: span 2;
+}
+
+.config-grid .config-item:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.config-grid .config-item:nth-child(5) {
+  grid-column: 4 / span 2;
+}
+
+
+
 .config-item {
-  background: var(--surface-primary);
-  border: 1px solid var(--border-primary);
+  background: var(--deduction-surface-primary);
+  border: 1px solid var(--deduction-border-primary);
   border-radius: 15px;
-  padding: 25px;
+  padding: 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 150px;
 }
 
 .config-item h4 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.2rem;
   margin-bottom: 8px;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
 }
 
 .config-item p {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--deduction-text-secondary);
   margin-bottom: 20px;
 }
 
@@ -1179,11 +1218,11 @@
 }
 
 .number-display {
-  font-family: var(--font-primary);
+  font-family: var(--deduction-font-primary);
   font-size: 1.1rem;
   font-weight: 700;
   min-width: 80px;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
   letter-spacing: 0.5px;
 }
 
@@ -1211,10 +1250,10 @@
   text-align: center;
   margin-top: 30px;
   padding: 15px;
-  background: var(--surface-primary);
+  background: var(--deduction-surface-primary);
   border-radius: 10px;
   font-size: 1.1rem;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--deduction-border-primary);
 }
 
 .difficulty-indicator strong {
@@ -1223,27 +1262,33 @@
 
 .preparation-progress {
   margin-top: 40px;
+  width: 100%;
+  padding: 50px;
+  background: var(--deduction-surface-secondary);
+  border-radius: 20px;
+  border: 1px solid var(--deduction-border-secondary);
 }
 
 .progress-steps {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  align-items: stretch;
+  gap: 25px;
   margin-bottom: 40px;
-  max-width: 600px;
+  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 20px;
 }
 
 .progress-step {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 20px 25px;
+  padding: 25px 35px;
   border-radius: 15px;
-  transition: all 0.3s ease;
   width: 100%;
+  transition: all 0.3s ease;
   justify-content: flex-start;
 }
 
@@ -1281,7 +1326,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-primary);
+  font-family: var(--deduction-font-primary);
   font-size: 1.2rem;
   font-weight: 700;
   flex-shrink: 0;
@@ -1347,7 +1392,7 @@
 }
 
 .progress-step.active .step-circle {
-  background: var(--btn-primary-bg);
+  background: var(--deduction-btn-primary-bg);
   color: white;
 }
 
@@ -1368,22 +1413,22 @@
 }
 
 .progress-step.pending .step-circle {
-  background: var(--surface-primary);
-  color: var(--text-tertiary);
+  background: var(--deduction-surface-primary);
+  color: var(--deduction-text-tertiary);
 }
 
 .step-content h4 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.3rem;
   margin-bottom: 5px;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
 }
 
 .step-content p {
-  font-family: var(--font-body);
+  font-family: var(--deduction-font-body);
   font-size: 1rem;
   font-weight: 400;
-  color: var(--text-secondary);
+  color: var(--deduction-text-secondary);
   margin: 0;
 }
 
@@ -1401,11 +1446,19 @@
   transition: width 0.5s ease;
 }
 
-.game-summary {
-  margin-top: 30px;
+.deduction-game-summary {
+  margin-top: 40px;
+  display: block !important;
+  gap: unset !important;
+  padding: 60px;
+  background: var(--deduction-surface-primary);
+  border-radius: 20px;
+  border: 1px solid var(--deduction-border-primary);
+  box-shadow: 0 8px 32px var(--deduction-shadow-primary);
+  width: 100%;
 }
 
-.summary-grid {
+.deduction-summary-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 25px;
@@ -1422,7 +1475,7 @@
 .summary-item h4 {
   font-size: 1.3rem;
   margin-bottom: 15px;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
   text-align: center;
 }
 
@@ -1434,12 +1487,12 @@
 }
 
 .player-chip {
-  background: var(--surface-secondary);
-  border: 1px solid var(--border-secondary);
+  background: var(--deduction-surface-secondary);
+  border: 1px solid var(--deduction-border-secondary);
   padding: 8px 15px;
   border-radius: 20px;
   font-size: 0.9rem;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
 }
 
 .game-info-grid {
@@ -1462,8 +1515,8 @@
 }
 
 .hint-chip {
-  background: var(--btn-danger-bg);
-  border: 1px solid var(--btn-danger-bg);
+  background: var(--deduction-btn-danger-bg);
+  border: 1px solid var(--deduction-btn-danger-bg);
   padding: 6px 12px;
   border-radius: 15px;
   font-size: 0.9rem;
@@ -1473,24 +1526,29 @@
 
 .hint-description {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--deduction-text-secondary);
   margin: 0;
 }
 
-.game-start-section {
+.deduction-game-start-section {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
+  width: 100%;
+  padding: 50px;
+  background: var(--deduction-surface-secondary);
+  border-radius: 20px;
+  border: 1px solid var(--deduction-border-secondary);
 }
 
 .countdown-info h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: var(--btn-primary-bg);
+  color: var(--deduction-btn-primary-bg);
 }
 
 .countdown-info p {
   font-size: 1.1rem;
-  color: var(--text-secondary);
+  color: var(--deduction-text-secondary);
   margin-bottom: 25px;
 }
 
@@ -1501,6 +1559,9 @@
   height: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .game-header-info {
@@ -1509,10 +1570,20 @@
   align-items: center;
   margin-bottom: 30px;
   padding: 20px 30px;
-  background: var(--surface-primary);
+  background: var(--deduction-surface-primary);
   border-radius: 15px;
   flex-shrink: 0;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--deduction-border-primary);
+  width: 100%;
+}
+
+.game-header-info .turn-info {
+  text-align: left;
+  margin-right: auto;
+}
+
+.game-header-info .header-controls {
+  margin-left: auto;
 }
 
 .header-controls {
@@ -1522,19 +1593,19 @@
 }
 
 .turn-info h3 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.8rem;
   margin-bottom: 8px;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
   font-weight: 600;
   letter-spacing: 1px;
 }
 
 .turn-info p {
-  font-family: var(--font-body);
+  font-family: var(--deduction-font-body);
   font-size: 1.3rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--deduction-text-secondary);
   margin: 0;
 }
 
@@ -1665,7 +1736,7 @@
 }
 
 .keyword-selection h4 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.5rem;
   margin-bottom: 25px;
   text-align: center;
@@ -1690,11 +1761,11 @@
 .keyword-btn {
   position: relative;
   padding: 15px 10px;
-  border: 2px solid var(--border-secondary);
+  border: 2px solid var(--deduction-border-secondary);
   border-radius: 12px;
-  background: var(--surface-primary);
-  color: var(--text-primary);
-  font-family: var(--font-body);
+  background: var(--deduction-surface-primary);
+  color: var(--deduction-text-primary);
+  font-family: var(--deduction-font-body);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -1733,15 +1804,15 @@
 }
 
 .keyword-btn:hover:not(:disabled) {
-  background: var(--surface-hover);
+  background: var(--deduction-surface-hover);
   transform: translateY(-3px) scale(1.02);
-  border-color: var(--border-active);
+  border-color: var(--deduction-border-active);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .keyword-btn.selected {
-  background: var(--btn-primary-bg);
-  border-color: var(--btn-primary-bg);
+  background: var(--deduction-btn-primary-bg);
+  border-color: var(--deduction-btn-primary-bg);
   transform: scale(1.05);
   color: white;
   animation: selectedPulse 0.4s ease-out;
@@ -1763,8 +1834,8 @@
 }
 
 .keyword-btn.hint {
-  background: var(--btn-danger-bg);
-  border-color: var(--btn-danger-bg);
+  background: var(--deduction-btn-danger-bg);
+  border-color: var(--deduction-btn-danger-bg);
   opacity: 0.3;
   color: white;
 }
@@ -1782,14 +1853,14 @@
 }
 
 .guess-controls {
-  border-top: 1px solid var(--border-primary);
+  border-top: 1px solid var(--deduction-border-primary);
   padding-top: 20px;
 }
 
 .selected-display h5 {
   font-size: 1.3rem;
   margin-bottom: 20px;
-  color: var(--text-primary);
+  color: var(--deduction-text-primary);
   font-weight: 500;
 }
 
@@ -1859,7 +1930,7 @@
 .my-hints h4,
 .players-status h4,
 .turn-history h4 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.3rem;
   margin-bottom: 20px;
   color: #fff;
@@ -1940,7 +2011,7 @@
 }
 
 .game-over h2 {
-  font-family: var(--font-primary);
+  font-family: var(--deduction-font-primary);
   font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 20px;
@@ -1957,7 +2028,7 @@
 
 .winner-announcement h3,
 .draw-announcement h3 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.8rem;
   margin-bottom: 10px;
   color: #ffc107;
@@ -2031,7 +2102,7 @@
 }
 
 .hint-viewing-phase h2 {
-  font-family: var(--font-primary);
+  font-family: var(--deduction-font-primary);
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 30px;
@@ -2204,104 +2275,6 @@
   right: 20px;
 }
 
-@media (max-width: 768px) {
-  .game-content {
-    max-width: 100%;
-    padding: 0 15px;
-  }
-
-  .game-screen {
-    width: 100%;
-    max-width: 100%;
-    padding: 30px 20px;
-    min-height: 400px;
-  }
-
-  .mode-cards {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .players-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .config-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .radio-group {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .multi-option-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .setup-actions {
-    flex-direction: column;
-  }
-
-  .btn-group {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .progress-steps {
-    gap: 15px;
-  }
-
-  .progress-step {
-    flex-direction: column;
-    text-align: center;
-    padding: 15px;
-  }
-
-  .step-circle {
-    margin-bottom: 10px;
-  }
-
-  .summary-grid {
-    gap: 20px;
-  }
-
-  .summary-item {
-    padding: 20px;
-  }
-
-  .game-info-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .game-layout {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .game-header-info {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
-  }
-
-  .header-controls {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .timer {
-    text-align: center;
-  }
-
-  .timer-bar {
-    margin: 0 auto;
-  }
-}
 
 /* Global hints toggle styles */
 .global-hints-toggle {
@@ -2366,81 +2339,28 @@
   line-height: 1.3;
 }
 
-/* 모달 확장 반응형 스타일 */
-@media (max-width: 1600px) {
-  .code-editor-modal.expanded {
-    width: 94%;
-    max-width: 1600px;
-    height: 90vh;
-    max-height: 850px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .code-editor-modal.expanded {
-    width: 93%;
-    max-width: none;
-    height: 88vh;
-    max-height: none;
-  }
-}
 
 /* Difficulty selection specific styles */
 .difficulty-selection {
   text-align: center;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .difficulty-selection .setup-actions {
   margin-top: 0;
-  display: flex; /* 추가: flexbox를 사용하여 내부 요소 정렬 */
-  justify-content: flex-start; /* 추가: 왼쪽 정렬 */
-  width: 100%; /* 추가: 부모 너비만큼 확장 */
-  box-sizing: border-box; /* 추가: 패딩 포함 너비 계산 */
+  display: flex;
+  justify-content: center !important;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .difficulty-selection h2 {
   text-align: center;
-  margin-top: 60px; /* Increased margin-top */
+  margin-top: 60px;
 }
 
-@media (max-width: 768px) {
-  .keywords-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 8px;
-  }
-
-  .keyword-btn {
-    min-height: 45px;
-    font-size: 0.8rem;
-  }
-
-  .control-buttons {
-    flex-direction: column;
-  }
-
-  .game-sidebar {
-    order: -1;
-  }
-
-  .answer-list {
-    gap: 8px;
-  }
-
-  .answer-chip {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-}
-
-/* 큰 화면 최적화 */
-@media (min-width: 1200px) {
-  /* 고정된 너비를 유지하므로 별도 조정 없음 */
-}
-
-/* 초대형 화면 최적화 */
-@media (min-width: 1600px) {
-  /* 고정된 너비를 유지하므로 별도 조정 없음 */
-}
 
 /* 코드 에디터 모달 스타일 */
 .modal-overlay {
@@ -2990,13 +2910,24 @@
 /* Difficulty Selection */
 .difficulty-selection {
   text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px;
 }
 
 .difficulty-cards {
   display: flex;
   gap: 30px;
-  margin-top: 30px;
+  margin-top: 40px;
+  margin-bottom: 60px;
   justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .difficulty-card {
@@ -3004,11 +2935,13 @@
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 15px;
-  padding: 40px 30px;
+  padding: 40px 35px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
-  width: 220px;
+  width: 240px;
+  flex: 0 1 240px;
+  min-height: 180px;
 }
 
 .difficulty-card:hover {
@@ -3018,18 +2951,18 @@
 }
 
 .difficulty-card h3 {
-  font-family: var(--font-secondary);
-  font-size: 1.6rem;
-  margin-bottom: 15px;
+  font-family: var(--deduction-font-secondary);
+  font-size: 1.8rem;
+  margin-bottom: 20px;
   letter-spacing: 1px;
 }
 
 .difficulty-card p {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-family: var(--deduction-font-body);
+  font-size: 1.05rem;
   font-weight: 400;
   opacity: 0.9;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* AI Thinking Indicator */
@@ -3129,12 +3062,12 @@
 }
 
 .loading-spinner-large::before {
-  border-top-color: var(--btn-primary-bg);
+  border-top-color: var(--deduction-btn-primary-bg);
   animation: spin 1.5s linear infinite;
 }
 
 .loading-spinner-large::after {
-  border-bottom-color: var(--btn-primary-bg-hover);
+  border-bottom-color: var(--deduction-btn-primary-bg-hover);
   animation: spin 1.5s linear infinite reverse;
   opacity: 0.6;
 }
@@ -3161,7 +3094,7 @@
 }
 
 .game-loading-content h3 {
-  font-family: var(--font-secondary);
+  font-family: var(--deduction-font-secondary);
   font-size: 1.5rem;
   margin-bottom: 20px;
   text-transform: uppercase;
@@ -3169,7 +3102,7 @@
 }
 
 .game-loading-content p {
-  font-family: var(--font-body);
+  font-family: var(--deduction-font-body);
   font-size: 1rem;
   opacity: 0.8;
   margin-top: 20px;
@@ -3398,3 +3331,32 @@
 .indicator.active {
   background: #ffc107;
 }
+
+/* Guest Notice in Game Over Screen */
+.guest-notice-game-over {
+  margin: 20px 0;
+  padding: 16px 24px;
+  background: rgba(74, 124, 126, 0.1);
+  border: 1px solid rgba(74, 124, 126, 0.3);
+  border-radius: 8px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.guest-notice-game-over p {
+  margin: 0;
+  color: #4a7c7e;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
