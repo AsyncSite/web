@@ -35,6 +35,12 @@
   height: 80px;
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
 .logo {
   font-size: 24px;
   font-weight: 700;
@@ -241,6 +247,10 @@
     height: 70px;
   }
   
+  .nav-right {
+    gap: 20px;
+  }
+  
   .nav-menu {
     gap: 20px;
   }
@@ -266,6 +276,10 @@
   
   .nav {
     justify-content: space-between;
+  }
+  
+  .nav-right {
+    gap: 16px;
   }
   
   .auth-skeleton {

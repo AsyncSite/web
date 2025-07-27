@@ -112,13 +112,12 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
       <div className="container">
         <nav className="nav">
           <a href="/" className="logo">AsyncSite</a>
-          <ul className="nav-menu">
-            <li><a href="/study" className={location.pathname === '/study' ? 'active' : ''}>STUDY</a></li>
-            <li><a href="/calendar" className={location.pathname === '/calendar' ? 'active' : ''}>CALENDAR</a></li>
-            <li><a href="/lab" className={location.pathname === '/lab' ? 'active' : ''}>LAB</a></li>
-            <li><a href="/study-plan" className={location.pathname === '/study-plan' ? 'active' : ''}>STUDY PLAN</a></li>
-          </ul>
-          <div className="auth-section">
+          <div className="nav-right">
+            <ul className="nav-menu">
+              <li><a href="/study" className={location.pathname === '/study' ? 'active' : ''}>STUDY</a></li>
+              <li><a href="/lab" className={location.pathname === '/lab' ? 'active' : ''}>LAB</a></li>
+            </ul>
+            <div className="auth-section">
             {isLoading ? (
               // 로딩 중일 때는 스켈레톤 또는 빈 공간 표시
               <div className="auth-loading">
@@ -180,6 +179,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                 )}
               </>
             )}
+            </div>
           </div>
         </nav>
       </div>
