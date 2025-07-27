@@ -130,13 +130,12 @@
 .hero {
     min-height: 100vh;
     display: flex;
-    align-items: flex-start; /* 중앙 대신 상단 기준 */
+    align-items: center;
     justify-content: center;
     position: relative;
     background: transparent;
     padding: 0 20px !important;
     width: 100% !important;
-    padding-top: 200px !important; /* 상단에서 200px 떨어진 위치 */
 }
 
 .hero-content {
@@ -152,18 +151,6 @@
     will-change: opacity, transform;
 }
 
-.hero-badge {
-    display: inline-block;
-    padding: 8px 20px;
-    background: rgba(195, 232, 141, 0.1);
-    border: 1px solid rgba(195, 232, 141, 0.3);
-    border-radius: 20px;
-    font-size: 14px;
-    color: #C3E88D;
-    margin-bottom: 30px;
-    animation: fadeInDown 0.8s ease;
-    font-weight: 600 !important;
-}
 
 .hero-title {
     font-size: 72px !important;

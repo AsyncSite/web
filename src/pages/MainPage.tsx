@@ -1,5 +1,5 @@
 import '../styles/common.css';
-import { BottomNavigation, Footer } from '../components/layout';
+import { Footer } from '../components/layout';
 import {About, Contribution, FAQ, Intro, Roadmap, Stats, Activities, Studies, Flow, CTA} from '../components/sections';
 
 const MainPage = () => {
@@ -16,7 +16,6 @@ const MainPage = () => {
       <FAQ />
       <Contribution />
       <Footer />
-      <BottomNavigation />
     </div>
   );
 };

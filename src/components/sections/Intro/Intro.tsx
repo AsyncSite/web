@@ -49,7 +49,6 @@ const Intro: React.FC = () => {
       <section id="intro" className="hero">
         <div className="container">
           <div className="hero-content">
-            <div className="hero-badge">AsyncSite</div>
             <h1 className="hero-title">
               따로 또 같이<br />
               <span>느슨히 끈끈히</span><br />
