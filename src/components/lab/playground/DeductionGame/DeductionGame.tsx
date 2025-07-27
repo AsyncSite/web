@@ -455,27 +455,35 @@ const DeductionGame: React.FC = () => {
         setIsAIThinking(false);
         // Get updated game context to sync revealed wrong answers from global hints
         const context = manager.getGameContext();
-        setGameState((prev) => ({
-          ...prev,
-          turnHistory: [...prev.turnHistory, result],
-          revealedWrongAnswers: context.revealedWrongAnswers,
-        }));
+        setGameState((prev) => {
+          const newState = {
+            ...prev,
+            turnHistory: [...prev.turnHistory, result],
+            revealedWrongAnswers: context.revealedWrongAnswers,
+          };
+          return newState;
+        });
       },
       onGameEnd: async (winner) => {
         const timeElapsed = Math.floor((Date.now() - gameStartTime) / 1000);
         const humanPlayer = players.find(p => p.type === 'human');
-        const didWin = !!(winner && humanPlayer && winner.getInfo().id === humanPlayer.id);
+        const didWin = !!(winner && humanPlayer && winner.getInfo().nickname === humanPlayer.nickname);
+        
+        // Get the latest game context from GameManager to ensure we have all turns
+        const finalContext = manager.getGameContext();
+        
         
         // Calculate score based on various factors
         const baseScore = 1000;
-        const turnBonus = Math.max(0, (gameConfig.maxTurns || 20) - gameState.currentTurn) * 50;
+        const turnBonus = Math.max(0, (gameConfig.maxTurns || 20) - finalContext.currentTurn) * 50;
         const timeBonus = Math.max(0, 300 - timeElapsed) * 2;
         const difficultyMultiplier = gameMode === 'solo' 
           ? (soloDifficulty === 'easy' ? 1 : soloDifficulty === 'medium' ? 1.5 : 2)
           : 1;
+        const humanGuessCount = humanPlayer ? finalContext.turnHistory.filter(t => t.playerName === humanPlayer.nickname).length : 0;
         const totalScore = didWin 
           ? Math.floor((baseScore + turnBonus + timeBonus) * difficultyMultiplier)
-          : Math.floor(gameState.turnHistory.filter(t => t.playerId === humanPlayer?.id).length * 50);
+          : Math.floor(humanGuessCount * 50);
 
         // Find opponent info
         const opponent = players.find(p => p.id !== humanPlayer?.id);
@@ -487,7 +495,7 @@ const DeductionGame: React.FC = () => {
             gameType: 'DEDUCTION',
             score: totalScore,
             difficulty: gameMode === 'solo' ? soloDifficulty : 'medium',
-            guessesCount: gameState.turnHistory.filter(t => t.playerId === humanPlayer.id).length,
+            guessesCount: humanGuessCount,
             hintsUsed: correctAnswerHintsUsed + wrongAnswerHintsUsed, // For backward compatibility
             wrongAnswerHintsUsed: wrongAnswerHintsUsed,
             correctAnswerHintsUsed: correctAnswerHintsUsed,
