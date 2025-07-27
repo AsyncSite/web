@@ -491,6 +491,12 @@ const DeductionGame: React.FC = () => {
         
         // Save game result
         if (gameDataManager && humanPlayer) {
+          console.log('Saving game result with hint counts:', {
+            correctAnswerHintsUsed,
+            wrongAnswerHintsUsed,
+            totalHints: correctAnswerHintsUsed + wrongAnswerHintsUsed
+          });
+          
           const gameResult: DeductionGameData = {
             gameType: 'DEDUCTION',
             score: totalScore,
@@ -918,7 +924,11 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedAnswers: context.revealedAnswers,
         }));
-        setCorrectAnswerHintsUsed(prev => prev + 1);
+        setCorrectAnswerHintsUsed(prev => {
+          const newValue = prev + 1;
+          console.log('Correct hint used:', newValue, 'GameManager:', !!gameManagerRef.current);
+          return newValue;
+        });
       }
     } else {
       const unrevealedAnswers = gameState.answers.filter(
@@ -931,7 +941,11 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedAnswers: [...prev.revealedAnswers, randomAnswer],
         }));
-        setCorrectAnswerHintsUsed(prev => prev + 1);
+        setCorrectAnswerHintsUsed(prev => {
+          const newValue = prev + 1;
+          console.log('Correct hint used:', newValue, 'GameManager:', !!gameManagerRef.current);
+          return newValue;
+        });
       }
     }
   };
@@ -945,7 +959,11 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedWrongAnswers: context.revealedWrongAnswers,
         }));
-        setWrongAnswerHintsUsed(prev => prev + 1);
+        setWrongAnswerHintsUsed(prev => {
+          const newValue = prev + 1;
+          console.log('Wrong hint used:', newValue, 'GameManager:', !!gameManagerRef.current);
+          return newValue;
+        });
       }
     } else {
       const wrongAnswers = gameState.keywords
@@ -961,7 +979,11 @@ const DeductionGame: React.FC = () => {
           ...prev,
           revealedWrongAnswers: [...prev.revealedWrongAnswers, randomWrong],
         }));
-        setWrongAnswerHintsUsed(prev => prev + 1);
+        setWrongAnswerHintsUsed(prev => {
+          const newValue = prev + 1;
+          console.log('Wrong hint used:', newValue, 'GameManager:', !!gameManagerRef.current);
+          return newValue;
+        });
       }
     }
   };
