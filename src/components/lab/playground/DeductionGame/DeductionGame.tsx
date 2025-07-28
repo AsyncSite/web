@@ -12,6 +12,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { GameManagerFactory, GameDataManager, DeductionGameData, TurnDetail } from '../../../../services/game';
 
 type GameScreen =
+  | 'intro'
   | 'mode-selection'
   | 'difficulty-selection'
   | 'player-setup'
@@ -71,7 +72,8 @@ const DeductionGame: React.FC = () => {
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [isAIGuideModalOpen, setIsAIGuideModalOpen] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState<GameScreen>('mode-selection');
+  const [personalBest, setPersonalBest] = useState<number>(0);
+  const [currentScreen, setCurrentScreen] = useState<GameScreen>('intro');
   const [gameMode, setGameMode] = useState<GameMode>('solo');
   const [playerCount, setPlayerCount] = useState(2);
   const [players, setPlayers] = useState<PlayerConfig[]>([]);
@@ -136,6 +138,17 @@ const DeductionGame: React.FC = () => {
     });
     setGameDataManager(manager);
   }, [isAuthenticated]);
+
+  // Load personal best when gameDataManager is ready
+  useEffect(() => {
+    if (gameDataManager) {
+      gameDataManager.getPersonalBest('DEDUCTION').then(result => {
+        if (result.success) {
+          setPersonalBest(result.data);
+        }
+      });
+    }
+  }, [gameDataManager]);
 
   // Remove lab-content padding for full screen experience
   useEffect(() => {
@@ -1435,8 +1448,68 @@ function makeGuess(gameState) {
     );
   };
 
+  const renderIntroScreen = () => (
+    <div className="game-screen intro-screen">
+      <div className="deduction-intro-container">
+        <div className="deduction-logo-section">
+          <h1 className="deduction-logo">DEDUCTION</h1>
+          <p className="deduction-subtitle">추론 게임</p>
+        </div>
+        
+        <div className="deduction-intro-content">
+          <div className="game-description">
+            <h2>상대방의 답을 추리하는 두뇌 게임</h2>
+            <ul className="feature-list">
+              <li>💡 힌트를 보고 정답을 맞춰보세요</li>
+              <li>🤖 다양한 난이도의 AI와 대결</li>
+              <li>👥 2-6명이 함께하는 멀티플레이</li>
+              <li>🧩 나만의 커스텀 AI 작성 가능</li>
+            </ul>
+          </div>
+          
+          {personalBest > 0 && (
+            <div className="personal-best-display">
+              <p>최고 점수: <span className="score-highlight">{personalBest.toLocaleString()}</span></p>
+            </div>
+          )}
+          
+          <div className="intro-actions">
+            <button 
+              className="btn-large btn-primary deduction-start-button"
+              onClick={() => setCurrentScreen('mode-selection')}
+            >
+              게임 시작
+            </button>
+            <div className="secondary-actions">
+              <button 
+                className="btn-large btn-secondary"
+                onClick={() => setShowLeaderboard(true)}
+              >
+                리더보드
+              </button>
+              <button 
+                className="btn-large btn-secondary"
+                onClick={() => setIsGuideModalOpen(true)}
+              >
+                게임 방법
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderModeSelection = () => (
     <div className="game-screen mode-selection">
+      <div className="back-button-container">
+        <button
+          className="btn-large btn-secondary"
+          onClick={() => setCurrentScreen('intro')}
+        >
+          ← 메인 화면
+        </button>
+      </div>
       <div className="guide-link-container">
         <button onClick={() => setIsGuideModalOpen(true)} className="guide-link">
           ?<span>게임 방법</span>
@@ -2401,8 +2474,8 @@ function makeGuess(gameState) {
 
   // 테마 결정 함수
   const getThemeClass = () => {
-    // 모드 선택 화면과 난이도 선택 화면에서는 항상 기본 테마
-    if (currentScreen === 'mode-selection' || currentScreen === 'difficulty-selection') {
+    // 인트로, 모드 선택 화면과 난이도 선택 화면에서는 항상 기본 테마
+    if (currentScreen === 'intro' || currentScreen === 'mode-selection' || currentScreen === 'difficulty-selection') {
       return 'theme-intermediate';
     }
 
@@ -2442,6 +2515,7 @@ function makeGuess(gameState) {
           <div className="game-content">
             <div className="game-wrapper">
 
+              {currentScreen === 'intro' && renderIntroScreen()}
               {currentScreen === 'mode-selection' && renderModeSelection()}
               {currentScreen === 'difficulty-selection' && renderDifficultySelection()}
               {currentScreen === 'player-setup' && renderPlayerSetup()}
