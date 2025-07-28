@@ -1,0 +1,173 @@
+/* ScrollNavigation.css */
+.scroll-navigation {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px;
+  height: 100vh;
+  background: transparent;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.scroll-navigation.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 네비게이션 토글 버튼 - 애니메이션 제거됨 */
+.nav-toggle {
+  display: none;
+}
+
+/* 네비게이션 메뉴 */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 3rem 2rem;
+}
+
+/* 네비게이션 헤더 제거 */
+.nav-header {
+  display: none;
+}
+
+/* 네비게이션 리스트 */
+.nav-list {
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.nav-item {
+  position: relative;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.8rem 0;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  gap: 0.6rem;
+}
+
+.nav-link:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.nav-link.active {
+  color: #C3E88D;
+  font-weight: 500;
+}
+
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 16px;
+  background: #C3E88D;
+  border-radius: 1px;
+}
+
+.nav-indicator {
+  display: none;
+}
+
+.nav-label {
+  flex: 1;
+}
+
+/* 네비게이션 푸터 제거 */
+.nav-footer {
+  display: none;
+}
+
+/* 모바일 오버레이 - 애니메이션 제거됨 */
+.nav-overlay {
+  display: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .scroll-navigation {
+    display: none;
+  }
+
+  .scroll-navigation.visible {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-navigation {
+    max-width: 280px;
+  }
+
+  .nav-toggle {
+    right: -50px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-menu {
+    padding: 1.5rem;
+  }
+
+  .nav-link {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* 접근성 개선 - 모든 애니메이션 제거됨 */
+
+/* 다크 모드 대응 */
+@media (prefers-color-scheme: light) {
+  .scroll-navigation {
+    background: rgba(255, 255, 255, 0.95);
+    border-right-color: rgba(130, 195, 102, 0.2);
+  }
+
+  .nav-link {
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .nav-link:hover {
+    color: #000000;
+  }
+
+  .progress-track {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* 고성능 애니메이션 제거됨 */
+
+/* 스크롤바 숨김 */
+.nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

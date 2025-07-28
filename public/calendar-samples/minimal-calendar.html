@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Study Calendar - AsyncSite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SUIT', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #05060A;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .calendar-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(195, 232, 141, 0.2);
+        }
+
+        .month-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 300;
+            color: #C3E88D;
+            letter-spacing: -1px;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-arrow {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .nav-arrow:hover {
+            color: #C3E88D;
+            background: rgba(195, 232, 141, 0.1);
+        }
+
+        .today-btn {
+            background: none;
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .today-btn:hover {
+            border-color: #C3E88D;
+            color: #C3E88D;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: rgba(195, 232, 141, 0.05);
+            border-radius: 12px;
+            padding: 2px;
+        }
+
+        .weekday-header {
+            padding: 20px 10px;
+            text-align: center;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .day-cell {
+            background: rgba(5, 6, 10, 0.8);
+            min-height: 100px;
+            padding: 15px 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .day-cell:hover {
+            background: rgba(195, 232, 141, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .day-number {
+            font-size: 16px;
+            font-weight: 400;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .day-cell.other-month {
+            opacity: 0.3;
+        }
+
+        .day-cell.today {
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+        }
+
+        .day-cell.today .day-number {
+            color: #C3E88D;
+            font-weight: 600;
+        }
+
+        .event-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 2px;
+            display: inline-block;
+        }
+
+        .event-dot.tecoteco {
+            background: #FF6B6B;
+        }
+
+        .event-dot.devlog {
+            background: #4A90E2;
+        }
+
+        .event-dot.resume {
+            background: #9C27B0;
+        }
+
+        .event-dot.retrospective {
+            background: #FFC107;
+        }
+
+        .event-count {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(195, 232, 141, 0.2);
+            color: #C3E88D;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(195, 232, 141, 0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .event-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: rgba(5, 6, 10, 0.95);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            color: #C3E88D;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
+        .event-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #FF6B6B;
+        }
+
+        .event-item.devlog {
+            border-left-color: #4A90E2;
+        }
+
+        .event-item.resume {
+            border-left-color: #9C27B0;
+        }
+
+        .event-item.retrospective {
+            border-left-color: #FFC107;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .event-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .calendar-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .month-title {
+                font-size: 28px;
+            }
+            
+            .day-cell {
+                min-height: 80px;
+                padding: 10px 5px;
+            }
+            
+            .legend {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-wrapper">
+        <div class="calendar-header">
+            <h1 class="month-title" id="monthTitle">2024년 1월</h1>
+            <div class="nav-controls">
+                <button class="nav-arrow" onclick="previousMonth()">‹</button>
+                <button class="today-btn" onclick="goToToday()">오늘</button>
+                <button class="nav-arrow" onclick="nextMonth()">›</button>
+            </div>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- 달력이 JavaScript로 생성됩니다 -->
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot tecoteco"></div>
+                <span>테코테코</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot devlog"></div>
+                <span>DEVLOG</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot resume"></div>
+                <span>이력서 리뷰</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot retrospective"></div>
+                <span>회고 미팅</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="event-modal" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">일정 상세</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="event-list" id="eventList">
+                <!-- 이벤트 목록이 JavaScript로 생성됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 샘플 데이터
+        const events = [
+            { date: '2024-01-05', title: '테코테코', type: 'tecoteco', description: '주간 스터디 모임' },
+            { date: '2024-01-12', title: '테코테코', type: 'tecoteco', description: '주간 스터디 모임' },
+            { date: '2024-01-19', title: '테코테코', type: 'tecoteco', description: '주간 스터디 모임' },
+            { date: '2024-01-26', title: '회고 미팅', type: 'retrospective', description: '월간 회고' },
+            { date: '2024-01-10', title: 'DEVLOG', type: 'devlog', description: '개발 블로그 스터디' },
+            { date: '2024-01-24', title: 'DEVLOG', type: 'devlog', description: '개발 블로그 스터디' },
+            { date: '2024-01-01', title: '이력서 리뷰', type: 'resume', description: '월간 이력서 검토' }
+        ];
+
+        let currentDate = new Date(2024, 0, 1);
+
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            document.getElementById('monthTitle').textContent = `${year}년 ${month + 1}월`;
+            calendarGrid.innerHTML = '';
+            
+            // 요일 헤더 추가
+            const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+            weekdays.forEach(day => {
+                const weekdayDiv = document.createElement('div');
+                weekdayDiv.className = 'weekday-header';
+                weekdayDiv.textContent = day;
+                calendarGrid.appendChild(weekdayDiv);
+            });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startDate);
+                cellDate.setDate(startDate.getDate() + i);
+                
+                const dayCell = document.createElement('div');
+                dayCell.className = 'day-cell';
+                
+                if (cellDate.getMonth() !== month) {
+                    dayCell.classList.add('other-month');
+                }
+                
+                if (cellDate.toDateString() === new Date().toDateString()) {
+                    dayCell.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = cellDate.getDate();
+                dayCell.appendChild(dayNumber);
+                
+                const dateStr = cellDate.toISOString().split('T')[0];
+                const dayEvents = events.filter(event => event.date === dateStr);
+                
+                if (dayEvents.length > 0) {
+                    const dotsContainer = document.createElement('div');
+                    dayEvents.forEach(event => {
+                        const dot = document.createElement('div');
+                        dot.className = `event-dot ${event.type}`;
+                        dotsContainer.appendChild(dot);
+                    });
+                    dayCell.appendChild(dotsContainer);
+                    
+                    if (dayEvents.length > 3) {
+                        const countDiv = document.createElement('div');
+                        countDiv.className = 'event-count';
+                        countDiv.textContent = `+${dayEvents.length - 3}`;
+                        dayCell.appendChild(countDiv);
+                    }
+                    
+                    dayCell.onclick = () => showDayEvents(cellDate, dayEvents);
+                }
+                
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        function showDayEvents(date, dayEvents) {
+            const modal = document.getElementById('eventModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const eventList = document.getElementById('eventList');
+            
+            modalTitle.textContent = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+            
+            eventList.innerHTML = '';
+            dayEvents.forEach(event => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = `event-item ${event.type}`;
+                eventDiv.innerHTML = `
+                    <div class="event-title">${event.title}</div>
+                    <div class="event-description">${event.description}</div>
+                `;
+                eventList.appendChild(eventDiv);
+            });
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            generateCalendar();
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('eventModal').onclick = function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        };
+
+        generateCalendar();
+    </script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Samples - AsyncSite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SUIT', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #05060A;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .main-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #C3E88D;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #c3e88d, #8fd67a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .sample-card {
+            background: rgba(5, 6, 10, 0.95);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sample-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(195, 232, 141, 0.4);
+            box-shadow: 0 20px 40px rgba(195, 232, 141, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .modern-icon {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+        }
+
+        .minimal-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .timeline-icon {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .card-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .features-list li {
+            padding: 5px 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            color: #C3E88D;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .view-btn {
+            width: 100%;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #C3E88D, #8fd67a);
+            border: none;
+            border-radius: 25px;
+            color: #05060A;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .view-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(195, 232, 141, 0.3);
+        }
+
+        .features-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(195, 232, 141, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .features-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            color: #C3E88D;
+            margin-bottom: 30px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-item {
+            padding: 20px;
+            background: rgba(195, 232, 141, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(195, 232, 141, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .feature-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 36px;
+            }
+            
+            .samples-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sample-card {
+                padding: 20px;
+            }
+            
+            .features-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">스터디 달력 샘플</h1>
+            <p class="subtitle">
+                AsyncSite 스터디 일정 관리를 위한 다양한 달력 디자인 샘플입니다.<br>
+                각 디자인은 스터디 일정 등록, 수정, 삭제 및 필터링 기능을 포함합니다.
+            </p>
+        </div>
+
+        <div class="samples-grid">
+            <div class="sample-card" onclick="window.open('modern-calendar.html', '_blank')">
+                <div class="card-header">
+                    <div class="card-icon modern-icon">📅</div>
+                    <h3 class="card-title">Modern Calendar</h3>
+                </div>
+                <p class="card-description">
+                    현대적이고 인터랙티브한 달력 디자인으로, 사이드바와 함께 풍부한 기능을 제공합니다.
+                </p>
+                <ul class="features-list">
+                    <li>스터디별 색상 구분 및 필터링</li>
+                    <li>다가오는 일정 사이드바</li>
+                    <li>일정 추가/수정/삭제 기능</li>
+                    <li>반응형 디자인</li>
+                    <li>호버 효과 및 애니메이션</li>
+                </ul>
+                <a href="modern-calendar.html" class="view-btn" target="_blank">미리보기</a>
+            </div>
+
+            <div class="sample-card" onclick="window.open('minimal-calendar.html', '_blank')">
+                <div class="card-header">
+                    <div class="card-icon minimal-icon">🗓️</div>
+                    <h3 class="card-title">Minimal Calendar</h3>
+                </div>
+                <p class="card-description">
+                    깔끔하고 미니멀한 디자인의 달력으로, 직관적인 사용자 경험을 제공합니다.
+                </p>
+                <ul class="features-list">
+                    <li>미니멀한 디자인과 깔끔한 UI</li>
+                    <li>이벤트 도트 표시 시스템</li>
+                    <li>모달을 통한 일정 상세보기</li>
+                    <li>스터디 타입별 범례</li>
+                    <li>모바일 최적화</li>
+                </ul>
+                <a href="minimal-calendar.html" class="view-btn" target="_blank">미리보기</a>
+            </div>
+
+            <div class="sample-card" onclick="window.open('timeline-calendar.html', '_blank')">
+                <div class="card-header">
+                    <div class="card-icon timeline-icon">📊</div>
+                    <h3 class="card-title">Timeline Calendar</h3>
+                </div>
+                <p class="card-description">
+                    타임라인 형태로 일정을 표시하는 달력으로, 시간 순서대로 일정을 관리할 수 있습니다.
+                </p>
+                <ul class="features-list">
+                    <li>타임라인 형태의 일정 표시</li>
+                    <li>미니 달력과 메인 타임라인 분리</li>
+                    <li>스터디 타입별 통계</li>
+                    <li>일정 편집 및 삭제 기능</li>
+                    <li>플로팅 추가 버튼</li>
+                </ul>
+                <a href="timeline-calendar.html" class="view-btn" target="_blank">미리보기</a>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="features-title">공통 기능</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🎨</div>
+                    <h4 class="feature-name">스터디별 색상 구분</h4>
+                    <p class="feature-desc">테코테코, DEVLOG, 이력서 리뷰 등 각 스터디별로 고유한 색상으로 구분하여 한눈에 파악 가능</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <h4 class="feature-name">필터링 기능</h4>
+                    <p class="feature-desc">특정 스터디 타입만 선택하여 해당 일정만 표시하는 필터링 기능 제공</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <h4 class="feature-name">반응형 디자인</h4>
+                    <p class="feature-desc">데스크톱, 태블릿, 모바일 등 모든 디바이스에서 최적화된 사용자 경험</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h4 class="feature-name">인터랙티브 UI</h4>
+                    <p class="feature-desc">부드러운 애니메이션과 호버 효과로 직관적이고 즐거운 사용자 인터페이스</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📝</div>
+                    <h4 class="feature-name">일정 관리</h4>
+                    <p class="feature-desc">일정 추가, 수정, 삭제 기능을 통한 완전한 일정 관리 시스템</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌙</div>
+                    <h4 class="feature-name">다크 테마</h4>
+                    <p class="feature-desc">AsyncSite의 브랜드 컬러를 활용한 일관된 다크 테마 디자인</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
