@@ -6,41 +6,41 @@
   --deduction-font-body: 'Exo 2', sans-serif; /* 본문, 일반 텍스트 */
   --deduction-font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; /* 코드 에디터 */
 
-  /* 기본 테마 (중급) - 인디고-바이올렛 색상 */
-  --deduction-primary-gradient-start: #4B0082; /* 인디고 */
-  --deduction-primary-gradient-end: #6A0DAD;   /* 로열 퍼플 */
+  /* 기본 테마 (중급) - 검은색 기반 무난한 색상 */
+  --deduction-primary-gradient-start: #0a0a0a; /* 딥 블랙 */
+  --deduction-primary-gradient-end: #1a1a1a;   /* 소프트 블랙 */
   --deduction-text-primary: #ffffff;
   --deduction-text-secondary: rgba(255, 255, 255, 0.9);
   --deduction-text-tertiary: rgba(255, 255, 255, 0.7);
-  --deduction-surface-primary: rgba(255, 255, 255, 0.1);
-  --deduction-surface-secondary: rgba(255, 255, 255, 0.15);
-  --deduction-surface-hover: rgba(255, 255, 255, 0.2);
-  --deduction-border-primary: rgba(255, 255, 255, 0.2);
-  --deduction-border-secondary: rgba(255, 255, 255, 0.3);
-  --deduction-border-active: rgba(255, 255, 255, 0.6);
-  --deduction-shadow-primary: rgba(0, 0, 0, 0.1);
-  --deduction-shadow-strong: rgba(0, 0, 0, 0.3);
+  --deduction-surface-primary: rgba(255, 255, 255, 0.08);
+  --deduction-surface-secondary: rgba(255, 255, 255, 0.12);
+  --deduction-surface-hover: rgba(255, 255, 255, 0.18);
+  --deduction-border-primary: rgba(255, 255, 255, 0.15);
+  --deduction-border-secondary: rgba(255, 255, 255, 0.25);
+  --deduction-border-active: rgba(255, 255, 255, 0.5);
+  --deduction-shadow-primary: rgba(0, 0, 0, 0.3);
+  --deduction-shadow-strong: rgba(0, 0, 0, 0.6);
   
-  /* 보색 계열 강조색 - 인디고와 조화로운 웜톤 */
-  --deduction-accent-amber: #f59e0b;     /* 앰버 - 주요 강조 */
-  --deduction-accent-yellow: #fbbf24;    /* 밝은 노랑 - 하이라이트 */
-  --deduction-accent-orange: #fb923c;    /* 주황 - 인터랙션 */
-  --deduction-accent-peach: #FFB347;     /* 피치 - 부드러운 강조 */
+  /* 보색 계열 강조색 - 검은색과 대비되는 밝은 색상 */
+  --deduction-accent-cyan: #00D9FF;      /* 시안 - 주요 강조 */
+  --deduction-accent-magenta: #FF0D72;   /* 마젠타 - 경고/중요 */
+  --deduction-accent-lime: #0DFF72;      /* 라임 - 성공/완료 */
+  --deduction-accent-amber: #FFB347;     /* 앰버 - 부드러운 강조 */
 
   /* 트랜지션 설정 */
   --deduction-transition-color: 0.3s ease;
 
   /* 특수 버튼 색상 */
-  --deduction-btn-primary-bg: #ff6b6b;
-  --deduction-btn-primary-bg-hover: #ff5252;
-  --deduction-btn-danger-bg: #ff6b6b;
-  --deduction-btn-danger-bg-hover: #ff5252;
+  --deduction-btn-primary-bg: var(--deduction-accent-cyan);
+  --deduction-btn-primary-bg-hover: #00B8E6;
+  --deduction-btn-danger-bg: var(--deduction-accent-magenta);
+  --deduction-btn-danger-bg-hover: #E00C66;
 
   /* 특수 요소들을 위한 추가 색상 */
-  --deduction-guide-button-bg: #007bff;
+  --deduction-guide-button-bg: #3877FF;
   --deduction-guide-button-text: #ffffff;
-  --deduction-start-button-gradient-start: var(--deduction-accent-peach);
-  --deduction-start-button-gradient-end: var(--deduction-accent-amber);
+  --deduction-start-button-gradient-start: var(--deduction-accent-cyan);
+  --deduction-start-button-gradient-end: var(--deduction-accent-lime);
 }
 
 /* 초급 테마 - 밝고 명확한 대비 */
@@ -72,22 +72,22 @@
   --deduction-start-button-gradient-end: #1976d2;
 }
 
-/* 중급 테마 - 인디고-바이올렛 지적인 색상 (기본) */
+/* 중급 테마 - 검은색 기반 무난한 색상 (기본) */
 .deduction-game.theme-intermediate {
-  --deduction-primary-gradient-start: #4B0082;
-  --deduction-primary-gradient-end: #6A0DAD;
+  --deduction-primary-gradient-start: #0a0a0a;
+  --deduction-primary-gradient-end: #1a1a1a;
   
   /* 보색 계열 강조색 - 중급 테마 전용 */
-  --deduction-accent-amber: #f59e0b;
-  --deduction-accent-yellow: #fbbf24;
-  --deduction-accent-orange: #fb923c;
-  --deduction-accent-peach: #FFB347;
+  --deduction-accent-cyan: #00D9FF;
+  --deduction-accent-magenta: #FF0D72;
+  --deduction-accent-lime: #0DFF72;
+  --deduction-accent-amber: #FFB347;
 
   /* 특수 버튼 색상 */
-  --deduction-btn-primary-bg: #ff6b6b;
-  --deduction-btn-primary-bg-hover: #ff5252;
-  --deduction-btn-danger-bg: #ff6b6b;
-  --deduction-btn-danger-bg-hover: #ff5252;
+  --deduction-btn-primary-bg: var(--deduction-accent-cyan);
+  --deduction-btn-primary-bg-hover: #00B8E6;
+  --deduction-btn-danger-bg: var(--deduction-accent-magenta);
+  --deduction-btn-danger-bg-hover: #E00C66;
 }
 
 /* 고급 테마 - 다크하고 강렬한 톤 */
@@ -758,7 +758,7 @@
 
 .deduction-game.theme-beginner .reveal-button {
   background: #c8e6c9;
-  border: 2px solid var(--deduction-accent-amber);
+  border: 2px solid var(--deduction-accent-lime);
   color: #1b5e20;
   font-weight: 600;
 }
@@ -790,7 +790,7 @@
 
 .deduction-game.theme-beginner .btn-hint {
   background: #c8e6c9;
-  border: 2px solid var(--deduction-accent-amber);
+  border: 2px solid var(--deduction-accent-lime);
   color: #1b5e20;
   font-weight: 600;
 }
@@ -1946,7 +1946,7 @@
 }
 
 .turn-history .history-result {
-  color: var(--deduction-accent-amber);
+  color: var(--deduction-accent-lime);
   text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
@@ -2049,7 +2049,7 @@
   font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 20px;
-  color: var(--deduction-accent-amber);
+  color: var(--deduction-accent-lime);
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
@@ -2797,7 +2797,7 @@
 }
 
 .test-result-panel.success {
-  border: 2px solid var(--deduction-accent-amber);
+  border: 2px solid var(--deduction-accent-lime);
 }
 
 .test-result-panel.error {
@@ -2817,7 +2817,7 @@
 }
 
 .test-result-panel.success .test-result-header h4 {
-  color: var(--deduction-accent-amber);
+  color: var(--deduction-accent-lime);
 }
 
 .test-result-panel.error .test-result-header h4 {
@@ -3160,7 +3160,7 @@
   transform: translate(-50%, -50%) scale(0);
   font-size: 20px;
   font-weight: bold;
-  color: var(--deduction-accent-amber);
+  color: var(--deduction-accent-lime);
   animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
 }
 
@@ -3261,10 +3261,10 @@
 @keyframes victoryGlow {
   0%,
   100% {
-    filter: drop-shadow(0 0 20px var(--deduction-accent-amber)) drop-shadow(0 0 40px var(--deduction-accent-yellow));
+    filter: drop-shadow(0 0 20px var(--deduction-accent-cyan)) drop-shadow(0 0 40px var(--deduction-accent-lime));
   }
   50% {
-    filter: drop-shadow(0 0 30px var(--deduction-accent-amber)) drop-shadow(0 0 60px var(--deduction-accent-yellow));
+    filter: drop-shadow(0 0 30px var(--deduction-accent-cyan)) drop-shadow(0 0 60px var(--deduction-accent-lime));
   }
 }
 
@@ -3293,8 +3293,8 @@
 }
 
 .guess-result-popup.success {
-  border: 3px solid var(--deduction-accent-amber);
-  box-shadow: 0 0 50px rgba(245, 158, 11, 0.5);
+  border: 3px solid var(--deduction-accent-lime);
+  box-shadow: 0 0 50px rgba(13, 255, 114, 0.5);
 }
 
 .guess-result-popup.partial {
@@ -3554,9 +3554,9 @@
 .score-highlight {
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--deduction-accent-yellow);
+  color: var(--deduction-accent-cyan);
   font-family: var(--deduction-font-primary);
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+  text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
 }
 
 .intro-actions {
