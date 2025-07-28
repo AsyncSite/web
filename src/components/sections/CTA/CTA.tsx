@@ -50,7 +50,7 @@ const CTA: React.FC = () => {
   };
 
   return (
-    <section className="cta" id="recruit">
+    <section className="cta section-background" id="recruit">
       <div className="container">
         <h2 className="cta-title">1기 모집 중</h2>
         <p className="cta-subtitle">열정 있는 당신을 기다립니다</p>

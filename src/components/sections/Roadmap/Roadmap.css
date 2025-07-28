@@ -1,13 +1,11 @@
 /* Roadmap Section - prototype_sipe_style.html mission 기반 */
 .roadmap {
   padding: 200px 0;
-  background: rgba(11, 12, 16, 0.95);
-  position: relative;
 }
 
 /* Roadmap 전용 섹션 헤더 */
 .roadmap .section-header {
-  margin-bottom: 80px;
+  margin-bottom: var(--spacing-6xl);
 }
 
 .roadmap-timeline {
@@ -22,19 +20,19 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(180deg, #c3e88d, #8fd67a);
+  background: linear-gradient(180deg, var(--primary-green), var(--darker-green));
   box-shadow: 0 0 10px rgba(195, 232, 141, 0.5);
   transform: translateX(-50%);
 }
 
 .roadmap-item {
   position: relative;
-  padding: 40px;
-  margin-bottom: 60px;
+  padding: var(--spacing-3xl);
+  margin-bottom: var(--spacing-5xl);
   background: rgba(255, 255, 255, 0.03);
   border-radius: 20px;
-  border: 1px solid rgba(195, 232, 141, 0.15);
-  transition: all 0.3s;
+  border: 1px solid var(--border-light);
+  transition: var(--transition-normal);
   overflow: hidden;
 }
 
@@ -45,28 +43,28 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #c3e88d 0%, #8fd67a 100%);
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--darker-green) 100%);
   opacity: 0;
   transition: opacity 0.3s;
   z-index: -1;
 }
 
-.roadmap-item:nth-child(odd) {
+.roadmap-item:nth-of-type(odd) {
   margin-right: 50%;
-  padding-right: 60px;
+  padding-right: var(--spacing-5xl);
 }
 
-.roadmap-item:nth-child(even) {
+.roadmap-item:nth-of-type(even) {
   margin-left: 50%;
-  padding-left: 60px;
+  padding-left: var(--spacing-5xl);
 }
 
 .roadmap-item::before {
   content: '';
   position: absolute;
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  width: var(--spacing-lg);
+  height: var(--spacing-lg);
+  background: linear-gradient(45deg, var(--primary-green), var(--darker-green));
   border-radius: 50%;
   top: 50%;
   transform: translateY(-50%);
@@ -74,18 +72,18 @@
   z-index: 1;
 }
 
-.roadmap-item:nth-child(odd)::before {
+.roadmap-item:nth-of-type(odd)::before {
   right: -10px;
 }
 
-.roadmap-item:nth-child(even)::before {
+.roadmap-item:nth-of-type(even)::before {
   left: -10px;
 }
 
 .roadmap-item:hover {
   transform: scale(1.02);
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(195, 232, 141, 0.3);
+  border-color: var(--border-heavy);
   box-shadow: 0 10px 30px rgba(195, 232, 141, 0.2);
 }
 
@@ -94,18 +92,18 @@
 }
 
 .roadmap-number {
-  font-size: 24px;
+  font-size: var(--font-2xl);
   font-weight: bold;
-  color: #c3e88d;
-  margin-bottom: 15px;
+  color: var(--primary-green);
+  margin-bottom: var(--spacing-md);
   text-shadow: 0 0 10px rgba(195, 232, 141, 0.5);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .roadmap-title {
-  font-size: 22px;
-  margin-bottom: 15px;
-  color: #ffffff;
+  font-size: var(--font-xl);
+  margin-bottom: var(--spacing-md);
+  color: var(--white-text);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 700;
 }
@@ -113,19 +111,19 @@
 .roadmap-description {
   opacity: 0.8;
   line-height: 1.8;
-  margin-bottom: 20px;
-  color: #ffffff;
+  margin-bottom: var(--spacing-lg);
+  color: var(--white-text);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .roadmap-reward {
   display: inline-block;
-  padding: 8px 20px;
+  padding: var(--spacing-xs) var(--spacing-lg);
   background: rgba(195, 232, 141, 0.15);
-  border-radius: 20px;
-  font-size: 14px;
-  color: #c3e88d;
-  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: var(--spacing-lg);
+  font-size: var(--font-sm);
+  color: var(--primary-green);
+  border: 1px solid var(--border-heavy);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
 }
@@ -133,7 +131,7 @@
 /* 반응형 */
 @media (max-width: 768px) {
   .roadmap {
-    padding: 80px 0;
+    padding: var(--spacing-6xl) 0;
   }
   
   /* 공통 스타일에서 처리 */
@@ -144,10 +142,10 @@
   
   .roadmap-item:nth-child(odd),
   .roadmap-item:nth-child(even) {
-    margin-left: 40px;
+    margin-left: var(--spacing-3xl);
     margin-right: 0;
-    padding-left: 60px;
-    padding-right: 40px;
+    padding-left: var(--spacing-5xl);
+    padding-right: var(--spacing-3xl);
   }
   
   .roadmap-item::before {
@@ -156,44 +154,44 @@
   }
   
   .roadmap-number {
-    font-size: 20px;
+    font-size: var(--font-lg);
   }
   
   .roadmap-title {
-    font-size: 20px;
+    font-size: var(--font-lg);
   }
   
   .roadmap-description {
-    font-size: 14px;
+    font-size: var(--font-sm);
   }
 }
 
 @media (max-width: 480px) {
   .roadmap {
-    padding: 60px 0;
+    padding: var(--spacing-5xl) 0;
   }
   
   .section-header {
-    margin-bottom: 60px;
+    margin-bottom: var(--spacing-5xl);
   }
   
   .section-title {
-    font-size: 28px;
+    font-size: var(--font-3xl);
   }
   
   .section-subtitle {
-    font-size: 16px;
+    font-size: var(--font-md);
   }
   
   .roadmap-item {
-    padding: 30px 20px 30px 50px;
-    margin-bottom: 40px;
+    padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-2xl) var(--spacing-4xl);
+    margin-bottom: var(--spacing-3xl);
   }
   
   .roadmap-item:nth-child(odd),
   .roadmap-item:nth-child(even) {
-    margin-left: 30px;
-    padding-left: 50px;
-    padding-right: 20px;
+    margin-left: var(--spacing-2xl);
+    padding-left: var(--spacing-4xl);
+    padding-right: var(--spacing-lg);
   }
 }

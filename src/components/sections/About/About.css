@@ -1,8 +1,6 @@
 /* About Section - prototype_mashup_style.html 기반 */
 .about {
   min-height: 100vh;
-  background: rgba(11, 12, 16, 0.95);
-  position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;

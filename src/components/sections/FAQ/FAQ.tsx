@@ -48,7 +48,7 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="faq" id="faq">
+    <section className="faq section-background" id="faq">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">FAQ</h2>

@@ -32,7 +32,7 @@ const About: React.FC = () => {
   ];
 
   return (
-    <section className="about" id="about">
+    <section className="about section-background" id="about">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">성장도 게임이 될 수 있어</h2>

@@ -1,8 +1,6 @@
 /* Stats Section - prototype_sopt_style.html 기반 */
 .stats {
   min-height: 40vh;
-  background: rgba(11, 12, 16, 0.95);
-  position: relative;
   display: flex;
   align-items: center;
 }
@@ -17,13 +15,13 @@
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
+  gap: var(--spacing-3xl);
 }
 
 .stat-card {
   text-align: center;
-  padding: 30px 20px;
-  transition: all 0.3s ease;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  transition: var(--transition-normal);
   position: relative;
 }
 
@@ -34,11 +32,11 @@
 }
 
 .stat-number {
-  font-size: 48px;
+  font-size: var(--font-5xl);
   font-weight: 900;
-  color: #c3e88d;
-  margin-bottom: 15px;
-  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  color: var(--primary-green);
+  margin-bottom: var(--spacing-md);
+  background: linear-gradient(45deg, var(--primary-green), var(--darker-green));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 20px rgba(195, 232, 141, 0.3);
@@ -46,8 +44,8 @@
 }
 
 .stat-label {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--font-md);
+  color: var(--white-transparent-heavy);
   font-weight: 500;
   letter-spacing: 0.5px;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -61,11 +59,11 @@
 
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
+    gap: var(--spacing-2xl);
   }
 
   .stat-card {
-    padding: 25px 15px;
+    padding: var(--spacing-xl) var(--spacing-md);
   }
   
   .stat-number {
@@ -73,7 +71,7 @@
   }
   
   .stat-label {
-    font-size: 14px;
+    font-size: var(--font-sm);
   }
 }
 
@@ -84,18 +82,18 @@
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: var(--spacing-lg);
   }
 
   .stat-card {
-    padding: 20px 10px;
+    padding: var(--spacing-lg) var(--spacing-xs);
   }
   
   .stat-number {
-    font-size: 28px;
+    font-size: var(--font-3xl);
   }
   
   .stat-label {
-    font-size: 12px;
+    font-size: var(--font-xs);
   }
 }

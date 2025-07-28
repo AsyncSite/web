@@ -59,7 +59,7 @@ const Studies: React.FC = () => {
   ];
 
   return (
-    <section className="studies" id="studies">
+    <section className="studies section-background" id="studies">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">PRE-WAVE</h2>

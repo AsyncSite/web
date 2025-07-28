@@ -27,7 +27,7 @@ const Stats: React.FC = () => {
   ];
 
   return (
-    <section className="stats">
+    <section className="stats section-background">
       <div className="container">
         <div className="stats-grid">
           {stats.map((stat, index) => (

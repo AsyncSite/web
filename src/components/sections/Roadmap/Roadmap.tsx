@@ -42,7 +42,7 @@ const Roadmap: React.FC = () => {
   ];
 
   return (
-    <section className="roadmap" id="roadmap">
+    <section className="roadmap section-background" id="roadmap">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">성장 로드맵</h2>
