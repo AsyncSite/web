@@ -10,8 +10,8 @@ const MainPage = () => {
       <Stats />
       <Roadmap />
       <Studies />
-      <CTA />
       <FAQ />
+      <CTA />
       <Contribution />
       <Footer />
     </div>
