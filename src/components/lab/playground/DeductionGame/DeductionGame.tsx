@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DeductionGame.css';
 import { GameManager } from './ai/GameManager';
 import { PlayerFactory } from './ai/PlayerFactory';
@@ -64,6 +65,7 @@ interface PlayerConfig {
 }
 
 const DeductionGame: React.FC = () => {
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [gameDataManager, setGameDataManager] = useState<GameDataManager | null>(null);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
@@ -1449,8 +1451,21 @@ function makeGuess(gameState) {
   };
 
   const renderIntroScreen = () => (
-    <div className="game-screen intro-screen">
-      <div className="deduction-intro-container">
+    <>
+      <div className="deduction-navigation-intro">
+        <button 
+          className="deduction-back-to-lab-button"
+          onClick={() => navigate('/lab')}
+          aria-label="Lab으로 돌아가기"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <span>Lab으로 돌아가기</span>
+        </button>
+      </div>
+      <div className="game-screen intro-screen">
+        <div className="deduction-intro-container">
         <div className="deduction-logo-section">
           <h1 className="deduction-logo">DEDUCTION</h1>
           <p className="deduction-subtitle">추론 게임</p>
@@ -1498,6 +1513,7 @@ function makeGuess(gameState) {
         </div>
       </div>
     </div>
+    </>
   );
 
   const renderModeSelection = () => (
@@ -2507,6 +2523,20 @@ function makeGuess(gameState) {
       }}
     >
       <div className={`deduction-game ${getThemeClass()}`}>
+        {currentScreen !== 'intro' && (
+          <div className="deduction-navigation">
+            <button 
+              className="deduction-back-to-lab-button"
+              onClick={() => navigate('/lab')}
+              aria-label="Lab으로 돌아가기"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span>Lab으로 돌아가기</span>
+            </button>
+          </div>
+        )}
         <div className={`deduction-container ${currentScreen === 'intro' ? 'intro-mode' : ''}`}>
           {currentScreen !== 'intro' && (
             <div className="game-header">
