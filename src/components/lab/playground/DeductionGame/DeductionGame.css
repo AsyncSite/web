@@ -152,6 +152,16 @@
   position: relative;
 }
 
+/* 인트로 모드에서 전체 화면 활용 */
+.deduction-container.intro-mode {
+  padding: 0;
+  max-width: 100%;
+}
+
+.deduction-container.intro-mode .game-content {
+  margin-top: 0;
+}
+
 .game-header {
   text-align: center;
   width: 100%;
@@ -160,6 +170,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation: header-fade-in 0.5s ease-out;
+}
+
+@keyframes header-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .game-header h1 {

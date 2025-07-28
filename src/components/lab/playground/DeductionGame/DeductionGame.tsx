@@ -2507,11 +2507,13 @@ function makeGuess(gameState) {
       }}
     >
       <div className={`deduction-game ${getThemeClass()}`}>
-        <div className="deduction-container">
-          <div className="game-header">
-            <h1>Exclusive Deduction Game</h1>
-            <p>서로 다른 단서로 정답을 추론하는 게임</p>
-          </div>
+        <div className={`deduction-container ${currentScreen === 'intro' ? 'intro-mode' : ''}`}>
+          {currentScreen !== 'intro' && (
+            <div className="game-header">
+              <h1>Exclusive Deduction Game</h1>
+              <p>서로 다른 단서로 정답을 추론하는 게임</p>
+            </div>
+          )}
           <div className="game-content">
             <div className="game-wrapper">
 
