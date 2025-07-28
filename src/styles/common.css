@@ -1,9 +1,22 @@
 /* 공통 스타일 - 모든 섹션에서 사용하는 공통 요소들 */
 
+/* 스크롤 스냅 */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+}
+
 /* 섹션 배경 */
 .section-background {
   background: rgba(11, 12, 16, 0.95);
   position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
 }
 
 /* 아바타 공통 스타일 - 각 컴포넌트에서 개별 적용 */
