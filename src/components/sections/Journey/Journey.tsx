@@ -1,21 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import './Journey.css';
 
-// GSAP을 동적으로 로드
-declare global {
-  interface Window {
-    gsap: any;
-    ScrollTrigger: any;
-  }
-}
-
-// ScrollTrigger 타입 정의
-interface ScrollTriggerCallbackVars {
-  progress: number;
-  direction: number;
-  isActive: boolean;
-}
-
 interface JourneyStep {
   id: number;
   title: string;
@@ -29,10 +14,9 @@ interface JourneyStep {
 }
 
 const Journey: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const stagesRef = useRef<(HTMLDivElement | null)[]>([]);
-  const timelineRef = useRef<any>(null);
-  const scrollTriggerRef = useRef<any>(null);
+  const starsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const pathRef = useRef<SVGPathElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const journeySteps: JourneyStep[] = [
     {
@@ -82,232 +66,90 @@ const Journey: React.FC = () => {
   ];
 
   useEffect(() => {
-    // GSAP 동적 로드
-    const loadGSAP = async () => {
-      if (typeof window.gsap === 'undefined') {
-        // GSAP 코어
-        const gsapScript = document.createElement('script');
-        gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
-        gsapScript.async = true;
-        document.head.appendChild(gsapScript);
-        
-        // ScrollTrigger 플러그인
-        const scrollTriggerScript = document.createElement('script');
-        scrollTriggerScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
-        scrollTriggerScript.async = true;
-        
-        await new Promise((resolve) => {
-          gsapScript.onload = () => {
-            document.head.appendChild(scrollTriggerScript);
-            scrollTriggerScript.onload = resolve;
-          };
-        });
-      }
-      
-      const { gsap, ScrollTrigger } = window;
-      gsap.registerPlugin(ScrollTrigger);
-      
-      // 모션 선호도 확인
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReducedMotion) return;
-      
-      // 마스터 타임라인 생성
-      const tl = gsap.timeline();
-      timelineRef.current = tl;
-      
-      // 각 스테이지 애니메이션 추가
-      stagesRef.current.forEach((stage, index) => {
-        if (!stage) return;
-        
-        // 스테이지 콘텐츠 페이드인
-        const content = stage.querySelector('.journey-stage-content');
-        const star = stage.querySelector('.journey-star');
-        const path = stage.querySelector('.journey-path');
-        
-        // 각 스테이지에 ScrollTrigger 생성
-        ScrollTrigger.create({
-          trigger: stage,
-          start: 'top 80%',
-          end: 'top 20%',
-          scrub: 1,
-          onEnter: () => {
-            gsap.to(content, {
-              opacity: 1,
-              y: 0,
-              duration: 1,
-              ease: 'power2.out'
-            });
-            gsap.to(star, {
-              scale: 1.2,
-              opacity: 1,
-              duration: 0.8,
-              ease: 'power2.out'
-            });
-          },
-          onLeaveBack: () => {
-            gsap.to(content, {
-              opacity: 0,
-              y: 50,
-              duration: 0.8
-            });
-            gsap.to(star, {
-              scale: 0.8,
-              opacity: 0.5,
-              duration: 0.8
-            });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.classList.add('active');
+            }, index * 200);
           }
         });
-        
-        // 별자리 경로 그리기
-        if (path && index > 0) {
-          const svgPath = path as SVGPathElement;
-          const pathLength = svgPath.getTotalLength();
-          gsap.set(svgPath, {
-            strokeDasharray: pathLength,
-            strokeDashoffset: pathLength
-          });
-          
-          ScrollTrigger.create({
-            trigger: stage,
-            start: 'top 60%',
-            end: 'top 30%',
-            scrub: 1,
-            onUpdate: (self: ScrollTriggerCallbackVars) => {
-              gsap.to(svgPath, {
-                strokeDashoffset: pathLength * (1 - self.progress),
-                duration: 0
-              });
-            }
-          });
-        }
-      });
-      
-      // 헤더 페이드아웃
-      const header = sectionRef.current?.querySelector('.section-header');
-      if (header) {
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '20% top',
-          scrub: true,
-          onUpdate: (self: ScrollTriggerCallbackVars) => {
-            gsap.to(header, {
-              opacity: 1 - self.progress,
-              y: -50 * self.progress,
-              duration: 0
-            });
-          }
-        });
-      }
-    };
-    
-    loadGSAP();
-    
-    // 클린업
-    return () => {
-      if (timelineRef.current) {
-        timelineRef.current.kill();
-      }
-      if (window.ScrollTrigger) {
-        window.ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
-      }
-    };
+      },
+      { threshold: 0.5 }
+    );
+
+    starsRef.current.forEach((star) => {
+      if (star) observer.observe(star);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="journey journey-cinematic" id="journey" ref={sectionRef}>
-      {/* 초기 헤더 */}
-      <div className="section-header">
-        <h2 className="section-title">당신의 Async 여정</h2>
-        <p className="section-subtitle">함께 성장하는 여정의 네 가지 별</p>
-      </div>
-      
-      {/* 각 여정 단계 (풀스크린) */}
-      {journeySteps.map((step, index) => (
-        <div
-          key={step.id}
-          className="journey-stage"
-          ref={(el) => (stagesRef.current[index] = el)}
-        >
-          {/* 별자리 SVG */}
-          <svg className="journey-constellation-bg" viewBox="0 0 1920 1080">
+    <section className="journey section-background" id="journey">
+      <div className="container" ref={containerRef}>
+        <div className="section-header">
+          <h2 className="section-title">당신의 Async 여정</h2>
+          <p className="section-subtitle">함께 성장하는 여정의 네 가지 별</p>
+        </div>
+
+        <div className="journey-constellation">
+          {/* SVG 별자리 연결선 */}
+          <svg className="constellation-svg" viewBox="0 0 1200 600">
             <defs>
-              <radialGradient id={`starGradient${step.id}`}>
-                <stop offset="0%" stopColor="#C3E88D" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#C3E88D" stopOpacity="0" />
-              </radialGradient>
-              <linearGradient id={`pathGradient${step.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#C3E88D" stopOpacity="0.3" />
                 <stop offset="50%" stopColor="#82aaff" stopOpacity="0.5" />
                 <stop offset="100%" stopColor="#C3E88D" stopOpacity="0.3" />
               </linearGradient>
             </defs>
-            
-            {/* 이전 별과의 연결선 */}
-            {index > 0 && (
-              <path
-                className="journey-path"
-                d={`M ${400 + (index - 1) * 300},540 Q ${550 + (index - 1) * 300},440 ${700 + (index - 1) * 300},540`}
-                fill="none"
-                stroke={`url(#pathGradient${step.id})`}
-                strokeWidth="2"
-                strokeDasharray="5,5"
-              />
-            )}
-            
-            {/* 현재 별 */}
-            <circle
-              className="journey-star"
-              cx={700 + index * 300}
-              cy="540"
-              r="60"
+            <path
+              ref={pathRef}
+              className="constellation-path"
+              d="M150,150 Q300,50 450,150 T750,150 Q900,250 1050,150"
               fill="none"
-              stroke="#C3E88D"
-              strokeWidth="3"
+              stroke="url(#pathGradient)"
+              strokeWidth="2"
+              strokeDasharray="5,5"
             />
-            <circle
-              className="journey-star-inner"
-              cx={700 + index * 300}
-              cy="540"
-              r="50"
-              fill={`url(#starGradient${step.id})`}
-            />
-            <text
-              x={700 + index * 300}
-              y="550"
-              textAnchor="middle"
-              className="journey-star-number"
-              fill="#C3E88D"
-              fontSize="36"
-              fontWeight="900"
-            >
-              {step.id}
-            </text>
           </svg>
-          
-          {/* 콘텐츠 */}
-          <div className="journey-stage-content">
-            <h3 className="journey-stage-title">{step.title}</h3>
-            <p className="journey-stage-subtitle">{step.subtitle}</p>
-            <p className="journey-stage-description">{step.description}</p>
-            
-            <div className="journey-testimonial">
-              <p className="journey-testimonial-content">
-                "{step.testimonial.content}"
-              </p>
-              <p className="journey-testimonial-author">
-                - {step.testimonial.author}, {step.testimonial.studyName}
-              </p>
-            </div>
+
+          {/* 별들과 내용 */}
+          <div className="journey-steps">
+            {journeySteps.map((step, index) => (
+              <div
+                key={step.id}
+                className={`journey-step step-${step.id}`}
+                ref={(el) => (starsRef.current[index] = el)}
+              >
+                <div className="star-container">
+                  <div className="star-glow"></div>
+                  <div className="star">
+                    <span className="star-number">{step.id}</span>
+                  </div>
+                  <div className="star-pulse"></div>
+                </div>
+                
+                <div className="step-content">
+                  <h3 className="step-title">{step.title}</h3>
+                  <p className="step-subtitle">{step.subtitle}</p>
+                  <p className="step-description">{step.description}</p>
+                  
+                  <div className="step-testimonial">
+                    <p className="testimonial-content">"{step.testimonial.content}"</p>
+                    <p className="testimonial-author">
+                      - {step.testimonial.author}, {step.testimonial.studyName}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-      
-      {/* 마지막 CTA */}
-      <div className="journey-stage journey-final">
-        <div className="journey-stage-content">
-          <p className="journey-cta-text">이제 당신의 여정을 시작할 차례입니다</p>
-          <a href="#studies" className="journey-cta-button">지금 모집 중인 스터디 보기</a>
+
+        <div className="journey-cta">
+          <p className="cta-text">이제 당신의 여정을 시작할 차례입니다</p>
         </div>
       </div>
     </section>
