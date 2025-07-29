@@ -80,6 +80,14 @@
   margin-bottom: 32px;
 }
 
+/* 뱃지 컨테이너 */
+.study-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .study-name {
   font-size: 32px;
   font-weight: 900;
@@ -265,9 +273,7 @@
 
 /* 유형 뱃지 */
 .study-type-badge {
-  position: absolute;
-  top: 24px;
-  right: 24px;
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -280,7 +286,6 @@
   color: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
-  z-index: 10;
   cursor: default;
 }
 
@@ -329,7 +334,8 @@
   content: attr(data-tooltip);
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
   padding: 8px 12px;
   background: rgba(10, 14, 39, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -338,10 +344,10 @@
   font-weight: 400;
   white-space: nowrap;
   opacity: 0;
-  transform: translateY(-4px);
   transition: all 0.3s ease;
   pointer-events: none;
   backdrop-filter: blur(10px);
+  z-index: 100;
 }
 
 .study-type-badge.participatory::after {
@@ -354,7 +360,7 @@
 
 .study-type-badge:hover::after {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
 }
 
 /* 더 많은 스터디 안내 */
@@ -495,10 +501,12 @@
   
   /* 모바일에서 뱃지 조정 */
   .study-type-badge {
-    top: 16px;
-    right: 16px;
     padding: 5px 12px;
     font-size: 12px;
+  }
+  
+  .study-badges {
+    gap: 6px;
   }
   
   .study-type-badge .type-icon {
@@ -526,8 +534,17 @@
     gap: 16px;
   }
   
-  .deadline-badge {
+  .study-badges {
     align-self: flex-start;
+    gap: 8px;
+  }
+  
+  .deadline-badge {
+    order: 2;
+  }
+  
+  .study-type-badge {
+    order: 1;
   }
   
   .study-cta {

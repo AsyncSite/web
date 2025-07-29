@@ -47,14 +47,6 @@ const Studies: React.FC = () => {
                   '--study-glow': study.color.glow
                 } as React.CSSProperties}
               >
-                {/* 유형 뱃지 */}
-                <div className={`study-type-badge ${study.type}`}>
-                  <span className="type-icon">
-                    {study.type === 'participatory' ? '👥' : '📚'}
-                  </span>
-                  <span className="type-label">{study.typeLabel}</span>
-                </div>
-                
                 {/* 스터디 헤더 */}
                 <div className="study-header">
                   <div className="study-info">
@@ -63,11 +55,19 @@ const Studies: React.FC = () => {
                     </h3>
                     <p className="study-tagline">{study.tagline}</p>
                   </div>
-                  {daysLeft <= 7 && (
-                    <div className="deadline-badge">
-                      D-{daysLeft}
+                  <div className="study-badges">
+                    <div className={`study-type-badge ${study.type}`}>
+                      <span className="type-icon">
+                        {study.type === 'participatory' ? '👥' : '📚'}
+                      </span>
+                      <span className="type-label">{study.typeLabel}</span>
                     </div>
-                  )}
+                    {daysLeft <= 7 && (
+                      <div className="deadline-badge">
+                        D-{daysLeft}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 {/* 리더 소개 */}
