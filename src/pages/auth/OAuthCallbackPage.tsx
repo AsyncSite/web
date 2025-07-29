@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import authService from '../../api/authService';
+import { LoginResponse } from '../../types/auth';
 import StarBackground from '../../components/common/StarBackground';
 import './LoginPage.css';
 
 function OAuthCallbackPage(): React.ReactNode {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(true);
 
