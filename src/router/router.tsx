@@ -9,6 +9,7 @@ import PrivateRoute from '../components/auth/PrivateRoute';
 const MainPage = lazy(() => import('../pages/MainPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
+const OAuthCallbackPage = lazy(() => import('../pages/auth/OAuthCallbackPage'));
 const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
 const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignupPage />,
+      },
+      {
+        path: 'auth/callback',
+        element: <OAuthCallbackPage />,
       },
       {
         path: 'users/me',
