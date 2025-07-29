@@ -47,6 +47,14 @@ const Studies: React.FC = () => {
                   '--study-glow': study.color.glow
                 } as React.CSSProperties}
               >
+                {/* 유형 뱃지 */}
+                <div className={`study-type-badge ${study.type}`}>
+                  <span className="type-icon">
+                    {study.type === 'participatory' ? '👥' : '📚'}
+                  </span>
+                  <span className="type-label">{study.typeLabel}</span>
+                </div>
+                
                 {/* 스터디 헤더 */}
                 <div className="study-header">
                   <div className="study-info">
@@ -109,9 +117,6 @@ const Studies: React.FC = () => {
                 <a href={getStudyUrl(study)} className="study-cta">
                   함께하기
                 </a>
-                
-                {/* 별 장식 */}
-                <div className="study-star"></div>
               </div>
             );
           })}

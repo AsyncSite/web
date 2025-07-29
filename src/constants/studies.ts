@@ -8,6 +8,8 @@ export interface StudyInfo {
   generation: number;
   tagline: string;
   description?: string;
+  type: 'participatory' | 'educational'; // 스터디 유형
+  typeLabel: string; // 한글 표시용 라벨
   leader: {
     name: string;
     profileImage: string;
@@ -38,6 +40,8 @@ export const STUDY_LIST: StudyInfo[] = [
     generation: 3,
     tagline: '함께 풀어가는 알고리즘의 즐거움',
     description: '코딩 테스트 완전 정복을 목표로 하는 알고리즘 스터디입니다.',
+    type: 'participatory',
+    typeLabel: '참여형',
     leader: {
       name: '김준혁',
       profileImage: 'https://i.pravatar.cc/150?img=1',
@@ -66,6 +70,8 @@ export const STUDY_LIST: StudyInfo[] = [
     generation: 2,
     tagline: '퇴근 후 함께하는 성장의 시간',
     description: '매일 밤 11시, 하루를 마무리하며 성장하는 온라인 스터디',
+    type: 'educational',
+    typeLabel: '교육형',
     leader: {
       name: '이서연',
       profileImage: 'https://i.pravatar.cc/150?img=2',
@@ -93,6 +99,8 @@ export const STUDY_LIST: StudyInfo[] = [
     generation: 1,
     tagline: '기록하며 성장하는 개발자의 글쓰기',
     description: '개발 경험을 글로 남기며 성장하는 테크 라이팅 스터디',
+    type: 'participatory',
+    typeLabel: '참여형',
     leader: {
       name: '박지민',
       profileImage: 'https://i.pravatar.cc/150?img=3',
