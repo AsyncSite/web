@@ -3,7 +3,12 @@
   padding: 160px 0;
   position: relative;
   overflow: hidden;
-  background: transparent;
+  background: rgba(11, 12, 16, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
 }
 
 .journey .section-header {

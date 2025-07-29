@@ -87,7 +87,7 @@ const Journey: React.FC = () => {
   }, []);
 
   return (
-    <section className="journey section-background" id="journey">
+    <section className="journey" id="journey">
       <div className="container" ref={containerRef}>
         <div className="section-header">
           <h2 className="section-title">당신의 Async 여정</h2>
