@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import authService from '../../api/authService';
+import userService from '../../api/userService';
 import { LoginResponse } from '../../types/auth';
 import StarBackground from '../../components/common/StarBackground';
 import './LoginPage.css';
@@ -46,7 +47,7 @@ function OAuthCallbackPage(): React.ReactNode {
         // Store auth data
         authService.storeAuthData(loginResponse);
 
-        // Validate token and get user info
+        // Validate token and get basic user info
         const userInfo = await authService.validateToken();
 
         // Update login response with user info
@@ -56,9 +57,17 @@ function OAuthCallbackPage(): React.ReactNode {
 
         // Store updated auth data
         authService.storeAuthData(loginResponse);
+        
+        // Fetch full user profile (including name and other details)
+        try {
+          await userService.getProfile();
+        } catch (error) {
+          // If profile fetch fails, continue anyway
+          console.error('Failed to fetch user profile:', error);
+        }
 
-        // Navigate to user profile
-        navigate('/users/me', { replace: true });
+        // Force a page reload to ensure AuthContext picks up the new auth state
+        window.location.href = '/users/me';
       } catch (err) {
         setError('OAuth 로그인 처리 중 오류가 발생했습니다.');
         setIsProcessing(false);
