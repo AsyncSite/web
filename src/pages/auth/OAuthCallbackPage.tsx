@@ -66,7 +66,7 @@ function OAuthCallbackPage(): React.ReactNode {
     };
 
     handleOAuthCallback();
-  }, [searchParams, navigate, login]);
+  }, [searchParams, navigate]);
 
   if (isProcessing) {
     return (
