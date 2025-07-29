@@ -204,7 +204,7 @@ const Studies: React.FC = () => {
                 )}
                 
                 {/* CTA 버튼 */}
-                <a href={`/studies/${study.id}`} className="study-cta">
+                <a href={`/study/${study.id}`} className="study-cta">
                   함께하기
                 </a>
                 
@@ -218,7 +218,7 @@ const Studies: React.FC = () => {
         {/* 더 많은 스터디 안내 */}
         <div className="more-studies">
           <p className="more-text">더 많은 스터디가 준비 중이에요</p>
-          <a href="/studies" className="more-link">
+          <a href="/study" className="more-link">
             모든 스터디 보기 →
           </a>
         </div>
