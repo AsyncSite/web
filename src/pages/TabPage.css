@@ -110,6 +110,147 @@
   transform: translateY(-2px);
 }
 
+/* Study List Page 스타일 */
+.study-list-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  color: #ffffff;
+}
+
+.study-list-page h1 {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  text-align: center;
+  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(195, 232, 141, 0.3);
+}
+
+.page-description {
+  text-align: center;
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 60px;
+}
+
+.study-section {
+  margin-bottom: 60px;
+}
+
+.study-section h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: #c3e88d;
+}
+
+.study-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.study-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.study-card {
+  background: rgba(5, 6, 10, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  padding: 24px;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.study-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(195, 232, 141, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.study-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.study-card.disabled:hover {
+  transform: none;
+}
+
+.study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.study-header h3 {
+  font-size: 24px;
+  margin: 0;
+  color: #ffffff;
+}
+
+.study-header .generation {
+  font-size: 16px;
+  opacity: 0.7;
+  font-weight: normal;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.recruiting {
+  background: rgba(195, 232, 141, 0.2);
+  color: #c3e88d;
+  border: 1px solid rgba(195, 232, 141, 0.3);
+}
+
+.status-badge.ongoing {
+  background: rgba(130, 170, 255, 0.2);
+  color: #82aaff;
+  border: 1px solid rgba(130, 170, 255, 0.3);
+}
+
+.status-badge.closed {
+  background: rgba(255, 255, 255, 0.1);
+  color: #666;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.study-tagline {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.study-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.study-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .page-content {
@@ -126,5 +267,13 @@
   
   .coming-soon p {
     font-size: 20px;
+  }
+  
+  .study-list-page h1 {
+    font-size: 36px;
+  }
+  
+  .study-grid {
+    grid-template-columns: 1fr;
   }
 }

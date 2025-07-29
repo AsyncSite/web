@@ -50,7 +50,7 @@ const Stats: React.FC = () => {
   const activeStudies = [
     { name: '테코테코', generation: 3, color: '#C3E88D' },
     { name: '11루틴', generation: 2, color: '#82aaff' },
-    { name: 'DEVLOG-14', generation: 1, color: '#ffea00' },
+    { name: '데브로그', generation: 1, color: '#ffea00' },
     { name: '알고리즘 마스터', generation: 2, color: '#89ddff' },
   ];
 

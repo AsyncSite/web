@@ -49,7 +49,7 @@ const Journey: React.FC = () => {
       testimonial: {
         content: '3개월 전과 비교하면 정말 많이 성장했어요. 특히 코드 품질에 대한 시각이 달라졌습니다.',
         author: '박○○',
-        studyName: 'DEVLOG-14 1기'
+        studyName: '데브로그 1기'
       }
     },
     {

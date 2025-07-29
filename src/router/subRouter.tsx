@@ -1,4 +1,5 @@
 import React, { lazy } from 'react';
+import { Navigate } from 'react-router-dom';
 
 // 기존 페이지들
 const LabPage = lazy(() => import('../pages/LabPage'));
@@ -6,17 +7,64 @@ const LabDetailPage = lazy(() => import('../pages/LabDetailPage'));
 const TeamShuffle = lazy(() => import('../components/lab/utilities/TeamShuffle'));
 const SpotlightArenaPage = lazy(() => import('../pages/lab/spotlight-arena/SpotlightArenaPage'));
 
-// 새로운 탭 페이지들
+// 스터디 관련 페이지들
 const StudyPage = lazy(() => import('../pages/StudyPage'));
+const TecoTecoPage = lazy(() => import('../pages/TecoTecoPage/TecoTecoPage'));
+const StudyDetailPage = lazy(() => import('../pages/StudyDetailPage'));
+
+// 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const StudyPlanPage = lazy(() => import('../pages/StudyPlanPage'));
 
 const subRouter = [
-  // 새로운 탭 페이지들
+  // 스터디 관련 라우트
   {
     path: 'study',
-    element: <StudyPage />,
+    children: [
+      {
+        index: true,
+        element: <StudyPage />,
+      },
+      // 레거시 URL 리다이렉트 (/study/1 -> /study/1-tecoteco)
+      {
+        path: '1',
+        element: <Navigate to="/study/1-tecoteco" replace />,
+      },
+      {
+        path: '2',
+        element: <Navigate to="/study/2-11routine" replace />,
+      },
+      {
+        path: '3',
+        element: <Navigate to="/study/3-devlog" replace />,
+      },
+      // 기존 URL 호환성
+      {
+        path: '3-devlog-14',
+        element: <Navigate to="/study/3-devlog" replace />,
+      },
+      {
+        path: 'devlog-14',
+        element: <Navigate to="/study/3-devlog" replace />,
+      },
+      // 테코테코 전용 페이지
+      {
+        path: '1-tecoteco',
+        element: <TecoTecoPage />,
+      },
+      {
+        path: 'tecoteco',
+        element: <Navigate to="/study/1-tecoteco" replace />,
+      },
+      // 다른 스터디들을 위한 동적 라우트 (향후 확장)
+      {
+        path: ':studyIdentifier',
+        element: <StudyDetailPage />,
+      },
+    ],
   },
+  
+  // 기타 페이지들
   {
     path: 'calendar',
     element: <CalendarPage />,
