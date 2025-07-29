@@ -33,12 +33,14 @@ function OAuthCallbackPage(): React.ReactNode {
         }
 
         // Store tokens and get user info
-        const loginResponse = {
+        const loginResponse: LoginResponse = {
           accessToken: token,
           refreshToken: refreshToken,
+          tokenType: 'Bearer',
+          expiresIn: 3600, // 1 hour default
           email: '', // Will be filled by validateToken
           username: '',
-          roles: []
+          roles: [] as string[]
         };
 
         // Store auth data
