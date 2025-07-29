@@ -37,7 +37,7 @@ const Flow: React.FC = () => {
   ];
 
   return (
-    <section className="flow" id="flow">
+    <section className="flow section-background" id="flow">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">스터디 플로우</h2>

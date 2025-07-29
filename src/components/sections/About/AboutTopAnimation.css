@@ -1,5 +1,5 @@
 .about-top-animation {
-  margin: 60px auto 80px auto;
+  margin: var(--spacing-5xl) auto var(--spacing-6xl) auto;
   text-align: center;
 }
 
@@ -7,8 +7,8 @@
 .type-line {
   display: inline-block; /* 가운데 정렬 대비 */
   white-space: pre-wrap;
-  color: #ffffff;
-  font-size: 1.8rem;
+  color: var(--white-text);
+  font-size: var(--font-3xl);
   line-height: 1.4;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
@@ -17,7 +17,7 @@
 .big-quote {
   font-size: 2.8rem;
   font-weight: bold;
-  color: #ffffff;
+  color: var(--white-text);
   text-shadow:
     2px 2px 4px rgba(0, 0, 0, 0.3),
     0 0 5px rgba(195, 232, 141, 0.5);
@@ -28,7 +28,7 @@
   display: inline-block;
   margin-left: 2px;
   width: 1ch;
-  color: #ffffff;
+  color: var(--white-text);
   font-weight: bold;
   animation: blink 0.7s infinite step-start;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);

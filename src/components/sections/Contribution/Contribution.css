@@ -1,26 +1,26 @@
 /* Members Section - 단순한 프로필 슬라이더 */
 .members-section {
-  padding: 80px 0;
-  background: rgba(11, 12, 16, 0.95);
-  position: relative;
+  padding: var(--spacing-4xl) 0;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 60vh;
 }
 
 /* 공통 스타일은 common.css에서 import */
 .members-section .section-header {
-  margin-bottom: 50px;
+  margin-bottom: var(--spacing-4xl);
 }
 
 .members-slider {
   width: 100%;
   overflow: hidden;
-  position: relative;
-  padding: 20px 0; /* 호버 시 확대를 위한 여백 */
+  padding: var(--spacing-lg) 0; /* 호버 시 확대를 위한 여백 */
 }
 
 .members-track {
   display: flex;
-  gap: 40px;
+  gap: var(--spacing-3xl);
   animation: slideLeft 30s linear infinite;
   width: fit-content;
 }
@@ -41,8 +41,7 @@
 .member-item {
   flex-shrink: 0;
   text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
+  transition: var(--transition-normal);
 }
 
 .member-item:hover {
@@ -54,28 +53,28 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 3px solid rgba(195, 232, 141, 0.3);
-  transition: all 0.3s ease;
+  border: 3px solid var(--border-heavy);
+  transition: var(--transition-normal);
   display: block;
 }
 
 .member-item:hover .member-avatar {
-  border-color: rgba(195, 232, 141, 0.8);
-  box-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  border-color: var(--white-transparent-heavy);
+  box-shadow: var(--shadow-green);
 }
 
 /* 반응형 */
 @media (max-width: 768px) {
   .members-section {
-    padding: 60px 0;
+    padding: var(--spacing-5xl) 0;
   }
 
   .members-slider {
-    padding: 15px 0;
+    padding: var(--spacing-md) 0;
   }
 
   .members-track {
-    gap: 30px;
+    gap: var(--spacing-2xl);
     animation-duration: 25s;
   }
 
@@ -87,15 +86,15 @@
 
 @media (max-width: 480px) {
   .members-section {
-    padding: 40px 0;
+    padding: var(--spacing-3xl) 0;
   }
 
   .members-slider {
-    padding: 10px 0;
+    padding: var(--spacing-xs) 0;
   }
 
   .members-track {
-    gap: 25px;
+    gap: var(--spacing-xl);
     animation-duration: 20s;
   }
 

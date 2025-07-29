@@ -5,6 +5,8 @@
     position: relative;
     width: 100%;
     min-height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
 /* 우주 배경 */
@@ -14,7 +16,7 @@
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    background: radial-gradient(ellipse at bottom, #1b2735 0%, #05060A 100%) !important;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, var(--dark-bg) 100%) !important;
     z-index: -2 !important;
     pointer-events: none;
 }
@@ -58,7 +60,7 @@
 
 .orbit {
     position: absolute;
-    border: 1px solid rgba(195, 232, 141, 0.1);
+    border: 1px solid var(--border-light);
     border-radius: 50%;
     animation: rotate 120s linear infinite;
     will-change: transform;
@@ -90,10 +92,9 @@
 
 .planet {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle, #C3E88D, #A8D66F);
-    border-radius: 50%;
+    width: var(--spacing-lg);
+    height: var(--spacing-lg);
+    background: radial-gradient(circle, var(--primary-green), var(--secondary-green));
     border-radius: 50%;
     box-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
 }
@@ -130,13 +131,12 @@
 .hero {
     min-height: 100vh;
     display: flex;
-    align-items: flex-start; /* 중앙 대신 상단 기준 */
+    align-items: center;
     justify-content: center;
     position: relative;
     background: transparent;
-    padding: 0 20px !important;
+    padding: 0 var(--spacing-lg) !important;
     width: 100% !important;
-    padding-top: 200px !important; /* 상단에서 200px 떨어진 위치 */
 }
 
 .hero-content {
@@ -152,26 +152,14 @@
     will-change: opacity, transform;
 }
 
-.hero-badge {
-    display: inline-block;
-    padding: 8px 20px;
-    background: rgba(195, 232, 141, 0.1);
-    border: 1px solid rgba(195, 232, 141, 0.3);
-    border-radius: 20px;
-    font-size: 14px;
-    color: #C3E88D;
-    margin-bottom: 30px;
-    animation: fadeInDown 0.8s ease;
-    font-weight: 600 !important;
-}
 
 .hero-title {
     font-size: 72px !important;
     font-weight: 900 !important;
     line-height: 1.1 !important;
-    margin-bottom: 30px;
+    margin-bottom: var(--spacing-2xl);
     letter-spacing: -2px !important;
-    color: #ffffff;
+    color: var(--white-text);
     text-align: center !important;
     animation: fadeInUpTitle 0.8s ease forwards;
     width: 100%;
@@ -180,17 +168,17 @@
 }
 
 .hero-title span {
-    background: linear-gradient(135deg, #C3E88D, #A8D66F);
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 30px rgba(195, 232, 141, 0.3);
 }
 
 .hero-subtitle {
-    font-size: 24px !important;
+    font-size: var(--font-2xl) !important;
     opacity: 0;
-    margin-bottom: 50px;
-    color: #ffffff;
+    margin-bottom: var(--spacing-4xl);
+    color: var(--white-text);
     text-align: center !important;
     font-weight: 600 !important;
     animation: fadeInUpSubtitle 0.8s ease 0.2s forwards;
@@ -200,7 +188,7 @@
 
 .hero-cta {
     display: flex !important;
-    gap: 20px;
+    gap: var(--spacing-lg);
     justify-content: center !important;
     text-align: center;
     animation: fadeInUpCTA 0.8s ease 0.4s forwards;
@@ -212,7 +200,7 @@
 .btn-primary {
     padding: 15px 40px;
     background: linear-gradient(135deg, #C3E88D, #A8D66F);
-    color: #05060A;
+    color: var(--dark-bg);
     text-decoration: none;
     border-radius: 30px;
     font-weight: 700 !important;

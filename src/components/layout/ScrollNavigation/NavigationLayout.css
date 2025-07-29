@@ -1,0 +1,55 @@
+/* NavigationLayout.css - 네비게이션이 있을 때의 메인 콘텐츠 레이아웃 */
+
+/* 메인 앱 컨테이너 */
+.App {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* 헤더는 네비게이션 영향 받지 않음 */
+.header {
+  margin-left: 0 !important;
+}
+
+/* 네비게이션이 표시될 때 메인 콘텐츠 영역 조정 */
+.main-content {
+  margin-left: 0;
+}
+
+.main-content.with-navigation {
+  margin-left: 200px;
+}
+
+/* About 섹션부터 적용되는 스타일 */
+.section-with-nav {
+  margin-left: 200px;
+}
+
+/* Intro 섹션은 풀 width 유지 */
+.section-full-width {
+  margin-left: 0;
+}
+
+/* 반응형 처리 */
+@media (max-width: 1024px) {
+  .main-content.with-navigation,
+  .section-with-nav {
+    margin-left: 0;
+  }
+
+  .header {
+    margin-left: 0 !important;
+  }
+}
+
+/* 모바일에서는 항상 풀 width */
+@media (max-width: 768px) {
+  .main-content,
+  .section-with-nav {
+    margin-left: 0 !important;
+  }
+
+  .header {
+    margin-left: 0 !important;
+  }
+}

@@ -1,138 +1,315 @@
-/* About Section - prototype_mashup_style.html 기반 */
+/* About Section - 카드 스타일 기반 */
 .about {
-  min-height: 100vh;
-  background: rgba(11, 12, 16, 0.95);
-  position: relative;
+  padding: 120px 0;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-/* 배경 효과 */
-.about::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-/* About 전용 컨테이너 */
-.about .container {
-  width: 100%;
 }
 
 /* About 전용 섹션 헤더 */
 .about .section-header {
   margin-bottom: 80px;
+  text-align: center;
 }
 
-/* 카드 그리드 */
-.about-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 40px;
+/* About Container - 카드 스타일 */
+.about-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 40px;
 }
 
-/* 카드 스타일 */
-.about-card {
+.about-subsection {
+  margin-bottom: 20px;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  flex-shrink: 0;
+}
+
+.section-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+  grid-auto-rows: min-content;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+/* Question Block */
+.question-block {
+  text-align: center;
+  position: relative;
+  transform: translateX(-50px);
+  opacity: 0;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.question-block.animate-in {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.question-number {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #C3E88D 0%, #A8D66F 100%);
+  color: #1A1D29;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 8px 32px rgba(195, 232, 141, 0.3);
+}
+
+.question-title {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 32px;
+  line-height: 1.3;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.question-visual {
+  position: relative;
+  display: inline-block;
+}
+
+.visual-icon {
+  font-size: 80px;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+}
+
+.visual-decoration {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.15), rgba(195, 232, 141, 0.05));
+  border-radius: 50%;
+  z-index: 1;
+  animation: decorationPulse 3s ease-in-out infinite;
+}
+
+@keyframes decorationPulse {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(1); 
+    opacity: 0.8; 
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.1); 
+    opacity: 0.4; 
+  }
+}
+
+/* Answer Block */
+.answer-block {
+  padding: 40px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(195, 232, 141, 0.2);
-  border-radius: 20px;
-  padding: 40px 30px;
-  text-align: center;
-  transition: all 0.3s ease;
+  transform: translateX(50px);
+  opacity: 0;
   position: relative;
   overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.about-card::before {
+.answer-block.animate-in {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.answer-block::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(135deg, #C3E88D 0%, #A8D66F 100%);
 }
 
-.about-card:hover {
-  transform: translateY(-10px);
-  border-color: rgba(195, 232, 141, 0.4);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.about-card:hover::before {
-  opacity: 1;
-}
-
-/* 아이콘 */
-.about-icon {
-  font-size: 60px;
-  margin-bottom: 25px;
-  display: block;
-  filter: drop-shadow(0 0 10px rgba(195, 232, 141, 0.3));
-}
-
-/* 제목 */
-.about-title {
+.answer-title {
   font-size: 24px;
   font-weight: 700;
   color: #C3E88D;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* 설명 */
-.about-description {
+.answer-text {
   font-size: 16px;
-  line-height: 1.7;
   color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  margin-bottom: 32px;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-weight: 400;
+}
+
+.answer-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(195, 232, 141, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.feature-item:hover {
+  background: rgba(195, 232, 141, 0.15);
+  transform: translateX(8px);
+}
+
+.feature-icon {
+  font-size: 20px;
+}
+
+/* Culture Highlights */
+.culture-highlights {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(195, 232, 141, 0.08);
+  border-radius: 16px;
+  border: 1px solid rgba(195, 232, 141, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.highlight-item:hover {
+  background: rgba(195, 232, 141, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.highlight-icon {
+  font-size: 32px;
+  margin-top: 4px;
+}
+
+.highlight-text h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #C3E88D;
+  margin-bottom: 4px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.highlight-text p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Layout Variations */
+.about-subsection[data-layout="answer-left"] .section-inner {
+  grid-template-columns: 1fr 1fr;
+}
+
+.about-subsection[data-layout="answer-left"] .question-block {
+  transform: translateX(50px);
+  order: 2;
+}
+
+.about-subsection[data-layout="answer-left"] .answer-block {
+  transform: translateX(-50px);
+  order: 1;
+}
+
+.about-subsection[data-layout="answer-left"] .question-block.animate-in {
+  transform: translateX(0);
+}
+
+.about-subsection[data-layout="answer-left"] .answer-block.animate-in {
+  transform: translateX(0);
 }
 
 /* 반응형 */
+@media (max-width: 1024px) {
+  .about-container {
+    padding: 0 20px;
+  }
+  
+  .section-inner {
+    gap: 40px;
+  }
+  
+  .about-subsection {
+    margin-bottom: 30px;
+  }
+}
+
 @media (max-width: 768px) {
   .about {
     padding: 80px 0;
   }
   
-  .section-title {
-    font-size: 36px;
+  .about-container {
+    padding: 0 20px;
   }
   
-  .section-subtitle {
-    font-size: 18px;
-  }
-  
-  .about-grid {
+  .section-inner {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 40px;
   }
   
-  .about-card {
-    padding: 30px 20px;
+  .about-subsection[data-layout="answer-left"] .question-block,
+  .question-block {
+    transform: translateY(30px);
+    order: 1;
   }
   
-  .about-icon {
-    font-size: 50px;
+  .about-subsection[data-layout="answer-left"] .answer-block,
+  .answer-block {
+    transform: translateY(30px);
+    order: 2;
   }
   
-  .about-title {
-    font-size: 20px;
+  .question-block.animate-in,
+  .about-subsection[data-layout="answer-left"] .question-block.animate-in {
+    transform: translateY(0);
   }
   
-  .about-description {
-    font-size: 14px;
+  .answer-block.animate-in,
+  .about-subsection[data-layout="answer-left"] .answer-block.animate-in {
+    transform: translateY(0);
+  }
+  
+  .answer-block {
+    padding: 24px;
+  }
+  
+  .question-number {
+    width: 50px;
+    height: 50px;
+    font-size: 16px;
   }
 }
 
@@ -151,5 +328,14 @@
   
   .section-subtitle {
     font-size: 16px;
+  }
+  
+  .visual-icon {
+    font-size: 60px;
+  }
+  
+  .visual-decoration {
+    width: 100px;
+    height: 100px;
   }
 }

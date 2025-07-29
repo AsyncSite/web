@@ -1,5 +1,26 @@
 /* 공통 스타일 - 모든 섹션에서 사용하는 공통 요소들 */
 
+/* 스크롤 스냅 */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+}
+
+/* 섹션 배경 */
+.section-background {
+  background: rgba(11, 12, 16, 0.95);
+  position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
+/* 아바타 공통 스타일 - 각 컴포넌트에서 개별 적용 */
+
 /* 컨테이너 */
 .container {
   max-width: 1200px;
@@ -77,21 +98,125 @@
   box-shadow: 0 8px 20px rgba(51, 51, 51, 0.4);
 }
 
-/* 공통 카드 스타일 */
+/* CSS 변수 정의 */
+:root {
+  /* 색상 팔레트 */
+  --primary-green: #C3E88D;
+  --secondary-green: #A8D66F;
+  --darker-green: #8fd67a;
+  --dark-bg: #05060A;
+  --section-bg: rgba(11, 12, 16, 0.95);
+  --white-text: #ffffff;
+  --white-transparent-light: rgba(255, 255, 255, 0.6);
+  --white-transparent-medium: rgba(255, 255, 255, 0.7);
+  --white-transparent-heavy: rgba(255, 255, 255, 0.8);
+  --border-light: rgba(195, 232, 141, 0.15);
+  --border-medium: rgba(195, 232, 141, 0.2);
+  --border-heavy: rgba(195, 232, 141, 0.3);
+  --border-strong: rgba(195, 232, 141, 0.4);
+  
+  /* 간격 시스템 */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 40px;
+  --spacing-4xl: 48px;
+  --spacing-5xl: 60px;
+  --spacing-6xl: 80px;
+  
+  /* 폰트 크기 */
+  --font-xs: 12px;
+  --font-sm: 14px;
+  --font-md: 16px;
+  --font-lg: 18px;
+  --font-xl: 20px;
+  --font-2xl: 24px;
+  --font-3xl: 28px;
+  --font-4xl: 36px;
+  --font-5xl: 48px;
+  
+  /* 그림자 */
+  --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --shadow-green: 0 0 20px rgba(195, 232, 141, 0.3);
+  --shadow-green-strong: 0 0 30px rgba(195, 232, 141, 0.5);
+  
+  /* 전환 효과 */
+  --transition-fast: all 0.2s ease;
+  --transition-normal: all 0.3s ease;
+  --transition-slow: all 0.5s ease;
+}
+
+/* 공통 카드 스타일 시스템 */
+.card-base {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-light);
+  border-radius: 15px;
+  padding: var(--spacing-2xl);
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-large {
+  border-radius: 20px;
+  padding: var(--spacing-3xl);
+}
+
+.card-hover {
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-heavy);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-hover-strong:hover {
+  transform: translateY(-10px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-xl);
+}
+
+/* 카드 오버레이 효과 */
+.card-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.card-overlay:hover::before {
+  opacity: 1;
+}
+
+/* 기존 card 클래스 (하위 호환성) */
 .card {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(195, 232, 141, 0.15);
+  border: 1px solid var(--border-light);
   border-radius: 15px;
-  padding: 30px;
-  transition: all 0.3s ease;
+  padding: var(--spacing-2xl);
+  transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  border-color: rgba(195, 232, 141, 0.3);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border-color: var(--border-heavy);
+  box-shadow: var(--shadow-lg);
 }
 
 /* 공통 그리드 */

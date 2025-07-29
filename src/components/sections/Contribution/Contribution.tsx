@@ -69,7 +69,7 @@ const Contribution: React.FC = () => {
 
 
   return (
-    <section className="members-section">
+    <section className="members-section section-background">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">Our Members</h2>

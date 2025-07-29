@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Study Calendar - AsyncSite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SUIT', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #05060A;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .calendar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: rgba(5, 6, 10, 0.95);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            height: fit-content;
+            backdrop-filter: blur(20px);
+        }
+
+        .sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            color: #C3E88D;
+            margin-bottom: 20px;
+        }
+
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(195, 232, 141, 0.05);
+            border-radius: 10px;
+        }
+
+        .month-display {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: #C3E88D;
+            background: rgba(195, 232, 141, 0.1);
+        }
+
+        .mini-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 25px;
+        }
+
+        .mini-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .mini-day.header {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .mini-day.other-month {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .mini-day.today {
+            background: #C3E88D;
+            color: #05060A;
+            font-weight: 600;
+        }
+
+        .mini-day.has-event {
+            background: rgba(195, 232, 141, 0.2);
+            color: #C3E88D;
+        }
+
+        .mini-day:hover:not(.header) {
+            background: rgba(195, 232, 141, 0.1);
+        }
+
+        .study-types {
+            margin-bottom: 25px;
+        }
+
+        .study-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .study-type:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .study-type.active {
+            background: rgba(195, 232, 141, 0.1);
+        }
+
+        .type-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .type-color.tecoteco { background: #FF6B6B; }
+        .type-color.devlog { background: #4A90E2; }
+        .type-color.resume { background: #9C27B0; }
+        .type-color.retrospective { background: #FFC107; }
+
+        .type-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .type-count {
+            margin-left: auto;
+            background: rgba(195, 232, 141, 0.2);
+            color: #C3E88D;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .main-content {
+            background: rgba(5, 6, 10, 0.95);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .timeline-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            color: #C3E88D;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(195, 232, 141, 0.2);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: rgba(195, 232, 141, 0.2);
+            border-color: #C3E88D;
+            color: #C3E88D;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #C3E88D, rgba(195, 232, 141, 0.3));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 4px solid #FF6B6B;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .timeline-item.devlog {
+            border-left-color: #4A90E2;
+        }
+
+        .timeline-item.resume {
+            border-left-color: #9C27B0;
+        }
+
+        .timeline-item.retrospective {
+            border-left-color: #FFC107;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #FF6B6B;
+            border: 3px solid #05060A;
+        }
+
+        .timeline-item.devlog::before {
+            background: #4A90E2;
+        }
+
+        .timeline-item.resume::before {
+            background: #9C27B0;
+        }
+
+        .timeline-item.retrospective::before {
+            background: #FFC107;
+        }
+
+        .event-date {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+        }
+
+        .event-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .event-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        .event-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid rgba(195, 232, 141, 0.3);
+            border-radius: 15px;
+            color: #C3E88D;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(195, 232, 141, 0.2);
+        }
+
+        .add-event-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C3E88D, #8fd67a);
+            border: none;
+            color: #05060A;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(195, 232, 141, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .add-event-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(195, 232, 141, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .calendar-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .timeline {
+                padding-left: 20px;
+            }
+            
+            .timeline::before {
+                left: 10px;
+            }
+            
+            .timeline-item::before {
+                left: 4px;
+            }
+            
+            .timeline-item {
+                padding: 15px;
+            }
+            
+            .add-event-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="sidebar">
+            <h2 class="sidebar-title">스터디 캘린더</h2>
+            
+            <div class="month-nav">
+                <button class="nav-btn" onclick="previousMonth()">‹</button>
+                <div class="month-display" id="monthDisplay">2024년 1월</div>
+                <button class="nav-btn" onclick="nextMonth()">›</button>
+            </div>
+            
+            <div class="mini-calendar" id="miniCalendar">
+                <!-- 미니 달력이 JavaScript로 생성됩니다 -->
+            </div>
+            
+            <div class="study-types">
+                <div class="study-type active" onclick="filterEvents('all')">
+                    <div class="type-color all" style="background: #C3E88D;"></div>
+                    <span class="type-name">전체</span>
+                    <span class="type-count" id="allCount">7</span>
+                </div>
+                <div class="study-type" onclick="filterEvents('tecoteco')">
+                    <div class="type-color tecoteco"></div>
+                    <span class="type-name">테코테코</span>
+                    <span class="type-count" id="tecoCount">3</span>
+                </div>
+                <div class="study-type" onclick="filterEvents('devlog')">
+                    <div class="type-color devlog"></div>
+                    <span class="type-name">DEVLOG</span>
+                    <span class="type-count" id="devlogCount">2</span>
+                </div>
+                <div class="study-type" onclick="filterEvents('resume')">
+                    <div class="type-color resume"></div>
+                    <span class="type-name">이력서 리뷰</span>
+                    <span class="type-count" id="resumeCount">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="timeline-header">
+                <h1 class="timeline-title">일정 타임라인</h1>
+                <div class="view-toggle">
+                    <button class="toggle-btn active">타임라인</button>
+                    <button class="toggle-btn">월간뷰</button>
+                </div>
+            </div>
+            
+            <div class="timeline" id="timeline">
+                <!-- 타임라인 이벤트들이 JavaScript로 생성됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <button class="add-event-btn" onclick="addNewEvent()">+</button>
+
+    <script>
+        const events = [
+            { date: '2024-01-01', title: '이력서 리뷰', type: 'resume', description: '월간 이력서 검토 및 피드백' },
+            { date: '2024-01-05', title: '테코테코', type: 'tecoteco', description: '주간 스터디 모임 - 알고리즘 문제 해결' },
+            { date: '2024-01-10', title: 'DEVLOG', type: 'devlog', description: '개발 블로그 스터디 - 기술 포스팅 리뷰' },
+            { date: '2024-01-12', title: '테코테코', type: 'tecoteco', description: '주간 스터디 모임 - 코드 리뷰' },
+            { date: '2024-01-19', title: '테코테코', type: 'tecoteco', description: '주간 스터디 모임 - 프로젝트 발표' },
+            { date: '2024-01-24', title: 'DEVLOG', type: 'devlog', description: '개발 블로그 스터디 - 새로운 기술 탐구' },
+            { date: '2024-01-26', title: '회고 미팅', type: 'retrospective', description: '월간 회고 및 다음 달 계획 수립' }
+        ];
+
+        let currentDate = new Date(2024, 0, 1);
+        let currentFilter = 'all';
+
+        function generateMiniCalendar() {
+            const miniCalendar = document.getElementById('miniCalendar');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            document.getElementById('monthDisplay').textContent = `${year}년 ${month + 1}월`;
+            miniCalendar.innerHTML = '';
+            
+            // 요일 헤더
+            const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+            weekdays.forEach(day => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'mini-day header';
+                dayDiv.textContent = day;
+                miniCalendar.appendChild(dayDiv);
+            });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            for (let i = 0; i < 42; i++) {
+                const cellDate = new Date(startDate);
+                cellDate.setDate(startDate.getDate() + i);
+                
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'mini-day';
+                dayDiv.textContent = cellDate.getDate();
+                
+                if (cellDate.getMonth() !== month) {
+                    dayDiv.classList.add('other-month');
+                }
+                
+                if (cellDate.toDateString() === new Date().toDateString()) {
+                    dayDiv.classList.add('today');
+                }
+                
+                const dateStr = cellDate.toISOString().split('T')[0];
+                const hasEvent = events.some(event => event.date === dateStr);
+                if (hasEvent) {
+                    dayDiv.classList.add('has-event');
+                }
+                
+                miniCalendar.appendChild(dayDiv);
+            }
+        }
+
+        function generateTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+            
+            const filteredEvents = currentFilter === 'all' 
+                ? events 
+                : events.filter(event => event.type === currentFilter);
+            
+            const sortedEvents = filteredEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            sortedEvents.forEach(event => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = `timeline-item ${event.type}`;
+                
+                const eventDate = new Date(event.date);
+                const formattedDate = eventDate.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'short'
+                });
+                
+                eventDiv.innerHTML = `
+                    <div class="event-date">${formattedDate}</div>
+                    <div class="event-title">${event.title}</div>
+                    <div class="event-description">${event.description}</div>
+                    <div class="event-actions">
+                        <button class="action-btn" onclick="editEvent('${event.date}')">수정</button>
+                        <button class="action-btn" onclick="deleteEvent('${event.date}')">삭제</button>
+                    </div>
+                `;
+                
+                timeline.appendChild(eventDiv);
+            });
+        }
+
+        function filterEvents(type) {
+            currentFilter = type;
+            
+            document.querySelectorAll('.study-type').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelector(`.study-type`).classList.add('active');
+            
+            generateTimeline();
+        }
+
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateMiniCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateMiniCalendar();
+        }
+
+        function editEvent(date) {
+            alert(`${date} 일정을 수정합니다.`);
+        }
+
+        function deleteEvent(date) {
+            if (confirm(`${date} 일정을 삭제하시겠습니까?`)) {
+                const index = events.findIndex(event => event.date === date);
+                if (index > -1) {
+                    events.splice(index, 1);
+                    generateTimeline();
+                    generateMiniCalendar();
+                }
+            }
+        }
+
+        function addNewEvent() {
+            const date = prompt('날짜를 입력하세요 (YYYY-MM-DD):');
+            if (date) {
+                const title = prompt('일정 제목:');
+                const type = prompt('스터디 타입 (tecoteco/devlog/resume/retrospective):') || 'tecoteco';
+                const description = prompt('설명:') || '';
+                
+                events.push({ date, title, type, description });
+                events.sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                generateTimeline();
+                generateMiniCalendar();
+            }
+        }
+
+        // 초기화
+        generateMiniCalendar();
+        generateTimeline();
+    </script>
+</body>
+</html>

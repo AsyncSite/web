@@ -1,27 +1,25 @@
 /* Activities Section - prototype_sipe_style.html 기반 + 프로젝트 색상 적용 */
 .activities {
   padding: 120px 0;
-  background: rgba(5, 6, 10, 0.95);
-  position: relative;
 }
 
 /* Activities 전용 섹션 헤더 */
 .activities .section-header {
-  margin-bottom: 80px;
+  margin-bottom: var(--spacing-6xl);
 }
 
 .activity-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
+  gap: var(--spacing-2xl);
 }
 
 .activity-card {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 20px;
-  padding: 40px;
-  border: 1px solid rgba(195, 232, 141, 0.15);
-  transition: all 0.3s;
+  padding: var(--spacing-3xl);
+  border: 1px solid var(--border-light);
+  transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
 }
@@ -41,8 +39,8 @@
 
 .activity-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(195, 232, 141, 0.3);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border-color: var(--border-heavy);
+  box-shadow: var(--shadow-lg);
 }
 
 .activity-card:hover::before {
@@ -50,24 +48,24 @@
 }
 
 .activity-icon {
-  font-size: 48px;
-  margin-bottom: 20px;
+  font-size: var(--font-5xl);
+  margin-bottom: var(--spacing-lg);
   display: block;
   filter: drop-shadow(0 0 10px rgba(195, 232, 141, 0.3));
 }
 
 .activity-title {
-  font-size: 22px;
-  margin-bottom: 15px;
-  color: #ffffff;
+  font-size: var(--font-xl);
+  margin-bottom: var(--spacing-md);
+  color: var(--white-text);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 700;
 }
 
 .activity-schedule {
-  font-size: 16px;
-  color: #c3e88d;
-  margin-bottom: 20px;
+  font-size: var(--font-md);
+  color: var(--primary-green);
+  margin-bottom: var(--spacing-lg);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 600;
 }
@@ -75,15 +73,15 @@
 .activity-description {
   opacity: 0.8;
   line-height: 1.7;
-  margin-bottom: 30px;
-  color: #ffffff;
+  margin-bottom: var(--spacing-2xl);
+  color: var(--white-text);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .activity-participants {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: var(--spacing-md);
 }
 
 .participant-avatars {
@@ -92,18 +90,17 @@
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: var(--spacing-3xl);
+  height: var(--spacing-3xl);
   border-radius: 50%;
-  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  background: linear-gradient(45deg, var(--primary-green), var(--darker-green));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  color: #05060A;
-  font-size: 14px;
+  color: var(--dark-bg);
+  font-size: var(--font-sm);
   margin-left: -5px;
-  border: 2px solid rgba(5, 6, 10, 0.95);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -112,42 +109,42 @@
 }
 
 .activity-participants span {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--font-sm);
+  color: var(--white-transparent-medium);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* 반응형 */
 @media (max-width: 768px) {
   .activities {
-    padding: 80px 0;
+    padding: var(--spacing-6xl) 0;
   }
 
   /* 공통 스타일에서 처리 */
 
   .activity-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: var(--spacing-xl);
   }
 
   .activity-card {
-    padding: 30px;
+    padding: var(--spacing-2xl);
   }
 
   .activity-icon {
-    font-size: 40px;
+    font-size: var(--font-3xl);
   }
 
   .activity-title {
-    font-size: 20px;
+    font-size: var(--font-lg);
   }
 
   .activity-schedule {
-    font-size: 14px;
+    font-size: var(--font-sm);
   }
 
   .activity-description {
-    font-size: 14px;
+    font-size: var(--font-sm);
   }
 
   .avatar {
@@ -187,14 +184,14 @@
   }
 
   .avatar {
-    width: 30px;
-    height: 30px;
+    width: var(--spacing-2xl);
+    height: var(--spacing-2xl);
     font-size: 11px;
   }
 
   .activity-participants {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: var(--spacing-xs);
   }
 }

@@ -43,7 +43,7 @@ const Activities: React.FC = () => {
   ];
 
   return (
-    <section className="activities" id="activities">
+    <section className="activities section-background" id="activities">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">정기 활동</h2>
