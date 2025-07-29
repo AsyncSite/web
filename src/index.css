@@ -1,16 +1,58 @@
+/* Import Typography and Spacing Systems */
+@import './styles/typography.css';
+@import './styles/spacing.css';
+
+/* CSS Variables */
+:root {
+  /* Colors */
+  --primary-green: #C3E88D;
+  --secondary-green: #82aaff;
+  --accent-yellow: #ffea00;
+  --accent-purple: #6366f1;
+  --accent-pink: #f87171;
+  
+  /* Background Colors */
+  --dark-bg: #0a0e27;
+  --dark-bg-secondary: #1a1a1a;
+  --dark-bg-tertiary: #2a2a2a;
+  
+  /* Text Colors */
+  --white-text: #f0f0f0;
+  --secondary-text: #ddd;
+  --muted-text: #aaa;
+  
+  /* Border Colors */
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-green: rgba(195, 232, 141, 0.3);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+  font-family: 'PretendardVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
     'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--dark-bg);
+  color: var(--white-text);
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* Font Face Declarations */
 @font-face {
   font-family: 'DungGeunMo';
   src: url('../fonts/DungGeunMo.ttf') format('truetype');
@@ -44,4 +86,55 @@ code {
   src: url('../fonts/LINESeedKR-Rg.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+}
+
+/* Global Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+p {
+  margin: 0 0 var(--spacing-md);
+}
+
+a {
+  color: var(--primary-green);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--primary-green);
+  color: var(--dark-bg);
+}
+
+/* Focus Styles */
+:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-green);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green);
 }

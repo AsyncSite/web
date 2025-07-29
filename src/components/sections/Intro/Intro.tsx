@@ -50,15 +50,16 @@ const Intro: React.FC = () => {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title">
-              따로 또 같이<br />
-              <span>느슨히 끈끈히</span><br />
+              성장의 다음 단계,<br />
+              <span>동료와 함께</span>
             </h1>
             <p className="hero-subtitle">
-              작고 꾸준한 행동이 모여 집단 지성을 이루는 생태계
+              혼자서는 넘기 힘든 성장의 벽을<br />
+              신뢰할 수 있는 동료들과 함께 넘어보세요
             </p>
             <div className="hero-cta">
-              <a href="#recruit" className="btn-primary">1기 지원하기</a>
-              <a href="#about" className="btn-secondary">더 알아보기</a>
+              <a href="#studies" className="btn-primary">지금 모집 중인 스터디</a>
+              <a href="#about" className="btn-secondary">Async Site 이야기</a>
             </div>
           </div>
         </div>

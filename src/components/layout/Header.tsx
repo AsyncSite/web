@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     return () => {
       observer.disconnect();
     };
-  }, [transparent]);
+  }, [transparent, headerHeight]);
 
   // 사용자 메뉴 외부 클릭 감지
   useEffect(() => {

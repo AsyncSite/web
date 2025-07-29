@@ -1,0 +1,130 @@
+/* Spacing System - Async Site */
+
+:root {
+  /* Base spacing unit (8px) */
+  --spacing-base: 8px;
+  
+  /* Spacing Scale */
+  --spacing-xs: calc(var(--spacing-base) * 0.5);   /* 4px */
+  --spacing-sm: calc(var(--spacing-base) * 1);     /* 8px */
+  --spacing-md: calc(var(--spacing-base) * 2);     /* 16px */
+  --spacing-lg: calc(var(--spacing-base) * 3);     /* 24px */
+  --spacing-xl: calc(var(--spacing-base) * 4);     /* 32px */
+  --spacing-2xl: calc(var(--spacing-base) * 5);    /* 40px */
+  --spacing-3xl: calc(var(--spacing-base) * 6);    /* 48px */
+  --spacing-4xl: calc(var(--spacing-base) * 8);    /* 64px */
+  --spacing-5xl: calc(var(--spacing-base) * 10);   /* 80px */
+  --spacing-6xl: calc(var(--spacing-base) * 12);   /* 96px */
+  --spacing-7xl: calc(var(--spacing-base) * 15);   /* 120px */
+  --spacing-8xl: calc(var(--spacing-base) * 20);   /* 160px */
+  
+  /* Section Spacing */
+  --section-padding-y: var(--spacing-7xl);
+  --section-padding-x: var(--spacing-lg);
+  --section-gap: var(--spacing-5xl);
+  
+  /* Component Spacing */
+  --card-padding: var(--spacing-xl);
+  --button-padding-y: var(--spacing-md);
+  --button-padding-x: var(--spacing-xl);
+  --input-padding: var(--spacing-md);
+  
+  /* Container */
+  --container-max-width: 1200px;
+  --container-padding: var(--spacing-lg);
+}
+
+/* Utility Classes */
+/* Margin */
+.m-0 { margin: 0; }
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }
+.m-2xl { margin: var(--spacing-2xl); }
+.m-3xl { margin: var(--spacing-3xl); }
+
+/* Margin Top */
+.mt-0 { margin-top: 0; }
+.mt-xs { margin-top: var(--spacing-xs); }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+.mt-2xl { margin-top: var(--spacing-2xl); }
+.mt-3xl { margin-top: var(--spacing-3xl); }
+
+/* Margin Bottom */
+.mb-0 { margin-bottom: 0; }
+.mb-xs { margin-bottom: var(--spacing-xs); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+.mb-2xl { margin-bottom: var(--spacing-2xl); }
+.mb-3xl { margin-bottom: var(--spacing-3xl); }
+
+/* Padding */
+.p-0 { padding: 0; }
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+.p-2xl { padding: var(--spacing-2xl); }
+.p-3xl { padding: var(--spacing-3xl); }
+
+/* Padding Y-axis */
+.py-0 { padding-top: 0; padding-bottom: 0; }
+.py-xs { padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
+.py-sm { padding-top: var(--spacing-sm); padding-bottom: var(--spacing-sm); }
+.py-md { padding-top: var(--spacing-md); padding-bottom: var(--spacing-md); }
+.py-lg { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
+.py-xl { padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl); }
+.py-2xl { padding-top: var(--spacing-2xl); padding-bottom: var(--spacing-2xl); }
+.py-3xl { padding-top: var(--spacing-3xl); padding-bottom: var(--spacing-3xl); }
+
+/* Gap */
+.gap-xs { gap: var(--spacing-xs); }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+.gap-xl { gap: var(--spacing-xl); }
+.gap-2xl { gap: var(--spacing-2xl); }
+.gap-3xl { gap: var(--spacing-3xl); }
+
+/* Section Layout */
+.section {
+  padding: var(--section-padding-y) var(--section-padding-x);
+}
+
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* Responsive Spacing */
+@media (max-width: 992px) {
+  :root {
+    --section-padding-y: var(--spacing-6xl);
+    --section-gap: var(--spacing-4xl);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding-y: var(--spacing-5xl);
+    --section-padding-x: var(--spacing-md);
+    --section-gap: var(--spacing-3xl);
+    --card-padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --section-padding-y: var(--spacing-4xl);
+    --section-gap: var(--spacing-2xl);
+  }
+}

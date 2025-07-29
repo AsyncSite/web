@@ -1,81 +1,317 @@
-/* Stats Section - prototype_sopt_style.html 기반 */
+/* Stats Section - 실타래처럼 엮이는 시간 */
 .stats {
   padding: 120px 0;
+  position: relative;
+  min-height: 100vh;
   display: flex;
   align-items: center;
+  overflow: visible;
 }
 
-/* Stats 전용 섹션 헤더 */
 .stats .section-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 80px;
+  animation: fadeInDown 0.8s ease;
+  z-index: 4;
+  position: relative;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .stats .section-title {
-  font-size: 48px;
-  margin-bottom: 20px;
-  color: #C3E88D;
-  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin-bottom: 0;
   font-weight: 900;
 }
 
-.stats .section-subtitle {
-  font-size: 20px;
-  opacity: 0.7;
-  color: #ffffff;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* Stats 전용 컨테이너 */
-.stats .container {
-  width: 100%;
-}
-
-/* 타이머 스타일 - CTA와 동일 */
-.stats-timer {
+.title-layout {
+  position: relative;
   display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-bottom: 60px;
+  flex-direction: column;
+  gap: 0;
 }
 
-.timer-item {
-  text-align: center;
-  min-width: 160px;
+.title-main {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  line-height: 1;
+  margin-bottom: -10px;
+}
+
+.title-part {
+  display: inline-block;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.title-part.first {
+  font-size: 64px;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: -1px;
+  margin-right: 20px;
+}
+
+.title-part.second {
+  font-size: 64px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -1px;
+  margin-right: 5px;
+}
+
+.title-comma {
+  font-size: 96px;
+  font-weight: 900;
+  color: #C3E88D;
+  line-height: 0.7;
+  margin-left: -5px;
+  margin-right: 20px;
+  display: inline-block;
+  transform: translateY(-10px);
+  text-shadow: 0 0 30px rgba(195, 232, 141, 0.5);
+  animation: commaGlow 2s ease-in-out infinite;
+}
+
+@keyframes commaGlow {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(-10px) scale(1.05);
+  }
+}
+
+.title-sub {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+  padding-right: 5%;
+}
+
+.title-part.accent {
+  font-size: 56px;
+  background: linear-gradient(135deg, #C3E88D, #A8D66F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  animation: accentGlow 3s ease-in-out infinite;
+}
+
+@keyframes accentGlow {
+  0%, 100% {
+    filter: brightness(1);
+    text-shadow: 0 0 20px rgba(195, 232, 141, 0.3);
+  }
+  50% {
+    filter: brightness(1.1);
+    text-shadow: 0 0 30px rgba(195, 232, 141, 0.5);
+  }
+}
+
+
+/* 실타래 컨테이너 */
+.weaving-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+/* 캔버스 스타일 */
+.weaving-canvas,
+.glow-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 1;
+  margin-left: calc(-50vw + 50%);
+}
+
+.glow-canvas {
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.weaving-canvas {
+  cursor: pointer;
+}
+
+/* 중앙 시간 표시 - 물 흐르듯 */
+.time-display-weaving {
+  position: relative;
+  z-index: 3;
+  padding: 30px 40px;
+  animation: timeAppear 1s ease-out 0.5s both;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 20px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(10, 14, 39, 0.6) 0%,
+    rgba(10, 14, 39, 0.3) 40%,
+    transparent 70%
+  );
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
 }
 
-.timer-number {
-  font-size: 64px;
-  font-weight: 900;
-  background: linear-gradient(45deg, #c3e88d, #8fd67a);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  margin-bottom: 10px;
-  width: 140px;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
+@keyframes timeAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.time-flow {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 70px;
+  gap: 15px;
 }
 
-.timer-label {
-  font-size: 18px;
-  opacity: 0.8;
-  color: #ffffff;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+.time-segment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-number {
+  font-family: 'Consolas', 'Source Code Pro', monospace;
+  font-size: 42px;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 3px;
+  text-shadow: 
+    0 0 20px rgba(195, 232, 141, 0.4),
+    0 0 40px rgba(195, 232, 141, 0.2);
+  animation: timeGlow 2s ease-in-out infinite;
+}
+
+@keyframes timeGlow {
+  0%, 100% { 
+    opacity: 1;
+  }
+  50% { 
+    opacity: 0.85;
+  }
+}
+
+.time-label {
+  font-size: 11px;
+  color: rgba(195, 232, 141, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 2px;
   font-weight: 500;
-  text-align: center;
-  width: 100%;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+.time-connector {
+  font-size: 20px;
+  color: rgba(195, 232, 141, 0.4);
+  margin: 0 -5px;
+  align-self: center;
+  margin-bottom: 20px;
+}
+
+/* 은은한 시작 날짜 표시 */
+.time-origin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: rgba(195, 232, 141, 0.3);
+  letter-spacing: 1px;
+  animation: fadeInUp 1s ease-out 1s both;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.time-origin:hover {
+  color: rgba(195, 232, 141, 0.5);
+}
+
+.origin-date {
+  font-family: 'Consolas', 'Source Code Pro', monospace;
+  font-weight: 500;
+}
+
+.origin-divider {
+  opacity: 0.5;
+}
+
+.origin-text {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  opacity: 0.8;
+}
+
+/* 하단 설명 */
+.weaving-legend {
+  position: relative;
+  margin-top: 20px;
+  text-align: center;
+  animation: fadeInUp 1s ease-out 1.2s both;
+  z-index: 4;
+}
+
+.weaving-legend p {
+  font-size: 16px;
+  color: rgba(195, 232, 141, 0.7);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: 0.5px;
+  line-height: 1.8;
+  margin: 0 0 8px 0;
+}
+
+.weaving-legend p:last-child {
+  margin-bottom: 0;
+}
+
+/* 애니메이션 */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* 반응형 */
 @media (max-width: 768px) {
@@ -83,71 +319,163 @@
     padding: 80px 0;
   }
 
-  .stats .section-header {
-    margin-bottom: 60px;
-  }
-
   .stats .section-title {
-    font-size: 36px;
+    gap: 8px;
   }
 
-  .stats .section-subtitle {
+  .title-main {
+    flex-wrap: wrap;
+  }
+
+  .title-part.first,
+  .title-part.second {
+    font-size: 42px;
+  }
+
+  .title-comma {
+    font-size: 64px;
+  }
+
+  .title-part.accent {
+    font-size: 38px;
+  }
+
+  .title-sub {
+    padding-right: 5%;
+    margin-top: 30px;
+  }
+
+  .weaving-container {
+    height: 400px;
+    padding: 0 20px;
+  }
+
+  .time-display-weaving {
+    padding: 25px 30px;
+  }
+
+  .time-flow {
+    gap: 12px;
+  }
+
+  .time-number {
+    font-size: 32px;
+  }
+
+  .time-label {
+    font-size: 11px;
+  }
+
+  .time-connector {
     font-size: 18px;
+    margin-bottom: 18px;
   }
 
-  .stats-timer {
-    gap: 20px;
-    margin-bottom: 40px;
+  .weaving-legend {
+    bottom: -40px;
+    padding: 0 20px;
   }
 
-  .timer-item {
-    min-width: 130px;
-  }
-
-  .timer-number {
-    font-size: 48px;
-    width: 120px;
-    min-height: 55px;
-  }
-
-  .timer-label {
-    font-size: 16px;
+  .weaving-legend p {
+    font-size: 15px;
   }
 }
 
 @media (max-width: 480px) {
-  .stats {
-    padding: 60px 0;
+  .stats .section-title {
+    gap: 5px;
+  }
+
+  .title-main {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .title-part.first,
+  .title-part.second {
+    font-size: 28px;
+    margin-right: 10px;
+  }
+
+  .title-comma {
+    font-size: 42px;
+    margin-right: 10px;
+  }
+
+  .title-part.accent {
+    font-size: 26px;
+  }
+
+  .title-sub {
+    justify-content: center;
+    padding-right: 0;
+    margin-top: 25px;
   }
 
   .stats .section-header {
-    margin-bottom: 40px;
+    text-align: center;
   }
 
-  .stats .section-title {
-    font-size: 28px;
+  .weaving-container {
+    height: 350px;
   }
 
-  .stats .section-subtitle {
-    font-size: 16px;
+  .time-display-weaving {
+    padding: 20px 25px;
   }
 
-  .stats-timer {
-    gap: 15px;
-    margin-bottom: 40px;
+  .time-flow {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
-  .timer-item {
-    min-width: 100px;
+  .time-number {
+    font-size: 26px;
+    letter-spacing: 1px;
   }
 
-  .timer-number {
-    font-size: 36px;
-    width: 90px;
-    min-height: 45px;
+  .time-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
   }
 
-  .timer-label {
+  .time-connector {
+    display: none;
+  }
+
+  .time-segment {
+    margin: 0 5px;
+  }
+
+  .time-origin {
+    font-size: 10px;
+    padding: 5px 10px;
+    gap: 6px;
+  }
+
+  .weaving-legend p {
     font-size: 14px;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .title-part.accent,
+  .time-number,
+  .time-origin {
+    animation: none;
+  }
+  
+  .time-display-weaving {
+    animation: none;
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .weaving-legend {
+    animation: none;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }
