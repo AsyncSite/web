@@ -1,0 +1,398 @@
+/* Journey Section - 고정형 스크롤 경험 */
+.journey-scroll-section {
+  position: relative;
+  background: transparent;
+  /* 높이는 GSAP ScrollTrigger가 자동으로 추가 공간을 만들어줌 */
+  overflow: visible;
+}
+
+/* 고정될 컨테이너 */
+.journey-pinned-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center top, rgba(195, 232, 141, 0.03) 0%, transparent 50%);
+}
+
+/* 섹션 헤더 */
+.journey-fixed-header {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.journey-header-title {
+  font-size: 56px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  color: #ffffff;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+
+.journey-header-subtitle {
+  font-size: 20px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.5px;
+}
+
+/* 스테이지 래퍼 */
+.journey-stages-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 개별 스테이지 - 모두 겹쳐서 배치 */
+.journey-stage-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+}
+
+/* 별 컨테이너 */
+.journey-star-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin-bottom: 48px;
+}
+
+/* 별 디자인 */
+.journey-star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle at 30% 30%, rgba(195, 232, 141, 0.15), transparent 60%);
+  border: 3px solid #C3E88D;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 30px rgba(195, 232, 141, 0.3);
+  z-index: 3;
+}
+
+/* 별 번호 */
+.journey-star-number {
+  font-size: 36px;
+  font-weight: 900;
+  color: #C3E88D;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.6);
+}
+
+/* 별 빛나는 효과 */
+.journey-star-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(195, 232, 141, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: journeyStarGlow 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes journeyStarGlow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.3;
+  }
+}
+
+/* 별 펄스 효과 */
+.journey-star-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border: 2px solid rgba(195, 232, 141, 0.3);
+  border-radius: 50%;
+  animation: journeyStarPulse 3s ease-in-out infinite;
+  animation-delay: 0.5s;
+  pointer-events: none;
+}
+
+@keyframes journeyStarPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* 스테이지 콘텐츠 */
+.journey-stage-content {
+  position: relative;
+  text-align: center;
+  max-width: 700px;
+  width: 100%;
+  z-index: 2;
+}
+
+.journey-stage-title {
+  font-size: 72px;
+  font-weight: 900;
+  margin-bottom: 24px;
+  color: #C3E88D;
+  letter-spacing: -2px;
+  line-height: 0.9;
+  text-shadow: 0 0 40px rgba(195, 232, 141, 0.4);
+}
+
+.journey-stage-subtitle {
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 20px;
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+}
+
+.journey-stage-description {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+/* 후기 박스 */
+.journey-testimonial-box {
+  background: rgba(10, 14, 39, 0.4);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  border-radius: 20px;
+  padding: 32px 40px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.journey-testimonial-text {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.journey-testimonial-author {
+  font-size: 14px;
+  color: rgba(195, 232, 141, 0.8);
+  text-align: right;
+  font-weight: 500;
+}
+
+/* 진행 인디케이터 */
+.journey-progress-dots {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 10;
+}
+
+.journey-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.journey-dot-1 {
+  background: #C3E88D;
+  border-color: #C3E88D;
+  box-shadow: 0 0 10px rgba(195, 232, 141, 0.5);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .journey-header-title {
+    font-size: 48px;
+  }
+  
+  .journey-stage-title {
+    font-size: 56px;
+  }
+  
+  .journey-stage-subtitle {
+    font-size: 24px;
+  }
+  
+  .journey-stage-description {
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .journey-fixed-header {
+    top: 60px;
+  }
+  
+  .journey-header-title {
+    font-size: 36px;
+  }
+  
+  .journey-header-subtitle {
+    font-size: 16px;
+  }
+  
+  .journey-stage-title {
+    font-size: 42px;
+  }
+  
+  .journey-stage-subtitle {
+    font-size: 20px;
+  }
+  
+  .journey-stage-description {
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+  
+  .journey-testimonial-box {
+    padding: 24px;
+  }
+  
+  .journey-testimonial-text {
+    font-size: 15px;
+  }
+  
+  .journey-star-container {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 32px;
+  }
+  
+  .journey-star {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .journey-star-number {
+    font-size: 28px;
+  }
+  
+  .journey-progress-dots {
+    bottom: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .journey-header-title {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  
+  .journey-stage-item {
+    padding: 0 20px;
+  }
+  
+  .journey-stage-title {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+  
+  .journey-stage-subtitle {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  
+  .journey-stage-description {
+    font-size: 14px;
+  }
+  
+  .journey-testimonial-text {
+    font-size: 14px;
+  }
+}
+
+/* 접근성 - 모션 축소 */
+@media (prefers-reduced-motion: reduce) {
+  .journey-star,
+  .journey-star-glow,
+  .journey-star-pulse,
+  .journey-stage-content {
+    animation: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  @keyframes journeyStarGlow {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.6;
+    }
+  }
+  
+  @keyframes journeyStarPulse {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
+  }
+}
+
+/* 다크 모드 대응을 위한 변수 사용 */
+:root {
+  --journey-primary-color: #C3E88D;
+  --journey-text-primary: #ffffff;
+  --journey-text-secondary: rgba(255, 255, 255, 0.7);
+  --journey-bg-overlay: rgba(10, 14, 39, 0.4);
+}
+
+/* JavaScript 로드 전 기본 상태 */
+.journey-stage-item:not(:first-child) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.journey-stage-item:first-child {
+  opacity: 1;
+}
+
+/* GSAP이 적용된 후에는 위 규칙 무시 */
+.journey-scroll-section[data-gsap-loaded] .journey-stage-item {
+  opacity: 1;
+  pointer-events: auto;
+}
