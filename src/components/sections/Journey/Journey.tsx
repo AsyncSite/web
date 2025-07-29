@@ -9,6 +9,13 @@ declare global {
   }
 }
 
+// ScrollTrigger 타입 정의
+interface ScrollTriggerCallbackVars {
+  progress: number;
+  direction: number;
+  isActive: boolean;
+}
+
 interface JourneyStep {
   id: number;
   title: string;
@@ -153,8 +160,9 @@ const Journey: React.FC = () => {
         
         // 별자리 경로 그리기
         if (path && index > 0) {
-          const pathLength = path.getTotalLength();
-          gsap.set(path, {
+          const svgPath = path as SVGPathElement;
+          const pathLength = svgPath.getTotalLength();
+          gsap.set(svgPath, {
             strokeDasharray: pathLength,
             strokeDashoffset: pathLength
           });
@@ -164,8 +172,8 @@ const Journey: React.FC = () => {
             start: 'top 60%',
             end: 'top 30%',
             scrub: 1,
-            onUpdate: (self) => {
-              gsap.to(path, {
+            onUpdate: (self: ScrollTriggerCallbackVars) => {
+              gsap.to(svgPath, {
                 strokeDashoffset: pathLength * (1 - self.progress),
                 duration: 0
               });
@@ -182,7 +190,7 @@ const Journey: React.FC = () => {
           start: 'top top',
           end: '20% top',
           scrub: true,
-          onUpdate: (self) => {
+          onUpdate: (self: ScrollTriggerCallbackVars) => {
             gsap.to(header, {
               opacity: 1 - self.progress,
               y: -50 * self.progress,
