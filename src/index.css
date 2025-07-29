@@ -121,20 +121,18 @@ a:hover {
   outline-offset: 2px;
 }
 
-/* Scrollbar */
+/* Scrollbar - Hidden */
+/* 스크롤 기능은 유지하되 스크롤바만 숨김 */
 ::-webkit-scrollbar {
-  width: 10px;
+  display: none; /* Chrome, Safari, Opera */
 }
 
-::-webkit-scrollbar-track {
-  background: var(--dark-bg-secondary);
+/* Firefox */
+* {
+  scrollbar-width: none;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border-green);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-green);
+/* IE and Edge */
+* {
+  -ms-overflow-style: none;
 }
