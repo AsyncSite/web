@@ -4,6 +4,7 @@ export { default as CTA } from './CTA/CTA';
 export { default as FAQ } from './FAQ/FAQ';
 export { default as Flow } from './Flow/Flow';
 export { default as Intro } from './Intro/Intro';
+export { default as Journey } from './Journey/Journey';
 export { default as Roadmap } from './Roadmap/Roadmap';
 export { default as Stats } from './Stats/Stats';
 export { default as Activities } from './Activities/Activities';
