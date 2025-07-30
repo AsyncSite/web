@@ -66,16 +66,25 @@
 }
 
 .faq-item.open .faq-answer {
-  max-height: 150px;
+  max-height: 300px;
 }
 
 .faq-answer p {
   padding: 0 25px 20px;
-  margin: 0;
+  margin: 0 0 12px 0;
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.6;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 14px;
+}
+
+.faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-answer strong {
+  color: #C3E88D;
+  font-weight: 600;
 }
 
 .faq-contact {

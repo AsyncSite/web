@@ -4,14 +4,23 @@ import './FAQ.css';
 interface FAQItem {
   id: number;
   question: string;
-  answer: string;
+  answer: string | React.ReactNode;
 }
 
 const faqData: FAQItem[] = [
   {
     id: 1,
     question: '참여 비용이 있나요?',
-    answer: 'AsyncSite는 완전 무료로 운영되는 커뮤니티입니다. 멤버십 비용이나 참가비 없이 누구나 자유롭게 참여할 수 있어요.'
+    answer: (
+      <>
+        <p>참여하시는 스터디의 성격에 따라 다릅니다.</p>
+        <p><strong>[Community Track]</strong><br />
+        동료와 함께 자율적으로 성장하는 대부분의 스터디는 무료로 참여할 수 있습니다.</p>
+        <p><strong>[Incubating/Workshop Track]</strong><br />
+        전문가의 초밀착 가이드가 제공되는 멘토링 프로그램이나 특정 워크샵은 별도의 참가비가 있습니다.</p>
+        <p>각 스터디의 상세 페이지에서 비용 정보를 확인해주세요.</p>
+      </>
+    )
   },
   {
     id: 2,
@@ -69,7 +78,7 @@ const FAQ: React.FC = () => {
               </div>
 
               <div className="faq-answer">
-                <p>{faq.answer}</p>
+                {typeof faq.answer === 'string' ? <p>{faq.answer}</p> : faq.answer}
               </div>
             </div>
           ))}
