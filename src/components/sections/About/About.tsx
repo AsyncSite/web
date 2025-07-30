@@ -55,10 +55,10 @@ const About: React.FC = () => {
       id: 1,
       layout: 'question-left',
       questionNumber: '01',
-      questionTitle: 'Async Site는 어떤 고민에서 시작했나요?',
+      questionTitle: 'Async Site는\n어떤 고민에서 시작했나요?',
       questionIcon: '💭',
-      answerTitle: '"최신 기술"을 쫓는 대신, "성장하는 방법" 자체를 배웁니다',
-      answerText: 'Async Site는 이런 고민에서 시작했어요. 우리는 기술 트렌드를 쫓는 대신, 문제의 본질을 이해하고 해결하는 힘을 기릅니다. 변화가 빠른 시대일수록 흔들리지 않는 기본기가 중요하다고 믿거든요.',
+      answerTitle: '혼자 공부하다 포기한 적 없으세요?',
+      answerText: '유튜브 재생목록엔 \'나중에 볼 영상\' 300개, 깃허브 잔디는 듬성듬성, 시작은 거창했지만 흐지부지된 사이드 프로젝트들. 우리 모두 겪어본 이야기입니다. Async Site는 여기서 시작했어요.',
       features: [
         { icon: '🧭', text: '본질에 집중하는 학습' },
         { icon: '🤔', text: '깊이 있는 사고력 훈련' },
