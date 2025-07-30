@@ -73,7 +73,7 @@ const About: React.FC = () => {
     <section className="about section-background" id="about">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">우리가 특별한 이유</h2>
+          <h2 className="section-title">금요일 저녁이<br />특별해지는 이유</h2>
           <p className="section-subtitle">끝없이 쏟아지는 새로운 기술들, AI가 코드를 대신 짜주는 시대.<br />
           개발자로서 우리는 무엇을 추구해야 할까요?</p>
         </div>
