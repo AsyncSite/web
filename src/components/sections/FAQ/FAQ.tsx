@@ -96,7 +96,7 @@ const FAQ: React.FC = () => {
               >
                 <span className="contact-icon">💬</span>
                 <span className="contact-label">빠른 답변</span>
-                <span className="contact-desc">Discord 커뮤니티</span>
+                <span className="contact-desc">1:1 Discord 채널</span>
               </a>
               <a
                 href="https://calendly.com/asyncsite/coffee-chat"
