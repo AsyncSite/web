@@ -50,7 +50,8 @@ const Intro: React.FC = () => {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title">
-              함께 만드는 가장 치열한 사생활
+              함께 만드는<br />
+              가장 치열한 사생활
             </h1>
             <p className="hero-subtitle">
               혼자의 밤을 지나, 함께 쓰는 성장의 다음 챕터
