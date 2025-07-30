@@ -1,95 +1,268 @@
-/* CTA Section - prototype_sopt_style.html 기반 + 프로젝트 색상 */
+/* CTA Section - 전체 서사를 마무리하는 강력한 행동 유도 */
 .cta {
-  padding: 150px 0;
+  padding: 160px 0;
   text-align: center;
-  background: radial-gradient(circle at 50% 50%, rgba(195, 232, 141, 0.1) 0%, transparent 50%);
+  background: transparent;
   position: relative;
   display: flex;
   align-items: center;
   min-height: 100vh;
+  overflow: hidden;
 }
 
-/* CTA는 공통 컨테이너 사용 */
+.cta-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 별들이 모이는 캔버스 */
+.cta-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+/* 콘텐츠 영역 */
+.cta-content {
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 0.8s ease;
+}
 
 .cta-title {
-  font-size: 56px;
+  font-size: 64px;
   font-weight: 900;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
   letter-spacing: -2px;
-  background: linear-gradient(45deg, #c3e88d, #8fd67a);
+  background: linear-gradient(135deg, #C3E88D 0%, #82AAFF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.1;
 }
 
 .cta-subtitle {
-  font-size: 24px;
-  opacity: 0.8;
-  margin-bottom: 50px;
-  color: #ffffff;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 60px;
+  line-height: 1.6;
+  font-weight: 300;
+  letter-spacing: 0.3px;
 }
 
+/* 통계 정보 */
+.cta-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease 0.3s both;
+}
+
+.cta-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.cta-stat-number {
+  font-size: 48px;
+  font-weight: 900;
+  color: #C3E88D;
+  text-shadow: 0 0 30px rgba(195, 232, 141, 0.5);
+}
+
+.cta-stat-label {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+}
+
+.cta-stat-divider {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 24px;
+}
+
+/* 버튼 그룹 */
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
 
 .cta-button {
-  padding: 20px 50px;
-  background: linear-gradient(135deg, #c3e88d, #8fd67a);
-  color: #05060A;
+  padding: 20px 48px;
   border: none;
-  border-radius: 30px;
+  border-radius: 12px;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 0 20px rgba(195, 232, 141, 0.3);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
 }
 
-.cta-button:hover {
+.cta-button.primary {
+  background: linear-gradient(135deg, #C3E88D 0%, #A8D66F 100%);
+  color: #0a0e27;
+  box-shadow: 0 8px 32px rgba(195, 232, 141, 0.3);
+}
+
+.cta-button.primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(195, 232, 141, 0.5);
-  background: linear-gradient(135deg, #8fd67a, #c3e88d);
+  box-shadow: 0 12px 40px rgba(195, 232, 141, 0.5);
+  filter: brightness(1.1);
 }
 
-/* 반응형 */
+.cta-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 2px solid rgba(195, 232, 141, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.cta-button.secondary:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(195, 232, 141, 0.2);
+}
+
+/* 하단 안내 문구 */
+.cta-note {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+  margin-top: 32px;
+  animation: fadeIn 0.8s ease 0.6s both;
+}
+
+/* 애니메이션 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 반응형 디자인 */
 @media (max-width: 768px) {
   .cta {
-    padding: 100px 0;
+    padding: 120px 0;
   }
   
   .cta-title {
-    font-size: 42px;
+    font-size: 48px;
   }
   
   .cta-subtitle {
-    font-size: 20px;
+    font-size: 18px;
+    margin-bottom: 40px;
+    padding: 0 20px;
   }
   
+  .cta-stats {
+    flex-direction: column;
+    gap: 32px;
+  }
+  
+  .cta-stat-divider {
+    display: none;
+  }
+  
+  .cta-stat-number {
+    font-size: 36px;
+  }
+  
+  .cta-stat-label {
+    font-size: 14px;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
   
   .cta-button {
+    width: 280px;
     padding: 18px 40px;
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .cta {
     padding: 80px 0;
+    min-height: auto;
   }
   
   .cta-title {
-    font-size: 32px;
-    margin-bottom: 20px;
+    font-size: 36px;
+    margin-bottom: 24px;
   }
   
   .cta-subtitle {
-    font-size: 18px;
-    margin-bottom: 40px;
+    font-size: 16px;
+    margin-bottom: 32px;
   }
   
+  .cta-stat-number {
+    font-size: 32px;
+  }
   
   .cta-button {
-    padding: 16px 35px;
-    font-size: 16px;
+    width: 100%;
+    max-width: 280px;
+    padding: 16px 32px;
+    font-size: 15px;
+  }
+  
+  .cta-note {
+    font-size: 13px;
+    padding: 0 20px;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .cta-content,
+  .cta-stats,
+  .cta-note {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .cta-button {
+    transition: none;
+  }
+  
+  .cta-button:hover {
+    transform: none;
   }
 }

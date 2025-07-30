@@ -1,0 +1,390 @@
+/* Journey Section - 별자리로 연결된 성장 여정 */
+.journey {
+  padding: 120px 0;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+
+.journey .section-header {
+  text-align: center;
+  margin-bottom: 80px;
+  animation: fadeInDown 0.8s ease;
+}
+
+.journey .section-title {
+  font-size: 48px;
+  margin-bottom: 16px;
+  font-weight: 900;
+}
+
+.journey .section-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+}
+
+/* 별자리 컨테이너 */
+.journey-constellation {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 600px;
+  contain: layout style paint;
+}
+
+/* SVG 배경 */
+.constellation-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  animation: fadeIn 1s ease 0.5s forwards;
+}
+
+.constellation-path {
+  opacity: 0;
+  animation: drawPath 2s ease 1s forwards;
+}
+
+@keyframes drawPath {
+  from {
+    stroke-dashoffset: 1000;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* 여정 단계들 */
+.journey-steps {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.journey-step {
+  position: relative;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.journey-step.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 별 디자인 */
+.star-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 30px;
+}
+
+.journey .star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+  border: 2px solid #C3E88D;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.journey .star:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  border-color: #A8D66F;
+  box-shadow: 0 0 30px rgba(195, 232, 141, 0.6);
+}
+
+.star-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: #C3E88D;
+  font-family: 'Consolas', 'Source Code Pro', monospace;
+}
+
+/* 별 빛나는 효과 */
+.star-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(195, 232, 141, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: starGlow 2s ease-in-out infinite;
+}
+
+.journey-step.active .star-glow {
+  opacity: 1;
+}
+
+@keyframes starGlow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.3;
+  }
+}
+
+/* 별 펄스 효과 */
+.star-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border: 1px solid #C3E88D;
+  border-radius: 50%;
+  opacity: 0;
+  animation: starPulse 3s ease-in-out infinite;
+}
+
+.journey-step.active .star-pulse {
+  opacity: 1;
+}
+
+@keyframes starPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* 컨텐츠 스타일 */
+.step-content {
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+.step-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #C3E88D;
+  letter-spacing: -0.5px;
+}
+
+.step-subtitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.step-description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* 후기 스타일 */
+.step-testimonial {
+  background: rgba(10, 14, 39, 0.6);
+  border: 1px solid rgba(195, 232, 141, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  position: relative;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.step-testimonial:hover {
+  border-color: rgba(195, 232, 141, 0.3);
+  background: rgba(10, 14, 39, 0.8);
+  transform: translateY(-2px);
+}
+
+.testimonial-content {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.testimonial-author {
+  font-size: 11px;
+  color: rgba(195, 232, 141, 0.7);
+  text-align: right;
+  font-weight: 500;
+}
+
+/* CTA 섹션 */
+.journey-cta {
+  text-align: center;
+  margin-top: 80px;
+  animation: fadeInUp 0.8s ease 1.5s both;
+}
+
+.cta-text {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  margin-bottom: 0;
+}
+
+/* 각 단계별 위치 조정 */
+.step-1 { margin-top: 60px; }
+.step-2 { margin-top: 0; }
+.step-3 { margin-top: 80px; }
+.step-4 { margin-top: 20px; }
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .journey-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 60px;
+  }
+  
+  .constellation-svg {
+    display: none;
+  }
+  
+  .step-1, .step-2, .step-3, .step-4 {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .journey {
+    padding: 80px 0;
+  }
+  
+  .journey .section-title {
+    font-size: 36px;
+  }
+  
+  .journey .section-subtitle {
+    font-size: 16px;
+  }
+  
+  .journey-steps {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .star-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .star {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .star-number {
+    font-size: 24px;
+  }
+  
+  .step-title {
+    font-size: 24px;
+  }
+  
+  .step-subtitle {
+    font-size: 15px;
+  }
+  
+  .step-description {
+    font-size: 13px;
+  }
+  
+  .cta-text {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .journey .section-title {
+    font-size: 28px;
+  }
+  
+  .journey-cta {
+    margin-top: 60px;
+  }
+  
+  .cta-text {
+    font-size: 16px;
+    padding: 0 20px;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .star-glow,
+  .star-pulse,
+  .constellation-path {
+    animation: none;
+  }
+  
+  .journey-step {
+    transition: none;
+  }
+}

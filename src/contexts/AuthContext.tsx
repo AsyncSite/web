@@ -2,9 +2,10 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { useNavigate, useLocation } from 'react-router-dom';
 import authService from '../api/authService';
 import userService from '../api/userService';
-import gameApiService, { TetrisGameResult } from '../api/gameApiService';
+import gameApiService, { TetrisGameResult, DeductionGameResult } from '../api/gameApiService';
 import { handleApiError } from '../api/client';
 import { AUTH_EVENTS, addAuthEventListener, dispatchAuthEvent } from '../utils/authEvents';
+import { GameHistory } from '../services/game/types';
 import {
   AuthContextType,
   User,
@@ -37,13 +38,123 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
   // Migrate guest scores to logged-in user
   const migrateGuestScores = useCallback(async () => {
     try {
-      // Check for Tetris guest score
+      // Read complete game history from localStorage
+      const gameHistoryJson = localStorage.getItem('game-history');
+      if (!gameHistoryJson) {
+        // Fallback to legacy Tetris score migration
+        await migrateLegacyTetrisScore();
+        return;
+      }
+
+      const gameHistory: GameHistory[] = JSON.parse(gameHistoryJson);
+      if (!gameHistory || gameHistory.length === 0) {
+        return;
+      }
+
+      // Track successfully migrated game IDs to avoid duplicates
+      const migratedGameIds: string[] = [];
+      
+      // Get previously migrated game IDs to prevent duplicates
+      const previouslyMigratedJson = localStorage.getItem('migrated-game-ids');
+      const previouslyMigrated = previouslyMigratedJson ? JSON.parse(previouslyMigratedJson) : [];
+
+      // Migrate each game record
+      for (const historyEntry of gameHistory) {
+        // Skip if already migrated
+        if (previouslyMigrated.includes(historyEntry.id)) {
+          continue;
+        }
+
+        try {
+          // Start a game session
+          const session = await gameApiService.startGameSession({
+            gameTypeCode: historyEntry.gameType
+          });
+
+          // Prepare game result based on type
+          let gameResult;
+          if (historyEntry.gameType === 'TETRIS') {
+            const tetrisResult: TetrisGameResult = {
+              gameType: 'TETRIS',
+              score: historyEntry.score,
+              level: historyEntry.additionalData?.level || 1,
+              linesCleared: historyEntry.additionalData?.linesCleared || 0,
+              timeElapsedSeconds: historyEntry.additionalData?.timeElapsedSeconds || 0,
+              maxCombo: historyEntry.additionalData?.maxCombo || 0,
+              gameData: JSON.stringify({
+                migratedFromGuest: true,
+                originalId: historyEntry.id,
+                originalPlayedAt: historyEntry.playedAt,
+                ...historyEntry.additionalData
+              })
+            };
+            gameResult = tetrisResult;
+          } else if (historyEntry.gameType === 'DEDUCTION') {
+            const deductionResult: DeductionGameResult = {
+              gameType: 'DEDUCTION',
+              score: historyEntry.score,
+              won: historyEntry.additionalData?.won || false,
+              difficulty: historyEntry.additionalData?.difficulty || 'medium',
+              guessesCount: historyEntry.additionalData?.guessesCount || 1,
+              hintsUsed: historyEntry.additionalData?.hintsUsed || 0,
+              wrongAnswerHintsUsed: historyEntry.additionalData?.wrongAnswerHintsUsed || 0,
+              correctAnswerHintsUsed: historyEntry.additionalData?.correctAnswerHintsUsed || 0,
+              timeElapsedSeconds: historyEntry.additionalData?.timeElapsedSeconds || 0,
+              playersCount: historyEntry.additionalData?.playersCount || 4,
+              opponentType: historyEntry.additionalData?.opponentType || 'AI',
+              opponentDifficulty: historyEntry.additionalData?.opponentDifficulty,
+              opponentId: historyEntry.additionalData?.opponentId,
+              gameData: JSON.stringify({
+                migratedFromGuest: true,
+                originalId: historyEntry.id,
+                originalPlayedAt: historyEntry.playedAt,
+                ...historyEntry.additionalData
+              })
+            };
+            gameResult = deductionResult;
+          } else {
+            // Skip unknown game types
+            continue;
+          }
+
+          // End the session with the migrated data
+          await gameApiService.endGameSession({
+            sessionId: session.sessionId,
+            result: gameResult
+          });
+
+          // Track successful migration
+          migratedGameIds.push(historyEntry.id);
+        } catch (error) {
+          // Continue with next game if one fails
+          console.error(`Failed to migrate game ${historyEntry.id}:`, error);
+        }
+      }
+
+      // Update migrated game IDs in localStorage
+      if (migratedGameIds.length > 0) {
+        const allMigratedIds = [...previouslyMigrated, ...migratedGameIds];
+        localStorage.setItem('migrated-game-ids', JSON.stringify(allMigratedIds));
+      }
+
+      // Clear legacy storage after successful migration
+      localStorage.removeItem('tetris-high-score');
+      localStorage.removeItem('tetris-last-played');
+      localStorage.removeItem('tetris-play-count');
+    } catch (error) {
+      console.error('Migration failed:', error);
+      // Don't throw - migration failure shouldn't block login
+    }
+  }, []);
+
+  // Fallback migration for legacy Tetris scores
+  const migrateLegacyTetrisScore = async () => {
+    try {
       const tetrisHighScore = localStorage.getItem('tetris-high-score');
       if (tetrisHighScore) {
         const score = parseInt(tetrisHighScore);
         const lastPlayed = localStorage.getItem('tetris-last-played') || new Date().toISOString();
         
-        // Start a session and immediately end it with the guest score
         try {
           const session = await gameApiService.startGameSession({
             gameTypeCode: 'TETRIS'
@@ -52,11 +163,15 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
           const tetrisResult: TetrisGameResult = {
             gameType: 'TETRIS',
             score: score,
-            level: 1, // Default level for migrated scores
-            linesCleared: 0, // Default lines for migrated scores
-            timeElapsedSeconds: 0, // Default time for migrated scores
-            maxCombo: 0, // Default combo for migrated scores
-            gameData: JSON.stringify({ migratedFromGuest: true, originalPlayedAt: lastPlayed })
+            level: 1,
+            linesCleared: 0,
+            timeElapsedSeconds: 0,
+            maxCombo: 0,
+            gameData: JSON.stringify({ 
+              migratedFromGuest: true, 
+              originalPlayedAt: lastPlayed,
+              legacyMigration: true 
+            })
           };
           
           await gameApiService.endGameSession({
@@ -64,17 +179,16 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
             result: tetrisResult
           });
           
-          // Clear guest scores after successful migration
           localStorage.removeItem('tetris-high-score');
           localStorage.removeItem('tetris-last-played');
         } catch (error) {
-          // Silently fail - migration failure shouldn't block login
+          // Silently fail
         }
       }
     } catch (error) {
-      // Don't throw error - migration failure shouldn't block login
+      // Silently fail
     }
-  }, []);
+  };
 
   // Listen for unauthorized events
   useEffect(() => {

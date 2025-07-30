@@ -34,7 +34,7 @@ const Activities: React.FC = () => {
     {
       id: 3,
       icon: '📚',
-      title: 'DEVLOG-14 - 블로그 챌린지',
+      title: '데브로그 - 블로그 챌린지',
       schedule: '격주 금요일',
       description: '2주에 한 번씩 기술 블로그를 작성하는 챌린지입니다. 꾸준한 기록으로 성장 과정을 남기고 공유합니다.',
       participants: ['한', '오', '서', '남'],

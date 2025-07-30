@@ -220,9 +220,12 @@ const DeductionLeaderboard: React.FC<DeductionLeaderboardProps> = ({ isVisible, 
                       </td>
                       <td className="difficulty">
                         <span className={`difficulty-badge diff-${entry.additionalData?.difficulty?.toLowerCase()}`}>
-                          {entry.additionalData?.difficulty === 'easy' ? '쉬움' : 
-                           entry.additionalData?.difficulty === 'medium' ? '보통' : 
-                           entry.additionalData?.difficulty === 'hard' ? '어려움' : '-'}
+                          {entry.additionalData?.difficulty?.toLowerCase() === 'easy' ? '쉬움' : 
+                           entry.additionalData?.difficulty?.toLowerCase() === 'medium' ? '보통' : 
+                           entry.additionalData?.difficulty?.toLowerCase() === 'hard' ? '어려움' : 
+                           entry.additionalData?.difficulty?.toUpperCase() === 'EASY' ? '쉬움' :
+                           entry.additionalData?.difficulty?.toUpperCase() === 'MEDIUM' ? '보통' :
+                           entry.additionalData?.difficulty?.toUpperCase() === 'HARD' ? '어려움' : '-'}
                         </span>
                       </td>
                       <td className="opponent">{getOpponentInfo(entry.additionalData)}</td>

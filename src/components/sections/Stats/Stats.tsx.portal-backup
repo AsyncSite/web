@@ -1,0 +1,496 @@
+import React, { useState, useEffect, useRef } from 'react';
+import './Stats.css';
+
+interface TimeElapsed {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+interface FloatingFragment {
+  id: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  rotation: number;
+  rotationSpeed: number;
+  scale: number;
+  opacity: number;
+  studyName?: string;
+  generation?: number;
+}
+
+const Stats: React.FC = () => {
+  const [timeElapsed, setTimeElapsed] = useState<TimeElapsed>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+  const [hoveredFragment, setHoveredFragment] = useState<number | null>(null);
+  const portalCanvasRef = useRef<HTMLCanvasElement>(null);
+  const particleCanvasRef = useRef<HTMLCanvasElement>(null);
+  const fragmentsRef = useRef<FloatingFragment[]>([]);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  
+  // 스터디 데이터 - 균열 주변을 부유하는 조각으로 표현
+  const activeStudies = [
+    { name: '테코테코', generation: 3 },
+    { name: '11루틴', generation: 2 },
+    { name: 'DEVLOG-14', generation: 1 },
+    { name: '알고리즘 마스터', generation: 2 },
+  ];
+
+  useEffect(() => {
+    // 2024년 6월 11일부터 시작
+    const startDate = new Date('2024-06-11T00:00:00').getTime();
+
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const difference = now - startDate;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        setTimeElapsed({ days, hours, minutes, seconds });
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // 마우스 추적
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const canvas = portalCanvasRef.current;
+      if (!canvas) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // 균열 포털 애니메이션
+  useEffect(() => {
+    const canvas = portalCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let animationId: number;
+    let phase = 0;
+
+    // 부유하는 조각들 초기화
+    if (fragmentsRef.current.length === 0) {
+      const fragments: FloatingFragment[] = [];
+      
+      // 일반 조각들
+      for (let i = 0; i < 20; i++) {
+        fragments.push({
+          id: i,
+          x: Math.random() * canvas.offsetWidth,
+          y: Math.random() * canvas.offsetHeight,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          rotation: Math.random() * Math.PI * 2,
+          rotationSpeed: (Math.random() - 0.5) * 0.02,
+          scale: 0.5 + Math.random() * 0.5,
+          opacity: 0.3 + Math.random() * 0.4
+        });
+      }
+      
+      // 스터디 조각들
+      activeStudies.forEach((study, index) => {
+        fragments.push({
+          id: 100 + index,
+          x: canvas.offsetWidth / 2 + (Math.random() - 0.5) * 300,
+          y: canvas.offsetHeight / 2 + (Math.random() - 0.5) * 200,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          rotation: Math.random() * Math.PI * 2,
+          rotationSpeed: (Math.random() - 0.5) * 0.01,
+          scale: 1,
+          opacity: 0.8,
+          studyName: study.name,
+          generation: study.generation
+        });
+      });
+      
+      fragmentsRef.current = fragments;
+    }
+
+    const drawPortal = (centerX: number, centerY: number, time: number) => {
+      // 균열 효과
+      const portalHeight = 400;
+      const portalWidth = 80;
+      
+      // 균열 중심선
+      ctx.save();
+      
+      // 여러 겹의 균열 에너지
+      for (let layer = 0; layer < 3; layer++) {
+        const offset = layer * 20;
+        const opacity = 0.8 - layer * 0.2;
+        
+        ctx.strokeStyle = `rgba(195, 232, 141, ${opacity})`;
+        ctx.lineWidth = 3 - layer;
+        ctx.shadowBlur = 20 + layer * 10;
+        ctx.shadowColor = '#C3E88D';
+        
+        ctx.beginPath();
+        
+        // 위쪽 균열
+        ctx.moveTo(centerX, centerY - portalHeight / 2);
+        
+        // 균열의 지그재그 패턴
+        const segments = 20;
+        for (let i = 0; i <= segments; i++) {
+          const progress = i / segments;
+          const y = centerY - portalHeight / 2 + portalHeight * progress;
+          const waveX = Math.sin(progress * Math.PI) * portalWidth * (0.5 + Math.sin(time + i * 0.3) * 0.2);
+          const jitterX = (Math.random() - 0.5) * 5;
+          
+          if (i === segments / 2) {
+            // 중앙 부분은 더 넓게
+            ctx.quadraticCurveTo(
+              centerX + waveX * 1.5 + jitterX,
+              y,
+              centerX + waveX + jitterX,
+              y + portalHeight / segments
+            );
+          } else {
+            ctx.lineTo(centerX + waveX + jitterX + offset * Math.sin(time + i), y);
+          }
+        }
+        
+        ctx.stroke();
+      }
+      
+      // 에너지 방출 효과
+      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, portalHeight / 2);
+      gradient.addColorStop(0, 'rgba(195, 232, 141, 0.3)');
+      gradient.addColorStop(0.5, 'rgba(195, 232, 141, 0.1)');
+      gradient.addColorStop(1, 'transparent');
+      
+      ctx.fillStyle = gradient;
+      ctx.fillRect(centerX - portalWidth * 2, centerY - portalHeight / 2, portalWidth * 4, portalHeight);
+      
+      ctx.restore();
+      
+      // 룬 문자 효과
+      ctx.save();
+      ctx.font = '16px serif';
+      ctx.textAlign = 'center';
+      
+      const runes = ['◈', '◊', '◉', '○', '◌', '◍', '◎', '●'];
+      for (let i = 0; i < 8; i++) {
+        const runeY = centerY - portalHeight / 2 + (i + 1) * (portalHeight / 9);
+        const runeX = centerX + Math.sin(time * 2 + i) * 30;
+        
+        ctx.fillStyle = `rgba(195, 232, 141, ${0.3 + Math.sin(time * 3 + i) * 0.2})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#C3E88D';
+        ctx.fillText(runes[i % runes.length], runeX, runeY);
+      }
+      
+      ctx.restore();
+    };
+
+    const drawFragment = (fragment: FloatingFragment) => {
+      ctx.save();
+      ctx.translate(fragment.x, fragment.y);
+      ctx.rotate(fragment.rotation);
+      ctx.scale(fragment.scale, fragment.scale);
+      
+      if (fragment.studyName) {
+        // 스터디 조각 (육각형)
+        ctx.fillStyle = `rgba(195, 232, 141, ${fragment.opacity})`;
+        ctx.strokeStyle = `rgba(195, 232, 141, ${fragment.opacity * 0.8})`;
+        ctx.lineWidth = 2;
+        
+        const size = 60;
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const angle = (i / 6) * Math.PI * 2;
+          const x = Math.cos(angle) * size;
+          const y = Math.sin(angle) * size;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // 스터디 이름 표시
+        if (hoveredFragment === fragment.id) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+          ctx.font = 'bold 14px Pretendard';
+          ctx.textAlign = 'center';
+          ctx.fillText(fragment.studyName, 0, 0);
+          ctx.font = '12px Pretendard';
+          ctx.fillText(`${fragment.generation}기`, 0, 20);
+        }
+      } else {
+        // 일반 조각 (삼각형)
+        ctx.fillStyle = `rgba(130, 170, 255, ${fragment.opacity * 0.3})`;
+        ctx.strokeStyle = `rgba(195, 232, 141, ${fragment.opacity * 0.5})`;
+        ctx.lineWidth = 1;
+        
+        const size = 15;
+        ctx.beginPath();
+        ctx.moveTo(0, -size);
+        ctx.lineTo(-size * 0.866, size * 0.5);
+        ctx.lineTo(size * 0.866, size * 0.5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+      
+      ctx.restore();
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+      
+      const centerX = canvas.offsetWidth / 2;
+      const centerY = canvas.offsetHeight / 2;
+      const time = Date.now() * 0.001;
+
+      // 배경 그라디언트
+      const bgGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 400);
+      bgGradient.addColorStop(0, 'rgba(195, 232, 141, 0.02)');
+      bgGradient.addColorStop(1, 'transparent');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
+      // 부유하는 조각들 업데이트 및 그리기
+      fragmentsRef.current.forEach((fragment) => {
+        // 마우스 인터랙션
+        const dx = mouseRef.current.x - fragment.x;
+        const dy = mouseRef.current.y - fragment.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 100) {
+          const force = (100 - distance) / 100;
+          fragment.vx -= (dx / distance) * force * 0.02;
+          fragment.vy -= (dy / distance) * force * 0.02;
+        }
+        
+        // 중앙으로 약간 끌리는 힘
+        const centerDx = centerX - fragment.x;
+        const centerDy = centerY - fragment.y;
+        fragment.vx += centerDx * 0.0001;
+        fragment.vy += centerDy * 0.0001;
+        
+        // 속도 제한
+        fragment.vx *= 0.98;
+        fragment.vy *= 0.98;
+        
+        // 위치 업데이트
+        fragment.x += fragment.vx;
+        fragment.y += fragment.vy;
+        fragment.rotation += fragment.rotationSpeed;
+        
+        // 화면 경계 처리
+        if (fragment.x < 0 || fragment.x > canvas.offsetWidth) fragment.vx *= -1;
+        if (fragment.y < 0 || fragment.y > canvas.offsetHeight) fragment.vy *= -1;
+        
+        // 호버 체크
+        if (fragment.studyName) {
+          const hoverDist = Math.sqrt(dx * dx + dy * dy);
+          if (hoverDist < 60 * fragment.scale) {
+            setHoveredFragment(fragment.id);
+          } else if (hoveredFragment === fragment.id) {
+            setHoveredFragment(null);
+          }
+        }
+        
+        drawFragment(fragment);
+      });
+
+      // 균열 포털 그리기
+      drawPortal(centerX, centerY, time);
+
+      phase += 0.01;
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, [hoveredFragment]);
+
+  // 파티클 효과
+  useEffect(() => {
+    const canvas = particleCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      life: number;
+      maxLife: number;
+      size: number;
+      color: string;
+    }
+
+    const particles: Particle[] = [];
+    let animationId: number;
+
+    const createParticle = () => {
+      const centerX = canvas.offsetWidth / 2;
+      const centerY = canvas.offsetHeight / 2;
+      const spread = 50;
+      
+      particles.push({
+        x: centerX + (Math.random() - 0.5) * spread,
+        y: centerY + (Math.random() - 0.5) * 200,
+        vx: (Math.random() - 0.5) * 2,
+        vy: -Math.random() * 2 - 1,
+        life: 0,
+        maxLife: 60 + Math.random() * 60,
+        size: 1 + Math.random() * 2,
+        color: Math.random() > 0.5 ? '#C3E88D' : '#82aaff'
+      });
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
+      // 새 파티클 생성
+      if (Math.random() < 0.3) createParticle();
+
+      // 파티클 업데이트 및 그리기
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05; // 중력
+        p.life++;
+
+        const lifeRatio = p.life / p.maxLife;
+        const opacity = (1 - lifeRatio) * 0.8;
+
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (p.life >= p.maxLife) {
+          particles.splice(i, 1);
+        }
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, []);
+
+  const formatNumber = (num: number): string => {
+    return num.toString().padStart(2, '0');
+  };
+
+  return (
+    <section className="stats section-background">
+      <div className="container">
+        <div className="section-header">
+          <h2 className="section-title">
+            <span className="title-part">느슨히</span>
+            <span className="title-part">끈끈히</span>
+            <span className="title-part accent">그리고 꾸준히</span>
+          </h2>
+        </div>
+        
+        <div className="portal-container">
+          {/* 균열 포털 캔버스 */}
+          <canvas ref={portalCanvasRef} className="portal-canvas" />
+          
+          {/* 파티클 캔버스 */}
+          <canvas ref={particleCanvasRef} className="particle-canvas" />
+          
+          {/* 중앙 시간 표시 */}
+          <div className="time-display-portal">
+            <div className="time-crystal">
+              <div className="time-value days">
+                <span className="number">{formatNumber(timeElapsed.days)}</span>
+                <span className="unit">DAYS</span>
+              </div>
+              <div className="time-divider" />
+              <div className="time-value hours">
+                <span className="number">{formatNumber(timeElapsed.hours)}</span>
+                <span className="unit">HRS</span>
+              </div>
+              <div className="time-divider" />
+              <div className="time-value minutes">
+                <span className="number">{formatNumber(timeElapsed.minutes)}</span>
+                <span className="unit">MIN</span>
+              </div>
+              <div className="time-divider" />
+              <div className="time-value seconds">
+                <span className="number">{formatNumber(timeElapsed.seconds)}</span>
+                <span className="unit">SEC</span>
+              </div>
+            </div>
+            {/* 은은한 서브 텍스트 */}
+            <div className="time-origin">
+              <span className="origin-date">Since 2024.06.11</span>
+              <span className="origin-divider">·</span>
+              <span className="origin-text">첫 모임</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Stats;

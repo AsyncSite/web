@@ -4,14 +4,23 @@ import './FAQ.css';
 interface FAQItem {
   id: number;
   question: string;
-  answer: string;
+  answer: string | React.ReactNode;
 }
 
 const faqData: FAQItem[] = [
   {
     id: 1,
     question: '참여 비용이 있나요?',
-    answer: 'AsyncSite는 완전 무료로 운영되는 커뮤니티입니다. 멤버십 비용이나 참가비 없이 누구나 자유롭게 참여할 수 있어요.'
+    answer: (
+      <>
+        <p>참여하시는 스터디의 성격에 따라 다릅니다.</p>
+        <p><strong>[Community Track]</strong><br />
+        동료와 함께 자율적으로 성장하는 대부분의 스터디는 무료로 참여할 수 있습니다.</p>
+        <p><strong>[Incubating/Workshop Track]</strong><br />
+        전문가의 초밀착 가이드가 제공되는 멘토링 프로그램이나 특정 워크샵은 별도의 참가비가 있습니다.</p>
+        <p>각 스터디의 상세 페이지에서 비용 정보를 확인해주세요.</p>
+      </>
+    )
   },
   {
     id: 2,
@@ -69,30 +78,41 @@ const FAQ: React.FC = () => {
               </div>
 
               <div className="faq-answer">
-                <p>{faq.answer}</p>
+                {typeof faq.answer === 'string' ? <p>{faq.answer}</p> : faq.answer}
               </div>
             </div>
           ))}
         </div>
 
         <div className="faq-contact">
-          <h3>다른 궁금한 점이 있으신가요?</h3>
-          <p>언제든지 편하게 문의해주세요!</p>
-          <div className="contact-buttons">
-            <a
-              href="https://github.com/asyncsite"
-              className="btn-secondary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              💻 GitHub
-            </a>
-            <a
-              href="mailto:contact@asyncsite.com"
-              className="btn-primary"
-            >
-              ✉️ 이메일 문의
-            </a>
+          <h3>더 궁금한 점이 있으신가요?</h3>
+          <div className="contact-options">
+            <div className="contact-main">
+              <a
+                href="https://discord.gg/asyncsite"
+                className="contact-item"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="contact-icon">💬</span>
+                <span className="contact-label">빠른 답변</span>
+                <span className="contact-desc">1:1 Discord 채널</span>
+              </a>
+              <a
+                href="https://calendly.com/asyncsite/coffee-chat"
+                className="contact-item"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="contact-icon">☕</span>
+                <span className="contact-label">커피챗</span>
+                <span className="contact-desc">30분 온라인 미팅</span>
+              </a>
+            </div>
+            <div className="contact-partnership">
+              <span>파트너십 문의</span>
+              <a href="mailto:partnership@asyncsite.com">partnership@asyncsite.com</a>
+            </div>
           </div>
         </div>
       </div>

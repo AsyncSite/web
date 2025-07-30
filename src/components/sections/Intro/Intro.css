@@ -156,15 +156,16 @@
 .hero-title {
     font-size: 72px !important;
     font-weight: 900 !important;
-    line-height: 1.1 !important;
-    margin-bottom: var(--spacing-2xl);
+    line-height: 1.15 !important;
+    margin-bottom: calc(var(--spacing-2xl) + 8px);
     letter-spacing: -2px !important;
     color: var(--white-text);
     text-align: center !important;
-    animation: fadeInUpTitle 0.8s ease forwards;
+    /* animation: fadeInUpTitle 0.8s ease forwards; */
     width: 100%;
     display: block;
-    opacity: 0;
+    /* opacity: 0; */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-title span {
@@ -198,7 +199,7 @@
 }
 
 .btn-primary {
-    padding: 15px 40px;
+    padding: 15px 32px;
     background: linear-gradient(135deg, #C3E88D, #A8D66F);
     color: var(--dark-bg);
     text-decoration: none;
@@ -213,7 +214,7 @@
 }
 
 .btn-secondary {
-    padding: 15px 40px;
+    padding: 15px 32px;
     background: transparent;
     color: #ffffff;
     text-decoration: none;
@@ -292,7 +293,16 @@
 /* Responsive */
 @media (max-width: 768px) {
     .hero-title {
-        font-size: 48px;
+        font-size: 48px !important;
+    }
+    
+    /* 모바일에서는 입체 효과 간소화 */
+    .hero-title-wrapper .hero-title::before {
+        transform: translate(-2px, -2px) skew(-5deg) scale(1, 1.02);
+    }
+    
+    .hero-title-wrapper .hero-title::after {
+        transform: translate(2px, 2px) skew(5deg) scale(1, 0.98);
     }
     
     .hero-subtitle {
@@ -309,5 +319,128 @@
         width: 100%;
         max-width: 280px;
         text-align: center;
+    }
+}
+
+/* 11MenZ 스타일 낙하 애니메이션 */
+.hero-title-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+}
+
+.hero-title-wrapper.drop-bounce .hero-title {
+    animation: dropBounce 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    transform-origin: center center;
+}
+
+@keyframes dropBounce {
+    0% {
+        transform: translateY(-500%) skew(5deg) rotate(-5deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(-200%) skew(5deg) rotate(-5deg) scale(0.8);
+        opacity: 0;
+    }
+    30% {
+        transform: translateY(-5%) skew(5deg) rotate(-5deg) scale(1.1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(10%) skew(5deg) rotate(-5deg) scale(0.95);
+    }
+    70% {
+        transform: translateY(0%) skew(5deg) rotate(-5deg) scale(1.02);
+    }
+    100% {
+        transform: translateY(0%) skew(0deg) rotate(0deg) scale(1);
+    }
+}
+
+/* 11MenZ 스타일 입체적 텍스트 효과 - 개선된 버전 */
+.hero-title-wrapper .hero-title {
+    position: relative;
+    z-index: 3;
+}
+
+.hero-title-wrapper .hero-title::before {
+    content: attr(data-heading);
+    position: absolute;
+    left: 0;
+    top: -8%;
+    overflow: hidden;
+    width: 100%;
+    height: 65%;
+    color: rgba(255, 255, 255, 0.9);
+    transform: translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    z-index: -1;
+    text-shadow: 0 0 10px rgba(195, 232, 141, 0.3);
+    pointer-events: none;
+    animation: dropBounceBefore 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.hero-title-wrapper .hero-title::after {
+    content: attr(data-heading);
+    position: absolute;
+    left: 0;
+    top: 8%;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    color: rgba(195, 232, 141, 0.6);
+    transform: translate(3px, 3px) skew(8deg) scale(1, 0.95);
+    clip-path: polygon(0 35%, 100% 35%, 100% 100%, 0% 100%);
+    text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    pointer-events: none;
+    animation: dropBounceAfter 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes dropBounceBefore {
+    0% {
+        transform: translateY(-500%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(-200%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+        opacity: 0;
+    }
+    30% {
+        transform: translateY(-5%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(10%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    }
+    70% {
+        transform: translateY(0%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    }
+    100% {
+        transform: translateY(0%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    }
+}
+
+@keyframes dropBounceAfter {
+    0% {
+        transform: translateY(-500%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(-200%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+        opacity: 0;
+    }
+    30% {
+        transform: translateY(-5%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(10%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+    }
+    70% {
+        transform: translateY(0%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+    }
+    100% {
+        transform: translateY(0%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
     }
 }

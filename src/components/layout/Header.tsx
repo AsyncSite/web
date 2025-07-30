@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { STUDY_LIST, getStudyUrl } from '../../constants/studies';
 import './Header.css';
 
 interface HeaderProps {
@@ -12,12 +13,45 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
   const [isFixedTop, setIsFixedTop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showStudyDropdown, setShowStudyDropdown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   const headerRef = useRef<HTMLElement | null>(null);
   const userMenuRef = useRef<HTMLDivElement | null>(null);
+  const studyDropdownRef = useRef<HTMLLIElement | null>(null);
+  const studyDropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
   const [headerHeight, setHeaderHeight] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, isLoading, logout } = useAuth();
+  
+  // 모바일 여부 감지
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // 모바일 메뉴가 열렸을 때 body 스크롤 방지
+  useEffect(() => {
+    if (isMobileMenuOpen && isMobile) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen, isMobile]);
 
   useEffect(() => {
     // Header의 높이를 측정
@@ -48,8 +82,14 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
           // Intro 섹션이 거의 화면에서 벗어나면 헤더를 상단에 고정
           if (entry.intersectionRatio < 0.1) {
             setIsFixedTop(true);
+            // 헤더 위치가 변경될 때 열려있는 드롭다운 닫기
+            setShowStudyDropdown(false);
+            setShowUserMenu(false);
           } else {
             setIsFixedTop(false);
+            // 헤더 위치가 변경될 때 열려있는 드롭다운 닫기
+            setShowStudyDropdown(false);
+            setShowUserMenu(false);
           }
         });
       },
@@ -65,24 +105,77 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     return () => {
       observer.disconnect();
     };
-  }, [transparent]);
+  }, [transparent, headerHeight]);
 
-  // 사용자 메뉴 외부 클릭 감지
+  // 메뉴 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
       }
+      if (studyDropdownRef.current && !studyDropdownRef.current.contains(event.target as Node)) {
+        setShowStudyDropdown(false);
+      }
     };
 
-    if (showUserMenu) {
+    if (showUserMenu || showStudyDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showUserMenu]);
+  }, [showUserMenu, showStudyDropdown]);
+  
+  // 드롭다운 hover 핸들러 (데스크톱 전용)
+  const handleStudyMouseEnter = () => {
+    if (!isMobile) {
+      if (studyDropdownTimeoutRef.current) {
+        clearTimeout(studyDropdownTimeoutRef.current);
+      }
+      studyDropdownTimeoutRef.current = setTimeout(() => {
+        setShowStudyDropdown(true);
+      }, 300); // 300ms 딜레이로 실수 방지
+    }
+  };
+  
+  const handleStudyMouseLeave = () => {
+    if (!isMobile) {
+      if (studyDropdownTimeoutRef.current) {
+        clearTimeout(studyDropdownTimeoutRef.current);
+      }
+      studyDropdownTimeoutRef.current = setTimeout(() => {
+        setShowStudyDropdown(false);
+      }, 300);
+    }
+  };
+  
+  // 드롭다운 click 핸들러 (모바일 또는 키보드)
+  const handleStudyClick = (e: React.MouseEvent | React.KeyboardEvent) => {
+    if (isMobile || e.type === 'keydown') {
+      e.preventDefault();
+      setShowStudyDropdown(!showStudyDropdown);
+    }
+  };
+  
+  // 키보드 이벤트 핸들러
+  const handleStudyKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleStudyClick(e);
+    } else if (e.key === 'Escape' && showStudyDropdown) {
+      setShowStudyDropdown(false);
+    }
+  };
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (studyDropdownTimeoutRef.current) {
+        clearTimeout(studyDropdownTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleAuthClick = () => {
     navigate('/login');
@@ -111,11 +204,94 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     >
       <div className="container">
         <nav className="nav">
-          <a href="/" className="logo">AsyncSite</a>
-          <div className="nav-right">
+          <Link to="/" className="logo" onClick={() => setIsMobileMenuOpen(false)}>AsyncSite</Link>
+          
+          {/* 모바일 메뉴 토글 버튼 */}
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="메뉴 열기"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+          </button>
+          
+          <div className={`nav-right ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
             <ul className="nav-menu">
-              <li><a href="/study" className={location.pathname === '/study' ? 'active' : ''}>STUDY</a></li>
-              <li><a href="/lab" className={location.pathname === '/lab' ? 'active' : ''}>LAB</a></li>
+              <li 
+                className="has-dropdown"
+                ref={studyDropdownRef}
+                onMouseEnter={handleStudyMouseEnter}
+                onMouseLeave={handleStudyMouseLeave}
+              >
+                <button 
+                  className={`nav-link ${location.pathname.startsWith('/study') ? 'active' : ''}`}
+                  onClick={(e) => {
+                    if (!isMobile && !showStudyDropdown) {
+                      navigate('/study');
+                    } else {
+                      handleStudyClick(e);
+                    }
+                  }}
+                  onKeyDown={handleStudyKeyDown}
+                  aria-haspopup="true"
+                  aria-expanded={showStudyDropdown}
+                >
+                  STUDY
+                  <svg 
+                    className={`dropdown-arrow ${showStudyDropdown ? 'open' : ''}`}
+                    width="12" 
+                    height="12" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                {showStudyDropdown && (
+                  <div className="nav-dropdown">
+                    {STUDY_LIST.filter(study => study.status !== 'closed').map(study => (
+                      <Link 
+                        key={study.id} 
+                        to={getStudyUrl(study)} 
+                        className="nav-dropdown-item"
+                        onClick={() => {
+                          setShowStudyDropdown(false);
+                          setIsMobileMenuOpen(false);
+                        }}
+                      >
+                        <span className="dropdown-item-name">{study.name}</span>
+                        <span className={`dropdown-item-badge ${study.status}`}>
+                          {study.status === 'recruiting' ? '모집중' : '진행중'}
+                        </span>
+                      </Link>
+                    ))}
+                    <div className="nav-dropdown-divider"></div>
+                    <Link 
+                      to="/study" 
+                      className="nav-dropdown-item nav-dropdown-all"
+                      onClick={() => {
+                        setShowStudyDropdown(false);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      모든 스터디 보기 →
+                    </Link>
+                  </div>
+                )}
+              </li>
+              <li>
+                <Link 
+                  to="/lab" 
+                  className={location.pathname.startsWith('/lab') ? 'active' : ''}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  LAB
+                </Link>
+              </li>
             </ul>
             <div className="auth-section">
             {isLoading ? (
@@ -174,7 +350,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                   </div>
                 ) : (
                   <button className="login-btn" onClick={handleAuthClick}>
-                    로그인/회원가입
+                    JOIN US
                   </button>
                 )}
               </>

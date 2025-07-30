@@ -29,10 +29,11 @@
 
 /* Navigation Button */
 .tetris-navigation {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 100;
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .back-to-lab-button {
@@ -75,8 +76,7 @@
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .tetris-navigation {
-    top: 10px;
-    left: 10px;
+    padding: 0 1rem;
   }
   
   .back-to-lab-button {
