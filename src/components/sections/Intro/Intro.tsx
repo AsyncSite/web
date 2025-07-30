@@ -50,7 +50,7 @@ const Intro: React.FC = () => {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title">
-              성장은 따라오는 거야.
+              성장은 따라오는 거야
             </h1>
             <p className="hero-subtitle">
               혼자의 밤을 지나, 함께 쓰는 성장의 다음 챕터
