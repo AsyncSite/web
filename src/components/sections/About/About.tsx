@@ -30,6 +30,7 @@ const About: React.FC = () => {
   ];
   
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [nextTextIndex, setNextTextIndex] = useState(1);
   const [isFlipping, setIsFlipping] = useState(false);
   
   useEffect(() => {
@@ -37,13 +38,14 @@ const About: React.FC = () => {
       setIsFlipping(true);
       
       setTimeout(() => {
-        setCurrentTextIndex((prevIndex) => (prevIndex + 1) % flipTexts.length);
+        setCurrentTextIndex(nextTextIndex);
+        setNextTextIndex((nextTextIndex + 1) % flipTexts.length);
         setIsFlipping(false);
-      }, 300); // flip 애니메이션 중간 지점
-    }, 3000); // 3초마다 텍스트 변경
+      }, 800); // 애니메이션 완료 시점
+    }, 4000); // 4초마다 텍스트 변경
     
     return () => clearInterval(interval);
-  }, []);
+  }, [nextTextIndex, flipTexts.length]);
   
   // About 섹션 데이터 - 따뜻한 서사 구조로 재구성
   const aboutSections: AboutSection[] = [
@@ -96,9 +98,16 @@ const About: React.FC = () => {
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">
-            <span className={`flip-text-container ${isFlipping ? 'flipping' : ''}`}>
-              <span className="flip-text">{flipTexts[currentTextIndex]}</span>
-            </span>
+            <div className={`flip-text-container ${isFlipping ? 'flipping' : ''}`}>
+              <div className="flip-card">
+                <div className="flip-card-face flip-card-current">
+                  <span className="flip-text">{flipTexts[currentTextIndex]}</span>
+                </div>
+                <div className="flip-card-face flip-card-next">
+                  <span className="flip-text">{flipTexts[nextTextIndex]}</span>
+                </div>
+              </div>
+            </div>
             <br />
             특별해지는 이유
           </h2>
