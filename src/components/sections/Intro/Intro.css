@@ -161,10 +161,10 @@
     letter-spacing: -2px !important;
     color: var(--white-text);
     text-align: center !important;
-    animation: fadeInUpTitle 0.8s ease forwards;
+    /* animation: fadeInUpTitle 0.8s ease forwards; */
     width: 100%;
     display: block;
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .hero-title span {
@@ -311,3 +311,40 @@
         text-align: center;
     }
 }
+
+/* 11MenZ 스타일 낙하 애니메이션 */
+.hero-title-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+}
+
+.hero-title-wrapper.drop-bounce .hero-title {
+    animation: dropBounce 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    transform-origin: center center;
+}
+
+@keyframes dropBounce {
+    0% {
+        transform: translateY(-500%) skew(5deg) rotate(-5deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(-200%) skew(5deg) rotate(-5deg) scale(0.8);
+        opacity: 0;
+    }
+    30% {
+        transform: translateY(-5%) skew(5deg) rotate(-5deg) scale(1.1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(10%) skew(5deg) rotate(-5deg) scale(0.95);
+    }
+    70% {
+        transform: translateY(0%) skew(5deg) rotate(-5deg) scale(1.02);
+    }
+    100% {
+        transform: translateY(0%) skew(0deg) rotate(0deg) scale(1);
+    }
+}
+EOF < /dev/null

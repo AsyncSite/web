@@ -49,9 +49,11 @@ const Intro: React.FC = () => {
       <section id="intro" className="hero">
         <div className="container">
           <div className="hero-content">
-            <h1 className="hero-title">
-              AsyncSite
-            </h1>
+            <div className="hero-title-wrapper drop-bounce">
+              <h1 className="hero-title">
+                AsyncSite
+              </h1>
+            </div>
             <p className="hero-subtitle">
               느슨히 끈끈히<br />
               성장이 일상이 되는 시간
