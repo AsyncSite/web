@@ -353,12 +353,10 @@ const Stats: React.FC = () => {
           <h2 className="section-title">
             <div className="title-layout">
               <div className="title-main">
-                <span className="title-part first">느슨히</span>
-                <span className="title-part second">끈끈히</span>
-                <span className="title-comma">,</span>
+                함께 연결되는
               </div>
               <div className="title-sub">
-                <span className="title-part accent">그리고 꾸준히</span>
+                당신의 가장 치열한 사생활
               </div>
             </div>
           </h2>
