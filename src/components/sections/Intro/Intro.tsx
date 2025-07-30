@@ -50,7 +50,7 @@ const Intro: React.FC = () => {
         <div className="container">
           <div className="hero-content">
             <div className="hero-title-wrapper drop-bounce">
-              <h1 className="hero-title">
+              <h1 className="hero-title" data-heading="AsyncSite">
                 AsyncSite
               </h1>
             </div>
