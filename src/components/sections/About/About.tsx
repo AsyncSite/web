@@ -83,24 +83,68 @@ const About: React.FC = () => {
       id: 2,
       layout: 'answer-left',
       questionNumber: '02',
-      questionTitle: '검증된 리더와 체계적인 스터디는 어떻게 다른가요?',
-      questionIcon: '🌟',
-      answerTitle: '진짜 동료를 만나는 경험을 제공합니다',
-      answerText: '매 시즌 엄선된 리더가 이끄는 스터디는 체계적이고 지속가능합니다. 코드 리뷰와 피드백을 통해 실력을 쌓고, 시즌제 운영으로 꾸준함을 만들어가며, 진짜 동료를 만나는 경험을 제공합니다.',
+      questionTitle: '그래서, 이번엔 끝까지 갈 수 있나요?',
+      questionIcon: '🎯',
+      answerTitle: '비결은 노력하지 않는 거예요.',
+      answerText: (
+        <>
+          월요일: 의욕 충만. "이번엔 진짜야"<br />
+          화요일: 슬슬 귀찮음. "내일 할까..."<br />
+          수요일: 디코 알림. "오늘 커밋하셨나요?"<br />
+          목요일: 동료 멘션. "내일 준비하셨어요?"<br />
+          금요일: 어느새 접속. "벌써 5주차네?"<br />
+          <br />
+          노력하지 않아요.<br />
+          대신 '포기하기 어려운 구조'에 자신을 넣으세요.<br />
+          <br />
+          스케줄에 나를 밀어넣고,<br />
+          시간이 지나 성장이 되어 있도록<br />
+          성장을 자동화해야 해요.<br />
+          <br />
+          그래서 우리는 94%가 완주합니다.
+        </>
+      ),
       highlights: [
-        { icon: '👥', title: '코드 리뷰로 연결', description: '형식적인 만남이 아닌 코드로 대화하는 진짜 네트워킹' },
-        { icon: '📅', title: '시즌제로 꾸준함', description: '일회성이 아닌 지속가능한 성장 시스템' },
-        { icon: '✨', title: '검증된 리더십', description: '매 시즌 엄선된 리더가 이끄는 체계적인 스터디' }
+        { icon: '🔄', title: '자동화된 성장', description: '의지력 대신 시스템으로 만드는 습관' },
+        { icon: '🔔', title: '동료가 만드는 압력', description: '혼자면 미루지만, 함께면 움직이게 되는 마법' },
+        { icon: '📊', title: '94% 완주율', description: '숫자가 증명하는 포기하기 어려운 구조' }
       ]
     },
     {
       id: 3,
       layout: 'question-left',
       questionNumber: '03',
+      questionTitle: '검증된 리더와 체계적인 스터디는 어떻게 다른가요?',
+      questionIcon: '🌟',
+      answerTitle: '진짜 동료를 만나는 경험을 제공합니다',
+      answerText: '매 시즌 엄선된 리더가 이끄는 스터디는 체계적이고 지속가능합니다. 코드 리뷰와 피드백을 통해 실력을 쌓고, 시즌제 운영으로 꾸준함을 만들어가며, 진짜 동료를 만나는 경험을 제공합니다.',
+      highlights: [
+        { icon: '👥', title: '실시간 피드백으로 연결', description: '형식적인 만남이 아닌 생각과 경험을 나누는 진짜 네트워킹' },
+        { icon: '📅', title: '시즌제로 꾸준함', description: '일회성이 아닌 지속가능한 성장 시스템' },
+        { icon: '✨', title: '검증된 리더십', description: '매 시즌 엄선된 리더가 이끄는 체계적인 스터디' }
+      ]
+    },
+    {
+      id: 4,
+      layout: 'answer-left',
+      questionNumber: '04',
       questionTitle: '왜 좋은 동료와 함께하면 다를까요?',
       questionIcon: '🤝',
       answerTitle: '혼자서는 넘기 힘든 성장의 벽을 함께 넘어서요',
-      answerText: '좋은 동료와 함께라면 어떤 변화도 두렵지 않다고 믿어요. 서로의 경험을 나누고, 다른 관점에서 배우며, 함께 성장하는 과정에서 혼자서는 얻을 수 없는 통찰력을 얻게 됩니다.',
+      answerText: (
+        <>
+          좋은 동료와 함께라면 어떤 변화도 두렵지 않다고 믿어요.<br />
+          <br />
+          서로의 경험을 나누고,<br />
+          다른 관점에서 배우며,<br />
+          함께 성장하는 과정에서 혼자서는 얻을 수 없는 통찰력을 얻게 됩니다.<br />
+          <br />
+          "네가 보는 버그는 내겐 feature야"<br />
+          "너의 막힘이 나의 배움이 되고"<br />
+          <br />
+          그렇게 우리는 서로의 디버거가 됩니다.
+        </>
+      ),
       features: [
         { icon: '🎯', text: '공동의 목표 달성' },
         { icon: '💪', text: '상호 동기부여' },
