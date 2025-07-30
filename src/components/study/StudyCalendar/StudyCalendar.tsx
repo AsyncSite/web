@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { STUDY_LIST, StudyInfo } from '../../../constants/studies';
 import './StudyCalendar.css';
 
@@ -33,6 +33,8 @@ const StudyCalendar: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('modern');
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [hoveredEvent, setHoveredEvent] = useState<StudyCalendarEvent | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   // 스터디 데이터 기반 이벤트 생성
   const generateEventsFromStudies = (): StudyCalendarEvent[] => {
@@ -222,10 +224,36 @@ const StudyCalendar: React.FC = () => {
     return events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
 
-  const events = generateEventsFromStudies();
+  // 이벤트 생성 최적화 - 월과 연도가 변경될 때만 재계산
+  const events = useMemo(() => generateEventsFromStudies(), [currentDate.getMonth(), currentDate.getFullYear()]);
+  
+  // 툴팁 관련 핸들러
+  const handleEventHover = useCallback((event: StudyCalendarEvent | null, e?: React.MouseEvent) => {
+    setHoveredEvent(event);
+    if (event && e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 10
+      });
+    }
+  }, []);
+  
+  // 오늘로 이동하는 함수
+  const handleTodayClick = useCallback(() => {
+    const today = new Date();
+    setCurrentDate(today);
+    // 부드러운 스크롤 애니메이션
+    setTimeout(() => {
+      const todayElement = document.querySelector('.sc-day-cell--today');
+      if (todayElement) {
+        todayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  }, []);
 
-  // 달력 생성 로직
-  const generateCalendarDays = () => {
+  // 달력 생성 로직 - 월과 연도가 변경될 때만 재계산
+  const generateCalendarDays = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -239,10 +267,10 @@ const StudyCalendar: React.FC = () => {
       days.push(cellDate);
     }
     return days;
-  };
+  }, [currentDate.getMonth(), currentDate.getFullYear()]);
 
   // 해당 날짜의 이벤트 가져오기
-  const getEventsForDate = (date: Date) => {
+  const getEventsForDate = useCallback((date: Date) => {
     const dateStr = date.toISOString().split('T')[0];
     return events.filter(event => {
       const matchesDate = event.date === dateStr;
@@ -252,15 +280,15 @@ const StudyCalendar: React.FC = () => {
         (selectedFilter === event.studyType);
       return matchesDate && matchesFilter;
     });
-  };
+  }, [events, selectedFilter]);
 
   // 필터링된 이벤트 가져오기
-  const getFilteredEvents = () => {
+  const getFilteredEvents = useCallback(() => {
     if (selectedFilter === 'all') return events;
     if (selectedFilter === 'recruitment') return events.filter(e => e.eventType === 'recruitment');
     if (selectedFilter === 'retrospective') return events.filter(e => e.eventType === 'retrospective');
     return events.filter(e => e.studyType === selectedFilter);
-  };
+  }, [events, selectedFilter]);
 
   // 월 변경
   const changeMonth = (direction: number) => {
@@ -272,8 +300,8 @@ const StudyCalendar: React.FC = () => {
   };
 
   const today = new Date();
-  const calendarDays = generateCalendarDays();
-  const filteredEvents = getFilteredEvents();
+  const calendarDays = generateCalendarDays;
+  const filteredEvents = useMemo(() => getFilteredEvents(), [events, selectedFilter]);
 
   // 뷰 전환 애니메이션
   const handleViewTransition = (newView: ViewMode) => {
@@ -290,19 +318,35 @@ const StudyCalendar: React.FC = () => {
 
   return (
     <div className="sc-calendar-wrapper">
-      {/* 뷰 모드 토글 */}
-      <div className="sc-view-toggle">
+      {/* 상단 컨트롤 영역 */}
+      <div className="sc-controls-wrapper">
+        {/* 뷰 모드 토글 */}
+        <div className="sc-view-toggle">
+          <button 
+            className={`sc-toggle-btn ${viewMode === 'modern' ? 'sc-toggle-btn--active' : ''}`}
+            onClick={() => handleViewTransition('modern')}
+          >
+            캘린더 뷰
+          </button>
+          <button 
+            className={`sc-toggle-btn ${viewMode === 'timeline' ? 'sc-toggle-btn--active' : ''}`}
+            onClick={() => handleViewTransition('timeline')}
+          >
+            타임라인 뷰
+          </button>
+        </div>
+        
+        {/* 오늘로 이동 버튼 */}
         <button 
-          className={`sc-toggle-btn ${viewMode === 'modern' ? 'sc-toggle-btn--active' : ''}`}
-          onClick={() => handleViewTransition('modern')}
+          className="sc-today-btn"
+          onClick={handleTodayClick}
+          title="오늘로 이동"
         >
-          캘린더 뷰
-        </button>
-        <button 
-          className={`sc-toggle-btn ${viewMode === 'timeline' ? 'sc-toggle-btn--active' : ''}`}
-          onClick={() => handleViewTransition('timeline')}
-        >
-          타임라인 뷰
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/>
+            <path d="M12 7V12L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          오늘
         </button>
       </div>
 
@@ -396,7 +440,8 @@ const StudyCalendar: React.FC = () => {
                               borderLeft: `3px solid ${event.color.primary}`,
                               color: event.color.primary
                             }}
-                            title={`${event.title} - ${event.startTime}`}
+                            onMouseEnter={(e) => handleEventHover(event, e)}
+                            onMouseLeave={() => handleEventHover(null)}
                           >
                             <span className="sc-event-time">{event.startTime}</span>
                             <span className="sc-event-title">{event.title}</span>
@@ -490,6 +535,8 @@ const StudyCalendar: React.FC = () => {
                         borderLeftColor: event.color.primary,
                         boxShadow: `0 0 20px ${event.color.glow}`
                       }}
+                      onMouseEnter={(e) => handleEventHover(event, e)}
+                      onMouseLeave={() => handleEventHover(null)}
                     >
                       <div className="sc-timeline-dot" style={{ backgroundColor: event.color.primary }}></div>
                       <div className="sc-timeline-content">
@@ -516,6 +563,76 @@ const StudyCalendar: React.FC = () => {
           </div>
         )}
       </div>
+      
+      {/* 이벤트 상세 정보 툴팁 */}
+      {hoveredEvent && (
+        <div 
+          className="sc-event-tooltip"
+          style={{
+            position: 'fixed',
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            transform: 'translate(-50%, -100%)'
+          }}
+        >
+          <div className="sc-tooltip-header">
+            <h4>{hoveredEvent.title}</h4>
+            <span className={`sc-tooltip-badge sc-tooltip-badge--${hoveredEvent.eventType}`}>
+              {hoveredEvent.eventType === 'regular' ? '정기 모임' :
+               hoveredEvent.eventType === 'special' ? '특별 이벤트' :
+               hoveredEvent.eventType === 'recruitment' ? '모집' :
+               hoveredEvent.eventType === 'orientation' ? '오리엔테이션' : '회고'}
+            </span>
+          </div>
+          <div className="sc-tooltip-content">
+            <div className="sc-tooltip-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
+                <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+              {new Date(hoveredEvent.date).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+              })}
+            </div>
+            <div className="sc-tooltip-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/>
+                <path d="M12 7V12L15 15" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+              {hoveredEvent.startTime} {hoveredEvent.endTime && `- ${hoveredEvent.endTime}`}
+            </div>
+            {hoveredEvent.location && (
+              <div className="sc-tooltip-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22S19 14.25 19 9C19 5.13 15.87 2 12 2Z" stroke="currentColor" strokeWidth="2"/>
+                  <circle cx="12" cy="9" r="3" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                {hoveredEvent.location === 'online' ? '온라인' : '오프라인'}
+              </div>
+            )}
+            <div className="sc-tooltip-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+              {hoveredEvent.description}
+            </div>
+            {hoveredEvent.participantLimit && (
+              <div className="sc-tooltip-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2"/>
+                  <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" strokeWidth="2"/>
+                  <circle cx="15" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                {hoveredEvent.currentParticipants}/{hoveredEvent.participantLimit}명 참여
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
