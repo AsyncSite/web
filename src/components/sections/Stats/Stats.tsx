@@ -353,7 +353,8 @@ const Stats: React.FC = () => {
           <h2 className="section-title">
             <div className="title-layout">
               <div className="title-main">
-                함께 연결되는
+                <span className="title-part first">함께</span>
+                <span className="title-part second">연결되는</span>
               </div>
               <div className="title-sub">
                 당신의 가장 치열한 사생활
