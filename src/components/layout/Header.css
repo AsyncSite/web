@@ -572,6 +572,31 @@
   z-index: 1001;
 }
 
+/* 화살표 삼각형 - 사용자 메뉴 드롭다운 */
+.user-menu-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid rgba(195, 232, 141, 0.2);
+}
+
+.user-menu-dropdown::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid rgba(13, 17, 23, 0.98);
+}
+
 @keyframes dropdownFadeIn {
   from {
     opacity: 0;
@@ -634,4 +659,62 @@
 .header.transparent.scrolled {
   backdrop-filter: blur(20px) saturate(180%);
   background: rgba(10, 14, 39, 0.85);
+}
+
+/* 하단 GNB 드롭다운 스타일 (Hero 섹션) */
+@media (min-width: 769px) {
+  /* 하단 GNB일 때 드롭다운을 위로 표시 */
+  .header:not(.fixed-top) .nav-dropdown,
+  .header:not(.fixed-top) .user-menu-dropdown {
+    top: auto;
+    bottom: calc(100% + 8px);
+    animation: dropdownFadeInUp 0.2s ease-out;
+  }
+  
+  /* 하단 GNB일 때 STUDY 드롭다운 화살표 위치 조정 */
+  .header:not(.fixed-top) .nav-dropdown::before {
+    top: auto;
+    bottom: -6px;
+    border-bottom: none;
+    border-top: 6px solid rgba(195, 232, 141, 0.2);
+  }
+  
+  .header:not(.fixed-top) .nav-dropdown::after {
+    top: auto;
+    bottom: -5px;
+    border-bottom: none;
+    border-top: 6px solid rgba(13, 17, 23, 0.98);
+  }
+  
+  /* 위로 나타나는 애니메이션 */
+  @keyframes dropdownFadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* 사용자 메뉴 드롭다운 위치 조정 */
+  .header:not(.fixed-top) .user-menu-dropdown {
+    margin-bottom: 8px; /* 하단 여백 추가 */
+  }
+  
+  /* 하단 GNB일 때 사용자 메뉴 드롭다운 화살표 위치 조정 */
+  .header:not(.fixed-top) .user-menu-dropdown::before {
+    top: auto;
+    bottom: -6px;
+    border-bottom: none;
+    border-top: 6px solid rgba(195, 232, 141, 0.2);
+  }
+  
+  .header:not(.fixed-top) .user-menu-dropdown::after {
+    top: auto;
+    bottom: -5px;
+    border-bottom: none;
+    border-top: 6px solid rgba(13, 17, 23, 0.98);
+  }
 }

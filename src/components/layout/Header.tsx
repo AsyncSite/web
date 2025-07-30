@@ -82,8 +82,14 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
           // Intro 섹션이 거의 화면에서 벗어나면 헤더를 상단에 고정
           if (entry.intersectionRatio < 0.1) {
             setIsFixedTop(true);
+            // 헤더 위치가 변경될 때 열려있는 드롭다운 닫기
+            setShowStudyDropdown(false);
+            setShowUserMenu(false);
           } else {
             setIsFixedTop(false);
+            // 헤더 위치가 변경될 때 열려있는 드롭다운 닫기
+            setShowStudyDropdown(false);
+            setShowUserMenu(false);
           }
         });
       },
