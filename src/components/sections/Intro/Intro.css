@@ -377,8 +377,7 @@
     z-index: -1;
     text-shadow: 0 0 10px rgba(195, 232, 141, 0.3);
     pointer-events: none;
-    opacity: 0;
-    animation: fadeInLayer 0.5s ease 2.5s forwards;
+    animation: dropBounceBefore 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 .hero-title-wrapper .hero-title::after {
@@ -395,12 +394,53 @@
     clip-path: polygon(0 35%, 100% 35%, 100% 100%, 0% 100%);
     text-shadow: 0 4px 8px rgba(0,0,0,0.4);
     pointer-events: none;
-    opacity: 0;
-    animation: fadeInLayer 0.5s ease 2.6s forwards;
+    animation: dropBounceAfter 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
-@keyframes fadeInLayer {
-    to {
+@keyframes dropBounceBefore {
+    0% {
+        transform: translateY(-500%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(-200%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+        opacity: 0;
+    }
+    30% {
+        transform: translateY(-5%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
         opacity: 1;
+    }
+    50% {
+        transform: translateY(10%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    }
+    70% {
+        transform: translateY(0%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    }
+    100% {
+        transform: translateY(0%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    }
+}
+
+@keyframes dropBounceAfter {
+    0% {
+        transform: translateY(-500%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+        opacity: 0;
+    }
+    10% {
+        transform: translateY(-200%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+        opacity: 0;
+    }
+    30% {
+        transform: translateY(-5%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(10%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+    }
+    70% {
+        transform: translateY(0%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
+    }
+    100% {
+        transform: translateY(0%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
     }
 }
