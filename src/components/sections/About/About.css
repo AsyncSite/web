@@ -374,6 +374,8 @@
 .flip-text {
   display: inline-block;
   white-space: nowrap;
+  color: #FFFFFF;
+  font-weight: 700;
 }
 
 /* 기본 상태 */

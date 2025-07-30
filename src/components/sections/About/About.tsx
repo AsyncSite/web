@@ -26,7 +26,9 @@ const About: React.FC = () => {
   const flipTexts = [
     "개발자의 금요일 저녁이",
     "1년차 미정이의 토요일 아침이",
-    "취준생 준우의 일요일 오후가"
+    "취준생 준우의 일요일 오후가",
+    "5년차 팀장 혜진이의 목요일 밤이",
+    "이직 준비생 승호의 화요일 새벽이"
   ];
   
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
