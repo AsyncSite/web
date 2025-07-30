@@ -9,7 +9,7 @@
 }
 
 .stats .section-header {
-  text-align: left;
+  text-align: center;
   margin-bottom: 80px;
   animation: fadeInDown 0.8s ease;
   z-index: 4;
@@ -34,6 +34,7 @@
 .title-main {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 0;
   line-height: 1;
   margin-bottom: -10px;
@@ -87,9 +88,8 @@
 
 .title-sub {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 40px;
-  padding-right: 5%;
 }
 
 .title-part.accent {
