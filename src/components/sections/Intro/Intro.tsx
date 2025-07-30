@@ -53,7 +53,7 @@ const Intro: React.FC = () => {
               성장은, 따라오는 거야.
             </h1>
             <p className="hero-subtitle">
-              혼자 고민하던 밤, 그 다음 이야기.
+              혼자의 밤을 지나, 함께 쓰는 성장의 다음 챕터
             </p>
             <div className="hero-cta">
               <a href="#studies" className="btn-primary">지금 모집 중인 스터디</a>
