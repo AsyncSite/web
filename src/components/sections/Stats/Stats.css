@@ -153,12 +153,12 @@
 .time-display-weaving {
   position: relative;
   z-index: 3;
-  padding: 30px 40px;
+  padding: 50px 60px;
   animation: timeAppear 1s ease-out 0.5s both;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   background: radial-gradient(
     ellipse at center,
     rgba(10, 14, 39, 0.6) 0%,
@@ -185,19 +185,19 @@
 .time-flow {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .time-segment {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .time-number {
   font-family: 'Consolas', 'Source Code Pro', monospace;
-  font-size: 42px;
+  font-size: 56px;
   font-weight: 200;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 3px;
@@ -217,7 +217,7 @@
 }
 
 .time-label {
-  font-size: 11px;
+  font-size: 14px;
   color: rgba(195, 232, 141, 0.5);
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -226,19 +226,19 @@
 }
 
 .time-connector {
-  font-size: 20px;
+  font-size: 26px;
   color: rgba(195, 232, 141, 0.4);
   margin: 0 -5px;
   align-self: center;
-  margin-bottom: 20px;
+  margin-bottom: 26px;
 }
 
 /* 은은한 시작 날짜 표시 */
 .time-origin {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 11px;
+  gap: 10px;
+  font-size: 13px;
   color: rgba(195, 232, 141, 0.3);
   letter-spacing: 1px;
   animation: fadeInUp 1s ease-out 1s both;
@@ -350,24 +350,24 @@
   }
 
   .time-display-weaving {
-    padding: 25px 30px;
+    padding: 35px 40px;
   }
 
   .time-flow {
-    gap: 12px;
+    gap: 16px;
   }
 
   .time-number {
-    font-size: 32px;
+    font-size: 42px;
   }
 
   .time-label {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .time-connector {
-    font-size: 18px;
-    margin-bottom: 18px;
+    font-size: 22px;
+    margin-bottom: 22px;
   }
 
   .weaving-legend {
@@ -420,22 +420,22 @@
   }
 
   .time-display-weaving {
-    padding: 20px 25px;
+    padding: 30px 35px;
   }
 
   .time-flow {
-    gap: 10px;
+    gap: 14px;
     flex-wrap: wrap;
     justify-content: center;
   }
 
   .time-number {
-    font-size: 26px;
+    font-size: 34px;
     letter-spacing: 1px;
   }
 
   .time-label {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 1.5px;
   }
 
@@ -444,13 +444,14 @@
   }
 
   .time-segment {
-    margin: 0 5px;
+    margin: 0 8px;
+    gap: 10px;
   }
 
   .time-origin {
-    font-size: 10px;
+    font-size: 11px;
     padding: 5px 10px;
-    gap: 6px;
+    gap: 8px;
   }
 
   .weaving-legend p {
