@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BaseGameProps } from '../../../../components/lab/utilities/spotlight-arena/shared/types/game';
+import { BaseGameProps } from '../../shared/types/game';
 import { SlotGrid } from './components/SlotGrid';
 import { GameStats } from './components/GameStats';
 import { BettingPanel } from './components/BettingPanel';

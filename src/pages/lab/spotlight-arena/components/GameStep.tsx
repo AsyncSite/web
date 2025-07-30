@@ -3,8 +3,8 @@ import Lottie from 'lottie-react';
 import { Participant } from '../../../../components/lab/utilities/spotlight-arena/shared/types';
 import { LottieAnimationData } from '../types/animation';
 import SnailRaceGame from '../../../../components/lab/utilities/spotlight-arena/games/SnailRace/SnailRaceGame';
-import { DartWheelGame } from '../../../../utilities/spotlight-arena/games/DartWheel';
-import { SlotCascadeGame } from '../../../../utilities/spotlight-arena/games/SlotCascade';
+import { DartWheelGame } from '../../../../components/lab/utilities/spotlight-arena/games/DartWheel';
+import { SlotCascadeGame } from '../../../../components/lab/utilities/spotlight-arena/games/SlotCascade';
 
 interface GameStepProps {
   selectedGame: string;
