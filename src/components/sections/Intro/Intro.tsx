@@ -54,7 +54,8 @@ const Intro: React.FC = () => {
               가장 치열한 사생활
             </h1>
             <p className="hero-subtitle">
-              느슨히 끈끈히, 그리고 꾸준히 성장이 일상이 되는 곳
+              느슨히 끈끈히, 그리고 꾸준히<br />
+              성장이 일상이 되는 곳
             </p>
             <div className="hero-cta">
               <a href="#studies" className="btn-primary">지금 모집 중인 스터디</a>
