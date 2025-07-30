@@ -1,8 +1,8 @@
 /* Stats Section - 실타래처럼 엮이는 시간 */
 .stats {
-  padding: 120px 0;
+  padding: 120px 0 60px 0;
   position: relative;
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   align-items: center;
   overflow: visible;
@@ -315,7 +315,7 @@
 /* 반응형 */
 @media (max-width: 768px) {
   .stats {
-    padding: 80px 0;
+    padding: 80px 0 40px 0;
   }
 
   .stats .section-title {

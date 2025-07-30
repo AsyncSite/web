@@ -148,9 +148,6 @@ const Journey: React.FC = () => {
           </div>
         </div>
 
-        <div className="journey-cta">
-          <p className="cta-text">이제 당신의 여정을 시작할 차례입니다</p>
-        </div>
       </div>
     </section>
   );
