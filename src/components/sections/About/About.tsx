@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './About.css';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 
@@ -22,6 +22,28 @@ interface AboutSection {
 }
 
 const About: React.FC = () => {
+  // Flip 애니메이션을 위한 텍스트 배열
+  const flipTexts = [
+    "개발자의 금요일 저녁이",
+    "1년차 미정이의 토요일 아침이",
+    "취준생 준우의 일요일 오후가"
+  ];
+  
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [isFlipping, setIsFlipping] = useState(false);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFlipping(true);
+      
+      setTimeout(() => {
+        setCurrentTextIndex((prevIndex) => (prevIndex + 1) % flipTexts.length);
+        setIsFlipping(false);
+      }, 300); // flip 애니메이션 중간 지점
+    }, 3000); // 3초마다 텍스트 변경
+    
+    return () => clearInterval(interval);
+  }, []);
   
   // About 섹션 데이터 - 따뜻한 서사 구조로 재구성
   const aboutSections: AboutSection[] = [
@@ -73,7 +95,13 @@ const About: React.FC = () => {
     <section className="about section-background" id="about">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">금요일 저녁이<br />특별해지는 이유</h2>
+          <h2 className="section-title">
+            <span className={`flip-text-container ${isFlipping ? 'flipping' : ''}`}>
+              <span className="flip-text">{flipTexts[currentTextIndex]}</span>
+            </span>
+            <br />
+            특별해지는 이유
+          </h2>
           <p className="section-subtitle">끝없이 쏟아지는 새로운 기술들, AI가 코드를 대신 짜주는 시대.<br />
           개발자로서 우리는 무엇을 추구해야 할까요?</p>
         </div>
