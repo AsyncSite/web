@@ -25,10 +25,10 @@ const About: React.FC = () => {
   // Flip 애니메이션을 위한 텍스트 배열
   const flipTexts = [
     "개발자의 금요일 저녁이",
-    "1년차 미정이의 토요일 아침이",
-    "취준생 준우의 일요일 오후가",
-    "5년차 팀장 혜진이의 목요일 밤이",
-    "이직 준비생 승호의 화요일 새벽이"
+    "1년차 루나의 토요일 아침이",
+    "취준생 아로의 일요일 오후가",
+    "5년차 팀장 노바의 목요일 밤이",
+    "이직 준비생 리오의 화요일 새벽이"
   ];
   
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -114,7 +114,7 @@ const About: React.FC = () => {
             특별해지는 이유
           </h2>
           <p className="section-subtitle">끝없이 쏟아지는 새로운 기술들, AI가 코드를 대신 짜주는 시대.<br />
-          개발자로서 우리는 무엇을 추구해야 할까요?</p>
+          우리는 무엇을 추구해야 할까요?</p>
         </div>
 
         <main className="about-container">
