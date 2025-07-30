@@ -48,10 +48,9 @@
 
 .title-part.first {
   font-size: 64px;
-  font-weight: 200;
-  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 1);
   letter-spacing: -1px;
-  margin-right: 20px;
 }
 
 .title-part.second {
