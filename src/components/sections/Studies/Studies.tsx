@@ -20,15 +20,19 @@ const Studies: React.FC = () => {
   
   // 중앙화된 스터디 데이터 사용
   const studies = STUDY_LIST.filter(study => study.status === 'recruiting' || study.status === 'ongoing');
+  const recruitingStudies = STUDY_LIST.filter(study => study.status === 'recruiting');
+  const hasRecruitingStudies = recruitingStudies.length > 0;
   
   return (
     <section className="studies section-background" id="studies">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">당신을 기다리는 동료들</h2>
-          <p className="section-subtitle">
-            각자의 별에서 시작해, 함께 빛나는 여정으로
-          </p>
+          <h2 className="section-title">지금 Async Site에서는</h2>
+          {hasRecruitingStudies && (
+            <p className="section-subtitle">
+              모집 중인 스터디를 확인해보세요!
+            </p>
+          )}
         </div>
         
         <div className="studies-grid">
@@ -124,7 +128,11 @@ const Studies: React.FC = () => {
         
         {/* 더 많은 스터디 안내 */}
         <div className="more-studies">
-          <p className="more-text">더 많은 스터디가 준비 중이에요</p>
+          <p className="more-text">
+            {hasRecruitingStudies 
+              ? "더 많은 스터디를 확인해보세요" 
+              : "더 많은 스터디가 준비 중이에요"}
+          </p>
           <a href="/study" className="more-link">
             모든 스터디 보기 →
           </a>
