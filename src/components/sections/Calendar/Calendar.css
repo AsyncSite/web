@@ -1,0 +1,636 @@
+/* Calendar Section */
+.calendar-section {
+  padding: 120px 0;
+}
+
+/* 뷰 토글 */
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.toggle-btn {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-light);
+  border-radius: 25px;
+  color: var(--white-transparent-medium);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+
+.toggle-btn.active {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+  color: var(--dark-bg);
+  font-weight: 600;
+}
+
+.toggle-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-medium);
+}
+
+/* 필터 버튼 */
+.calendar-filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: var(--spacing-4xl);
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition-normal);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.filter-btn.all {
+  background: rgba(195, 232, 141, 0.1);
+  color: var(--primary-green);
+  border-color: rgba(195, 232, 141, 0.3);
+}
+
+.filter-btn.tecoteco {
+  background: rgba(255, 107, 107, 0.1);
+  color: #FF6B6B;
+  border-color: rgba(255, 107, 107, 0.3);
+}
+
+.filter-btn.devlog {
+  background: rgba(74, 144, 226, 0.1);
+  color: #4A90E2;
+  border-color: rgba(74, 144, 226, 0.3);
+}
+
+.filter-btn.retrospective {
+  background: rgba(255, 193, 7, 0.1);
+  color: #FFC107;
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+.filter-btn.active {
+  background: rgba(195, 232, 141, 0.2);
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+  transform: translateY(-2px);
+}
+
+/* 캘린더 컨텐츠 */
+.calendar-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.calendar-content.transitioning {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* 모던 캘린더 뷰 */
+.modern-calendar {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: var(--spacing-3xl);
+  backdrop-filter: blur(10px);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-3xl);
+}
+
+.calendar-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--primary-green);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.nav-btn {
+  padding: 10px 15px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid var(--border-medium);
+  border-radius: 10px;
+  color: var(--white-text);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  font-size: var(--font-lg);
+}
+
+.nav-btn:hover {
+  background: rgba(195, 232, 141, 0.2);
+  transform: translateY(-2px);
+}
+
+.calendar-grid {
+  width: 100%;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin-bottom: 10px;
+}
+
+.weekday {
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--white-transparent-medium);
+  font-size: var(--font-sm);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--border-light);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.day-cell {
+  background: rgba(5, 6, 10, 0.8);
+  min-height: 100px;
+  padding: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.day-cell:hover {
+  background: rgba(195, 232, 141, 0.05);
+}
+
+.day-cell.today {
+  background: rgba(195, 232, 141, 0.1);
+  border: 2px solid var(--primary-green);
+}
+
+.day-cell.other-month .day-number {
+  color: var(--white-transparent-light);
+}
+
+.day-number {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--white-text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.day-cell.today .day-number {
+  color: var(--primary-green);
+  font-weight: 700;
+}
+
+.day-events {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.event {
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.event.tecoteco {
+  background: rgba(255, 107, 107, 0.8);
+  color: #ffffff;
+}
+
+.event.devlog {
+  background: rgba(74, 144, 226, 0.8);
+  color: #ffffff;
+}
+
+.event.retrospective {
+  background: rgba(255, 193, 7, 0.8);
+  color: #000000;
+}
+
+/* 타임라인 뷰 */
+.timeline-calendar {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--spacing-4xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.timeline-sidebar {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: var(--spacing-3xl);
+  height: fit-content;
+  backdrop-filter: blur(10px);
+}
+
+.timeline-main {
+  min-height: 400px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--primary-green), rgba(195, 232, 141, 0.3));
+  border-radius: 1px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 30px;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  border-left: 4px solid #FF6B6B;
+  transition: var(--transition-normal);
+}
+
+.timeline-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(5px);
+}
+
+.timeline-item.tecoteco {
+  border-left-color: #FF6B6B;
+}
+
+.timeline-item.devlog {
+  border-left-color: #4A90E2;
+}
+
+.timeline-item.retrospective {
+  border-left-color: #FFC107;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -34px;
+  top: 30px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #FF6B6B;
+  border: 3px solid var(--dark-bg);
+}
+
+.timeline-item.devlog::before {
+  background: #4A90E2;
+}
+
+.timeline-item.retrospective::before {
+  background: #FFC107;
+}
+
+.timeline-item .event-date {
+  font-size: var(--font-sm);
+  color: var(--white-transparent-medium);
+  margin-bottom: 8px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.timeline-item .event-title {
+  font-size: var(--font-xl);
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--white-text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.timeline-item .event-description {
+  font-size: var(--font-md);
+  color: var(--white-transparent-medium);
+  line-height: 1.5;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 미니 달력 */
+.mini-calendar-container {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.mini-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding: 10px;
+  background: rgba(195, 232, 141, 0.05);
+  border-radius: 10px;
+}
+
+.mini-month-display {
+  font-weight: 600;
+  color: var(--white-text);
+  font-size: var(--font-md);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.mini-nav-btn {
+  background: none;
+  border: none;
+  color: var(--white-transparent-medium);
+  font-size: var(--font-lg);
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: var(--transition-normal);
+}
+
+.mini-nav-btn:hover {
+  color: var(--primary-green);
+  background: rgba(195, 232, 141, 0.1);
+}
+
+.mini-calendar {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 5px;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.mini-calendar:hover {
+  background: rgba(195, 232, 141, 0.05);
+  transform: scale(1.02);
+}
+
+.mini-calendar:active {
+  transform: scale(0.98);
+}
+
+.mini-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 5px;
+}
+
+.mini-weekday {
+  text-align: center;
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--white-transparent-medium);
+  padding: 5px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.mini-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.mini-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: var(--transition-normal);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--white-text);
+}
+
+.mini-day.other-month {
+  color: var(--white-transparent-light);
+}
+
+.mini-day.today {
+  background: var(--primary-green);
+  color: var(--dark-bg);
+  font-weight: 600;
+}
+
+.mini-day.has-event {
+  background: rgba(195, 232, 141, 0.2);
+  color: var(--primary-green);
+}
+
+.mini-day:hover:not(.today) {
+  background: rgba(195, 232, 141, 0.1);
+}
+
+/* 이벤트 통계 */
+.event-stats {
+  margin-top: var(--spacing-2xl);
+}
+
+.event-stats h4 {
+  color: var(--primary-green);
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-lg);
+  font-weight: 600;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: var(--transition-normal);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.stat-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stat-color.tecoteco {
+  background: #FF6B6B;
+}
+
+.stat-color.devlog {
+  background: #4A90E2;
+}
+
+.stat-color.retrospective {
+  background: #FFC107;
+}
+
+.stat-item span {
+  font-size: var(--font-sm);
+  color: var(--white-text);
+}
+
+.stat-count {
+  margin-left: auto !important;
+  background: rgba(195, 232, 141, 0.2);
+  color: var(--primary-green) !important;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: var(--font-xs) !important;
+  font-weight: 600;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .calendar-section {
+    padding: 80px 0;
+  }
+
+  .view-toggle {
+    gap: 8px;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .toggle-btn {
+    padding: 10px 20px;
+    font-size: var(--font-sm);
+  }
+
+  .calendar-filters {
+    gap: 10px;
+    margin-bottom: var(--spacing-3xl);
+  }
+
+  .filter-btn {
+    padding: 8px 16px;
+    font-size: var(--font-xs);
+  }
+
+  .modern-calendar {
+    padding: var(--spacing-2xl);
+  }
+
+  .day-cell {
+    min-height: 80px;
+    padding: 8px;
+  }
+
+  .calendar-title {
+    font-size: var(--font-lg);
+  }
+
+  .timeline {
+    padding-left: 20px;
+  }
+
+  .timeline::before {
+    left: 10px;
+  }
+
+  .timeline-item::before {
+    left: 4px;
+  }
+
+  .timeline-item {
+    padding: 20px;
+  }
+
+  .timeline-calendar {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+
+  .timeline-sidebar {
+    order: 2;
+  }
+
+  .timeline-main {
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-section {
+    padding: 60px 0;
+  }
+
+  .view-toggle {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .toggle-btn {
+    width: 200px;
+  }
+
+  .calendar-filters {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filter-btn {
+    width: 150px;
+    text-align: center;
+  }
+
+  .modern-calendar {
+    padding: var(--spacing-xl);
+  }
+
+  .day-cell {
+    min-height: 70px;
+    padding: 6px;
+  }
+
+  .event {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
+  .timeline-item .event-title {
+    font-size: var(--font-lg);
+  }
+}
