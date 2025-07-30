@@ -131,11 +131,17 @@ const Studies: React.FC = () => {
           <p className="more-text">
             {hasRecruitingStudies 
               ? "더 많은 스터디를 확인해보세요" 
-              : "더 많은 스터디가 준비 중이에요"}
+              : "아쉽지만 지금은 모집중인 스터디가 없어요! 알림을 보내드릴게요!"}
           </p>
-          <a href="/study" className="more-link">
-            모든 스터디 보기 →
-          </a>
+          {hasRecruitingStudies ? (
+            <a href="/study" className="more-link">
+              모든 스터디 보기 →
+            </a>
+          ) : (
+            <a href="/login" className="more-link join-us-btn">
+              JOIN US
+            </a>
+          )}
         </div>
       </div>
     </section>

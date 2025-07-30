@@ -395,6 +395,23 @@
   transform: translateX(4px);
 }
 
+/* JOIN US 버튼 스타일 */
+.more-link.join-us-btn {
+  background: #C3E88D;
+  color: #1A1D29;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.more-link.join-us-btn:hover {
+  background: #A8D66F;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(195, 232, 141, 0.3);
+}
+
 /* 애니메이션 */
 @keyframes fadeInDown {
   from {
