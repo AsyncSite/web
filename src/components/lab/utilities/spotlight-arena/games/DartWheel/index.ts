@@ -1,1 +1,2 @@
-export { default as DartWheelGame } from './DartWheelGame';
+import DartWheelGame from './DartWheelGame';
+export { DartWheelGame };
