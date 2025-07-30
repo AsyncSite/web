@@ -1,0 +1,132 @@
+/* 성능 최적화된 Intro CSS */
+
+/* GPU 가속을 위한 기본 설정 */
+.intro-wrapper {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* 배경 최적화 */
+.space-background-optimized {
+  /* GPU 레이어 생성 */
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  
+  /* 리페인팅 방지 */
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Starfield 컨테이너 최적화 */
+.starfield-optimized {
+  /* 컨테이너 최적화 */
+  contain: layout style paint;
+  transform: translateZ(0);
+  will-change: contents;
+}
+
+/* 개별 별 최적화 - CSS 애니메이션 대신 CSS 변수 사용 */
+.star-optimized {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  
+  /* GPU 가속 */
+  will-change: opacity;
+  transform-style: preserve-3d;
+  
+  /* CSS 변수로 애니메이션 제어 */
+  animation: twinkle-optimized var(--duration) var(--delay) infinite ease-in-out;
+}
+
+/* 최적화된 애니메이션 - transform과 opacity만 사용 */
+@keyframes twinkle-optimized {
+  0%, 100% { 
+    opacity: 0.2;
+    transform: scale3d(0.8, 0.8, 1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale3d(1.2, 1.2, 1);
+  }
+}
+
+/* 궤도 애니메이션 최적화 */
+.orbit-container-optimized {
+  /* 레이아웃 격리 */
+  contain: layout;
+  transform: translateZ(0);
+}
+
+.orbit-optimized {
+  /* GPU 가속 회전 */
+  transform-style: preserve-3d;
+  will-change: transform;
+  
+  /* 부드러운 애니메이션 */
+  animation-timing-function: linear;
+}
+
+/* 성능을 위한 애니메이션 그룹화 */
+.orbit-1.orbit-optimized {
+  animation: rotate3d-optimized 20s linear infinite;
+}
+
+.orbit-2.orbit-optimized {
+  animation: rotate3d-optimized 30s linear infinite reverse;
+}
+
+.orbit-3.orbit-optimized {
+  animation: rotate3d-optimized 40s linear infinite;
+}
+
+/* 3D 변환으로 GPU 활용 */
+@keyframes rotate3d-optimized {
+  from {
+    transform: rotate3d(0, 0, 1, 0deg) translateZ(0);
+  }
+  to {
+    transform: rotate3d(0, 0, 1, 360deg) translateZ(0);
+  }
+}
+
+/* 행성 최적화 */
+.planet-optimized {
+  /* 그림자 대신 box-shadow 사용 (성능 향상) */
+  box-shadow: 
+    0 0 20px rgba(195, 232, 141, 0.8),
+    inset -5px -5px 10px rgba(0, 0, 0, 0.3);
+  
+  /* GPU 가속 */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* 모바일 최적화 - 별 개수 감소 */
+@media (max-width: 768px) {
+  .star-optimized:nth-child(n+100) {
+    display: none;
+  }
+}
+
+/* 저사양 기기 대응 - prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .star-optimized,
+  .orbit-optimized,
+  .planet-optimized {
+    animation: none !important;
+  }
+  
+  .star-optimized {
+    opacity: 0.6;
+  }
+}
+
+/* Canvas 버전 스타일 */
+.starfield-canvas {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}

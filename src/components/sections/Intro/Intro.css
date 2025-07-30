@@ -19,6 +19,10 @@
     background: radial-gradient(ellipse at bottom, #1b2735 0%, var(--dark-bg) 100%) !important;
     z-index: -2 !important;
     pointer-events: none;
+    /* GPU 가속 */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 /* 별 필드 */
@@ -30,6 +34,10 @@
     height: 100% !important;
     z-index: -1 !important;
     pointer-events: none;
+    /* 레이아웃 격리 및 GPU 가속 */
+    contain: layout style paint;
+    transform: translateZ(0);
+    will-change: contents;
 }
 
 .star {
@@ -40,12 +48,21 @@
     border-radius: 50%;
     animation: twinkle 4s infinite;
     box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
-    will-change: opacity, transform;
+    /* 최적화: transform3d 사용 */
+    will-change: opacity;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
 }
 
 @keyframes twinkle {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.5); }
+    0%, 100% { 
+        opacity: 0.3; 
+        transform: scale3d(1, 1, 1); 
+    }
+    50% { 
+        opacity: 1; 
+        transform: scale3d(1.5, 1.5, 1); 
+    }
 }
 
 /* 궤도 애니메이션 */
@@ -56,14 +73,20 @@
     transform: translate(-50%, -50%) !important;
     pointer-events: none;
     z-index: -1 !important;
+    /* 레이아웃 격리 */
+    contain: layout;
+    transform-style: preserve-3d;
 }
 
 .orbit {
     position: absolute;
     border: 1px solid var(--border-light);
     border-radius: 50%;
-    animation: rotate 120s linear infinite;
+    animation: rotate3d 120s linear infinite;
+    /* GPU 가속 최적화 */
     will-change: transform;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
 }
 
 .orbit-1 {
@@ -97,6 +120,9 @@
     background: radial-gradient(circle, var(--primary-green), var(--secondary-green));
     border-radius: 50%;
     box-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+    /* GPU 가속 */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 /* 각 궤도의 행성들을 다른 위치에서 시작 */
@@ -120,6 +146,16 @@
 
 @keyframes rotate {
     100% { transform: rotate(360deg); }
+}
+
+/* GPU 가속 회전 애니메이션 */
+@keyframes rotate3d {
+    from { 
+        transform: rotate3d(0, 0, 1, 0deg) translateZ(0); 
+    }
+    to { 
+        transform: rotate3d(0, 0, 1, 360deg) translateZ(0); 
+    }
 }
 
 /* Intro 전용 컨테이너 오버라이드 */
