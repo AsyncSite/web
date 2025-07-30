@@ -344,7 +344,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                   </div>
                 ) : (
                   <button className="login-btn" onClick={handleAuthClick}>
-                    로그인/회원가입
+                    JOIN US
                   </button>
                 )}
               </>
