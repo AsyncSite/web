@@ -50,11 +50,11 @@ const Intro: React.FC = () => {
         <div className="container">
           <div className="hero-content">
             <h1 className="hero-title">
-              함께 만드는<br />
-              가장 치열한 사생활
+              느슨히 끈끈히<br />
+              성장이 일상이 되는 시간
             </h1>
             <p className="hero-subtitle">
-              느슨히 끈끈히 성장이 일상이 되는 시간
+              
             </p>
             <div className="hero-cta">
               <a href="#studies" className="btn-primary">지금 모집 중인 스터디</a>
