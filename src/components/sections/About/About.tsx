@@ -6,7 +6,7 @@ interface AboutSection {
   id: number;
   layout: 'question-left' | 'answer-left';
   questionNumber: string;
-  questionTitle: string;
+  questionTitle: string | React.ReactNode;
   questionIcon: string;
   answerTitle: string;
   answerText: string | React.ReactNode;
@@ -55,7 +55,12 @@ const About: React.FC = () => {
       id: 1,
       layout: 'question-left',
       questionNumber: '01',
-      questionTitle: 'Async Site는\n어떤 고민에서 시작했나요?',
+      questionTitle: (
+        <>
+          Async Site는<br />
+          어떤 고민에서 시작했나요?
+        </>
+      ),
       questionIcon: '💭',
       answerTitle: '혼자 공부하다 포기한 적 없으세요?',
       answerText: (
