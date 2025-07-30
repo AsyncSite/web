@@ -8,6 +8,7 @@ interface CalendarEvent {
   description: string;
 }
 
+// not use currently, for sample
 const ModernCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 6, 1)); // 2025년 7월
   const [currentFilter, setCurrentFilter] = useState<string>('all');
