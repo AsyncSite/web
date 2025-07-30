@@ -85,23 +85,34 @@ const FAQ: React.FC = () => {
         </div>
 
         <div className="faq-contact">
-          <h3>다른 궁금한 점이 있으신가요?</h3>
-          <p>언제든지 편하게 문의해주세요!</p>
-          <div className="contact-buttons">
-            <a
-              href="https://github.com/asyncsite"
-              className="btn-secondary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              💻 GitHub
-            </a>
-            <a
-              href="mailto:contact@asyncsite.com"
-              className="btn-primary"
-            >
-              ✉️ 이메일 문의
-            </a>
+          <h3>더 궁금한 점이 있으신가요?</h3>
+          <div className="contact-options">
+            <div className="contact-main">
+              <a
+                href="https://discord.gg/asyncsite"
+                className="contact-item"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="contact-icon">💬</span>
+                <span className="contact-label">빠른 답변</span>
+                <span className="contact-desc">Discord 커뮤니티</span>
+              </a>
+              <a
+                href="https://calendly.com/asyncsite/coffee-chat"
+                className="contact-item"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="contact-icon">☕</span>
+                <span className="contact-label">커피챗</span>
+                <span className="contact-desc">30분 온라인 미팅</span>
+              </a>
+            </div>
+            <div className="contact-partnership">
+              <span>파트너십 문의</span>
+              <a href="mailto:partnership@asyncsite.com">partnership@asyncsite.com</a>
+            </div>
           </div>
         </div>
       </div>
