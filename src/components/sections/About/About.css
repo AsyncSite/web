@@ -154,6 +154,7 @@
   line-height: 1.8;
   margin-bottom: 32px;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  white-space: pre-line;
 }
 
 .answer-features {

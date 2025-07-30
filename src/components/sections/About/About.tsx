@@ -9,7 +9,7 @@ interface AboutSection {
   questionTitle: string;
   questionIcon: string;
   answerTitle: string;
-  answerText: string;
+  answerText: string | React.ReactNode;
   features?: {
     icon: string;
     text: string;
@@ -58,11 +58,20 @@ const About: React.FC = () => {
       questionTitle: 'Async Site는\n어떤 고민에서 시작했나요?',
       questionIcon: '💭',
       answerTitle: '혼자 공부하다 포기한 적 없으세요?',
-      answerText: '유튜브 재생목록엔 \'나중에 볼 영상\' 300개, 깃허브 잔디는 듬성듬성, 시작은 거창했지만 흐지부지된 사이드 프로젝트들. 우리 모두 겪어본 이야기입니다. Async Site는 여기서 시작했어요.',
+      answerText: (
+        <>
+          유튜브 재생목록엔 '나중에 볼 영상' 300개,<br />
+          깃허브 잔디는 듬성듬성,<br />
+          시작은 거창했지만 흐지부지된 사이드 프로젝트들.<br />
+          <br />
+          우리 모두 겪어본 이야기입니다.<br />
+          Async Site는 여기서 시작했어요.
+        </>
+      ),
       features: [
-        { icon: '🧭', text: '본질에 집중하는 학습' },
-        { icon: '🤔', text: '깊이 있는 사고력 훈련' },
-        { icon: '💡', text: '문제 해결 능력 향상' }
+        { icon: '🤝', text: '함께하니까 꾸준해져요' },
+        { icon: '📅', text: '매주 금요일이 기다려져요' },
+        { icon: '🔥', text: '작심삼일이 작심삼년으로' }
       ]
     },
     {
@@ -145,7 +154,7 @@ const About: React.FC = () => {
                 </div>
                 <div className="answer-block" ref={answerBlockRef}>
                   <h3 className="answer-title">{section.answerTitle}</h3>
-                  <p className="answer-text">{section.answerText}</p>
+                  <div className="answer-text">{section.answerText}</div>
                   
                   {section.features && (
                     <div className="answer-features">
