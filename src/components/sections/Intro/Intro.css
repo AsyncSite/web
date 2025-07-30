@@ -165,6 +165,7 @@
     width: 100%;
     display: block;
     /* opacity: 0; */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-title span {
@@ -292,7 +293,16 @@
 /* Responsive */
 @media (max-width: 768px) {
     .hero-title {
-        font-size: 48px;
+        font-size: 48px !important;
+    }
+    
+    /* 모바일에서는 입체 효과 간소화 */
+    .hero-title-wrapper .hero-title::before {
+        transform: translate(-2px, -2px) skew(-5deg) scale(1, 1.02);
+    }
+    
+    .hero-title-wrapper .hero-title::after {
+        transform: translate(2px, 2px) skew(5deg) scale(1, 0.98);
     }
     
     .hero-subtitle {
@@ -348,38 +358,49 @@
     }
 }
 
-/* 11MenZ 스타일 입체적 텍스트 효과 */
+/* 11MenZ 스타일 입체적 텍스트 효과 - 개선된 버전 */
 .hero-title-wrapper .hero-title {
     position: relative;
+    z-index: 3;
 }
 
 .hero-title-wrapper .hero-title::before {
     content: attr(data-heading);
     position: absolute;
     left: 0;
-    top: -4.8%;
+    top: -8%;
     overflow: hidden;
     width: 100%;
-    height: 50%;
-    color: rgba(251, 247, 244, 0.8);
-    transform: translate(1.6vw, 0) skew(-13deg) scale(1, 1.2);
-    z-index: 2;
-    text-shadow: 2px -1px 6px rgba(0,0,0,0.2);
+    height: 65%;
+    color: rgba(255, 255, 255, 0.9);
+    transform: translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
+    z-index: -1;
+    text-shadow: 0 0 10px rgba(195, 232, 141, 0.3);
     pointer-events: none;
+    opacity: 0;
+    animation: fadeInLayer 0.5s ease 2.5s forwards;
 }
 
 .hero-title-wrapper .hero-title::after {
     content: attr(data-heading);
     position: absolute;
     left: 0;
-    top: 0;
+    top: 8%;
     overflow: hidden;
     width: 100%;
     height: 100%;
-    z-index: 1;
-    color: rgba(195, 232, 141, 0.4);
-    transform: translate(0vw, 0) skew(13deg) scale(1, 0.8);
-    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0% 100%);
-    text-shadow: 2px -1px 6px rgba(0,0,0,0.3);
+    z-index: -2;
+    color: rgba(195, 232, 141, 0.6);
+    transform: translate(3px, 3px) skew(8deg) scale(1, 0.95);
+    clip-path: polygon(0 35%, 100% 35%, 100% 100%, 0% 100%);
+    text-shadow: 0 4px 8px rgba(0,0,0,0.4);
     pointer-events: none;
+    opacity: 0;
+    animation: fadeInLayer 0.5s ease 2.6s forwards;
+}
+
+@keyframes fadeInLayer {
+    to {
+        opacity: 1;
+    }
 }
