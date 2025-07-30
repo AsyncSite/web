@@ -357,7 +357,7 @@ const Stats: React.FC = () => {
                 <span className="title-part second">연결되는</span>
               </div>
               <div className="title-sub">
-                당신의 가장 치열한 사생활
+                <span className="title-part accent">당신의 가장 치열한 사생활</span>
               </div>
             </div>
           </h2>
