@@ -25,6 +25,10 @@ const subRouter = [
         index: true,
         element: <StudyPage />,
       },
+      {
+        path: 'calendar',
+        element: <StudyPage />,
+      },
       // 레거시 URL 리다이렉트 (/study/1 -> /study/1-tecoteco)
       {
         path: '1',

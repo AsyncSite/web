@@ -1,6 +1,6 @@
 import '../styles/common.css';
 import { Footer } from '../components/layout';
-import {About, Calendar, Contribution, FAQ, Intro, Journey, Stats, Studies, CTA} from '../components/sections';
+import {About, Contribution, FAQ, Intro, Journey, Stats, Studies, CTA} from '../components/sections';
 
 const MainPage = () => {
   return (
@@ -10,7 +10,6 @@ const MainPage = () => {
       <Stats />
       <Journey />
       <Studies />
-      <Calendar />
       <FAQ />
       <CTA />
       <Contribution />

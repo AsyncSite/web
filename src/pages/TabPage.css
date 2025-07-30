@@ -277,3 +277,68 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Tab Navigation Styles - Calendar 전용 */
+.tab-navigation {
+  display: flex;
+  gap: 0.5rem;
+  margin: 2rem 0;
+  border-bottom: 2px solid rgba(195, 232, 141, 0.2);
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 8px 8px 0 0;
+}
+
+.tab-button:hover {
+  color: #e6edf3;
+  background: rgba(195, 232, 141, 0.05);
+}
+
+.tab-button.active {
+  color: #C3E88D;
+  background: rgba(195, 232, 141, 0.1);
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #C3E88D;
+  box-shadow: 0 0 10px rgba(195, 232, 141, 0.5);
+}
+
+.tab-icon {
+  font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .tab-navigation {
+    justify-content: center;
+  }
+  
+  .tab-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .tab-icon {
+    font-size: 1rem;
+  }
+}
