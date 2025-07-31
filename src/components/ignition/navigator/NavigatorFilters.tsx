@@ -62,53 +62,53 @@ const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({ filters, onFilterCh
     <aside className="ignition-nav-filters">
       {/* Roadmap CTA */}
       <div className="ignition-nav-filter-cta">
-        <h3 className="filter-cta-title">🚀 성장 로드맵</h3>
-        <p className="filter-cta-desc">목표 공고까지의 최적 경로를 찾아보세요</p>
-        <button className="filter-cta-btn">내 로드맵 만들기</button>
+        <h3 className="ignition-nav-filter-cta-title">🚀 성장 로드맵</h3>
+        <p className="ignition-nav-filter-cta-desc">목표 공고까지의 최적 경로를 찾아보세요</p>
+        <button className="ignition-nav-filter-cta-btn">내 로드맵 만들기</button>
       </div>
 
       {/* Company Filter */}
       <div className="ignition-nav-filter-section">
-        <h3 className="filter-title">회사</h3>
+        <h3 className="ignition-nav-filter-title">회사</h3>
         {availableFilters.companies.map((company) => (
           <div
             key={company.name}
-            className="filter-option"
+            className="ignition-nav-filter-option"
             onClick={() => handleFilterToggle('companies', company.name)}
           >
-            <div className={`filter-checkbox ${filters.companies.includes(company.name) ? 'checked' : ''}`}></div>
-            <span className="filter-name">{company.name}</span>
-            <span className="filter-count">{company.count}</span>
+            <div className={`ignition-nav-filter-checkbox ${filters.companies.includes(company.name) ? 'checked' : ''}`}></div>
+            <span className="ignition-nav-filter-name">{company.name}</span>
+            <span className="ignition-nav-filter-count">{company.count}</span>
           </div>
         ))}
       </div>
 
       {/* Skill Filter */}
       <div className="ignition-nav-filter-section">
-        <h3 className="filter-title">기술 스택</h3>
+        <h3 className="ignition-nav-filter-title">기술 스택</h3>
         {availableFilters.skills.map((skill) => (
           <div
             key={skill.name}
-            className="filter-option"
+            className="ignition-nav-filter-option"
             onClick={() => handleFilterToggle('skills', skill.name)}
           >
-            <div className={`filter-checkbox ${filters.skills.includes(skill.name) ? 'checked' : ''}`}></div>
-            <span className="filter-name">{skill.name}</span>
-            <span className="filter-count">{skill.count}</span>
+            <div className={`ignition-nav-filter-checkbox ${filters.skills.includes(skill.name) ? 'checked' : ''}`}></div>
+            <span className="ignition-nav-filter-name">{skill.name}</span>
+            <span className="ignition-nav-filter-count">{skill.count}</span>
           </div>
         ))}
       </div>
 
       {/* Experience Filter */}
       <div className="ignition-nav-filter-section">
-        <h3 className="filter-title">경력</h3>
+        <h3 className="ignition-nav-filter-title">경력</h3>
         {availableFilters.experience.map((exp) => (
           <div
             key={exp.name}
-            className="filter-option"
+            className="ignition-nav-filter-option"
             onClick={() => handleFilterToggle('experience', exp.name)}
           >
-            <div className={`filter-checkbox ${filters.experience.includes(exp.name) ? 'checked' : ''}`}></div>
+            <div className={`ignition-nav-filter-checkbox ${filters.experience.includes(exp.name) ? 'checked' : ''}`}></div>
             <span className="filter-name">{exp.name}</span>
             <span className="filter-count">{exp.count}</span>
           </div>

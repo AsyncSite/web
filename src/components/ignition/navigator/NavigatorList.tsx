@@ -117,9 +117,9 @@ const NavigatorList: React.FC<NavigatorListProps> = ({ searchQuery, filters }) =
     <div className="ignition-nav-list">
       {/* List Controls */}
       <div className="ignition-nav-list-controls">
-        <span className="results-count">총 {filteredJobs.length}개의 채용공고</span>
-        <div className="view-options">
-          <select className="sort-dropdown">
+        <span className="ignition-nav-results-count">총 {filteredJobs.length}개의 채용공고</span>
+        <div className="ignition-nav-view-options">
+          <select className="ignition-nav-sort-dropdown">
             <option>매칭률 높은순</option>
             <option>최신순</option>
             <option>마감임박순</option>
@@ -132,20 +132,20 @@ const NavigatorList: React.FC<NavigatorListProps> = ({ searchQuery, filters }) =
       <div className="ignition-nav-job-items">
         {filteredJobs.map((job) => (
           <article key={job.id} className="ignition-nav-job-item">
-            {job.hasWarRoom && <div className="war-room-indicator"></div>}
+            {job.hasWarRoom && <div className="ignition-nav-war-room-indicator"></div>}
             
-            <div className="job-item-header">
-              <div className="job-info">
-                <div className="job-company">
-                  <div className="company-logo">{job.companyLogo}</div>
-                  <span className="company-name">{job.company}</span>
+            <div className="ignition-nav-job-item-header">
+              <div className="ignition-nav-job-info">
+                <div className="ignition-nav-job-company">
+                  <div className="ignition-nav-company-logo">{job.companyLogo}</div>
+                  <span className="ignition-nav-company-name">{job.company}</span>
                 </div>
-                <h3 className="job-title">{job.title}</h3>
+                <h3 className="ignition-nav-job-title">{job.title}</h3>
               </div>
-              <div className="job-badges">
-                <div className="match-badge">{job.matchScore}% 매칭</div>
+              <div className="ignition-nav-job-badges">
+                <div className="ignition-nav-match-badge">{job.matchScore}% 매칭</div>
                 {job.hasWarRoom && (
-                  <div className="war-room-badge">
+                  <div className="ignition-nav-war-room-badge">
                     <span>👥</span>
                     <span>{job.warRoomCount}명 작전회의중</span>
                   </div>
@@ -153,23 +153,23 @@ const NavigatorList: React.FC<NavigatorListProps> = ({ searchQuery, filters }) =
               </div>
             </div>
             
-            <p className="job-description">{job.description}</p>
+            <p className="ignition-nav-job-description">{job.description}</p>
             
-            <div className="job-skills">
+            <div className="ignition-nav-job-skills">
               {job.skills.map((skill, index) => (
-                <span key={index} className="skill-tag">{skill}</span>
+                <span key={index} className="ignition-nav-skill-tag">{skill}</span>
               ))}
             </div>
             
-            <div className="job-footer">
-              <div className="job-meta">
-                <div className="job-meta-item">🏢 {job.experience}</div>
-                <div className="job-meta-item">📍 {job.location}</div>
-                <div className="job-meta-item">📅 {job.deadline}</div>
+            <div className="ignition-nav-job-footer">
+              <div className="ignition-nav-job-meta">
+                <div className="ignition-nav-job-meta-item">🏢 {job.experience}</div>
+                <div className="ignition-nav-job-meta-item">📍 {job.location}</div>
+                <div className="ignition-nav-job-meta-item">📅 {job.deadline}</div>
               </div>
-              <div className="job-action">
-                <button className="action-btn">상세보기</button>
-                <button className="action-btn primary">로드맵 분석</button>
+              <div className="ignition-nav-job-action">
+                <button className="ignition-nav-action-btn">상세보기</button>
+                <button className="ignition-nav-action-btn primary">로드맵 분석</button>
               </div>
             </div>
           </article>
@@ -178,13 +178,13 @@ const NavigatorList: React.FC<NavigatorListProps> = ({ searchQuery, filters }) =
 
       {/* Pagination */}
       <div className="ignition-nav-pagination">
-        <button className="page-btn">&lt;</button>
-        <button className="page-btn active">1</button>
-        <button className="page-btn">2</button>
-        <button className="page-btn">3</button>
-        <button className="page-btn">4</button>
-        <button className="page-btn">5</button>
-        <button className="page-btn">&gt;</button>
+        <button className="ignition-nav-page-btn">&lt;</button>
+        <button className="ignition-nav-page-btn active">1</button>
+        <button className="ignition-nav-page-btn">2</button>
+        <button className="ignition-nav-page-btn">3</button>
+        <button className="ignition-nav-page-btn">4</button>
+        <button className="ignition-nav-page-btn">5</button>
+        <button className="ignition-nav-page-btn">&gt;</button>
       </div>
     </div>
   );
