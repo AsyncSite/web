@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
-import { Participant } from '../../../../components/lab/utilities/spotlight-arena/shared/types';
-import ResultDisplay from '../../../../components/lab/utilities/spotlight-arena/common/ResultDisplay';
+import { Participant } from '../../shared/types';
+import ResultDisplay from '../../common/ResultDisplay';
 import { useDartWheelGame } from './hooks/useDartWheelGame';
 import DartWheelCountdown from './components/DartWheelCountdown';
 import DartWheelCanvas from './components/DartWheelCanvas';

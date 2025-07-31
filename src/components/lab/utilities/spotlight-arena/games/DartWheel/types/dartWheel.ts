@@ -1,4 +1,4 @@
-import { Participant } from '../../../../../components/lab/utilities/spotlight-arena/shared/types';
+import { Participant } from '../../../shared/types';
 
 // 다트휠 섹션 타입
 export interface DartWheelSection {

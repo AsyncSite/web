@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Participant } from '../../../../../components/lab/utilities/spotlight-arena/shared/types';
+import { Participant } from '../../../shared/types';
 import { GameStatus, SlotCascadeGameState, PlayerState, DEFAULT_GAME_CONFIG } from '../types/game';
 import { SymbolType } from '../types/symbol';
 import { generateInitialGrid } from '../utils/symbolUtils';

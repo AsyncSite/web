@@ -1,4 +1,4 @@
-import { Participant } from '../../../../../components/lab/utilities/spotlight-arena/shared/types';
+import { Participant } from '../../../shared/types';
 import './DartWheelParticipantDisplay.css';
 
 interface DartWheelParticipantDisplayProps {

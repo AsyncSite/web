@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Participant, GameStatus } from '../../../../../components/lab/utilities/spotlight-arena/shared/types';
+import { Participant, GameStatus } from '../../../shared/types';
 import { 
   DartWheelGameState, 
   DartWheelSection, 
@@ -26,8 +26,8 @@ import {
 } from '../utils/dartWheelGameModes';
 import { DART_WHEEL_THEME_PALETTES } from '../utils/dartWheelVisualEffects';
 import { DartWheelTheme } from '../components/DartWheelThemeSelector';
-import { gameHistoryService } from '../../../../../components/lab/utilities/spotlight-arena/shared/services';
-import { GameResult } from '../../../../../components/lab/utilities/spotlight-arena/shared/types/storage';
+import { gameHistoryService } from '../../../shared/services';
+import { GameResult } from '../../../shared/types/storage';
 
 interface UseDartWheelGameProps {
   participants: Participant[];
