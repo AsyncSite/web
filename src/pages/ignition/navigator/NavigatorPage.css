@@ -8,7 +8,8 @@
 }
 
 /* ignition-nav-page 내부의 모든 section 태그에 대해 App.css 스타일 오버라이드 */
-.ignition-nav-page section {
+.ignition-nav-page > section,
+.ignition-nav-content-wrapper > section {
   min-height: auto !important;
   padding: 0 !important;
   width: 100%;
@@ -138,7 +139,7 @@
 
 /* Main Content */
 .ignition-nav-main-content {
-  padding: 0 0 2rem; /* 좌우 padding 제거 - content-wrapper에서 처리 */
+  padding: 0;
   width: 100%;
 }
 
