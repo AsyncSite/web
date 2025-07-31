@@ -285,6 +285,15 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
               </li>
               <li>
                 <Link 
+                  to="/ignition" 
+                  className={location.pathname.startsWith('/ignition') ? 'active' : ''}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  IGNITION
+                </Link>
+              </li>
+              <li>
+                <Link 
                   to="/lab" 
                   className={location.pathname.startsWith('/lab') ? 'active' : ''}
                   onClick={() => setIsMobileMenuOpen(false)}

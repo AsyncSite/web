@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { GameProgressProvider } from './contexts/GameProgressContext';
@@ -7,7 +7,21 @@ function App(): React.ReactNode {
   return (
     <AuthProvider>
       <GameProgressProvider>
-        <Outlet />
+        <Suspense fallback={
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '100vh',
+            backgroundColor: '#0a0e27',
+            color: '#C3E88D',
+            fontSize: '1.5rem'
+          }}>
+            Loading...
+          </div>
+        }>
+          <Outlet />
+        </Suspense>
       </GameProgressProvider>
     </AuthProvider>
   );
