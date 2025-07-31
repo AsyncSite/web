@@ -1,0 +1,136 @@
+.ignition-page {
+  min-height: calc(100vh - 80px);
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ignition-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.ignition-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #C3E88D 0%, #82aaff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ignition-subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.ignition-services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.ignition-service-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ignition-service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #C3E88D 0%, #82aaff 100%);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.ignition-service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(195, 232, 141, 0.1);
+  border-color: rgba(195, 232, 141, 0.3);
+}
+
+.ignition-service-card:hover::before {
+  transform: translateX(0);
+}
+
+.service-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.service-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.service-description {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.service-link {
+  display: inline-block;
+  color: #C3E88D;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.service-link:hover {
+  transform: translateX(4px);
+}
+
+.ignition-service-card.coming-soon {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ignition-service-card.coming-soon:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.service-badge {
+  display: inline-block;
+  background: rgba(130, 170, 255, 0.1);
+  color: #82aaff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .ignition-page {
+    padding: 2rem 1rem;
+  }
+
+  .ignition-title {
+    font-size: 2rem;
+  }
+
+  .ignition-subtitle {
+    font-size: 1rem;
+  }
+
+  .ignition-services {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,152 @@
+.ignition-nav-page {
+  background: #0f0f1a;
+  color: #ffffff;
+  position: relative;
+  z-index: 1;
+  padding-top: 100px; /* Header 높이보다 더 여유있게 */
+  overflow: visible; /* overflow 설정 */
+}
+
+/* ignition-nav-page 내부의 모든 section 태그에 대해 App.css 스타일 오버라이드 */
+.ignition-nav-page section {
+  min-height: auto !important;
+  padding: 0 !important;
+  width: 100%;
+}
+
+/* Container - Header와 동일한 너비 제한 */
+.ignition-nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Content Wrapper - 전체 컨텐츠를 감싸는 래퍼 */
+.ignition-nav-content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.ignition-nav-hero {
+  text-align: center;
+  padding: 3rem 2rem 1.5rem !important; /* 상단 패딩 더 증가 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(195, 232, 141, 0.03) 0%, transparent 100%);
+  overflow: visible; /* overflow 명시적으로 설정 */
+}
+
+.ignition-nav-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #C3E88D;
+  line-height: 1.8; /* line-height 더 증가 */
+  display: inline-block; /* inline-block으로 변경 */
+  padding: 0.5rem 0; /* 상하 패딩 추가 */
+  transform: translateY(2px); /* 약간 아래로 이동 */
+}
+
+.ignition-nav-subtitle {
+  color: #999;
+  font-size: 0.9rem;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+}
+
+/* View Mode Toggle */
+.ignition-nav-view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.ignition-nav-view-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #999;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.ignition-nav-view-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.ignition-nav-view-toggle-btn.active {
+  background: rgba(195, 232, 141, 0.1);
+  border-color: rgba(195, 232, 141, 0.3);
+  color: #C3E88D;
+}
+
+.ignition-nav-view-icon {
+  font-size: 1.2rem;
+}
+
+/* Search Section */
+.ignition-nav-search-section {
+  width: 100%;
+  margin: 0 0 1.5rem;
+  padding: 0 !important; /* 전체 width를 맞추기 위해 padding 제거 */
+}
+
+.ignition-nav-search-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s;
+}
+
+.ignition-nav-search-box:focus-within {
+  border-color: rgba(195, 232, 141, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ignition-nav-search-icon {
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+.ignition-nav-search-input {
+  background: none;
+  border: none;
+  color: #e5e5e5;
+  font-size: 1rem;
+  flex: 1;
+  outline: none;
+}
+
+.ignition-nav-search-input::placeholder {
+  color: #666;
+}
+
+/* Main Content */
+.ignition-nav-main-content {
+  padding: 0 0 2rem; /* 좌우 padding 제거 - content-wrapper에서 처리 */
+  width: 100%;
+}
+
+/* List Layout */
+.ignition-nav-list-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr; /* 사이드바 너비 축소 */
+  gap: 1.5rem; /* 간격도 축소 */
+}
+
+/* 웹 전용 - 모바일 미디어쿼리 제거 */

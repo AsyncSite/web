@@ -12,6 +12,10 @@ const StudyPage = lazy(() => import('../pages/StudyPage'));
 const TecoTecoPage = lazy(() => import('../pages/TecoTecoPage/TecoTecoPage'));
 const StudyDetailPage = lazy(() => import('../pages/StudyDetailPage'));
 
+// Ignition 관련 페이지들
+const IgnitionPage = lazy(() => import('../pages/ignition/IgnitionPage'));
+const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPage'));
+
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const StudyPlanPage = lazy(() => import('../pages/StudyPlanPage'));
@@ -76,6 +80,21 @@ const subRouter = [
   {
     path: 'study-plan',
     element: <StudyPlanPage />,
+  },
+
+  // Ignition 관련 라우트
+  {
+    path: 'ignition',
+    children: [
+      {
+        index: true,
+        element: <IgnitionPage />,
+      },
+      {
+        path: 'navigator',
+        element: <NavigatorPage />,
+      },
+    ],
   },
 
   // 기존 페이지들

@@ -1,0 +1,413 @@
+.ignition-nav-dashboard {
+  width: 100%;
+  background-color: transparent;
+  padding: 0; /* content-wrapper에서 padding 처리하므로 제거 */
+  color: #ffffff;
+}
+
+/* Personal Header */
+.ignition-nav-personal-header {
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1) 0%, rgba(130, 170, 255, 0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem !important; /* 커스텀 padding 설정 */
+  margin-bottom: 1.5rem;
+}
+
+.ignition-nav-greeting {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  color: #f0f0f0;
+}
+
+.ignition-nav-sub-greeting {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Quick Stats - 웹 전용 4열 고정 */
+.ignition-nav-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.ignition-nav-stat-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ignition-nav-stat-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(195, 232, 141, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.ignition-nav-stat-content {
+  flex: 1;
+}
+
+.ignition-nav-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #C3E88D;
+}
+
+.ignition-nav-stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Dashboard Grid */
+.ignition-nav-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px; /* 사이드바 너비 축소 */
+  gap: 1.5rem;
+}
+
+/* Recommended Section */
+.ignition-nav-recommended-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.5rem !important; /* 커스텀 padding 설정 */
+}
+
+.ignition-nav-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ignition-nav-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #f0f0f0;
+}
+
+.ignition-nav-section-action {
+  color: #82aaff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.3s;
+}
+
+.ignition-nav-section-action:hover {
+  transform: translateX(4px);
+}
+
+/* Job Cards */
+.ignition-nav-job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ignition-nav-job-card-compact {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.ignition-nav-job-card-compact::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #C3E88D 0%, #82aaff 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.ignition-nav-job-card-compact:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(4px);
+}
+
+.ignition-nav-job-card-compact:hover::before {
+  opacity: 1;
+}
+
+.ignition-nav-job-compact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 0.75rem;
+}
+
+.ignition-nav-job-compact-info {
+  flex: 1;
+}
+
+.ignition-nav-company-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.ignition-nav-company-logo-sm {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #C3E88D;
+}
+
+.ignition-nav-company-name-sm {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ignition-nav-job-title-compact {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  color: #f0f0f0;
+}
+
+.ignition-nav-match-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ignition-nav-match-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: conic-gradient(#C3E88D 0deg, #C3E88D calc(var(--match) * 3.6deg), rgba(255, 255, 255, 0.1) calc(var(--match) * 3.6deg));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.ignition-nav-match-circle::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #1a1a2a;
+  border-radius: 50%;
+}
+
+.ignition-nav-match-value {
+  position: relative;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #C3E88D;
+  z-index: 1;
+}
+
+.ignition-nav-match-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ignition-nav-job-tags-compact {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.ignition-nav-tag-compact {
+  background: rgba(130, 170, 255, 0.1);
+  color: #82aaff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.ignition-nav-job-compact-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ignition-nav-job-meta-compact {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ignition-nav-war-room-link {
+  background: rgba(255, 234, 0, 0.1);
+  color: #ffea00;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.3s;
+}
+
+.ignition-nav-war-room-link:hover {
+  background: rgba(255, 234, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Sidebar */
+.ignition-nav-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Roadmap Widget */
+.ignition-nav-roadmap-widget {
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.08) 0%, rgba(195, 232, 141, 0.02) 100%);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.ignition-nav-roadmap-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.ignition-nav-roadmap-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #C3E88D;
+}
+
+.ignition-nav-roadmap-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.ignition-nav-roadmap-btn {
+  background: #C3E88D;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.ignition-nav-roadmap-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(195, 232, 141, 0.3);
+}
+
+/* Trend Widget */
+.ignition-nav-trend-widget {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.ignition-nav-trend-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ignition-nav-trend-widget-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ignition-nav-trend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ignition-nav-trend-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.ignition-nav-trend-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ignition-nav-trend-rank {
+  width: 32px;
+  height: 32px;
+  background: rgba(195, 232, 141, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #C3E88D;
+}
+
+.ignition-nav-trend-info {
+  flex: 1;
+}
+
+.ignition-nav-trend-name {
+  font-weight: 600;
+  margin-bottom: 0.125rem;
+  color: #f0f0f0;
+}
+
+.ignition-nav-trend-change {
+  font-size: 0.8rem;
+  color: #82aaff;
+}
+
+/* 웹 전용 - 모바일 미디어쿼리 제거 */
