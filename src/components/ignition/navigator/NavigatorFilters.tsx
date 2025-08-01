@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { CompanyResponse, TechStackResponse } from '../../../api/jobNavigatorService';
 import './NavigatorFilters.css';
 
 interface NavigatorFiltersProps {
@@ -12,38 +13,47 @@ interface NavigatorFiltersProps {
     skills: string[];
     experience: string[];
   }) => void;
+  companies: CompanyResponse[];
+  techStacks: TechStackResponse[];
 }
 
-const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({ filters, onFilterChange }) => {
-  const availableFilters = {
-    companies: [
-      { name: '네이버', count: 12 },
-      { name: '카카오', count: 8 },
-      { name: '쿠팡', count: 15 },
-      { name: '배달의민족', count: 6 },
-      { name: '토스', count: 10 },
-      { name: '당근마켓', count: 7 },
-      { name: '라인', count: 5 },
-    ],
-    skills: [
-      { name: 'Java', count: 45 },
-      { name: 'Spring', count: 38 },
-      { name: 'Kotlin', count: 22 },
-      { name: 'Python', count: 18 },
-      { name: 'React', count: 25 },
-      { name: 'TypeScript', count: 20 },
-      { name: 'Node.js', count: 15 },
-      { name: 'Go', count: 12 },
-      { name: 'Kubernetes', count: 28 },
-      { name: 'Docker', count: 30 },
-    ],
-    experience: [
+const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({ 
+  filters, 
+  onFilterChange, 
+  companies,
+  techStacks 
+}) => {
+  const availableFilters = useMemo(() => {
+    // Map companies with mock counts for now
+    const companiesWithCount = companies.map(company => ({
+      name: company.name,
+      count: Math.floor(Math.random() * 20) + 1 // Mock count for now
+    }));
+
+    // Map tech stacks with mock counts for now
+    const skillsWithCount = techStacks.map(tech => ({
+      name: tech.name,
+      count: Math.floor(Math.random() * 40) + 5 // Mock count for now
+    }));
+
+    // Experience levels are static
+    const experienceLevels = [
       { name: '신입', count: 23 },
       { name: '경력 (1-3년)', count: 35 },
       { name: '경력 (4-7년)', count: 28 },
       { name: '경력 (8년+)', count: 14 },
-    ],
-  };
+    ];
+
+    return {
+      companies: companiesWithCount.length > 0 ? companiesWithCount : [
+        { name: '회사 정보를 불러오는 중...', count: 0 }
+      ],
+      skills: skillsWithCount.length > 0 ? skillsWithCount : [
+        { name: '기술 스택을 불러오는 중...', count: 0 }
+      ],
+      experience: experienceLevels,
+    };
+  }, [companies, techStacks]);
 
   const handleFilterToggle = (category: keyof typeof filters, value: string) => {
     const currentFilters = { ...filters };

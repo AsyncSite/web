@@ -282,4 +282,51 @@
   font-weight: 600;
 }
 
+/* Loading State */
+.ignition-nav-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #888;
+}
+
+.ignition-nav-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid #2a2a2a;
+  border-top-color: #C3E88D;
+  border-radius: 50%;
+  animation: ignition-nav-spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes ignition-nav-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.ignition-nav-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #ff6b6b;
+}
+
+/* Disabled pagination button */
+.ignition-nav-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ignition-nav-page-btn:disabled:hover {
+  border-color: #2a2a2a;
+  color: #888;
+}
+
 /* 웹 전용 - 모바일 미디어쿼리 제거 */
