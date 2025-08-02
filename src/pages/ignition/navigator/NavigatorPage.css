@@ -3,7 +3,7 @@
   color: #ffffff;
   position: relative;
   z-index: 1;
-  padding-top: 100px; /* Header 높이보다 더 여유있게 */
+  padding-top: 80px; /* Header 높이와 동일하게 조정 */
   overflow: visible; /* overflow 설정 */
 }
 
@@ -32,22 +32,22 @@
 /* Hero Section */
 .ignition-nav-hero {
   text-align: center;
-  padding: 3rem 2rem 1.5rem !important; /* 상단 패딩 더 증가 */
+  padding: 2rem 2rem 1.5rem !important; /* 상단 패딩 적절히 축소 */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: linear-gradient(180deg, rgba(195, 232, 141, 0.03) 0%, transparent 100%);
   overflow: visible; /* overflow 명시적으로 설정 */
 }
 
 .ignition-nav-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem; /* 살짝 크게 조정 */
   font-weight: 800;
   margin-top: 0;
   margin-bottom: 0.75rem;
   color: #C3E88D;
-  line-height: 1.8; /* line-height 더 증가 */
+  line-height: 1.4; /* line-height 적절히 조정 */
   display: inline-block; /* inline-block으로 변경 */
-  padding: 0.5rem 0; /* 상하 패딩 추가 */
-  transform: translateY(2px); /* 약간 아래로 이동 */
+  padding: 0;
+  transform: none; /* transform 제거 */
 }
 
 .ignition-nav-subtitle {
