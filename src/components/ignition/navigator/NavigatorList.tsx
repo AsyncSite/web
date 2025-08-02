@@ -84,7 +84,8 @@ const NavigatorList: React.FC<NavigatorListProps> = ({
                 <h3 className="ignition-nav-job-title">{job.title}</h3>
               </div>
               <div className="ignition-nav-job-badges">
-                <div className="ignition-nav-match-badge">{job.matchScore}% 매칭</div>
+                {/* 매칭 점수 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
+                {/* <div className="ignition-nav-match-badge">{job.matchScore}% 매칭</div> */}
                 {job.hasWarRoom && (
                   <div className="ignition-nav-war-room-badge">
                     <span>👥</span>
@@ -115,7 +116,8 @@ const NavigatorList: React.FC<NavigatorListProps> = ({
                 >
                   상세보기
                 </button>
-                <button className="ignition-nav-action-btn primary">로드맵 분석</button>
+                {/* 로드맵 분석 버튼 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
+                {/* <button className="ignition-nav-action-btn primary">로드맵 분석</button> */}
               </div>
             </div>
           </article>

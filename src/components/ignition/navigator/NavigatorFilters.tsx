@@ -36,12 +36,14 @@ const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({
       count: Math.floor(Math.random() * 40) + 5 // Mock count for now
     }));
 
-    // Experience levels are static
+    // Experience levels are static - updated to match new categories
     const experienceLevels = [
-      { name: '신입', count: 23 },
-      { name: '경력 (1-3년)', count: 35 },
-      { name: '경력 (4-7년)', count: 28 },
-      { name: '경력 (8년+)', count: 14 },
+      { name: '신입', count: 0 },
+      { name: '주니어 (1-3년)', count: 0 },
+      { name: '미드레벨 (3-7년)', count: 0 },
+      { name: '시니어 (7년+)', count: 0 },
+      { name: '리드/수석급', count: 0 },
+      { name: '경력무관', count: 0 },
     ];
 
     return {
@@ -70,12 +72,12 @@ const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({
 
   return (
     <aside className="ignition-nav-filters">
-      {/* Roadmap CTA */}
-      <div className="ignition-nav-filter-cta">
+      {/* 성장 로드맵 CTA 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
+      {/* <div className="ignition-nav-filter-cta">
         <h3 className="ignition-nav-filter-cta-title">🚀 성장 로드맵</h3>
         <p className="ignition-nav-filter-cta-desc">목표 공고까지의 최적 경로를 찾아보세요</p>
         <button className="ignition-nav-filter-cta-btn">내 로드맵 만들기</button>
-      </div>
+      </div> */}
 
       {/* Company Filter */}
       <div className="ignition-nav-filter-section">

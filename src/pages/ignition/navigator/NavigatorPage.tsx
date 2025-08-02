@@ -132,8 +132,8 @@ const NavigatorPage: React.FC = () => {
 
       {/* Content Wrapper */}
       <div className="ignition-nav-content-wrapper">
-        {/* View Mode Toggle */}
-        <div className="ignition-nav-view-toggle">
+        {/* View Mode Toggle - 임시로 대시보드 버튼 제거 (개인화 기능 구현 후 활성화 예정) */}
+        {/* <div className="ignition-nav-view-toggle">
           <button
             className={`ignition-nav-view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
             onClick={() => setViewMode('list')}
@@ -148,7 +148,7 @@ const NavigatorPage: React.FC = () => {
             <span className="ignition-nav-view-icon">📊</span>
             대시보드
           </button>
-        </div>
+        </div> */}
 
         {/* Search Section */}
         <section className="ignition-nav-search-section">
@@ -166,30 +166,27 @@ const NavigatorPage: React.FC = () => {
 
         {/* Main Content */}
         <div className="ignition-nav-main-content">
-          {viewMode === 'dashboard' ? (
-            <NavigatorDashboard />
-          ) : (
-            <div className="ignition-nav-list-layout">
-              <NavigatorFilters 
-                filters={filters} 
-                onFilterChange={setFilters}
-                companies={companies}
-                techStacks={techStacks}
-              />
-              <NavigatorList 
-                jobs={jobs}
-                loading={loading}
-                error={error}
-                searchQuery={searchQuery}
-                filters={filters}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalElements={totalElements}
-                onPageChange={handlePageChange}
-                onJobClick={handleJobClick}
-              />
-            </div>
-          )}
+          {/* 대시보드 모드 임시 비활성화 - 개인화 기능 구현 후 활성화 예정 */}
+          <div className="ignition-nav-list-layout">
+            <NavigatorFilters 
+              filters={filters} 
+              onFilterChange={setFilters}
+              companies={companies}
+              techStacks={techStacks}
+            />
+            <NavigatorList 
+              jobs={jobs}
+              loading={loading}
+              error={error}
+              searchQuery={searchQuery}
+              filters={filters}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalElements={totalElements}
+              onPageChange={handlePageChange}
+              onJobClick={handleJobClick}
+            />
+          </div>
         </div>
       </div>
       

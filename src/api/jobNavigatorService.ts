@@ -28,6 +28,7 @@ export interface JobItemResponse {
   matchScore: number;
   hasWarRoom: boolean;
   warRoomCount?: number;
+  sourceUrl?: string;
 }
 
 export interface JobSearchResponse {

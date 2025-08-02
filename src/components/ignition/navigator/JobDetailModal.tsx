@@ -65,7 +65,8 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
                   <p className="ignition-nav-job-location">📍 {job.location}</p>
                 </div>
               </div>
-              <div className="ignition-nav-match-score">{job.matchScore}% 매칭</div>
+              {/* 매칭 점수 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
+              {/* <div className="ignition-nav-match-score">{job.matchScore}% 매칭</div> */}
             </div>
 
             <div className="ignition-nav-modal-body">
@@ -104,12 +105,22 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
               <button className="ignition-nav-modal-btn secondary" onClick={onClose}>
                 닫기
               </button>
-              <button className="ignition-nav-modal-btn primary">
+              <button 
+                className="ignition-nav-modal-btn primary"
+                onClick={() => {
+                  if (job.sourceUrl) {
+                    window.open(job.sourceUrl, '_blank', 'noopener,noreferrer');
+                  } else {
+                    alert('지원 링크가 없습니다.');
+                  }
+                }}
+              >
                 지원하기
               </button>
-              <button className="ignition-nav-modal-btn primary">
+              {/* 로드맵 분석 버튼 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
+              {/* <button className="ignition-nav-modal-btn primary">
                 로드맵 분석
-              </button>
+              </button> */}
             </div>
           </>
         )}
