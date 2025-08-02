@@ -99,42 +99,73 @@
 /* Search Section */
 .ignition-nav-search-section {
   width: 100%;
-  margin: 0 0 1.5rem;
-  padding: 0 !important; /* 전체 width를 맞추기 위해 padding 제거 */
+  margin: 0 0 2rem;
+  padding: 1rem 0 !important;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.05) 0%, transparent 100%);
+  border-radius: 16px;
 }
 
 .ignition-nav-search-box {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(195, 232, 141, 0.2);
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .ignition-nav-search-box:focus-within {
-  border-color: rgba(195, 232, 141, 0.3);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(195, 232, 141, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(195, 232, 141, 0.15);
+  transform: translateY(-2px);
 }
 
 .ignition-nav-search-icon {
-  font-size: 1.2rem;
-  opacity: 0.6;
+  font-size: 1.4rem;
+  opacity: 0.8;
+  color: #C3E88D;
 }
 
 .ignition-nav-search-input {
   background: none;
   border: none;
-  color: #e5e5e5;
-  font-size: 1rem;
+  color: #ffffff;
+  font-size: 1.1rem;
   flex: 1;
   outline: none;
+  font-weight: 500;
 }
 
 .ignition-nav-search-input::placeholder {
-  color: #666;
+  color: #999;
+  font-weight: 400;
+}
+
+/* Search Loading State */
+.ignition-nav-search-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ignition-nav-search-loading-spinner {
+  font-size: 1.2rem;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Main Content */

@@ -3,7 +3,15 @@ import NavigatorDashboard from '../../../components/ignition/navigator/Navigator
 import NavigatorList from '../../../components/ignition/navigator/NavigatorList';
 import NavigatorFilters from '../../../components/ignition/navigator/NavigatorFilters';
 import JobDetailModal from '../../../components/ignition/navigator/JobDetailModal';
-import jobNavigatorService, { JobItemResponse, CompanyResponse, TechStackResponse } from '../../../api/jobNavigatorService';
+import jobNavigatorService, { 
+  JobItemResponse, 
+  CompanyResponse, 
+  TechStackResponse,
+  CompanyWithCountResponse,
+  TechStackWithCountResponse,
+  ExperienceCategoryWithCountResponse 
+} from '../../../api/jobNavigatorService';
+import { useDebounce } from '../../../hooks/useDebounce';
 import './NavigatorPage.css';
 
 type ViewMode = 'dashboard' | 'list';
@@ -17,10 +25,16 @@ const NavigatorPage: React.FC = () => {
     experience: [] as string[],
   });
   
+  // 검색어에 디바운싱 적용 (300ms 지연)
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  
   // API states
   const [jobs, setJobs] = useState<JobItemResponse[]>([]);
   const [companies, setCompanies] = useState<CompanyResponse[]>([]);
   const [techStacks, setTechStacks] = useState<TechStackResponse[]>([]);
+  const [companiesWithCount, setCompaniesWithCount] = useState<CompanyWithCountResponse[]>([]);
+  const [techStacksWithCount, setTechStacksWithCount] = useState<TechStackWithCountResponse[]>([]);
+  const [experienceCategoriesWithCount, setExperienceCategoriesWithCount] = useState<ExperienceCategoryWithCountResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -44,12 +58,28 @@ const NavigatorPage: React.FC = () => {
   useEffect(() => {
     const loadFilterOptions = async () => {
       try {
+        // Load basic data first
         const [companiesData, techStacksData] = await Promise.all([
           jobNavigatorService.getCompanies(),
           jobNavigatorService.getTechStacks()
         ]);
         setCompanies(companiesData);
         setTechStacks(techStacksData);
+        
+        // Try to load count data separately (optional enhancement)
+        try {
+          const [companiesWithCountData, techStacksWithCountData, experienceCategoriesWithCountData] = await Promise.all([
+            jobNavigatorService.getCompaniesWithCount(),
+            jobNavigatorService.getTechStacksWithCount(),
+            jobNavigatorService.getExperienceCategoriesWithCount()
+          ]);
+          setCompaniesWithCount(companiesWithCountData);
+          setTechStacksWithCount(techStacksWithCountData);
+          setExperienceCategoriesWithCount(experienceCategoriesWithCountData);
+        } catch (countErr) {
+          console.warn('Failed to load count data, using basic filters:', countErr);
+          // Count data is optional, filters will work without it
+        }
       } catch (err) {
         console.error('Failed to load filter options:', err);
       }
@@ -74,7 +104,7 @@ const NavigatorPage: React.FC = () => {
         .filter((id): id is number => id !== undefined);
 
       const response = await jobNavigatorService.searchJobs({
-        keyword: searchQuery,
+        keyword: debouncedSearchQuery,
         companyIds: companyIds.length > 0 ? companyIds : undefined,
         techStackIds: techStackIds.length > 0 ? techStackIds : undefined,
         experienceLevel: filters.experience[0],
@@ -96,7 +126,7 @@ const NavigatorPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, filters, getCompanyId, getTechStackId]);
+  }, [debouncedSearchQuery, filters, getCompanyId, getTechStackId]);
 
   // Load jobs when filters or search query changes
   useEffect(() => {
@@ -161,6 +191,11 @@ const NavigatorPage: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {loading && searchQuery !== debouncedSearchQuery && (
+              <div className="ignition-nav-search-loading">
+                <span className="ignition-nav-search-loading-spinner">⏳</span>
+              </div>
+            )}
           </div>
         </section>
 
@@ -173,6 +208,9 @@ const NavigatorPage: React.FC = () => {
               onFilterChange={setFilters}
               companies={companies}
               techStacks={techStacks}
+              companiesWithCount={companiesWithCount}
+              techStacksWithCount={techStacksWithCount}
+              experienceCategoriesWithCount={experienceCategoriesWithCount}
             />
             <NavigatorList 
               jobs={jobs}

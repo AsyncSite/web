@@ -75,6 +75,7 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
               <div className="ignition-nav-job-meta-info">
                 <span>🏢 {job.experience}</span>
                 <span>📅 마감: {job.deadline}</span>
+                {job.postedAt && <span>🕐 공고 일자: {job.postedAt}</span>}
               </div>
 
               <div className="ignition-nav-modal-section">

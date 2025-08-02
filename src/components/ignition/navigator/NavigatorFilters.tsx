@@ -1,5 +1,11 @@
 import React, { useMemo } from 'react';
-import { CompanyResponse, TechStackResponse } from '../../../api/jobNavigatorService';
+import { 
+  CompanyResponse, 
+  TechStackResponse,
+  CompanyWithCountResponse,
+  TechStackWithCountResponse,
+  ExperienceCategoryWithCountResponse 
+} from '../../../api/jobNavigatorService';
 import './NavigatorFilters.css';
 
 interface NavigatorFiltersProps {
@@ -15,56 +21,79 @@ interface NavigatorFiltersProps {
   }) => void;
   companies: CompanyResponse[];
   techStacks: TechStackResponse[];
+  companiesWithCount?: CompanyWithCountResponse[];
+  techStacksWithCount?: TechStackWithCountResponse[];
+  experienceCategoriesWithCount?: ExperienceCategoryWithCountResponse[];
 }
 
 const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({ 
   filters, 
   onFilterChange, 
   companies,
-  techStacks 
+  techStacks,
+  companiesWithCount,
+  techStacksWithCount,
+  experienceCategoriesWithCount 
 }) => {
   const availableFilters = useMemo(() => {
-    // Map companies with mock counts for now
-    const companiesWithCount = companies.map(company => ({
-      name: company.name,
-      count: Math.floor(Math.random() * 20) + 1 // Mock count for now
-    }));
+    // Use real count data if available, otherwise fallback to companies list
+    const companiesData = companiesWithCount && companiesWithCount.length > 0
+      ? companiesWithCount.map(company => ({
+          name: company.name,
+          count: company.jobCount
+        }))
+      : companies.map(company => ({
+          name: company.name,
+          count: 0 // No count available
+        }));
 
-    // Map tech stacks with mock counts for now
-    const skillsWithCount = techStacks.map(tech => ({
-      name: tech.name,
-      count: Math.floor(Math.random() * 40) + 5 // Mock count for now
-    }));
+    // Use real count data if available, otherwise fallback to tech stacks list
+    const skillsData = techStacksWithCount && techStacksWithCount.length > 0
+      ? techStacksWithCount.map(tech => ({
+          name: tech.name,
+          count: tech.jobCount
+        }))
+      : techStacks.map(tech => ({
+          name: tech.name,
+          count: 0 // No count available
+        }));
 
-    // Experience levels are static - updated to match new categories
-    const experienceLevels = [
-      { name: '신입', count: 0 },
-      { name: '주니어 (1-3년)', count: 0 },
-      { name: '미드레벨 (3-7년)', count: 0 },
-      { name: '시니어 (7년+)', count: 0 },
-      { name: '리드/수석급', count: 0 },
-      { name: '경력무관', count: 0 },
-    ];
+    // Use real count data if available, otherwise fallback to static list
+    const experienceLevels = experienceCategoriesWithCount && experienceCategoriesWithCount.length > 0
+      ? experienceCategoriesWithCount.map(exp => ({
+          name: exp.displayName,
+          value: exp.category,
+          count: exp.jobCount
+        }))
+      : [
+          { name: '신입', value: 'ENTRY', count: 0 },
+          { name: '주니어 (1-3년)', value: 'JUNIOR', count: 0 },
+          { name: '미드레벨 (3-7년)', value: 'MID', count: 0 },
+          { name: '시니어 (7년+)', value: 'SENIOR', count: 0 },
+          { name: '리드/수석급', value: 'LEAD', count: 0 },
+          { name: '경력무관', value: 'ANY', count: 0 },
+        ];
 
     return {
-      companies: companiesWithCount.length > 0 ? companiesWithCount : [
+      companies: companiesData.length > 0 ? companiesData : [
         { name: '회사 정보를 불러오는 중...', count: 0 }
       ],
-      skills: skillsWithCount.length > 0 ? skillsWithCount : [
+      skills: skillsData.length > 0 ? skillsData : [
         { name: '기술 스택을 불러오는 중...', count: 0 }
       ],
       experience: experienceLevels,
     };
-  }, [companies, techStacks]);
+  }, [companies, techStacks, companiesWithCount, techStacksWithCount]);
 
-  const handleFilterToggle = (category: keyof typeof filters, value: string) => {
+  const handleFilterToggle = (category: keyof typeof filters, value: string, enumValue?: string) => {
     const currentFilters = { ...filters };
-    const index = currentFilters[category].indexOf(value);
+    const filterValue = enumValue || value; // Use enum value if provided, otherwise use display value
+    const index = currentFilters[category].indexOf(filterValue);
     
     if (index > -1) {
-      currentFilters[category] = currentFilters[category].filter(item => item !== value);
+      currentFilters[category] = currentFilters[category].filter(item => item !== filterValue);
     } else {
-      currentFilters[category] = [...currentFilters[category], value];
+      currentFilters[category] = [...currentFilters[category], filterValue];
     }
     
     onFilterChange(currentFilters);
@@ -118,9 +147,9 @@ const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({
           <div
             key={exp.name}
             className="ignition-nav-filter-option"
-            onClick={() => handleFilterToggle('experience', exp.name)}
+            onClick={() => handleFilterToggle('experience', exp.value, exp.value)}
           >
-            <div className={`ignition-nav-filter-checkbox ${filters.experience.includes(exp.name) ? 'checked' : ''}`}></div>
+            <div className={`ignition-nav-filter-checkbox ${filters.experience.includes(exp.value) ? 'checked' : ''}`}></div>
             <span className="filter-name">{exp.name}</span>
             <span className="filter-count">{exp.count}</span>
           </div>

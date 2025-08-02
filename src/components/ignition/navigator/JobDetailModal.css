@@ -178,6 +178,12 @@
   background: #d0d0d0;
 }
 
+.ignition-nav-job-location {
+  color: #666;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
 @media (max-width: 768px) {
   .ignition-nav-modal-content {
     margin: 20px;

@@ -10,6 +10,27 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  paramsSerializer: {
+    serialize: (params) => {
+      // Custom params serializer to handle arrays properly
+      const searchParams = new URLSearchParams();
+      
+      Object.keys(params).forEach(key => {
+        const value = params[key];
+        
+        if (Array.isArray(value)) {
+          // Serialize arrays without brackets (companyIds=1&companyIds=2)
+          value.forEach(item => {
+            searchParams.append(key, item.toString());
+          });
+        } else if (value !== undefined && value !== null) {
+          searchParams.append(key, value.toString());
+        }
+      });
+      
+      return searchParams.toString();
+    }
+  }
 });
 
 // Request interceptor to add auth token

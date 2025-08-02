@@ -1,5 +1,6 @@
 import React from 'react';
 import { JobItemResponse } from '../../../api/jobNavigatorService';
+import { highlightText } from '../../../utils/highlightText';
 import './NavigatorList.css';
 
 interface NavigatorListProps {
@@ -79,9 +80,9 @@ const NavigatorList: React.FC<NavigatorListProps> = ({
               <div className="ignition-nav-job-info">
                 <div className="ignition-nav-job-company">
                   <div className="ignition-nav-company-logo">{job.companyLogo}</div>
-                  <span className="ignition-nav-company-name">{job.company}</span>
+                  <span className="ignition-nav-company-name">{highlightText(job.company, searchQuery)}</span>
                 </div>
-                <h3 className="ignition-nav-job-title">{job.title}</h3>
+                <h3 className="ignition-nav-job-title">{highlightText(job.title, searchQuery)}</h3>
               </div>
               <div className="ignition-nav-job-badges">
                 {/* 매칭 점수 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
@@ -108,6 +109,9 @@ const NavigatorList: React.FC<NavigatorListProps> = ({
                 <div className="ignition-nav-job-meta-item">🏢 {job.experience}</div>
                 <div className="ignition-nav-job-meta-item">📍 {job.location}</div>
                 <div className="ignition-nav-job-meta-item">📅 {job.deadline}</div>
+                {job.postedAt && (
+                  <div className="ignition-nav-job-meta-item">🕐 공고 일자: {job.postedAt}</div>
+                )}
               </div>
               <div className="ignition-nav-job-action">
                 <button 

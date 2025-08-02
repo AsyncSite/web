@@ -29,6 +29,8 @@ export interface JobItemResponse {
   hasWarRoom: boolean;
   warRoomCount?: number;
   sourceUrl?: string;
+  postedAt?: string;
+  experienceCategory?: string;
 }
 
 export interface JobSearchResponse {
@@ -53,6 +55,26 @@ export interface TechStackResponse {
   id: number;
   name: string;
   category: 'LANGUAGE' | 'FRAMEWORK' | 'DATABASE' | 'CLOUD' | 'TOOL' | 'OTHER';
+}
+
+export interface CompanyWithCountResponse {
+  id: number;
+  name: string;
+  nameEn?: string;
+  jobCount: number;
+}
+
+export interface TechStackWithCountResponse {
+  id: number;
+  name: string;
+  category: string;
+  jobCount: number;
+}
+
+export interface ExperienceCategoryWithCountResponse {
+  category: string;
+  displayName: string;
+  jobCount: number;
 }
 
 // Service
@@ -97,6 +119,30 @@ class JobNavigatorService {
     const response = await apiClient.get<TechStackResponse[]>('/api/job-navigator/tech-stacks', {
       params: category ? { category } : undefined
     });
+    return response.data;
+  }
+
+  /**
+   * Get companies with job count
+   */
+  async getCompaniesWithCount(): Promise<CompanyWithCountResponse[]> {
+    const response = await apiClient.get<CompanyWithCountResponse[]>('/api/job-navigator/companies/with-count');
+    return response.data;
+  }
+
+  /**
+   * Get tech stacks with job count
+   */
+  async getTechStacksWithCount(): Promise<TechStackWithCountResponse[]> {
+    const response = await apiClient.get<TechStackWithCountResponse[]>('/api/job-navigator/tech-stacks/with-count');
+    return response.data;
+  }
+
+  /**
+   * Get experience categories with job count
+   */
+  async getExperienceCategoriesWithCount(): Promise<ExperienceCategoryWithCountResponse[]> {
+    const response = await apiClient.get<ExperienceCategoryWithCountResponse[]>('/api/job-navigator/experience/categories/with-count');
     return response.data;
   }
 
