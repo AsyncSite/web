@@ -1,9 +1,10 @@
 .ignition-nav-page {
-  background: #0f0f1a;
+  background: #05060A;
   color: #ffffff;
   position: relative;
   z-index: 1;
-  padding-top: 80px; /* Header 높이와 동일하게 조정 */
+  padding-top: 0; /* SubContentsTemplate에서 이미 padding-top 적용됨 */
+  padding-bottom: 5rem; /* 페이지 하단 여백 추가 */
   overflow: visible; /* overflow 설정 */
 }
 
@@ -19,7 +20,7 @@
 .ignition-nav-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 3rem 20px 2.5rem; /* 상하 여백 추가 */
 }
 
 /* Content Wrapper - 전체 컨텐츠를 감싸는 래퍼 */
@@ -32,8 +33,7 @@
 /* Hero Section */
 .ignition-nav-hero {
   text-align: center;
-  padding: 2rem 2rem 1.5rem !important; /* 상단 패딩 적절히 축소 */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 !important; /* 내부 컨테이너에서 패딩을 제어하므로 제거 */
   background: linear-gradient(180deg, rgba(195, 232, 141, 0.03) 0%, transparent 100%);
   overflow: visible; /* overflow 명시적으로 설정 */
 }
