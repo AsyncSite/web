@@ -12,6 +12,8 @@ const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
 const OAuthCallbackPage = lazy(() => import('../pages/auth/OAuthCallbackPage'));
 const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
 const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
+const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
+const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,14 @@ const router = createBrowserRouter([
             <ProfileEditPage />
           </PrivateRoute>
         ),
+      },
+      {
+        path: 'terms', // 추가
+        element: <TermsPage />,
+      },
+      {
+        path: 'privacy', // 추가
+        element: <PrivacyPage />,
       },
       {
         path: '/',

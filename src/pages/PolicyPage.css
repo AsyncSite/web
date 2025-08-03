@@ -1,0 +1,56 @@
+.policy-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  line-height: 1.8; /* 줄 간격 조정 */
+  font-size: 16px;
+  color: white; /* 글자 색상 흰색으로 변경 */
+  text-align: left; /* 기본 텍스트 정렬 */
+}
+
+.policy-container h1,
+.policy-container h2 {
+  text-align: center; /* h1, h2 제목만 중앙 정렬 */
+  margin-top: 40px; /* 여백 증가 */
+  margin-bottom: 20px; /* 여백 증가 */
+  color: #eee; /* 제목 색상도 밝게 조정 */
+}
+
+.policy-container h3,
+.policy-container h4 {
+  margin-top: 30px; /* 여백 증가 */
+  margin-bottom: 15px; /* 여백 증가 */
+  color: #eee; /* 제목 색상 유지 */
+}
+
+.policy-container p,
+.policy-container ul,
+.policy-container ol {
+  margin-bottom: 15px; /* 단락 및 리스트 하단 여백 */
+}
+
+.policy-container ul,
+.policy-container ol {
+  padding-left: 25px; /* 리스트 들여쓰기 */
+}
+
+.policy-container strong {
+  font-weight: bold;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #888; /* 버튼 색상 */
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-bottom: 20px; /* 내용과의 간격 */
+  display: block; /* 블록 요소로 만들어 상단에 배치 */
+  text-align: left; /* 왼쪽 정렬 */
+  transition: color 0.3s ease; /* 호버 효과 */
+}
+
+.back-button:hover {
+  color: #fff; /* 호버 시 색상 변경 */
+}
