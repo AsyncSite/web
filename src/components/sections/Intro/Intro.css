@@ -48,10 +48,11 @@
     border-radius: 50%;
     animation: twinkle 4s infinite;
     box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
-    /* 최적화: transform3d 사용 */
-    will-change: opacity;
+    /* GPU 가속 최적화 */
+    will-change: opacity, transform;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
+    contain: layout style paint;
 }
 
 @keyframes twinkle {
@@ -326,8 +327,15 @@
     }
 }
 
-/* Responsive */
+/* 모바일 최적화 */
 @media (max-width: 768px) {
+    /* 별 크기 축소 */
+    .star {
+        width: 1px !important;
+        height: 1px !important;
+        box-shadow: 0 0 2px rgba(255, 255, 255, 0.3) !important;
+    }
+    
     .hero-title {
         font-size: 48px !important;
     }
