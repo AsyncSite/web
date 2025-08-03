@@ -534,7 +534,6 @@ const Stats: React.FC = () => {
                       <div className="step-content">
                         <h3 className="step-title">{step.title}</h3>
                         <p className="step-subtitle">{step.subtitle}</p>
-                        <p className="step-description">{step.description}</p>
 
                         <div className="step-testimonial">
                           <p className="testimonial-content">"{step.testimonial.content}"</p>
