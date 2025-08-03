@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  scroll-snap-type: y mandatory;
+  
   overflow-y: auto;
 }
 
@@ -14,8 +14,7 @@ body {
 .section-background {
   background: rgba(11, 12, 16, 0.95);
   position: relative;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  
   min-height: 100vh;
 }
 

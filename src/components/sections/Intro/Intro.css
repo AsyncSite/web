@@ -5,8 +5,7 @@
     position: relative;
     width: 100%;
     min-height: 100vh;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    
 }
 
 /* 우주 배경 */
