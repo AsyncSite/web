@@ -4,6 +4,17 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import router from './router/router';
 import './App.css';
+import { env } from './config/environment';
+
+// Kakao SDK 초기화
+if (window.Kakao && !window.Kakao.isInitialized()) {
+  try {
+    window.Kakao.init(env.kakaoAppKey);
+    console.log('Kakao SDK initialized:', window.Kakao.isInitialized());
+  } catch (error) {
+    console.error('Failed to initialize Kakao SDK:', error);
+  }
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(<RouterProvider router={router} />);

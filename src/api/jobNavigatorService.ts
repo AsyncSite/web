@@ -77,6 +77,29 @@ export interface ExperienceCategoryWithCountResponse {
   jobCount: number;
 }
 
+export interface CreateSuggestionRequest {
+  type: 'DATA_ERROR' | 'JOB_CLOSED' | 'ADD_COMPANY' | 'OTHER';
+  jobPostingId?: number | null;
+  userEmail?: string | null;
+  content: string;
+}
+
+export interface SuggestionResponse {
+  id: number;
+  type: string;
+  typeDisplayName: string;
+  jobPostingId?: number;
+  jobTitle?: string;
+  companyName?: string;
+  userEmail?: string;
+  content: string;
+  status: string;
+  statusDisplayName: string;
+  adminNote?: string;
+  createdAt: string;
+  processedAt?: string;
+}
+
 // Service
 class JobNavigatorService {
   /**
@@ -160,6 +183,14 @@ class JobNavigatorService {
     const matches = userSkillsLower.filter(skill => jobSkills.includes(skill));
     
     return Math.min(100, Math.floor((matches.length / Math.max(jobSkills.length, 1)) * 100));
+  }
+
+  /**
+   * Create a new suggestion
+   */
+  async createSuggestion(request: CreateSuggestionRequest): Promise<SuggestionResponse> {
+    const response = await apiClient.post<SuggestionResponse>('/api/job-navigator/suggestions', request);
+    return response.data;
   }
 }
 

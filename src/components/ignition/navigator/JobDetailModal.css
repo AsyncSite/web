@@ -143,11 +143,30 @@
 
 .ignition-nav-modal-footer {
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
   padding: 20px 30px;
   border-top: 1px solid #eee;
   background: #f8f9fa;
   border-radius: 0 0 12px 12px;
+}
+
+.ignition-nav-modal-footer-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ignition-nav-modal-footer-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.ignition-nav-modal-share-btn {
+  font-size: 14px;
+  padding: 8px 16px;
+  height: 40px;
 }
 
 .ignition-nav-modal-btn {
@@ -197,9 +216,17 @@
 
   .ignition-nav-modal-footer {
     flex-direction: column;
+    gap: 16px;
   }
 
-  .ignition-nav-modal-btn {
+  .ignition-nav-modal-footer-left,
+  .ignition-nav-modal-footer-right {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .ignition-nav-modal-btn,
+  .ignition-nav-modal-share-btn {
     width: 100%;
   }
 }

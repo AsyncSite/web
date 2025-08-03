@@ -6,6 +6,7 @@ interface EnvironmentConfig {
   isDevelopment: boolean;
   isProduction: boolean;
   isLocal: boolean;
+  kakaoAppKey: string;
 }
 
 const getEnvironmentConfig = (): EnvironmentConfig => {
@@ -36,6 +37,7 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
     isDevelopment,
     isProduction,
     isLocal,
+    kakaoAppKey: process.env.REACT_APP_KAKAO_APP_KEY || 'YOUR_KAKAO_APP_KEY',
   };
 };
 

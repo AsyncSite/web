@@ -1,0 +1,113 @@
+/* Floating Action Button */
+.suggestion-fab {
+  position: fixed;
+  right: 2rem;
+  bottom: 6rem; /* 채팅 위젯 위에 위치하도록 조정 */
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C3E88D 0%, #A5D572 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #05060A;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  z-index: 100;
+}
+
+.suggestion-fab.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.suggestion-fab:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(195, 232, 141, 0.4);
+  background: linear-gradient(135deg, #D4F394 0%, #B5E582 100%);
+}
+
+.suggestion-fab:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.suggestion-fab svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.5;
+}
+
+/* Tooltip */
+.suggestion-fab-tooltip {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(5, 6, 10, 0.9);
+  color: #ffffff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 0.2s ease-in-out forwards;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.suggestion-fab-tooltip::after {
+  content: '';
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent rgba(5, 6, 10, 0.9);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .suggestion-fab {
+    right: 1rem;
+    bottom: 5rem;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .suggestion-fab svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* 모바일에서는 툴팁 표시하지 않음 */
+  .suggestion-fab-tooltip {
+    display: none;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .suggestion-fab {
+    bottom: 2rem;
+  }
+}

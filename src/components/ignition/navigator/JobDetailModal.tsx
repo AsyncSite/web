@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import jobNavigatorService, { JobItemResponse } from '../../../api/jobNavigatorService';
+import ShareButton from './ShareButton';
+import SuggestionModal from './SuggestionModal';
 import './JobDetailModal.css';
 
 interface JobDetailModalProps {
@@ -11,6 +13,7 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
   const [job, setJob] = useState<JobItemResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSuggestionModalOpen, setIsSuggestionModalOpen] = useState(false);
 
   useEffect(() => {
     if (jobId === null) {
@@ -103,29 +106,52 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
             </div>
 
             <div className="ignition-nav-modal-footer">
-              <button className="ignition-nav-modal-btn secondary" onClick={onClose}>
-                닫기
-              </button>
-              <button 
-                className="ignition-nav-modal-btn primary"
-                onClick={() => {
-                  if (job.sourceUrl) {
-                    window.open(job.sourceUrl, '_blank', 'noopener,noreferrer');
-                  } else {
-                    alert('지원 링크가 없습니다.');
-                  }
-                }}
-              >
-                지원하기
-              </button>
-              {/* 로드맵 분석 버튼 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
-              {/* <button className="ignition-nav-modal-btn primary">
-                로드맵 분석
-              </button> */}
+              <div className="ignition-nav-modal-footer-left">
+                <ShareButton job={job} className="ignition-nav-modal-share-btn" />
+                <button 
+                  className="ignition-nav-modal-btn secondary"
+                  onClick={() => setIsSuggestionModalOpen(true)}
+                >
+                  제안하기
+                </button>
+              </div>
+              <div className="ignition-nav-modal-footer-right">
+                <button className="ignition-nav-modal-btn secondary" onClick={onClose}>
+                  닫기
+                </button>
+                <button 
+                  className="ignition-nav-modal-btn primary"
+                  onClick={() => {
+                    if (job.sourceUrl) {
+                      window.open(job.sourceUrl, '_blank', 'noopener,noreferrer');
+                    } else {
+                      alert('지원 링크가 없습니다.');
+                    }
+                  }}
+                >
+                  지원하기
+                </button>
+                {/* 로드맵 분석 버튼 임시 비활성화 - 서버 측 개인화 구현 후 활성화 예정 */}
+                {/* <button className="ignition-nav-modal-btn primary">
+                  로드맵 분석
+                </button> */}
+              </div>
             </div>
           </>
         )}
       </div>
+      
+      {job && (
+        <SuggestionModal
+          job={job}
+          isOpen={isSuggestionModalOpen}
+          onClose={() => setIsSuggestionModalOpen(false)}
+          onSuccess={() => {
+            setIsSuggestionModalOpen(false);
+            alert('제안이 성공적으로 전송되었습니다. 감사합니다!');
+          }}
+        />
+      )}
     </div>
   );
 };

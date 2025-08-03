@@ -105,6 +105,14 @@
   border-radius: 16px;
 }
 
+.ignition-nav-search-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .ignition-nav-search-box {
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(195, 232, 141, 0.2);
@@ -115,8 +123,7 @@
   gap: 1rem;
   transition: all 0.3s;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  margin: 0 auto;
+  flex: 1;
 }
 
 .ignition-nav-search-box:focus-within {
@@ -179,6 +186,24 @@
   display: grid;
   grid-template-columns: 240px 1fr; /* 사이드바 너비 축소 */
   gap: 1.5rem; /* 간격도 축소 */
+}
+
+/* Mobile Search Container */
+@media (max-width: 768px) {
+  .ignition-nav-search-container {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0 1rem;
+  }
+  
+  .ignition-nav-search-box {
+    width: 100%;
+  }
+  
+  /* Mobile Hero Container */
+  .ignition-nav-container {
+    padding: 2rem 15px 1.5rem;
+  }
 }
 
 /* 웹 전용 - 모바일 미디어쿼리 제거 */

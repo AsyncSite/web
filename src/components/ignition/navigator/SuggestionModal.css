@@ -1,0 +1,333 @@
+/* Suggestion Modal Overlay */
+.suggestion-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Modal Content Container */
+.suggestion-modal-content {
+  background: var(--color-surface-primary, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Modal Header */
+.suggestion-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.suggestion-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.suggestion-modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--color-text-secondary, #666);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.suggestion-modal-close:hover {
+  background-color: var(--color-background-secondary, #f5f5f5);
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+/* Modal Body */
+.suggestion-modal-body {
+  padding: 24px;
+}
+
+/* Context Section */
+.suggestion-context {
+  background-color: var(--color-background-secondary, #f8f9fa);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.suggestion-context-label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #666);
+  margin-bottom: 4px;
+}
+
+.suggestion-context-content {
+  font-size: 1rem;
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+/* Form Groups */
+.suggestion-form-group {
+  margin-bottom: 24px;
+}
+
+.suggestion-form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary, #1a1a1a);
+  margin-bottom: 8px;
+}
+
+.suggestion-form-label .required {
+  color: #ef4444;
+}
+
+.suggestion-form-label .optional {
+  color: var(--color-text-secondary, #666);
+  font-weight: normal;
+}
+
+/* Type Selection */
+.suggestion-type-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.suggestion-type-option {
+  border: 2px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--color-surface-primary, #ffffff);
+}
+
+.suggestion-type-option:hover {
+  border-color: var(--color-primary, #3b82f6);
+  background-color: var(--color-primary-light, #eff6ff);
+}
+
+.suggestion-type-option.selected {
+  border-color: var(--color-primary, #3b82f6);
+  background-color: var(--color-primary-light, #eff6ff);
+}
+
+.suggestion-type-title {
+  font-weight: 500;
+  color: var(--color-text-primary, #1a1a1a);
+  margin-bottom: 4px;
+}
+
+.suggestion-type-desc {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #666);
+}
+
+/* Textarea */
+.suggestion-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.suggestion-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.suggestion-char-count {
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #666);
+  margin-top: 4px;
+}
+
+/* Input */
+.suggestion-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.suggestion-input:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.suggestion-email-hint {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #666);
+  margin-top: 4px;
+}
+
+/* Error Message */
+.suggestion-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 16px;
+  font-size: 0.875rem;
+}
+
+/* Modal Footer */
+.suggestion-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid var(--color-border, #e0e0e0);
+}
+
+/* Buttons */
+.suggestion-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.suggestion-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.suggestion-btn.primary {
+  background-color: var(--color-primary, #3b82f6);
+  color: white;
+}
+
+.suggestion-btn.primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark, #2563eb);
+}
+
+.suggestion-btn.secondary {
+  background-color: var(--color-background-secondary, #f5f5f5);
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.suggestion-btn.secondary:hover:not(:disabled) {
+  background-color: var(--color-border, #e0e0e0);
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .suggestion-modal-content {
+    background: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  .suggestion-modal-header {
+    border-bottom-color: #333;
+  }
+  
+  .suggestion-modal-header h2 {
+    color: #ffffff;
+  }
+  
+  .suggestion-modal-close {
+    color: #999;
+  }
+  
+  .suggestion-modal-close:hover {
+    background-color: #333;
+    color: #ffffff;
+  }
+  
+  .suggestion-context {
+    background-color: #2a2a2a;
+  }
+  
+  .suggestion-context-label {
+    color: #999;
+  }
+  
+  .suggestion-context-content {
+    color: #ffffff;
+  }
+  
+  .suggestion-form-label {
+    color: #ffffff;
+  }
+  
+  .suggestion-type-option {
+    background-color: #1a1a1a;
+    border-color: #333;
+  }
+  
+  .suggestion-type-option:hover,
+  .suggestion-type-option.selected {
+    background-color: #1e3a8a;
+    border-color: #3b82f6;
+  }
+  
+  .suggestion-type-title {
+    color: #ffffff;
+  }
+  
+  .suggestion-type-desc {
+    color: #999;
+  }
+  
+  .suggestion-textarea,
+  .suggestion-input {
+    background-color: #2a2a2a;
+    border-color: #333;
+    color: #ffffff;
+  }
+  
+  .suggestion-textarea:focus,
+  .suggestion-input:focus {
+    border-color: #3b82f6;
+  }
+  
+  .suggestion-modal-footer {
+    border-top-color: #333;
+  }
+  
+  .suggestion-btn.secondary {
+    background-color: #333;
+    color: #ffffff;
+  }
+  
+  .suggestion-btn.secondary:hover:not(:disabled) {
+    background-color: #444;
+  }
+}

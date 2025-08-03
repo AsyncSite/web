@@ -3,6 +3,7 @@ import NavigatorDashboard from '../../../components/ignition/navigator/Navigator
 import NavigatorList from '../../../components/ignition/navigator/NavigatorList';
 import NavigatorFilters from '../../../components/ignition/navigator/NavigatorFilters';
 import JobDetailModal from '../../../components/ignition/navigator/JobDetailModal';
+import SuggestionFAB from '../../../components/ignition/navigator/SuggestionFAB';
 import jobNavigatorService, { 
   JobItemResponse, 
   CompanyResponse, 
@@ -182,20 +183,22 @@ const NavigatorPage: React.FC = () => {
 
         {/* Search Section */}
         <section className="ignition-nav-search-section">
-          <div className="ignition-nav-search-box">
-            <span className="ignition-nav-search-icon">🔍</span>
-            <input
-              type="text"
-              className="ignition-nav-search-input"
-              placeholder="회사, 직무, 기술 스택으로 검색"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {loading && searchQuery !== debouncedSearchQuery && (
-              <div className="ignition-nav-search-loading">
-                <span className="ignition-nav-search-loading-spinner">⏳</span>
-              </div>
-            )}
+          <div className="ignition-nav-search-container">
+            <div className="ignition-nav-search-box">
+              <span className="ignition-nav-search-icon">🔍</span>
+              <input
+                type="text"
+                className="ignition-nav-search-input"
+                placeholder="회사, 직무, 기술 스택으로 검색"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {loading && searchQuery !== debouncedSearchQuery && (
+                <div className="ignition-nav-search-loading">
+                  <span className="ignition-nav-search-loading-spinner">⏳</span>
+                </div>
+              )}
+            </div>
           </div>
         </section>
 
@@ -233,6 +236,9 @@ const NavigatorPage: React.FC = () => {
         jobId={selectedJobId} 
         onClose={handleModalClose} 
       />
+      
+      {/* Suggestion Floating Action Button */}
+      <SuggestionFAB />
     </div>
   );
 };

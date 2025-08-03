@@ -1,0 +1,61 @@
+/* Share Button Styles */
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: var(--color-background-secondary, #f5f5f5);
+  color: var(--color-text-primary, #1a1a1a);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.share-button:hover {
+  background-color: var(--color-primary-light, #eff6ff);
+  border-color: var(--color-primary, #3b82f6);
+  color: var(--color-primary, #3b82f6);
+}
+
+.share-button:active {
+  transform: translateY(1px);
+}
+
+.share-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.share-button-text {
+  display: inline-block;
+}
+
+/* Responsive - Hide text on small screens */
+@media (max-width: 480px) {
+  .share-button {
+    padding: 8px;
+  }
+  
+  .share-button-text {
+    display: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .share-button {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #444;
+  }
+  
+  .share-button:hover {
+    background-color: #1e3a8a;
+    border-color: #3b82f6;
+    color: #93bbfc;
+  }
+}
