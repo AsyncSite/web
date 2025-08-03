@@ -1,10 +1,10 @@
 /* Members Section - 단순한 프로필 슬라이더 */
 .members-section {
-  padding: var(--spacing-4xl) 0;
+  padding: var(--spacing-3xl) 0; /* 변경: 상하 패딩 줄임 */
   overflow: hidden;
   display: flex;
   align-items: center;
-  min-height: 60vh;
+  min-height: 40vh; /* 변경: 최소 높이 줄임 */
 }
 
 /* 공통 스타일은 common.css에서 import */

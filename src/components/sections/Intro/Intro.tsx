@@ -42,6 +42,8 @@ const Intro: React.FC = () => {
         </div>
       </div>
 
+      
+
       {/* Header - Intro와 함께 움직임 */}
       <Header />
 

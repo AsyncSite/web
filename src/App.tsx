@@ -13,7 +13,7 @@ function App(): React.ReactNode {
             justifyContent: 'center', 
             alignItems: 'center', 
             height: '100vh',
-            backgroundColor: '#0a0e27',
+            backgroundColor: '#05060A',
             color: '#C3E88D',
             fontSize: '1.5rem'
           }}>
