@@ -1,6 +1,6 @@
 /* Stats Section - 실타래처럼 엮이는 시간 */
 .stats {
-  padding: 120px 0 60px 0;
+  padding: 120px 0 0 0;
   position: relative;
   min-height: auto;
   display: flex;
@@ -131,7 +131,7 @@
 .weaving-canvas,
 .glow-canvas {
   position: absolute;
-  top: 0;
+  top: 50px;
   left: 0;
   width: 100vw;
   height: 100%;
@@ -169,6 +169,7 @@
   border: none;
   border-radius: 50%;
   box-shadow: none;
+  top: -50px;
 }
 
 @keyframes timeAppear {
@@ -482,7 +483,7 @@
 
 /* Journey Section - 별자리로 연결된 성장 여정 */
 .journey {
-  padding: 40px 0 100px 0;
+  padding: 0 0 100px 0;
   position: relative;
   overflow: hidden;
   background: rgba(11, 12, 16, 0.95);
