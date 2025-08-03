@@ -43,6 +43,7 @@ html {
 
 html,
 body {
+  height: 100%;
   font-family: 'Moneygraphy-Rounded', Consolas, 'Courier New', monospace;
   line-height: 1.6;
   overflow-x: hidden;

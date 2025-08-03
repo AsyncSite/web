@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // useNavigate import
 import './PolicyPage.css'; // CSS 파일 import
 
@@ -124,6 +124,18 @@ const privacyPolicyContent = `
 
 const PrivacyPage: React.FC = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
+
+  useEffect(() => {
+    // 페이지 마운트 시 스타일 변경
+    document.documentElement.style.height = 'auto';
+    document.body.style.height = 'auto';
+
+    // 페이지 언마운트 시 스타일 복원
+    return () => {
+      document.documentElement.style.height = '100%';
+      document.body.style.height = '100%';
+    };
+  }, []);
 
   const handleGoBack = () => {
     navigate(-1); // 이전 페이지로 이동
