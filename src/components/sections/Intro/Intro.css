@@ -327,8 +327,15 @@
     }
 }
 
-/* Responsive */
+/* 모바일 최적화 */
 @media (max-width: 768px) {
+    /* 별 크기 축소 */
+    .star {
+        width: 1px !important;
+        height: 1px !important;
+        box-shadow: 0 0 2px rgba(255, 255, 255, 0.3) !important;
+    }
+    
     .hero-title {
         font-size: 48px !important;
     }
