@@ -283,7 +283,7 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   letter-spacing: 0.5px;
   line-height: 1.8;
-  margin: 0 0 8px 0;
+  margin: -20px 0 8px 0;
 }
 
 .weaving-legend p:last-child {
