@@ -8,7 +8,7 @@ const MainPage = () => {
       <Intro />
       <About />
       <Stats />
-      <Journey />
+      {/*<Journey />*/}
       <Studies />
       <FAQ />
       <CTA />
