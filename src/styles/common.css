@@ -41,8 +41,9 @@ body {
   margin-bottom: 20px;
   color: #C3E88D;
   text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 900;
+  text-align: center;
 }
 
 .section-subtitle {
@@ -272,7 +273,18 @@ body {
 
 @media (max-width: 480px) {
   .section-title {
-    font-size: 28px;
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto;
+    max-width: calc(100vw - 40px) !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
   
   .section-subtitle {
@@ -281,5 +293,25 @@ body {
   
   .card {
     padding: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .section-title {
+    font-size: 18px !important;
+    line-height: 1.1 !important;
+    max-width: calc(100vw - 30px) !important;
+    padding: 0 15px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .section-title {
+    font-size: 16px !important;
+    line-height: 1.1 !important;
+    max-width: calc(100vw - 20px) !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
   }
 }
