@@ -484,71 +484,77 @@ const Stats: React.FC = () => {
               </div>
             </div>
 
+            {/* 하단 설명 */}
+            <div className="weaving-legend">
+              <p>각각의 실은 하나의 스터디를 나타내요.</p>
+              <p>서로 엮이며 성취하고 성장합니다.</p>
+            </div>
+
             
           </div>
         </section>
-        <section className="journey" id="journey">
-          <div className="container" ref={containerRef}>
-            <div className="section-header">
-              <h2 className="section-title">당신의 Async 여정</h2>
-              <p className="section-subtitle">함께 성장하는 여정의 네 가지 별</p>
-            </div>
+        {/*<section className="journey" id="journey">*/}
+        {/*  <div className="container" ref={containerRef}>*/}
+        {/*    <div className="section-header">*/}
+        {/*      <h2 className="section-title">당신의 Async 여정</h2>*/}
+        {/*      <p className="section-subtitle">함께 성장하는 여정의 네 가지 별</p>*/}
+        {/*    </div>*/}
 
-            <div className="journey-constellation">
-              {/* SVG 별자리 연결선 */}
-              <svg className="constellation-svg" viewBox="0 0 1200 600">
-                <defs>
-                  <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#C3E88D" stopOpacity="0.3" />
-                    <stop offset="50%" stopColor="#82aaff" stopOpacity="0.5" />
-                    <stop offset="100%" stopColor="#C3E88D" stopOpacity="0.3" />
-                  </linearGradient>
-                </defs>
-                <path
-                    ref={pathRef}
-                    className="constellation-path"
-                    d="M150,150 Q300,50 450,150 T750,150 Q900,250 1050,150"
-                    fill="none"
-                    stroke="url(#pathGradient)"
-                    strokeWidth="2"
-                    strokeDasharray="5,5"
-                />
-              </svg>
+        {/*    <div className="journey-constellation">*/}
+        {/*      /!* SVG 별자리 연결선 *!/*/}
+        {/*      <svg className="constellation-svg" viewBox="0 0 1200 600">*/}
+        {/*        <defs>*/}
+        {/*          <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">*/}
+        {/*            <stop offset="0%" stopColor="#C3E88D" stopOpacity="0.3" />*/}
+        {/*            <stop offset="50%" stopColor="#82aaff" stopOpacity="0.5" />*/}
+        {/*            <stop offset="100%" stopColor="#C3E88D" stopOpacity="0.3" />*/}
+        {/*          </linearGradient>*/}
+        {/*        </defs>*/}
+        {/*        <path*/}
+        {/*            ref={pathRef}*/}
+        {/*            className="constellation-path"*/}
+        {/*            d="M150,150 Q300,50 450,150 T750,150 Q900,250 1050,150"*/}
+        {/*            fill="none"*/}
+        {/*            stroke="url(#pathGradient)"*/}
+        {/*            strokeWidth="2"*/}
+        {/*            strokeDasharray="5,5"*/}
+        {/*        />*/}
+        {/*      </svg>*/}
 
-              {/* 별들과 내용 */}
-              <div className="journey-steps">
-                {journeySteps.map((step, index) => (
-                    <div
-                        key={step.id}
-                        className={`journey-step step-${step.id}`}
-                        ref={(el) => (starsRef.current[index] = el)}
-                    >
-                      <div className="star-container">
-                        <div className="star-glow"></div>
-                        <div className="star">
-                          <span className="star-number">{step.id}</span>
-                        </div>
-                        <div className="star-pulse"></div>
-                      </div>
+        {/*      /!* 별들과 내용 *!/*/}
+        {/*      <div className="journey-steps">*/}
+        {/*        {journeySteps.map((step, index) => (*/}
+        {/*            <div*/}
+        {/*                key={step.id}*/}
+        {/*                className={`journey-step step-${step.id}`}*/}
+        {/*                ref={(el) => (starsRef.current[index] = el)}*/}
+        {/*            >*/}
+        {/*              <div className="star-container">*/}
+        {/*                <div className="star-glow"></div>*/}
+        {/*                <div className="star">*/}
+        {/*                  <span className="star-number">{step.id}</span>*/}
+        {/*                </div>*/}
+        {/*                <div className="star-pulse"></div>*/}
+        {/*              </div>*/}
 
-                      <div className="step-content">
-                        <h3 className="step-title">{step.title}</h3>
-                        <p className="step-subtitle">{step.subtitle}</p>
+        {/*              <div className="step-content">*/}
+        {/*                <h3 className="step-title">{step.title}</h3>*/}
+        {/*                <p className="step-subtitle">{step.subtitle}</p>*/}
 
-                        <div className="step-testimonial">
-                          <p className="testimonial-content">"{step.testimonial.content}"</p>
-                          <p className="testimonial-author">
-                            - {step.testimonial.author}, {step.testimonial.studyName}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                ))}
-              </div>
-            </div>
+        {/*                <div className="step-testimonial">*/}
+        {/*                  <p className="testimonial-content">"{step.testimonial.content}"</p>*/}
+        {/*                  <p className="testimonial-author">*/}
+        {/*                    - {step.testimonial.author}, {step.testimonial.studyName}*/}
+        {/*                  </p>*/}
+        {/*                </div>*/}
+        {/*              </div>*/}
+        {/*            </div>*/}
+        {/*        ))}*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
 
-          </div>
-        </section>
+        {/*  </div>*/}
+        {/*</section>*/}
       </>
   );
 };
