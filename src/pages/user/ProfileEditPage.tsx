@@ -4,10 +4,16 @@ import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
 import StarBackground from '../../components/common/StarBackground';
 import './ProfileEditPage.css';
+import notiService from "../../api/notiService";
 
 interface ProfileFormData {
   name: string;
   profileImage: string;
+  studyUpdates: boolean;
+  marketing: boolean;
+  emailEnabled: boolean;
+  discordEnabled: boolean;
+  pushEnabled: boolean;
 }
 
 interface ProfileFormErrors {
@@ -18,6 +24,7 @@ interface ProfileFormErrors {
 
 function ProfileEditPage(): React.ReactNode {
   const { user, updateProfile, isAuthenticated, isLoading } = useAuth();
+  const { getNotiSetting, updateNotiSetting } = notiService;
   const navigate = useNavigate();
   
   // 인증되지 않은 경우 로그인 페이지로 리디렉션
@@ -29,7 +36,12 @@ function ProfileEditPage(): React.ReactNode {
   
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
-    profileImage: ''
+    profileImage: '',
+    studyUpdates: false,
+    marketing: false,
+    emailEnabled: false,
+    discordEnabled: false,
+    pushEnabled: false
   });
   const [errors, setErrors] = useState<ProfileFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,10 +49,27 @@ function ProfileEditPage(): React.ReactNode {
 
   useEffect(() => {
     if (user) {
-      setFormData({
+      let formdata = {
         name: user.name || '',
-        profileImage: user.profileImage || ''
-      });
+        profileImage: user.profileImage || '',
+        studyUpdates: false,
+        marketing: false,
+        emailEnabled: false,
+        discordEnabled: false,
+        pushEnabled: false
+      };
+      getNotiSetting(user.id)
+          .then(notiSetting => {
+            formdata = {
+              ...formdata,
+              studyUpdates: notiSetting.studyUpdates,
+              marketing: notiSetting.marketing,
+              emailEnabled: notiSetting.emailEnabled,
+              discordEnabled: notiSetting.discordEnabled,
+              pushEnabled: notiSetting.pushEnabled
+            }
+          });
+      setFormData(formdata);
     }
   }, [user]);
 
@@ -60,8 +89,11 @@ function ProfileEditPage(): React.ReactNode {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
     // Clear error when user starts typing
     if (errors[name as keyof ProfileFormErrors]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
@@ -81,6 +113,18 @@ function ProfileEditPage(): React.ReactNode {
         name: formData.name,
         profileImage: formData.profileImage || undefined
       });
+
+      // 알림 설정 업데이트
+      if (user) {
+        await updateNotiSetting(user.id, {
+          studyUpdates: formData.studyUpdates,
+          marketing: formData.marketing,
+          emailEnabled: formData.emailEnabled,
+          discordEnabled: formData.discordEnabled,
+          pushEnabled: formData.pushEnabled
+        });
+      }
+
       setIsSuccess(true);
       setTimeout(() => {
         navigate('/users/me');
@@ -183,6 +227,91 @@ function ProfileEditPage(): React.ReactNode {
                 <p className="preview-name">{formData.name || user?.name || '이름'}</p>
                 <p className="preview-email">{user?.email}</p>
               </div>
+            </div>
+          </div>
+
+          {/* 알림 설정 섹션 */}
+          <div className="notification-settings">
+            <h3 className="settings-title">알림 설정</h3>
+            
+            <div className="notification-option">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  name="studyUpdates"
+                  checked={formData.studyUpdates}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="toggle-input"
+                />
+                <span className="toggle-slider"></span>
+                <span className="toggle-label">학습 업데이트 알림</span>
+              </label>
+              <p className="option-description">새로운 학습 자료나 업데이트에 대한 알림을 받습니다</p>
+            </div>
+
+            <div className="notification-option">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  name="marketing"
+                  checked={formData.marketing}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="toggle-input"
+                />
+                <span className="toggle-slider"></span>
+                <span className="toggle-label">마케팅 알림</span>
+              </label>
+              <p className="option-description">새로운 기능이나 이벤트에 대한 알림을 받습니다</p>
+            </div>
+
+            <div className="notification-option">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  name="emailEnabled"
+                  checked={formData.emailEnabled}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="toggle-input"
+                />
+                <span className="toggle-slider"></span>
+                <span className="toggle-label">이메일 알림</span>
+              </label>
+              <p className="option-description">이메일을 통한 알림을 받습니다</p>
+            </div>
+
+            <div className="notification-option">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  name="discordEnabled"
+                  checked={formData.discordEnabled}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="toggle-input"
+                />
+                <span className="toggle-slider"></span>
+                <span className="toggle-label">Discord 알림</span>
+              </label>
+              <p className="option-description">Discord를 통한 알림을 받습니다</p>
+            </div>
+
+            <div className="notification-option">
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  name="pushEnabled"
+                  checked={formData.pushEnabled}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="toggle-input"
+                />
+                <span className="toggle-slider"></span>
+                <span className="toggle-label">푸시 알림</span>
+              </label>
+              <p className="option-description">브라우저 푸시 알림을 받습니다</p>
             </div>
           </div>
 
