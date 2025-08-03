@@ -6,21 +6,21 @@ const Intro: React.FC = () => {
   const starfieldRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 별 생성 최적화 (DocumentFragment 사용)
     const starfield = starfieldRef.current;
     if (starfield) {
       const fragment = document.createDocumentFragment();
-
-      for (let i = 0; i < 250; i++) {
+      
+      for (let i = 0; i < 150; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         star.style.left = Math.random() * 100 + '%';
         star.style.top = Math.random() * 100 + '%';
         star.style.animationDelay = Math.random() * 4 + 's';
         star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        
         fragment.appendChild(star);
       }
-
+      
       starfield.appendChild(fragment);
     }
   }, []);
