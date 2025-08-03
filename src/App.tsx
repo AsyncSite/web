@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { GameProgressProvider } from './contexts/GameProgressContext';
+import ScrollToTop from './components/common/ScrollToTop';
 
 function App(): React.ReactNode {
   return (
@@ -20,6 +21,7 @@ function App(): React.ReactNode {
             Loading...
           </div>
         }>
+          <ScrollToTop />
           <Outlet />
         </Suspense>
       </GameProgressProvider>

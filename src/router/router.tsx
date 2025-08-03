@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter, Navigate, ScrollRestoration } from 'react-router-dom';
 
 import App from '../App';
 import subRouter from './subRouter';
@@ -18,7 +18,12 @@ const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <>
+        <ScrollRestoration />
+        <App />
+      </>
+    ),
     children: [
       {
         index: true,
