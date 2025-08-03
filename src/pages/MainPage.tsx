@@ -1,4 +1,4 @@
-import '../styles/common.css';
+import '../styles/common-landing.css';
 import { Footer } from '../components/layout';
 import {About, Contribution, FAQ, Intro, Journey, Stats, Studies, CTA} from '../components/sections';
 

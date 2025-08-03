@@ -323,13 +323,7 @@
     margin-bottom: 60px;
   }
   
-  .section-title {
-    font-size: 28px;
-  }
-  
-  .section-subtitle {
-    font-size: 16px;
-  }
+  /* section-title, section-subtitle는 common-landing.css에서 관리 */
   
   .visual-icon {
     font-size: 60px;

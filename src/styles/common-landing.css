@@ -1,0 +1,251 @@
+/* 랜딩 페이지 전용 공통 스타일 - 실제 사용되는 클래스만 정리 */
+
+/* 전체 폰트 설정 - Pretendard 우선, title만 Moneygraphy-Rounded */
+* {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+/* 단, 섹션 타이틀은 Moneygraphy-Rounded 유지 */
+.section-title {
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+/* 스크롤 스냅 */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+}
+
+/* 섹션 배경 */
+.section-background {
+  background: rgba(11, 12, 16, 0.95);
+  position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
+/* 컨테이너 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 섹션 헤더 */
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-title {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+.section-subtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 버튼 스타일 */
+.btn-primary {
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #C3E88D, #A8D66F);
+  color: #05060A;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(195, 232, 141, 0.4);
+  background: linear-gradient(135deg, #A8D66F, #C3E88D);
+}
+
+.btn-secondary {
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 2px solid rgba(195, 232, 141, 0.5);
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(195, 232, 141, 0.2);
+}
+
+/* CSS 변수 정의 */
+:root {
+  /* 색상 팔레트 */
+  --primary-green: #C3E88D;
+  --secondary-green: #A8D66F;
+  --darker-green: #8fd67a;
+  --dark-bg: #05060A;
+  --section-bg: rgba(11, 12, 16, 0.95);
+  --white-text: #ffffff;
+  --white-transparent-light: rgba(255, 255, 255, 0.6);
+  --white-transparent-medium: rgba(255, 255, 255, 0.7);
+  --white-transparent-heavy: rgba(255, 255, 255, 0.8);
+  --border-light: rgba(195, 232, 141, 0.15);
+  --border-medium: rgba(195, 232, 141, 0.2);
+  --border-heavy: rgba(195, 232, 141, 0.3);
+  --border-strong: rgba(195, 232, 141, 0.4);
+  
+  /* 간격 시스템 */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 40px;
+  --spacing-4xl: 48px;
+  --spacing-5xl: 60px;
+  --spacing-6xl: 80px;
+  
+  /* 폰트 크기 */
+  --font-xs: 12px;
+  --font-sm: 14px;
+  --font-md: 16px;
+  --font-lg: 18px;
+  --font-xl: 20px;
+  --font-2xl: 24px;
+  --font-3xl: 28px;
+  --font-4xl: 36px;
+  --font-5xl: 48px;
+  
+  /* 그림자 */
+  --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --shadow-green: 0 0 20px rgba(195, 232, 141, 0.3);
+  --shadow-green-strong: 0 0 30px rgba(195, 232, 141, 0.5);
+  
+  /* 전환 효과 */
+  --transition-fast: all 0.2s ease;
+  --transition-normal: all 0.3s ease;
+  --transition-slow: all 0.5s ease;
+}
+
+/* 카드 스타일 - 실제 사용되는 것만 */
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-light);
+  border-radius: 15px;
+  padding: var(--spacing-2xl);
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-heavy);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .section-header {
+    margin-bottom: 40px;
+  }
+  
+  .section-title {
+    font-size: 36px;
+  }
+  
+  .section-subtitle {
+    font-size: 18px;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: calc(100vw - 40px) !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  .section-subtitle {
+    font-size: 16px;
+  }
+  
+  .card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .section-title {
+    font-size: 18px !important;
+    line-height: 1.1 !important;
+    max-width: calc(100vw - 30px) !important;
+    padding: 0 15px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .section-title {
+    font-size: 16px !important;
+    line-height: 1.1 !important;
+    max-width: calc(100vw - 20px) !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+  }
+}

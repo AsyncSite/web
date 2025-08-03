@@ -235,38 +235,7 @@
     opacity: 0;
 }
 
-.btn-primary {
-    padding: 15px 32px;
-    background: linear-gradient(135deg, #C3E88D, #A8D66F);
-    color: var(--dark-bg);
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: 700 !important;
-    font-size: 18px !important;
-    transition: all 0.3s;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-}
-
-.btn-secondary {
-    padding: 15px 32px;
-    background: transparent;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: 700 !important;
-    font-size: 18px !important;
-    border: 2px solid rgba(195, 232, 141, 0.3);
-    transition: all 0.3s;
-}
-
-.btn-secondary:hover {
-    background: rgba(195, 232, 141, 0.1);
-    border-color: rgba(195, 232, 141, 0.6);
-    transform: translateY(-2px);
-}
+/* Hero 버튼은 공통 CSS 스타일 그대로 사용 */
 
 /* Animations - prototype과 동일 */
 @keyframes fadeInUp {
@@ -358,8 +327,8 @@
         align-items: center;
     }
     
-    .btn-primary,
-    .btn-secondary {
+    .hero-cta .btn-primary,
+    .hero-cta .btn-secondary {
         width: 100%;
         max-width: 280px;
         text-align: center;

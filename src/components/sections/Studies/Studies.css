@@ -12,19 +12,7 @@
   animation: fadeInDown 0.8s ease;
 }
 
-.studies .section-title {
-  font-size: 56px;
-  margin-bottom: 24px;
-  font-weight: 900;
-  letter-spacing: -1px;
-}
-
-.studies .section-subtitle {
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 300;
-  letter-spacing: 0.5px;
-}
+/* section-title, section-subtitle는 common-landing.css에서 관리 */
 
 /* 스터디 그리드 */
 .studies-grid {
@@ -478,13 +466,7 @@
     padding: 120px 0;
   }
   
-  .studies .section-title {
-    font-size: 42px;
-  }
-  
-  .studies .section-subtitle {
-    font-size: 18px;
-  }
+  /* section-title, section-subtitle는 common-landing.css에서 관리 */
   
   .studies-grid {
     grid-template-columns: 1fr;
@@ -537,14 +519,7 @@
 }
 
 @media (max-width: 480px) {
-  .studies .section-title {
-    font-size: 32px;
-  }
-  
-  .studies .section-subtitle {
-    font-size: 16px;
-    padding: 0 20px;
-  }
+  /* section-title, section-subtitle는 common-landing.css에서 관리 */
   
   .study-header {
     flex-direction: column;
