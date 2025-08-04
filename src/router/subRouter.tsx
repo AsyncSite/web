@@ -19,6 +19,16 @@ const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPa
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const StudyPlanPage = lazy(() => import('../pages/StudyPlanPage'));
+const WhoWeArePage = lazy(() => import('../pages/WhoWeArePage'));
+const WhoWeAreV2Page = lazy(() => import('../pages/WhoWeAreV2Page'));
+const WhoWeAreV4Page = lazy(() => import('../pages/WhoWeAreV4Page'));
+const WhoWeAreV5Page = lazy(() => import('../pages/WhoWeAreV5Page'));
+const WhoWeAreEnhancedPage = lazy(() => import('../pages/WhoWeAreEnhancedPage'));
+const WhoWeAreProfilePage = lazy(() => import('../pages/WhoWeAreProfilePage'));
+const WhoWeAreSubtlePage = lazy(() => import('../pages/WhoWeAreSubtlePage'));
+const WhoWeArePlanetPage = lazy(() => import('../pages/WhoWeArePlanetPage'));
+const WhoWeAreGlassPage = lazy(() => import('../pages/WhoWeAreGlassPage'));
+const WhoWeAreScreenPage = lazy(() => import('../pages/WhoWeAreScreenPage'));
 
 const subRouter = [
   // 스터디 관련 라우트
@@ -113,6 +123,48 @@ const subRouter = [
   {
     path: 'lab/:subject',
     element: <LabDetailPage />,
+  },
+  
+  // Who We Are 페이지 (프로토타입들)
+  {
+    path: 'whoweare',
+    element: <WhoWeArePage />,
+  },
+  {
+    path: 'whoweare-v2',
+    element: <WhoWeAreV2Page />,
+  },
+  {
+    path: 'whoweare-v4',
+    element: <WhoWeAreV4Page />,
+  },
+  {
+    path: 'whoweare-v5',
+    element: <WhoWeAreV5Page />,
+  },
+  {
+    path: 'whoweare-enhanced',
+    element: <WhoWeAreEnhancedPage />,
+  },
+  {
+    path: 'whoweare-profile',
+    element: <WhoWeAreProfilePage />,
+  },
+  {
+    path: 'whoweare-subtle',
+    element: <WhoWeAreSubtlePage />,
+  },
+  {
+    path: 'whoweare-planet',
+    element: <WhoWeArePlanetPage />,
+  },
+  {
+    path: 'whoweare-glass',
+    element: <WhoWeAreGlassPage />,
+  },
+  {
+    path: 'whoweare-screen',
+    element: <WhoWeAreScreenPage />,
   },
 ];
 export default subRouter;
