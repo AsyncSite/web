@@ -2,10 +2,10 @@ import React, { useState, Suspense, lazy } from 'react';
 import './WhoWeArePage.css';
 
 // Lazy load Three.js scene
-const ThreeSceneLoader = lazy(() => import('../components/whoweare/ThreeSceneLoader'));
+const ThreeSceneTeamNodes = lazy(() => import('../components/whoweare/ThreeSceneTeamNodes'));
 
 // Team member data - 실제 팀원 데이터로 업데이트
-export const whoweareTeamMembers = [
+export const whoweareTeamNodesMembers = [
   {
     id: 'rene-choi',
     name: 'RENE CHOI',
@@ -74,7 +74,7 @@ export const whoweareTeamMembers = [
   }
 ];
 
-export interface WhoWeAreMemberData {
+export interface WhoWeAreTeamNodesMemberData {
   id: string;
   name: string;
   initials: string;
@@ -83,15 +83,14 @@ export interface WhoWeAreMemberData {
   story: string;
   color: string;
   darkColor: string;
-  github?: string;
   position: { x: number; y: number; z: number };
 }
 
-const WhoWeArePage: React.FC = () => {
-  const [whoweareSelectedMember, setWhoweareSelectedMember] = useState<WhoWeAreMemberData | null>(null);
-  const [whoweareIsLoading, setWhoweareIsLoading] = useState(true);
-  const [whoweareLoadError, setWhoweareLoadError] = useState<string | null>(null);
-  const [whoweareShow3D, setWhoweareShow3D] = useState(true);
+const WhoWeAreTeamNodesPage: React.FC = () => {
+  const [whoweareTeamNodesSelectedMember, setWhoweareTeamNodesSelectedMember] = useState<WhoWeAreTeamNodesMemberData | null>(null);
+  const [whoweareTeamNodesIsLoading, setWhoweareTeamNodesIsLoading] = useState(true);
+  const [whoweareTeamNodesLoadError, setWhoweareTeamNodesLoadError] = useState<string | null>(null);
+  const [whoweareTeamNodesShow3D, setWhoweareTeamNodesShow3D] = useState(true);
 
   // Check WebGL support and device capabilities
   React.useEffect(() => {
@@ -103,36 +102,36 @@ const WhoWeArePage: React.FC = () => {
         const isLowPerformance = navigator.hardwareConcurrency ? navigator.hardwareConcurrency < 4 : false;
         
         if (!gl || isMobile || isLowPerformance) {
-          setWhoweareShow3D(false);
-          setWhoweareIsLoading(false);
+          setWhoweareTeamNodesShow3D(false);
+          setWhoweareTeamNodesIsLoading(false);
         }
       } catch (e) {
-        setWhoweareShow3D(false);
-        setWhoweareIsLoading(false);
+        setWhoweareTeamNodesShow3D(false);
+        setWhoweareTeamNodesIsLoading(false);
       }
     };
 
     checkWebGLSupport();
   }, []);
 
-  const closeWhoWeareMemberPanel = () => {
-    setWhoweareSelectedMember(null);
+  const closeWhoWeAreTeamNodesMemberPanel = () => {
+    setWhoweareTeamNodesSelectedMember(null);
   };
 
   // 2D Fallback UI
   const FallbackUI = () => (
     <div className="whoweare-fallback-container">
       <div className="whoweare-fallback-header">
-        <h1>TEAM SPACE</h1>
-        <div className="whoweare-subtitle">AsyncSite 크루들의 작업실</div>
+        <h1>OUR TEAM</h1>
+        <div className="whoweare-subtitle">AsyncSite를 만들어가는 사람들</div>
       </div>
       <div className="whoweare-fallback-grid">
-        {whoweareTeamMembers.map((member) => (
+        {whoweareTeamNodesMembers.map((member) => (
           <div
             key={member.id}
             className="whoweare-fallback-card"
             style={{ '--member-color': member.color, '--member-color-dark': member.darkColor } as React.CSSProperties}
-            onClick={() => setWhoweareSelectedMember(member)}
+            onClick={() => setWhoweareTeamNodesSelectedMember(member)}
           >
             <div className="whoweare-fallback-avatar">{member.initials}</div>
             <div className="whoweare-fallback-name">{member.name}</div>
@@ -152,25 +151,25 @@ const WhoWeArePage: React.FC = () => {
 
   return (
     <div className="whoweare-page-container">
-      {whoweareShow3D ? (
+      {whoweareTeamNodesShow3D ? (
         <>
           {/* Loading screen */}
-          {whoweareIsLoading && (
+          {whoweareTeamNodesIsLoading && (
             <div className="whoweare-loading">
-              <div className="whoweare-loading-text">ENTERING TEAM SPACE...</div>
+              <div className="whoweare-loading-text">CONNECTING TEAM NODES...</div>
             </div>
           )}
 
           {/* 3D Scene */}
           <Suspense fallback={null}>
-            <ThreeSceneLoader
-              members={whoweareTeamMembers}
-              onMemberSelect={setWhoweareSelectedMember}
-              onLoadComplete={() => setWhoweareIsLoading(false)}
+            <ThreeSceneTeamNodes
+              members={whoweareTeamNodesMembers}
+              onMemberSelect={setWhoweareTeamNodesSelectedMember}
+              onLoadComplete={() => setWhoweareTeamNodesIsLoading(false)}
               onLoadError={(error) => {
-                setWhoweareLoadError(error);
-                setWhoweareShow3D(false);
-                setWhoweareIsLoading(false);
+                setWhoweareTeamNodesLoadError(error);
+                setWhoweareTeamNodesShow3D(false);
+                setWhoweareTeamNodesIsLoading(false);
               }}
             />
           </Suspense>
@@ -178,17 +177,17 @@ const WhoWeArePage: React.FC = () => {
           {/* UI Overlay for 3D */}
           <div className="whoweare-ui-overlay">
             <div className="whoweare-header">
-              <h1>TEAM SPACE</h1>
-              <div className="whoweare-subtitle">AsyncSite 크루들의 작업실</div>
+              <h1>TEAM NETWORK</h1>
+              <div className="whoweare-subtitle">AsyncSite의 협업 네트워크</div>
             </div>
 
             {/* Instructions */}
             <div className="whoweare-instructions">
               <div className="whoweare-control-hint">🖱️ 마우스로 둘러보기 · 클릭으로 멤버 선택</div>
               <div className="whoweare-control-keys">
-                <span className="whoweare-key">WASD</span>
-                <span className="whoweare-key">마우스 드래그</span>
-                <span className="whoweare-key">스크롤 줌</span>
+                <span className="whoweare-key">드래그</span>
+                <span className="whoweare-key">스크롤</span>
+                <span className="whoweare-key">클릭</span>
               </div>
             </div>
           </div>
@@ -198,21 +197,21 @@ const WhoWeArePage: React.FC = () => {
       )}
 
       {/* Member Panel (shared between 3D and 2D) */}
-      {whoweareSelectedMember && (
+      {whoweareTeamNodesSelectedMember && (
         <div className="whoweare-ui-overlay">
           <div 
             className="whoweare-member-panel active" 
             style={{ 
-              '--member-color': whoweareSelectedMember.color, 
-              '--member-color-dark': whoweareSelectedMember.darkColor 
+              '--member-color': whoweareTeamNodesSelectedMember.color, 
+              '--member-color-dark': whoweareTeamNodesSelectedMember.darkColor 
             } as React.CSSProperties}
           >
-            <button className="whoweare-close-btn" onClick={closeWhoWeareMemberPanel}>×</button>
-            <div className="whoweare-member-avatar">{whoweareSelectedMember.initials}</div>
-            <div className="whoweare-member-name">{whoweareSelectedMember.name}</div>
-            <div className="whoweare-member-role">{whoweareSelectedMember.role}</div>
-            <div className="whoweare-member-quote">{whoweareSelectedMember.quote}</div>
-            <div className="whoweare-member-story">{whoweareSelectedMember.story}</div>
+            <button className="whoweare-close-btn" onClick={closeWhoWeAreTeamNodesMemberPanel}>×</button>
+            <div className="whoweare-member-avatar">{whoweareTeamNodesSelectedMember.initials}</div>
+            <div className="whoweare-member-name">{whoweareTeamNodesSelectedMember.name}</div>
+            <div className="whoweare-member-role">{whoweareTeamNodesSelectedMember.role}</div>
+            <div className="whoweare-member-quote">{whoweareTeamNodesSelectedMember.quote}</div>
+            <div className="whoweare-member-story">{whoweareTeamNodesSelectedMember.story}</div>
             <div className="whoweare-member-links">
               <a href="#" className="whoweare-link-btn">G</a>
               <a href="#" className="whoweare-link-btn">B</a>
@@ -232,4 +231,4 @@ const WhoWeArePage: React.FC = () => {
   );
 };
 
-export default WhoWeArePage;
+export default WhoWeAreTeamNodesPage;

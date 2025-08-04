@@ -29,6 +29,8 @@ const WhoWeAreSubtlePage = lazy(() => import('../pages/WhoWeAreSubtlePage'));
 const WhoWeArePlanetPage = lazy(() => import('../pages/WhoWeArePlanetPage'));
 const WhoWeAreGlassPage = lazy(() => import('../pages/WhoWeAreGlassPage'));
 const WhoWeAreScreenPage = lazy(() => import('../pages/WhoWeAreScreenPage'));
+const WhoWeAreTeamNodesPage = lazy(() => import('../pages/WhoWeAreTeamNodesPage'));
+const WhoWeAreProfilePlanetsPage = lazy(() => import('../pages/WhoWeAreProfilePlanetsPage'));
 
 const subRouter = [
   // 스터디 관련 라우트
@@ -165,6 +167,14 @@ const subRouter = [
   {
     path: 'whoweare-screen',
     element: <WhoWeAreScreenPage />,
+  },
+  {
+    path: 'whoweare-team-nodes',
+    element: <WhoWeAreTeamNodesPage />,
+  },
+  {
+    path: 'whoweare-profile-planets',
+    element: <WhoWeAreProfilePlanetsPage />,
   },
 ];
 export default subRouter;
