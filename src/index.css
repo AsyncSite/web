@@ -88,6 +88,28 @@ code {
   font-style: normal;
 }
 
+/* PF Stardust 3.0 - 3가지 굵기 */
+@font-face {
+  font-family: 'PFStardust';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/PFStardustRegular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PFStardust';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/PFStardustBold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PFStardust';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/PFStardustExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
 /* Global Typography */
 h1, h2, h3, h4, h5, h6 {
   margin: 0;

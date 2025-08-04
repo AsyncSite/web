@@ -76,7 +76,9 @@ body {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  text-align: center;
 }
 
 .btn-primary:hover {
@@ -99,7 +101,9 @@ body {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  text-align: center;
   backdrop-filter: blur(10px);
 }
 
@@ -203,6 +207,8 @@ body {
   .btn-secondary {
     padding: 12px 25px;
     font-size: 14px;
+    width: auto;
+    max-width: 280px;
   }
 }
 

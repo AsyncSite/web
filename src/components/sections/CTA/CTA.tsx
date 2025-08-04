@@ -22,6 +22,15 @@ const CTA: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     
+    // CTA 타이틀 그라데이션과 정확히 일치하는 색상 팔레트
+    const colorPalette = [
+      '#C3E88D', // 네온 그린 (그라데이션 시작)
+      '#82AAFF', // 일렉트릭 블루 (그라데이션 끝)
+      '#A3DE9D', // 네온 그린과 블루 사이 25%
+      '#92C99E', // 네온 그린과 블루 사이 50%
+      '#8AAFAA', // 네온 그린과 블루 사이 75%
+    ];
+    
     // 별 파티클 시스템
     const stars: {
       x: number;
@@ -31,6 +40,8 @@ const CTA: React.FC = () => {
       opacity: number;
       targetX: number;
       targetY: number;
+      color: string;
+      shadowColor: string;
     }[] = [];
     
     // 별 생성
@@ -39,6 +50,7 @@ const CTA: React.FC = () => {
       const distance = Math.random() * Math.max(canvas.width, canvas.height);
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
+      const selectedColor = colorPalette[Math.floor(Math.random() * colorPalette.length)];
       
       return {
         x: centerX + Math.cos(angle) * distance,
@@ -47,7 +59,9 @@ const CTA: React.FC = () => {
         speed: Math.random() * 0.02 + 0.01,
         opacity: 0,
         targetX: centerX,
-        targetY: centerY
+        targetY: centerY,
+        color: selectedColor,
+        shadowColor: selectedColor
       };
     };
     
@@ -71,12 +85,12 @@ const CTA: React.FC = () => {
         star.x += (star.targetX - star.x) * star.speed;
         star.y += (star.targetY - star.y) * star.speed;
         
-        // 별 그리기
+        // 별 그리기 (다양한 색상 적용)
         ctx.save();
         ctx.globalAlpha = star.opacity;
-        ctx.fillStyle = '#C3E88D';
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#C3E88D';
+        ctx.fillStyle = star.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = star.shadowColor;
         
         // 별 모양 그리기
         ctx.beginPath();

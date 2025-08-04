@@ -1,6 +1,6 @@
 /* Stats Section - 실타래처럼 엮이는 시간 */
 .stats {
-  padding: 200px 0 0 0;
+  padding: 200px 0 100px 0;
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -149,25 +149,20 @@
   cursor: pointer;
 }
 
-/* 중앙 시간 표시 - 물 흐르듯 */
+/* 중앙 시간 표시 - 미니멀하고 고급스럽게 */
 .time-display-weaving {
   position: relative;
   z-index: 3;
-  padding: 50px 60px;
+  padding: 60px 70px;
   animation: timeAppear 1s ease-out 0.5s both;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
-  background: radial-gradient(
-          ellipse at center,
-          rgba(10, 14, 39, 0.6) 0%,
-          rgba(10, 14, 39, 0.3) 40%,
-          transparent 70%
-  );
-  backdrop-filter: blur(10px);
+  gap: 35px;
+  background: none;
+  backdrop-filter: none;
   border: none;
-  border-radius: 50%;
+  border-radius: 0;
   box-shadow: none;
   top: -50px;
 }
@@ -197,15 +192,22 @@
 }
 
 .time-number {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 56px;
-  font-weight: 200;
-  color: rgba(255, 255, 255, 0.9);
-  letter-spacing: 3px;
+  font-family: 'PFStardust', 'DungGeunMo', 'Consolas', 'Monaco', 'Lucida Console', monospace !important;
+  font-size: 64px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 1);
+  letter-spacing: 1px;
   text-shadow:
-          0 0 20px rgba(195, 232, 141, 0.4),
-          0 0 40px rgba(195, 232, 141, 0.2);
-  animation: timeGlow 2s ease-in-out infinite;
+          0 0 40px rgba(195, 232, 141, 0.8),
+          0 0 80px rgba(195, 232, 141, 0.4),
+          0 0 20px rgba(195, 232, 141, 0.6),
+          0 2px 6px rgba(0, 0, 0, 0.5);
+  animation: timeGlow 3s ease-in-out infinite;
+  width: 130px;
+  text-align: center;
+  display: inline-block;
+  line-height: 1;
+  filter: brightness(1.1);
 }
 
 @keyframes timeGlow {
@@ -218,12 +220,13 @@
 }
 
 .time-label {
-  font-size: 14px;
-  color: rgba(195, 232, 141, 0.5);
+  font-size: 13px;
+  color: rgba(195, 232, 141, 0.6);
   text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 500;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: 3px;
+  font-weight: 600;
+  font-family: 'PFStardust', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-shadow: 0 0 10px rgba(195, 232, 141, 0.2);
 }
 
 .time-connector {
@@ -357,7 +360,8 @@
   }
 
   .time-number {
-    font-size: 42px;
+    font-size: clamp(36px, 7vw, 42px);
+    width: clamp(75px, 15vw, 90px);
   }
 
   .time-label {
@@ -429,6 +433,7 @@
   .time-number {
     font-size: 34px;
     letter-spacing: 1px;
+    width: 70px;
   }
 
   .time-label {

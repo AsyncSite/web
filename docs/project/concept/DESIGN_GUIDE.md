@@ -1,4 +1,36 @@
-# AsyncSite Design Guide
+
+3가지 굵기로 돌아온 PF스타더스트!
+400
+3가지 굵기로 돌아온 PF스타더스트!
+700
+3가지 굵기로 돌아온 PF스타더스트!
+800
+
+License text
+1. The copyright for PF Stardust belongs to the creator, Pinata (campanula913@naver.com).
+2. PF Starduster is free for commercial use by everyone, including individual and corporate users.
+3. Modification, redistribution, or selling for a fee without the creator's permission is prohibited.
+
+License summary
+Category	Usage scope	Allowed
+Print	Brochure, Poster, Book, Magazine, and Publications	Allowed
+Website	Webpage Ad banner Email E-brochure	Allowed
+Packaging	Commercial Product Packaging	Allowed
+Video	Video Subtitles Movie Opening/Ending Credits User-Generated Content, etc.	Allowed
+Embedding	Website and Application Server Font Installation E-book Production	Allowed
+BI/CI	Company Name Brand Name Product Name Logo Mark Slogan Catchphrase	Allowed
+OFL	Modification, duplication, and redistribution of the font file are permitted.
+※ The above usage scope is for reference only. Please confirm the exact usage scope with the font copyright holder before use.
+The usage scope may vary according to the regulations of the copyright holder.
+The copyright holder is written under the font name at the top of the page.
+
+Use as webfont
+@font-face {
+font-family: 'PFStardustExtraBold';
+src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/PFStardustExtraBold.woff2') format('woff2');
+font-weight: 800;
+font-style: normal;
+}아니 여기# AsyncSite Design Guide
 
 ## 1. 디자인 철학 (Design Philosophy)
 
@@ -73,6 +105,7 @@
 | **UI / Interface** | `Pretendard` | 대부분의 UI 텍스트, 뛰어난 가독성 |
 | **Code / Terminal** | `Consolas`, `Source Code Pro` | 코드 블록, 기술적 콘텐츠 |
 | **Retro / Game** | `DungGeunMo` | 레트로 게임 UI, 특별한 효과 |
+| **Digital / Futuristic** | `PFStardust` | 미래지향적 숫자, 시간 표시, 사이버펑크 분위기 |
 | **Content / Body** | `LINESeedKR`, `NoonnuBasicGothic` | 긴 텍스트, 읽기 편한 본문 |
 
 ### 3.2 타입 스케일 (Type Scale)

@@ -1,6 +1,6 @@
 /* About Section - 카드 스타일 기반 */
 .about {
-  padding: 120px 0;
+  padding: 160px 0 120px 0;
   overflow: hidden;
 }
 
@@ -229,27 +229,29 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Layout Variations */
-.about-subsection[data-layout="answer-left"] .section-inner {
-  grid-template-columns: 1fr 1fr;
-}
+/* Layout Variations - 데스크탑에서만 적용 */
+@media (min-width: 769px) {
+  .about-subsection[data-layout="answer-left"] .section-inner {
+    grid-template-columns: 1fr 1fr;
+  }
 
-.about-subsection[data-layout="answer-left"] .question-block {
-  transform: translateX(50px);
-  order: 2;
-}
+  .about-subsection[data-layout="answer-left"] .question-block {
+    transform: translateX(50px);
+    order: 2;
+  }
 
-.about-subsection[data-layout="answer-left"] .answer-block {
-  transform: translateX(-50px);
-  order: 1;
-}
+  .about-subsection[data-layout="answer-left"] .answer-block {
+    transform: translateX(-50px);
+    order: 1;
+  }
 
-.about-subsection[data-layout="answer-left"] .question-block.animate-in {
-  transform: translateX(0);
-}
+  .about-subsection[data-layout="answer-left"] .question-block.animate-in {
+    transform: translateX(0);
+  }
 
-.about-subsection[data-layout="answer-left"] .answer-block.animate-in {
-  transform: translateX(0);
+  .about-subsection[data-layout="answer-left"] .answer-block.animate-in {
+    transform: translateX(0);
+  }
 }
 
 /* 반응형 */
@@ -269,7 +271,7 @@
 
 @media (max-width: 768px) {
   .about {
-    padding: 80px 0;
+    padding: 120px 0 80px 0;
   }
   
   .about-container {
@@ -281,25 +283,22 @@
     gap: 40px;
   }
   
-  .about-subsection[data-layout="answer-left"] .question-block,
+  /* 모바일에서는 모든 블록이 기본 세로 배치 */
   .question-block {
     transform: translateY(30px);
     order: 1;
   }
   
-  .about-subsection[data-layout="answer-left"] .answer-block,
   .answer-block {
     transform: translateY(30px);
     order: 2;
   }
   
-  .question-block.animate-in,
-  .about-subsection[data-layout="answer-left"] .question-block.animate-in {
+  .question-block.animate-in {
     transform: translateY(0);
   }
   
-  .answer-block.animate-in,
-  .about-subsection[data-layout="answer-left"] .answer-block.animate-in {
+  .answer-block.animate-in {
     transform: translateY(0);
   }
   
@@ -316,7 +315,7 @@
 
 @media (max-width: 480px) {
   .about {
-    padding: 60px 0;
+    padding: 100px 0 60px 0;
   }
   
   .section-header {
