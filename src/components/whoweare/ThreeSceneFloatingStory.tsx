@@ -378,9 +378,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         // Member spheres with profile cards
         const memberObjects: any[] = [];
         const raycaster = new THREE.Raycaster();
-        // Improve raycaster precision
-        raycaster.params.Points.threshold = 0.1;
-        raycaster.params.Line.threshold = 0.1;
         const mouse = new THREE.Vector2();
 
         members.forEach((member) => {
@@ -394,7 +391,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             metalness: 0.1,
             roughness: 0.1,
             transparent: true,
-            opacity: 0.4, // Increased for better visibility
+            opacity: 0.3,
             clearcoat: 1.0,
             clearcoatRoughness: 0.0,
             side: THREE.DoubleSide
@@ -411,7 +408,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             side: THREE.BackSide
           });
           const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
-          glowSphere.raycast = () => {}; // Disable raycasting for glow
           group.add(glowSphere);
           
           // Profile card inside sphere
@@ -484,8 +480,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             profileMaterial
           );
           profilePlane.position.z = 0.05;
-          // Make profile plane not interfere with sphere clicking
-          profilePlane.raycast = () => {}; 
           profileGroup.add(profilePlane);
           
           group.add(profileGroup);
@@ -552,7 +546,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             obj.scale.set(1, 1, 1);
             const sphere = obj.children[0] as any;
             if (sphere && sphere.material) {
-              sphere.material.opacity = 0.4; // Match default opacity
+              sphere.material.opacity = 0.3;
             }
           });
           
@@ -596,7 +590,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             closestMember.scale.set(1.2, 1.2, 1.2);
             const sphere = closestMember.children[0] as any;
             if (sphere && sphere.material) {
-              sphere.material.opacity = 0.6; // More visible on hover
+              sphere.material.opacity = 0.5;
             }
             document.body.style.cursor = 'pointer';
           } else {
@@ -651,10 +645,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             }
           }
           
-          // Debug logging
-          if (memberIntersects.length > 0 && !closestMember) {
-            console.log('Member intersects found but no valid member:', memberIntersects);
-          }
           
           // Click on the closest object (story card or member)
           if (closestStoryCard && closestStoryDistance < closestMemberDistance) {
@@ -790,7 +780,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             obj.rotation.y += obj.userData.rotationSpeed;
             
             if (obj.userData.profileGroup) {
-              obj.userData.profileGroup.rotation.y = -obj.rotation.y;
+              obj.userData.profileGroup.lookAt(camera.position);
             }
           });
           
