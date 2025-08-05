@@ -229,88 +229,93 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           const borderLines = new THREE.LineSegments(borderGeometry, borderMaterial);
           group.add(borderLines);
           
-          // Create text texture with higher resolution
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = 2048; // Double resolution
-          canvas.height = 1536; // Double resolution
-          
-          if (ctx) {
-            // Scale context for high DPI
-            ctx.scale(2, 2);
+          // Create text texture function
+          const createTextTexture = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 2048; // Double resolution
+            canvas.height = 1536; // Double resolution
             
-            // Clear canvas
-            ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-            ctx.fillRect(0, 0, 1024, 768);
-            
-            // Add stronger background for better text visibility
-            const bgGradient = ctx.createRadialGradient(512, 384, 0, 512, 384, 600);
-            bgGradient.addColorStop(0, 'rgba(10, 10, 10, 0.95)');
-            bgGradient.addColorStop(0.7, 'rgba(10, 10, 10, 0.85)');
-            bgGradient.addColorStop(1, 'rgba(10, 10, 10, 0.7)');
-            ctx.fillStyle = bgGradient;
-            ctx.fillRect(0, 0, 1024, 768);
-            
-            // Add subtle glow background for title
-            if (panel.title) {
-              const titleGlow = ctx.createRadialGradient(512, 150, 0, 512, 150, 300);
-              titleGlow.addColorStop(0, 'rgba(195, 232, 141, 0.15)');
-              titleGlow.addColorStop(1, 'rgba(195, 232, 141, 0)');
-              ctx.fillStyle = titleGlow;
-              ctx.fillRect(0, 0, 1024, 300);
-            }
-            
-            // Title with maximum clarity
-            if (panel.title) {
-              // Multiple shadow layers for better visibility
-              ctx.shadowColor = '#000000';
-              ctx.shadowBlur = 20;
-              ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 3;
+            if (ctx) {
+              // Scale context for high DPI
+              ctx.scale(2, 2);
               
-              // Draw title multiple times for bold effect
-              ctx.fillStyle = '#C3E88D';
-              ctx.font = '900 74px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+              // Clear canvas
+              ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+              ctx.fillRect(0, 0, 1024, 768);
+              
+              // Add stronger background for better text visibility
+              const bgGradient = ctx.createRadialGradient(512, 384, 0, 512, 384, 600);
+              bgGradient.addColorStop(0, 'rgba(10, 10, 10, 0.95)');
+              bgGradient.addColorStop(0.7, 'rgba(10, 10, 10, 0.85)');
+              bgGradient.addColorStop(1, 'rgba(10, 10, 10, 0.7)');
+              ctx.fillStyle = bgGradient;
+              ctx.fillRect(0, 0, 1024, 768);
+              
+              // Add subtle glow background for title
+              if (panel.title) {
+                const titleGlow = ctx.createRadialGradient(512, 150, 0, 512, 150, 300);
+                titleGlow.addColorStop(0, 'rgba(195, 232, 141, 0.15)');
+                titleGlow.addColorStop(1, 'rgba(195, 232, 141, 0)');
+                ctx.fillStyle = titleGlow;
+                ctx.fillRect(0, 0, 1024, 300);
+              }
+              
+              // Title with maximum clarity
+              if (panel.title) {
+                // Multiple shadow layers for better visibility
+                ctx.shadowColor = '#000000';
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 3;
+                
+                // Draw title multiple times for bold effect
+                ctx.fillStyle = '#C3E88D';
+                ctx.font = '900 74px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                ctx.textAlign = 'center';
+                
+                // Draw shadow layer
+                ctx.fillText(panel.title, 512, 150);
+                
+                // Draw main text
+                ctx.shadowBlur = 5;
+                ctx.shadowOffsetY = 1;
+                ctx.fillText(panel.title, 512, 150);
+                
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetY = 0;
+              }
+              
+              // Content with maximum readability
+              ctx.fillStyle = '#ffffff';
+              ctx.font = '600 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
               ctx.textAlign = 'center';
+              ctx.shadowColor = '#000000';
+              ctx.shadowBlur = 15;
+              ctx.shadowOffsetX = 0;
+              ctx.shadowOffsetY = 2;
               
-              // Draw shadow layer
-              ctx.fillText(panel.title, 512, 150);
+              const lines = panel.content.split('\n');
+              lines.forEach((line, i) => {
+                // Draw shadow layer
+                ctx.fillText(line, 512, 320 + i * 70);
+              });
               
-              // Draw main text
-              ctx.shadowBlur = 5;
+              // Draw text again with less shadow for crisp edges
+              ctx.shadowBlur = 3;
               ctx.shadowOffsetY = 1;
-              ctx.fillText(panel.title, 512, 150);
-              
-              ctx.shadowBlur = 0;
-              ctx.shadowOffsetY = 0;
+              lines.forEach((line, i) => {
+                ctx.fillText(line, 512, 320 + i * 70);
+              });
             }
             
-            // Content with maximum readability
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '600 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.shadowColor = '#000000';
-            ctx.shadowBlur = 15;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 2;
-            
-            const lines = panel.content.split('\n');
-            lines.forEach((line, i) => {
-              // Draw shadow layer
-              ctx.fillText(line, 512, 320 + i * 70);
-            });
-            
-            // Draw text again with less shadow for crisp edges
-            ctx.shadowBlur = 3;
-            ctx.shadowOffsetY = 1;
-            lines.forEach((line, i) => {
-              ctx.fillText(line, 512, 320 + i * 70);
-            });
-          }
+            return new THREE.CanvasTexture(canvas);
+          };
           
-          const textTexture = new THREE.CanvasTexture(canvas);
+          // Create front text
+          const frontTexture = createTextTexture();
           const textMaterial = new THREE.MeshBasicMaterial({
-            map: textTexture,
+            map: frontTexture,
             transparent: true,
             opacity: 1,
             side: THREE.DoubleSide,
@@ -323,6 +328,24 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           );
           textPlane.position.z = 0.01;
           group.add(textPlane);
+          
+          // Create back text
+          const backTexture = createTextTexture();
+          const backTextMaterial = new THREE.MeshBasicMaterial({
+            map: backTexture,
+            transparent: true,
+            opacity: 1,
+            side: THREE.DoubleSide,
+            depthWrite: false
+          });
+          
+          const backTextPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(4.8, 2.8),
+            backTextMaterial
+          );
+          backTextPlane.position.z = -0.01;
+          backTextPlane.rotation.y = Math.PI; // Rotate 180 degrees
+          group.add(backTextPlane);
           
           // Position and rotation
           group.position.set(panel.position.x, panel.position.y, panel.position.z);
