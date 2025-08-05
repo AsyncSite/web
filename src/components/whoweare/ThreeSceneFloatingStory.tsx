@@ -26,6 +26,11 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
   const [selectedStoryCard, setSelectedStoryCard] = useState<any>(null);
   const [isZooming, setIsZooming] = useState(false);
   const lastClickTimeRef = useRef<number>(0);
+  
+  // Simplified drag detection
+  const mouseDownTimeRef = useRef<number>(0);
+  const mouseDownPosRef = useRef({ x: 0, y: 0 });
+  const hasMovedRef = useRef(false);
 
   // Generate random positions for story panels
   const generateRandomPosition = (index: number) => {
@@ -43,45 +48,38 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
   // Story content with random positions generated on mount
   const storyPanels = useMemo(() => [
     {
-      id: 'intro',
-      title: 'AsyncSite',
-      content: '각자의 궤도를 도는 개발자들이\n서로의 중력이 되어주는\n지속가능한 성장 생태계',
+      id: 'why',
+      title: '왜 시작했나요?',
+      content: '혼자 공부하다 지치지 않으셨나요?\n유튜브와 블로그만으론 부족하죠.\n진짜 성장은 함께할 때\n비로소 시작된다고 믿어요.',
       position: generateRandomPosition(0),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
-      id: 'why',
-      title: '왜 시작했나요?',
-      content: '우리는 \'점\'으로 흩어진\n지식의 시대에 지쳤어요.\n개발자의 성장은 점점 더\n고독한 싸움이 되어가고 있어요.',
+      id: 'value1',
+      title: '어떻게 성장하나요?',
+      content: '실제 프로젝트를 함께 만들어요.\n코드 리뷰로 서로 배우고,\n동료의 피드백으로 성장해요.\n지식이 경험이 되는 순간을 만들어요.',
       position: generateRandomPosition(1),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
-      id: 'value1',
-      title: '큰 그림을 그려요',
-      content: '코드 리뷰와 동료 피드백,\n팀 프로젝트를 통해\n학습한 지식을 실제 경험으로\n꿰어내는 \'총체적 성장\'',
+      id: 'value2',
+      title: '어떤 문화를 만드나요?',
+      content: '각자의 속도를 존중해요.\n비동기적(Async)으로 참여하되,\n안정적인 터전(Site)에서\n지속적으로 연결되어 있어요.',
       position: generateRandomPosition(2),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
-      id: 'value2',
-      title: '느슨하지만 끈끈해요',
-      content: '각자의 속도와 리듬을 존중하는\n비동기적(Async) 참여,\n그리고 안정적인 터전(Site)',
+      id: 'value3',
+      title: '어떻게 지속하나요?',
+      content: '리더에겐 합당한 보상을,\n멤버에겐 다음이 기대되는 경험을.\n모두가 윈윈하는 구조로\n오래오래 함께 가요.',
       position: generateRandomPosition(3),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
-      id: 'value3',
-      title: '지속가능함을 추구해요',
-      content: '리더에게 합당한 보상,\n멤버들에게는 다음 시즌을\n기대하게 만드는 시스템',
-      position: generateRandomPosition(4),
-      rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
-    },
-    {
       id: 'question',
-      title: '',
-      content: '"어떻게 하면, 이 외로운 여정을\n함께, 그리고 꾸준히\n걸어갈 수 있을까?"\n\n우리는 그 답을\n여기서 찾아가고 있습니다.',
-      position: generateRandomPosition(5),
+      title: '우리의 질문',
+      content: '"어떻게 하면 이 외로운 여정을\n함께, 그리고 꾸준히\n걸어갈 수 있을까요?"',
+      position: generateRandomPosition(4),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     }
   ], []);
@@ -143,9 +141,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           alpha: true 
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = false; // Disable shadows for performance
         mountRef.current.appendChild(renderer.domElement);
         rendererRef.current = renderer;
 
@@ -163,11 +160,11 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         controls.panSpeed = 0.8; // Smoother panning
         controlsRef.current = controls;
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+        // Optimized lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.0);
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.3);
         directionalLight.position.set(10, 10, 10);
         scene.add(directionalLight);
 
@@ -232,33 +229,31 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           // Create text texture function
           const createTextTexture = () => {
             const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 2048; // Double resolution
-            canvas.height = 1536; // Double resolution
+            const ctx = canvas.getContext('2d', { alpha: false });
+            canvas.width = 512; // Optimized resolution
+            canvas.height = 384; // Optimized resolution
             
             if (ctx) {
-              // Scale context for high DPI
-              ctx.scale(2, 2);
               
               // Clear canvas
               ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-              ctx.fillRect(0, 0, 1024, 768);
+              ctx.fillRect(0, 0, 512, 384);
               
               // Add stronger background for better text visibility
-              const bgGradient = ctx.createRadialGradient(512, 384, 0, 512, 384, 600);
+              const bgGradient = ctx.createRadialGradient(256, 192, 0, 256, 192, 300);
               bgGradient.addColorStop(0, 'rgba(10, 10, 10, 0.95)');
               bgGradient.addColorStop(0.7, 'rgba(10, 10, 10, 0.85)');
               bgGradient.addColorStop(1, 'rgba(10, 10, 10, 0.7)');
               ctx.fillStyle = bgGradient;
-              ctx.fillRect(0, 0, 1024, 768);
+              ctx.fillRect(0, 0, 512, 384);
               
               // Add subtle glow background for title
               if (panel.title) {
-                const titleGlow = ctx.createRadialGradient(512, 150, 0, 512, 150, 300);
+                const titleGlow = ctx.createRadialGradient(256, 75, 0, 256, 75, 150);
                 titleGlow.addColorStop(0, 'rgba(195, 232, 141, 0.15)');
                 titleGlow.addColorStop(1, 'rgba(195, 232, 141, 0)');
                 ctx.fillStyle = titleGlow;
-                ctx.fillRect(0, 0, 1024, 300);
+                ctx.fillRect(0, 0, 512, 150);
               }
               
               // Title with maximum clarity
@@ -271,16 +266,16 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 
                 // Draw title multiple times for bold effect
                 ctx.fillStyle = '#C3E88D';
-                ctx.font = '900 74px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                ctx.font = '600 37px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
                 ctx.textAlign = 'center';
                 
                 // Draw shadow layer
-                ctx.fillText(panel.title, 512, 150);
+                ctx.fillText(panel.title, 256, 75);
                 
                 // Draw main text
                 ctx.shadowBlur = 5;
                 ctx.shadowOffsetY = 1;
-                ctx.fillText(panel.title, 512, 150);
+                ctx.fillText(panel.title, 256, 75);
                 
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetY = 0;
@@ -288,24 +283,31 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               
               // Content with maximum readability
               ctx.fillStyle = '#ffffff';
-              ctx.font = '600 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+              ctx.font = '400 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
               ctx.textAlign = 'center';
               ctx.shadowColor = '#000000';
-              ctx.shadowBlur = 15;
+              ctx.shadowBlur = 20;
               ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 2;
+              ctx.shadowOffsetY = 3;
               
               const lines = panel.content.split('\n');
               lines.forEach((line, i) => {
                 // Draw shadow layer
-                ctx.fillText(line, 512, 320 + i * 70);
+                ctx.fillText(line, 256, 160 + i * 35);
               });
               
               // Draw text again with less shadow for crisp edges
-              ctx.shadowBlur = 3;
-              ctx.shadowOffsetY = 1;
+              ctx.shadowBlur = 5;
+              ctx.shadowOffsetY = 2;
               lines.forEach((line, i) => {
-                ctx.fillText(line, 512, 320 + i * 70);
+                ctx.fillText(line, 256, 160 + i * 35);
+              });
+              
+              // Final layer for maximum sharpness
+              ctx.shadowBlur = 0;
+              ctx.shadowOffsetY = 0;
+              lines.forEach((line, i) => {
+                ctx.fillText(line, 256, 160 + i * 35);
               });
             }
             
@@ -319,7 +321,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             transparent: true,
             opacity: 1,
             side: THREE.DoubleSide,
-            depthWrite: false
+            depthWrite: true,
+            depthTest: true
           });
           
           const textPlane = new THREE.Mesh(
@@ -336,7 +339,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             transparent: true,
             opacity: 1,
             side: THREE.DoubleSide,
-            depthWrite: false
+            depthWrite: true,
+            depthTest: true
           });
           
           const backTextPlane = new THREE.Mesh(
@@ -351,33 +355,17 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           group.position.set(panel.position.x, panel.position.y, panel.position.z);
           group.rotation.y = panel.rotation.y;
           
-          // Stronger glow light for visibility
-          const cardLight = new THREE.PointLight(0xC3E88D, 0.6, 20); // Increased intensity and range
+          // Single optimized light per card
+          const cardLight = new THREE.PointLight(0xC3E88D, 0.5, 15);
           cardLight.position.copy(group.position);
           scene.add(cardLight);
           group.userData.light = cardLight;
-          
-          // Additional white light for text clarity
-          const textLight = new THREE.PointLight(0xffffff, 0.4, 10); // Increased intensity
-          textLight.position.copy(group.position);
-          textLight.position.z += 2;
-          scene.add(textLight);
-          group.userData.textLight = textLight;
-          
-          // Front-facing spotlight for text
-          const spotLight = new THREE.SpotLight(0xffffff, 0.3);
-          spotLight.position.copy(group.position);
-          spotLight.position.z += 5;
-          spotLight.target = cardMesh;
-          spotLight.angle = Math.PI / 6;
-          spotLight.penumbra = 0.5;
-          scene.add(spotLight);
-          group.userData.spotLight = spotLight;
           
           // Animation properties
           group.userData.floatOffset = Math.random() * Math.PI * 2;
           group.userData.originalPosition = group.position.clone();
           group.userData.originalRotation = group.rotation.clone();
+          group.userData.isStoryCard = true;
           
           // Initial scale animation
           group.scale.set(0, 0, 0);
@@ -414,34 +402,31 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             metalness: 0.1,
             roughness: 0.1,
             transparent: true,
-            opacity: 0.3,
+            opacity: 0.5,
             clearcoat: 1.0,
             clearcoatRoughness: 0.0,
-            side: THREE.DoubleSide
+            side: THREE.DoubleSide,
+            depthWrite: false
           });
           const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+          sphere.renderOrder = 1;
           group.add(sphere);
           
-          // Add invisible click helper sphere (slightly larger)
-          const clickHelperGeometry = new THREE.SphereGeometry(1.2, 16, 16);
+          // Add invisible click helper sphere (much larger for better detection)
+          const clickHelperGeometry = new THREE.SphereGeometry(1.5, 16, 16);
           const clickHelperMaterial = new THREE.MeshBasicMaterial({
-            visible: false,
+            transparent: true,
+            opacity: 0.01, // Very slight opacity to ensure raycasting works
             side: THREE.DoubleSide
           });
           const clickHelper = new THREE.Mesh(clickHelperGeometry, clickHelperMaterial);
           clickHelper.userData = member;
+          clickHelper.name = 'clickHelper';
+          clickHelper.renderOrder = 999; // Ensure it's checked first
           group.add(clickHelper);
           
-          // Inner glow
-          const glowGeometry = new THREE.SphereGeometry(0.95, 32, 32);
-          const glowMaterial = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(member.color),
-            transparent: true,
-            opacity: 0.1,
-            side: THREE.BackSide
-          });
-          const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
-          group.add(glowSphere);
+          // Inner glow (removed to eliminate dark edges)
+          // Commenting out the inner glow sphere
           
           // Profile card inside sphere
           const profileGroup = new THREE.Group();
@@ -449,26 +434,26 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           // Create profile card with canvas
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          canvas.width = 256;
-          canvas.height = 320;
+          canvas.width = 128;
+          canvas.height = 160;
           
           if (ctx) {
             // Glassmorphism background
-            const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+            const gradient = ctx.createLinearGradient(0, 0, 0, 160);
             gradient.addColorStop(0, `rgba(255, 255, 255, 0.1)`);
             gradient.addColorStop(0.5, `rgba(255, 255, 255, 0.05)`);
             gradient.addColorStop(1, `rgba(255, 255, 255, 0.1)`);
             ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 256, 320);
+            ctx.fillRect(0, 0, 128, 160);
             
             // Profile content
-            const centerX = 128;
+            const centerX = 64;
             const padding = 20;
             const contentWidth = canvas.width - (padding * 2);
             
             // Dynamic sizing based on content
-            let currentY = 20;
-            const photoSize = Math.min(60, canvas.height * 0.25); // 25% of canvas height max
+            let currentY = 10;
+            const photoSize = Math.min(30, canvas.height * 0.25); // 25% of canvas height max
             const photoRadius = photoSize / 2;
             
             // Profile image with dynamic sizing
@@ -512,30 +497,30 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               ctx.fillText(member.initials, centerX, currentY + photoRadius);
             }
             
-            currentY += photoSize + 15;
+            currentY += photoSize + 8;
             
             // Name with dynamic font size
             ctx.fillStyle = '#ffffff';
-            let nameFontSize = 18;
+            let nameFontSize = 9;
             ctx.font = `bold ${nameFontSize}px Arial`;
             ctx.textAlign = 'center';
             
             // Adjust font size if name is too wide
-            while (ctx.measureText(member.name).width > contentWidth && nameFontSize > 12) {
+            while (ctx.measureText(member.name).width > contentWidth && nameFontSize > 6) {
               nameFontSize--;
               ctx.font = `bold ${nameFontSize}px Arial`;
             }
             ctx.fillText(member.name, centerX, currentY);
             
-            currentY += nameFontSize + 8;
+            currentY += nameFontSize + 4;
             
             // Role with dynamic font size
             ctx.fillStyle = member.color;
-            let roleFontSize = 14;
+            let roleFontSize = 7;
             ctx.font = `${roleFontSize}px Arial`;
             
             // Adjust font size if role is too wide
-            while (ctx.measureText(member.role).width > contentWidth && roleFontSize > 10) {
+            while (ctx.measureText(member.role).width > contentWidth && roleFontSize > 5) {
               roleFontSize--;
               ctx.font = `${roleFontSize}px Arial`;
             }
@@ -553,15 +538,17 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             profileMaterial
           );
           profilePlane.position.z = 0.05;
+          profilePlane.renderOrder = 2; // Ensure proper layering
           profileGroup.add(profilePlane);
           
           group.add(profileGroup);
           group.userData.profileGroup = profileGroup;
           
-          // Position in space
-          const angle = (members.indexOf(member) / members.length) * Math.PI * 2;
-          const radius = 10;
-          const height = Math.sin(angle * 2) * 3;
+          // Position in space with better distribution
+          const memberIndex = members.indexOf(member);
+          const angle = (memberIndex / members.length) * Math.PI * 2;
+          const radius = 12 + (memberIndex % 2) * 3; // Alternate between two radius levels
+          const height = Math.sin(angle * 2) * 3 + (memberIndex % 3 - 1) * 1.5; // Vary heights more
           
           group.position.set(
             Math.cos(angle) * radius,
@@ -573,11 +560,13 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           group.userData.floatSpeed = 0.5 + Math.random() * 0.5;
           group.userData.rotationSpeed = 0.001 + Math.random() * 0.002;
           group.userData.originalY = group.position.y;
+          group.userData.isMember = true;
           
-          // Point light
-          const light = new THREE.PointLight(new THREE.Color(member.color), 0.5, 8);
+          // Optimized member light
+          const light = new THREE.PointLight(new THREE.Color(member.color), 0.3, 8);
           light.position.copy(group.position);
           scene.add(light);
+          group.userData.light = light;
           
           scene.add(group);
           memberObjects.push(group);
@@ -587,7 +576,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         const findGroupWithUserData = (object: any): any => {
           let current = object;
           while (current) {
-            if (current.userData && (current.userData.id || current.userData.name)) {
+            if (current.userData && (current.userData.id || current.userData.name || current.userData.isMember || current.userData.isStoryCard)) {
               return current;
             }
             current = current.parent;
@@ -596,15 +585,52 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         };
 
         // Mouse events
+        const handleMouseDown = (event: MouseEvent) => {
+          mouseDownTimeRef.current = Date.now();
+          mouseDownPosRef.current = { x: event.clientX, y: event.clientY };
+          hasMovedRef.current = false;
+        };
+        
+        const handleMouseUp = (event: MouseEvent) => {
+          // Just a placeholder - we handle everything in click
+        };
+        
         const handleMouseMove = (event: MouseEvent) => {
           mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
           mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
           
+          // Check if mouse has moved significantly since mousedown
+          if (mouseDownTimeRef.current > 0) {
+            const distance = Math.sqrt(
+              Math.pow(event.clientX - mouseDownPosRef.current.x, 2) + 
+              Math.pow(event.clientY - mouseDownPosRef.current.y, 2)
+            );
+            if (distance > 5) {
+              hasMovedRef.current = true;
+            }
+          }
+          
           raycaster.setFromCamera(mouse, camera);
+          
+          // Set near and far for better detection
+          raycaster.near = 0.1;
+          raycaster.far = 100;
           
           // Get all intersections from both story cards and members
           const allObjects = [...storyObjects, ...memberObjects];
           const allIntersects = raycaster.intersectObjects(allObjects, true);
+          
+          // Debug: Log what's being detected
+          if (allIntersects.length > 0) {
+            console.log('Hover detected:', allIntersects.map(i => ({
+              name: i.object.name || 'unnamed',
+              type: i.object.type,
+              distance: i.distance,
+              visible: i.object.visible,
+              userData: i.object.userData,
+              parentUserData: i.object.parent?.userData
+            })));
+          }
           
           // Reset all objects first
           storyObjects.forEach(obj => {
@@ -617,9 +643,11 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           memberObjects.forEach(obj => {
             obj.scale.set(1, 1, 1);
-            const sphere = obj.children[0] as any;
+            const sphere = obj.children.find((child: any) => child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper') as any;
             if (sphere && sphere.material) {
-              sphere.material.opacity = 0.3;
+              sphere.material.opacity = 0.5;
+              sphere.material.emissive = new THREE.Color(0x000000); // Reset glow
+              sphere.material.emissiveIntensity = 0;
             }
           });
           
@@ -629,14 +657,14 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           for (const intersect of allIntersects) {
             // Skip invisible objects
-            if (intersect.object.visible === false) continue;
+            if (!intersect.object.visible) continue;
             
             const parentGroup = findGroupWithUserData(intersect.object);
             if (!parentGroup) continue;
             
             // Check if it's a valid story card or member
-            const isStoryCard = storyObjects.includes(parentGroup);
-            const isMember = memberObjects.includes(parentGroup);
+            const isStoryCard = parentGroup.userData.isStoryCard || storyObjects.includes(parentGroup);
+            const isMember = parentGroup.userData.isMember || memberObjects.includes(parentGroup);
             
             if ((isStoryCard || isMember) && intersect.distance < minDistance) {
               minDistance = intersect.distance;
@@ -651,6 +679,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           // Apply hover effect to the closest object
           if (hoveredObject) {
+            console.log('Hovering over:', hoveredObject.isMember ? 'Member' : 'Story Card', hoveredObject.group.userData);
             if (hoveredObject.isStoryCard) {
               hoveredObject.group.scale.set(1.1, 1.1, 1.1);
               const card = hoveredObject.group.children[0] as any;
@@ -658,15 +687,20 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 card.material.opacity = 1;
               }
             } else if (hoveredObject.isMember) {
-              hoveredObject.group.scale.set(1.15, 1.15, 1.15);
-              const sphere = hoveredObject.group.children[0] as any;
+              hoveredObject.group.scale.set(1.3, 1.3, 1.3); // 더 크게
+              const sphere = hoveredObject.group.children.find((child: any) => child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper') as any;
               if (sphere && sphere.material) {
-                sphere.material.opacity = 0.5;
+                sphere.material.opacity = 0.9; // 더 선명하게
+                sphere.material.emissive = new THREE.Color(hoveredObject.group.userData.color);
+                sphere.material.emissiveIntensity = 0.3; // 빛나는 효과
               }
             }
+            // 더 강력하게 cursor 설정
             document.body.style.cursor = 'pointer';
+            renderer.domElement.style.cursor = 'pointer';
           } else {
             document.body.style.cursor = 'default';
+            renderer.domElement.style.cursor = 'default';
           }
         };
 
@@ -679,11 +713,24 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           // Prevent clicks during zoom animation
           if (isZooming || selectedStoryCard) return;
           
+          // Check if this was a drag (mouse moved more than 5px or took longer than 500ms)
+          const clickDuration = currentTime - mouseDownTimeRef.current;
+          if (hasMovedRef.current || clickDuration > 500) {
+            // Reset state and ignore this as a click
+            mouseDownTimeRef.current = 0;
+            hasMovedRef.current = false;
+            return;
+          }
+          
           // Update mouse position from click event
           mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
           mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
           
           raycaster.setFromCamera(mouse, camera);
+          
+          // Set near and far for better detection
+          raycaster.near = 0.1;
+          raycaster.far = 100;
           
           // Get all intersections from both story cards and members
           const allObjects = [...storyObjects, ...memberObjects];
@@ -695,14 +742,14 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           for (const intersect of allIntersects) {
             // Skip invisible objects
-            if (intersect.object.visible === false) continue;
+            if (!intersect.object.visible) continue;
             
             const parentGroup = findGroupWithUserData(intersect.object);
             if (!parentGroup) continue;
             
             // Check if it's a valid story card or member
-            const isStoryCard = storyObjects.includes(parentGroup);
-            const isMember = memberObjects.includes(parentGroup);
+            const isStoryCard = parentGroup.userData.isStoryCard || storyObjects.includes(parentGroup);
+            const isMember = parentGroup.userData.isMember || memberObjects.includes(parentGroup);
             
             if ((isStoryCard || isMember) && intersect.distance < minDistance) {
               minDistance = intersect.distance;
@@ -763,8 +810,14 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               animateZoom();
             }
           }
+          
+          // Reset mouse state after handling click
+          mouseDownTimeRef.current = 0;
+          hasMovedRef.current = false;
         };
 
+        window.addEventListener('mousedown', handleMouseDown);
+        window.addEventListener('mouseup', handleMouseUp);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('click', handleClick);
 
@@ -812,47 +865,105 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         };
         window.addEventListener('resize', handleResize);
 
-        // Animation loop
+        // Animation loop with LOD
         const animate = () => {
           animationIdRef.current = requestAnimationFrame(animate);
           const time = Date.now() * 0.001;
           
-          // Animate story panels - 3D floating movement
+          // LOD system
+          const cameraPosition = camera.position;
+          
+          // Animate story panels with LOD
           storyObjects.forEach((obj, index) => {
-            const floatY = Math.sin(time * 0.3 + obj.userData.floatOffset) * 0.3;
-            const floatX = Math.cos(time * 0.2 + obj.userData.floatOffset) * 0.2;
-            const floatZ = Math.sin(time * 0.25 + obj.userData.floatOffset) * 0.1;
+            const distance = obj.position.distanceTo(cameraPosition);
             
-            obj.position.y = obj.userData.originalPosition.y + floatY;
-            obj.position.x = obj.userData.originalPosition.x + floatX;
-            obj.position.z = obj.userData.originalPosition.z + floatZ;
-            
-            // Subtle rotation
-            obj.rotation.y = obj.userData.originalRotation.y + Math.sin(time * 0.2 + index) * 0.05;
-            obj.rotation.x = Math.sin(time * 0.15 + index) * 0.02;
-            
-            // Update light positions
-            if (obj.userData.light) {
-              obj.userData.light.position.copy(obj.position);
-            }
-            if (obj.userData.textLight) {
-              obj.userData.textLight.position.copy(obj.position);
-              obj.userData.textLight.position.z += 2;
-            }
-            if (obj.userData.spotLight) {
-              obj.userData.spotLight.position.copy(obj.position);
-              obj.userData.spotLight.position.z += 5;
+            // LOD levels
+            if (distance > 30) {
+              // Far: minimal animation, hide lights
+              obj.visible = true;
+              if (obj.userData.light) obj.userData.light.visible = false;
+              if (obj.userData.textLight) obj.userData.textLight.visible = false;
+              if (obj.userData.spotLight) obj.userData.spotLight.visible = false;
+              
+              // Simple rotation only
+              obj.rotation.y = obj.userData.originalRotation.y + time * 0.1;
+            } else if (distance > 15) {
+              // Medium: reduced animation
+              obj.visible = true;
+              if (obj.userData.light) obj.userData.light.visible = true;
+              if (obj.userData.textLight) obj.userData.textLight.visible = false;
+              if (obj.userData.spotLight) obj.userData.spotLight.visible = false;
+              
+              // Simplified floating
+              const floatY = Math.sin(time * 0.3 + obj.userData.floatOffset) * 0.2;
+              obj.position.y = obj.userData.originalPosition.y + floatY;
+              obj.rotation.y = obj.userData.originalRotation.y + Math.sin(time * 0.2 + index) * 0.05;
+            } else {
+              // Near: full animation
+              obj.visible = true;
+              if (obj.userData.light) obj.userData.light.visible = true;
+              if (obj.userData.textLight) obj.userData.textLight.visible = true;
+              if (obj.userData.spotLight) obj.userData.spotLight.visible = true;
+              
+              const floatY = Math.sin(time * 0.3 + obj.userData.floatOffset) * 0.3;
+              const floatX = Math.cos(time * 0.2 + obj.userData.floatOffset) * 0.2;
+              const floatZ = Math.sin(time * 0.25 + obj.userData.floatOffset) * 0.1;
+              
+              obj.position.y = obj.userData.originalPosition.y + floatY;
+              obj.position.x = obj.userData.originalPosition.x + floatX;
+              obj.position.z = obj.userData.originalPosition.z + floatZ;
+              
+              obj.rotation.y = obj.userData.originalRotation.y + Math.sin(time * 0.2 + index) * 0.05;
+              obj.rotation.x = Math.sin(time * 0.15 + index) * 0.02;
+              
+              // Update light positions
+              if (obj.userData.light) {
+                obj.userData.light.position.copy(obj.position);
+              }
+              if (obj.userData.textLight) {
+                obj.userData.textLight.position.copy(obj.position);
+                obj.userData.textLight.position.z += 2;
+              }
+              if (obj.userData.spotLight) {
+                obj.userData.spotLight.position.copy(obj.position);
+                obj.userData.spotLight.position.z += 5;
+              }
             }
           });
           
-          // Animate member spheres
+          // Animate member spheres with LOD
           memberObjects.forEach((obj) => {
-            const floatY = Math.sin(time * obj.userData.floatSpeed + obj.userData.floatOffset) * 0.5;
-            obj.position.y = obj.userData.originalY + floatY;
-            obj.rotation.y += obj.userData.rotationSpeed;
+            const distance = obj.position.distanceTo(cameraPosition);
             
-            if (obj.userData.profileGroup) {
-              obj.userData.profileGroup.lookAt(camera.position);
+            if (distance > 25) {
+              // Far: hide profile, minimal animation
+              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = false;
+              if (obj.userData.light) obj.userData.light.visible = false;
+              
+              obj.rotation.y += obj.userData.rotationSpeed * 0.5;
+            } else if (distance > 12) {
+              // Medium: show profile but no lookAt
+              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = true;
+              if (obj.userData.light) obj.userData.light.visible = true;
+              
+              const floatY = Math.sin(time * obj.userData.floatSpeed + obj.userData.floatOffset) * 0.3;
+              obj.position.y = obj.userData.originalY + floatY;
+              obj.rotation.y += obj.userData.rotationSpeed;
+            } else {
+              // Near: full animation
+              if (obj.userData.profileGroup) {
+                obj.userData.profileGroup.visible = true;
+                obj.userData.profileGroup.lookAt(camera.position);
+              }
+              if (obj.userData.light) obj.userData.light.visible = true;
+              
+              const floatY = Math.sin(time * obj.userData.floatSpeed + obj.userData.floatOffset) * 0.5;
+              obj.position.y = obj.userData.originalY + floatY;
+              obj.rotation.y += obj.userData.rotationSpeed;
+              
+              if (obj.userData.light) {
+                obj.userData.light.position.copy(obj.position);
+              }
             }
           });
           
@@ -870,6 +981,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         // Cleanup
         return () => {
           mounted = false;
+          window.removeEventListener('mousedown', handleMouseDown);
+          window.removeEventListener('mouseup', handleMouseUp);
           window.removeEventListener('mousemove', handleMouseMove);
           window.removeEventListener('click', handleClick);
           window.removeEventListener('resize', handleResize);
