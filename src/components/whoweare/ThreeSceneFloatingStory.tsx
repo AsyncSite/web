@@ -192,11 +192,12 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         
         // Create multiple layers of stars for depth
         const starLayers = [
-          { count: 2000, size: 0.02, range: 200, opacity: 0.6, color: 0xffffff }, // Very distant stars
-          { count: 1500, size: 0.03, range: 150, opacity: 0.7, color: 0xffffdd }, // Distant stars
-          { count: 1000, size: 0.05, range: 100, opacity: 0.8, color: 0xffffcc }, // Mid-distance stars
-          { count: 600, size: 0.08, range: 70, opacity: 0.9, color: 0xC3E88D }, // Closer stars
-          { count: 300, size: 0.12, range: 50, opacity: 1.0, color: 0xC3E88D }, // Nearest stars
+          { count: 3500, size: 0.02, range: 250, opacity: 0.6, color: 0xffffff }, // Very distant stars
+          { count: 2500, size: 0.03, range: 180, opacity: 0.7, color: 0xffffdd }, // Distant stars
+          { count: 2000, size: 0.05, range: 120, opacity: 0.8, color: 0xffffcc }, // Mid-distance stars
+          { count: 1500, size: 0.08, range: 80, opacity: 0.9, color: 0xC3E88D }, // Closer stars
+          { count: 1000, size: 0.12, range: 40, opacity: 1.0, color: 0xC3E88D }, // Nearest stars
+          { count: 800, size: 0.06, range: 25, opacity: 0.85, color: 0xffffff }, // Very close small stars
         ];
         
         starLayers.forEach((layer, layerIndex) => {

@@ -1,11 +1,21 @@
 /* Members Section - 단순한 프로필 슬라이더 */
 .members-section {
   padding: var(--spacing-3xl) 0;
-  margin-top: 500px; /* 변경: 상하 패딩 줄임 */
-  overflow: hidden;
+  margin-top: -100px; /* CTA와 자연스럽게 오버랩 */
+  overflow: visible; /* 애니메이션이 잘리지 않도록 */
   display: flex;
   align-items: center;
   min-height: 50vh; /* 변경: 최소 높이 줄임 */
+  position: relative;
+  z-index: 2; /* CTA 별 애니메이션 위에 표시 */
+  /* 상단 페이드 그라데이션으로 자연스러운 전환 */
+  background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          rgba(5, 6, 10, 0.8) 20%,
+          rgba(5, 6, 10, 0.95) 40%,
+          rgba(5, 6, 10, 1) 60%
+  );
 }
 
 /* 공통 스타일은 common.css에서 import */
