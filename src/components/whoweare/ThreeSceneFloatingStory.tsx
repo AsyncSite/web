@@ -190,6 +190,64 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         
         const particles = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particles);
+        
+        // Shooting stars
+        const shootingStars: any[] = [];
+        const shootingStarCount = 3; // Few shooting stars for subtlety
+        
+        for (let i = 0; i < shootingStarCount; i++) {
+          const starGeometry = new THREE.BufferGeometry();
+          
+          // Create trail with multiple points
+          const trailLength = 20;
+          const starPositions = new Float32Array(trailLength * 3);
+          const starSizes = new Float32Array(trailLength);
+          const starOpacities = new Float32Array(trailLength);
+          
+          // Random starting position
+          const startX = (Math.random() - 0.5) * 60;
+          const startY = (Math.random() - 0.5) * 30 + 15;
+          const startZ = (Math.random() - 0.5) * 60;
+          
+          // Random velocity
+          const velocityX = (Math.random() - 0.5) * 0.5;
+          const velocityY = -Math.random() * 0.3 - 0.1;
+          const velocityZ = (Math.random() - 0.5) * 0.5;
+          
+          for (let j = 0; j < trailLength; j++) {
+            starPositions[j * 3] = startX;
+            starPositions[j * 3 + 1] = startY;
+            starPositions[j * 3 + 2] = startZ;
+            starSizes[j] = (1 - j / trailLength) * 0.15; // Decreasing size
+            starOpacities[j] = (1 - j / trailLength) * 0.8; // Fading trail
+          }
+          
+          starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+          starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+          starGeometry.setAttribute('opacity', new THREE.BufferAttribute(starOpacities, 1));
+          
+          const starMaterial = new THREE.PointsMaterial({
+            color: 0xFFFFFF,
+            size: 0.15,
+            transparent: true,
+            opacity: 0.8,
+            sizeAttenuation: true,
+            vertexColors: false
+          });
+          
+          const shootingStar = new THREE.Points(starGeometry, starMaterial);
+          shootingStar.userData = {
+            velocity: new THREE.Vector3(velocityX, velocityY, velocityZ),
+            positions: starPositions,
+            trailLength: trailLength,
+            currentPosition: new THREE.Vector3(startX, startY, startZ),
+            lifetime: 0,
+            maxLifetime: Math.random() * 5 + 3 // 3-8 seconds lifetime
+          };
+          
+          scene.add(shootingStar);
+          shootingStars.push(shootingStar);
+        }
 
         // Create floating story panels as 3D objects
         const storyObjects: any[] = [];
@@ -1114,6 +1172,77 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           particles.rotation.y += 0.00005;
           particles.rotation.x += 0.00002;
           
+          // Update shooting stars
+          shootingStars.forEach((star, index) => {
+            const userData = star.userData;
+            const positions = userData.positions;
+            const deltaTime = 0.016; // Approximate 60 FPS
+            
+            userData.lifetime += deltaTime;
+            
+            // Update current position
+            userData.currentPosition.add(userData.velocity.clone().multiplyScalar(deltaTime));
+            
+            // Update trail positions
+            for (let i = userData.trailLength - 1; i > 0; i--) {
+              positions[i * 3] = positions[(i - 1) * 3];
+              positions[i * 3 + 1] = positions[(i - 1) * 3 + 1];
+              positions[i * 3 + 2] = positions[(i - 1) * 3 + 2];
+            }
+            
+            // Set head position
+            positions[0] = userData.currentPosition.x;
+            positions[1] = userData.currentPosition.y;
+            positions[2] = userData.currentPosition.z;
+            
+            // Update geometry
+            star.geometry.attributes.position.needsUpdate = true;
+            
+            // Fade in/out based on lifetime
+            const fadeInTime = 0.5;
+            const fadeOutTime = 1.0;
+            let opacity = 1.0;
+            
+            if (userData.lifetime < fadeInTime) {
+              opacity = userData.lifetime / fadeInTime;
+            } else if (userData.lifetime > userData.maxLifetime - fadeOutTime) {
+              opacity = (userData.maxLifetime - userData.lifetime) / fadeOutTime;
+            }
+            
+            star.material.opacity = opacity * 0.8;
+            
+            // Reset when lifetime exceeded or out of bounds
+            if (userData.lifetime > userData.maxLifetime || 
+                Math.abs(userData.currentPosition.x) > 40 ||
+                userData.currentPosition.y < -20 ||
+                Math.abs(userData.currentPosition.z) > 40) {
+              
+              // Reset to new random position
+              userData.currentPosition.set(
+                (Math.random() - 0.5) * 60,
+                (Math.random() - 0.5) * 30 + 15,
+                (Math.random() - 0.5) * 60
+              );
+              
+              // New random velocity
+              userData.velocity.set(
+                (Math.random() - 0.5) * 0.5,
+                -Math.random() * 0.3 - 0.1,
+                (Math.random() - 0.5) * 0.5
+              );
+              
+              userData.lifetime = 0;
+              userData.maxLifetime = Math.random() * 5 + 3;
+              
+              // Reset all trail positions
+              for (let i = 0; i < userData.trailLength; i++) {
+                positions[i * 3] = userData.currentPosition.x;
+                positions[i * 3 + 1] = userData.currentPosition.y;
+                positions[i * 3 + 2] = userData.currentPosition.z;
+              }
+            }
+          });
+          
           controls.update();
           renderer.render(scene, camera);
         };
@@ -1152,6 +1281,12 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               }
             });
           }
+          
+          // Clean up shooting stars
+          shootingStars.forEach(star => {
+            if (star.geometry) star.geometry.dispose();
+            if (star.material) star.material.dispose();
+          });
         };
       } catch (error) {
         console.error('Three.js initialization error:', error);
