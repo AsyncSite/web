@@ -279,30 +279,44 @@
   justify-content: center;
   z-index: 1000;
   pointer-events: none;
-  transition: background-color 0.6s ease;
+  transition: none;
 }
 
 .whoweare-member-card-container.active {
   pointer-events: auto;
   background-color: rgba(0, 0, 0, 0.8);
+  transition: background-color 0.2s ease-out;
+}
+
+.whoweare-member-card-container.active.preparing {
+  background-color: rgba(0, 0, 0, 0) !important;
+  transition: none;
+}
+
+.whoweare-member-card-container.active:not(.preparing) {
+  background-color: rgba(0, 0, 0, 0.8);
+  transition: background-color 0.25s ease-out;
+}
+
+.whoweare-member-card-container.closing {
+  transition: background-color 0.15s ease-out;
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: none;
 }
 
 .whoweare-member-card {
   width: 600px;
   max-width: 90vw;
   max-height: 90vh;
-  background: rgba(15, 15, 15, 0.98);
-  backdrop-filter: blur(20px);
+  background: rgba(10, 10, 10, 0.95);
+  /* backdrop-filter removed for performance */
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 50px;
-  transform: scale(0) rotateY(90deg);
+  transform: scale(1);
   opacity: 0;
-  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 
-    0 0 0 1px var(--member-color),
-    0 20px 80px rgba(0, 0, 0, 0.8),
-    0 0 120px rgba(var(--member-color-rgb), 0.2);
+  transition: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--member-color);
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
@@ -321,8 +335,23 @@
 }
 
 .whoweare-member-card.active {
-  transform: scale(1) rotateY(0deg);
+  transform: scale(1);
   opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+.whoweare-member-card.active:not(.preparing) {
+  opacity: 1;
+}
+
+.whoweare-member-card.closing {
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+}
+
+.whoweare-member-card.preparing {
+  opacity: 0 !important;
+  transition: none;
 }
 
 .whoweare-close-btn {

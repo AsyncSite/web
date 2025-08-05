@@ -14,6 +14,8 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
   const [whoweareLoadError, setWhoweareLoadError] = useState<string | null>(null);
   const [whoweareShow3D, setWhoweareShow3D] = useState(true);
   const [selectedStoryCard, setSelectedStoryCard] = useState<any>(null);
+  const [isClosingCard, setIsClosingCard] = useState(false);
+  const [isPreparingCard, setIsPreparingCard] = useState(false);
 
 
   // Helper function to convert hex to RGB
@@ -52,9 +54,32 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
   };
 
   const closeStoryCard = () => {
-    setSelectedStoryCard(null);
-    const event = new CustomEvent('resetCamera');
-    window.dispatchEvent(event);
+    // Start closing animation
+    setIsClosingCard(true);
+    
+    // Wait for fade out animation before triggering camera reset
+    setTimeout(() => {
+      const event = new CustomEvent('resetCamera');
+      window.dispatchEvent(event);
+      
+      // Clear the card after camera starts moving
+      setTimeout(() => {
+        setSelectedStoryCard(null);
+        setIsClosingCard(false);
+      }, 50);
+    }, 150); // Wait for fade out
+  };
+
+  // Handle story card selection with preparation phase
+  const handleStoryCardSelect = (storyData: any) => {
+    // First, set the card data but keep it invisible
+    setSelectedStoryCard(storyData);
+    setIsPreparingCard(true);
+    
+    // Transition to visible when zoom is almost complete
+    setTimeout(() => {
+      setIsPreparingCard(false);
+    }, 900); // Show card at ~75% of zoom (900ms / 1200ms)
   };
 
   return (
@@ -66,7 +91,7 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
             <ThreeSceneFloatingStory
               members={whoweareTeamMembers}
               onMemberSelect={setWhoweareSelectedMember}
-              onStoryCardSelect={setSelectedStoryCard}
+              onStoryCardSelect={handleStoryCardSelect}
               onLoadComplete={() => setWhoweareIsLoading(false)}
               onLoadError={(error) => {
                 setWhoweareLoadError(error);
@@ -128,46 +153,44 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Story 2D Card */}
-      {selectedStoryCard && (
-        <div className="whoweare-member-card-container active" onClick={closeStoryCard}>
-          <div 
-            className="whoweare-member-card active"
-            onClick={(e) => e.stopPropagation()}
-            style={{ 
-              '--member-color': '#C3E88D', 
-              '--member-dark-color': '#7CB342',
-              '--member-color-rgb': '195, 232, 141',
-              maxWidth: '600px',
-              padding: '40px'
-            } as React.CSSProperties}
-          >
-            <button className="whoweare-close-btn" onClick={closeStoryCard}>×</button>
-            
-            {selectedStoryCard.title && (
-              <h2 style={{
-                color: '#C3E88D',
-                fontSize: '2.5rem',
-                marginBottom: '20px',
-                textAlign: 'center',
-                fontWeight: 700
-              }}>
-                {selectedStoryCard.title}
-              </h2>
-            )}
-            
-            <div style={{
-              fontSize: '1.3rem',
-              lineHeight: '1.8',
+      {/* Story 2D Card - Always rendered, controlled by CSS */}
+      <div className={`whoweare-member-card-container ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''} ${isPreparingCard ? 'preparing' : ''}`} onClick={closeStoryCard}>
+        <div 
+          className={`whoweare-member-card ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''} ${isPreparingCard ? 'preparing' : ''}`}
+          onClick={(e) => e.stopPropagation()}
+          style={{ 
+            '--member-color': '#C3E88D', 
+            '--member-dark-color': '#7CB342',
+            '--member-color-rgb': '195, 232, 141',
+            maxWidth: '600px',
+            padding: '40px'
+          } as React.CSSProperties}
+        >
+          <button className="whoweare-close-btn" onClick={closeStoryCard}>×</button>
+          
+          {selectedStoryCard?.title && (
+            <h2 style={{
+              color: '#C3E88D',
+              fontSize: '2.5rem',
+              marginBottom: '20px',
               textAlign: 'center',
-              whiteSpace: 'pre-line',
-              color: '#ffffff'
+              fontWeight: 700
             }}>
-              {selectedStoryCard.content}
-            </div>
+              {selectedStoryCard.title}
+            </h2>
+          )}
+          
+          <div style={{
+            fontSize: '1.3rem',
+            lineHeight: '1.8',
+            textAlign: 'center',
+            whiteSpace: 'pre-line',
+            color: '#ffffff'
+          }}>
+            {selectedStoryCard?.content || ''}
           </div>
         </div>
-      )}
+      </div>
 
       {/* Member 2D Card */}
       <div className={`whoweare-member-card-container ${whoweareSelectedMember ? 'active' : ''}`}>

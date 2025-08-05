@@ -620,17 +620,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           const allObjects = [...storyObjects, ...memberObjects];
           const allIntersects = raycaster.intersectObjects(allObjects, true);
           
-          // Debug: Log what's being detected
-          if (allIntersects.length > 0) {
-            console.log('Hover detected:', allIntersects.map(i => ({
-              name: i.object.name || 'unnamed',
-              type: i.object.type,
-              distance: i.distance,
-              visible: i.object.visible,
-              userData: i.object.userData,
-              parentUserData: i.object.parent?.userData
-            })));
-          }
           
           // Reset all objects first
           storyObjects.forEach(obj => {
@@ -679,7 +668,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           // Apply hover effect to the closest object
           if (hoveredObject) {
-            console.log('Hovering over:', hoveredObject.isMember ? 'Member' : 'Story Card', hoveredObject.group.userData);
             if (hoveredObject.isStoryCard) {
               hoveredObject.group.scale.set(1.1, 1.1, 1.1);
               const card = hoveredObject.group.children[0] as any;
@@ -771,9 +759,28 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               setIsZooming(true);
               setSelectedStoryCard(clickedObject.group);
               
+              // Trigger card preparation immediately
+              if (clickedObject.group.userData && onStoryCardSelect) {
+                onStoryCardSelect(clickedObject.group.userData);
+              }
+              
               // Zoom animation to card
-              const targetPosition = clickedObject.group.position.clone();
-              targetPosition.z += 8; // Position camera in front of card
+              const cardPosition = clickedObject.group.position.clone();
+              
+              // Calculate a better camera position based on card's location
+              const direction = cardPosition.clone().normalize();
+              const distance = 8;
+              const targetPosition = cardPosition.clone().add(direction.multiplyScalar(distance));
+              
+              // Store initial states for smooth reset
+              const initialCameraPosition = camera.position.clone();
+              const initialControlsTarget = controls.target.clone();
+              
+              // Store zoom state for reset
+              clickedObject.group.userData.zoomFrom = {
+                position: initialCameraPosition,
+                target: initialControlsTarget
+              };
               
               // Disable controls during animation
               controls.enabled = false;
@@ -781,29 +788,36 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               
               // Animate camera
               const startPosition = camera.position.clone();
-              const startRotation = camera.rotation.clone();
-              const duration = 1500;
+              const startTarget = controls.target.clone();
+              const duration = 1200; // Fixed zoom speed
               const startTime = Date.now();
               
               const animateZoom = () => {
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+                // Simple ease-out cubic
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
                 
                 // Interpolate camera position
                 camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-                camera.lookAt(clickedObject.group.position);
+                
+                // Interpolate camera target (where it's looking)
+                const currentTarget = new THREE.Vector3();
+                currentTarget.lerpVectors(startTarget, cardPosition, easeProgress);
+                camera.lookAt(currentTarget);
+                controls.target.copy(currentTarget);
+                
+                // Fade out 3D card as 2D card appears
+                if (progress > 0.7 && clickedObject.group) {
+                  const fadeProgress = (progress - 0.7) / 0.3; // 0 to 1 over last 30%
+                  const card = clickedObject.group.children[0];
+                  if (card && card.material) {
+                    card.material.opacity = 0.95 * (1 - fadeProgress * 0.7); // Fade to 30% opacity
+                  }
+                }
                 
                 if (progress < 1) {
                   requestAnimationFrame(animateZoom);
-                } else {
-                  // Show 2D card overlay after zoom completes
-                  setTimeout(() => {
-                    // Trigger parent component to show 2D overlay
-                    if (clickedObject.group.userData && onStoryCardSelect) {
-                      onStoryCardSelect(clickedObject.group.userData);
-                    }
-                  }, 200);
                 }
               };
               
@@ -825,34 +839,68 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         const handleResetCamera = () => {
           if (!cameraRef.current || !controlsRef.current || !camera) return;
           
-          // Reset zoom state immediately
+          // Reset zoom state
           setIsZooming(false);
-          setSelectedStoryCard(null);
+          const selectedCard = selectedStoryCard;
           
-          const duration = 1000;
-          const startTime = Date.now();
-          const startPosition = camera.position.clone();
-          const targetPosition = new THREE.Vector3(0, 3, 25);
-          
-          const animateReset = () => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeProgress = 1 - Math.pow(1 - progress, 3);
-            
-            camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-            camera.lookAt(0, 0, 0);
-            
-            if (progress < 1) {
-              requestAnimationFrame(animateReset);
-            } else {
-              // Re-enable controls after animation completes
-              controls.enabled = true;
-              controls.autoRotate = true;
-              controls.update();
-            }
+          // Get the stored zoom origin or use defaults
+          const zoomFrom = selectedCard?.userData?.zoomFrom || {
+            position: new THREE.Vector3(0, 3, 25),
+            target: new THREE.Vector3(0, 0, 0)
           };
           
-          animateReset();
+          
+          // Small delay to let GPU prepare for 3D rendering after 2D fadeout
+          const animationDelay = 50;
+          
+          setTimeout(() => {
+            const duration = 1200; // Same as zoom in
+            const startTime = Date.now();
+            const startPosition = camera.position.clone();
+            const startTarget = controls.target.clone();
+            
+            // Enable controls smoothly during animation
+            let controlsEnabled = false;
+            
+            const animateReset = () => {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              // Smoother ease for zoom out
+              const easeProgress = progress < 0.5
+                ? 2 * progress * progress
+                : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+              
+              // Interpolate camera position
+              camera.position.lerpVectors(startPosition, zoomFrom.position, easeProgress);
+              
+              // Interpolate camera target (where it's looking)
+              const currentTarget = new THREE.Vector3();
+              currentTarget.lerpVectors(startTarget, zoomFrom.target, easeProgress);
+              camera.lookAt(currentTarget);
+              controls.target.copy(currentTarget);
+              
+              // Enable controls halfway through for smoother transition
+              if (progress > 0.5 && !controlsEnabled) {
+                controlsEnabled = true;
+                controls.enabled = true;
+                controls.autoRotate = true;
+              }
+              
+              if (progress < 1) {
+                requestAnimationFrame(animateReset);
+              } else {
+                // Ensure controls are fully updated
+                controls.update();
+                
+                // Clean up stored zoom data
+                if (selectedCard) {
+                  delete selectedCard.userData.zoomFrom;
+                }
+              }
+            };
+            
+            animateReset();
+          }, animationDelay);
         };
         
         window.addEventListener('resetCamera', handleResetCamera);
