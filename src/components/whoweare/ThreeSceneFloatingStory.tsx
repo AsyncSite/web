@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { WhoWeAreMemberData } from '../../pages/WhoWeArePage';
 
 interface ThreeSceneFloatingStoryProps {
@@ -25,6 +25,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
   const [isThreeLoaded, setIsThreeLoaded] = useState(false);
   const [selectedStoryCard, setSelectedStoryCard] = useState<any>(null);
   const [isZooming, setIsZooming] = useState(false);
+  const lastClickTimeRef = useRef<number>(0);
 
   // Generate random positions for story panels
   const generateRandomPosition = (index: number) => {
@@ -39,8 +40,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
     };
   };
 
-  // Story content
-  const storyPanels = [
+  // Story content with random positions generated on mount
+  const storyPanels = useMemo(() => [
     {
       id: 'intro',
       title: 'AsyncSite',
@@ -83,7 +84,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
       position: generateRandomPosition(5),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     }
-  ];
+  ], []);
 
   useEffect(() => {
     let mounted = true;
@@ -149,14 +150,17 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         rendererRef.current = renderer;
 
 
-        // Controls
+        // Controls with smoother interaction
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
+        controls.dampingFactor = 0.08; // Increased for smoother damping
         controls.minDistance = 10;
         controls.maxDistance = 50;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 0.3;
+        controls.rotateSpeed = 0.8; // Slightly slower rotation for better control
+        controls.zoomSpeed = 0.8; // Smoother zoom
+        controls.panSpeed = 0.8; // Smoother panning
         controlsRef.current = controls;
 
         // Lighting
@@ -374,6 +378,9 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         // Member spheres with profile cards
         const memberObjects: any[] = [];
         const raycaster = new THREE.Raycaster();
+        // Improve raycaster precision
+        raycaster.params.Points.threshold = 0.1;
+        raycaster.params.Line.threshold = 0.1;
         const mouse = new THREE.Vector2();
 
         members.forEach((member) => {
@@ -387,7 +394,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             metalness: 0.1,
             roughness: 0.1,
             transparent: true,
-            opacity: 0.3,
+            opacity: 0.4, // Increased for better visibility
             clearcoat: 1.0,
             clearcoatRoughness: 0.0,
             side: THREE.DoubleSide
@@ -404,6 +411,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             side: THREE.BackSide
           });
           const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
+          glowSphere.raycast = () => {}; // Disable raycasting for glow
           group.add(glowSphere);
           
           // Profile card inside sphere
@@ -476,6 +484,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             profileMaterial
           );
           profilePlane.position.z = 0.05;
+          // Make profile plane not interfere with sphere clicking
+          profilePlane.raycast = () => {}; 
           profileGroup.add(profilePlane);
           
           group.add(profileGroup);
@@ -506,6 +516,18 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           memberObjects.push(group);
         });
 
+        // Helper function to find the group with userData
+        const findGroupWithUserData = (object: any): any => {
+          let current = object;
+          while (current) {
+            if (current.userData && (current.userData.id || current.userData.name)) {
+              return current;
+            }
+            current = current.parent;
+          }
+          return null;
+        };
+
         // Mouse events
         const handleMouseMove = (event: MouseEvent) => {
           mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -513,10 +535,11 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           raycaster.setFromCamera(mouse, camera);
           
-          // Check story cards for hover
+          // Check all intersections
           const storyIntersects = raycaster.intersectObjects(storyObjects, true);
+          const memberIntersects = raycaster.intersectObjects(memberObjects, true);
           
-          // Reset all story cards
+          // Reset all objects
           storyObjects.forEach(obj => {
             obj.scale.set(1, 1, 1);
             const card = obj.children[0] as any;
@@ -525,105 +548,158 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             }
           });
           
-          if (storyIntersects.length > 0) {
-            const hoveredStory = storyIntersects[0].object.parent;
-            if (hoveredStory) {
-              hoveredStory.scale.set(1.1, 1.1, 1.1);
-              const card = hoveredStory.children[0] as any;
-              if (card && card.material) {
-                card.material.opacity = 1;
+          memberObjects.forEach(obj => {
+            obj.scale.set(1, 1, 1);
+            const sphere = obj.children[0] as any;
+            if (sphere && sphere.material) {
+              sphere.material.opacity = 0.4; // Match default opacity
+            }
+          });
+          
+          // Find closest valid story card
+          let closestStoryCard = null;
+          let closestStoryDistance = Infinity;
+          
+          for (const intersect of storyIntersects) {
+            const card = findGroupWithUserData(intersect.object);
+            if (card && storyObjects.includes(card)) {
+              if (intersect.distance < closestStoryDistance) {
+                closestStoryCard = card;
+                closestStoryDistance = intersect.distance;
               }
+            }
+          }
+          
+          // Find closest valid member
+          let closestMember = null;
+          let closestMemberDistance = Infinity;
+          
+          for (const intersect of memberIntersects) {
+            const member = findGroupWithUserData(intersect.object);
+            if (member && memberObjects.includes(member) && member.userData) {
+              if (intersect.distance < closestMemberDistance) {
+                closestMember = member;
+                closestMemberDistance = intersect.distance;
+              }
+            }
+          }
+          
+          // Hover effect on closest object
+          if (closestStoryCard && closestStoryDistance < closestMemberDistance) {
+            closestStoryCard.scale.set(1.1, 1.1, 1.1);
+            const card = closestStoryCard.children[0] as any;
+            if (card && card.material) {
+              card.material.opacity = 1;
+            }
+            document.body.style.cursor = 'pointer';
+          } else if (closestMember) {
+            closestMember.scale.set(1.2, 1.2, 1.2);
+            const sphere = closestMember.children[0] as any;
+            if (sphere && sphere.material) {
+              sphere.material.opacity = 0.6; // More visible on hover
             }
             document.body.style.cursor = 'pointer';
           } else {
-            // Check member spheres
-            const memberIntersects = raycaster.intersectObjects(memberObjects, true);
-            
-            memberObjects.forEach(obj => {
-              obj.scale.set(1, 1, 1);
-              const sphere = obj.children[0] as any;
-              if (sphere && sphere.material) {
-                sphere.material.opacity = 0.3;
-              }
-            });
-            
-            if (memberIntersects.length > 0) {
-              const hoveredObject = memberIntersects[0].object.parent;
-              if (hoveredObject) {
-                hoveredObject.scale.set(1.2, 1.2, 1.2);
-                const sphere = hoveredObject.children[0] as any;
-                if (sphere && sphere.material) {
-                  sphere.material.opacity = 0.5;
-                }
-              }
-              document.body.style.cursor = 'pointer';
-            } else {
-              document.body.style.cursor = 'default';
-            }
+            document.body.style.cursor = 'default';
           }
         };
 
-        const handleClick = () => {
-          if (isZooming) return;
+        const handleClick = (event: MouseEvent) => {
+          // Debounce clicks - prevent multiple rapid clicks
+          const currentTime = Date.now();
+          if (currentTime - lastClickTimeRef.current < 300) return;
+          lastClickTimeRef.current = currentTime;
+          
+          // Prevent clicks during zoom animation
+          if (isZooming || selectedStoryCard) return;
+          
+          // Update mouse position from click event
+          mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+          mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
           
           raycaster.setFromCamera(mouse, camera);
           
-          // Check story cards first
+          // Check all intersections for both story cards and member spheres
           const storyIntersects = raycaster.intersectObjects(storyObjects, true);
+          const memberIntersects = raycaster.intersectObjects(memberObjects, true);
           
-          if (storyIntersects.length > 0) {
-            const clickedCard = storyIntersects[0].object.parent;
-            if (clickedCard) {
-              setIsZooming(true);
-              setSelectedStoryCard(clickedCard);
-              
-              // Zoom animation to card
-              const targetPosition = clickedCard.position.clone();
-              targetPosition.z += 8; // Position camera in front of card
-              
-              // Disable controls during animation
-              controls.enabled = false;
-              controls.autoRotate = false;
-              
-              // Animate camera
-              const startPosition = camera.position.clone();
-              const startRotation = camera.rotation.clone();
-              const duration = 1500;
-              const startTime = Date.now();
-              
-              const animateZoom = () => {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
-                
-                // Interpolate camera position
-                camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-                camera.lookAt(clickedCard.position);
-                
-                if (progress < 1) {
-                  requestAnimationFrame(animateZoom);
-                } else {
-                  // Show 2D card overlay after zoom completes
-                  setTimeout(() => {
-                    // Trigger parent component to show 2D overlay
-                    if (clickedCard.userData && onStoryCardSelect) {
-                      onStoryCardSelect(clickedCard.userData);
-                    }
-                  }, 200);
-                }
-              };
-              
-              animateZoom();
-              return;
+          // Find the closest valid story card
+          let closestStoryCard = null;
+          let closestStoryDistance = Infinity;
+          
+          for (const intersect of storyIntersects) {
+            const card = findGroupWithUserData(intersect.object);
+            if (card && storyObjects.includes(card)) {
+              if (intersect.distance < closestStoryDistance) {
+                closestStoryCard = card;
+                closestStoryDistance = intersect.distance;
+              }
             }
           }
           
-          // Check member spheres
-          const memberIntersects = raycaster.intersectObjects(memberObjects, true);
+          // Find the closest valid member sphere
+          let closestMember = null;
+          let closestMemberDistance = Infinity;
           
-          if (memberIntersects.length > 0 && memberIntersects[0].object.parent) {
-            const clickedMember = memberIntersects[0].object.parent.userData as WhoWeAreMemberData;
-            onMemberSelect(clickedMember);
+          for (const intersect of memberIntersects) {
+            const member = findGroupWithUserData(intersect.object);
+            if (member && memberObjects.includes(member) && member.userData) {
+              if (intersect.distance < closestMemberDistance) {
+                closestMember = member;
+                closestMemberDistance = intersect.distance;
+              }
+            }
+          }
+          
+          // Debug logging
+          if (memberIntersects.length > 0 && !closestMember) {
+            console.log('Member intersects found but no valid member:', memberIntersects);
+          }
+          
+          // Click on the closest object (story card or member)
+          if (closestStoryCard && closestStoryDistance < closestMemberDistance) {
+            setIsZooming(true);
+            setSelectedStoryCard(closestStoryCard);
+            
+            // Zoom animation to card
+            const targetPosition = closestStoryCard.position.clone();
+            targetPosition.z += 8; // Position camera in front of card
+            
+            // Disable controls during animation
+            controls.enabled = false;
+            controls.autoRotate = false;
+            
+            // Animate camera
+            const startPosition = camera.position.clone();
+            const startRotation = camera.rotation.clone();
+            const duration = 1500;
+            const startTime = Date.now();
+            
+            const animateZoom = () => {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+              
+              // Interpolate camera position
+              camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
+              camera.lookAt(closestStoryCard.position);
+              
+              if (progress < 1) {
+                requestAnimationFrame(animateZoom);
+              } else {
+                // Show 2D card overlay after zoom completes
+                setTimeout(() => {
+                  // Trigger parent component to show 2D overlay
+                  if (closestStoryCard.userData && onStoryCardSelect) {
+                    onStoryCardSelect(closestStoryCard.userData);
+                  }
+                }, 200);
+              }
+            };
+            
+            animateZoom();
+          } else if (closestMember) {
+            onMemberSelect(closestMember.userData as WhoWeAreMemberData);
           }
         };
 
@@ -632,11 +708,15 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
 
         // Reset camera when closing card
         const handleResetCamera = () => {
-          if (!cameraRef.current || !controlsRef.current) return;
+          if (!cameraRef.current || !controlsRef.current || !camera) return;
+          
+          // Reset zoom state immediately
+          setIsZooming(false);
+          setSelectedStoryCard(null);
           
           const duration = 1000;
           const startTime = Date.now();
-          const startPosition = cameraRef.current.position.clone();
+          const startPosition = camera.position.clone();
           const targetPosition = new THREE.Vector3(0, 3, 25);
           
           const animateReset = () => {
@@ -644,16 +724,16 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             const progress = Math.min(elapsed / duration, 1);
             const easeProgress = 1 - Math.pow(1 - progress, 3);
             
-            cameraRef.current.position.lerpVectors(startPosition, targetPosition, easeProgress);
-            cameraRef.current.lookAt(0, 0, 0);
+            camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
+            camera.lookAt(0, 0, 0);
             
             if (progress < 1) {
               requestAnimationFrame(animateReset);
             } else {
-              controlsRef.current.enabled = true;
-              controlsRef.current.autoRotate = true;
-              setIsZooming(false);
-              setSelectedStoryCard(null);
+              // Re-enable controls after animation completes
+              controls.enabled = true;
+              controls.autoRotate = true;
+              controls.update();
             }
           };
           

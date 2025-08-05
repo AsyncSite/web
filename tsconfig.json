@@ -24,6 +24,7 @@
     "types": ["three"]
   },
   "include": [
-    "src"
+    "src",
+    "src/types/**/*"
   ]
 }
