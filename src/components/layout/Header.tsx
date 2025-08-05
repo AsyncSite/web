@@ -220,6 +220,15 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
           
           <div className={`nav-right ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
             <ul className="nav-menu">
+              <li>
+                <Link 
+                  to="/whoweare" 
+                  className={location.pathname.startsWith('/whoweare') ? 'active' : ''}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  WHO WE ARE
+                </Link>
+              </li>
               <li 
                 className="has-dropdown"
                 ref={studyDropdownRef}

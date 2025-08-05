@@ -1,0 +1,487 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+/* Base container */
+.whoweare-v2-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Pretendard', -apple-system, sans-serif;
+}
+
+/* Animated stars background */
+.whoweare-v2-stars-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+    radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+    radial-gradient(1px 1px at 50px 90px, #fff, transparent),
+    radial-gradient(1px 1px at 130px 40px, #fff, transparent),
+    radial-gradient(2px 2px at 200px 150px, #fff, transparent);
+  background-repeat: repeat;
+  background-size: 250px 250px;
+  opacity: 0.3;
+  animation: whoweare-v2-drift 120s linear infinite;
+}
+
+@keyframes whoweare-v2-drift {
+  from { transform: translate(-250px, -250px); }
+  to { transform: translate(0, 0); }
+}
+
+/* Constellation canvas */
+.whoweare-v2-constellation-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Header */
+.whoweare-v2-header {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.whoweare-v2-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: transparent;
+  background: linear-gradient(135deg, #C3E88D 0%, #82aaff 50%, #f87171 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  margin-bottom: 10px;
+  text-shadow: 0 0 40px rgba(195, 232, 141, 0.5);
+}
+
+.whoweare-v2-subtitle {
+  font-size: 1.1rem;
+  color: #82aaff;
+  opacity: 0.8;
+  letter-spacing: 0.2em;
+}
+
+/* Constellation map container */
+.whoweare-v2-constellation-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease-out;
+  z-index: 5;
+}
+
+/* Star (team member) */
+.whoweare-v2-star {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.whoweare-v2-star-core {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--star-color), var(--star-dark-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 0 20px var(--star-color),
+    0 0 40px var(--star-color),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.whoweare-v2-star-initials {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.whoweare-v2-star-label {
+  position: absolute;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.whoweare-v2-star-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--star-color);
+  margin-bottom: 2px;
+}
+
+.whoweare-v2-star-role {
+  font-size: 0.75rem;
+  color: #f0f0f0;
+  opacity: 0.8;
+}
+
+/* Star glow effect */
+.whoweare-v2-star-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--star-color), transparent);
+  opacity: 0.3;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* Star pulse animation */
+.whoweare-v2-star-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--star-color);
+  opacity: 0;
+  pointer-events: none;
+  animation: whoweare-v2-pulse 3s ease-out infinite;
+}
+
+@keyframes whoweare-v2-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* Hover state */
+.whoweare-v2-star.hovered .whoweare-v2-star-core {
+  transform: scale(1.2);
+  box-shadow: 
+    0 0 30px var(--star-color),
+    0 0 60px var(--star-color),
+    0 0 90px var(--star-color);
+}
+
+.whoweare-v2-star.hovered .whoweare-v2-star-glow {
+  width: 120px;
+  height: 120px;
+  opacity: 0.5;
+}
+
+.whoweare-v2-star.hovered .whoweare-v2-star-label {
+  opacity: 1;
+}
+
+.whoweare-v2-star.hovered .whoweare-v2-star-pulse {
+  animation-duration: 1s;
+}
+
+/* Member panel overlay */
+.whoweare-v2-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: whoweare-v2-fade-in 0.3s ease;
+}
+
+@keyframes whoweare-v2-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Member detail panel */
+.whoweare-v2-member-panel {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(13, 13, 13, 0.95));
+  border: 2px solid var(--panel-color);
+  border-radius: 30px;
+  padding: 50px 40px 40px;
+  box-shadow: 
+    0 0 40px var(--panel-color),
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    inset 0 0 60px rgba(255, 255, 255, 0.05);
+  animation: whoweare-v2-slide-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes whoweare-v2-slide-up {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Close button */
+.whoweare-v2-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #f0f0f0;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.whoweare-v2-close-btn:hover {
+  background: var(--panel-color);
+  color: #000;
+  transform: rotate(90deg);
+  border-color: var(--panel-color);
+}
+
+/* Member content */
+.whoweare-v2-member-content {
+  text-align: center;
+}
+
+.whoweare-v2-member-avatar {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--panel-color), var(--panel-dark-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 
+    0 0 40px var(--panel-color),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.whoweare-v2-member-avatar::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: whoweare-v2-shine 3s ease-in-out infinite;
+}
+
+@keyframes whoweare-v2-shine {
+  0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.whoweare-v2-member-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--panel-color);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.whoweare-v2-member-role {
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem;
+  color: #82aaff;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.whoweare-v2-member-quote {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: #f0f0f0;
+  margin: 30px 0;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border-left: 3px solid var(--panel-color);
+  line-height: 1.6;
+}
+
+.whoweare-v2-member-story {
+  font-size: 1rem;
+  color: #f0f0f0;
+  line-height: 1.8;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+/* Member links */
+.whoweare-v2-member-links {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.whoweare-v2-link-btn {
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f0f0f0;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.whoweare-v2-link-btn:hover {
+  background: var(--panel-color);
+  border-color: var(--panel-color);
+  color: #000;
+  transform: scale(1.1) rotate(360deg);
+}
+
+/* Panel footer */
+.whoweare-v2-panel-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 25px;
+  margin-top: 20px;
+}
+
+.whoweare-v2-cta-link {
+  color: var(--panel-color);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.whoweare-v2-cta-link:hover {
+  transform: translateX(5px);
+  text-shadow: 0 0 20px var(--panel-color);
+}
+
+/* Navigation hint */
+.whoweare-v2-navigation-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.whoweare-v2-hint-text {
+  font-size: 0.9rem;
+  color: #82aaff;
+  opacity: 0.8;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.whoweare-v2-hint-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.whoweare-v2-key {
+  padding: 5px 15px;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid #82aaff;
+  border-radius: 8px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.85rem;
+  color: #f0f0f0;
+}
+
+.whoweare-v2-key-desc {
+  font-size: 0.85rem;
+  color: #f0f0f0;
+  opacity: 0.7;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .whoweare-v2-title {
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+  }
+
+  .whoweare-v2-star-core {
+    width: 50px;
+    height: 50px;
+  }
+
+  .whoweare-v2-star-initials {
+    font-size: 1.2rem;
+  }
+
+  .whoweare-v2-member-panel {
+    padding: 40px 30px 30px;
+  }
+
+  .whoweare-v2-member-avatar {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+
+  .whoweare-v2-member-name {
+    font-size: 1.5rem;
+  }
+
+  .whoweare-v2-navigation-hint {
+    bottom: 20px;
+  }
+}

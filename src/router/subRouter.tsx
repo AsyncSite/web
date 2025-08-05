@@ -19,6 +19,7 @@ const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPa
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const StudyPlanPage = lazy(() => import('../pages/StudyPlanPage'));
+const WhoWeArePage = lazy(() => import('../pages/WhoWeArePage'));
 
 const subRouter = [
   // 스터디 관련 라우트
@@ -113,6 +114,17 @@ const subRouter = [
   {
     path: 'lab/:subject',
     element: <LabDetailPage />,
+  },
+  
+  // Who We Are 페이지
+  {
+    path: 'whoweare',
+    element: <WhoWeArePage />,
+  },
+  // Legacy URL redirect
+  {
+    path: 'whoweare-profile-cards-floating',
+    element: <Navigate to="/whoweare" replace />,
   },
 ];
 export default subRouter;
