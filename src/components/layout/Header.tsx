@@ -222,7 +222,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
             <ul className="nav-menu">
               <li>
                 <Link 
-                  to="/whoweare" 
+                  to="/whoweare-profile-cards-floating" 
                   className={location.pathname.startsWith('/whoweare') ? 'active' : ''}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
