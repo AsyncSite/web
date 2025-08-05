@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { WhoWeAreMemberData } from '../../pages/WhoWeArePage';
+import { WhoWeAreMemberData } from '../../data/whoweareTeamMembers';
 
 interface ThreeSceneGlassOrbsProps {
   members: WhoWeAreMemberData[];

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { WhoWeAreMemberData } from '../../pages/WhoWeArePage';
+import { WhoWeAreMemberData } from '../../data/whoweareTeamMembers';
 
 interface ThreeSceneFloatingStoryProps {
   members: WhoWeAreMemberData[];
@@ -170,18 +170,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         directionalLight.position.set(10, 10, 10);
         scene.add(directionalLight);
 
-        // Particles (stars)
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particleCount = 300;
-        const positions = new Float32Array(particleCount * 3);
-        
-        for (let i = 0; i < particleCount * 3; i += 3) {
-          positions[i] = (Math.random() - 0.5) * 50;
-          positions[i + 1] = (Math.random() - 0.5) * 50;
-          positions[i + 2] = (Math.random() - 0.5) * 50;
-        }
-        
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        // Enhanced particles (stars) with depth
+        const starGroups: any[] = [];
         
         // Create circular texture for particles
         const canvas = document.createElement('canvas');
@@ -190,28 +180,68 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         const ctx = canvas.getContext('2d');
         if (ctx) {
           const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
-          gradient.addColorStop(0, 'rgba(195, 232, 141, 1)');
-          gradient.addColorStop(0.4, 'rgba(195, 232, 141, 0.8)');
-          gradient.addColorStop(0.8, 'rgba(195, 232, 141, 0.3)');
-          gradient.addColorStop(1, 'rgba(195, 232, 141, 0)');
+          gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+          gradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.8)');
+          gradient.addColorStop(0.8, 'rgba(255, 255, 255, 0.3)');
+          gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
           ctx.fillStyle = gradient;
           ctx.fillRect(0, 0, 32, 32);
         }
         
         const particleTexture = new THREE.CanvasTexture(canvas);
         
-        const particlesMaterial = new THREE.PointsMaterial({
-          color: 0xC3E88D,
-          size: 0.08,
-          map: particleTexture,
-          transparent: true,
-          opacity: 0.8,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false
-        });
+        // Create multiple layers of stars for depth
+        const starLayers = [
+          { count: 2000, size: 0.02, range: 200, opacity: 0.6, color: 0xffffff }, // Very distant stars
+          { count: 1500, size: 0.03, range: 150, opacity: 0.7, color: 0xffffdd }, // Distant stars
+          { count: 1000, size: 0.05, range: 100, opacity: 0.8, color: 0xffffcc }, // Mid-distance stars
+          { count: 600, size: 0.08, range: 70, opacity: 0.9, color: 0xC3E88D }, // Closer stars
+          { count: 300, size: 0.12, range: 50, opacity: 1.0, color: 0xC3E88D }, // Nearest stars
+        ];
         
-        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particles);
+        starLayers.forEach((layer, layerIndex) => {
+          const particlesGeometry = new THREE.BufferGeometry();
+          const positions = new Float32Array(layer.count * 3);
+          const sizes = new Float32Array(layer.count);
+          
+          for (let i = 0; i < layer.count; i++) {
+            const i3 = i * 3;
+            // Distribute stars in a sphere for more natural look
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(Math.random() * 2 - 1);
+            const radius = Math.random() * layer.range + layer.range * 0.5;
+            
+            positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+            positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            positions[i3 + 2] = radius * Math.cos(phi);
+            
+            // Add size variation within each layer
+            sizes[i] = layer.size * (0.5 + Math.random() * 0.5);
+          }
+          
+          particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+          
+          const particlesMaterial = new THREE.PointsMaterial({
+            color: layer.color,
+            size: layer.size,
+            sizeAttenuation: true,
+            map: particleTexture,
+            transparent: true,
+            opacity: layer.opacity,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            vertexColors: false
+          });
+          
+          // Store base opacity for twinkling effect
+          particlesMaterial.userData = { baseOpacity: layer.opacity };
+          
+          const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+          particles.userData.layerIndex = layerIndex;
+          starGroups.push(particles);
+          scene.add(particles);
+        });
 
         // Create floating story panels as 3D objects
         const storyObjects: any[] = [];
@@ -1178,9 +1208,23 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             }
           });
           
-          // Subtle star rotation
-          particles.rotation.y += 0.00005;
-          particles.rotation.x += 0.00002;
+          // Subtle star rotation and twinkling effect
+          starGroups.forEach((starGroup, index) => {
+            // Farther stars rotate slower for realistic parallax
+            const speedFactor = 1 - (index * 0.2);
+            starGroup.rotation.y += 0.00005 * speedFactor;
+            starGroup.rotation.x += 0.00002 * speedFactor;
+            
+            // Add twinkling effect by modulating opacity
+            const material = starGroup.material as any;
+            if (material) {
+              // Create a pulsing effect with different frequencies for each layer
+              const twinkleSpeed = 2 + index * 0.5;
+              const twinkleAmount = 0.3 - (index * 0.05); // Distant stars twinkle more
+              material.opacity = material.userData.baseOpacity + 
+                Math.sin(time * twinkleSpeed) * twinkleAmount * material.userData.baseOpacity;
+            }
+          });
           
           controls.update();
           renderer.render(scene, camera);

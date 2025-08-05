@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { WhoWeAreMemberData } from '../../pages/WhoWeArePage';
+import { WhoWeAreMemberData } from '../../data/whoweareTeamMembers';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 
 interface ThreeSceneJourneyProps {
