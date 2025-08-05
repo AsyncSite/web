@@ -562,11 +562,11 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           raycaster.setFromCamera(mouse, camera);
           
-          // Check all intersections
-          const storyIntersects = raycaster.intersectObjects(storyObjects, true);
-          const memberIntersects = raycaster.intersectObjects(memberObjects, true);
+          // Get all intersections from both story cards and members
+          const allObjects = [...storyObjects, ...memberObjects];
+          const allIntersects = raycaster.intersectObjects(allObjects, true);
           
-          // Reset all objects
+          // Reset all objects first
           storyObjects.forEach(obj => {
             obj.scale.set(1, 1, 1);
             const card = obj.children[0] as any;
@@ -583,47 +583,46 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             }
           });
           
-          // Find closest valid story card
-          let closestStoryCard = null;
-          let closestStoryDistance = Infinity;
+          // Find the closest object that the mouse is actually over
+          let hoveredObject = null;
+          let minDistance = Infinity;
           
-          for (const intersect of storyIntersects) {
-            const card = findGroupWithUserData(intersect.object);
-            if (card && storyObjects.includes(card)) {
-              if (intersect.distance < closestStoryDistance) {
-                closestStoryCard = card;
-                closestStoryDistance = intersect.distance;
-              }
+          for (const intersect of allIntersects) {
+            // Skip invisible objects
+            if (intersect.object.visible === false) continue;
+            
+            const parentGroup = findGroupWithUserData(intersect.object);
+            if (!parentGroup) continue;
+            
+            // Check if it's a valid story card or member
+            const isStoryCard = storyObjects.includes(parentGroup);
+            const isMember = memberObjects.includes(parentGroup);
+            
+            if ((isStoryCard || isMember) && intersect.distance < minDistance) {
+              minDistance = intersect.distance;
+              hoveredObject = {
+                group: parentGroup,
+                isStoryCard,
+                isMember,
+                distance: intersect.distance
+              };
             }
           }
           
-          // Find closest valid member
-          let closestMember = null;
-          let closestMemberDistance = Infinity;
-          
-          for (const intersect of memberIntersects) {
-            const member = findGroupWithUserData(intersect.object);
-            if (member && memberObjects.includes(member) && member.userData) {
-              if (intersect.distance < closestMemberDistance) {
-                closestMember = member;
-                closestMemberDistance = intersect.distance;
+          // Apply hover effect to the closest object
+          if (hoveredObject) {
+            if (hoveredObject.isStoryCard) {
+              hoveredObject.group.scale.set(1.1, 1.1, 1.1);
+              const card = hoveredObject.group.children[0] as any;
+              if (card && card.material) {
+                card.material.opacity = 1;
               }
-            }
-          }
-          
-          // Hover effect on closest object
-          if (closestStoryCard && closestStoryDistance < closestMemberDistance) {
-            closestStoryCard.scale.set(1.1, 1.1, 1.1);
-            const card = closestStoryCard.children[0] as any;
-            if (card && card.material) {
-              card.material.opacity = 1;
-            }
-            document.body.style.cursor = 'pointer';
-          } else if (closestMember) {
-            closestMember.scale.set(1.2, 1.2, 1.2);
-            const sphere = closestMember.children[0] as any;
-            if (sphere && sphere.material) {
-              sphere.material.opacity = 0.5;
+            } else if (hoveredObject.isMember) {
+              hoveredObject.group.scale.set(1.2, 1.2, 1.2);
+              const sphere = hoveredObject.group.children[0] as any;
+              if (sphere && sphere.material) {
+                sphere.material.opacity = 0.5;
+              }
             }
             document.body.style.cursor = 'pointer';
           } else {
@@ -646,52 +645,47 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           raycaster.setFromCamera(mouse, camera);
           
-          // Check all intersections for both story cards and member spheres
-          const storyIntersects = raycaster.intersectObjects(storyObjects, true);
-          const memberIntersects = raycaster.intersectObjects(memberObjects, true);
+          // Get all intersections from both story cards and members
+          const allObjects = [...storyObjects, ...memberObjects];
+          const allIntersects = raycaster.intersectObjects(allObjects, true);
           
-          // Find the closest valid story card
-          let closestStoryCard = null;
-          let closestStoryDistance = Infinity;
+          // Find the closest object that was clicked
+          let clickedObject = null;
+          let minDistance = Infinity;
           
-          for (const intersect of storyIntersects) {
-            const card = findGroupWithUserData(intersect.object);
-            if (card && storyObjects.includes(card)) {
-              if (intersect.distance < closestStoryDistance) {
-                closestStoryCard = card;
-                closestStoryDistance = intersect.distance;
-              }
+          for (const intersect of allIntersects) {
+            // Skip invisible objects
+            if (intersect.object.visible === false) continue;
+            
+            const parentGroup = findGroupWithUserData(intersect.object);
+            if (!parentGroup) continue;
+            
+            // Check if it's a valid story card or member
+            const isStoryCard = storyObjects.includes(parentGroup);
+            const isMember = memberObjects.includes(parentGroup);
+            
+            if ((isStoryCard || isMember) && intersect.distance < minDistance) {
+              minDistance = intersect.distance;
+              clickedObject = {
+                group: parentGroup,
+                isStoryCard,
+                isMember,
+                distance: intersect.distance
+              };
             }
           }
           
-          // Find the closest valid member sphere
-          let closestMember = null;
-          let closestMemberDistance = Infinity;
-          
-          for (const intersect of memberIntersects) {
-            const member = findGroupWithUserData(intersect.object);
-            if (member && memberObjects.includes(member) && member.userData) {
-              if (intersect.distance < closestMemberDistance) {
-                closestMember = member;
-                closestMemberDistance = intersect.distance;
-              }
-            }
-          }
-          
-          
-          // Click on the closest object - prioritize members if both are close
-          if (closestMember && closestStoryCard) {
-            // If both are detected, prioritize based on distance and a small bias for members
-            const memberBias = 0.8; // Give members 20% priority
-            if (closestMemberDistance * memberBias < closestStoryDistance) {
-              onMemberSelect(closestMember.userData as WhoWeAreMemberData);
-            } else {
+          // Handle the click on the closest object
+          if (clickedObject) {
+            if (clickedObject.isMember) {
+              onMemberSelect(clickedObject.group.userData as WhoWeAreMemberData);
+            } else if (clickedObject.isStoryCard) {
               // Handle story card click
               setIsZooming(true);
-              setSelectedStoryCard(closestStoryCard);
+              setSelectedStoryCard(clickedObject.group);
               
               // Zoom animation to card
-              const targetPosition = closestStoryCard.position.clone();
+              const targetPosition = clickedObject.group.position.clone();
               targetPosition.z += 8; // Position camera in front of card
               
               // Disable controls during animation
@@ -711,7 +705,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 
                 // Interpolate camera position
                 camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-                camera.lookAt(closestStoryCard.position);
+                camera.lookAt(clickedObject.group.position);
                 
                 if (progress < 1) {
                   requestAnimationFrame(animateZoom);
@@ -719,8 +713,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                   // Show 2D card overlay after zoom completes
                   setTimeout(() => {
                     // Trigger parent component to show 2D overlay
-                    if (closestStoryCard.userData && onStoryCardSelect) {
-                      onStoryCardSelect(closestStoryCard.userData);
+                    if (clickedObject.group.userData && onStoryCardSelect) {
+                      onStoryCardSelect(clickedObject.group.userData);
                     }
                   }, 200);
                 }
@@ -728,50 +722,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               
               animateZoom();
             }
-          } else if (closestMember) {
-            onMemberSelect(closestMember.userData as WhoWeAreMemberData);
-          } else if (closestStoryCard) {
-            // Handle story card click
-            setIsZooming(true);
-            setSelectedStoryCard(closestStoryCard);
-            
-            // Zoom animation to card
-            const targetPosition = closestStoryCard.position.clone();
-            targetPosition.z += 8; // Position camera in front of card
-            
-            // Disable controls during animation
-            controls.enabled = false;
-            controls.autoRotate = false;
-            
-            // Animate camera
-            const startPosition = camera.position.clone();
-            const startRotation = camera.rotation.clone();
-            const duration = 1500;
-            const startTime = Date.now();
-            
-            const animateZoom = () => {
-              const elapsed = Date.now() - startTime;
-              const progress = Math.min(elapsed / duration, 1);
-              const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
-              
-              // Interpolate camera position
-              camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-              camera.lookAt(closestStoryCard.position);
-              
-              if (progress < 1) {
-                requestAnimationFrame(animateZoom);
-              } else {
-                // Show 2D card overlay after zoom completes
-                setTimeout(() => {
-                  // Trigger parent component to show 2D overlay
-                  if (closestStoryCard.userData && onStoryCardSelect) {
-                    onStoryCardSelect(closestStoryCard.userData);
-                  }
-                }, 200);
-              }
-            };
-            
-            animateZoom();
           }
         };
 
