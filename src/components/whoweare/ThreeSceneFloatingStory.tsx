@@ -422,6 +422,16 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
           group.add(sphere);
           
+          // Add invisible click helper sphere (slightly larger)
+          const clickHelperGeometry = new THREE.SphereGeometry(1.8, 16, 16);
+          const clickHelperMaterial = new THREE.MeshBasicMaterial({
+            visible: false,
+            side: THREE.DoubleSide
+          });
+          const clickHelper = new THREE.Mesh(clickHelperGeometry, clickHelperMaterial);
+          clickHelper.userData = member;
+          group.add(clickHelper);
+          
           // Inner glow
           const glowGeometry = new THREE.SphereGeometry(1.45, 32, 32);
           const glowMaterial = new THREE.MeshBasicMaterial({
@@ -669,8 +679,59 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           }
           
           
-          // Click on the closest object (story card or member)
-          if (closestStoryCard && closestStoryDistance < closestMemberDistance) {
+          // Click on the closest object - prioritize members if both are close
+          if (closestMember && closestStoryCard) {
+            // If both are detected, prioritize based on distance and a small bias for members
+            const memberBias = 0.8; // Give members 20% priority
+            if (closestMemberDistance * memberBias < closestStoryDistance) {
+              onMemberSelect(closestMember.userData as WhoWeAreMemberData);
+            } else {
+              // Handle story card click
+              setIsZooming(true);
+              setSelectedStoryCard(closestStoryCard);
+              
+              // Zoom animation to card
+              const targetPosition = closestStoryCard.position.clone();
+              targetPosition.z += 8; // Position camera in front of card
+              
+              // Disable controls during animation
+              controls.enabled = false;
+              controls.autoRotate = false;
+              
+              // Animate camera
+              const startPosition = camera.position.clone();
+              const startRotation = camera.rotation.clone();
+              const duration = 1500;
+              const startTime = Date.now();
+              
+              const animateZoom = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+                
+                // Interpolate camera position
+                camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
+                camera.lookAt(closestStoryCard.position);
+                
+                if (progress < 1) {
+                  requestAnimationFrame(animateZoom);
+                } else {
+                  // Show 2D card overlay after zoom completes
+                  setTimeout(() => {
+                    // Trigger parent component to show 2D overlay
+                    if (closestStoryCard.userData && onStoryCardSelect) {
+                      onStoryCardSelect(closestStoryCard.userData);
+                    }
+                  }, 200);
+                }
+              };
+              
+              animateZoom();
+            }
+          } else if (closestMember) {
+            onMemberSelect(closestMember.userData as WhoWeAreMemberData);
+          } else if (closestStoryCard) {
+            // Handle story card click
             setIsZooming(true);
             setSelectedStoryCard(closestStoryCard);
             
@@ -711,8 +772,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             };
             
             animateZoom();
-          } else if (closestMember) {
-            onMemberSelect(closestMember.userData as WhoWeAreMemberData);
           }
         };
 
