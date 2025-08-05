@@ -463,43 +463,83 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             
             // Profile content
             const centerX = 128;
-            const photoY = 75;
+            const padding = 20;
+            const contentWidth = canvas.width - (padding * 2);
             
+            // Dynamic sizing based on content
+            let currentY = 20;
+            const photoSize = Math.min(60, canvas.height * 0.25); // 25% of canvas height max
+            const photoRadius = photoSize / 2;
+            
+            // Profile image with dynamic sizing
             if (member.profileImage && imageMap.has(member.id)) {
               const img = imageMap.get(member.id)!;
               ctx.save();
               ctx.beginPath();
-              ctx.arc(centerX, photoY, 40, 0, Math.PI * 2);
+              ctx.arc(centerX, currentY + photoRadius, photoRadius, 0, Math.PI * 2);
               ctx.closePath();
               ctx.clip();
-              ctx.drawImage(img, centerX - 40, photoY - 40, 80, 80);
+              
+              // Calculate proper image scaling
+              const scale = Math.min(photoSize / img.width, photoSize / img.height);
+              const scaledWidth = img.width * scale;
+              const scaledHeight = img.height * scale;
+              const offsetX = (photoSize - scaledWidth) / 2;
+              const offsetY = (photoSize - scaledHeight) / 2;
+              
+              ctx.drawImage(img, 
+                centerX - photoRadius + offsetX, 
+                currentY + offsetY, 
+                scaledWidth, 
+                scaledHeight
+              );
               ctx.restore();
             } else {
-              // Fallback to initials
-              const circleGradient = ctx.createRadialGradient(centerX, photoY, 0, centerX, photoY, 40);
+              // Fallback to initials with dynamic size
+              const circleGradient = ctx.createRadialGradient(centerX, currentY + photoRadius, 0, centerX, currentY + photoRadius, photoRadius);
               circleGradient.addColorStop(0, member.color);
               circleGradient.addColorStop(1, `${member.color}88`);
               ctx.fillStyle = circleGradient;
               ctx.beginPath();
-              ctx.arc(centerX, photoY, 40, 0, Math.PI * 2);
+              ctx.arc(centerX, currentY + photoRadius, photoRadius, 0, Math.PI * 2);
               ctx.fill();
               
               ctx.fillStyle = '#ffffff';
-              ctx.font = 'bold 30px Arial';
+              const initialsFontSize = photoRadius * 0.7;
+              ctx.font = `bold ${initialsFontSize}px Arial`;
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
-              ctx.fillText(member.initials, centerX, photoY);
+              ctx.fillText(member.initials, centerX, currentY + photoRadius);
             }
             
-            // Name and role
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 18px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(member.name, centerX, 150);
+            currentY += photoSize + 15;
             
+            // Name with dynamic font size
+            ctx.fillStyle = '#ffffff';
+            let nameFontSize = 18;
+            ctx.font = `bold ${nameFontSize}px Arial`;
+            ctx.textAlign = 'center';
+            
+            // Adjust font size if name is too wide
+            while (ctx.measureText(member.name).width > contentWidth && nameFontSize > 12) {
+              nameFontSize--;
+              ctx.font = `bold ${nameFontSize}px Arial`;
+            }
+            ctx.fillText(member.name, centerX, currentY);
+            
+            currentY += nameFontSize + 8;
+            
+            // Role with dynamic font size
             ctx.fillStyle = member.color;
-            ctx.font = '14px Arial';
-            ctx.fillText(member.role, centerX, 175);
+            let roleFontSize = 14;
+            ctx.font = `${roleFontSize}px Arial`;
+            
+            // Adjust font size if role is too wide
+            while (ctx.measureText(member.role).width > contentWidth && roleFontSize > 10) {
+              roleFontSize--;
+              ctx.font = `${roleFontSize}px Arial`;
+            }
+            ctx.fillText(member.role, centerX, currentY);
           }
           
           const profileTexture = new THREE.CanvasTexture(canvas);
