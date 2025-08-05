@@ -49,36 +49,36 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
   const storyPanels = useMemo(() => [
     {
       id: 'why',
-      title: '왜 시작했나요?',
-      content: '혼자 공부하다 지치지 않으셨나요?\n유튜브와 블로그만으론 부족하죠.\n진짜 성장은 함께할 때\n비로소 시작된다고 믿어요.',
+      title: '혼자만의 성장에 \n마침표를 찍어요.',
+      content: '강의만으로는 채워지지 않는 갈증,\n동료의 피드백이 절실했던 순간들.\n우리는 \'함께\'라는 가장 강력한 변수를 더해\n성장의 방정식을 새로 써요.',
       position: generateRandomPosition(0),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
       id: 'value1',
-      title: '어떻게 성장하나요?',
-      content: '실제 프로젝트를 함께 만들어요.\n코드 리뷰로 서로 배우고,\n동료의 피드백으로 성장해요.\n지식이 경험이 되는 순간을 만들어요.',
+      title: '나의 \'아웃풋\'으로 증명하고, \n동료의 \'피드백\'으로 완성해요.',
+      content: '책으로만 배우는 시대를 넘어\n나만의 결과물을 만드는 경험에 집중해요.\n서로의 아웃풋을 기꺼이 공유하고\n건설적인 피드백으로 함께 완성도를 높여요.',
       position: generateRandomPosition(1),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
       id: 'value2',
-      title: '어떤 문화를 만드나요?',
-      content: '각자의 속도를 존중해요.\n비동기적(Async)으로 참여하되,\n안정적인 터전(Site)에서\n지속적으로 연결되어 있어요.',
+      title: '따로 또 같이,\n느슨하게 연결돼요.',
+      content: '모두가 같은 속도로 뛸 필요는 없어요.\n각자의 궤도를 존중하는 비동기(Async) 참여로\n오래 지속할 우리만의 터전(Site)을 만들어요.',
       position: generateRandomPosition(2),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
       id: 'value3',
-      title: '어떻게 지속하나요?',
-      content: '리더에겐 합당한 보상을,\n멤버에겐 다음이 기대되는 경험을.\n모두가 윈윈하는 구조로\n오래오래 함께 가요.',
+      title: '성장의 선순환 구조를 만들어요.',
+      content: '성장에 기여한 리더에겐 합당한 보상을,\n참여하는 동료에겐 다음이 기대되는 경험을.\n서로가 서로의 성장을 돕는 투명한 시스템으로\n지속가능한 생태계를 꾸려나가요.',
       position: generateRandomPosition(3),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     },
     {
       id: 'question',
-      title: '우리의 질문',
-      content: '"어떻게 하면 이 외로운 여정을\n함께, 그리고 꾸준히\n걸어갈 수 있을까요?"',
+      title: '우리의 여정에 동참해요.',
+      content: '결국 우리의 질문은 하나예요.\n"어떻게 하면 이 외로운 항해를\n함께, 그리고 끝까지 완주할 수 있을까?"\n그 답을 여기서 함께 찾아요.',
       position: generateRandomPosition(4),
       rotation: { x: 0, y: Math.random() * Math.PI * 2, z: 0 }
     }
@@ -278,6 +278,11 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               
               // Title with maximum clarity
               if (panel.title) {
+                const titleLines = panel.title.split('\n');
+                const lineHeight = 45; // Font size is 37px, so this gives some space
+                const totalHeight = (titleLines.length - 1) * lineHeight;
+                const startY = 75 - totalHeight / 2;
+
                 // Multiple shadow layers for better visibility
                 ctx.shadowColor = '#000000';
                 ctx.shadowBlur = 20;
@@ -289,13 +294,16 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 ctx.font = '600 37px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
                 ctx.textAlign = 'center';
                 
-                // Draw shadow layer
-                ctx.fillText(panel.title, 256, 75);
-                
-                // Draw main text
-                ctx.shadowBlur = 5;
-                ctx.shadowOffsetY = 1;
-                ctx.fillText(panel.title, 256, 75);
+                titleLines.forEach((line, i) => {
+                  const y = startY + i * lineHeight;
+                  // Draw shadow layer
+                  ctx.fillText(line, 256, y);
+                  
+                  // Draw main text
+                  ctx.shadowBlur = 5;
+                  ctx.shadowOffsetY = 1;
+                  ctx.fillText(line, 256, y);
+                });
                 
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetY = 0;
@@ -411,7 +419,14 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
 
-        members.forEach((member) => {
+        // Create shuffled indices for random placement
+        const shuffledIndices = Array.from({ length: members.length }, (_, i) => i);
+        for (let i = shuffledIndices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+        }
+
+        members.forEach((member, originalIndex) => {
           const group = new THREE.Group();
           group.userData = member;
           
@@ -564,11 +579,11 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           group.add(profileGroup);
           group.userData.profileGroup = profileGroup;
           
-          // Position in space with better distribution
-          const memberIndex = members.indexOf(member);
-          const angle = (memberIndex / members.length) * Math.PI * 2;
-          const radius = 12 + (memberIndex % 2) * 3; // Alternate between two radius levels
-          const height = Math.sin(angle * 2) * 3 + (memberIndex % 3 - 1) * 1.5; // Vary heights more
+          // Position in space with better distribution using shuffled index
+          const shuffledIndex = shuffledIndices[originalIndex];
+          const angle = (shuffledIndex / members.length) * Math.PI * 2;
+          const radius = 12 + (shuffledIndex % 2) * 3; // Alternate between two radius levels
+          const height = Math.sin(angle * 2) * 3 + (shuffledIndex % 3 - 1) * 1.5; // Vary heights more
           
           group.position.set(
             Math.cos(angle) * radius,
@@ -585,8 +600,34 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           // Optimized member light
           const light = new THREE.PointLight(new THREE.Color(member.color), 0.3, 8);
           light.position.copy(group.position);
+          light.visible = false; // Initially hide the light
           scene.add(light);
           group.userData.light = light;
+          
+          // Initial scale animation for member spheres
+          group.scale.set(0, 0, 0);
+          profileGroup.visible = false; // Initially hide profile
+          const memberDelay = 1500 + originalIndex * 250; // Start after story cards finish
+          setTimeout(() => {
+            // Turn on the light when animation starts
+            light.visible = true;
+            
+            const scaleAnimation = () => {
+              group.scale.x += (1 - group.scale.x) * 0.08;
+              group.scale.y += (1 - group.scale.y) * 0.08;
+              group.scale.z += (1 - group.scale.z) * 0.08;
+              
+              // Show profile when scale is large enough
+              if (group.scale.x > 0.5 && !profileGroup.visible) {
+                profileGroup.visible = true;
+              }
+              
+              if (group.scale.x < 0.99) {
+                requestAnimationFrame(scaleAnimation);
+              }
+            };
+            scaleAnimation();
+          }, memberDelay);
           
           scene.add(group);
           memberObjects.push(group);
@@ -1098,16 +1139,19 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           memberObjects.forEach((obj) => {
             const distance = obj.position.distanceTo(cameraPosition);
             
+            // Only show profile if scale is large enough
+            const showProfile = obj.scale.x > 0.5;
+            
             if (distance > 25) {
-              // Far: show profile always, minimal animation
-              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = true;
+              // Far: show profile if scale allows, minimal animation
+              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = showProfile;
               if (obj.userData.light) obj.userData.light.visible = false;
               
               obj.rotation.y += obj.userData.rotationSpeed * 0.5;
             } else if (distance > 12) {
-              // Medium: show profile but no lookAt
-              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = true;
-              if (obj.userData.light) obj.userData.light.visible = true;
+              // Medium: show profile if scale allows but no lookAt
+              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = showProfile;
+              if (obj.userData.light) obj.userData.light.visible = obj.scale.x > 0.1;
               
               const floatY = Math.sin(time * obj.userData.floatSpeed + obj.userData.floatOffset) * 0.3;
               obj.position.y = obj.userData.originalY + floatY;
@@ -1115,10 +1159,12 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             } else {
               // Near: full animation
               if (obj.userData.profileGroup) {
-                obj.userData.profileGroup.visible = true;
-                obj.userData.profileGroup.lookAt(camera.position);
+                obj.userData.profileGroup.visible = showProfile;
+                if (showProfile) {
+                  obj.userData.profileGroup.lookAt(camera.position);
+                }
               }
-              if (obj.userData.light) obj.userData.light.visible = true;
+              if (obj.userData.light) obj.userData.light.visible = obj.scale.x > 0.1;
               
               const floatY = Math.sin(time * obj.userData.floatSpeed + obj.userData.floatOffset) * 0.5;
               obj.position.y = obj.userData.originalY + floatY;
