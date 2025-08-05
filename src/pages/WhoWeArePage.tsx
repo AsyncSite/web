@@ -25,8 +25,8 @@ export const whoweareTeamMembers = [
     role: 'System Engineer',
     quote: '"코드는 단순하게, 생각은 깊게"',
     story: '복잡한 문제를 단순하게 풀어내는 것이 진정한 엔지니어링이라고 믿습니다.',
-    color: '#82aaff',
-    darkColor: '#5b82d8',
+    color: '#f472b6',
+    darkColor: '#e11d48',
     position: { x: 4, y: 0, z: 3 },
     profileImage: '/images/face/KrongDev.png'
   },
@@ -63,7 +63,8 @@ export const whoweareTeamMembers = [
     story: '개발자들이 외롭지 않게, 서로의 성장을 응원하는 공간을 만들어갑니다.',
     color: '#34d399',
     darkColor: '#10b981',
-    position: { x: 0, y: 0, z: 5 }
+    position: { x: 0, y: 0, z: 5 },
+    profileImage: '/images/face/vvoohhee.png'
   },
   {
     id: 'dongmin-cha',
@@ -74,7 +75,8 @@ export const whoweareTeamMembers = [
     story: '안정적인 시스템 위에서만 진정한 혁신이 가능하다고 믿습니다.',
     color: '#f59e0b',
     darkColor: '#d97706',
-    position: { x: 0, y: 0, z: -5 }
+    position: { x: 0, y: 0, z: -5 },
+    profileImage: '/images/face/kdelay.png'
   }
 ];
 

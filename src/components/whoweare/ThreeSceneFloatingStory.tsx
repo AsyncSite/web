@@ -1099,8 +1099,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             const distance = obj.position.distanceTo(cameraPosition);
             
             if (distance > 25) {
-              // Far: hide profile, minimal animation
-              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = false;
+              // Far: show profile always, minimal animation
+              if (obj.userData.profileGroup) obj.userData.profileGroup.visible = true;
               if (obj.userData.light) obj.userData.light.visible = false;
               
               obj.rotation.y += obj.userData.rotationSpeed * 0.5;
