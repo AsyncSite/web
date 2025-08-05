@@ -15,7 +15,6 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
   const [whoweareShow3D, setWhoweareShow3D] = useState(true);
   const [selectedStoryCard, setSelectedStoryCard] = useState<any>(null);
   const [isClosingCard, setIsClosingCard] = useState(false);
-  const [isPreparingCard, setIsPreparingCard] = useState(false);
 
 
   // Helper function to convert hex to RGB
@@ -70,16 +69,9 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
     }, 150); // Wait for fade out
   };
 
-  // Handle story card selection with preparation phase
+  // Handle story card selection
   const handleStoryCardSelect = (storyData: any) => {
-    // First, set the card data but keep it invisible
     setSelectedStoryCard(storyData);
-    setIsPreparingCard(true);
-    
-    // Transition to visible when zoom is almost complete
-    setTimeout(() => {
-      setIsPreparingCard(false);
-    }, 900); // Show card at ~75% of zoom (900ms / 1200ms)
   };
 
   return (
@@ -154,9 +146,9 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
       </div>
 
       {/* Story 2D Card - Always rendered, controlled by CSS */}
-      <div className={`whoweare-member-card-container ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''} ${isPreparingCard ? 'preparing' : ''}`} onClick={closeStoryCard}>
+      <div className={`whoweare-member-card-container ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''}`} onClick={closeStoryCard}>
         <div 
-          className={`whoweare-member-card ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''} ${isPreparingCard ? 'preparing' : ''}`}
+          className={`whoweare-member-card ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''}`}
           onClick={(e) => e.stopPropagation()}
           style={{ 
             '--member-color': '#C3E88D', 

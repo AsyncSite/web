@@ -755,14 +755,9 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             if (clickedObject.isMember) {
               onMemberSelect(clickedObject.group.userData as WhoWeAreMemberData);
             } else if (clickedObject.isStoryCard) {
-              // Handle story card click
+              // Handle story card click with stage-separated animation
               setIsZooming(true);
               setSelectedStoryCard(clickedObject.group);
-              
-              // Trigger card preparation immediately
-              if (clickedObject.group.userData && onStoryCardSelect) {
-                onStoryCardSelect(clickedObject.group.userData);
-              }
               
               // Zoom animation to card
               const cardPosition = clickedObject.group.position.clone();
@@ -786,17 +781,29 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               controls.enabled = false;
               controls.autoRotate = false;
               
-              // Animate camera
+              // Stage-separated animation parameters
               const startPosition = camera.position.clone();
               const startTarget = controls.target.clone();
-              const duration = 1200; // Fixed zoom speed
+              const zoomDuration = 1200;
+              const stage2Start = 800; // Start fading 3D at 66%
+              const stage3Start = 1000; // Start showing 2D at 83%
               const startTime = Date.now();
+              
+              // Delay card trigger to stage 3
+              setTimeout(() => {
+                if (clickedObject.group.userData && onStoryCardSelect) {
+                  onStoryCardSelect(clickedObject.group.userData);
+                }
+              }, stage3Start);
               
               const animateZoom = () => {
                 const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                // Simple ease-out cubic
-                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                const progress = Math.min(elapsed / zoomDuration, 1);
+                
+                // Use easeInOutCubic for smooth motion
+                const easeProgress = progress < 0.5 
+                  ? 4 * progress * progress * progress 
+                  : 1 - Math.pow(-2 * progress + 2, 3) / 2;
                 
                 // Interpolate camera position
                 camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
@@ -807,13 +814,58 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 camera.lookAt(currentTarget);
                 controls.target.copy(currentTarget);
                 
-                // Fade out 3D card as 2D card appears
-                if (progress > 0.7 && clickedObject.group) {
-                  const fadeProgress = (progress - 0.7) / 0.3; // 0 to 1 over last 30%
-                  const card = clickedObject.group.children[0];
-                  if (card && card.material) {
-                    card.material.opacity = 0.95 * (1 - fadeProgress * 0.7); // Fade to 30% opacity
+                // Stage-based opacity control
+                if (elapsed >= stage2Start) {
+                  // Stage 2: Start fading out 3D objects
+                  const fadeProgress = Math.min((elapsed - stage2Start) / (zoomDuration - stage2Start), 1);
+                  
+                  // Fade other story cards
+                  storyObjects.forEach(obj => {
+                    if (obj !== clickedObject.group) {
+                      const card = obj.children[0];
+                      if (card && card.material) {
+                        card.material.opacity = 0.95 * (1 - fadeProgress * 0.8);
+                      }
+                    }
+                  });
+                  
+                  // Fade member spheres
+                  memberObjects.forEach(obj => {
+                    const sphere = obj.children.find((child: any) => 
+                      child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+                    );
+                    if (sphere && sphere.material) {
+                      sphere.material.opacity = 0.5 * (1 - fadeProgress * 0.8);
+                    }
+                  });
+                  
+                  // Also fade the focused panel slightly for smooth transition
+                  if (elapsed >= stage3Start && clickedObject.group) {
+                    const panelFadeProgress = Math.min((elapsed - stage3Start) / (zoomDuration - stage3Start), 1);
+                    const card = clickedObject.group.children[0];
+                    if (card && card.material) {
+                      card.material.opacity = 0.95 * (1 - panelFadeProgress * 0.3);
+                    }
                   }
+                } else {
+                  // Stage 1: Pure zoom, keep everything visible with subtle fade
+                  storyObjects.forEach(obj => {
+                    if (obj !== clickedObject.group) {
+                      const card = obj.children[0];
+                      if (card && card.material) {
+                        card.material.opacity = 0.95 * (1 - easeProgress * 0.3);
+                      }
+                    }
+                  });
+                  
+                  memberObjects.forEach(obj => {
+                    const sphere = obj.children.find((child: any) => 
+                      child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+                    );
+                    if (sphere && sphere.material) {
+                      sphere.material.opacity = 0.5 * (1 - easeProgress * 0.3);
+                    }
+                  });
                 }
                 
                 if (progress < 1) {
@@ -835,13 +887,14 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('click', handleClick);
 
-        // Reset camera when closing card
+        // Reset camera with stage-separated animation
         const handleResetCamera = () => {
           if (!cameraRef.current || !controlsRef.current || !camera) return;
           
           // Reset zoom state
           setIsZooming(false);
           const selectedCard = selectedStoryCard;
+          setSelectedStoryCard(null);
           
           // Get the stored zoom origin or use defaults
           const zoomFrom = selectedCard?.userData?.zoomFrom || {
@@ -849,47 +902,89 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             target: new THREE.Vector3(0, 0, 0)
           };
           
+          // Restore focused panel opacity immediately
+          if (selectedCard) {
+            const card = selectedCard.children[0];
+            if (card && card.material) {
+              card.material.opacity = 0.95;
+            }
+          }
           
-          // Small delay to let GPU prepare for 3D rendering after 2D fadeout
+          // Small delay to let 2D fade out complete
           const animationDelay = 50;
           
           setTimeout(() => {
-            const duration = 1200; // Same as zoom in
+            const duration = 800; // Faster for snappier feel
+            const stage2Start = 150; // Start restoring 3D objects early
             const startTime = Date.now();
             const startPosition = camera.position.clone();
             const startTarget = controls.target.clone();
             
-            // Enable controls smoothly during animation
-            let controlsEnabled = false;
-            
             const animateReset = () => {
               const elapsed = Date.now() - startTime;
               const progress = Math.min(elapsed / duration, 1);
-              // Smoother ease for zoom out
-              const easeProgress = progress < 0.5
-                ? 2 * progress * progress
-                : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+              
+              // Use easeOutCubic for smooth deceleration
+              const easeProgress = 1 - Math.pow(1 - progress, 3);
               
               // Interpolate camera position
               camera.position.lerpVectors(startPosition, zoomFrom.position, easeProgress);
               
-              // Interpolate camera target (where it's looking)
+              // Interpolate camera target
               const currentTarget = new THREE.Vector3();
               currentTarget.lerpVectors(startTarget, zoomFrom.target, easeProgress);
               camera.lookAt(currentTarget);
               controls.target.copy(currentTarget);
               
-              // Enable controls halfway through for smoother transition
-              if (progress > 0.5 && !controlsEnabled) {
-                controlsEnabled = true;
-                controls.enabled = true;
-                controls.autoRotate = true;
+              // Stage-based visibility restoration
+              if (elapsed >= stage2Start) {
+                // Restore 3D object visibility
+                const restoreProgress = Math.min((elapsed - stage2Start) / (duration - stage2Start), 1);
+                
+                // Restore story cards
+                storyObjects.forEach(obj => {
+                  const card = obj.children[0];
+                  if (card && card.material) {
+                    card.material.opacity = 0.15 + restoreProgress * 0.8;
+                  }
+                });
+                
+                // Restore member spheres
+                memberObjects.forEach(obj => {
+                  const sphere = obj.children.find((child: any) => 
+                    child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+                  );
+                  if (sphere && sphere.material) {
+                    sphere.material.opacity = 0.1 + restoreProgress * 0.4;
+                  }
+                });
               }
               
               if (progress < 1) {
                 requestAnimationFrame(animateReset);
               } else {
-                // Ensure controls are fully updated
+                // Ensure all objects are fully visible
+                storyObjects.forEach(obj => {
+                  const card = obj.children[0];
+                  if (card && card.material) {
+                    card.material.opacity = 0.95;
+                  }
+                });
+                
+                memberObjects.forEach(obj => {
+                  const sphere = obj.children.find((child: any) => 
+                    child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+                  );
+                  if (sphere && sphere.material) {
+                    sphere.material.opacity = 0.5;
+                    sphere.material.emissive = new THREE.Color(0x000000);
+                    sphere.material.emissiveIntensity = 0;
+                  }
+                });
+                
+                // Re-enable controls
+                controls.enabled = true;
+                controls.autoRotate = true;
                 controls.update();
                 
                 // Clean up stored zoom data

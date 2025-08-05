@@ -279,23 +279,13 @@
   justify-content: center;
   z-index: 1000;
   pointer-events: none;
-  transition: none;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.25s ease-out;
 }
 
 .whoweare-member-card-container.active {
   pointer-events: auto;
   background-color: rgba(0, 0, 0, 0.8);
-  transition: background-color 0.2s ease-out;
-}
-
-.whoweare-member-card-container.active.preparing {
-  background-color: rgba(0, 0, 0, 0) !important;
-  transition: none;
-}
-
-.whoweare-member-card-container.active:not(.preparing) {
-  background-color: rgba(0, 0, 0, 0.8);
-  transition: background-color 0.25s ease-out;
 }
 
 .whoweare-member-card-container.closing {
@@ -314,7 +304,7 @@
   padding: 50px;
   transform: scale(1);
   opacity: 0;
-  transition: none;
+  transition: opacity 0.25s ease-out;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   border: 1px solid var(--member-color);
   position: relative;
@@ -337,21 +327,11 @@
 .whoweare-member-card.active {
   transform: scale(1);
   opacity: 1;
-  transition: opacity 0.2s ease-out;
-}
-
-.whoweare-member-card.active:not(.preparing) {
-  opacity: 1;
 }
 
 .whoweare-member-card.closing {
   opacity: 0;
   transition: opacity 0.15s ease-out;
-}
-
-.whoweare-member-card.preparing {
-  opacity: 0 !important;
-  transition: none;
 }
 
 .whoweare-close-btn {
