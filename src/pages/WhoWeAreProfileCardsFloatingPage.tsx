@@ -173,7 +173,8 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
               fontSize: '2.5rem',
               marginBottom: '20px',
               textAlign: 'center',
-              fontWeight: 700
+              fontWeight: 700,
+              whiteSpace: 'pre-line'
             }}>
               {selectedStoryCard.title}
             </h2>
