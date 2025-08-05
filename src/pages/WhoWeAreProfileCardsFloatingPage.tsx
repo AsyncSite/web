@@ -15,6 +15,7 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
   const [whoweareShow3D, setWhoweareShow3D] = useState(true);
   const [selectedStoryCard, setSelectedStoryCard] = useState<any>(null);
   const [isClosingCard, setIsClosingCard] = useState(false);
+  const [isClosingMember, setIsClosingMember] = useState(false);
 
 
   // Helper function to convert hex to RGB
@@ -49,7 +50,12 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
   }, []);
 
   const closeWhoWeareMemberPanel = () => {
+    setIsClosingMember(true);
     setWhoweareSelectedMember(null);
+    // Keep blocking clicks for a bit after closing (match story card timing)
+    setTimeout(() => {
+      setIsClosingMember(false);
+    }, 200);
   };
 
   const closeStoryCard = () => {
@@ -90,6 +96,7 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
                 setWhoweareShow3D(false);
                 setWhoweareIsLoading(false);
               }}
+              isUIActive={!!whoweareSelectedMember || !!selectedStoryCard || isClosingCard || isClosingMember}
             />
           </Suspense>
         </div>
@@ -140,8 +147,8 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
       {/* Navigation hint */}
       <div className="whoweare-instructions" style={{ left: '50%', transform: 'translateX(-50%)', right: 'auto' }}>
         <div className="whoweare-control-keys">
-          <span className="whoweare-key">클릭하여 상세보기</span>
-          <span className="whoweare-key">드래그로 회전</span>
+          <span className="whoweare-key">하나씩 클릭해보세요</span>
+          <span className="whoweare-key">드래그로 회전이 가능해요</span>
         </div>
       </div>
 
@@ -185,10 +192,11 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
       </div>
 
       {/* Member 2D Card */}
-      <div className={`whoweare-member-card-container ${whoweareSelectedMember ? 'active' : ''}`}>
+      <div className={`whoweare-member-card-container ${whoweareSelectedMember ? 'active' : ''}`} onClick={closeWhoWeareMemberPanel}>
         {whoweareSelectedMember && (
           <div 
             className={`whoweare-member-card ${whoweareSelectedMember ? 'active' : ''}`}
+            onClick={(e) => e.stopPropagation()}
             style={{ 
               '--member-color': whoweareSelectedMember.color, 
               '--member-dark-color': whoweareSelectedMember.darkColor || whoweareSelectedMember.color,

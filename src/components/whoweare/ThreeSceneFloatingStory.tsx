@@ -7,6 +7,7 @@ interface ThreeSceneFloatingStoryProps {
   onLoadComplete: () => void;
   onLoadError: (error: string) => void;
   onStoryCardSelect?: (story: any) => void;
+  isUIActive?: boolean;
 }
 
 const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({ 
@@ -14,7 +15,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
   onMemberSelect, 
   onLoadComplete, 
   onLoadError,
-  onStoryCardSelect 
+  onStoryCardSelect,
+  isUIActive = false
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<any>(null);
@@ -759,8 +761,8 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           if (currentTime - lastClickTimeRef.current < 300) return;
           lastClickTimeRef.current = currentTime;
           
-          // Prevent clicks during zoom animation
-          if (isZooming || selectedStoryCard) return;
+          // Prevent clicks during zoom animation or when 2D UI is active
+          if (isZooming || selectedStoryCard || isUIActive) return;
           
           // Check if this was a drag (mouse moved more than 5px or took longer than 500ms)
           const clickDuration = currentTime - mouseDownTimeRef.current;
