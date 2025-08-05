@@ -289,7 +289,7 @@ const WhoWeAreProfileCardsFloatingPage: React.FC = () => {
       )}
 
       {/* Navigation hint */}
-      <div className="whoweare-instructions" style={{ left: '20px', right: 'auto' }}>
+      <div className="whoweare-instructions" style={{ left: '50%', transform: 'translateX(-50%)', right: 'auto' }}>
         <div className="whoweare-control-hint">🌌 스토리 패널과 팀원들이 함께 떠있는 공간</div>
         <div className="whoweare-control-keys">
           <span className="whoweare-key">자동 회전 중</span>

@@ -408,7 +408,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           group.userData = member;
           
           // Transparent glass sphere
-          const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+          const sphereGeometry = new THREE.SphereGeometry(1.0, 32, 32);
           const sphereMaterial = new THREE.MeshPhysicalMaterial({
             color: new THREE.Color(member.color),
             metalness: 0.1,
@@ -423,7 +423,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           group.add(sphere);
           
           // Add invisible click helper sphere (slightly larger)
-          const clickHelperGeometry = new THREE.SphereGeometry(1.8, 16, 16);
+          const clickHelperGeometry = new THREE.SphereGeometry(1.2, 16, 16);
           const clickHelperMaterial = new THREE.MeshBasicMaterial({
             visible: false,
             side: THREE.DoubleSide
@@ -433,7 +433,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           group.add(clickHelper);
           
           // Inner glow
-          const glowGeometry = new THREE.SphereGeometry(1.45, 32, 32);
+          const glowGeometry = new THREE.SphereGeometry(0.95, 32, 32);
           const glowMaterial = new THREE.MeshBasicMaterial({
             color: new THREE.Color(member.color),
             transparent: true,
@@ -509,7 +509,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
             side: THREE.DoubleSide
           });
           const profilePlane = new THREE.Mesh(
-            new THREE.PlaneGeometry(1, 1.25),
+            new THREE.PlaneGeometry(0.7, 0.875),
             profileMaterial
           );
           profilePlane.position.z = 0.05;
@@ -618,7 +618,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 card.material.opacity = 1;
               }
             } else if (hoveredObject.isMember) {
-              hoveredObject.group.scale.set(1.2, 1.2, 1.2);
+              hoveredObject.group.scale.set(1.15, 1.15, 1.15);
               const sphere = hoveredObject.group.children[0] as any;
               if (sphere && sphere.material) {
                 sphere.material.opacity = 0.5;
