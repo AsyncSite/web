@@ -11,7 +11,7 @@ export const whoweareTeamMembers = [
     name: 'RENE CHOI',
     initials: 'RC',
     role: 'The Visionary Builder\nTech Lead & Founder',
-    quote: '"결국, 세상은 만드는 사람들의 것이라고 믿어요."',
+    quote: '"결국,\n세상은 만드는 사람들의 것이라고 믿어요."',
     story: 'AsyncSite의 비전을 세우고 아키텍처를 설계하며, 전체 여정의 지도를 그리고 있어요.\n\n머릿속 아이디어가 코드가 되고, 코드가 살아있는 서비스가 되는 순간, 그 순간의 희열을 사랑해요.\n\n막연한 성장에 대한 불안감 대신, 치열하게 몰입하고 단단하게 성장하는 즐거움. 그 값진 경험을 더 많은 동료들과 함께 만들어가고 싶어요.',
     color: '#6366f1',
     darkColor: '#4f46e5',
