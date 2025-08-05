@@ -31,6 +31,16 @@ const WhoWeAreGlassPage = lazy(() => import('../pages/WhoWeAreGlassPage'));
 const WhoWeAreScreenPage = lazy(() => import('../pages/WhoWeAreScreenPage'));
 const WhoWeAreTeamNodesPage = lazy(() => import('../pages/WhoWeAreTeamNodesPage'));
 const WhoWeAreProfilePlanetsPage = lazy(() => import('../pages/WhoWeAreProfilePlanetsPage'));
+const WhoWeArePlanetsRandomPage = lazy(() => import('../pages/WhoWeArePlanetsRandomPage'));
+const WhoWeArePlanetsIntuitivePage = lazy(() => import('../pages/WhoWeArePlanetsIntuitivePage'));
+const WhoWeAreGlassOrbsPage = lazy(() => import('../pages/WhoWeAreGlassOrbsPage'));
+const WhoWeAreCrystalOrbsPage = lazy(() => import('../pages/WhoWeAreCrystalOrbsPage'));
+const WhoWeAreProfileCardsPage = lazy(() => import('../pages/WhoWeAreProfileCardsPage'));
+const WhoWeAreProfileCardsFloatingPage = lazy(() => import('../pages/WhoWeAreProfileCardsFloatingPage'));
+const WhoWeAreProfileCardsCorePage = lazy(() => import('../pages/WhoWeAreProfileCardsCorePage'));
+const WhoWeAreProfileCardsSequencePage = lazy(() => import('../pages/WhoWeAreProfileCardsSequencePage'));
+const WhoWeAreProfileCardsJourneyPage = lazy(() => import('../pages/WhoWeAreProfileCardsJourneyPage'));
+const WhoWeAreStoryPlanetsPage = lazy(() => import('../pages/WhoWeAreStoryPlanetsPage'));
 
 const subRouter = [
   // 스터디 관련 라우트
@@ -175,6 +185,46 @@ const subRouter = [
   {
     path: 'whoweare-profile-planets',
     element: <WhoWeAreProfilePlanetsPage />,
+  },
+  {
+    path: 'whoweare-planets-random',
+    element: <WhoWeArePlanetsRandomPage />,
+  },
+  {
+    path: 'whoweare-planets-intuitive',
+    element: <WhoWeArePlanetsIntuitivePage />,
+  },
+  {
+    path: 'whoweare-glass-orbs',
+    element: <WhoWeAreGlassOrbsPage />,
+  },
+  {
+    path: 'whoweare-crystal-orbs',
+    element: <WhoWeAreCrystalOrbsPage />,
+  },
+  {
+    path: 'whoweare-profile-cards',
+    element: <WhoWeAreProfileCardsPage />,
+  },
+  {
+    path: 'whoweare-profile-cards-floating',
+    element: <WhoWeAreProfileCardsFloatingPage />,
+  },
+  {
+    path: 'whoweare-profile-cards-core',
+    element: <WhoWeAreProfileCardsCorePage />,
+  },
+  {
+    path: 'whoweare-profile-cards-sequence',
+    element: <WhoWeAreProfileCardsSequencePage />,
+  },
+  {
+    path: 'whoweare-profile-cards-journey',
+    element: <WhoWeAreProfileCardsJourneyPage />,
+  },
+  {
+    path: 'whoweare-story-planets',
+    element: <WhoWeAreStoryPlanetsPage />,
   },
 ];
 export default subRouter;

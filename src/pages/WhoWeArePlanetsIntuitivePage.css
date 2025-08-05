@@ -1,0 +1,210 @@
+.whoweare-planets-intuitive-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Text Section */
+.whoweare-intro-section {
+  position: relative;
+  z-index: 10;
+  padding: 60px 20px 40px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 70%, transparent 100%);
+}
+
+.whoweare-intro-text {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.whoweare-intro-text h1 {
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.whoweare-intro-text .subtitle {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #6366f1, #82aaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.whoweare-intro-text p {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+  margin-top: 1rem;
+}
+
+/* Guide hint */
+.whoweare-guide-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 20px 30px;
+  color: white;
+  font-size: 1.1rem;
+  text-align: center;
+  z-index: 20;
+  animation: fadeInOut 4s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  20%, 80% { opacity: 1; }
+}
+
+/* 3D Scene Container */
+.whoweare-3d-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Planet labels styling */
+.planet-label {
+  user-select: none;
+  pointer-events: auto !important;
+}
+
+.planet-label-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.planet-label-role {
+  font-size: 0.9rem;
+  font-weight: 300;
+  opacity: 0.8;
+}
+
+.planet-label:hover {
+  background: rgba(0, 0, 0, 0.9) !important;
+  transform: scale(1.05);
+}
+
+/* Override existing overlay styles */
+.whoweare-planets-intuitive-container .whoweare-ui-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.whoweare-planets-intuitive-container .whoweare-ui-overlay > * {
+  pointer-events: auto;
+}
+
+/* Hide the header in this version */
+.whoweare-planets-intuitive-container .whoweare-header {
+  display: none;
+}
+
+/* Adjust instructions position */
+.whoweare-planets-intuitive-container .whoweare-instructions {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+/* CTA Button */
+.whoweare-bottom-cta {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.whoweare-cta-button {
+  display: inline-block;
+  padding: 12px 30px;
+  background: linear-gradient(45deg, #6366f1, #82aaff);
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+}
+
+.whoweare-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.4);
+}
+
+/* Loading screen adjustment */
+.whoweare-planets-intuitive-container .whoweare-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  z-index: 100;
+}
+
+/* Member panel override for better visibility */
+.whoweare-planets-intuitive-container .whoweare-member-panel {
+  max-width: 400px;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: fixed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .whoweare-intro-section {
+    padding: 40px 20px 30px;
+  }
+  
+  .whoweare-intro-text h1 {
+    font-size: 1.6rem;
+  }
+  
+  .whoweare-intro-text .subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .whoweare-intro-text p {
+    font-size: 1rem;
+  }
+  
+  .planet-label-name {
+    font-size: 1rem;
+  }
+  
+  .planet-label-role {
+    font-size: 0.8rem;
+  }
+}
