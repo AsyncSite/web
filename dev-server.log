@@ -1,0 +1,197 @@
+
+> asyncsite-frontend@0.1.0 start
+> DISABLE_ESLINT_PLUGIN=true react-scripts start
+
+(node:23775) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:23775) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:23775) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view asyncsite-frontend in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://172.30.1.85:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+(node:23775) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+[0;33mOne of your dependencies, babel-preset-react-app, is importing the
+"@babel/plugin-proposal-private-property-in-object" package without
+declaring it in its dependencies. This is currently working because
+"@babel/plugin-proposal-private-property-in-object" is already in your
+node_modules folder for unrelated reasons, but it [1mmay break at any time[0;33m.
+
+babel-preset-react-app is part of the create-react-app project, [1mwhich
+is not maintianed anymore[0;33m. It is thus unlikely that this bug will
+ever be fixed. Add "@babel/plugin-proposal-private-property-in-object" to
+your devDependencies to work around this error. This will make this message
+go away.[0m
+  
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/components/whoweare/ThreeSceneFloatingStory.tsx:582:38
+TS2345: Argument of type 'Record<string, any>' is not assignable to parameter of type 'WhoWeAreMemberData'.
+  Type 'Record<string, any>' is missing the following properties from type 'WhoWeAreMemberData': id, name, initials, role, and 5 more.
+    580 |                     // Trigger parent component to show 2D overlay
+    581 |                     if (clickedCard.userData) {
+  > 582 |                       onMemberSelect(clickedCard.userData); // Reuse member select for now
+        |                                      ^^^^^^^^^^^^^^^^^^^^
+    583 |                     }
+    584 |                   }, 200);
+    585 |                 }
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/components/whoweare/ThreeSceneFloatingStory.tsx:582:38
+TS2345: Argument of type 'Record<string, any>' is not assignable to parameter of type 'WhoWeAreMemberData'.
+  Type 'Record<string, any>' is missing the following properties from type 'WhoWeAreMemberData': id, name, initials, role, and 5 more.
+    580 |                     // Trigger parent component to show 2D overlay
+    581 |                     if (clickedCard.userData) {
+  > 582 |                       onMemberSelect(clickedCard.userData); // Reuse member select for now
+        |                                      ^^^^^^^^^^^^^^^^^^^^
+    583 |                     }
+    584 |                   }, 200);
+    585 |                 }
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/components/whoweare/ThreeSceneFloatingStory.tsx:583:38
+TS2345: Argument of type 'Record<string, any>' is not assignable to parameter of type 'WhoWeAreMemberData'.
+  Type 'Record<string, any>' is missing the following properties from type 'WhoWeAreMemberData': id, name, initials, role, and 5 more.
+    581 |                     // Trigger parent component to show 2D overlay
+    582 |                     if (clickedCard.userData) {
+  > 583 |                       onMemberSelect(clickedCard.userData); // Reuse member select for now
+        |                                      ^^^^^^^^^^^^^^^^^^^^
+    584 |                     }
+    585 |                   }, 200);
+    586 |                 }
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/components/whoweare/ThreeSceneFloatingStory.tsx:584:38
+TS2345: Argument of type 'Record<string, any>' is not assignable to parameter of type 'WhoWeAreMemberData'.
+  Type 'Record<string, any>' is missing the following properties from type 'WhoWeAreMemberData': id, name, initials, role, and 5 more.
+    582 |                     // Trigger parent component to show 2D overlay
+    583 |                     if (clickedCard.userData) {
+  > 584 |                       onMemberSelect(clickedCard.userData); // Reuse member select for now
+        |                                      ^^^^^^^^^^^^^^^^^^^^
+    585 |                     }
+    586 |                   }, 200);
+    587 |                 }
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
