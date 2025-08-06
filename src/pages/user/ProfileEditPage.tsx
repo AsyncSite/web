@@ -55,17 +55,16 @@ function ProfileEditPage(): React.ReactNode {
 
   useEffect(() => {
     if (user) {
-      let formdata = {
+      // Set initial form data from user profile
+      setFormData(prev => ({
+        ...prev,
         name: user.name || '',
         role: user.role || '',
         bio: user.bio || '',
-        profileImage: user.profileImage || '',
-        studyUpdates: false,
-        marketing: false,
-        emailEnabled: false,
-        discordEnabled: false,
-        pushEnabled: false
-      };
+        profileImage: user.profileImage || ''
+      }));
+      
+      // Load notification settings separately
       notiService.getNotiSetting(user.id)
           .then(notiSetting => {
             setFormData(prev => ({
@@ -81,7 +80,6 @@ function ProfileEditPage(): React.ReactNode {
             // Notification settings not available or error - continue without them
             console.error('Failed to load notification settings:', error);
           });
-      setFormData(formdata);
     }
   }, [user]);
 
