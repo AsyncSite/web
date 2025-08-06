@@ -13,6 +13,18 @@ function ProfilePage(): React.ReactNode {
   const { user: authUser, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   
+  // Debug: Check user roles
+  useEffect(() => {
+    if (authUser) {
+      console.log('=== ProfilePage Debug ===');
+      console.log('User:', authUser);
+      console.log('SystemRole:', authUser.systemRole);
+      console.log('Roles:', authUser.roles);
+      console.log('Is Admin:', authUser?.systemRole === 'ROLE_ADMIN');
+      console.log('========================');
+    }
+  }, [authUser]);
+  
   // 인증되지 않은 경우 로그인 페이지로 리디렉션
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -105,6 +117,14 @@ function ProfilePage(): React.ReactNode {
             ) : (
               <div className="profile-placeholder">
                 {user.name?.[0] || '?'}
+              </div>
+            )}
+            {/* Admin Badge - with unique prefix to avoid conflicts */}
+            {(authUser?.systemRole === 'ROLE_ADMIN' || authUser?.roles?.includes('ROLE_ADMIN') || authUser?.roles?.includes('ADMIN')) && (
+              <div className="profile-admin-badge" title="AsyncSite Administrator">
+                <svg className="profile-admin-icon" viewBox="0 0 24 24" width="18" height="18">
+                  <path fill="white" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                </svg>
               </div>
             )}
           </div>

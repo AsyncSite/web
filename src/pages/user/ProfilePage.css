@@ -788,3 +788,58 @@
     font-size: 1.125rem;
   }
 }
+
+/* =============================================== */
+/* Admin Badge Styles - Unique prefix to avoid conflicts */
+/* =============================================== */
+.profile-image {
+  position: relative;
+}
+
+.profile-admin-badge {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+  animation: profile-admin-pulse-glow 2s infinite;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-admin-badge:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+}
+
+.profile-admin-icon {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes profile-admin-pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); 
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.8), 0 0 40px rgba(118, 75, 162, 0.4); 
+  }
+}
+
+/* Admin Panel Section removed - using floating toolbar instead */
+
+/* Mobile responsiveness for admin elements */
+@media (max-width: 768px) {
+  .profile-admin-badge {
+    width: 28px;
+    height: 28px;
+    bottom: -3px;
+    right: -3px;
+  }
+}

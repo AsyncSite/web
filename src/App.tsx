@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { GameProgressProvider } from './contexts/GameProgressContext';
 import ScrollToTop from './components/common/ScrollToTop';
+import AdminFloatingToolbar from './components/admin/AdminFloatingToolbar';
 
 function App(): React.ReactNode {
   return (
@@ -23,6 +24,8 @@ function App(): React.ReactNode {
         }>
           <ScrollToTop />
           <Outlet />
+          {/* Admin Floating Toolbar - only visible for admins */}
+          <AdminFloatingToolbar />
         </Suspense>
       </GameProgressProvider>
     </AuthProvider>
