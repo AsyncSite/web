@@ -2,6 +2,49 @@
 
 ## 2025년 1월
 
+### 1월 6일 - WebGL Context Exhaustion 버그 수정 ✅
+
+#### 문제점
+- 5-6회 줌인/줌아웃 상호작용 후 화면이 완전히 하얗게 변함
+- 브라우저 콘솔: "WARNING: Too many active WebGL contexts. Oldest context will be lost."
+- Three.js 씬이 응답하지 않고 페이지 새로고침 필요
+
+#### 근본 원인
+- 부모 컴포넌트(WhoWeArePage)에서 매 렌더링마다 새로운 콜백 함수 생성
+- 이로 인해 ThreeSceneFloatingStory의 useEffect가 반복 실행
+- WebGL 컨텍스트가 제대로 정리되지 않고 누적
+
+#### 해결 방법
+1. **React 콜백 최적화**
+   - useCallback 훅을 사용하여 콜백 함수들 메모이제이션
+   - handleStoryCardSelect, handleLoadComplete, handleLoadError 함수 안정화
+   - 불필요한 useEffect 재실행 방지
+
+2. **강화된 WebGL 리소스 정리**
+   - 모든 텍스처 맵(map, normalMap, roughnessMap) 명시적 dispose
+   - Scene에서 모든 객체 제거 및 부모-자식 관계 정리
+   - OrbitControls dispose 추가
+   - WEBGL_lose_context 확장을 사용한 강제 컨텍스트 해제
+   - forceContextLoss() 호출로 완전한 정리 보장
+   - 모든 ref를 null로 초기화
+
+3. **모니터링 도구 추가**
+   - WebGL 컨텍스트 실시간 모니터링 페이지 구현
+   - 콘솔 로그로 컨텍스트 생성/정리 추적
+
+#### 수정된 파일
+- `src/pages/WhoWeArePage.tsx`
+- `src/components/whoweare/ThreeSceneFloatingStory.tsx`
+
+#### 검증 결과
+- 20회 이상 줌인/줌아웃 후에도 정상 작동
+- WebGL 컨텍스트가 1-2개로 안정적 유지
+- 메모리 누수 없음
+
+---
+
+## 2025년 1월
+
 ### 1월 6일 - 3D 카드 텍스트 선명도 문제 해결
 
 #### 문제점

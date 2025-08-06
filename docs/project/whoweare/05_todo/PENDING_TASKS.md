@@ -1,43 +1,5 @@
 # WhoWeAre 진행 예정 작업 목록
 
-## 우선순위 높음 (Critical Issues)
-
-### 1. WebGL Context Exhaustion (White Screen Issue) 🔴
-
-#### 문제 설명
-- 5-6회 상호작용(줌 인/아웃) 후 화면이 완전히 하얗게 변함
-- 브라우저 콘솔: "WARNING: Too many active WebGL contexts. Oldest context will be lost."
-- Three.js 씬이 응답하지 않고 페이지 새로고침 필요
-
-#### 근본 원인
-- 브라우저가 WebGL 컨텍스트를 약 16개로 제한
-- 컴포넌트 재렌더링 또는 부적절한 정리로 인한 컨텍스트 누적
-- Three.js 렌더러 disposal이 WebGL 리소스를 완전히 해제하지 못함
-
-#### 시도된 해결책
-1. **글로벌 렌더러 싱글톤 패턴**
-   - 단일 글로벌 렌더러 인스턴스 생성
-   - 결과: 화면 하얗게 변하는 것은 방지했지만 줌 기능 고장
-
-2. **적극적인 컨텍스트 정리**
-   - WebGL 컨텍스트 카운터 및 추적 구현
-   - 한계 도달 시 강제 정리 (2, 5개 컨텍스트 한계 시도)
-   - `WEBGL_lose_context` 확장 사용 추가
-   - 결과: 여전히 2회 상호작용 후 화면 하얗게 변함
-
-3. **컴포넌트 최적화**
-   - React.memo 추가로 재렌더링 방지
-   - 컴포넌트에 안정적인 key prop 추가
-   - 초기화 전 기존 렌더러 확인
-   - 결과: 유의미한 개선 없음
-
-#### 권장 향후 접근 방법
-1. 전체 애플리케이션에서 단일 영구 Three.js 씬 사용 조사
-2. 더 나은 리소스 관리를 위한 OffscreenCanvas 사용 고려
-3. WebGL 컨텍스트 풀 매니저 구현
-4. React 컴포넌트 라이프사이클 검토 및 불필요한 마운트/언마운트 방지
-5. 리소스 관리가 더 나은 React Three Fiber 사용 고려
-
 ---
 
 ## 우선순위 중간 (Enhancement Required)
