@@ -137,19 +137,14 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         camera.position.set(0, 3, 25);
         cameraRef.current = camera;
 
-        // WebGL Renderer with optimized settings for text clarity
+        // WebGL Renderer
         const renderer = new THREE.WebGLRenderer({ 
           antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-          precision: "highp"
+          alpha: true 
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        // Allow higher pixel ratio for better text clarity on high DPI displays
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = false; // Disable shadows for performance
-        renderer.outputColorSpace = THREE.SRGBColorSpace; // Ensure correct color rendering
-        renderer.toneMapping = THREE.NoToneMapping; // Disable tone mapping for text clarity
         mountRef.current.appendChild(renderer.domElement);
         rendererRef.current = renderer;
 
@@ -287,47 +282,31 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           // Create text texture function
           const createTextTexture = () => {
             const canvas = document.createElement('canvas');
-            // High DPI support for sharp text
-            const dpr = Math.min(window.devicePixelRatio || 1, 3);
-            const baseWidth = 512;
-            const baseHeight = 384;
-            canvas.width = baseWidth * dpr;
-            canvas.height = baseHeight * dpr;
-            canvas.style.width = baseWidth + 'px';
-            canvas.style.height = baseHeight + 'px';
-            
-            const ctx = canvas.getContext('2d', { 
-              alpha: true,
-              willReadFrequently: false,
-              desynchronized: true
-            });
-            
-            // Scale context to match device pixel ratio
-            if (ctx) {
-              ctx.scale(dpr, dpr);
-            }
+            const ctx = canvas.getContext('2d', { alpha: false });
+            canvas.width = 512; // Optimized resolution
+            canvas.height = 384; // Optimized resolution
             
             if (ctx) {
               
-              // Clear canvas (use base dimensions, context is already scaled)
+              // Clear canvas
               ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-              ctx.fillRect(0, 0, baseWidth, baseHeight);
+              ctx.fillRect(0, 0, 512, 384);
               
               // Add stronger background for better text visibility
-              const bgGradient = ctx.createRadialGradient(baseWidth/2, baseHeight/2, 0, baseWidth/2, baseHeight/2, 300);
+              const bgGradient = ctx.createRadialGradient(256, 192, 0, 256, 192, 300);
               bgGradient.addColorStop(0, 'rgba(10, 10, 10, 0.95)');
               bgGradient.addColorStop(0.7, 'rgba(10, 10, 10, 0.85)');
               bgGradient.addColorStop(1, 'rgba(10, 10, 10, 0.7)');
               ctx.fillStyle = bgGradient;
-              ctx.fillRect(0, 0, baseWidth, baseHeight);
+              ctx.fillRect(0, 0, 512, 384);
               
               // Add subtle glow background for title
               if (panel.title) {
-                const titleGlow = ctx.createRadialGradient(baseWidth/2, 75, 0, baseWidth/2, 75, 150);
+                const titleGlow = ctx.createRadialGradient(256, 75, 0, 256, 75, 150);
                 titleGlow.addColorStop(0, 'rgba(195, 232, 141, 0.15)');
                 titleGlow.addColorStop(1, 'rgba(195, 232, 141, 0)');
                 ctx.fillStyle = titleGlow;
-                ctx.fillRect(0, 0, baseWidth, 150);
+                ctx.fillRect(0, 0, 512, 150);
               }
               
               // Title with maximum clarity
@@ -351,12 +330,12 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 titleLines.forEach((line, i) => {
                   const y = startY + i * lineHeight;
                   // Draw shadow layer
-                  ctx.fillText(line, baseWidth/2, y);
+                  ctx.fillText(line, 256, y);
                   
                   // Draw main text
                   ctx.shadowBlur = 5;
                   ctx.shadowOffsetY = 1;
-                  ctx.fillText(line, baseWidth/2, y);
+                  ctx.fillText(line, 256, y);
                 });
                 
                 ctx.shadowBlur = 0;
@@ -375,31 +354,25 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               const lines = panel.content.split('\n');
               lines.forEach((line, i) => {
                 // Draw shadow layer
-                ctx.fillText(line, baseWidth/2, 160 + i * 35);
+                ctx.fillText(line, 256, 160 + i * 35);
               });
               
               // Draw text again with less shadow for crisp edges
               ctx.shadowBlur = 5;
               ctx.shadowOffsetY = 2;
               lines.forEach((line, i) => {
-                ctx.fillText(line, baseWidth/2, 160 + i * 35);
+                ctx.fillText(line, 256, 160 + i * 35);
               });
               
               // Final layer for maximum sharpness
               ctx.shadowBlur = 0;
               ctx.shadowOffsetY = 0;
               lines.forEach((line, i) => {
-                ctx.fillText(line, baseWidth/2, 160 + i * 35);
+                ctx.fillText(line, 256, 160 + i * 35);
               });
             }
             
-            const texture = new THREE.CanvasTexture(canvas);
-            // Enhanced texture filtering for sharper text
-            texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;
-            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-            texture.needsUpdate = true;
-            return texture;
+            return new THREE.CanvasTexture(canvas);
           };
           
           // Create front text
@@ -528,43 +501,27 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           // Create profile card with canvas
           const canvas = document.createElement('canvas');
-          // High DPI support for sharp profile cards
-          const dpr = Math.min(window.devicePixelRatio || 1, 3);
-          const profileBaseWidth = 256;  // Doubled from 128
-          const profileBaseHeight = 320; // Doubled from 160
-          canvas.width = profileBaseWidth * dpr;
-          canvas.height = profileBaseHeight * dpr;
-          canvas.style.width = profileBaseWidth + 'px';
-          canvas.style.height = profileBaseHeight + 'px';
-          
-          const ctx = canvas.getContext('2d', {
-            alpha: true,
-            willReadFrequently: false,
-            desynchronized: true
-          });
-          
-          // Scale context to match device pixel ratio
-          if (ctx) {
-            ctx.scale(dpr, dpr);
-          }
+          const ctx = canvas.getContext('2d');
+          canvas.width = 128;
+          canvas.height = 160;
           
           if (ctx) {
-            // Glassmorphism background (use base dimensions)
-            const gradient = ctx.createLinearGradient(0, 0, 0, profileBaseHeight);
+            // Glassmorphism background
+            const gradient = ctx.createLinearGradient(0, 0, 0, 160);
             gradient.addColorStop(0, `rgba(255, 255, 255, 0.1)`);
             gradient.addColorStop(0.5, `rgba(255, 255, 255, 0.05)`);
             gradient.addColorStop(1, `rgba(255, 255, 255, 0.1)`);
             ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, profileBaseWidth, profileBaseHeight);
+            ctx.fillRect(0, 0, 128, 160);
             
-            // Profile content (scaled for higher resolution)
-            const centerX = profileBaseWidth / 2;
-            const padding = 40; // Doubled from 20
-            const contentWidth = profileBaseWidth - (padding * 2);
+            // Profile content
+            const centerX = 64;
+            const padding = 20;
+            const contentWidth = canvas.width - (padding * 2);
             
-            // Dynamic sizing based on content (scaled up)
-            let currentY = 20; // Doubled from 10
-            const photoSize = Math.min(60, profileBaseHeight * 0.25); // Doubled from 30
+            // Dynamic sizing based on content
+            let currentY = 10;
+            const photoSize = Math.min(30, canvas.height * 0.25); // 25% of canvas height max
             const photoRadius = photoSize / 2;
             
             // Profile image with dynamic sizing
@@ -602,54 +559,47 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               
               ctx.fillStyle = '#ffffff';
               const initialsFontSize = photoRadius * 0.7;
-              ctx.font = `bold ${initialsFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+              ctx.font = `bold ${initialsFontSize}px Arial`;
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
               ctx.fillText(member.initials, centerX, currentY + photoRadius);
             }
             
-            currentY += photoSize + 16; // Doubled spacing from 8
+            currentY += photoSize + 8;
             
-            // Name with dynamic font size (scaled up)
+            // Name with dynamic font size
             ctx.fillStyle = '#ffffff';
-            let nameFontSize = 18; // Doubled from 9
-            ctx.font = `bold ${nameFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+            let nameFontSize = 9;
+            ctx.font = `bold ${nameFontSize}px Arial`;
             ctx.textAlign = 'center';
             
             // Adjust font size if name is too wide
-            while (ctx.measureText(member.name).width > contentWidth && nameFontSize > 12) { // Min doubled from 6
+            while (ctx.measureText(member.name).width > contentWidth && nameFontSize > 6) {
               nameFontSize--;
-              ctx.font = `bold ${nameFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+              ctx.font = `bold ${nameFontSize}px Arial`;
             }
             ctx.fillText(member.name, centerX, currentY);
             
-            currentY += nameFontSize + 8; // Doubled spacing from 4
+            currentY += nameFontSize + 4;
             
-            // Role with dynamic font size (scaled up)
+            // Role with dynamic font size
             ctx.fillStyle = member.color;
-            let roleFontSize = 14; // Doubled from 7
-            ctx.font = `${roleFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+            let roleFontSize = 7;
+            ctx.font = `${roleFontSize}px Arial`;
             
             // Adjust font size if role is too wide
-            while (ctx.measureText(member.role).width > contentWidth && roleFontSize > 10) { // Min doubled from 5
+            while (ctx.measureText(member.role).width > contentWidth && roleFontSize > 5) {
               roleFontSize--;
-              ctx.font = `${roleFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+              ctx.font = `${roleFontSize}px Arial`;
             }
             ctx.fillText(member.role, centerX, currentY);
           }
           
           const profileTexture = new THREE.CanvasTexture(canvas);
-          // Enhanced texture filtering for sharper profile cards
-          profileTexture.minFilter = THREE.LinearFilter;
-          profileTexture.magFilter = THREE.LinearFilter;
-          profileTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-          profileTexture.needsUpdate = true;
-          
           const profileMaterial = new THREE.MeshBasicMaterial({
             map: profileTexture,
             transparent: true,
-            side: THREE.DoubleSide,
-            alphaTest: 0.01 // Help with edge sharpness
+            side: THREE.DoubleSide
           });
           const profilePlane = new THREE.Mesh(
             new THREE.PlaneGeometry(0.7, 0.875),
