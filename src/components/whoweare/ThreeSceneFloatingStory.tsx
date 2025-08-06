@@ -29,11 +29,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
   const [isZooming, setIsZooming] = useState(false);
   const lastClickTimeRef = useRef<number>(0);
   
-  // Log members when they change
-  useEffect(() => {
-    console.log(`🎨 ThreeSceneFloatingStory received ${members.length} members:`, members.map(m => m.name));
-  }, [members]);
-  
   // Simplified drag detection
   const mouseDownTimeRef = useRef<number>(0);
   const mouseDownPosRef = useRef({ x: 0, y: 0 });
@@ -1354,31 +1349,6 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
 
     return () => {
       mounted = false;
-      // Clean up Three.js resources when component unmounts or members change
-      if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
-      }
-      if (rendererRef.current && mountRef.current && rendererRef.current.domElement) {
-        mountRef.current.removeChild(rendererRef.current.domElement);
-      }
-      if (rendererRef.current) {
-        rendererRef.current.dispose();
-      }
-      if (sceneRef.current) {
-        // Clean up scene objects
-        sceneRef.current.traverse((child: any) => {
-          if (child.geometry) child.geometry.dispose();
-          if (child.material) {
-            if (Array.isArray(child.material)) {
-              child.material.forEach((material: any) => material.dispose());
-            } else {
-              child.material.dispose();
-            }
-          }
-        });
-      }
-      // Reset state so scene can reinitialize with new members
-      setIsThreeLoaded(false);
     };
   }, [members, onMemberSelect, onLoadComplete, onLoadError]);
 
