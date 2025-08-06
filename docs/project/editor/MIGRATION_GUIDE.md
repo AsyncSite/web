@@ -1,380 +1,445 @@
-# Editor Integration 마이그레이션 가이드
+# Editor Integration 마이그레이션 가이드 (구현 완료)
 
 ## 1. 개요
 
-기존 Plain Text 기반의 콘텐츠를 Rich Text Editor 형식으로 마이그레이션하는 가이드입니다.
+이 문서는 AsyncSite 플랫폼에 TipTap 리치 텍스트 에디터를 통합하는 과정에서 수행된 실제 마이그레이션 작업을 기록합니다.
 
-## 2. 마이그레이션 대상
+## 2. 실제 구현된 마이그레이션
 
-### 2.1 User Service
-- `users.bio` - 사용자 자기소개 (현재: VARCHAR/TEXT)
-- 예상 레코드 수: ~1,000개
+### 2.1 User Service (✅ 완료)
+- **추가된 필드:**
+  - `users.role` - 사용자 역할/직책 (VARCHAR 100)
+  - `users.quote` - 사용자 인용구/좌우명 (VARCHAR 255)
+  - `users.bio` - 사용자 자기소개 (TEXT, HTML 형식)
+- **마이그레이션 방식:** Flyway 마이그레이션 스크립트 사용
+- **영향받은 기능:** ProfileEditPage, WhoWeArePage
 
-### 2.2 Study Service
-- `studies.description` - 스터디 간단 설명 (현재: VARCHAR)
-- `studies.details` - 스터디 상세 설명 (신규 필드)
-- `studies.rules` - 스터디 규칙 (현재: TEXT)
+### 2.2 Study Service (예정)
+- `studies.details` - 스터디 상세 설명 (TEXT, HTML 형식 예정)
+- `studies.curriculum` - 스터디 커리큘럼 (TEXT, HTML 형식 예정)
 - 예상 레코드 수: ~500개
 
-## 3. 마이그레이션 전략
+## 3. 실제 적용된 마이그레이션 전략
 
-### 3.1 단계별 접근
+### 3.1 직접 스키마 확장 방식
 ```
-Phase 1: 스키마 확장 (비파괴적)
-  ↓
-Phase 2: 듀얼 라이팅 (신규 + 기존)
-  ↓
-Phase 3: 데이터 마이그레이션
-  ↓
-Phase 4: 읽기 전환
-  ↓
-Phase 5: 기존 필드 제거
+1. Flyway 마이그레이션으로 새 필드 추가
+   ↓
+2. 도메인 엔티티 및 JPA 엔티티 업데이트
+   ↓
+3. API 엔드포인트 구현
+   ↓
+4. Frontend 컴포넌트 통합
+   ↓
+5. 테스트 및 버그 수정
 ```
 
-## 4. 상세 구현 가이드
+**선택 이유:**
+- 기존 데이터가 없어 복잡한 마이그레이션 불필요
+- HTML 형식으로 직접 저장하여 변환 과정 단순화
+- DOMPurify를 통한 XSS 방지로 보안 확보
 
-### Phase 1: 스키마 확장 (Day 1)
+## 4. 실제 구현 내용
 
-#### User Service
+### 4.1 데이터베이스 마이그레이션 (✅ 완료)
+
+#### V1__Add_role_and_bio_fields.sql
 ```sql
--- 새로운 컬럼 추가 (기존 데이터 영향 없음)
-ALTER TABLE users 
-ADD COLUMN bio_rich TEXT,
-ADD COLUMN bio_format VARCHAR(20) DEFAULT 'plain',
-ADD COLUMN bio_updated_at TIMESTAMP NULL;
-
--- 인덱스 추가
-CREATE INDEX idx_bio_format ON users(bio_format);
+-- 2025년 8월 6일 실행
+ALTER TABLE users
+ADD COLUMN role VARCHAR(100) NULL COMMENT '사용자 역할/직책' AFTER name,
+ADD COLUMN bio TEXT NULL COMMENT '사용자 자기소개 (HTML 형식)' AFTER role;
 ```
 
-#### Study Service
+#### V2__Add_quote_field.sql
 ```sql
--- 새로운 컬럼 추가
-ALTER TABLE studies
-ADD COLUMN details TEXT,
-ADD COLUMN details_format VARCHAR(20) DEFAULT 'plain',
-ADD COLUMN curriculum TEXT,
-ADD COLUMN curriculum_format VARCHAR(20) DEFAULT 'plain',
-ADD COLUMN content_updated_at TIMESTAMP NULL;
-
--- 인덱스 추가
-CREATE INDEX idx_details_format ON studies(details_format);
+-- 2025년 8월 6일 실행
+ALTER TABLE users
+ADD COLUMN quote VARCHAR(255) NULL COMMENT '사용자 인용구/좌우명' AFTER role;
 ```
 
-### Phase 2: 듀얼 라이팅 (Day 2-7)
+**실행 결과:**
+- ✅ 모든 마이그레이션 성공적으로 적용
+- ✅ 기존 데이터 손실 없음
+- ✅ 다운타임 없이 적용
 
-#### 애플리케이션 코드 수정
-```java
-// UserService.java
-@Transactional
-public void updateUserProfile(String userId, ProfileUpdateRequest request) {
-    User user = userRepository.findById(userId);
-    
-    // 듀얼 라이팅: 기존 필드와 새 필드 모두 업데이트
-    if (request.hasBio()) {
-        user.setBio(extractPlainText(request.getBio())); // 기존 필드
-        user.setBioRich(request.getBio().toJson());      // 새 필드
-        user.setBioFormat(request.getBio().getFormat());
-        user.setBioUpdatedAt(Instant.now());
-    }
-    
-    userRepository.save(user);
-}
+### 4.2 Backend 구현 (✅ 완료)
 
-private String extractPlainText(RichContent content) {
-    // Rich content에서 plain text 추출
-    return content.toPlainText();
-}
+#### Kotlin Domain Entity
+```kotlin
+// UserProfile.kt
+data class UserProfile(
+    val email: String,
+    val name: String,
+    val role: String? = null,    // 역할/직책
+    val quote: String? = null,   // 인용구/좌우명
+    val bio: String? = null,      // HTML 형식 자기소개
+    val profileImage: String? = null,
+    // ...
+)
 ```
 
-### Phase 3: 데이터 마이그레이션 (Day 8-9)
-
-#### 마이그레이션 스크립트
-```python
-# migrate_content.py
-import json
-import mysql.connector
-from datetime import datetime
-
-def migrate_users_bio(connection):
-    cursor = connection.cursor(dictionary=True)
+#### JPA Entity
+```kotlin
+// UserJpaEntity.kt
+@Entity
+@Table(name = "users")
+class UserJpaEntity {
+    @Column(name = "role", length = 100)
+    var role: String? = null
     
-    # Plain text 데이터만 선택
-    cursor.execute("""
-        SELECT email, bio 
-        FROM users 
-        WHERE bio IS NOT NULL 
-        AND bio_format = 'plain'
-        LIMIT 100
-    """)
+    @Column(name = "quote", length = 255)
+    var quote: String? = null
     
-    for user in cursor:
-        # Plain text를 Editor.js 형식으로 변환
-        rich_content = convert_to_editorjs(user['bio'])
-        
-        # 업데이트
-        update_cursor = connection.cursor()
-        update_cursor.execute("""
-            UPDATE users 
-            SET bio_rich = %s, 
-                bio_format = 'editorjs',
-                bio_updated_at = %s
-            WHERE email = %s
-        """, (json.dumps(rich_content), datetime.now(), user['email']))
-    
-    connection.commit()
-
-def convert_to_editorjs(plain_text):
-    """Plain text를 Editor.js 형식으로 변환"""
-    # 줄바꿈 기준으로 paragraph 블록 생성
-    paragraphs = plain_text.split('\n\n')
-    blocks = []
-    
-    for para in paragraphs:
-        if para.strip():
-            blocks.append({
-                "type": "paragraph",
-                "data": {
-                    "text": para.strip()
-                }
-            })
-    
-    return {
-        "time": int(datetime.now().timestamp() * 1000),
-        "blocks": blocks,
-        "version": "2.22.2"
-    }
-
-def convert_to_tiptap(plain_text):
-    """Plain text를 TipTap 형식으로 변환"""
-    paragraphs = plain_text.split('\n\n')
-    content = []
-    
-    for para in paragraphs:
-        if para.strip():
-            content.append({
-                "type": "paragraph",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": para.strip()
-                    }
-                ]
-            })
-    
-    return {
-        "type": "doc",
-        "content": content
-    }
-```
-
-#### 배치 마이그레이션 작업
-```bash
-#!/bin/bash
-# batch_migration.sh
-
-# 1. 백업 생성
-mysqldump -u root -p asyncsite users studies > backup_$(date +%Y%m%d).sql
-
-# 2. 마이그레이션 실행 (배치 단위)
-python migrate_content.py --batch-size=100 --dry-run
-python migrate_content.py --batch-size=100 --execute
-
-# 3. 검증
-mysql -u root -p asyncsite -e "
-    SELECT 
-        COUNT(*) as total,
-        SUM(CASE WHEN bio_format = 'editorjs' THEN 1 ELSE 0 END) as migrated
-    FROM users
-    WHERE bio IS NOT NULL;
-"
-```
-
-### Phase 4: 읽기 전환 (Day 10-14)
-
-#### Feature Flag 적용
-```java
-// UserController.java
-@GetMapping("/api/users/{userId}/profile")
-public ResponseEntity<UserProfileResponse> getProfile(@PathVariable String userId) {
-    User user = userService.findById(userId);
-    
-    UserProfileResponse response = new UserProfileResponse();
-    response.setUserId(user.getId());
-    response.setName(user.getName());
-    
-    // Feature Flag로 점진적 전환
-    if (featureFlags.isEnabled("USE_RICH_TEXT_BIO", userId)) {
-        response.setBio(user.getBioRich());
-        response.setBioFormat(user.getBioFormat());
-    } else {
-        response.setBio(user.getBio());
-        response.setBioFormat("plain");
-    }
-    
-    return ResponseEntity.ok(response);
+    @Column(name = "bio", columnDefinition = "TEXT")
+    var bio: String? = null
+    // ...
 }
 ```
 
-#### Frontend 호환성 레이어
+### 4.3 Frontend 구현 (✅ 완료)
+
+#### TipTap Editor 컴포넌트
 ```typescript
-// bioRenderer.tsx
-interface BioContent {
-  format: 'plain' | 'editorjs' | 'tiptap';
-  content: string | EditorJSData | TipTapData;
-}
+// RichTextEditor.tsx
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import CharacterCount from '@tiptap/extension-character-count';
+import DOMPurify from 'dompurify';
 
-export function BioRenderer({ bio }: { bio: BioContent }) {
-  switch (bio.format) {
-    case 'plain':
-      return <PlainTextViewer text={bio.content as string} />;
-    case 'editorjs':
-      return <EditorJSViewer data={bio.content as EditorJSData} />;
-    case 'tiptap':
-      return <TipTapViewer data={bio.content as TipTapData} />;
-    default:
-      return <div>Unsupported format</div>;
-  }
-}
-```
-
-### Phase 5: 기존 필드 제거 (Day 15+)
-
-#### 최종 정리
-```sql
--- 1. 모든 데이터가 마이그레이션되었는지 확인
-SELECT COUNT(*) FROM users WHERE bio_format = 'plain';
-SELECT COUNT(*) FROM studies WHERE details_format = 'plain';
-
--- 2. 기존 컬럼을 deprecated로 표시
-ALTER TABLE users RENAME COLUMN bio TO bio_deprecated;
-ALTER TABLE studies RENAME COLUMN description TO description_deprecated;
-
--- 3. 새 컬럼을 기본 컬럼으로 변경
-ALTER TABLE users RENAME COLUMN bio_rich TO bio;
-
--- 4. 일정 기간 후 deprecated 컬럼 삭제
--- (30일 후 실행)
-ALTER TABLE users DROP COLUMN bio_deprecated;
-ALTER TABLE studies DROP COLUMN description_deprecated;
-```
-
-## 5. 롤백 계획
-
-### 즉시 롤백 (Phase 1-2)
-```sql
--- 새로 추가한 컬럼 제거
-ALTER TABLE users 
-DROP COLUMN bio_rich,
-DROP COLUMN bio_format,
-DROP COLUMN bio_updated_at;
-```
-
-### 데이터 복구 롤백 (Phase 3-4)
-```bash
-# 백업에서 복구
-mysql -u root -p asyncsite < backup_20250106.sql
-
-# 또는 역마이그레이션
-python rollback_migration.py --target=plain
-```
-
-## 6. 모니터링 및 검증
-
-### 모니터링 메트릭
-```sql
--- 마이그레이션 진행 상황
-SELECT 
-    bio_format,
-    COUNT(*) as count,
-    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) as percentage
-FROM users
-WHERE bio IS NOT NULL OR bio_rich IS NOT NULL
-GROUP BY bio_format;
-
--- 에러 추적
-SELECT 
-    DATE(created_at) as date,
-    COUNT(*) as error_count
-FROM migration_errors
-WHERE type = 'CONTENT_CONVERSION'
-GROUP BY DATE(created_at);
-```
-
-### 데이터 검증
-```java
-@Component
-public class MigrationValidator {
-    
-    @Scheduled(fixedDelay = 3600000) // 1시간마다
-    public void validateMigration() {
-        // 1. 데이터 일관성 검증
-        List<User> users = userRepository.findUsersWithInconsistentBio();
-        if (!users.isEmpty()) {
-            log.error("Inconsistent bio data found: {}", users.size());
-            alertService.sendAlert("Data inconsistency detected");
-        }
-        
-        // 2. 형식 검증
-        List<User> invalidFormat = userRepository.findUsersWithInvalidFormat();
-        if (!invalidFormat.isEmpty()) {
-            log.error("Invalid format found: {}", invalidFormat.size());
-        }
-        
-        // 3. 성능 메트릭
-        double avgLoadTime = performanceMonitor.getAverageLoadTime("bio_render");
-        if (avgLoadTime > 2000) { // 2초 이상
-            log.warn("Bio rendering performance degradation: {}ms", avgLoadTime);
-        }
+function RichTextEditor({
+  value,
+  onChange,
+  maxLength = 2000,
+}: RichTextEditorProps) {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      CharacterCount.configure({ limit: maxLength }),
+    ],
+    content: value,
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      onChange(html);
+    },
+  });
+  
+  // Value prop 변경 시 에디터 업데이트
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value);
     }
+  }, [value, editor]);
+  
+  return <EditorContent editor={editor} />;
 }
 ```
 
-## 7. 트러블슈팅
+#### 안전한 HTML 렌더링
+```typescript
+// RichTextDisplay.tsx
+import DOMPurify from 'dompurify';
 
-### 일반적인 문제와 해결책
+function RichTextDisplay({ content }: { content: string }) {
+  const sanitizedHTML = DOMPurify.sanitize(content);
+  
+  return (
+    <div 
+      className="rich-text-display"
+      dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+    />
+  );
+}
+```
 
-| 문제 | 원인 | 해결책 |
-|------|------|--------|
-| 마이그레이션 중 데이터 손실 | 변환 로직 오류 | 백업에서 복구 후 재실행 |
-| 성능 저하 | 대용량 Rich Text 렌더링 | 페이지네이션, 지연 로딩 적용 |
-| 형식 호환성 문제 | 버전 차이 | 버전별 파서 구현 |
-| XSS 취약점 | 불충분한 sanitization | DOMPurify 강화 |
+### 4.4 API 구현 (✅ 완료)
 
-### 긴급 대응 절차
-1. Feature Flag 즉시 비활성화
-2. 캐시 무효화
-3. 이전 버전으로 롤백
-4. 원인 분석 및 수정
-5. 단계별 재배포
+#### 프로필 조회 API
+```kotlin
+// UserProfileController.kt
+@GetMapping("/api/users/me")
+fun getCurrentUser(@AuthenticationPrincipal userDetails: CustomUserDetails): ResponseEntity<UserProfileResponse> {
+    val profile = getUserProfileUseCase.execute(GetUserProfileCommand(userDetails.username))
+    return ResponseEntity.ok(UserProfileResponse.from(profile))
+}
+```
 
-## 8. 체크리스트
+#### 프로필 업데이트 API
+```kotlin
+@PutMapping("/api/users/me")
+fun updateProfile(
+    @RequestBody request: UserUpdateRequest,
+    @AuthenticationPrincipal userDetails: CustomUserDetails
+): ResponseEntity<UserProfileResponse> {
+    val command = UpdateUserProfileCommand(
+        email = userDetails.username,
+        name = request.name,
+        role = request.role,      // 새로운 필드
+        quote = request.quote,    // 새로운 필드
+        bio = request.bio,        // HTML 형식
+        profileImage = request.profileImage
+    )
+    val updated = updateUserProfileUseCase.execute(command)
+    return ResponseEntity.ok(UserProfileResponse.from(updated))
+}
+```
 
-### 마이그레이션 전
-- [ ] 전체 데이터베이스 백업
-- [ ] 마이그레이션 스크립트 테스트 (개발 환경)
-- [ ] 롤백 절차 문서화
-- [ ] 모니터링 대시보드 준비
-- [ ] 관련 팀 공지
+#### Public API (WhoWeAre)
+```kotlin
+@GetMapping("/api/public/users/whoweare-members")
+fun getWhoWeAreMembers(): ResponseEntity<List<PublicTeamMemberResponse>> {
+    val members = userRepository.findBySystemRole("ROLE_ADMIN")
+    return ResponseEntity.ok(members.map { PublicTeamMemberResponse.from(it) })
+}
+```
 
-### 마이그레이션 중
-- [ ] 실시간 모니터링
-- [ ] 에러 로그 확인
-- [ ] 성능 메트릭 추적
-- [ ] 사용자 피드백 수집
+## 5. 실제 통합 과정
 
-### 마이그레이션 후
-- [ ] 데이터 일관성 검증
-- [ ] 성능 벤치마크
-- [ ] 사용자 교육 자료 배포
-- [ ] 문서 업데이트
-- [ ] 사후 분석 (Post-mortem)
+### 5.1 ProfileEditPage 통합 (✅ 완료)
+```typescript
+// ProfileEditPage.tsx
+interface ProfileFormData {
+  name: string;
+  role: string;       // 일반 텍스트 입력
+  quote: string;      // 일반 텍스트 입력 (255자 제한)
+  bio: string;        // HTML 리치 텍스트
+  profileImage: string;
+}
 
-## 9. 참고 자료
+function ProfileEditPage() {
+  const [formData, setFormData] = useState<ProfileFormData>({
+    name: user?.name || '',
+    role: user?.role || '',
+    quote: user?.quote || '',
+    bio: user?.bio || '',
+    profileImage: user?.profileImage || ''
+  });
+  
+  return (
+    <>
+      <input 
+        value={formData.role}
+        onChange={(e) => setFormData({...formData, role: e.target.value})}
+        maxLength={100}
+        placeholder="예: Frontend Developer"
+      />
+      
+      <input
+        value={formData.quote}
+        onChange={(e) => setFormData({...formData, quote: e.target.value})}
+        maxLength={255}
+        placeholder="좌우명을 입력하세요"
+      />
+      
+      <RichTextEditor
+        value={formData.bio}
+        onChange={(bio) => setFormData({...formData, bio})}
+        maxLength={2000}
+      />
+    </>
+  );
+}
+```
 
-- [Editor.js 마이그레이션 가이드](https://editorjs.io/migration)
-- [TipTap 스키마 버전 관리](https://tiptap.dev/guide/migration)
-- [MySQL 온라인 스키마 변경](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl.html)
-- [Feature Flag 모범 사례](https://martinfowler.com/articles/feature-toggles.html)
+### 5.2 WhoWeAre 페이지 통합 (✅ 완료)
+```typescript
+// WhoWeArePage.tsx
+const [adminMembers, setAdminMembers] = useState<PublicTeamMember[]>([]);
 
-*최종 업데이트: 2025년 1월 6일*
+useEffect(() => {
+  fetchWhoWeAreMembers().then(members => {
+    setAdminMembers(members);
+  });
+}, []);
+
+// 백엔드 멤버와 하드코딩된 멤버 결합
+const allMembers = [
+  ...whoweareTeamMembers.map((member, index) => ({
+    ...member,
+    // 백엔드 데이터가 있으면 사용, 없으면 하드코딩 데이터 사용
+    quote: adminMembers[index]?.quote || member.quote,
+    story: adminMembers[index]?.bio 
+      ? DOMPurify.sanitize(adminMembers[index].bio)
+      : member.story
+  })),
+  ...adminMembers.slice(whoweareTeamMembers.length)
+];
+```
+
+## 6. 해결한 주요 문제들
+
+### 6.1 Three.js 리렌더링 문제 (✅ 해결)
+**문제:** WhoWeAre 페이지에서 백엔드 데이터 로드 시 Three.js 씬이 업데이트되지 않음 (6개 행성만 표시)
+
+**해결:** 
+```typescript
+// ThreeSceneFloatingStory.tsx
+useEffect(() => {
+  let mounted = true;
+  
+  // 기존 캔버스 제거 및 애니메이션 취소
+  const canvas = sceneRef.current?.querySelector('canvas');
+  if (canvas) {
+    canvas.remove();
+  }
+  if (animationIdRef.current) {
+    cancelAnimationFrame(animationIdRef.current);
+  }
+  
+  // 씬 재초기화
+  initializeScene();
+  
+  return () => {
+    mounted = false;
+    // 클린업 로직
+  };
+}, [members]); // members 변경 시 재실행
+```
+
+### 6.2 RichTextEditor value prop 업데이트 문제 (✅ 해결)
+**문제:** 프로필 편집 페이지 열 때 기존 데이터가 에디터에 로드되지 않음
+
+**해결:**
+```typescript
+// RichTextEditor.tsx
+useEffect(() => {
+  if (editor && value !== editor.getHTML()) {
+    editor.commands.setContent(value);
+  }
+}, [value, editor]);
+```
+
+### 6.3 API 응답 처리 불일치 (✅ 해결)
+**문제:** updateProfile API가 response.data.data를 기대하지만 실제로는 response.data 반환
+
+**해결:**
+```typescript
+// userService.ts
+async updateProfile(data: UpdateProfileRequest): Promise<User> {
+  const response = await apiClient.put<User>('/api/users/me', data);
+  return response.data; // response.data.data가 아닌 response.data
+}
+```
+
+### 6.4 XSS 보안 문제 (✅ 해결)
+**문제:** 사용자가 입력한 HTML이 그대로 렌더링되면 XSS 공격 가능
+
+**해결:** DOMPurify를 사용한 HTML sanitization
+```typescript
+import DOMPurify from 'dompurify';
+
+const sanitizedHTML = DOMPurify.sanitize(bio);
+<div dangerouslySetInnerHTML={{ __html: sanitizedHTML }} />
+```
+
+## 7. 테스트 및 검증 (✅ 완료)
+
+### 7.1 수행된 테스트
+1. **프로필 CRUD 테스트**
+   - ✅ 프로필 생성 (role, quote, bio)
+   - ✅ 프로필 조회
+   - ✅ 프로필 수정
+   - ✅ 필드별 글자 수 제한 검증
+
+2. **WhoWeAre 통합 테스트**
+   - ✅ 백엔드 관리자 프로필 로드
+   - ✅ 하드코딩 멤버와 결합
+   - ✅ Three.js 8개 행성 렌더링
+   - ✅ 클릭 이벤트 동작
+
+3. **보안 테스트**
+   - ✅ XSS 스크립트 주입 차단
+   - ✅ DOMPurify sanitization 검증
+
+### 7.2 Docker 환경 테스트
+```bash
+# 실제 수행된 테스트 커맨드
+cd core-platform
+./docker-compose-oauth.sh
+
+# 로그 확인
+docker logs user-service
+docker logs web
+
+# 데이터베이스 확인
+docker exec -it mysql-db mysql -u root -p
+USE asyncsite;
+SELECT email, role, quote, bio FROM users WHERE role IS NOT NULL;
+```
+
+## 8. 배포 및 롤백
+
+### 8.1 배포 프로세스 (✅ 완료)
+```bash
+# 1. 백엔드 배포
+cd user-service
+git add .
+git commit -m "feat: Add role, quote, bio fields for user profile"
+git push origin main
+
+# 2. 프론트엔드 배포
+cd web
+git add .
+git commit -m "feat: Integrate TipTap editor for user profiles"
+git push origin main
+
+# 3. Docker 이미지 빌드 및 배포
+./deploy.sh
+```
+
+### 8.2 롤백 계획 (필요시)
+```sql
+-- 필드 제거 (데이터 손실 주의)
+ALTER TABLE users 
+DROP COLUMN role,
+DROP COLUMN quote,
+DROP COLUMN bio;
+```
+
+## 9. 구현 체크리스트 (✅ 모두 완료)
+
+### Backend
+- ✅ Flyway 마이그레이션 스크립트 작성
+- ✅ Domain Entity 업데이트 (UserProfile)
+- ✅ JPA Entity 업데이트 (UserJpaEntity)
+- ✅ API 엔드포인트 구현 (/api/users/me)
+- ✅ Public API 구현 (/api/public/users/whoweare-members)
+- ✅ 테스트 및 검증
+
+### Frontend
+- ✅ TipTap 패키지 설치
+- ✅ RichTextEditor 컴포넌트 구현
+- ✅ RichTextDisplay 컴포넌트 구현
+- ✅ ProfileEditPage 통합
+- ✅ WhoWeArePage 통합
+- ✅ Three.js 씬 업데이트 문제 해결
+- ✅ DOMPurify 보안 적용
+
+### 문서화
+- ✅ API_DESIGN.md 업데이트
+- ✅ IMPLEMENTATION_PLAN.md 업데이트
+- ✅ README.md 업데이트
+- ✅ MIGRATION_GUIDE.md 업데이트
+
+## 10. 주요 학습 사항
+
+### 성공 요인
+1. **단순한 접근**: 복잡한 JSON 형식 대신 HTML 직접 저장
+2. **점진적 구현**: User Profile 먼저 구현 후 Study Service 확장 계획
+3. **보안 우선**: DOMPurify를 통한 XSS 방지
+4. **실시간 피드백**: 개발 중 지속적인 테스트와 수정
+
+### 개선 사항 (향후)
+1. 이미지 업로드 기능 추가
+2. 더 많은 포맷팅 옵션 (테이블, 코드 블록 등)
+3. 버전 관리 시스템 구현
+4. 콘텐츠 히스토리 추적
+
+## 11. 참고 자료
+
+- [TipTap Documentation](https://tiptap.dev/)
+- [DOMPurify Security](https://github.com/cure53/DOMPurify)
+- [Flyway Migration Guide](https://flywaydb.org/documentation/)
+- [Spring Boot JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+
+*최종 업데이트: 2025년 8월 6일*

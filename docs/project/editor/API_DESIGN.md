@@ -1,81 +1,91 @@
-# Editor Integration API 설계
+# Editor Integration API 설계 (구현 완료)
 
-## 1. User Service APIs
+## 1. User Service APIs (✅ 구현됨)
 
 ### 1.1 프로필 관리
 
-#### 프로필 조회
+#### 현재 사용자 프로필 조회
 ```http
-GET /api/users/{userId}/profile
+GET /api/users/me
+Authorization: Bearer {token}
 ```
 
 **Response:**
 ```json
 {
-  "userId": "user123",
-  "email": "user@example.com",
-  "name": "홍길동",
-  "profileImage": "https://s3.amazonaws.com/asyncsite/profiles/user123.jpg",
-  "bio": {
-    "format": "editorjs",
-    "content": {
-      "time": 1638360464112,
-      "blocks": [
-        {
-          "type": "paragraph",
-          "data": {
-            "text": "안녕하세요, 풀스택 개발자입니다."
-          }
-        },
-        {
-          "type": "list",
-          "data": {
-            "style": "unordered",
-            "items": [
-              "React/TypeScript",
-              "Spring Boot/Java",
-              "AWS/Docker"
-            ]
-          }
-        }
-      ],
-      "version": "2.22.2"
-    }
-  },
-  "bioUpdatedAt": "2025-01-06T10:30:00Z",
-  "createdAt": "2024-12-01T09:00:00Z"
+  "email": "asyncsite@gmail.com",
+  "name": "Super Administrator",
+  "role": "Platform Architect",
+  "quote": "함께 성장하는 개발자 커뮤니티를 만들어갑니다",
+  "bio": "<p>열정적으로 사람들을 돕고 싶다구 ~</p>",
+  "phoneNumber": "+82-10-1234-5678",
+  "profileImage": null,
+  "systemRole": "ROLE_ADMIN",
+  "status": "ACTIVE",
+  "createdAt": "2025-07-18T03:39:53Z",
+  "updatedAt": "2025-08-06T09:14:10Z",
+  "lastLoginAt": "2025-08-06T09:11:46Z"
 }
 ```
 
 #### 프로필 업데이트
 ```http
-PUT /api/users/me/profile
+PUT /api/users/me
 Authorization: Bearer {token}
 ```
 
 **Request:**
 ```json
 {
-  "name": "홍길동",
-  "bio": {
-    "format": "editorjs",
-    "content": {
-      "blocks": [...]
-    }
-  }
+  "name": "사용자 이름",
+  "role": "역할/직책",
+  "quote": "인용구/좌우명",
+  "bio": "<p>HTML 형식의 자기소개</p>",
+  "profileImage": "https://example.com/image.jpg"
 }
 ```
 
 **Response:**
 ```json
 {
-  "success": true,
-  "message": "프로필이 업데이트되었습니다.",
-  "data": {
-    "userId": "user123",
-    "bioUpdatedAt": "2025-01-06T10:35:00Z"
-  }
+  "email": "user@example.com",
+  "name": "사용자 이름",
+  "role": "역할/직책",
+  "quote": "인용구/좌우명",
+  "bio": "<p>HTML 형식의 자기소개</p>",
+  "profileImage": "https://example.com/image.jpg",
+  "systemRole": "ROLE_USER",
+  "status": "ACTIVE",
+  "createdAt": "2025-07-18T03:39:53Z",
+  "updatedAt": "2025-08-06T10:00:00Z"
 }
+```
+
+### 1.2 공개 API
+
+#### WhoWeAre 멤버 조회
+```http
+GET /api/public/users/whoweare-members
+```
+
+**Response:**
+```json
+[
+  {
+    "name": "Admin User",
+    "role": "System Administrator",
+    "quote": "기술로 더 나은 세상을 만들어갑니다",
+    "bio": "<p>시스템을 관리하는 관리자입니다.</p>",
+    "profileImage": null
+  },
+  {
+    "name": "Super Administrator",
+    "role": "Platform Architect",
+    "quote": "함께 성장하는 개발자 커뮤니티를 만들어갑니다",
+    "bio": "<p>열정적으로 사람들을 돕고 싶다구 ~</p>",
+    "profileImage": null
+  }
+]
 ```
 
 #### 프로필 이미지 업로드
@@ -298,84 +308,73 @@ description: "Week 1 강의 자료"
 }
 ```
 
-## 3. 공통 API 규격
+## 3. 실제 구현 사항
 
-### 3.1 에러 응답 형식
+### 3.1 데이터 형식
+
+#### HTML 형식 (실제 구현)
 ```json
 {
-  "success": false,
-  "error": {
-    "code": "CONTENT_TOO_LONG",
-    "message": "콘텐츠가 최대 허용 길이를 초과했습니다.",
-    "details": {
-      "maxLength": 20000,
-      "actualLength": 25432
-    }
-  }
+  "bio": "<p>안녕하세요, <strong>풀스택 개발자</strong>입니다.</p><ul><li>React</li><li>Spring Boot</li></ul>"
 }
 ```
 
-### 3.2 에러 코드
-| 코드 | 설명 | HTTP Status |
-|------|------|-------------|
-| `CONTENT_TOO_LONG` | 콘텐츠 길이 초과 | 400 |
-| `INVALID_FORMAT` | 지원하지 않는 콘텐츠 형식 | 400 |
-| `MALICIOUS_CONTENT` | 악성 스크립트 감지 | 400 |
-| `UNAUTHORIZED` | 인증 필요 | 401 |
-| `FORBIDDEN` | 권한 없음 | 403 |
-| `NOT_FOUND` | 리소스 없음 | 404 |
-| `FILE_TOO_LARGE` | 파일 크기 초과 | 413 |
-| `UNSUPPORTED_MEDIA_TYPE` | 지원하지 않는 파일 형식 | 415 |
+- TipTap 에디터가 직접 HTML을 생성/파싱
+- DOMPurify로 XSS 방지
+- 데이터베이스에 HTML 형식으로 저장
 
-### 3.3 콘텐츠 형식 (Content Format)
+### 3.2 필드 제한사항 (구현됨)
 
-#### Editor.js Format
-```json
-{
-  "format": "editorjs",
-  "content": {
-    "time": 1638360464112,
-    "blocks": [...],
-    "version": "2.22.2"
-  }
-}
+| 필드 | 최대 길이 | 타입 | 설명 |
+|------|-----------|------|------|
+| role | 100자 | VARCHAR(100) | 역할/직책 |
+| quote | 255자 | VARCHAR(255) | 인용구/좌우명 |
+| bio | 2000자 | TEXT | HTML 형식 자기소개 |
+
+### 3.3 Frontend 컴포넌트
+
+#### RichTextEditor
+- 위치: `src/components/common/RichTextEditor.tsx`
+- 기능: TipTap 기반 편집기
+- 지원 기능: 굵게, 이탤릭, 취소선, 링크, 목록
+- 문자 수 카운트 및 제한
+
+#### RichTextDisplay
+- 위치: `src/components/common/RichTextDisplay.tsx`
+- 기능: 안전한 HTML 렌더링
+- 보안: DOMPurify 적용
+
+### 3.4 Backend 구조
+
+#### Domain Entity
+```kotlin
+data class UserProfile(
+    val email: String,
+    val name: String,
+    val role: String? = null,
+    val quote: String? = null,
+    val bio: String? = null,
+    val profileImage: String? = null,
+    // ...
+)
 ```
 
-#### TipTap Format
-```json
-{
-  "format": "tiptap",
-  "content": {
-    "type": "doc",
-    "content": [...]
-  }
+#### JPA Entity
+```kotlin
+@Entity
+@Table(name = "users")
+class UserJpaEntity {
+    @Column(name = "role", length = 100)
+    var role: String? = null
+    
+    @Column(name = "quote", length = 255)
+    var quote: String? = null
+    
+    @Column(name = "bio", columnDefinition = "TEXT")
+    var bio: String? = null
+    // ...
 }
 ```
-
-#### Plain Text Format (기존 데이터)
-```json
-{
-  "format": "plain",
-  "content": "일반 텍스트 내용입니다."
-}
-```
-
-### 3.4 파일 업로드 제한
-
-| 타입 | 최대 크기 | 허용 형식 |
-|------|-----------|-----------|
-| 프로필 이미지 | 5MB | jpg, png, webp |
-| 에디터 이미지 | 2MB | jpg, png, gif, webp |
-| 문서 | 10MB | pdf, doc, docx, ppt, pptx |
-| 비디오 | 100MB | mp4, webm |
-
-### 3.5 콘텐츠 길이 제한
-
-| 필드 | 최대 길이 | 비고 |
-|------|-----------|------|
-| 프로필 bio | 5,000자 | 렌더링된 텍스트 기준 |
-| 스터디 details | 20,000자 | 렌더링된 텍스트 기준 |
-| 스터디 curriculum | 10,000자 | 렌더링된 텍스트 기준 |
 
 ## 4. 보안 고려사항
 
