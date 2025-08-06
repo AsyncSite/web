@@ -91,6 +91,9 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
 
     const initThree = async () => {
       try {
+        // Debug: Log WebGL context count
+        const canvasCount = document.querySelectorAll('canvas').length;
+        console.log(`[ThreeScene] Canvas count before init: ${canvasCount}`);
         // Preload profile images
         const imagePromises = members
           .filter(member => member.profileImage)
@@ -1256,6 +1259,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
 
         // Cleanup
         return () => {
+          console.log('[ThreeScene] Starting cleanup...');
           mounted = false;
           window.removeEventListener('mousedown', handleMouseDown);
           window.removeEventListener('mouseup', handleMouseUp);
@@ -1266,25 +1270,74 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           
           if (animationIdRef.current) {
             cancelAnimationFrame(animationIdRef.current);
+            animationIdRef.current = null;
           }
-          
-          if (rendererRef.current && mountRef.current) {
-            mountRef.current.removeChild(rendererRef.current.domElement);
-            rendererRef.current.dispose();
-          }
-          
+
+          // More thorough cleanup of Three.js resources
           if (sceneRef.current) {
             sceneRef.current.traverse((object: any) => {
-              if (object.geometry) object.geometry.dispose();
+              if (object.geometry) {
+                object.geometry.dispose();
+              }
               if (object.material) {
                 if (Array.isArray(object.material)) {
-                  object.material.forEach((material: any) => material.dispose());
+                  object.material.forEach((material: any) => {
+                    if (material.map) material.map.dispose();
+                    if (material.normalMap) material.normalMap.dispose();
+                    if (material.roughnessMap) material.roughnessMap.dispose();
+                    material.dispose();
+                  });
                 } else {
+                  if (object.material.map) object.material.map.dispose();
+                  if (object.material.normalMap) object.material.normalMap.dispose();
+                  if (object.material.roughnessMap) object.material.roughnessMap.dispose();
                   object.material.dispose();
                 }
               }
+              // Remove from parent
+              if (object.parent) {
+                object.parent.remove(object);
+              }
             });
+            
+            // Clear the scene
+            while(sceneRef.current.children.length > 0) {
+              sceneRef.current.remove(sceneRef.current.children[0]);
+            }
           }
+          
+          // Dispose controls
+          if (controlsRef.current) {
+            controlsRef.current.dispose();
+            controlsRef.current = null;
+          }
+          
+          // Force WebGL context loss and cleanup
+          if (rendererRef.current) {
+            const gl = rendererRef.current.getContext();
+            const loseContext = gl?.getExtension('WEBGL_lose_context');
+            if (loseContext) {
+              loseContext.loseContext();
+            }
+            
+            rendererRef.current.renderLists.dispose();
+            rendererRef.current.dispose();
+            rendererRef.current.forceContextLoss();
+            
+            if (mountRef.current && rendererRef.current.domElement) {
+              mountRef.current.removeChild(rendererRef.current.domElement);
+            }
+            
+            rendererRef.current = null;
+          }
+          
+          // Clear all refs
+          sceneRef.current = null;
+          cameraRef.current = null;
+          
+          // Debug: Log cleanup completion
+          const canvasCountAfter = document.querySelectorAll('canvas').length;
+          console.log(`[ThreeScene] Cleanup complete. Canvas count: ${canvasCountAfter}`);
         };
       } catch (error) {
         console.error('Three.js initialization error:', error);

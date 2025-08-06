@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy, useEffect } from 'react';
+import React, { useState, Suspense, lazy, useEffect, useCallback } from 'react';
 import './WhoWeArePage.css';
 import './WhoWeAreProfileCardsPage.css';
 
@@ -76,9 +76,21 @@ const WhoWeArePage: React.FC = () => {
   };
 
   // Handle story card selection
-  const handleStoryCardSelect = (storyData: any) => {
+  const handleStoryCardSelect = useCallback((storyData: any) => {
     setSelectedStoryCard(storyData);
-  };
+  }, []);
+
+  // Memoized callback for Three.js scene load complete
+  const handleLoadComplete = useCallback(() => {
+    setWhoweareIsLoading(false);
+  }, []);
+
+  // Memoized callback for Three.js scene load error
+  const handleLoadError = useCallback((error: string) => {
+    setWhoweareLoadError(error);
+    setWhoweareShow3D(false);
+    setWhoweareIsLoading(false);
+  }, []);
 
   return (
     <div className="whoweare-planets-random-container">
@@ -90,12 +102,8 @@ const WhoWeArePage: React.FC = () => {
               members={whoweareTeamMembers}
               onMemberSelect={setWhoweareSelectedMember}
               onStoryCardSelect={handleStoryCardSelect}
-              onLoadComplete={() => setWhoweareIsLoading(false)}
-              onLoadError={(error) => {
-                setWhoweareLoadError(error);
-                setWhoweareShow3D(false);
-                setWhoweareIsLoading(false);
-              }}
+              onLoadComplete={handleLoadComplete}
+              onLoadError={handleLoadError}
               isUIActive={!!whoweareSelectedMember || !!selectedStoryCard || isClosingCard || isClosingMember}
             />
           </Suspense>

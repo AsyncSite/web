@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL Context Monitor</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #111;
+            color: #0f0;
+        }
+        #monitor {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            min-width: 300px;
+        }
+        .stat {
+            margin: 5px 0;
+        }
+        .warning {
+            color: #ff0;
+        }
+        .danger {
+            color: #f00;
+        }
+        button {
+            margin: 10px 5px;
+            padding: 10px 20px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #0a0;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebGL Context Monitor</h1>
+    <p>Open your WhoWeAre page in another tab and monitor WebGL contexts here.</p>
+    
+    <div id="monitor">
+        <h3>WebGL Status</h3>
+        <div class="stat">Canvas Count: <span id="canvasCount">0</span></div>
+        <div class="stat">WebGL Contexts: <span id="contextCount">0</span></div>
+        <div class="stat">Lost Contexts: <span id="lostCount">0</span></div>
+        <div class="stat">Memory (MB): <span id="memory">N/A</span></div>
+        <div class="stat">Last Update: <span id="lastUpdate">-</span></div>
+    </div>
+
+    <button onclick="startMonitoring()">Start Monitoring</button>
+    <button onclick="stopMonitoring()">Stop Monitoring</button>
+    <button onclick="clearLog()">Clear Log</button>
+
+    <h3>Instructions for Testing:</h3>
+    <ol>
+        <li>Open http://localhost:3000/whoweare in another tab</li>
+        <li>Click "Start Monitoring" here</li>
+        <li>In the WhoWeAre page, perform 20+ zoom in/out operations</li>
+        <li>Watch the canvas and context counts</li>
+        <li>If contexts exceed 5-6, the fix is not working</li>
+        <li>Check console for detailed logs</li>
+    </ol>
+
+    <h3>Log:</h3>
+    <pre id="log"></pre>
+
+    <script>
+        let monitorInterval = null;
+        let lostContextCount = 0;
+        const log = document.getElementById('log');
+
+        function checkWebGLContexts() {
+            const canvases = document.querySelectorAll('canvas');
+            let activeContexts = 0;
+            
+            canvases.forEach(canvas => {
+                try {
+                    const gl = canvas.getContext('webgl') || canvas.getContext('webgl2') || canvas.getContext('experimental-webgl');
+                    if (gl && !gl.isContextLost()) {
+                        activeContexts++;
+                    } else if (gl && gl.isContextLost()) {
+                        lostContextCount++;
+                    }
+                } catch (e) {
+                    // Context might be locked
+                }
+            });
+
+            return {
+                canvasCount: canvases.length,
+                activeContexts: activeContexts,
+                lostContexts: lostContextCount
+            };
+        }
+
+        function updateMonitor() {
+            const stats = checkWebGLContexts();
+            const now = new Date().toLocaleTimeString();
+            
+            document.getElementById('canvasCount').textContent = stats.canvasCount;
+            document.getElementById('contextCount').textContent = stats.activeContexts;
+            document.getElementById('lostCount').textContent = stats.lostContexts;
+            document.getElementById('lastUpdate').textContent = now;
+
+            // Color coding
+            const contextElement = document.getElementById('contextCount');
+            contextElement.className = '';
+            if (stats.activeContexts > 10) {
+                contextElement.className = 'danger';
+                addLog(`⚠️ DANGER: ${stats.activeContexts} active contexts!`, 'danger');
+            } else if (stats.activeContexts > 5) {
+                contextElement.className = 'warning';
+                addLog(`⚠️ WARNING: ${stats.activeContexts} active contexts`, 'warning');
+            }
+
+            // Memory usage
+            if (performance.memory) {
+                const memoryMB = (performance.memory.usedJSHeapSize / 1048576).toFixed(2);
+                document.getElementById('memory').textContent = memoryMB;
+            }
+        }
+
+        function addLog(message, className = '') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = `[${timestamp}] ${message}\n`;
+            log.textContent = entry + log.textContent;
+            
+            // Keep only last 50 entries
+            const lines = log.textContent.split('\n');
+            if (lines.length > 50) {
+                log.textContent = lines.slice(0, 50).join('\n');
+            }
+        }
+
+        function startMonitoring() {
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+            }
+            
+            addLog('Started monitoring WebGL contexts');
+            updateMonitor();
+            monitorInterval = setInterval(updateMonitor, 1000);
+        }
+
+        function stopMonitoring() {
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+                monitorInterval = null;
+                addLog('Stopped monitoring');
+            }
+        }
+
+        function clearLog() {
+            log.textContent = '';
+            lostContextCount = 0;
+            addLog('Log cleared');
+        }
+
+        // Auto-start monitoring
+        startMonitoring();
+
+        // Listen for console messages from the main app
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.join(' ');
+            if (message.includes('[ThreeScene]')) {
+                addLog(message);
+            }
+        };
+    </script>
+</body>
+</html>
