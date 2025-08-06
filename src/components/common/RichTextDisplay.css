@@ -1,0 +1,179 @@
+/* TipTap Rich Text Display Styles - All classes prefixed with 'tiptap-display-' */
+
+.tiptap-display-container {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  font-size: 16px;
+  overflow-y: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.tiptap-display-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tiptap-display-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.tiptap-display-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.tiptap-display-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Typography Styles */
+.tiptap-display-container p {
+  margin: 0 0 1em 0;
+  line-height: 1.6;
+}
+
+.tiptap-display-container p:last-child {
+  margin-bottom: 0;
+}
+
+.tiptap-display-container strong {
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.tiptap-display-container em {
+  font-style: italic;
+}
+
+.tiptap-display-container s {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* List Styles */
+.tiptap-display-container ul,
+.tiptap-display-container ol {
+  padding-left: 24px;
+  margin: 0.5em 0 1em 0;
+}
+
+.tiptap-display-container ul:last-child,
+.tiptap-display-container ol:last-child {
+  margin-bottom: 0;
+}
+
+.tiptap-display-container li {
+  margin: 0.25em 0;
+  line-height: 1.6;
+}
+
+.tiptap-display-container ul li {
+  list-style-type: disc;
+}
+
+.tiptap-display-container ol li {
+  list-style-type: decimal;
+}
+
+/* Nested Lists */
+.tiptap-display-container ul ul,
+.tiptap-display-container ol ol,
+.tiptap-display-container ul ol,
+.tiptap-display-container ol ul {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+/* Link Styles */
+.tiptap-display-container a {
+  color: #a5b4fc;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.tiptap-display-container a:hover {
+  color: #c7d2fe;
+  text-decoration: none;
+}
+
+.tiptap-display-container a:visited {
+  color: #c4b5fd;
+}
+
+/* Empty State */
+.tiptap-display-container:empty::before {
+  content: '내용이 없습니다.';
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tiptap-display-container {
+    font-size: 15px;
+  }
+  
+  .tiptap-display-container ul,
+  .tiptap-display-container ol {
+    padding-left: 20px;
+  }
+}
+
+/* Light Theme Support */
+@media (prefers-color-scheme: light) {
+  .tiptap-display-container {
+    color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .tiptap-display-container strong {
+    color: rgba(0, 0, 0, 0.95);
+  }
+  
+  .tiptap-display-container a {
+    color: #6366f1;
+  }
+  
+  .tiptap-display-container a:hover {
+    color: #4f46e5;
+  }
+  
+  .tiptap-display-container a:visited {
+    color: #7c3aed;
+  }
+  
+  .tiptap-display-container:empty::before {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  
+  .tiptap-display-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  .tiptap-display-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .tiptap-display-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .tiptap-display-container {
+    color: black;
+    font-size: 12pt;
+  }
+  
+  .tiptap-display-container a {
+    color: black;
+    text-decoration: underline;
+  }
+  
+  .tiptap-display-container a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 90%;
+  }
+}

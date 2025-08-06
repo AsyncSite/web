@@ -5,9 +5,15 @@
   "dependencies": {
     "@react-spring/web": "^10.0.1",
     "@testing-library/jest-dom": "^5.14.1",
+    "@tiptap/extension-character-count": "^3.0.9",
+    "@tiptap/extension-link": "^3.0.9",
+    "@tiptap/extension-placeholder": "^3.0.9",
+    "@tiptap/react": "^3.0.9",
+    "@tiptap/starter-kit": "^3.0.9",
     "@types/jest": "^27.0.1",
     "@types/three": "^0.178.1",
     "axios": "^1.10.0",
+    "dompurify": "^3.2.6",
     "gsap": "^3.12.5",
     "konva": "^9.3.20",
     "lottie-react": "^2.4.1",
@@ -46,6 +52,7 @@
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/dompurify": "^3.0.5",
     "@types/node": "^22.16.0",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",

@@ -4,6 +4,8 @@ export interface User {
   email: string;
   username: string;
   name?: string;
+  role?: string;
+  bio?: string;
   profileImage?: string;
   roles: string[];
   isActive: boolean;
@@ -57,6 +59,8 @@ export interface TokenResponse {
 // Profile related types
 export interface UpdateProfileRequest {
   name?: string;
+  role?: string;
+  bio?: string;
   profileImage?: string;
 }
 

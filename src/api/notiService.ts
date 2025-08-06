@@ -2,19 +2,20 @@ import apiClient from './client';
 import {NotiSetting, UpdateNotificationSettingsRequest} from "../types/noti";
 
 class NotiService {
-  baseUrl = "/api/noti/settings/";
+  private readonly baseUrl = "/api/noti/settings/";
+  
   /**
-   * Register a new user
+   * Update notification settings
    */
-  async updateNotiSetting(userId: string, data: UpdateNotificationSettingsRequest): Promise<NotiSetting> {
+  updateNotiSetting = async (userId: string, data: UpdateNotificationSettingsRequest): Promise<NotiSetting> => {
     const response = await apiClient.post<NotiSetting>(`${this.baseUrl}${userId}`, data);
     return response.data;
   }
 
   /**
-   * Get current user profile
+   * Get notification settings
    */
-  async getNotiSetting(userId: string): Promise<NotiSetting> {
+  getNotiSetting = async (userId: string): Promise<NotiSetting> => {
     const response = await apiClient.get<NotiSetting>(`${this.baseUrl}${userId}`);
     return response.data;
   }

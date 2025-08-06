@@ -1,0 +1,329 @@
+/* TipTap Rich Text Editor Styles - All classes prefixed with 'tiptap-' */
+
+.tiptap-editor-wrapper {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.tiptap-editor-wrapper:focus-within {
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.tiptap-editor-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Toolbar Styles */
+.tiptap-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap;
+}
+
+.tiptap-toolbar-group {
+  display: flex;
+  gap: 4px;
+}
+
+.tiptap-toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 4px;
+}
+
+.tiptap-toolbar-button {
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tiptap-toolbar-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.tiptap-toolbar-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.tiptap-toolbar-button-active {
+  background: rgba(99, 102, 241, 0.2) !important;
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #a5b4fc !important;
+}
+
+.tiptap-toolbar-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Toolbar Icons */
+.tiptap-toolbar-icon-bold {
+  font-weight: bold;
+}
+
+.tiptap-toolbar-icon-italic {
+  font-style: italic;
+}
+
+.tiptap-toolbar-icon-strike {
+  text-decoration: line-through;
+}
+
+.tiptap-toolbar-icon-list,
+.tiptap-toolbar-icon-numbered {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.tiptap-toolbar-icon-link {
+  font-size: 16px;
+}
+
+/* Editor Content Area */
+.tiptap-editor-content-wrapper {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.tiptap-editor-content-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tiptap-editor-content-wrapper::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.tiptap-editor-content-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.tiptap-editor-content-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tiptap-editor-content {
+  padding: 16px;
+}
+
+/* ProseMirror Editor Styles */
+.tiptap-editor-content .ProseMirror {
+  min-height: 168px;
+  outline: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.tiptap-editor-content .ProseMirror p {
+  margin: 0 0 1em 0;
+}
+
+.tiptap-editor-content .ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+.tiptap-editor-content .ProseMirror strong {
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.tiptap-editor-content .ProseMirror em {
+  font-style: italic;
+}
+
+.tiptap-editor-content .ProseMirror s {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.tiptap-editor-content .ProseMirror ul,
+.tiptap-editor-content .ProseMirror ol {
+  padding-left: 24px;
+  margin: 0.5em 0;
+}
+
+.tiptap-editor-content .ProseMirror li {
+  margin: 0.25em 0;
+}
+
+.tiptap-editor-content .ProseMirror a {
+  color: #a5b4fc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tiptap-editor-content .ProseMirror a:hover {
+  color: #c7d2fe;
+  text-decoration: none;
+}
+
+/* Placeholder Text */
+.tiptap-editor-content .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* Footer Styles */
+.tiptap-editor-footer {
+  padding: 8px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.tiptap-character-count {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.tiptap-character-count-max {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .tiptap-editor-toolbar {
+    padding: 12px 8px;
+    gap: 6px;
+  }
+  
+  .tiptap-toolbar-button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px;
+  }
+  
+  .tiptap-toolbar-icon-list,
+  .tiptap-toolbar-icon-numbered {
+    font-size: 11px;
+  }
+  
+  .tiptap-editor-content-wrapper {
+    max-height: 300px;
+  }
+  
+  .tiptap-editor-content {
+    padding: 12px;
+  }
+  
+  .tiptap-editor-content .ProseMirror {
+    font-size: 15px;
+  }
+  
+  .tiptap-toolbar-divider {
+    display: none;
+  }
+  
+  .tiptap-toolbar-group {
+    gap: 2px;
+  }
+}
+
+/* Animation Effects */
+@keyframes tiptap-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+}
+
+.tiptap-editor-wrapper:focus-within {
+  animation: tiptap-pulse 1.5s ease-out;
+}
+
+/* Dark Theme Compatibility */
+@media (prefers-color-scheme: light) {
+  .tiptap-editor-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .tiptap-editor-toolbar {
+    background: rgba(249, 250, 251, 1);
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .tiptap-toolbar-button {
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .tiptap-toolbar-button:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .tiptap-toolbar-button-active {
+    background: rgba(99, 102, 241, 0.1) !important;
+    color: #6366f1 !important;
+  }
+  
+  .tiptap-toolbar-divider {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+  .tiptap-editor-content .ProseMirror {
+    color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .tiptap-editor-content .ProseMirror strong {
+    color: rgba(0, 0, 0, 0.95);
+  }
+  
+  .tiptap-editor-content .ProseMirror p.is-editor-empty:first-child::before {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  
+  .tiptap-editor-content .ProseMirror a {
+    color: #6366f1;
+  }
+  
+  .tiptap-editor-content .ProseMirror a:hover {
+    color: #4f46e5;
+  }
+  
+  .tiptap-editor-footer {
+    background: rgba(249, 250, 251, 1);
+    border-top-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .tiptap-character-count {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}

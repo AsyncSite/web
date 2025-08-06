@@ -3,11 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
 import StarBackground from '../../components/common/StarBackground';
+import RichTextEditor from '../../components/common/RichTextEditor';
 import './ProfileEditPage.css';
 import notiService from "../../api/notiService";
 
 interface ProfileFormData {
   name: string;
+  role: string;
+  bio: string;
   profileImage: string;
   studyUpdates: boolean;
   marketing: boolean;
@@ -18,13 +21,14 @@ interface ProfileFormData {
 
 interface ProfileFormErrors {
   name?: string;
+  role?: string;
+  bio?: string;
   profileImage?: string;
   general?: string;
 }
 
 function ProfileEditPage(): React.ReactNode {
   const { user, updateProfile, isAuthenticated, isLoading } = useAuth();
-  const { getNotiSetting, updateNotiSetting } = notiService;
   const navigate = useNavigate();
   
   // 인증되지 않은 경우 로그인 페이지로 리디렉션
@@ -36,6 +40,8 @@ function ProfileEditPage(): React.ReactNode {
   
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
+    role: '',
+    bio: '',
     profileImage: '',
     studyUpdates: false,
     marketing: false,
@@ -51,6 +57,8 @@ function ProfileEditPage(): React.ReactNode {
     if (user) {
       let formdata = {
         name: user.name || '',
+        role: user.role || '',
+        bio: user.bio || '',
         profileImage: user.profileImage || '',
         studyUpdates: false,
         marketing: false,
@@ -58,16 +66,20 @@ function ProfileEditPage(): React.ReactNode {
         discordEnabled: false,
         pushEnabled: false
       };
-      getNotiSetting(user.id)
+      notiService.getNotiSetting(user.id)
           .then(notiSetting => {
-            formdata = {
-              ...formdata,
+            setFormData(prev => ({
+              ...prev,
               studyUpdates: notiSetting.studyUpdates,
               marketing: notiSetting.marketing,
               emailEnabled: notiSetting.emailEnabled,
               discordEnabled: notiSetting.discordEnabled,
               pushEnabled: notiSetting.pushEnabled
-            }
+            }));
+          })
+          .catch(error => {
+            // Notification settings not available or error - continue without them
+            console.error('Failed to load notification settings:', error);
           });
       setFormData(formdata);
     }
@@ -82,6 +94,11 @@ function ProfileEditPage(): React.ReactNode {
       newErrors.name = '이름은 2자 이상이어야 합니다';
     } else if (formData.name.length > 50) {
       newErrors.name = '이름은 50자 이하여야 합니다';
+    }
+
+    // Role validation (optional field)
+    if (formData.role && formData.role.length > 100) {
+      newErrors.role = '역할/직책은 100자 이하여야 합니다';
     }
 
     setErrors(newErrors);
@@ -100,6 +117,14 @@ function ProfileEditPage(): React.ReactNode {
     }
   };
 
+  const handleBioChange = (html: string) => {
+    setFormData(prev => ({ ...prev, bio: html }));
+    // Clear bio error when user starts typing
+    if (errors.bio) {
+      setErrors(prev => ({ ...prev, bio: undefined }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -111,18 +136,25 @@ function ProfileEditPage(): React.ReactNode {
     try {
       await updateProfile({
         name: formData.name,
+        role: formData.role || undefined,
+        bio: formData.bio || undefined,
         profileImage: formData.profileImage || undefined
       });
 
       // 알림 설정 업데이트
       if (user) {
-        await updateNotiSetting(user.id, {
-          studyUpdates: formData.studyUpdates,
-          marketing: formData.marketing,
-          emailEnabled: formData.emailEnabled,
-          discordEnabled: formData.discordEnabled,
-          pushEnabled: formData.pushEnabled
-        });
+        try {
+          await notiService.updateNotiSetting(user.id, {
+            studyUpdates: formData.studyUpdates,
+            marketing: formData.marketing,
+            emailEnabled: formData.emailEnabled,
+            discordEnabled: formData.discordEnabled,
+            pushEnabled: formData.pushEnabled
+          });
+        } catch (notiError) {
+          console.error('Failed to update notification settings:', notiError);
+          // Continue with success even if notification settings fail
+        }
       }
 
       setIsSuccess(true);
@@ -191,6 +223,46 @@ function ProfileEditPage(): React.ReactNode {
           </div>
 
           <div className="form-group auth-form-group">
+            <label htmlFor="role" className="auth-label">
+              역할/직책 <span className="optional">(선택)</span>
+            </label>
+            <input
+              type="text"
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className={`auth-input ${errors.role ? 'error' : ''}`}
+              placeholder="예: Product Architect, System Engineer, Growth Hacker"
+              maxLength={100}
+              disabled={isSubmitting}
+            />
+            {errors.role && (
+              <span className="error-message auth-error-message">
+                {errors.role}
+              </span>
+            )}
+          </div>
+
+          <div className="form-group auth-form-group">
+            <label htmlFor="bio" className="auth-label">
+              스토리 <span className="optional">(선택)</span>
+            </label>
+            <RichTextEditor
+              value={formData.bio}
+              onChange={handleBioChange}
+              placeholder="당신의 이야기를 들려주세요... 어떤 여정을 걸어왔고, 무엇을 꿈꾸며, 어떤 가치를 추구하시나요?"
+              maxLength={2000}
+              disabled={isSubmitting}
+            />
+            {errors.bio && (
+              <span className="error-message auth-error-message">
+                {errors.bio}
+              </span>
+            )}
+          </div>
+
+          <div className="form-group auth-form-group">
             <label htmlFor="profileImage" className="auth-label">
               프로필 이미지 URL <span className="optional">(선택)</span>
             </label>
@@ -225,6 +297,7 @@ function ProfileEditPage(): React.ReactNode {
               </div>
               <div className="preview-info">
                 <p className="preview-name">{formData.name || user?.name || '이름'}</p>
+                <p className="preview-role">{formData.role || user?.role || ''}</p>
                 <p className="preview-email">{user?.email}</p>
               </div>
             </div>
