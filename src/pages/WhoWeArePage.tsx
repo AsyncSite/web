@@ -1,6 +1,7 @@
 import React, { useState, Suspense, lazy, useEffect, useCallback } from 'react';
 import './WhoWeArePage.css';
 import './WhoWeAreProfileCardsPage.css';
+import userService from '../api/userService';
 
 // Lazy load Three.js scene
 const ThreeSceneFloatingStory = lazy(() => import('../components/whoweare/ThreeSceneFloatingStory'));
@@ -16,6 +17,7 @@ const WhoWeArePage: React.FC = () => {
   const [selectedStoryCard, setSelectedStoryCard] = useState<any>(null);
   const [isClosingCard, setIsClosingCard] = useState(false);
   const [isClosingMember, setIsClosingMember] = useState(false);
+  const [combinedTeamMembers, setCombinedTeamMembers] = useState<WhoWeAreMemberData[]>(whoweareTeamMembers);
 
 
   // Helper function to convert hex to RGB
@@ -25,6 +27,82 @@ const WhoWeArePage: React.FC = () => {
       ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
       : '255, 255, 255';
   };
+
+  // Profile images to use for admin users (cycling through existing images)
+  const profileImages = [
+    '/images/face/rene.png',
+    '/images/face/KrongDev.png',
+    '/images/face/vvoohhee.png',
+    '/images/face/kdelay.png'
+  ];
+
+  // Colors for admin users
+  const adminColors = [
+    { color: '#8b5cf6', darkColor: '#7c3aed' },
+    { color: '#3b82f6', darkColor: '#2563eb' },
+    { color: '#14b8a6', darkColor: '#0d9488' },
+    { color: '#f97316', darkColor: '#ea580c' }
+  ];
+
+  // Map backend member to WhoWeAre member format
+  const mapBackendMemberToWhoWeAre = (member: {
+    name: string;
+    role?: string;
+    bio?: string;
+    profileImage?: string;
+  }, index: number): WhoWeAreMemberData => {
+    const colorIndex = index % adminColors.length;
+    const imageIndex = index % profileImages.length;
+    // Position members in a wider circle to avoid overlap with hardcoded members
+    const angle = (Math.PI * 2 * index) / 8 + Math.PI / 4; // Offset angle to avoid collision
+    const radius = 8; // Larger radius than hardcoded members
+    
+    return {
+      id: `backend-member-${index}`,
+      name: member.name,
+      initials: member.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2),
+      role: member.role || 'AsyncSite Team',
+      quote: '"함께 성장하는 커뮤니티를 만들어갑니다"',
+      story: member.bio || '열정적으로 AsyncSite를 운영하며 개발자들의 성장을 돕고 있습니다.',
+      color: adminColors[colorIndex].color,
+      darkColor: adminColors[colorIndex].darkColor,
+      position: { 
+        x: Math.cos(angle) * radius, 
+        y: Math.sin(angle / 2) * 2, // Add more vertical variation
+        z: Math.sin(angle) * radius 
+      },
+      profileImage: member.profileImage || profileImages[imageIndex]
+    };
+  };
+
+  // Fetch admin users from backend
+  useEffect(() => {
+    const fetchWhoWeAreMembers = async () => {
+      try {
+        console.log('Fetching WhoWeAre members from backend...');
+        const backendMembers = await userService.getWhoWeAreMembers();
+        console.log('Backend members fetched:', backendMembers);
+        
+        if (backendMembers && backendMembers.length > 0) {
+          // Map backend members to WhoWeAre format
+          const mappedBackendMembers = backendMembers.map((member, index) => 
+            mapBackendMemberToWhoWeAre(member, index)
+          );
+          console.log('Mapped backend members:', mappedBackendMembers);
+          
+          // Combine hardcoded members with backend members
+          const combined = [...whoweareTeamMembers, ...mappedBackendMembers];
+          console.log('Combined team members:', combined.length, 'total (', whoweareTeamMembers.length, 'hardcoded +', mappedBackendMembers.length, 'backend)');
+          setCombinedTeamMembers(combined);
+        }
+      } catch (error) {
+        // If fetching fails, just use hardcoded members
+        console.error('Failed to fetch WhoWeAre members:', error);
+      }
+    };
+
+    fetchWhoWeAreMembers();
+  }, []);
 
 
   // Check WebGL support
@@ -99,7 +177,7 @@ const WhoWeArePage: React.FC = () => {
         <div className="whoweare-3d-container">
           <Suspense fallback={null}>
             <ThreeSceneFloatingStory
-              members={whoweareTeamMembers}
+              members={combinedTeamMembers}
               onMemberSelect={setWhoweareSelectedMember}
               onStoryCardSelect={handleStoryCardSelect}
               onLoadComplete={handleLoadComplete}

@@ -71,6 +71,25 @@ class UserService {
       return true;
     }
   }
+
+  /**
+   * Get public team members for WhoWeAre page
+   * Returns only public-safe information
+   */
+  async getWhoWeAreMembers(): Promise<Array<{
+    name: string;
+    role?: string;
+    bio?: string;
+    profileImage?: string;
+  }>> {
+    try {
+      const response = await apiClient.get('/api/public/users/whoweare-members');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch WhoWeAre members:', error);
+      return [];
+    }
+  }
 }
 
 export default new UserService();
