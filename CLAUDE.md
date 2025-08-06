@@ -261,6 +261,36 @@ Frontend development **must follow a scalable, feature-based architecture** to e
 * **Async Errors**: Always handle promises and async operations
 * **User Feedback**: Provide clear error messages to users
 
+#### Rich Text Editor Integration (TipTap)
+
+* **Editor Component**: `components/common/RichTextEditor.tsx` - Full-featured editor with toolbar
+* **Display Component**: `components/common/RichTextDisplay.tsx` - Safe HTML rendering
+* **Security**: Always use DOMPurify to sanitize HTML before rendering
+* **CSS Prefix**: Use `tiptap-` prefix for all editor styles to avoid conflicts
+* **Usage Pattern**:
+  ```typescript
+  // In forms
+  <RichTextEditor
+    value={bio}
+    onChange={setBio}
+    placeholder="Tell your story..."
+    maxLength={2000}
+  />
+  
+  // For display
+  <RichTextDisplay content={user.bio} />
+  ```
+* **Key Features**:
+  - Bold, italic, underline formatting
+  - Headings (H1-H3)
+  - Bullet and numbered lists
+  - Links with URL validation
+  - Character count with max length
+  - Accessibility support
+* **Profile Fields**:
+  - `role`: Plain text field for position/title
+  - `bio`: HTML-formatted rich text for biography
+
 #### API/Service Layer
 
 * **Separation**: Keep API calls in separate service files
