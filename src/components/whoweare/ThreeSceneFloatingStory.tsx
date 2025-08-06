@@ -87,6 +87,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
   ], []);
 
   useEffect(() => {
+    console.log('[ThreeScene] useEffect triggered with', members.length, 'members');
     let mounted = true;
 
     const initThree = async () => {
@@ -482,6 +483,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
         }
 
+        console.log('[ThreeScene] Creating planets for', members.length, 'members');
         members.forEach((member, originalIndex) => {
           const group = new THREE.Group();
           group.userData = member;
@@ -1349,6 +1351,18 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
 
     return () => {
       mounted = false;
+      // Cancel animation frame
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
+      }
+      // Remove existing canvas when members change
+      if (mountRef.current) {
+        const canvas = mountRef.current.querySelector('canvas');
+        if (canvas) {
+          mountRef.current.removeChild(canvas);
+        }
+      }
     };
   }, [members, onMemberSelect, onLoadComplete, onLoadError]);
 
