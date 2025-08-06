@@ -45,6 +45,16 @@ const WhoWeArePage: React.FC = () => {
     { color: '#f97316', darkColor: '#ea580c' }
   ];
 
+  // Quotes for admin users
+  const adminQuotes = [
+    '"기술로 더 나은 세상을 만들어갑니다"',
+    '"함께 성장하는 커뮤니티를 만들어갑니다"',
+    '"혁신적인 솔루션으로 문제를 해결합니다"',
+    '"열정과 전문성으로 미래를 설계합니다"',
+    '"지속 가능한 기술 생태계를 구축합니다"',
+    '"창의적인 아이디어로 변화를 이끕니다"'
+  ];
+
   // Map backend member to WhoWeAre member format
   const mapBackendMemberToWhoWeAre = (member: {
     name: string;
@@ -54,6 +64,7 @@ const WhoWeArePage: React.FC = () => {
   }, index: number): WhoWeAreMemberData => {
     const colorIndex = index % adminColors.length;
     const imageIndex = index % profileImages.length;
+    const quoteIndex = index % adminQuotes.length;
     // Position members in a wider circle to avoid overlap with hardcoded members
     const angle = (Math.PI * 2 * index) / 8 + Math.PI / 4; // Offset angle to avoid collision
     const radius = 8; // Larger radius than hardcoded members
@@ -63,7 +74,7 @@ const WhoWeArePage: React.FC = () => {
       name: member.name,
       initials: member.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2),
       role: member.role || 'AsyncSite Team',
-      quote: '"함께 성장하는 커뮤니티를 만들어갑니다"',
+      quote: adminQuotes[quoteIndex],
       story: member.bio || '열정적으로 AsyncSite를 운영하며 개발자들의 성장을 돕고 있습니다.',
       color: adminColors[colorIndex].color,
       darkColor: adminColors[colorIndex].darkColor,
