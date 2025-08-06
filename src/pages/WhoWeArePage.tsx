@@ -2,6 +2,7 @@ import React, { useState, Suspense, lazy, useEffect, useCallback } from 'react';
 import './WhoWeArePage.css';
 import './WhoWeAreProfileCardsPage.css';
 import userService from '../api/userService';
+import DOMPurify from 'dompurify';
 
 // Lazy load Three.js scene
 const ThreeSceneFloatingStory = lazy(() => import('../components/whoweare/ThreeSceneFloatingStory'));
@@ -303,7 +304,12 @@ const WhoWeArePage: React.FC = () => {
             <div className="whoweare-member-name">{whoweareSelectedMember.name}</div>
             <div className="whoweare-member-role">{whoweareSelectedMember.role}</div>
             <div className="whoweare-member-quote">{whoweareSelectedMember.quote}</div>
-            <div className="whoweare-member-story">{whoweareSelectedMember.story}</div>
+            <div 
+              className="whoweare-member-story"
+              dangerouslySetInnerHTML={{ 
+                __html: DOMPurify.sanitize(whoweareSelectedMember.story) 
+              }}
+            />
             
             <div className="whoweare-member-links">
               <a href="#" className="whoweare-link-btn">G</a>
