@@ -10,6 +10,7 @@ import notiService from "../../api/notiService";
 interface ProfileFormData {
   name: string;
   role: string;
+  quote: string;
   bio: string;
   profileImage: string;
   studyUpdates: boolean;
@@ -22,6 +23,7 @@ interface ProfileFormData {
 interface ProfileFormErrors {
   name?: string;
   role?: string;
+  quote?: string;
   bio?: string;
   profileImage?: string;
   general?: string;
@@ -41,6 +43,7 @@ function ProfileEditPage(): React.ReactNode {
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
     role: '',
+    quote: '',
     bio: '',
     profileImage: '',
     studyUpdates: false,
@@ -60,6 +63,7 @@ function ProfileEditPage(): React.ReactNode {
         ...prev,
         name: user.name || '',
         role: user.role || '',
+        quote: user.quote || '',
         bio: user.bio || '',
         profileImage: user.profileImage || ''
       }));
@@ -78,7 +82,7 @@ function ProfileEditPage(): React.ReactNode {
           })
           .catch(error => {
             // Notification settings not available or error - continue without them
-            console.error('Failed to load notification settings:', error);
+            // Silently handle error to prevent UI issues
           });
     }
   }, [user]);
@@ -97,6 +101,11 @@ function ProfileEditPage(): React.ReactNode {
     // Role validation (optional field)
     if (formData.role && formData.role.length > 100) {
       newErrors.role = '역할/직책은 100자 이하여야 합니다';
+    }
+
+    // Quote validation (optional field)
+    if (formData.quote && formData.quote.length > 255) {
+      newErrors.quote = '인용구는 255자 이하여야 합니다';
     }
 
     setErrors(newErrors);
@@ -135,6 +144,7 @@ function ProfileEditPage(): React.ReactNode {
       await updateProfile({
         name: formData.name,
         role: formData.role || undefined,
+        quote: formData.quote || undefined,
         bio: formData.bio || undefined,
         profileImage: formData.profileImage || undefined
       });
@@ -150,8 +160,8 @@ function ProfileEditPage(): React.ReactNode {
             pushEnabled: formData.pushEnabled
           });
         } catch (notiError) {
-          console.error('Failed to update notification settings:', notiError);
           // Continue with success even if notification settings fail
+          // Silently handle error to prevent blocking profile update
         }
       }
 
@@ -238,6 +248,28 @@ function ProfileEditPage(): React.ReactNode {
             {errors.role && (
               <span className="error-message auth-error-message">
                 {errors.role}
+              </span>
+            )}
+          </div>
+
+          <div className="form-group auth-form-group">
+            <label htmlFor="quote" className="auth-label">
+              인용구/좌우명 <span className="optional">(선택)</span>
+            </label>
+            <input
+              type="text"
+              id="quote"
+              name="quote"
+              value={formData.quote}
+              onChange={handleChange}
+              className={`auth-input ${errors.quote ? 'error' : ''}`}
+              placeholder="예: 함께 성장하는 커뮤니티를 만들어갑니다"
+              maxLength={255}
+              disabled={isSubmitting}
+            />
+            {errors.quote && (
+              <span className="error-message auth-error-message">
+                {errors.quote}
               </span>
             )}
           </div>

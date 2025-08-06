@@ -59,6 +59,7 @@ const WhoWeArePage: React.FC = () => {
   const mapBackendMemberToWhoWeAre = (member: {
     name: string;
     role?: string;
+    quote?: string;
     bio?: string;
     profileImage?: string;
   }, index: number): WhoWeAreMemberData => {
@@ -74,7 +75,7 @@ const WhoWeArePage: React.FC = () => {
       name: member.name,
       initials: member.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2),
       role: member.role || 'AsyncSite Team',
-      quote: adminQuotes[quoteIndex],
+      quote: member.quote ? `"${member.quote}"` : adminQuotes[quoteIndex],
       story: member.bio || '열정적으로 AsyncSite를 운영하며 개발자들의 성장을 돕고 있습니다.',
       color: adminColors[colorIndex].color,
       darkColor: adminColors[colorIndex].darkColor,
@@ -91,25 +92,21 @@ const WhoWeArePage: React.FC = () => {
   useEffect(() => {
     const fetchWhoWeAreMembers = async () => {
       try {
-        console.log('Fetching WhoWeAre members from backend...');
         const backendMembers = await userService.getWhoWeAreMembers();
-        console.log('Backend members fetched:', backendMembers);
         
         if (backendMembers && backendMembers.length > 0) {
           // Map backend members to WhoWeAre format
           const mappedBackendMembers = backendMembers.map((member, index) => 
             mapBackendMemberToWhoWeAre(member, index)
           );
-          console.log('Mapped backend members:', mappedBackendMembers);
           
           // Combine hardcoded members with backend members
           const combined = [...whoweareTeamMembers, ...mappedBackendMembers];
-          console.log('Combined team members:', combined.length, 'total (', whoweareTeamMembers.length, 'hardcoded +', mappedBackendMembers.length, 'backend)');
           setCombinedTeamMembers(combined);
         }
       } catch (error) {
         // If fetching fails, just use hardcoded members
-        console.error('Failed to fetch WhoWeAre members:', error);
+        // Error is silently handled to prevent UI issues
       }
     };
 

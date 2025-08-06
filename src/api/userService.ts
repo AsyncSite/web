@@ -13,8 +13,8 @@ class UserService {
    * Register a new user
    */
   async register(data: RegisterRequest): Promise<RegisterResponse> {
-    const response = await apiClient.post<ApiResponse<RegisterResponse>>('/api/users/register', data);
-    return response.data.data;
+    const response = await apiClient.post<RegisterResponse>('/api/users/register', data);
+    return response.data;
   }
 
   /**
@@ -30,8 +30,8 @@ class UserService {
    * Update user profile
    */
   async updateProfile(data: UpdateProfileRequest): Promise<User> {
-    const response = await apiClient.put<ApiResponse<User>>('/api/users/me', data);
-    return response.data.data;
+    const response = await apiClient.put<User>('/api/users/me', data);
+    return response.data;
   }
 
   /**
@@ -79,6 +79,7 @@ class UserService {
   async getWhoWeAreMembers(): Promise<Array<{
     name: string;
     role?: string;
+    quote?: string;
     bio?: string;
     profileImage?: string;
   }>> {
@@ -86,7 +87,7 @@ class UserService {
       const response = await apiClient.get('/api/public/users/whoweare-members');
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch WhoWeAre members:', error);
+      // Return empty array if fetching fails to prevent UI issues
       return [];
     }
   }

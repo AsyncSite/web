@@ -5,6 +5,7 @@ export interface User {
   username: string;
   name?: string;
   role?: string;
+  quote?: string;
   bio?: string;
   profileImage?: string;
   roles: string[];
@@ -60,6 +61,7 @@ export interface TokenResponse {
 export interface UpdateProfileRequest {
   name?: string;
   role?: string;
+  quote?: string;
   bio?: string;
   profileImage?: string;
 }
