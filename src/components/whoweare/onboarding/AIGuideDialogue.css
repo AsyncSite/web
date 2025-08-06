@@ -255,6 +255,18 @@
   display: flex;
   gap: 6px;
   z-index: 1;
+  animation: fadeInButtons 0.3s ease-out;
+}
+
+@keyframes fadeInButtons {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Back Button */
@@ -359,6 +371,7 @@
     top: 6px;
     right: 8px;
     gap: 4px;
+    animation: fadeInButtons 0.3s ease-out;
   }
   
   .back-guide-button {

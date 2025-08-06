@@ -92,16 +92,18 @@ const AIGuideDialogue: React.FC<AIGuideDialogueProps> = ({
       </div>
       
       <div className="ai-guide-bubble">
-        <div className="dialogue-buttons">
-          {canGoBack && !isEndDialogue && (
-            <button className="back-guide-button" onClick={handleBack} title="이전">
-              ←
+        {!isTyping && (
+          <div className="dialogue-buttons">
+            {canGoBack && !isEndDialogue && (
+              <button className="back-guide-button" onClick={handleBack} title="이전">
+                ←
+              </button>
+            )}
+            <button className="skip-guide-button" onClick={onSkip}>
+              {isEndDialogue ? '종료' : '건너뛰기'}
             </button>
-          )}
-          <button className="skip-guide-button" onClick={onSkip}>
-            {isEndDialogue ? '종료' : '건너뛰기'}
-          </button>
-        </div>
+          </div>
+        )}
         
         <div className="bubble-content">
           <p className="bubble-text">{displayedText}</p>
