@@ -79,30 +79,39 @@ const WhoWeArePage: React.FC = () => {
   useEffect(() => {
     const fetchWhoWeAreMembers = async () => {
       try {
-        console.log('Fetching WhoWeAre members from backend...');
+        console.log('🔍 Fetching WhoWeAre members from backend...');
         const backendMembers = await userService.getWhoWeAreMembers();
-        console.log('Backend members fetched:', backendMembers);
+        console.log('✅ Backend members fetched:', backendMembers);
         
         if (backendMembers && backendMembers.length > 0) {
           // Map backend members to WhoWeAre format
           const mappedBackendMembers = backendMembers.map((member, index) => 
             mapBackendMemberToWhoWeAre(member, index)
           );
-          console.log('Mapped backend members:', mappedBackendMembers);
+          console.log('🗺️ Mapped backend members:', mappedBackendMembers);
           
           // Combine hardcoded members with backend members
           const combined = [...whoweareTeamMembers, ...mappedBackendMembers];
-          console.log('Combined team members:', combined.length, 'total (', whoweareTeamMembers.length, 'hardcoded +', mappedBackendMembers.length, 'backend)');
+          console.log(`🌟 Combined team members: ${combined.length} total (${whoweareTeamMembers.length} hardcoded + ${mappedBackendMembers.length} backend)`);
+          console.log('📋 All members:', combined.map(m => m.name));
           setCombinedTeamMembers(combined);
+        } else {
+          console.log('⚠️ No backend members found, using only hardcoded members');
         }
       } catch (error) {
         // If fetching fails, just use hardcoded members
-        console.error('Failed to fetch WhoWeAre members:', error);
+        console.error('❌ Failed to fetch WhoWeAre members:', error);
       }
     };
 
     fetchWhoWeAreMembers();
   }, []);
+  
+  // Log when combinedTeamMembers changes
+  useEffect(() => {
+    console.log(`🎯 combinedTeamMembers updated: ${combinedTeamMembers.length} members`);
+    console.log('📊 Member names:', combinedTeamMembers.map(m => m.name));
+  }, [combinedTeamMembers]);
 
 
   // Check WebGL support
