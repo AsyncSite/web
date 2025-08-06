@@ -1126,6 +1126,16 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           renderer.setSize(window.innerWidth, window.innerHeight);
         };
         window.addEventListener('resize', handleResize);
+        
+        // Store all event handlers for cleanup
+        (window as any).__threeSceneHandlers = {
+          handleMouseDown,
+          handleMouseUp,
+          handleMouseMove,
+          handleClick,
+          handleResetCamera,
+          handleResize
+        };
 
         // Animation loop with LOD
         const animate = () => {
@@ -1356,6 +1366,26 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         cancelAnimationFrame(animationIdRef.current);
         animationIdRef.current = null;
       }
+      // Remove event listeners
+      if ((window as any).__threeSceneHandlers) {
+        const handlers = (window as any).__threeSceneHandlers;
+        window.removeEventListener('mousedown', handlers.handleMouseDown);
+        window.removeEventListener('mouseup', handlers.handleMouseUp);
+        window.removeEventListener('mousemove', handlers.handleMouseMove);
+        window.removeEventListener('click', handlers.handleClick);
+        window.removeEventListener('resetCamera', handlers.handleResetCamera);
+        window.removeEventListener('resize', handlers.handleResize);
+        delete (window as any).__threeSceneHandlers;
+      }
+      // Dispose renderer properly
+      if (rendererRef.current) {
+        rendererRef.current.dispose();
+        rendererRef.current = null;
+      }
+      // Clear refs
+      sceneRef.current = null;
+      cameraRef.current = null;
+      controlsRef.current = null;
       // Remove existing canvas when members change
       if (mountRef.current) {
         const canvas = mountRef.current.querySelector('canvas');
