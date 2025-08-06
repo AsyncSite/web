@@ -9,6 +9,7 @@ docs/project/whoweare/
 │
 ├── README.md (현재 문서)
 ├── INTEGRATED_STATUS_REPORT.md ⭐ (통합 현황 - 먼저 읽기)
+├── ACTION_PLAN_2025.md         # 실행 계획서
 │
 ├── 01_initial_planning/        # 초기 기획
 │   └── INITIAL_3D_IMPROVEMENT_PLAN.md
@@ -22,14 +23,20 @@ docs/project/whoweare/
 ├── 04_done/                    # 완료 작업
 │   └── COMPLETED_TASKS.md
 │
-└── 05_todo/                    # 진행 예정
-    └── PENDING_TASKS.md
+├── 05_todo/                    # 진행 예정
+│   └── PENDING_TASKS.md
+│
+└── 06_planning/                # 기획 및 전략 🆕
+    ├── ONBOARDING_GUIDE_STRATEGY.md  # 온보딩 가이드 전략서
+    └── ONBOARDING_PROTOTYPES_IMPLEMENTATION.md  # 프로토타입 구현 계획서
 ```
 
 ## 🎯 Quick Links
 
 - **현재 상황 파악**: [INTEGRATED_STATUS_REPORT.md](./INTEGRATED_STATUS_REPORT.md) 
-- **긴급 이슈**: [PENDING_TASKS.md](./05_todo/PENDING_TASKS.md#우선순위-높음-critical-issues)
+- **🆕 온보딩 가이드 전략**: [ONBOARDING_GUIDE_STRATEGY.md](./06_planning/ONBOARDING_GUIDE_STRATEGY.md)
+- **🆕 프로토타입 구현 계획**: [ONBOARDING_PROTOTYPES_IMPLEMENTATION.md](./06_planning/ONBOARDING_PROTOTYPES_IMPLEMENTATION.md)
+- **긴급 이슈**: [PENDING_TASKS.md](./05_todo/PENDING_TASKS.md#우선순위-높음-critical-features-)
 - **완료 내역**: [COMPLETED_TASKS.md](./04_done/COMPLETED_TASKS.md)
 - **프로토타입 역사**: [PROTOTYPE_OVERVIEW.md](./02_prototypes/PROTOTYPE_OVERVIEW.md)
 
@@ -46,13 +53,14 @@ docs/project/whoweare/
 - [ ] 각 멤버별 GitHub, Blog, LinkedIn URL 추가
 ```
 
-### 이번 주 목표 (Critical Bug Fix)
+### 이번 주 목표 (최우선 과제)
 ```bash
-# WebGL Context 문제 해결 - 최우선!
-- [ ] ThreeSceneFloatingStory.tsx cleanup 함수 점검
-- [ ] useEffect return에서 모든 리소스 해제 확인
-- [ ] renderer.dispose() 제대로 호출되는지 확인
-- [ ] 임시 해결책: 줌 횟수 제한 (5회까지만)
+# 온보딩 가이드 시스템 구현 - 최우선!
+- [ ] 진입 애니메이션 시퀀스 개발
+- [ ] 앰비언트 힌트 시스템 구축
+- [ ] localStorage 기반 재방문자 감지
+- [ ] 첫 인터랙션까지 시간 측정
+- [ ] 상세 구현은 ONBOARDING_GUIDE_STRATEGY.md 참조
 ```
 
 ### 다음 스프린트 (1-2주)
@@ -99,7 +107,8 @@ stats.showPanel(0); // FPS
 
 | 항목 | 상태 | 우선순위 |
 |------|------|----------|
-| WebGL Context 버그 | 🔴 진행중 | 최고 |
+| 온보딩 가이드 | 🔴 기획완료 | 최고 |
+| WebGL Context 버그 | ✅ 해결 | - |
 | 텍스트 선명도 | ✅ 완료 | - |
 | 프로필 이미지 | ⚠️ 부분완료 | 중간 |
 | 소셜 링크 | ❌ 미구현 | 낮음 |

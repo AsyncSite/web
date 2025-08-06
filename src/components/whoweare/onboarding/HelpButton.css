@@ -1,0 +1,125 @@
+/* Help Button Styles */
+.help-button-container {
+  position: fixed;
+  top: 140px;
+  right: 40px;
+  z-index: 999;
+  animation: fadeInHelp 0.5s ease-out 3s both;
+}
+
+@keyframes fadeInHelp {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.help-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.help-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(195, 232, 141, 0.05) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.help-button:hover {
+  background: rgba(26, 26, 46, 0.95);
+  border-color: rgba(195, 232, 141, 0.4);
+  color: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(195, 232, 141, 0.1);
+}
+
+.help-button:hover::before {
+  opacity: 1;
+}
+
+.help-button:active {
+  transform: translateY(0);
+}
+
+.help-icon {
+  font-size: 16px;
+  transition: transform 0.3s;
+}
+
+.help-button:hover .help-icon {
+  transform: rotate(15deg) scale(1.1);
+}
+
+.help-text {
+  letter-spacing: 0.02em;
+}
+
+/* Pulse animation for attention */
+.help-button.pulse {
+  animation: helpPulse 2s ease-in-out infinite;
+}
+
+@keyframes helpPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(195, 232, 141, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(195, 232, 141, 0.1);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .help-button-container {
+    top: 120px;
+    right: 20px;
+  }
+  
+  .help-button {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  
+  .help-icon {
+    font-size: 14px;
+  }
+  
+  .help-text {
+    display: none;
+  }
+  
+  .help-button.mobile-expanded .help-text {
+    display: inline;
+  }
+}

@@ -4,18 +4,18 @@ import './WhoWeAreProfileCardsPage.css';
 import userService from '../api/userService';
 import DOMPurify from 'dompurify';
 
-// Lazy load Three.js scene
-const ThreeScene = lazy(() => import('../components/whoweare/ThreeScene'));
+// Lazy load Three.js scene - HYBRID ARCHIVE
+const ThreeSceneHybridArchive = lazy(() => import('../components/whoweare/ThreeSceneHybridArchive'));
 
-// Import AI Guide components
-import AIGuideDialogue from '../components/whoweare/onboarding/AIGuideDialogue';
-import { aiGuideStore } from '../components/whoweare/onboarding/AIGuideStore';
+// Import onboarding components
+import HybridHintSystem from '../components/whoweare/onboarding/HybridHintSystem';
+import { hybridOnboardingStore } from '../components/whoweare/onboarding/OnboardingStore';
 import HelpButton from '../components/whoweare/onboarding/HelpButton';
 
 // Import team members data
 import { whoweareTeamMembers, WhoWeAreMemberData } from '../data/whoweareTeamMembers';
 
-const WhoWeArePage: React.FC = () => {
+const WhoWeAreHybridArchivePage: React.FC = () => {
   const [whoweareSelectedMember, setWhoweareSelectedMember] = useState<WhoWeAreMemberData | null>(null);
   const [whoweareIsLoading, setWhoweareIsLoading] = useState(true);
   const [whoweareLoadError, setWhoweareLoadError] = useState<string | null>(null);
@@ -25,9 +25,10 @@ const WhoWeArePage: React.FC = () => {
   const [isClosingMember, setIsClosingMember] = useState(false);
   const [combinedTeamMembers, setCombinedTeamMembers] = useState<WhoWeAreMemberData[]>(whoweareTeamMembers);
   
-  // AI Guide states
-  const [showAIGuide, setShowAIGuide] = useState(true);
-  const [currentDialogue, setCurrentDialogue] = useState('');
+  // Onboarding states
+  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [hasSelectedMember, setHasSelectedMember] = useState(false);
 
 
   // Helper function to convert hex to RGB
@@ -96,6 +97,17 @@ const WhoWeArePage: React.FC = () => {
       profileImage: member.profileImage || profileImages[imageIndex]
     };
   };
+
+  // Track member selection for onboarding
+  useEffect(() => {
+    if (whoweareSelectedMember && showOnboarding && !hasSelectedMember) {
+      hybridOnboardingStore.recordInteraction('member', whoweareSelectedMember.id);
+      if (onboardingStep === 2) {
+        setOnboardingStep(3);
+      }
+      setHasSelectedMember(true);
+    }
+  }, [whoweareSelectedMember, showOnboarding, onboardingStep, hasSelectedMember]);
 
   // Fetch admin users from backend
   useEffect(() => {
@@ -171,45 +183,22 @@ const WhoWeArePage: React.FC = () => {
     }, 150); // Wait for fade out
   };
 
-  // Handle story card selection with AI Guide interaction
+  // Handle story card selection
   const handleStoryCardSelect = useCallback((storyData: any) => {
     setSelectedStoryCard(storyData);
-    // Notify AI Guide about story card interaction
-    if (showAIGuide) {
-      aiGuideStore.recordInteraction('story', storyData?.id);
-      const dialogue = aiGuideStore.getDialogueForAction('story');
-      setCurrentDialogue(dialogue);
+    // Record story interaction for onboarding
+    if (showOnboarding) {
+      hybridOnboardingStore.recordInteraction('story', storyData?.id);
+      if (onboardingStep === 1) {
+        setOnboardingStep(2);
+      }
     }
-  }, [showAIGuide]);
-  
-  // Handle member selection with AI Guide interaction
-  const handleMemberSelect = useCallback((memberData: WhoWeAreMemberData | null) => {
-    setWhoweareSelectedMember(memberData);
-    // Notify AI Guide about member interaction
-    if (showAIGuide && memberData) {
-      aiGuideStore.recordInteraction('member', memberData.id);
-      const dialogue = aiGuideStore.getDialogueForAction('member');
-      setCurrentDialogue(dialogue);
-    }
-  }, [showAIGuide]);
+  }, [showOnboarding, onboardingStep]);
 
   // Memoized callback for Three.js scene load complete
   const handleLoadComplete = useCallback(() => {
     setWhoweareIsLoading(false);
   }, []);
-  
-  // Initialize AI Guide on first mount only
-  useEffect(() => {
-    const hasSeenGuide = localStorage.getItem('whoweare-ai-guide-seen');
-    if (!hasSeenGuide && !whoweareIsLoading) {
-      setTimeout(() => {
-        const dialogue = aiGuideStore.getDialogueForAction('intro');
-        setCurrentDialogue(dialogue);
-      }, 1000);
-    } else if (hasSeenGuide) {
-      setShowAIGuide(false);
-    }
-  }, [whoweareIsLoading]);
 
   // Memoized callback for Three.js scene load error
   const handleLoadError = useCallback((error: string) => {
@@ -218,65 +207,55 @@ const WhoWeArePage: React.FC = () => {
     setWhoweareIsLoading(false);
   }, []);
   
-  // AI Guide callbacks
-  const handleAIGuideSkip = useCallback(() => {
-    setShowAIGuide(false);
-    aiGuideStore.skip();
-    // Delay localStorage update to avoid triggering re-render
+  // Onboarding callbacks
+  const handleOnboardingSkip = useCallback(() => {
+    setShowOnboarding(false);
+    hybridOnboardingStore.skip();
+  }, []);
+  
+  const handleOnboardingComplete = useCallback(() => {
+    setShowOnboarding(false);
+    hybridOnboardingStore.complete();
+  }, []);
+  
+  const handleOnboardingInteraction = useCallback(() => {
+    const nextStep = hybridOnboardingStore.getCurrentStep();
+    setOnboardingStep(nextStep);
+  }, []);
+  
+  const handleRestartOnboarding = useCallback(() => {
+    // Reset only onboarding state, not the scene
+    setOnboardingStep(0);
+    setShowOnboarding(true);
+    setHasSelectedMember(false);
+    // Reset store but keep localStorage for now to prevent auto-start
+    hybridOnboardingStore.reset();
+    // Clear localStorage after a brief delay to avoid immediate restart
     setTimeout(() => {
-      localStorage.setItem('whoweare-ai-guide-seen', 'true');
+      localStorage.removeItem('whoweare-hybrid-onboarding');
     }, 100);
   }, []);
   
-  const handleAIGuideComplete = useCallback(() => {
-    setShowAIGuide(false);
-    aiGuideStore.complete();
-    // Delay localStorage update to avoid triggering re-render
-    setTimeout(() => {
-      localStorage.setItem('whoweare-ai-guide-seen', 'true');
-    }, 100);
-  }, []);
-  
-  const handleAIGuideResponse = useCallback((response: string) => {
-    // Handle user response to AI Guide
-    const nextDialogue = aiGuideStore.processUserResponse(response);
-    setCurrentDialogue(nextDialogue);
-  }, []);
-  
-  const handleAIGuideBack = useCallback(() => {
-    // Go back to previous dialogue
-    const previousDialogue = aiGuideStore.goBack();
-    if (previousDialogue) {
-      setCurrentDialogue(previousDialogue);
+  const handleDragInteraction = useCallback(() => {
+    if (showOnboarding && onboardingStep === 0) {
+      setOnboardingStep(1);
     }
-  }, []);
-  
-  const handleRestartAIGuide = useCallback(() => {
-    // Reset only AI Guide state, not the scene
-    aiGuideStore.reset();
-    setShowAIGuide(true);
-    // Delay dialogue start to avoid issues
-    setTimeout(() => {
-      const dialogue = aiGuideStore.getDialogueForAction('intro');
-      setCurrentDialogue(dialogue);
-      localStorage.removeItem('whoweare-ai-guide-seen');
-    }, 100);
-  }, []);
+  }, [showOnboarding, onboardingStep]);
 
   return (
     <div className="whoweare-planets-random-container">
-      {/* 3D Scene with AI Guide Character */}
+      {/* 3D Scene with Floating Story Panels */}
       {whoweareShow3D && (
         <div className="whoweare-3d-container">
           <Suspense fallback={null}>
-            <ThreeScene
+            <ThreeSceneHybridArchive
               members={combinedTeamMembers}
-              onMemberSelect={handleMemberSelect}
+              onMemberSelect={setWhoweareSelectedMember}
               onStoryCardSelect={handleStoryCardSelect}
               onLoadComplete={handleLoadComplete}
               onLoadError={handleLoadError}
               isUIActive={!!whoweareSelectedMember || !!selectedStoryCard || isClosingCard || isClosingMember}
-              showAIGuide={showAIGuide}
+              onDragInteraction={handleDragInteraction}
             />
           </Suspense>
         </div>
@@ -323,6 +302,14 @@ const WhoWeArePage: React.FC = () => {
           <div className="whoweare-loading-text">ENTERING ASYNC UNIVERSE...</div>
         </div>
       )}
+
+      {/* Navigation hint */}
+      <div className="whoweare-instructions" style={{ left: '50%', transform: 'translateX(-50%)', right: 'auto' }}>
+        <div className="whoweare-control-keys">
+          <span className="whoweare-key">하나씩 클릭해보세요</span>
+          <span className="whoweare-key">드래그로 회전이 가능해요</span>
+        </div>
+      </div>
 
       {/* Story 2D Card - Always rendered, controlled by CSS */}
       <div className={`whoweare-member-card-container ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''}`} onClick={closeStoryCard}>
@@ -405,25 +392,24 @@ const WhoWeArePage: React.FC = () => {
         )}
       </div>
       
-      {/* AI Guide Dialogue System */}
-      {showAIGuide && !whoweareIsLoading && (
-        <AIGuideDialogue
-          dialogue={currentDialogue}
-          onResponse={handleAIGuideResponse}
-          onSkip={handleAIGuideSkip}
-          onComplete={handleAIGuideComplete}
-          onBack={handleAIGuideBack}
+      {/* Hybrid Onboarding System */}
+      {showOnboarding && !whoweareIsLoading && (
+        <HybridHintSystem
+          currentStep={onboardingStep}
+          onSkip={handleOnboardingSkip}
+          onComplete={handleOnboardingComplete}
+          onInteraction={handleOnboardingInteraction}
         />
       )}
       
       {/* Help Button */}
       <HelpButton 
-        onHelp={handleRestartAIGuide}
-        isVisible={!whoweareIsLoading && !showAIGuide}
+        onHelp={handleRestartOnboarding}
+        isVisible={!whoweareIsLoading && !showOnboarding}
       />
 
     </div>
   );
 };
 
-export default WhoWeArePage;
+export default WhoWeAreHybridArchivePage;

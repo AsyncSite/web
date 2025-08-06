@@ -5,17 +5,12 @@ import userService from '../api/userService';
 import DOMPurify from 'dompurify';
 
 // Lazy load Three.js scene
-const ThreeScene = lazy(() => import('../components/whoweare/ThreeScene'));
-
-// Import AI Guide components
-import AIGuideDialogue from '../components/whoweare/onboarding/AIGuideDialogue';
-import { aiGuideStore } from '../components/whoweare/onboarding/AIGuideStore';
-import HelpButton from '../components/whoweare/onboarding/HelpButton';
+const ThreeSceneFloatingStory = lazy(() => import('../components/whoweare/ThreeSceneFloatingStory'));
 
 // Import team members data
 import { whoweareTeamMembers, WhoWeAreMemberData } from '../data/whoweareTeamMembers';
 
-const WhoWeArePage: React.FC = () => {
+const WhoWeAreOriginalPage: React.FC = () => {
   const [whoweareSelectedMember, setWhoweareSelectedMember] = useState<WhoWeAreMemberData | null>(null);
   const [whoweareIsLoading, setWhoweareIsLoading] = useState(true);
   const [whoweareLoadError, setWhoweareLoadError] = useState<string | null>(null);
@@ -24,10 +19,6 @@ const WhoWeArePage: React.FC = () => {
   const [isClosingCard, setIsClosingCard] = useState(false);
   const [isClosingMember, setIsClosingMember] = useState(false);
   const [combinedTeamMembers, setCombinedTeamMembers] = useState<WhoWeAreMemberData[]>(whoweareTeamMembers);
-  
-  // AI Guide states
-  const [showAIGuide, setShowAIGuide] = useState(true);
-  const [currentDialogue, setCurrentDialogue] = useState('');
 
 
   // Helper function to convert hex to RGB
@@ -171,45 +162,15 @@ const WhoWeArePage: React.FC = () => {
     }, 150); // Wait for fade out
   };
 
-  // Handle story card selection with AI Guide interaction
+  // Handle story card selection
   const handleStoryCardSelect = useCallback((storyData: any) => {
     setSelectedStoryCard(storyData);
-    // Notify AI Guide about story card interaction
-    if (showAIGuide) {
-      aiGuideStore.recordInteraction('story', storyData?.id);
-      const dialogue = aiGuideStore.getDialogueForAction('story');
-      setCurrentDialogue(dialogue);
-    }
-  }, [showAIGuide]);
-  
-  // Handle member selection with AI Guide interaction
-  const handleMemberSelect = useCallback((memberData: WhoWeAreMemberData | null) => {
-    setWhoweareSelectedMember(memberData);
-    // Notify AI Guide about member interaction
-    if (showAIGuide && memberData) {
-      aiGuideStore.recordInteraction('member', memberData.id);
-      const dialogue = aiGuideStore.getDialogueForAction('member');
-      setCurrentDialogue(dialogue);
-    }
-  }, [showAIGuide]);
+  }, []);
 
   // Memoized callback for Three.js scene load complete
   const handleLoadComplete = useCallback(() => {
     setWhoweareIsLoading(false);
   }, []);
-  
-  // Initialize AI Guide on first mount only
-  useEffect(() => {
-    const hasSeenGuide = localStorage.getItem('whoweare-ai-guide-seen');
-    if (!hasSeenGuide && !whoweareIsLoading) {
-      setTimeout(() => {
-        const dialogue = aiGuideStore.getDialogueForAction('intro');
-        setCurrentDialogue(dialogue);
-      }, 1000);
-    } else if (hasSeenGuide) {
-      setShowAIGuide(false);
-    }
-  }, [whoweareIsLoading]);
 
   // Memoized callback for Three.js scene load error
   const handleLoadError = useCallback((error: string) => {
@@ -217,66 +178,20 @@ const WhoWeArePage: React.FC = () => {
     setWhoweareShow3D(false);
     setWhoweareIsLoading(false);
   }, []);
-  
-  // AI Guide callbacks
-  const handleAIGuideSkip = useCallback(() => {
-    setShowAIGuide(false);
-    aiGuideStore.skip();
-    // Delay localStorage update to avoid triggering re-render
-    setTimeout(() => {
-      localStorage.setItem('whoweare-ai-guide-seen', 'true');
-    }, 100);
-  }, []);
-  
-  const handleAIGuideComplete = useCallback(() => {
-    setShowAIGuide(false);
-    aiGuideStore.complete();
-    // Delay localStorage update to avoid triggering re-render
-    setTimeout(() => {
-      localStorage.setItem('whoweare-ai-guide-seen', 'true');
-    }, 100);
-  }, []);
-  
-  const handleAIGuideResponse = useCallback((response: string) => {
-    // Handle user response to AI Guide
-    const nextDialogue = aiGuideStore.processUserResponse(response);
-    setCurrentDialogue(nextDialogue);
-  }, []);
-  
-  const handleAIGuideBack = useCallback(() => {
-    // Go back to previous dialogue
-    const previousDialogue = aiGuideStore.goBack();
-    if (previousDialogue) {
-      setCurrentDialogue(previousDialogue);
-    }
-  }, []);
-  
-  const handleRestartAIGuide = useCallback(() => {
-    // Reset only AI Guide state, not the scene
-    aiGuideStore.reset();
-    setShowAIGuide(true);
-    // Delay dialogue start to avoid issues
-    setTimeout(() => {
-      const dialogue = aiGuideStore.getDialogueForAction('intro');
-      setCurrentDialogue(dialogue);
-      localStorage.removeItem('whoweare-ai-guide-seen');
-    }, 100);
-  }, []);
 
   return (
     <div className="whoweare-planets-random-container">
-      {/* 3D Scene with AI Guide Character */}
+      {/* 3D Scene with Floating Story Panels */}
       {whoweareShow3D && (
         <div className="whoweare-3d-container">
           <Suspense fallback={null}>
-            <ThreeScene
+            <ThreeSceneFloatingStory
               members={combinedTeamMembers}
-              onMemberSelect={handleMemberSelect}
+              onMemberSelect={setWhoweareSelectedMember}
               onStoryCardSelect={handleStoryCardSelect}
               onLoadComplete={handleLoadComplete}
               onLoadError={handleLoadError}
               isUIActive={!!whoweareSelectedMember || !!selectedStoryCard || isClosingCard || isClosingMember}
-              showAIGuide={showAIGuide}
             />
           </Suspense>
         </div>
@@ -323,6 +238,14 @@ const WhoWeArePage: React.FC = () => {
           <div className="whoweare-loading-text">ENTERING ASYNC UNIVERSE...</div>
         </div>
       )}
+
+      {/* Navigation hint */}
+      <div className="whoweare-instructions" style={{ left: '50%', transform: 'translateX(-50%)', right: 'auto' }}>
+        <div className="whoweare-control-keys">
+          <span className="whoweare-key">하나씩 클릭해보세요</span>
+          <span className="whoweare-key">드래그로 회전이 가능해요</span>
+        </div>
+      </div>
 
       {/* Story 2D Card - Always rendered, controlled by CSS */}
       <div className={`whoweare-member-card-container ${selectedStoryCard ? 'active' : ''} ${isClosingCard ? 'closing' : ''}`} onClick={closeStoryCard}>
@@ -404,26 +327,9 @@ const WhoWeArePage: React.FC = () => {
           </div>
         )}
       </div>
-      
-      {/* AI Guide Dialogue System */}
-      {showAIGuide && !whoweareIsLoading && (
-        <AIGuideDialogue
-          dialogue={currentDialogue}
-          onResponse={handleAIGuideResponse}
-          onSkip={handleAIGuideSkip}
-          onComplete={handleAIGuideComplete}
-          onBack={handleAIGuideBack}
-        />
-      )}
-      
-      {/* Help Button */}
-      <HelpButton 
-        onHelp={handleRestartAIGuide}
-        isVisible={!whoweareIsLoading && !showAIGuide}
-      />
 
     </div>
   );
 };
 
-export default WhoWeArePage;
+export default WhoWeAreOriginalPage;

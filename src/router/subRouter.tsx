@@ -20,6 +20,8 @@ const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPa
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const StudyPlanPage = lazy(() => import('../pages/StudyPlanPage'));
 const WhoWeArePage = lazy(() => import('../pages/WhoWeArePage'));
+const WhoWeAreOriginalPage = lazy(() => import('../pages/WhoWeAreOriginalPage'));
+const WhoWeAreHybridArchivePage = lazy(() => import('../pages/WhoWeAreHybridArchivePage'));
 
 const subRouter = [
   // 스터디 관련 라우트
@@ -116,15 +118,33 @@ const subRouter = [
     element: <LabDetailPage />,
   },
   
-  // Who We Are 페이지
+  // Who We Are 페이지 (AI Guide 버전이 메인)
   {
     path: 'whoweare',
     element: <WhoWeArePage />,
   },
-  // Legacy URL redirect
+  // Who We Are 아카이브: Original 버전
+  {
+    path: 'whoweare-original',
+    element: <WhoWeAreOriginalPage />,
+  },
+  // Who We Are 아카이브: Hybrid 프로토타입
+  {
+    path: 'whoweare-hybrid-archive',
+    element: <WhoWeAreHybridArchivePage />,
+  },
+  // Legacy URL redirects
   {
     path: 'whoweare-profile-cards-floating',
     element: <Navigate to="/whoweare" replace />,
+  },
+  {
+    path: 'whoweare-ai-guide',
+    element: <Navigate to="/whoweare" replace />,
+  },
+  {
+    path: 'whoweare-hybrid',
+    element: <Navigate to="/whoweare-hybrid-archive" replace />,
   },
 ];
 export default subRouter;
