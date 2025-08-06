@@ -137,10 +137,12 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
         camera.position.set(0, 3, 25);
         cameraRef.current = camera;
 
-        // WebGL Renderer
+        // WebGL Renderer with high performance settings
         const renderer = new THREE.WebGLRenderer({ 
           antialias: true,
-          alpha: true 
+          alpha: true,
+          powerPreference: "high-performance",
+          preserveDrawingBuffer: false
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -283,38 +285,48 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
           const createTextTexture = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { alpha: false });
-            canvas.width = 512; // Optimized resolution
-            canvas.height = 384; // Optimized resolution
+            
+            // Apply DPR for sharper text on high-DPI displays
+            const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
+            const baseWidth = 1024; // Increased from 512
+            const baseHeight = 768; // Increased from 384
+            
+            canvas.width = baseWidth * dpr;
+            canvas.height = baseHeight * dpr;
+            canvas.style.width = baseWidth + 'px';
+            canvas.style.height = baseHeight + 'px';
             
             if (ctx) {
+              // Scale context to match DPR
+              ctx.scale(dpr, dpr);
               
               // Clear canvas
               ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-              ctx.fillRect(0, 0, 512, 384);
+              ctx.fillRect(0, 0, baseWidth, baseHeight);
               
               // Add stronger background for better text visibility
-              const bgGradient = ctx.createRadialGradient(256, 192, 0, 256, 192, 300);
+              const bgGradient = ctx.createRadialGradient(baseWidth/2, baseHeight/2, 0, baseWidth/2, baseHeight/2, baseWidth * 0.6);
               bgGradient.addColorStop(0, 'rgba(10, 10, 10, 0.95)');
               bgGradient.addColorStop(0.7, 'rgba(10, 10, 10, 0.85)');
               bgGradient.addColorStop(1, 'rgba(10, 10, 10, 0.7)');
               ctx.fillStyle = bgGradient;
-              ctx.fillRect(0, 0, 512, 384);
+              ctx.fillRect(0, 0, baseWidth, baseHeight);
               
               // Add subtle glow background for title
               if (panel.title) {
-                const titleGlow = ctx.createRadialGradient(256, 75, 0, 256, 75, 150);
+                const titleGlow = ctx.createRadialGradient(baseWidth/2, 150, 0, baseWidth/2, 150, 300);
                 titleGlow.addColorStop(0, 'rgba(195, 232, 141, 0.15)');
                 titleGlow.addColorStop(1, 'rgba(195, 232, 141, 0)');
                 ctx.fillStyle = titleGlow;
-                ctx.fillRect(0, 0, 512, 150);
+                ctx.fillRect(0, 0, baseWidth, 300);
               }
               
               // Title with maximum clarity
               if (panel.title) {
                 const titleLines = panel.title.split('\n');
-                const lineHeight = 45; // Font size is 37px, so this gives some space
+                const lineHeight = 90; // Doubled for new resolution
                 const totalHeight = (titleLines.length - 1) * lineHeight;
-                const startY = 75 - totalHeight / 2;
+                const startY = 150 - totalHeight / 2; // Doubled from 75
 
                 // Multiple shadow layers for better visibility
                 ctx.shadowColor = '#000000';
@@ -324,18 +336,18 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
                 
                 // Draw title multiple times for bold effect
                 ctx.fillStyle = '#C3E88D';
-                ctx.font = '600 37px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                ctx.font = '600 74px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'; // Doubled font size
                 ctx.textAlign = 'center';
                 
                 titleLines.forEach((line, i) => {
                   const y = startY + i * lineHeight;
                   // Draw shadow layer
-                  ctx.fillText(line, 256, y);
+                  ctx.fillText(line, baseWidth/2, y);
                   
                   // Draw main text
                   ctx.shadowBlur = 5;
                   ctx.shadowOffsetY = 1;
-                  ctx.fillText(line, 256, y);
+                  ctx.fillText(line, baseWidth/2, y);
                 });
                 
                 ctx.shadowBlur = 0;
@@ -344,7 +356,7 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               
               // Content with maximum readability
               ctx.fillStyle = '#ffffff';
-              ctx.font = '400 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+              ctx.font = '400 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'; // Doubled font size
               ctx.textAlign = 'center';
               ctx.shadowColor = '#000000';
               ctx.shadowBlur = 20;
@@ -354,25 +366,33 @@ const ThreeSceneFloatingStory: React.FC<ThreeSceneFloatingStoryProps> = ({
               const lines = panel.content.split('\n');
               lines.forEach((line, i) => {
                 // Draw shadow layer
-                ctx.fillText(line, 256, 160 + i * 35);
+                ctx.fillText(line, baseWidth/2, 320 + i * 70); // Doubled positions
               });
               
               // Draw text again with less shadow for crisp edges
               ctx.shadowBlur = 5;
               ctx.shadowOffsetY = 2;
               lines.forEach((line, i) => {
-                ctx.fillText(line, 256, 160 + i * 35);
+                ctx.fillText(line, baseWidth/2, 320 + i * 70); // Doubled positions
               });
               
               // Final layer for maximum sharpness
               ctx.shadowBlur = 0;
               ctx.shadowOffsetY = 0;
               lines.forEach((line, i) => {
-                ctx.fillText(line, 256, 160 + i * 35);
+                ctx.fillText(line, baseWidth/2, 320 + i * 70); // Doubled positions
               });
             }
             
-            return new THREE.CanvasTexture(canvas);
+            const texture = new THREE.CanvasTexture(canvas);
+            // Optimize texture filtering for clarity
+            texture.minFilter = THREE.LinearMipmapLinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            texture.generateMipmaps = true;
+            texture.needsUpdate = true;
+            
+            return texture;
           };
           
           // Create front text
