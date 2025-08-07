@@ -481,21 +481,47 @@
   color: var(--member-color);
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .whoweare-member-panel {
-    width: 90%;
-    right: 5%;
-    left: 5%;
-    transform: translateY(-50%);
-  }
-
+/* Responsive adjustments - Tablet */
+@media (max-width: 1024px) and (min-width: 769px) {
   .whoweare-header {
-    top: 80px;
+    top: 90px;
   }
 
   .whoweare-header h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
+  }
+  
+  .whoweare-member-panel {
+    width: 450px;
+    right: 30px;
+  }
+}
+
+/* Responsive adjustments - Mobile */
+@media (max-width: 768px) {
+  .whoweare-member-panel {
+    width: calc(100% - 40px);
+    max-width: 400px;
+    right: 50%;
+    left: auto;
+    transform: translateX(50%) translateY(-50%);
+    margin: 0;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .whoweare-header {
+    top: 60px;
+    padding: 0 20px;
+  }
+
+  .whoweare-header h1 {
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  .whoweare-subtitle {
+    font-size: 0.9rem;
   }
 
   .whoweare-instructions {
@@ -505,5 +531,89 @@
   .whoweare-fallback-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 20px;
+    padding: 20px;
+  }
+  
+  .whoweare-3d-container {
+    touch-action: pan-y pinch-zoom;
+  }
+  
+  /* Story card adjustments for mobile */
+  .story-card-overlay {
+    width: calc(100% - 40px);
+    max-width: 400px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .story-card-title {
+    font-size: 1.3rem;
+  }
+  
+  .story-card-content {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+
+/* Responsive adjustments - Small Mobile */
+@media (max-width: 480px) {
+  .whoweare-header {
+    top: 40px;
+  }
+
+  .whoweare-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .whoweare-member-panel {
+    width: calc(100% - 20px);
+    padding: 20px;
+  }
+  
+  .whoweare-member-avatar {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .whoweare-member-name {
+    font-size: 1.4rem;
+  }
+  
+  .whoweare-member-role {
+    font-size: 0.9rem;
+  }
+  
+  .whoweare-member-quote {
+    font-size: 0.85rem;
+    padding: 15px;
+  }
+  
+  .whoweare-member-story {
+    font-size: 0.85rem;
+  }
+  
+  .story-card-overlay {
+    width: calc(100% - 20px);
+    padding: 15px;
+  }
+}
+
+/* Landscape orientation handling */
+@media (max-height: 500px) and (orientation: landscape) {
+  .whoweare-header {
+    top: 20px;
+  }
+  
+  .whoweare-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .whoweare-member-panel,
+  .story-card-overlay {
+    max-height: calc(100vh - 40px);
   }
 }

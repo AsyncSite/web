@@ -10,6 +10,9 @@ interface ThreeSceneAIGuideProps {
   isUIActive?: boolean;
   showAIGuide?: boolean;
   aiGuidePosition?: { x: number; y: number; z: number };
+  // New optional props for mobile support - doesn't affect existing usage
+  renderQuality?: 'high' | 'medium' | 'low';
+  deviceType?: 'desktop' | 'mobile' | 'tablet';
 }
 
 const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({ 
@@ -20,7 +23,9 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
   onStoryCardSelect,
   isUIActive = false,
   showAIGuide = true,
-  aiGuidePosition = { x: 0, y: 0, z: 0 }
+  aiGuidePosition = { x: 0, y: 0, z: 0 },
+  renderQuality = 'high', // Default to high for backward compatibility
+  deviceType = 'desktop' // Default to desktop for backward compatibility
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<any>(null);
@@ -164,21 +169,33 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
         camera.position.set(0, 3, 25);
         cameraRef.current = camera;
 
-        // WebGL Renderer with high performance settings
+        // WebGL Renderer with performance settings based on device
         const renderer = new THREE.WebGLRenderer({ 
-          antialias: true,
+          antialias: deviceType === 'desktop' ? true : renderQuality !== 'low', // Reduce antialiasing on low-end mobile
           alpha: true,
-          powerPreference: "high-performance",
+          powerPreference: deviceType === 'desktop' ? "high-performance" : "default",
           preserveDrawingBuffer: false
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        // Pixel ratio optimization based on device
+        if (deviceType === 'desktop') {
+          // Desktop keeps original behavior
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        } else if (deviceType === 'tablet') {
+          // Tablet optimization
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, renderQuality === 'high' ? 2 : 1.5));
+        } else {
+          // Mobile optimization
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, renderQuality === 'low' ? 1 : 1.5));
+        }
+        
         renderer.shadowMap.enabled = false; // Disable shadows for performance
         mountRef.current.appendChild(renderer.domElement);
         rendererRef.current = renderer;
 
 
-        // Controls with smoother interaction
+        // Controls with device-optimized settings
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.08; // Increased for smoother damping
@@ -186,9 +203,33 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
         controls.maxDistance = 50;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 0.3;
-        controls.rotateSpeed = 0.8; // Slightly slower rotation for better control
-        controls.zoomSpeed = 0.8; // Smoother zoom
-        controls.panSpeed = 0.8; // Smoother panning
+        
+        // Adjust control speeds based on device type
+        if (deviceType === 'desktop') {
+          // Desktop keeps original settings
+          controls.rotateSpeed = 0.8;
+          controls.zoomSpeed = 0.8;
+          controls.panSpeed = 0.8;
+        } else if (deviceType === 'tablet') {
+          // Tablet optimized settings
+          controls.rotateSpeed = 0.6; // Slower for more precise touch control
+          controls.zoomSpeed = 1.0; // Faster zoom for pinch gesture
+          controls.panSpeed = 0.6;
+          controls.touches = {
+            ONE: THREE.TOUCH.ROTATE,
+            TWO: THREE.TOUCH.DOLLY_PAN
+          };
+        } else {
+          // Mobile optimized settings
+          controls.rotateSpeed = 0.5; // Even slower for small screens
+          controls.zoomSpeed = 1.2; // Fast zoom for pinch
+          controls.panSpeed = 0.5;
+          controls.touches = {
+            ONE: THREE.TOUCH.ROTATE,
+            TWO: THREE.TOUCH.DOLLY_PAN
+          };
+        }
+        
         controlsRef.current = controls;
 
         // Optimized lighting
@@ -219,15 +260,35 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
         
         const particleTexture = new THREE.CanvasTexture(canvas);
         
-        // Create multiple layers of stars for depth
-        const starLayers = [
-          { count: 3500, size: 0.02, range: 250, opacity: 0.6, color: 0xffffff }, // Very distant stars
-          { count: 2500, size: 0.03, range: 180, opacity: 0.7, color: 0xffffdd }, // Distant stars
-          { count: 2000, size: 0.05, range: 120, opacity: 0.8, color: 0xffffcc }, // Mid-distance stars
-          { count: 1500, size: 0.08, range: 80, opacity: 0.9, color: 0xC3E88D }, // Closer stars
-          { count: 1000, size: 0.12, range: 40, opacity: 1.0, color: 0xC3E88D }, // Nearest stars
-          { count: 800, size: 0.06, range: 25, opacity: 0.85, color: 0xffffff }, // Very close small stars
-        ];
+        // Create multiple layers of stars for depth - optimized by quality
+        let starLayers;
+        if (deviceType === 'desktop' || renderQuality === 'high') {
+          // Desktop and high quality keep original particle counts
+          starLayers = [
+            { count: 3500, size: 0.02, range: 250, opacity: 0.6, color: 0xffffff }, // Very distant stars
+            { count: 2500, size: 0.03, range: 180, opacity: 0.7, color: 0xffffdd }, // Distant stars
+            { count: 2000, size: 0.05, range: 120, opacity: 0.8, color: 0xffffcc }, // Mid-distance stars
+            { count: 1500, size: 0.08, range: 80, opacity: 0.9, color: 0xC3E88D }, // Closer stars
+            { count: 1000, size: 0.12, range: 40, opacity: 1.0, color: 0xC3E88D }, // Nearest stars
+            { count: 800, size: 0.06, range: 25, opacity: 0.85, color: 0xffffff }, // Very close small stars
+          ];
+        } else if (renderQuality === 'medium') {
+          // Tablet/Medium quality - reduced particles (60% of original)
+          starLayers = [
+            { count: 2100, size: 0.03, range: 250, opacity: 0.6, color: 0xffffff },
+            { count: 1500, size: 0.04, range: 180, opacity: 0.7, color: 0xffffdd },
+            { count: 1200, size: 0.06, range: 120, opacity: 0.8, color: 0xffffcc },
+            { count: 900, size: 0.09, range: 80, opacity: 0.9, color: 0xC3E88D },
+            { count: 500, size: 0.08, range: 25, opacity: 0.85, color: 0xffffff },
+          ];
+        } else {
+          // Mobile/Low quality - minimal particles (30% of original)
+          starLayers = [
+            { count: 1000, size: 0.04, range: 200, opacity: 0.7, color: 0xffffff },
+            { count: 600, size: 0.06, range: 120, opacity: 0.8, color: 0xffffdd },
+            { count: 400, size: 0.10, range: 60, opacity: 0.9, color: 0xC3E88D },
+          ];
+        }
         
         starLayers.forEach((layer, layerIndex) => {
           const particlesGeometry = new THREE.BufferGeometry();
@@ -1727,8 +1788,8 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
         const core = new THREE.Mesh(coreGeometry, coreMaterial);
         aiGuideGroup.add(core);
         
-        // Add particle effect around the guide
-        const particleCount = 20;
+        // Add particle effect around the guide - optimized for device
+        const particleCount = deviceType === 'desktop' ? 20 : (renderQuality === 'medium' ? 12 : 8);
         const particlesGeometry = new THREE.BufferGeometry();
         const positions = new Float32Array(particleCount * 3);
         

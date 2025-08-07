@@ -24,6 +24,9 @@ const WhoWeArePage: React.FC = () => {
   const [isClosingCard, setIsClosingCard] = useState(false);
   const [isClosingMember, setIsClosingMember] = useState(false);
   const [combinedTeamMembers, setCombinedTeamMembers] = useState<WhoWeAreMemberData[]>(whoweareTeamMembers);
+  // New state for quality settings - doesn't affect existing desktop behavior
+  const [renderQuality, setRenderQuality] = useState<'high' | 'medium' | 'low'>('high');
+  const [deviceType, setDeviceType] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
   
   // AI Guide states
   const [showAIGuide, setShowAIGuide] = useState(true);
@@ -123,20 +126,72 @@ const WhoWeArePage: React.FC = () => {
   }, []);
 
 
-  // Check WebGL support
+  // Check WebGL support and device capabilities
   React.useEffect(() => {
     const checkWebGLSupport = () => {
       try {
         const canvas = document.createElement('canvas');
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const isLowPerformance = navigator.hardwareConcurrency ? navigator.hardwareConcurrency < 4 : false;
         
-        if (!gl || isMobile || isLowPerformance) {
-          setWhoweareShow3D(false);
-          setWhoweareIsLoading(false);
+        // Device detection - improved logic
+        const userAgent = navigator.userAgent;
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+        const isTablet = /iPad|Android(?!.*Mobile)/i.test(userAgent);
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const screenWidth = window.innerWidth;
+        
+        // Performance detection
+        const cores = navigator.hardwareConcurrency || 2;
+        const isLowPerformance = cores < 4;
+        
+        // Determine device type for new state (doesn't affect existing logic)
+        if (!isMobile && !isTablet) {
+          setDeviceType('desktop');
+        } else if (isTablet || (isTouchDevice && screenWidth >= 768)) {
+          setDeviceType('tablet');
+        } else {
+          setDeviceType('mobile');
+        }
+        
+        // PRESERVED DESKTOP LOGIC - Desktop users see no change
+        if (!isMobile && !isTablet) {
+          // Desktop path - exactly as before
+          if (!gl || isLowPerformance) {
+            setWhoweareShow3D(false);
+            setWhoweareIsLoading(false);
+          }
+          // Desktop keeps high quality by default
+          setRenderQuality('high');
+        } 
+        // NEW MOBILE/TABLET LOGIC - Added without affecting desktop
+        else {
+          // Check if WebGL is supported
+          if (!gl) {
+            // No WebGL - disable 3D (safety fallback)
+            setWhoweareShow3D(false);
+            setWhoweareIsLoading(false);
+          } else {
+            // WebGL supported on mobile/tablet - enable with appropriate quality
+            setWhoweareShow3D(true); // Enable 3D for capable mobile devices
+            
+            // Set quality based on device and performance
+            if (isTablet && cores >= 4) {
+              setRenderQuality('medium');
+            } else if (isMobile && cores >= 6) {
+              setRenderQuality('medium');
+            } else if (isMobile && cores >= 4) {
+              setRenderQuality('low');
+            } else if (cores < 4) {
+              // Very low-end mobile - disable 3D
+              setWhoweareShow3D(false);
+              setWhoweareIsLoading(false);
+            } else {
+              setRenderQuality('low');
+            }
+          }
         }
       } catch (e) {
+        // Error fallback - same as before
         setWhoweareShow3D(false);
         setWhoweareIsLoading(false);
       }
@@ -277,6 +332,8 @@ const WhoWeArePage: React.FC = () => {
               onLoadError={handleLoadError}
               isUIActive={!!whoweareSelectedMember || !!selectedStoryCard || isClosingCard || isClosingMember}
               showAIGuide={showAIGuide}
+              renderQuality={renderQuality}
+              deviceType={deviceType}
             />
           </Suspense>
         </div>

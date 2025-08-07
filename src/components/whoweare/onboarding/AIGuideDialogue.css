@@ -311,18 +311,34 @@
   color: rgba(195, 232, 141, 0.9);
 }
 
-/* Mobile Responsive */
+/* Tablet Responsive */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .ai-guide-dialogue-container {
+    bottom: 30px;
+    left: 30px;
+    max-width: 450px;
+  }
+  
+  .ai-guide-bubble {
+    max-width: 380px;
+  }
+}
+
+/* Mobile Responsive - Standard */
 @media (max-width: 768px) {
   .ai-guide-dialogue-container {
     bottom: 20px;
     left: 20px;
     right: 20px;
     max-width: calc(100% - 40px);
+    flex-direction: row;
+    align-items: flex-end;
   }
   
   .ai-guide-avatar {
     width: 60px;
     height: 60px;
+    flex-shrink: 0;
   }
   
   .avatar-core {
@@ -347,41 +363,131 @@
   .ai-guide-bubble {
     max-width: calc(100% - 80px);
     padding: 15px;
-    padding-top: 32px; /* 모바일에서도 버튼 공간 확보 */
-  }
-  
-  .bubble-content {
-    /* 모바일에서도 적절한 여백 */
+    padding-top: 32px;
+    flex-grow: 1;
   }
   
   .bubble-text {
     font-size: 14px;
+    line-height: 1.5;
   }
   
   .choice-buttons {
-    /* 모바일에서도 적절한 여백 */
+    flex-wrap: wrap;
+    gap: 8px;
   }
   
   .choice-button {
     font-size: 13px;
-    padding: 8px 12px;
+    padding: 10px 14px;
+    min-height: 44px; /* Touch target minimum */
+    flex: 1 1 auto;
+    min-width: 120px;
   }
   
   .dialogue-buttons {
     top: 6px;
     right: 8px;
     gap: 4px;
-    animation: fadeInButtons 0.3s ease-out;
   }
   
   .back-guide-button {
-    padding: 3px 6px;
+    padding: 6px 8px;
     font-size: 12px;
-    min-width: 24px;
+    min-width: 32px;
+    min-height: 32px;
   }
   
   .skip-guide-button {
-    padding: 3px 8px;
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 32px;
+  }
+}
+
+/* Mobile Responsive - Small Phones */
+@media (max-width: 480px) {
+  .ai-guide-dialogue-container {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  .ai-guide-avatar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .avatar-core {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .avatar-emoji {
+    font-size: 24px;
+  }
+  
+  .avatar-glow {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .avatar-ring {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .ai-guide-bubble {
+    max-width: calc(100% - 60px);
+    padding: 12px;
+    padding-top: 30px;
+  }
+  
+  .bubble-text {
+    font-size: 13px;
+  }
+  
+  .choice-button {
+    font-size: 12px;
+    padding: 10px 12px;
+    width: 100%;
+  }
+  
+  .dialogue-buttons {
+    top: 4px;
+    right: 6px;
+  }
+  
+  .back-guide-button,
+  .skip-guide-button {
     font-size: 10px;
+  }
+}
+
+/* Mobile Responsive - Landscape Orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+  .ai-guide-dialogue-container {
+    bottom: 10px;
+    max-height: calc(100vh - 100px);
+  }
+  
+  .ai-guide-bubble {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+  
+  .ai-guide-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .avatar-core {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .avatar-emoji {
+    font-size: 20px;
   }
 }
