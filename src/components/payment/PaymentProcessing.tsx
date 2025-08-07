@@ -42,10 +42,7 @@ const PaymentProcessing: React.FC<PaymentProcessingProps> = ({ method, provider 
 
   const getMethodName = () => {
     const methodNames: Record<PaymentMethod, string> = {
-      card: '카드 결제',
-      transfer: '계좌이체',
       virtualAccount: '가상계좌',
-      phone: '휴대폰 결제',
       easyPay: '간편결제'
     };
     return methodNames[method];
