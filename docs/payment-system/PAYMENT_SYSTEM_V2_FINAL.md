@@ -29,6 +29,7 @@ sequenceDiagram
     G->>PC: 결제 준비 요청
     PC->>PC: Transaction 생성 (status: 10)
     PC-->>F: transactionId, amount, callback URLs 반환
+    F->>F: SessionStorage에 transactionId 저장
     
     alt 가상계좌
         F->>T: 가상계좌 발급 요청
@@ -37,35 +38,53 @@ sequenceDiagram
         Note over U,T: 입금 대기...
         T->>G: Webhook: 입금 완료
         G->>PC: POST /webhooks/payment
-        PC->>PG: 결제 검증 요청
+        PC->>PG: 결제 검증 요청 (gRPC/REST)
         PG->>T: S2S 검증 API 호출
         T-->>PG: 검증 결과
         PG-->>PC: 검증 완료
+        PC->>PC: Transaction 업데이트 (status: 40)
     else 간편결제
         Note over F,T: successUrl = backend/api/payments/callback/success
         Note over F,T: failUrl = backend/api/payments/callback/fail
         F->>T: 결제창 호출 (with backend URLs)
         U->>T: 결제 승인
-        T->>G: GET /api/payments/callback/success?paymentKey=xxx
-        G->>PC: 결제 콜백 처리
-        PC->>PG: 결제 검증 요청
-        PG->>T: S2S 검증 API 호출
-        T-->>PG: 검증 결과
-        PG-->>PC: 검증 완료
+        
+        rect rgb(255, 245, 230)
+            Note over T,PC: Backend S2S 처리
+            T->>G: GET /api/payments/callback/success?paymentKey=xxx
+            G->>PC: 결제 콜백 처리
+            PC->>PG: 결제 검증 요청 (gRPC/REST)
+            PG->>T: S2S 검증 API 호출
+            T-->>PG: 검증 결과
+            PG-->>PC: 검증 완료
+            PC->>PC: Transaction 업데이트 (status: 40)
+            PC->>F: 302 Redirect to /payment/success?transactionId=xxx
+        end
+        
+        rect rgb(230, 245, 255)
+            Note over F,PC: Frontend Polling (Smart Retry)
+            F->>F: SessionStorage에서 transactionId 조회
+            loop Exponential Backoff (0s→1s→2s→3s→5s)
+                F->>G: GET /api/payments/{transactionId}/status
+                G->>PC: Transaction 상태 조회
+                PC-->>F: status 반환
+                alt status == PENDING
+                    F->>F: Wait & Retry
+                else status == COMPLETED
+                    F->>F: Break loop
+                end
+            end
+        end
     end
     
-    PC->>PC: Transaction 업데이트 (status: 40)
-    PC->>PR: 지급 요청 이벤트
+    Note over PC,PR: 비동기 지급 처리
+    PC->>PR: 지급 요청 이벤트 (Kafka/RabbitMQ)
     PR->>S: 스터디 등록
     S-->>PR: 등록 완료
     PR->>PC: 지급 완료 통지
     PC->>PC: Transaction 완료 (status: 50)
     
-    alt 간편결제 콜백
-        PC->>F: 302 Redirect to /payment/success
-    end
-    
-    F->>U: 성공 화면
+    F->>U: 성공 화면 (with transaction details)
 ```
 
 ## 3. Backend Architecture
@@ -485,7 +504,243 @@ class PaymentCallbackController(
 }
 ```
 
-## 9. Error Handling
+## 9. Payment Response Handling Strategy
+
+### 9.1 Core Problem: Asynchronous Payment Processing
+
+결제 시스템의 핵심 과제는 **비동기 처리와 즉시 응답의 간극**을 해결하는 것입니다.
+
+#### 타이밍 문제
+```
+[Timeline]
+T+0ms: 토스페이먼츠에서 결제 승인
+T+1ms: 토스 → Frontend 리다이렉트 (GET /payment/success)
+T+10ms: Frontend 도착, Transaction 조회 시도 ⚠️ 아직 PENDING!
+T+50ms: 토스 → Backend Callback 도착
+T+100ms: Backend DB 업데이트 완료
+```
+
+#### 결제 유형별 문제점
+- **가상계좌**: 입금 시점 예측 불가 (몇 분 ~ 3일)
+- **간편결제**: 리다이렉트로 원래 요청 컨텍스트 손실
+- **공통 문제**: Frontend가 Backend보다 빨리 도착
+
+### 9.2 Solution: Transaction ID + Smart Polling
+
+#### Core Concept
+```
+1. 결제 준비 → Transaction ID 즉시 발급
+2. 로컬 스토리지에 Transaction ID 저장
+3. 결제 후 리다이렉트 → Transaction 상태 조회
+4. Exponential Backoff으로 Smart Polling
+```
+
+#### Frontend Implementation
+```typescript
+// hooks/usePaymentResult.ts
+const usePaymentResult = (transactionId: string) => {
+  const [state, setState] = useState({
+    status: 'CHECKING',
+    transaction: null,
+    attemptCount: 0
+  });
+
+  useEffect(() => {
+    let mounted = true;
+    let timeoutId: NodeJS.Timeout;
+
+    const checkTransaction = async () => {
+      // Exponential Backoff: 0s → 1s → 2s → 3s → 5s
+      const delays = [0, 1000, 2000, 3000, 5000];
+      const delay = delays[Math.min(state.attemptCount, delays.length - 1)];
+      
+      if (delay > 0) {
+        await new Promise(resolve => {
+          timeoutId = setTimeout(resolve, delay);
+        });
+      }
+      
+      if (!mounted) return;
+      
+      try {
+        const result = await api.getTransaction(transactionId);
+        
+        if (result.status === 'PENDING' && state.attemptCount < 20) {
+          setState(prev => ({
+            ...prev,
+            attemptCount: prev.attemptCount + 1
+          }));
+          checkTransaction(); // 재귀 호출
+        } else {
+          setState({
+            status: 'RESOLVED',
+            transaction: result,
+            attemptCount: state.attemptCount
+          });
+        }
+      } catch (error) {
+        setState({
+          status: 'ERROR',
+          transaction: null,
+          error
+        });
+      }
+    };
+
+    checkTransaction();
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [transactionId]);
+
+  return state;
+};
+```
+
+#### Payment Result Page
+```typescript
+const PaymentResultPage: React.FC = () => {
+  const transactionId = sessionStorage.getItem('currentTransaction');
+  const { status, transaction } = usePaymentResult(transactionId);
+  
+  // 처리 중 UI (불안감 해소)
+  if (status === 'CHECKING') {
+    return (
+      <ProcessingView>
+        <Spinner />
+        <h2>결제를 확인하고 있습니다</h2>
+        <p>잠시만 기다려주세요... (보통 2-3초)</p>
+        <ProgressIndicator attemptCount={attemptCount} />
+      </ProcessingView>
+    );
+  }
+  
+  // 성공
+  if (status === 'RESOLVED' && transaction?.status === 'COMPLETED') {
+    return <PaymentSuccessView transaction={transaction} />;
+  }
+  
+  // 타임아웃 (30초 후)
+  if (status === 'RESOLVED' && transaction?.status === 'PENDING') {
+    return (
+      <DelayedView>
+        <h2>결제 처리가 지연되고 있습니다</h2>
+        <p>잠시 후 주문 내역에서 확인해주세요</p>
+        <Link to="/orders">주문 내역 보기</Link>
+      </DelayedView>
+    );
+  }
+  
+  return <PaymentErrorView />;
+};
+```
+
+### 9.3 Backend API Design for Polling
+
+#### Transaction Status Endpoint
+```kotlin
+// payment.core/adapter/in/web/TransactionController.kt
+@RestController
+@RequestMapping("/api/payments")
+class TransactionController(
+    private val transactionService: TransactionService
+) {
+    
+    @GetMapping("/{transactionId}/status")
+    suspend fun getTransactionStatus(
+        @PathVariable transactionId: String
+    ): ResponseEntity<TransactionStatusResponse> {
+        val transaction = transactionService.findById(transactionId)
+        
+        return ResponseEntity.ok(
+            TransactionStatusResponse(
+                transactionId = transaction.id,
+                status = transaction.status.name,
+                statusCode = transaction.status.value,
+                amount = transaction.amount,
+                completedAt = transaction.completedAt,
+                // 프론트엔드 힌트
+                isSettled = transaction.status.value >= 40,
+                needsPolling = transaction.status.value < 40,
+                message = getStatusMessage(transaction.status)
+            )
+        )
+    }
+}
+
+data class TransactionStatusResponse(
+    val transactionId: String,
+    val status: String,
+    val statusCode: Int,
+    val amount: Long,
+    val completedAt: Instant?,
+    val isSettled: Boolean,
+    val needsPolling: Boolean,
+    val message: String
+)
+```
+
+### 9.4 Alternative: Server-Sent Events (Optional)
+
+Phase 2에서 실시간성이 중요해지면 SSE 추가 가능:
+
+```kotlin
+// payment.core/adapter/in/web/PaymentEventController.kt
+@RestController
+@RequestMapping("/api/payments")
+class PaymentEventController {
+    
+    @GetMapping("/{transactionId}/events", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun streamTransactionEvents(
+        @PathVariable transactionId: String
+    ): Flux<ServerSentEvent<TransactionEvent>> {
+        return transactionEventService
+            .subscribe(transactionId)
+            .map { event ->
+                ServerSentEvent.builder<TransactionEvent>()
+                    .id(event.id)
+                    .event(event.type)
+                    .data(event)
+                    .build()
+            }
+    }
+}
+```
+
+### 9.5 Polling Strategy Comparison
+
+| Strategy | 초기 지연 | 재시도 간격 | 최대 시도 | 타임아웃 | 적용 케이스 |
+|----------|----------|------------|----------|----------|------------|
+| **Immediate** | 0ms | 2초 고정 | 30회 | 60초 | 트래픽 적음 |
+| **Delayed** | 1000ms | 2초 고정 | 30회 | 60초 | 안정성 중요 |
+| **Exponential** ✅ | 0ms | 0→1→2→3→5초 | 20회 | 45초 | **추천** |
+| **Optimistic** | 0ms | 1→2→4→8초 | 10회 | 30초 | UX 중요 |
+
+### 9.6 Best Practices
+
+1. **Transaction ID 중심 설계**
+   - 모든 결제는 Transaction ID로 추적
+   - SessionStorage/LocalStorage 활용
+   - URL에 Transaction ID 포함 가능
+
+2. **처리 중 UI 필수**
+   - 사용자 불안감 해소
+   - 진행 상황 시각화
+   - 예상 시간 안내
+
+3. **Graceful Degradation**
+   - 타임아웃 시 안내 페이지
+   - 주문 내역으로 유도
+   - 고객센터 연락처 제공
+
+4. **Error Recovery**
+   - 네트워크 에러 시 재시도
+   - Transaction 조회 실패 시 fallback
+   - 명확한 에러 메시지
+
+## 10. Error Handling
 
 ### 9.1 Error Codes
 

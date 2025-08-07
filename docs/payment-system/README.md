@@ -1,80 +1,61 @@
-# 결제 시스템 문서 목록 📚
+# AsyncSite Payment System Documentation
 
-AsyncSite 결제 시스템 설계 및 전략 문서 모음
+## 📋 Document Structure
 
-## 📋 문서 구성
+### 🎯 Main Architecture Document
+- **[PAYMENT_SYSTEM_V2_FINAL.md](./PAYMENT_SYSTEM_V2_FINAL.md)** - **✅ FINAL VERSION FOR BACKEND IMPLEMENTATION**
+  - Final payment system architecture (Version 2.0.0)
+  - Payment Core/Gateway separation without orchestrator
+  - S2S verification flow
+  - Transaction ID + Smart Polling strategy
+  - MySQL schema design
+  - Clean Architecture implementation guide
 
-### 1. [PAYMENT_SYSTEM_ARCHITECTURE.md](./PAYMENT_SYSTEM_ARCHITECTURE.md)
-**결제 시스템 아키텍처 설계**
-- Hexagonal Architecture 기반 Payment Service 설계
-- MSA 환경에서의 결제 시스템 통합
-- 토스페이먼츠 연동 전략
-- 에스크로 및 정산 시스템 구조
-- 보안 및 성능 요구사항
+### 📚 Implementation Guides
+실제 구현 시 참고할 문서들:
 
-### 2. [PAYMENT_IDEAS_BRAINSTORMING.md](./PAYMENT_IDEAS_BRAINSTORMING.md)
-**결제 시스템 아이디어 브레인스토밍**
-- Dynamic Pricing, Subscription 등 혁신적 결제 모델
-- UX 최적화 아이디어 (One-Click, Social Proof)
-- 수익 다각화 전략 (B2B, 부가서비스)
-- 게이미피케이션 및 소셜 기능
-- 블록체인, AI 등 미래 기술 적용 방안
+- **[implementation-guide/](./implementation-guide/)**
+  - `TOSS_PAYMENTS_INTEGRATION_FLOW.md` - TossPayments SDK integration examples
+  - `CURRENT_STUDY_PAYMENT_INTEGRATION.md` - Integration guide for existing study system
+  - `FRONTEND_PAYMENT_FLOW.md` - Frontend UI/UX flow design
 
-### 3. [PAYMENT_STRATEGY_ROADMAP.md](./PAYMENT_STRATEGY_ROADMAP.md)
-**결제 시스템 전략 및 로드맵**
-- 단계별 구현 전략 (Phase 0~3)
-- Pod Study 중심 수익화 계획
-- KPI 및 성공 지표
-- 투자 계획 및 예상 수익
-- 리스크 관리 방안
+### 🗄️ Archive
+초기 브레인스토밍 및 이전 버전 문서들:
 
----
+- **[archive/](./archive/)**
+  - `PAYMENT_SYSTEM_ARCHITECTURE.md` - Initial architecture design (deprecated)
+  - `PAYMENT_IDEAS_BRAINSTORMING.md` - Future expansion ideas
+  - `PAYMENT_STRATEGY_ROADMAP.md` - Business strategy roadmap
+  - `README.md` - Old documentation index
 
-## 🎯 핵심 전략
+## 🚀 Quick Start for Backend Implementation
 
-### Phase 0: Foundation (즉시~2주)
-- Payment Service 구축
-- 토스페이먼츠 연동
-- 기본 결제/취소 API
+1. **Read Main Architecture**: Start with `PAYMENT_SYSTEM_V2_FINAL.md`
+2. **Review Implementation Guides**: Check SDK integration examples in `implementation-guide/`
+3. **Follow Clean Architecture**: Implement as per Section 7 of main document
+4. **Test with Polling Strategy**: Implement Section 9 for response handling
 
-### Phase 1: Pod Study (2-4주)
-- Pod Study 유료화
-- 에스크로 시스템
-- 자동 정산 (80/20)
+## 📊 Current Architecture Summary
 
-### Phase 2: Growth (1-2개월)
-- Dynamic Pricing
-- Subscription Model
-- 포인트 시스템
+```
+Payment Core Service ←→ Payment Gateway Service
+        ↓                        ↓
+   Transaction DB          PG Adapters (Toss)
+        ↓
+  Provisioning Service
+```
 
-### Phase 3: Advanced (3-6개월)
-- B2B Solutions
-- AI 사기 탐지
-- 글로벌 확장
+### Key Decisions:
+- ✅ No Orchestrator (Option 2 from architecture discussion)
+- ✅ S2S Verification only (no frontend purchase calls)
+- ✅ MySQL over PostgreSQL
+- ✅ Transaction ID + Smart Polling for async handling
+- ✅ Exponential Backoff: 0s → 1s → 2s → 3s → 5s
 
----
-
-## 💰 예상 성과
-
-| 구분 | 1년차 | 2년차 | 3년차 |
-|------|-------|-------|-------|
-| 거래액 | 2억원 | 10억원 | 30억원 |
-| 수수료 수익 | 3천만원 | 1.8억원 | 6억원 |
-| 수수료율 | 15% | 18% | 20% |
+## 📝 Version History
+- **v2.0.0** (2024-11-25): Current version with Core/Gateway separation
+- **v1.0.0**: Initial design (archived)
 
 ---
 
-## ✅ 즉시 실행 항목
-
-1. **토스페이먼츠 가입** 및 API 키 발급
-2. **Payment Service** 프로젝트 생성
-3. **기본 결제 API** 구현
-4. **Frontend 결제 UI** 개발
-
----
-
-## 📞 문의
-
-결제 시스템 관련 문의는 Architecture Team으로 연락 주세요.
-
-*최종 업데이트: 2025년 8월 7일*
+*For backend implementation, focus on `PAYMENT_SYSTEM_V2_FINAL.md` as the single source of truth.*
