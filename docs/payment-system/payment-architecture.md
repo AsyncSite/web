@@ -5,7 +5,7 @@
 AsyncSite의 결제 시스템은 마이크로서비스 아키텍처 기반으로 설계되었으며, 디지털 상품(스터디, AI 이력서 등)의 즉시 제공을 위해 최적화되었습니다.
 
 ### Core Principles
-- **Orchestration-based**: Payment Orchestrator가 전체 플로우 제어
+- **Service Separation**: Payment Core와 Gateway 명확히 분리
 - **Transaction-based**: 주문(Order)보다 트랜잭션(Transaction) 중심
 - **Two-phase Payment**: Issue(준비) → Purchase(실행) 단계 분리
 - **S2S Verification**: 모든 결제 검증은 서버 간 직접 통신
@@ -18,20 +18,17 @@ sequenceDiagram
     participant U as User
     participant F as Frontend
     participant G as API Gateway
-    participant PO as Payment Orchestrator
-    participant PC as Payment Core
-    participant PG as Payment Gateway
+    participant PC as Payment Core Service
+    participant PG as Payment Gateway Service
     participant T as TossPayments
     participant PR as Provisioning Service
     participant S as Study Service
 
     U->>F: "구매하기" 클릭
     F->>G: POST /api/payments/issue
-    G->>PO: 결제 준비 요청
-    PO->>PC: Transaction 생성 지시
+    G->>PC: 결제 준비 요청
     PC->>PC: Transaction 생성 (status: 10)
-    PC-->>PO: Transaction 정보
-    PO-->>F: transactionId, amount, callback URLs 반환
+    PC-->>F: transactionId, amount, callback URLs 반환
     
     alt 가상계좌
         F->>T: 가상계좌 발급 요청
@@ -39,33 +36,33 @@ sequenceDiagram
         F->>U: 계좌번호 표시
         Note over U,T: 입금 대기...
         T->>G: Webhook: 입금 완료
-        G->>PO: POST /webhooks/payment
-        PO->>PG: 결제 검증 요청
+        G->>PC: POST /webhooks/payment
+        PC->>PG: 결제 검증 요청
         PG->>T: S2S 검증 API 호출
         T-->>PG: 검증 결과
+        PG-->>PC: 검증 완료
     else 간편결제
         Note over F,T: successUrl = backend/api/payments/callback/success
         Note over F,T: failUrl = backend/api/payments/callback/fail
         F->>T: 결제창 호출 (with backend URLs)
         U->>T: 결제 승인
         T->>G: GET /api/payments/callback/success?paymentKey=xxx
-        G->>PO: 결제 콜백 처리
-        PO->>PG: 결제 검증 요청
+        G->>PC: 결제 콜백 처리
+        PC->>PG: 결제 검증 요청
         PG->>T: S2S 검증 API 호출
         T-->>PG: 검증 결과
+        PG-->>PC: 검증 완료
     end
     
-    PG-->>PO: 검증 완료
-    PO->>PC: Transaction 업데이트 지시
     PC->>PC: Transaction 업데이트 (status: 40)
-    PO->>PR: 지급 처리 지시
+    PC->>PR: 지급 요청 이벤트
     PR->>S: 스터디 등록
     S-->>PR: 등록 완료
-    PR-->>PO: 지급 완료
-    PO->>PC: Transaction 완료 (status: 50)
+    PR->>PC: 지급 완료 통지
+    PC->>PC: Transaction 완료 (status: 50)
     
     alt 간편결제 콜백
-        PO->>F: 302 Redirect to /payment/success
+        PC->>F: 302 Redirect to /payment/success
     end
     
     F->>U: 성공 화면
@@ -81,19 +78,13 @@ sequenceDiagram
 │                  (Spring Cloud Gateway)                 │
 └────────────────────┬────────────────────────────────────┘
                      │
-                     ▼
-        ┌───────────────────────────┐
-        │   Payment Orchestrator    │ ← 전체 플로우 제어
-        │       (지휘자 역할)         │
-        └───────────┬───────────────┘
-                    │
-      ┌─────────────┼─────────────┬─────────────┐
-      ▼             ▼             ▼             ▼
-┌──────────┐  ┌──────────────┐  ┌─────────────┐  ┌──────────┐
-│ Payment  │  │Payment Gateway│  │Provisioning │  │Settlement│
-│  Core    │  │   Service     │  │   Service   │  │ Service  │
-│ Service  │  │               │  │             │  │          │
-└──────────┘  └──────────────┘  └─────────────┘  └──────────┘
+      ┌──────────────┼──────────────┬──────────────┐
+      ▼              ▼              ▼              ▼
+┌──────────────┐ ┌──────────────┐ ┌─────────────┐ ┌──────────┐
+│Payment Core  │ │Payment Gateway│ │Provisioning │ │Settlement│
+│   Service    │◄►│   Service     │ │   Service   │ │ Service  │
+│  (메인 로직)  │ │  (PG사 통신)   │ │  (지급 처리)  │ │ (정산)    │
+└──────────────┘ └──────────────┘ └─────────────┘ └──────────┘
       │              │                  │              │
       └──────────────┴──────────────────┴──────────────┘
                             │
@@ -105,37 +96,36 @@ sequenceDiagram
 
 ### 3.2 Service Responsibilities
 
-#### Payment Orchestrator (신규 - 핵심)
+#### Payment Core Service (메인 컨트롤러)
 - **전체 결제 플로우 제어**
-- 서비스 간 조율 및 순서 보장
-- 트랜잭션 일관성 관리
-- SAGA 패턴 구현
-- 실패 시 보상 트랜잭션 처리
-- 상태 기반 워크플로우 실행
-
-#### Payment Core Service
 - Transaction 생명주기 관리
-- 상태 전이 검증
+- 상태 전이 검증 및 관리
 - 비즈니스 규칙 적용
+- Payment Gateway Service 호출 및 조율
+- Provisioning Service 트리거
+- Callback/Webhook 엔드포인트 제공
 - Transaction 데이터 저장
 
-#### Payment Gateway Service  
+#### Payment Gateway Service (PG사 통신 전담)
 - PG사 어댑터 관리 (토스, 카카오페이, 네이버페이)
 - **S2S API 통신 및 검증**
-- Webhook 처리
-- Callback URL 처리
+- PG사별 API 추상화
 - 응답 표준화
+- PG사 인증 관리
+- 결제 검증 로직
 
 #### Provisioning Service
 - 상품별 지급 로직
 - 스터디 등록
 - AI 이력서 크레딧 충전
 - 지급 실패 처리
+- 지급 완료 후 Payment Core에 통지
 
 #### Settlement Service
 - 정산 계산
 - 수수료 처리
 - 판매자 송금 관리
+- 정산 리포트 생성
 
 ## 4. Transaction State Machine
 
@@ -206,8 +196,8 @@ Query Parameters:
   - amount: 50000
 
 Processing (Backend):
-1. Orchestrator가 Payment Gateway Service 호출
-2. Payment Gateway가 TossPayments S2S API로 검증
+1. Payment Core Service가 요청 수신
+2. Payment Gateway Service 호출하여 S2S 검증
 3. 검증 성공 시 Transaction 상태 업데이트
 4. Frontend로 302 Redirect
 
@@ -245,11 +235,11 @@ X-Toss-Signature: {signature}
 }
 
 Processing (Backend):
-1. Signature 검증
-2. Orchestrator 호출
-3. Payment Gateway Service로 S2S 검증
-4. Transaction 상태 업데이트
-5. Provisioning 트리거
+1. Payment Core가 Signature 검증
+2. Payment Gateway Service로 S2S 검증
+3. Transaction 상태 업데이트
+4. Provisioning Service에 지급 이벤트 발행
+5. 지급 완료 대기
 ```
 
 ## 6. Database Schema (MySQL)
@@ -296,129 +286,78 @@ CREATE TABLE transaction_history (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
-### 6.3 Orchestration Saga Table
-
-```sql
-CREATE TABLE payment_saga (
-    id CHAR(36) PRIMARY KEY,
-    transaction_id VARCHAR(50) NOT NULL,
-    saga_state VARCHAR(50) NOT NULL,  -- STARTED, COMPENSATING, COMPLETED, FAILED
-    current_step VARCHAR(100),
-    completed_steps JSON,  -- ["CREATE_TRANSACTION", "VERIFY_PAYMENT", ...]
-    compensation_steps JSON,
-    error_message TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id),
-    INDEX idx_transaction_id (transaction_id),
-    INDEX idx_saga_state (saga_state)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-```
 
 ## 7. Clean Architecture Implementation
 
 ### 7.1 Package Structure
-
-#### Payment Orchestrator Service
-```
-com.asyncsite.orchestrator/
-├── adapter/
-│   ├── in/
-│   │   └── web/
-│   │       ├── PaymentOrchestratorController.kt
-│   │       └── PaymentCallbackController.kt
-│   └── out/
-│       ├── service/
-│       │   ├── PaymentCoreAdapter.kt
-│       │   ├── PaymentGatewayAdapter.kt
-│       │   └── ProvisioningAdapter.kt
-│       └── persistence/
-│           └── SagaPersistenceAdapter.kt
-├── application/
-│   ├── port/
-│   │   ├── in/
-│   │   │   ├── OrchestatePaymentUseCase.kt
-│   │   │   └── HandleCallbackUseCase.kt
-│   │   └── out/
-│   │       ├── PaymentCorePort.kt
-│   │       ├── PaymentGatewayPort.kt
-│   │       └── ProvisioningPort.kt
-│   ├── service/
-│   │   └── PaymentOrchestratorService.kt
-│   └── saga/
-│       ├── PaymentSaga.kt
-│       └── CompensationHandler.kt
-└── domain/
-    ├── SagaState.kt
-    └── WorkflowStep.kt
-```
 
 #### Payment Core Service
 ```
 com.asyncsite.payment.core/
 ├── adapter/
 │   ├── in/
-│   │   └── grpc/
-│   │       └── PaymentCoreGrpcService.kt
+│   │   └── web/
+│   │       ├── PaymentController.kt
+│   │       ├── PaymentCallbackController.kt
+│   │       └── WebhookController.kt
 │   └── out/
-│       └── persistence/
-│           ├── TransactionPersistenceAdapter.kt
-│           └── TransactionJpaEntity.kt
+│       ├── persistence/
+│       │   ├── TransactionPersistenceAdapter.kt
+│       │   └── TransactionJpaEntity.kt
+│       ├── gateway/
+│       │   └── PaymentGatewayAdapter.kt
+│       └── event/
+│           └── ProvisioningEventAdapter.kt
 ├── application/
 │   ├── port/
 │   │   ├── in/
-│   │   │   ├── CreateTransactionUseCase.kt
-│   │   │   └── UpdateTransactionUseCase.kt
+│   │   │   ├── IssuePaymentUseCase.kt
+│   │   │   ├── HandleCallbackUseCase.kt
+│   │   │   └── ProcessWebhookUseCase.kt
 │   │   └── out/
 │   │       ├── LoadTransactionPort.kt
-│   │       └── SaveTransactionPort.kt
+│   │       ├── SaveTransactionPort.kt
+│   │       ├── PaymentGatewayPort.kt
+│   │       └── ProvisioningEventPort.kt
 │   └── service/
-│       └── TransactionService.kt
+│       ├── PaymentService.kt
+│       └── TransactionStateMachine.kt
 └── domain/
     ├── Transaction.kt
     ├── TransactionStatus.kt
-    └── TransactionStateMachine.kt
+    └── PaymentMethod.kt
+```
+
+#### Payment Gateway Service
+```
+com.asyncsite.payment.gateway/
+├── adapter/
+│   ├── in/
+│   │   └── grpc/
+│   │       └── PaymentGatewayGrpcService.kt
+│   └── out/
+│       ├── toss/
+│       │   └── TossPaymentsAdapter.kt
+│       ├── kakao/
+│       │   └── KakaoPayAdapter.kt
+│       └── naver/
+│           └── NaverPayAdapter.kt
+├── application/
+│   ├── port/
+│   │   ├── in/
+│   │   │   ├── VerifyPaymentUseCase.kt
+│   │   │   └── ProcessRefundUseCase.kt
+│   │   └── out/
+│   │       └── PaymentProviderPort.kt
+│   └── service/
+│       └── PaymentGatewayService.kt
+└── domain/
+    ├── PaymentProvider.kt
+    ├── PaymentVerification.kt
+    └── RefundRequest.kt
 ```
 
 ### 7.2 Domain Models
-
-#### Orchestrator Domain
-```kotlin
-// orchestrator/domain/PaymentSaga.kt
-data class PaymentSaga(
-    val id: SagaId,
-    val transactionId: TransactionId,
-    val state: SagaState,
-    val currentStep: WorkflowStep,
-    val completedSteps: List<WorkflowStep>,
-    val compensationSteps: List<CompensationStep>,
-    val metadata: Map<String, Any>
-) {
-    fun canProceed(): Boolean = state == SagaState.STARTED
-    
-    fun needsCompensation(): Boolean = state == SagaState.COMPENSATING
-    
-    fun markStepCompleted(step: WorkflowStep): PaymentSaga {
-        return copy(
-            completedSteps = completedSteps + step,
-            currentStep = getNextStep(step)
-        )
-    }
-}
-
-enum class SagaState {
-    STARTED, COMPENSATING, COMPLETED, FAILED
-}
-
-enum class WorkflowStep {
-    CREATE_TRANSACTION,
-    VALIDATE_PAYMENT,
-    VERIFY_WITH_PG,
-    UPDATE_TRANSACTION,
-    TRIGGER_PROVISIONING,
-    COMPLETE_SAGA
-}
-```
 
 #### Payment Core Domain
 ```kotlin
@@ -461,62 +400,59 @@ data class Transaction(
 }
 ```
 
-## 8. Orchestration Flow
+## 8. Event Flow & Integration
 
-### 8.1 SAGA Pattern Implementation
+### 8.1 Service Communication
 
 ```kotlin
-// orchestrator/application/saga/PaymentSaga.kt
-class PaymentSagaOrchestrator(
-    private val paymentCore: PaymentCorePort,
+// payment.core/application/service/PaymentService.kt
+class PaymentService(
+    private val transactionRepository: SaveTransactionPort,
     private val paymentGateway: PaymentGatewayPort,
-    private val provisioning: ProvisioningPort,
-    private val sagaRepository: SagaRepository
+    private val provisioningEvent: ProvisioningEventPort
 ) {
-    fun orchestratePayment(request: PaymentRequest): SagaResult {
-        val saga = PaymentSaga.start(request.transactionId)
+    suspend fun issuePayment(request: PaymentRequest): Transaction {
+        // 1. Transaction 생성
+        val transaction = Transaction.create(request)
+        transactionRepository.save(transaction)
         
-        return try {
-            // Step 1: Create Transaction
-            val transaction = executeStep(saga, WorkflowStep.CREATE_TRANSACTION) {
-                paymentCore.createTransaction(request)
-            }
-            
-            // Step 2: Validate with Payment Gateway
-            executeStep(saga, WorkflowStep.VERIFY_WITH_PG) {
-                paymentGateway.verifyPayment(transaction.paymentKey)
-            }
-            
-            // Step 3: Update Transaction Status
-            executeStep(saga, WorkflowStep.UPDATE_TRANSACTION) {
-                paymentCore.updateStatus(transaction.id, TransactionStatus.PAYMENT_SUCCESS)
-            }
-            
-            // Step 4: Trigger Provisioning
-            executeStep(saga, WorkflowStep.TRIGGER_PROVISIONING) {
-                provisioning.provision(transaction)
-            }
-            
-            // Step 5: Complete Saga
-            saga.complete()
-            SagaResult.Success(transaction)
-            
-        } catch (e: Exception) {
-            // Compensation logic
-            compensate(saga)
-            SagaResult.Failed(e.message)
-        }
+        // 2. Callback URLs 생성
+        return transaction.withCallbackUrls(
+            successUrl = "${baseUrl}/api/payments/callback/success",
+            failUrl = "${baseUrl}/api/payments/callback/fail"
+        )
     }
     
-    private fun compensate(saga: PaymentSaga) {
-        saga.completedSteps.reversed().forEach { step ->
-            when (step) {
-                WorkflowStep.TRIGGER_PROVISIONING -> provisioning.cancelProvision()
-                WorkflowStep.UPDATE_TRANSACTION -> paymentCore.revertStatus()
-                WorkflowStep.CREATE_TRANSACTION -> paymentCore.cancelTransaction()
-                // ...
-            }
+    suspend fun handleCallback(
+        paymentKey: String,
+        orderId: String,
+        amount: Long
+    ): CallbackResult {
+        // 1. Transaction 조회
+        val transaction = transactionRepository.findById(orderId)
+        
+        // 2. Payment Gateway로 S2S 검증
+        val verification = paymentGateway.verify(
+            VerificationRequest(paymentKey, orderId, amount)
+        )
+        
+        if (verification.isSuccess) {
+            // 3. Transaction 상태 업데이트
+            transaction.updateStatus(TransactionStatus.PAYMENT_SUCCESS)
+            transactionRepository.save(transaction)
+            
+            // 4. Provisioning 이벤트 발행
+            provisioningEvent.publish(
+                ProvisioningEvent(
+                    transactionId = transaction.id,
+                    productType = transaction.productType,
+                    productId = transaction.productId,
+                    userId = transaction.userId
+                )
+            )
         }
+        
+        return CallbackResult(verification.isSuccess, transaction)
     }
 }
 ```
@@ -524,28 +460,21 @@ class PaymentSagaOrchestrator(
 ### 8.2 S2S Callback Flow
 
 ```kotlin
-// orchestrator/adapter/in/web/PaymentCallbackController.kt
+// payment.core/adapter/in/web/PaymentCallbackController.kt
 @RestController
 @RequestMapping("/api/payments/callback")
 class PaymentCallbackController(
-    private val orchestrator: PaymentOrchestratorService
+    private val paymentService: PaymentService
 ) {
     
     @GetMapping("/success")
-    fun handleSuccess(
+    suspend fun handleSuccess(
         @RequestParam paymentKey: String,
         @RequestParam orderId: String,
         @RequestParam amount: Long
     ): ResponseEntity<Void> {
-        // 1. Orchestrator가 전체 플로우 제어
-        val result = orchestrator.handlePaymentCallback(
-            PaymentCallback(
-                transactionId = orderId,
-                paymentKey = paymentKey,
-                amount = amount,
-                status = CallbackStatus.SUCCESS
-            )
-        )
+        // 1. Payment Core Service가 처리
+        val result = paymentService.handleCallback(paymentKey, orderId, amount)
         
         // 2. 프론트엔드로 리다이렉트
         return ResponseEntity
@@ -632,21 +561,28 @@ logger.info("Transaction issued",
 
 ### Phase 1: MVP (Week 1-2)
 - [ ] Payment Core Service 구현
+  - Transaction 관리
+  - 상태 머신 구현
+  - Callback/Webhook 엔드포인트
+- [ ] Payment Gateway Service 구현
+  - 토스페이먼츠 어댑터
+  - S2S 검증 로직
 - [ ] 가상계좌 지원
-- [ ] 토스페이먼츠 연동
-- [ ] 기본 Provisioning
+- [ ] 기본 Provisioning 이벤트
 
 ### Phase 2: Enhancement (Week 3-4)
-- [ ] 간편결제 추가 (카카오페이, 네이버페이)
-- [ ] Webhook 처리
+- [ ] 간편결제 추가
+  - 카카오페이 어댑터
+  - 네이버페이 어댑터
+- [ ] Webhook 고도화
 - [ ] 환불 기능
 - [ ] 모니터링 대시보드
 
 ### Phase 3: Scale (Month 2)
 - [ ] Settlement Service 추가
 - [ ] 배치 정산
-- [ ] 고급 분석
-- [ ] A/B 테스팅 지원
+- [ ] 서비스 간 Circuit Breaker
+- [ ] 성능 최적화
 
 ## 13. Testing Strategy
 
@@ -693,13 +629,20 @@ payment:
 
 ## 15. Future Considerations
 
+### 기능 확장
 - **Subscription Model**: 정기 결제 지원
 - **Multi-currency**: 해외 결제 지원
 - **Fraud Detection**: 이상 거래 탐지
 - **Payment Analytics**: 상세 분석 대시보드
 - **B2B Payments**: 기업 결제 지원
 
+### 아키텍처 진화
+- **Payment Orchestrator**: 복잡한 플로우 발생 시 Orchestrator 추가 고려
+- **SAGA Pattern**: 분산 트랜잭션 필요 시 도입
+- **Event Sourcing**: 결제 이력 추적 강화
+- **CQRS**: 읽기/쓰기 분리로 성능 최적화
+
 ---
 
 *Last Updated: 2024-11-25*
-*Version: 1.0.0*
+*Version: 2.0.0* (Orchestrator 제거, Core/Gateway 분리 구조)
