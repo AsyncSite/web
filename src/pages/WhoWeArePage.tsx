@@ -233,7 +233,13 @@ const WhoWeArePage: React.FC = () => {
     if (showAIGuide) {
       aiGuideStore.recordInteraction('story', storyData?.id);
       const dialogue = aiGuideStore.getDialogueForAction('story');
-      setCurrentDialogue(dialogue);
+      // Always set a dialogue, never empty string
+      if (dialogue) {
+        setCurrentDialogue(dialogue);
+      } else {
+        // Fallback message if dialogue is somehow empty
+        setCurrentDialogue('카드를 자세히 살펴보고 있네요! 다른 카드들도 확인해보세요.');
+      }
     }
   }, [showAIGuide]);
   
@@ -244,7 +250,13 @@ const WhoWeArePage: React.FC = () => {
     if (showAIGuide && memberData) {
       aiGuideStore.recordInteraction('member', memberData.id);
       const dialogue = aiGuideStore.getDialogueForAction('member');
-      setCurrentDialogue(dialogue);
+      // Always set a dialogue, never empty string  
+      if (dialogue) {
+        setCurrentDialogue(dialogue);
+      } else {
+        // Fallback message if dialogue is somehow empty
+        setCurrentDialogue('팀원을 자세히 살펴보고 있네요! 다른 팀원들도 만나보세요.');
+      }
     }
   }, [showAIGuide]);
 

@@ -26,6 +26,15 @@ const AIGuideDialogue: React.FC<AIGuideDialogueProps> = ({
   const [lastValidDialogue, setLastValidDialogue] = useState<string>('');
   
   useEffect(() => {
+    // Handle hidden state - immediately hide the dialogue
+    if (dialogue === '' && aiGuideStore.getCurrentDialogue()?.id === 'hidden') {
+      setIsFadingOut(true);
+      setTimeout(() => {
+        onComplete();
+      }, 300);
+      return;
+    }
+    
     if (!dialogue) {
       // Keep the last valid dialogue displayed to prevent sudden disappearance
       // Only hide after a delay if really needed
