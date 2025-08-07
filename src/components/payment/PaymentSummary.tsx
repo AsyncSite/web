@@ -20,7 +20,6 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = ({ request }) => {
       <div className="order-info">
         <div className="order-header">
           <span className="order-name">{request.orderName}</span>
-          <span className="order-id">주문번호: {request.orderId}</span>
         </div>
         
         {/* 상품 목록 */}

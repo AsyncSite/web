@@ -4,10 +4,7 @@
 export type PaymentProvider = 'toss' | 'kakaopay' | 'naverpay' | 'payco' | 'samsungpay';
 
 export type PaymentMethod = 
-  | 'card'           // 신용/체크카드
-  | 'transfer'       // 계좌이체
   | 'virtualAccount' // 가상계좌
-  | 'phone'          // 휴대폰
   | 'easyPay';       // 간편결제
 
 export type PaymentStatus = 

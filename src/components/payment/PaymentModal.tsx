@@ -19,8 +19,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   onError,
   request,
   config,
-  allowedMethods = ['card', 'transfer', 'virtualAccount', 'easyPay'],
-  defaultMethod = 'card'
+  allowedMethods = ['virtualAccount', 'easyPay'],
+  defaultMethod = 'virtualAccount'
 }) => {
   const { status, error, initiatePayment, confirmPayment } = usePayment();
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(defaultMethod);
@@ -95,10 +95,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     }
 
     const paymentMethodMap: Record<PaymentMethod, string> = {
-      card: '카드',
-      transfer: '계좌이체',
       virtualAccount: '가상계좌',
-      phone: '휴대폰',
       easyPay: '간편결제'
     };
 

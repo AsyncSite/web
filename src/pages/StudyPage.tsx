@@ -36,8 +36,9 @@ const StudyPage: React.FC = () => {
   };
 
   // 테스트용 결제 요청 데이터
+  // TODO: 프로덕션에서는 백엔드 API를 호출하여 주문번호를 받아와야 함
   const createPaymentRequest = (studyName: string, price: number): PaymentRequest => ({
-    orderId: `STUDY_${Date.now()}`,
+    orderId: `STUDY_${Date.now()}`, // 임시 주문번호 - 백엔드에서 생성 필요
     orderName: studyName,
     amount: {
       original: price,
