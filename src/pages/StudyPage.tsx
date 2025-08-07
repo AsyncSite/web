@@ -88,66 +88,6 @@ const StudyPage: React.FC = () => {
                 일정 캘린더
               </button>
             </div>
-            
-            {/* 결제 시스템 테스트 섹션 (임시) */}
-            <section style={{
-              margin: '40px 0',
-              padding: '24px',
-              background: 'rgba(195, 232, 141, 0.05)',
-              border: '1px solid rgba(195, 232, 141, 0.2)',
-              borderRadius: '16px'
-            }}>
-              <h2 style={{ color: '#c3e88d', marginBottom: '16px' }}>💳 결제 시스템 테스트</h2>
-              <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '24px' }}>
-                통합 결제 UI를 테스트해보세요. 실제 결제는 이루어지지 않습니다.
-              </p>
-              
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                {/* 다양한 스타일의 결제 버튼 */}
-                <PaymentButton
-                  variant="primary"
-                  size="medium"
-                  label="테코테코 3기 참가 신청"
-                  request={createPaymentRequest('테코테코 3기', 50000)}
-                  onSuccess={handlePaymentSuccess}
-                  onError={handlePaymentError}
-                />
-                
-                <PaymentButton
-                  variant="secondary"
-                  size="medium"
-                  label="11루틴 2기 (무료)"
-                  request={createPaymentRequest('11루틴 2기', 0)}
-                  onSuccess={handlePaymentSuccess}
-                  onError={handlePaymentError}
-                />
-                
-                <PaymentButton
-                  variant="gradient"
-                  size="large"
-                  icon="✨"
-                  request={createPaymentRequest('프리미엄 멘토링', 150000)}
-                  onSuccess={handlePaymentSuccess}
-                  onError={handlePaymentError}
-                  showPrice={true}
-                  pricePrefix="프리미엄"
-                />
-                
-                <PaymentButton
-                  variant="outline"
-                  size="small"
-                  label="₩30,000 결제 테스트"
-                  request={createPaymentRequest('일반 스터디', 30000)}
-                  onSuccess={handlePaymentSuccess}
-                  onError={handlePaymentError}
-                />
-              </div>
-              
-              <div style={{ marginTop: '24px', fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' }}>
-                <p>💡 이 버튼들은 나중에 스터디 상세 페이지나 AI 이력서 서비스에서 사용됩니다.</p>
-                <p>💡 토스페이먼츠 테스트 모드로 동작하며, 실제 결제는 이루어지지 않습니다.</p>
-              </div>
-            </section>
           
           {/* Tab Content */}
           {activeTab === 'list' ? (
@@ -214,6 +154,84 @@ const StudyPage: React.FC = () => {
                   </div>
                 </section>
               )}
+              
+              {/* 결제 시스템 테스트 섹션 (임시) */}
+              <section style={{
+                marginTop: '30px',
+                padding: '16px',
+                background: 'rgba(195, 232, 141, 0.03)',
+                border: '1px solid rgba(195, 232, 141, 0.1)',
+                borderRadius: '12px'
+              }}>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  marginBottom: '12px',
+                  flexWrap: 'wrap',
+                  gap: '8px'
+                }}>
+                  <h3 style={{ 
+                    color: '#c3e88d', 
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    margin: 0
+                  }}>
+                    💳 결제 테스트
+                  </h3>
+                  <span style={{ 
+                    fontSize: '12px', 
+                    color: 'rgba(255, 255, 255, 0.4)',
+                    padding: '2px 8px',
+                    background: 'rgba(130, 170, 255, 0.1)',
+                    borderRadius: '4px'
+                  }}>
+                    개발 모드
+                  </span>
+                </div>
+                
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '8px', 
+                  flexWrap: 'wrap',
+                  marginBottom: '12px'
+                }}>
+                  <PaymentButton
+                    variant="primary"
+                    size="small"
+                    label="스터디 결제"
+                    request={createPaymentRequest('테코테코 3기', 50000)}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                  
+                  <PaymentButton
+                    variant="secondary"
+                    size="small"
+                    label="무료 신청"
+                    request={createPaymentRequest('11루틴 2기', 0)}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                  
+                  <PaymentButton
+                    variant="outline"
+                    size="small"
+                    label="테스트 결제"
+                    request={createPaymentRequest('일반 스터디', 30000)}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                </div>
+                
+                <p style={{ 
+                  fontSize: '11px', 
+                  color: 'rgba(255, 255, 255, 0.3)',
+                  margin: 0
+                }}>
+                  토스페이먼츠 테스트 모드 • 실제 결제 X
+                </p>
+              </section>
             </>
           ) : (
             <StudyCalendar />
