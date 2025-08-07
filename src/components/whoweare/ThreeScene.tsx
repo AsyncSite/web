@@ -1144,6 +1144,180 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
         
         window.addEventListener('resetCamera', handleResetCamera);
 
+        // AI Guide action effects
+        const handleAIGuideAction = (event: CustomEvent) => {
+          const { action, target } = event.detail;
+          
+          if (action === 'point' || action === 'highlight') {
+            if (target === 'all_members') {
+              // Subtle highlight for all members
+              memberObjects.forEach(obj => {
+                const sphere = obj.children.find((child: any) => 
+                  child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+                );
+                if (sphere && sphere.material) {
+                  // Subtle green outline effect like cards
+                  sphere.material.emissive = new THREE.Color(0xC3E88D);
+                  sphere.material.emissiveIntensity = 0.15; // Very subtle glow
+                  sphere.material.opacity = 0.6; // Slightly more visible
+                }
+              });
+              
+              // Slightly dim story cards
+              storyObjects.forEach(obj => {
+                const card = obj.children[0];
+                if (card && card.material) {
+                  card.material.opacity = 0.7; // Not too dim
+                }
+              });
+            } else if (target === 'nearest_story') {
+              // Find the nearest story card to camera
+              let nearestStory = storyObjects[0];
+              let minDistance = Infinity;
+              
+              storyObjects.forEach(obj => {
+                const distance = camera.position.distanceTo(obj.position);
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  nearestStory = obj;
+                }
+              });
+              
+              
+              // Spotlight effect on story cards
+              storyObjects.forEach(obj => {
+                const card = obj.children[0];
+                if (card && card.material) {
+                  // Make story cards glow
+                  card.material.emissive = new THREE.Color(0xC3E88D);
+                  card.material.emissiveIntensity = 0.3;
+                  
+                  // Floating animation
+                  const originalY = obj.userData.originalPosition.y;
+                  const floatAnimation = () => {
+                    const time = Date.now() * 0.001;
+                    obj.position.y = originalY + Math.sin(time * 2) * 0.3;
+                    obj.rotation.y = Math.sin(time) * 0.1;
+                    
+                    // Store animation frame ID to cancel later
+                    obj.userData.floatAnimationId = requestAnimationFrame(floatAnimation);
+                  };
+                  floatAnimation();
+                }
+              });
+              
+              // Dim other objects
+              memberObjects.forEach(obj => {
+                const sphere = obj.children.find((child: any) => 
+                  child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+                );
+                if (sphere && sphere.material) {
+                  sphere.material.opacity = 0.2;
+                }
+              });
+            } else if (target === 'member_rene') {
+              // Find the nearest member to camera
+              let nearestMember = memberObjects[0];
+              let minDistance = Infinity;
+              
+              memberObjects.forEach(obj => {
+                const distance = camera.position.distanceTo(obj.position);
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  nearestMember = obj;
+                }
+              });
+              
+              // Subtle spotlight effect on members
+              memberObjects.forEach(obj => {
+                const sphere = obj.children.find((child: any) => 
+                  child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+                );
+                if (sphere && sphere.material) {
+                  if (obj === nearestMember) {
+                    // Subtle highlight for the nearest member - same style as cards
+                    sphere.material.emissive = new THREE.Color(0xC3E88D);
+                    sphere.material.emissiveIntensity = 0.25; // Slightly stronger than all_members
+                    sphere.material.opacity = 0.7;
+                    
+                    // Very subtle pulsing effect (no position change)
+                    const pulseAnimation = () => {
+                      const time = Date.now() * 0.001;
+                      sphere.material.emissiveIntensity = 0.25 + Math.sin(time * 2) * 0.1;
+                      
+                      // Store animation frame ID to cancel later
+                      obj.userData.memberPulseAnimationId = requestAnimationFrame(pulseAnimation);
+                    };
+                    pulseAnimation();
+                  } else {
+                    // Slightly dim other members
+                    sphere.material.opacity = 0.3;
+                    sphere.material.emissive = new THREE.Color(0x000000);
+                    sphere.material.emissiveIntensity = 0;
+                  }
+                }
+              });
+              
+              // Slightly dim story cards
+              storyObjects.forEach(obj => {
+                const card = obj.children[0];
+                if (card && card.material) {
+                  card.material.opacity = 0.5;
+                }
+              });
+            }
+          }
+        };
+        
+        // Clear AI Guide effects when dialogue changes
+        const clearAIGuideEffects = () => {
+          // Reset story cards
+          storyObjects.forEach(obj => {
+            const card = obj.children[0];
+            if (card && card.material) {
+              card.material.emissive = new THREE.Color(0x000000);
+              card.material.emissiveIntensity = 0;
+              card.material.opacity = 0.95;
+            }
+            
+            // Cancel floating animation
+            if (obj.userData.floatAnimationId) {
+              cancelAnimationFrame(obj.userData.floatAnimationId);
+              delete obj.userData.floatAnimationId;
+              // Reset position
+              obj.position.copy(obj.userData.originalPosition);
+              obj.rotation.copy(obj.userData.originalRotation);
+            }
+          });
+          
+          // Reset members
+          memberObjects.forEach(obj => {
+            const sphere = obj.children.find((child: any) => 
+              child.geometry instanceof THREE.SphereGeometry && child.name !== 'clickHelper'
+            );
+            if (sphere && sphere.material) {
+              sphere.material.emissive = new THREE.Color(0x000000);
+              sphere.material.emissiveIntensity = 0;
+              sphere.material.opacity = 0.5;
+            }
+            
+            // Cancel member pulse animation
+            if (obj.userData.memberPulseAnimationId) {
+              cancelAnimationFrame(obj.userData.memberPulseAnimationId);
+              delete obj.userData.memberPulseAnimationId;
+            }
+          });
+        };
+        
+        window.addEventListener('aiGuideAction', handleAIGuideAction as EventListener);
+        
+        // Clear effects when dialogue changes
+        const handleDialogueChange = () => {
+          clearAIGuideEffects();
+        };
+        
+        window.addEventListener('aiGuideDialogueChange', handleDialogueChange);
+
         // Window resize
         const handleResize = () => {
           camera.aspect = window.innerWidth / window.innerHeight;
@@ -1334,6 +1508,8 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
           window.removeEventListener('click', handleClick);
           window.removeEventListener('resize', handleResize);
           window.removeEventListener('resetCamera', handleResetCamera);
+          window.removeEventListener('aiGuideAction', handleAIGuideAction as EventListener);
+          window.removeEventListener('aiGuideDialogueChange', handleDialogueChange);
           
           if (animationIdRef.current) {
             cancelAnimationFrame(animationIdRef.current);

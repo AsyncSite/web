@@ -2,6 +2,51 @@
 
 ## 2025년 1월
 
+### 1월 7일 - AI Guide 온보딩 시스템 구현 ✅
+
+#### 구현 내용
+1. **AI Guide 캐릭터 및 대화 시스템**
+   - AsyncSite의 마스코트 'Async' 캐릭터 추가
+   - 11개의 대화 단계로 구성된 온보딩 플로우
+   - 사용자 선택에 따른 분기형 대화 구조
+   - 타이핑 애니메이션 효과
+
+2. **Three.js 씬 통합**
+   - AI Guide 3D 캐릭터 (반투명 구체)를 씬에 추가
+   - 대화와 동기화된 페이드 인/아웃 애니메이션
+   - 중앙 고정 위치 (0, 0, 0)에 배치
+
+3. **시각적 강조 효과**
+   - 스토리 카드 강조: 초록색(#C3E88D) 발광 효과
+   - 팀원 전체 강조: 약한 테두리 발광 효과
+   - 개별 팀원 강조: 펄스 애니메이션
+   - 대화 변경 시 효과 자동 초기화
+
+4. **UX 개선사항**
+   - 타이핑 완료 후 버튼 표시 (건너뛰기, 뒤로가기)
+   - 도움받기 버튼 추가 (상단)
+   - localStorage 활용한 온보딩 상태 저장
+   - 종료 대화 5초 후 자동 닫기
+
+5. **프로젝트 구조 변경**
+   - AI Guide 버전이 메인 WhoWeAre 페이지로 승격
+   - 기존 버전은 WhoWeAreOriginalPage로 이동
+   - 레거시 URL 리다이렉트 설정
+
+#### 구현된 파일
+- `src/components/whoweare/onboarding/AIGuideDialogue.tsx`
+- `src/components/whoweare/onboarding/AIGuideDialogue.css`
+- `src/components/whoweare/onboarding/AIGuideStore.ts`
+- `src/components/whoweare/ThreeScene.tsx` (기존 ThreeSceneAIGuide.tsx에서 이름 변경)
+- `src/pages/WhoWeArePage.tsx` (AI Guide 버전)
+- `src/pages/WhoWeAreOriginalPage.tsx` (기존 버전)
+
+#### 기술적 특징
+- Custom Event를 통한 React-Three.js 간 통신
+- requestAnimationFrame을 활용한 부드러운 애니메이션
+- TypeScript 타입 안전성 확보
+- 메모리 누수 방지를 위한 cleanup 처리
+
 ### 1월 6일 - WebGL Context Exhaustion 버그 수정 ✅
 
 #### 문제점
@@ -109,4 +154,4 @@
 3. 모바일 폴백 전략 필요성
 
 ---
-*최종 업데이트: 2025년 1월 6일*
+*최종 업데이트: 2025년 1월 7일*

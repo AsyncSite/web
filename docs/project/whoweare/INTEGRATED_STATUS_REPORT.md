@@ -1,24 +1,32 @@
 # WhoWeAre 섹션 통합 현황 보고서
 
-*최종 분석일: 2025년 1월 6일*
+*최종 분석일: 2025년 1월 7일*
 
 ## 📊 전체 개요
 
 AsyncSite의 WhoWeAre 섹션은 초기 프로토타입 단계를 거쳐 현재 안정적인 운영 단계에 도달했습니다. 
 22개의 다양한 프로토타입 실험을 통해 최종적으로 **ThreeSceneFloatingStory** 방식을 채택했으며, 
-현재 `/whoweare` 경로에서 서비스 중입니다.
+**2025년 1월 7일부터 AI Guide 온보딩 시스템이 메인 버전으로 서비스** 중입니다.
 
 ## 🏗️ 현재 구현 상태
 
 ### ✅ 구현 완료
-1. **3D 플로팅 카드 시스템**
+1. **AI Guide 온보딩 시스템 (2025.1.7 추가)**
+   - 'Async' 마스코트 캐릭터를 통한 대화형 가이드
+   - 11단계 분기형 대화 플로우
+   - 타이핑 애니메이션 및 선택지 시스템
+   - 시각적 강조 효과 (스토리/팀원 하이라이트)
+   - localStorage 기반 상태 저장
+   - 도움받기 버튼 및 뒤로가기 기능
+
+2. **3D 플로팅 카드 시스템**
    - Three.js 기반 우주 공간 테마
    - 6명의 팀 멤버 3D 오브젝트
    - 스토리 패널 (AsyncSite 소개)
    - 마우스 인터랙션 (호버, 클릭, 드래그)
    - 줌인/줌아웃 애니메이션
 
-2. **팀 멤버 데이터 구조**
+3. **팀 멤버 데이터 구조**
    ```typescript
    - RENE CHOI: Visionary Builder & Product Architect
    - 진우 조: System Engineer
@@ -28,13 +36,13 @@ AsyncSite의 WhoWeAre 섹션은 초기 프로토타입 단계를 거쳐 현재 �
    - 차동민: Platform Engineer
    ```
 
-3. **반응형 대응**
+4. **반응형 대응**
    - WebGL 지원 체크
    - 모바일 기기 감지
    - 저사양 하드웨어 감지 (CPU 코어 < 4)
    - 2D 카드 폴백 UI
 
-4. **성능 최적화 (2025.1.6 완료)**
+5. **성능 최적화 (2025.1.6 완료)**
    - 고해상도 텍스트 렌더링 (DPR 3배 지원)
    - 캔버스 해상도 2배 증가
    - 텍스처 필터링 최적화
@@ -60,12 +68,12 @@ AsyncSite의 WhoWeAre 섹션은 초기 프로토타입 단계를 거쳐 현재 �
 
 ## 🐛 알려진 문제점
 
-### 🔴 치명적 (Critical)
-1. **WebGL Context Exhaustion**
-   - 증상: 5-6회 줌 인/아웃 후 화면 하얗게 변함
-   - 원인: WebGL 컨텍스트 누적 (브라우저 제한 16개)
-   - 영향: 페이지 새로고침 필요
-   - 우선순위: **최고**
+### ✅ 해결됨 (Resolved)
+1. **~~WebGL Context Exhaustion~~** (2025.1.6 해결)
+   - ~~증상: 5-6회 줌 인/아웃 후 화면 하얗게 변함~~
+   - ~~원인: WebGL 컨텍스트 누적 (브라우저 제한 16개)~~
+   - ~~영향: 페이지 새로고침 필요~~
+   - 해결: useCallback과 강화된 리소스 정리로 완전 해결
 
 ### 🟡 중요 (Major)
 2. **줌아웃 애니메이션 버그**
@@ -89,9 +97,14 @@ AsyncSite의 WhoWeAre 섹션은 초기 프로토타입 단계를 거쳐 현재 �
 ```
 src/
 ├── pages/
-│   └── WhoWeArePage.tsx (활성 페이지)
+│   ├── WhoWeArePage.tsx (메인 - AI Guide 버전)
+│   └── WhoWeAreOriginalPage.tsx (이전 버전)
 ├── components/whoweare/
-│   ├── ThreeSceneFloatingStory.tsx (메인 3D 씬)
+│   ├── ThreeScene.tsx (메인 3D 씬)
+│   ├── onboarding/
+│   │   ├── AIGuideDialogue.tsx (대화 UI)
+│   │   ├── AIGuideDialogue.css
+│   │   └── AIGuideStore.ts (상태 관리)
 │   └── [기타 프로토타입 컴포넌트 22개]
 ├── data/
 │   └── whoweareTeamMembers.ts (팀 데이터)
@@ -174,6 +187,8 @@ docs/project/whoweare/
 
 ## 🔄 변경 이력
 
+- **2025.01.07**: AI Guide 온보딩 시스템 구현 및 메인 버전으로 배포
+- **2025.01.06**: WebGL Context Exhaustion 버그 수정
 - **2025.01.06**: 텍스트 선명도 문제 해결
 - **2025.01.06**: 문서 구조 재정리
 - **2024.xx.xx**: ThreeSceneFloatingStory 최종 선택

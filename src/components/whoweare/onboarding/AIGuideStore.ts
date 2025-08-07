@@ -72,9 +72,13 @@ class AIGuideStore {
       {
         id: 'team_introduction',
         text: '이제 우리 팀원들을 만나볼 차례예요. 각자의 궤도를 돌고 있죠.',
-        action: 'move',
-        target: new THREE.Vector3(0, 5, 15),
-        duration: 3000
+        action: 'highlight',
+        target: 'all_members',
+        duration: 3000,
+        choices: [
+          { text: '팀원들을 자세히 볼게요', next: 'member_guide' },
+          { text: '멋지네요!', next: 'navigation_tip' }
+        ]
       },
       {
         id: 'member_guide',
@@ -177,6 +181,14 @@ class AIGuideStore {
   
   getChoices(): { text: string; next: string }[] | undefined {
     return this.dialogueScript.get(this.currentDialogueId)?.choices;
+  }
+  
+  getCurrentAction(): { action?: string; target?: any } {
+    const dialogue = this.dialogueScript.get(this.currentDialogueId);
+    return {
+      action: dialogue?.action,
+      target: dialogue?.target
+    };
   }
   
   recordInteraction(type: string, id: string) {

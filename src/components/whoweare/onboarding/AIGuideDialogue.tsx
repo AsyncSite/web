@@ -22,6 +22,7 @@ const AIGuideDialogue: React.FC<AIGuideDialogueProps> = ({
   const [showChoices, setShowChoices] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isEndDialogue, setIsEndDialogue] = useState(false);
+  const [currentAction, setCurrentAction] = useState<{ action?: string; target?: any }>({});
   
   useEffect(() => {
     if (!dialogue) {
@@ -36,6 +37,25 @@ const AIGuideDialogue: React.FC<AIGuideDialogueProps> = ({
     
     // 종료 대화인지 확인
     setIsEndDialogue(aiGuideStore.isEndDialogue());
+    
+    // 현재 액션 확인
+    const action = aiGuideStore.getCurrentAction();
+    setCurrentAction(action);
+    
+    // 대화 변경 이벤트 발생 (효과 초기화용)
+    const dialogueChangeEvent = new CustomEvent('aiGuideDialogueChange');
+    window.dispatchEvent(dialogueChangeEvent);
+    
+    // 액션에 따른 시각적 효과 트리거
+    if (action.action === 'point' || action.action === 'highlight') {
+      // 약간의 딜레이 후 효과 적용 (대화 변경 효과가 먼저 적용되도록)
+      setTimeout(() => {
+        const event = new CustomEvent('aiGuideAction', { 
+          detail: { action: action.action, target: action.target } 
+        });
+        window.dispatchEvent(event);
+      }, 100);
+    }
     
     // 타이핑 효과
     const text = dialogue;
