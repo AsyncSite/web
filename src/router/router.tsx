@@ -14,6 +14,8 @@ const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
 const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
 const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
+const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
+const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
 
 const router = createBrowserRouter([
   {
@@ -64,6 +66,14 @@ const router = createBrowserRouter([
       {
         path: 'privacy', // 추가
         element: <PrivacyPage />,
+      },
+      {
+        path: 'payment/success',
+        element: <PaymentSuccessPage />,
+      },
+      {
+        path: 'payment/fail',
+        element: <PaymentFailPage />,
       },
       {
         path: '/',
