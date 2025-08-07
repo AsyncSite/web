@@ -58,7 +58,11 @@ class AIGuideStore {
         text: '카드를 클릭하면 자세한 이야기를 볼 수 있어요. 한번 시도해보세요!',
         action: 'highlight',
         target: 'story_panel_1',
-        duration: 3000
+        duration: 3000,
+        choices: [
+          { text: '클릭해볼게요', next: 'wait_for_story' },
+          { text: '팀원들을 먼저 볼래요', next: 'team_introduction' }
+        ]
       },
       {
         id: 'after_story_click',
@@ -85,7 +89,11 @@ class AIGuideStore {
         text: '팀원을 클릭하면 더 자세히 알아볼 수 있어요. 누구부터 만나보실래요?',
         action: 'point',
         target: 'member_rene',
-        duration: 3000
+        duration: 3000,
+        choices: [
+          { text: '클릭해볼게요', next: 'wait_for_member' },
+          { text: '다른 것도 둘러볼래요', next: 'navigation_tip' }
+        ]
       },
       {
         id: 'after_member_click',
@@ -99,7 +107,11 @@ class AIGuideStore {
       {
         id: 'navigation_tip',
         text: '잠깐! 마우스를 드래그하면 공간을 회전시킬 수 있어요. 시도해보세요!',
-        duration: 3000
+        duration: 3000,
+        choices: [
+          { text: '알겠어요!', next: 'free_explore' },
+          { text: '투어 마치기', next: 'tour_end' }
+        ]
       },
       {
         id: 'tour_end',
@@ -118,17 +130,52 @@ class AIGuideStore {
       {
         id: 'continue_stories',
         text: '다른 카드들도 각각 특별한 의미가 있어요. 모두 둘러보세요!',
-        duration: 2000
+        duration: 2000,
+        choices: [
+          { text: '계속 둘러볼게요', next: 'free_explore' },
+          { text: '팀원들을 만나볼게요', next: 'team_introduction' }
+        ]
       },
       {
         id: 'continue_members',
         text: '좋아요! 다른 팀원들도 만나보세요. 모두 특별한 재능을 가지고 있어요.',
-        duration: 2000
+        duration: 2000,
+        choices: [
+          { text: '계속 둘러볼게요', next: 'free_explore' },
+          { text: '스토리 카드도 볼게요', next: 'tour_start' }
+        ]
       },
       {
         id: 'complete',
         text: '즐거운 여행이 되셨길 바라요! AsyncSite 우주에서 뵙게 되어 반가웠어요! 🚀✨',
         duration: 3000
+      },
+      {
+        id: 'wait_for_story',
+        text: '천천히 살펴보세요. 클릭하면 자세한 내용을 볼 수 있어요!',
+        duration: 3000,
+        choices: [
+          { text: '다 봤어요', next: 'after_story_click' },
+          { text: '팀원들을 볼래요', next: 'team_introduction' }
+        ]
+      },
+      {
+        id: 'wait_for_member',
+        text: '팀원을 클릭해서 만나보세요! 각자의 이야기가 기다리고 있어요.',
+        duration: 3000,
+        choices: [
+          { text: '다 봤어요', next: 'after_member_click' },
+          { text: '스토리를 볼래요', next: 'tour_start' }
+        ]
+      },
+      {
+        id: 'free_explore',
+        text: '자유롭게 탐험해보세요! 궁금한 것이 있으면 언제든 클릭해보세요.',
+        duration: 3000,
+        choices: [
+          { text: '계속 둘러볼게요', next: 'complete' },
+          { text: '다시 안내받고 싶어요', next: 'tour_start' }
+        ]
       }
     ];
     
@@ -142,17 +189,39 @@ class AIGuideStore {
       case 'intro':
         return this.dialogueScript.get('greeting')?.text || '';
       case 'story':
+        const storyClicks = this.interactionHistory.filter(h => h.type === 'story').length;
         // First story click
-        if (this.interactionHistory.filter(h => h.type === 'story').length === 1) {
+        if (storyClicks === 1) {
           this.currentDialogueId = 'after_story_click';
           return this.dialogueScript.get('after_story_click')?.text || '';
         }
+        // Repeated story clicks - provide helpful guidance
+        else if (storyClicks > 1) {
+          const messages = [
+            '다른 카드들도 둘러보셨나요? 각각 특별한 의미가 있어요.',
+            '이 카드를 다시 보시는군요! 다른 카드들도 확인해보세요.',
+            '좋아요! 천천히 모든 이야기를 살펴보세요.',
+            '카드를 자세히 보고 계시네요. 팀원들도 만나보실래요?'
+          ];
+          return messages[Math.min(storyClicks - 2, messages.length - 1)];
+        }
         return '';
       case 'member':
+        const memberClicks = this.interactionHistory.filter(h => h.type === 'member').length;
         // First member click
-        if (this.interactionHistory.filter(h => h.type === 'member').length === 1) {
+        if (memberClicks === 1) {
           this.currentDialogueId = 'after_member_click';
           return this.dialogueScript.get('after_member_click')?.text || '';
+        }
+        // Repeated member clicks - provide helpful guidance
+        else if (memberClicks > 1) {
+          const messages = [
+            '다른 팀원들도 만나보셨나요? 모두 특별한 재능이 있어요.',
+            '이 팀원을 다시 보시는군요! 다른 팀원들도 확인해보세요.',
+            '좋아요! 각 팀원의 이야기를 천천히 살펴보세요.',
+            '팀원들을 자세히 보고 계시네요. 스토리 카드도 보실래요?'
+          ];
+          return messages[Math.min(memberClicks - 2, messages.length - 1)];
         }
         return '';
       default:

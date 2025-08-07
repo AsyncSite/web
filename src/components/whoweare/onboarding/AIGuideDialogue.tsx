@@ -23,13 +23,24 @@ const AIGuideDialogue: React.FC<AIGuideDialogueProps> = ({
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isEndDialogue, setIsEndDialogue] = useState(false);
   const [currentAction, setCurrentAction] = useState<{ action?: string; target?: any }>({});
+  const [lastValidDialogue, setLastValidDialogue] = useState<string>('');
   
   useEffect(() => {
     if (!dialogue) {
-      setDisplayedText('');
-      setShowChoices(false);
+      // Keep the last valid dialogue displayed to prevent sudden disappearance
+      // Only hide after a delay if really needed
+      if (lastValidDialogue && !isFadingOut) {
+        setTimeout(() => {
+          if (!dialogue) {
+            setShowChoices(true); // Show choices even for empty dialogue
+          }
+        }, 500);
+      }
       return;
     }
+    
+    // Store valid dialogue
+    setLastValidDialogue(dialogue);
     
     setIsTyping(true);
     setDisplayedText('');
@@ -99,7 +110,11 @@ const AIGuideDialogue: React.FC<AIGuideDialogueProps> = ({
   const choices = aiGuideStore.getChoices();
   const canGoBack = aiGuideStore.canGoBack();
   
-  if (!dialogue && !displayedText) return null;
+  // Don't hide immediately when dialogue is empty - use last valid dialogue
+  if (!dialogue && !displayedText && !lastValidDialogue) return null;
+  
+  // Use the displayed text or fallback to last valid dialogue
+  const textToDisplay = displayedText || lastValidDialogue || '계속 탐험해보세요!';
   
   return (
     <div className={`ai-guide-dialogue-container ${isFadingOut ? 'fade-out' : ''}`}>
@@ -126,7 +141,7 @@ const AIGuideDialogue: React.FC<AIGuideDialogueProps> = ({
         )}
         
         <div className="bubble-content">
-          <p className="bubble-text">{displayedText}</p>
+          <p className="bubble-text">{textToDisplay}</p>
           {isTyping && <span className="typing-cursor">|</span>}
         </div>
         
