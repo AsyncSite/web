@@ -174,18 +174,40 @@ const WhoWeArePage: React.FC = () => {
             // WebGL supported on mobile/tablet - enable with appropriate quality
             setWhoweareShow3D(true); // Enable 3D for capable mobile devices
             
-            // Set quality based on device and performance
-            if (isTablet && cores >= 4) {
-              setRenderQuality('medium');
-            } else if (isMobile && cores >= 6) {
-              setRenderQuality('medium');
-            } else if (isMobile && cores >= 4) {
-              setRenderQuality('low');
-            } else if (cores < 4) {
-              // Very low-end mobile - disable 3D
-              setWhoweareShow3D(false);
-              setWhoweareIsLoading(false);
+            // Improved quality settings for better text readability
+            // Consider both core count and screen resolution
+            const highResScreen = window.devicePixelRatio >= 2;
+            
+            if (isTablet) {
+              // Tablets generally have better performance
+              if (cores >= 6) {
+                setRenderQuality('high');
+              } else if (cores >= 4) {
+                setRenderQuality('medium');
+              } else {
+                setRenderQuality('low');
+              }
+            } else if (isMobile) {
+              // Mobile quality based on cores and screen
+              if (cores >= 8) {
+                // High-end phones (flagship devices)
+                setRenderQuality('high');
+              } else if (cores >= 6 || (cores >= 4 && highResScreen)) {
+                // Mid-to-high range phones
+                setRenderQuality('medium');
+              } else if (cores >= 4) {
+                // Mid-range phones - prioritize text clarity
+                setRenderQuality('low');
+              } else if (cores >= 2) {
+                // Low-end phones - still enable but with lowest quality
+                setRenderQuality('low');
+              } else {
+                // Very low-end mobile - disable 3D
+                setWhoweareShow3D(false);
+                setWhoweareIsLoading(false);
+              }
             } else {
+              // Fallback
               setRenderQuality('low');
             }
           }

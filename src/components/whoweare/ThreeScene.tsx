@@ -178,16 +178,37 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
         
-        // Pixel ratio optimization based on device
+        // Pixel ratio optimization - prioritize text clarity
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        
         if (deviceType === 'desktop') {
           // Desktop keeps original behavior
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
         } else if (deviceType === 'tablet') {
-          // Tablet optimization
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio, renderQuality === 'high' ? 2 : 1.5));
+          // Tablet - balance between quality and performance
+          let targetRatio;
+          if (renderQuality === 'high') {
+            targetRatio = Math.min(devicePixelRatio, 2);
+          } else if (renderQuality === 'medium') {
+            targetRatio = Math.min(devicePixelRatio, 1.75);
+          } else {
+            targetRatio = Math.min(devicePixelRatio, 1.5);
+          }
+          renderer.setPixelRatio(targetRatio);
         } else {
-          // Mobile optimization
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio, renderQuality === 'low' ? 1 : 1.5));
+          // Mobile - ensure minimum quality for text readability
+          let targetRatio;
+          if (renderQuality === 'high') {
+            // High-end phones can handle native resolution up to 2x
+            targetRatio = Math.min(devicePixelRatio, 2);
+          } else if (renderQuality === 'medium') {
+            // Mid-range phones - good balance
+            targetRatio = Math.min(Math.max(1.5, devicePixelRatio * 0.75), 1.75);
+          } else {
+            // Low-end phones - ensure minimum 1.25 for text clarity
+            targetRatio = Math.min(Math.max(1.25, devicePixelRatio * 0.6), 1.5);
+          }
+          renderer.setPixelRatio(targetRatio);
         }
         
         renderer.shadowMap.enabled = false; // Disable shadows for performance
@@ -374,10 +395,47 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { alpha: false });
             
-            // Apply DPR for sharper text on high-DPI displays
-            const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
-            const baseWidth = 1024; // Increased from 512
-            const baseHeight = 768; // Increased from 384
+            // Dynamic resolution based on device and quality
+            let dpr, baseWidth, baseHeight;
+            
+            if (deviceType === 'desktop') {
+              // Desktop - highest quality
+              dpr = Math.min(window.devicePixelRatio || 1, 2);
+              baseWidth = 1024;
+              baseHeight = 768;
+            } else if (deviceType === 'tablet') {
+              // Tablet - good quality with performance consideration
+              dpr = Math.min(window.devicePixelRatio || 1, 2);
+              if (renderQuality === 'high') {
+                baseWidth = 1024;
+                baseHeight = 768;
+              } else if (renderQuality === 'medium') {
+                baseWidth = 896;
+                baseHeight = 672;
+              } else {
+                baseWidth = 768;
+                baseHeight = 576;
+              }
+            } else {
+              // Mobile - optimized for clarity while maintaining performance
+              // Ensure minimum DPR for text clarity
+              const deviceDPR = window.devicePixelRatio || 1;
+              
+              if (renderQuality === 'high') {
+                dpr = Math.min(deviceDPR, 2);
+                baseWidth = 896;
+                baseHeight = 672;
+              } else if (renderQuality === 'medium') {
+                dpr = Math.min(Math.max(1.5, deviceDPR), 2);
+                baseWidth = 768;
+                baseHeight = 576;
+              } else {
+                // Even on low quality, ensure text is readable
+                dpr = Math.max(1.25, Math.min(deviceDPR, 1.5));
+                baseWidth = 640;
+                baseHeight = 480;
+              }
+            }
             
             canvas.width = baseWidth * dpr;
             canvas.height = baseHeight * dpr;
@@ -400,6 +458,9 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
               ctx.fillStyle = bgGradient;
               ctx.fillRect(0, 0, baseWidth, baseHeight);
               
+              // Scale font sizes based on canvas resolution
+              const scaleFactor = baseWidth / 1024; // Use 1024 as reference
+              
               // Add subtle glow background for title
               if (panel.title) {
                 const titleGlow = ctx.createRadialGradient(baseWidth/2, 150, 0, baseWidth/2, 150, 300);
@@ -412,19 +473,20 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
               // Title with maximum clarity
               if (panel.title) {
                 const titleLines = panel.title.split('\n');
-                const lineHeight = 90; // Doubled for new resolution
+                const titleFontSize = Math.round(74 * scaleFactor);
+                const lineHeight = Math.round(90 * scaleFactor);
                 const totalHeight = (titleLines.length - 1) * lineHeight;
-                const startY = 150 - totalHeight / 2; // Doubled from 75
+                const startY = Math.round(150 * scaleFactor) - totalHeight / 2;
 
                 // Multiple shadow layers for better visibility
                 ctx.shadowColor = '#000000';
-                ctx.shadowBlur = 20;
+                ctx.shadowBlur = Math.round(20 * scaleFactor);
                 ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 3;
+                ctx.shadowOffsetY = Math.round(3 * scaleFactor);
                 
                 // Draw title multiple times for bold effect
                 ctx.fillStyle = '#C3E88D';
-                ctx.font = '600 74px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'; // Doubled font size
+                ctx.font = `600 ${titleFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
                 ctx.textAlign = 'center';
                 
                 titleLines.forEach((line, i) => {
@@ -433,8 +495,8 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
                   ctx.fillText(line, baseWidth/2, y);
                   
                   // Draw main text
-                  ctx.shadowBlur = 5;
-                  ctx.shadowOffsetY = 1;
+                  ctx.shadowBlur = Math.round(5 * scaleFactor);
+                  ctx.shadowOffsetY = Math.round(1 * scaleFactor);
                   ctx.fillText(line, baseWidth/2, y);
                 });
                 
@@ -443,32 +505,36 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
               }
               
               // Content with maximum readability
+              const contentFontSize = Math.round(44 * scaleFactor);
+              const contentLineHeight = Math.round(70 * scaleFactor);
+              const contentStartY = Math.round(320 * scaleFactor);
+              
               ctx.fillStyle = '#ffffff';
-              ctx.font = '400 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'; // Doubled font size
+              ctx.font = `400 ${contentFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
               ctx.textAlign = 'center';
               ctx.shadowColor = '#000000';
-              ctx.shadowBlur = 20;
+              ctx.shadowBlur = Math.round(20 * scaleFactor);
               ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 3;
+              ctx.shadowOffsetY = Math.round(3 * scaleFactor);
               
               const lines = panel.content.split('\n');
               lines.forEach((line, i) => {
                 // Draw shadow layer
-                ctx.fillText(line, baseWidth/2, 320 + i * 70); // Doubled positions
+                ctx.fillText(line, baseWidth/2, contentStartY + i * contentLineHeight);
               });
               
               // Draw text again with less shadow for crisp edges
-              ctx.shadowBlur = 5;
-              ctx.shadowOffsetY = 2;
+              ctx.shadowBlur = Math.round(5 * scaleFactor);
+              ctx.shadowOffsetY = Math.round(2 * scaleFactor);
               lines.forEach((line, i) => {
-                ctx.fillText(line, baseWidth/2, 320 + i * 70); // Doubled positions
+                ctx.fillText(line, baseWidth/2, contentStartY + i * contentLineHeight);
               });
               
               // Final layer for maximum sharpness
               ctx.shadowBlur = 0;
               ctx.shadowOffsetY = 0;
               lines.forEach((line, i) => {
-                ctx.fillText(line, baseWidth/2, 320 + i * 70); // Doubled positions
+                ctx.fillText(line, baseWidth/2, contentStartY + i * contentLineHeight);
               });
             }
             
