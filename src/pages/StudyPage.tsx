@@ -95,6 +95,44 @@ const StudyPage: React.FC = () => {
             <h1>STUDY</h1>
             <p className="page-description">함께 성장하는 개발자들의 커뮤니티</p>
           
+            {/* Study Actions */}
+            <div className="study-actions" style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px',
+              marginBottom: '30px'
+            }}>
+              <button 
+                onClick={() => navigate('/study/propose')} 
+                className="propose-study-btn"
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  color: '#1a1a1a',
+                  background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(195, 232, 141, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(195, 232, 141, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(195, 232, 141, 0.3)';
+                }}
+              >
+                💡 스터디 제안하기
+              </button>
+            </div>
+          
             {/* Tab Navigation */}
             <div className="tab-navigation">
               <button

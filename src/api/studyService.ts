@@ -1,4 +1,5 @@
 import publicApiClient, { handlePublicApiError } from './publicClient';
+import apiClient from './client';
 
 // Constants
 export const StudyStatus = {
@@ -202,6 +203,23 @@ export interface GetStudiesParams {
   sort?: string;
 }
 
+// Study Proposal Request Type
+export interface StudyProposalRequest {
+  title: string;
+  description: string;
+  proposerId: string;
+  generation?: number;
+  slug?: string;
+  type?: StudyType;
+  tagline?: string;
+  schedule?: string;
+  duration?: string;
+  capacity?: number;
+  recruitDeadline?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 // Service class following JobNavigatorService pattern
 class StudyService {
   private readonly STUDY_API_PATH = '/api/studies/v1/studies';
@@ -350,6 +368,23 @@ class StudyService {
       study.tagline.toLowerCase().includes(lowerKeyword) ||
       (study.description?.toLowerCase().includes(lowerKeyword) ?? false)
     );
+  }
+
+  /**
+   * Propose a new study (requires authentication)
+   */
+  async proposeStudy(proposal: StudyProposalRequest): Promise<StudyDTO> {
+    const response = await apiClient.post<{
+      success: boolean;
+      data: StudyDTO;
+      error: any;
+      timestamp: number[];
+    }>(this.STUDY_API_PATH, proposal);
+    
+    // API가 success/data 구조로 응답하는 경우 처리
+    const study = response.data?.data || response.data;
+    
+    return study;
   }
 }
 

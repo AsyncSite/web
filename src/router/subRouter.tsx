@@ -11,6 +11,7 @@ const SpotlightArenaPage = lazy(() => import('../pages/lab/spotlight-arena/Spotl
 const StudyPage = lazy(() => import('../pages/StudyPage'));
 const TecoTecoPage = lazy(() => import('../pages/TecoTecoPage/TecoTecoPage'));
 const StudyDetailPage = lazy(() => import('../pages/StudyDetailPage'));
+const StudyProposalPage = lazy(() => import('../pages/StudyProposalPage'));
 
 // Ignition 관련 페이지들
 const IgnitionPage = lazy(() => import('../pages/ignition/IgnitionPage'));
@@ -35,6 +36,10 @@ const subRouter = [
       {
         path: 'calendar',
         element: <StudyPage />,
+      },
+      {
+        path: 'propose',
+        element: <StudyProposalPage />,
       },
       // 레거시 URL 리다이렉트 (/study/1 -> /study/1-tecoteco)
       {
