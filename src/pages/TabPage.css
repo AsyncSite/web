@@ -153,10 +153,21 @@
   gap: 24px;
 }
 
+.study-card-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .study-card-link {
   text-decoration: none;
   color: inherit;
   display: block;
+  flex: 1;
+}
+
+.study-actions {
+  padding: 0;
+  margin-top: 0;
 }
 
 .study-card {

@@ -6,11 +6,13 @@ import { PaymentProvider } from '../contexts/PaymentContext';
 import { PaymentRequest, PaymentResponse } from '../types/payment';
 import EmptyState from '../components/ui/EmptyState';
 import studyService, { Study } from '../api/studyService';
+import { useAuth } from '../contexts/AuthContext';
 import './TabPage.css';
 
 const StudyPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<'list' | 'calendar'>(
     location.pathname.includes('/calendar') ? 'calendar' : 'list'
   );
@@ -95,6 +97,44 @@ const StudyPage: React.FC = () => {
             <h1>STUDY</h1>
             <p className="page-description">함께 성장하는 개발자들의 커뮤니티</p>
           
+            {/* Study Actions */}
+            <div className="study-actions" style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px',
+              marginBottom: '30px'
+            }}>
+              <button 
+                onClick={() => navigate('/study/propose')} 
+                className="propose-study-btn"
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  color: '#1a1a1a',
+                  background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(195, 232, 141, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(195, 232, 141, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(195, 232, 141, 0.3)';
+                }}
+              >
+                💡 스터디 제안하기
+              </button>
+            </div>
+          
             {/* Tab Navigation */}
             <div className="tab-navigation">
               <button
@@ -137,26 +177,96 @@ const StudyPage: React.FC = () => {
                   <h2>📢 모집 중인 스터디</h2>
                   <div className="study-grid">
                     {recruitingStudies.map(study => (
-                      <Link to={`/study/${study.slug}`} key={study.id} className="study-card-link">
-                        <div className="study-card">
-                          <div className="study-header">
-                            <h3>
-                              {study.name}
-                              {study.generation > 1 && <span className="generation">{study.generation}기</span>}
-                            </h3>
-                            <span className="status-badge recruiting">모집중</span>
+                      <div key={study.id} className="study-card-wrapper">
+                        <Link to={`/study/${study.slug}`} className="study-card-link">
+                          <div className="study-card">
+                            <div className="study-header">
+                              <h3>
+                                {study.name}
+                                {study.generation > 1 && <span className="generation">{study.generation}기</span>}
+                              </h3>
+                              <span className="status-badge recruiting">모집중</span>
+                            </div>
+                            <p className="study-tagline">{study.tagline}</p>
+                            <div className="study-meta">
+                              {study.schedule && study.schedule !== '매주 수요일' && (
+                                <span>📅 {study.schedule} {study.duration && study.duration !== '19:00-21:00' && study.duration}</span>
+                              )}
+                              {(study.capacity && study.capacity > 0) && (
+                                <span>👥 {study.enrolled}/{study.capacity}명</span>
+                              )}
+                            </div>
                           </div>
-                          <p className="study-tagline">{study.tagline}</p>
-                          <div className="study-meta">
-                            {study.schedule && study.schedule !== '매주 수요일' && (
-                              <span>📅 {study.schedule} {study.duration && study.duration !== '19:00-21:00' && study.duration}</span>
-                            )}
-                            {(study.capacity && study.capacity > 0) && (
-                              <span>👥 {study.enrolled}/{study.capacity}명</span>
-                            )}
-                          </div>
+                        </Link>
+                        <div className="study-actions">
+                          {/* 스터디 제안자 여부에 따라 다른 버튼 표시 */}
+                          {isAuthenticated && user && study.proposerId === user.email ? (
+                            /* 스터디 제안자는 관리 버튼 */
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/study/${study.id}/manage`);
+                              }}
+                              className="manage-button"
+                              style={{
+                                background: 'linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%)',
+                                border: 'none',
+                                color: '#1a1a1a',
+                                padding: '8px 16px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                transition: 'all 0.3s ease',
+                                marginTop: '12px',
+                                width: '100%'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(137, 221, 255, 0.3)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            >
+                              🎛️ 스터디 관리
+                            </button>
+                          ) : (
+                            /* 일반 사용자는 참가 신청 버튼 */
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/study/${study.id}/apply`);
+                              }}
+                              className="apply-button"
+                              style={{
+                                background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
+                                border: 'none',
+                                color: '#1a1a1a',
+                                padding: '8px 16px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                transition: 'all 0.3s ease',
+                                marginTop: '12px',
+                                width: '100%'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(195, 232, 141, 0.3)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            >
+                              📝 참가 신청하기
+                            </button>
+                          )}
                         </div>
-                      </Link>
+                      </div>
                     ))}
                   </div>
                 </section>

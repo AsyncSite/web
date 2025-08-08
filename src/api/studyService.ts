@@ -1,4 +1,5 @@
 import publicApiClient, { handlePublicApiError } from './publicClient';
+import apiClient from './client';
 
 // Constants
 export const StudyStatus = {
@@ -64,6 +65,7 @@ export interface Study {
   generation: number;
   tagline: string;
   description?: string;
+  proposerId: string; // 스터디 제안자 ID
   type: 'participatory' | 'educational';
   typeLabel: string;
   leader: {
@@ -104,38 +106,57 @@ const parseDate = (dateValue: string | number[] | undefined): Date | null => {
 
 // Helper: Determine study status
 const determineStudyStatus = (dto: StudyDTO): Study['status'] => {
+  // APPROVED가 아닌 스터디는 모두 closed
   if (dto.status !== 'APPROVED') {
     return 'closed';
   }
   
-  // 날짜 정보가 없는 경우 기본적으로 진행중으로 처리
-  if (!dto.recruitDeadline && !dto.endDate) {
-    return 'ongoing';
-  }
-  
   const now = new Date();
   
-  // 모집 마감일이 있는 경우에만 체크
-  if (dto.recruitDeadline) {
-    const deadline = parseDate(dto.recruitDeadline);
-    if (deadline && deadline > now) {
-      return 'recruiting';
-    }
-  }
-  
-  // 종료일이 있는 경우에만 체크
+  // 종료일이 있고 지났으면 closed
   if (dto.endDate) {
     const endDate = parseDate(dto.endDate);
-    if (endDate) {
-      if (endDate > now) {
-        return 'ongoing';
-      }
+    if (endDate && endDate <= now) {
       return 'closed';
     }
   }
   
-  // 모집 마감일만 있고 지났다면 진행중으로 간주
-  return 'ongoing';
+  // 정원이 차면 closed (enrolled >= capacity)
+  if (dto.capacity && dto.enrolled && dto.enrolled >= dto.capacity) {
+    return 'closed';
+  }
+  
+  // 모집 마감일 체크
+  if (dto.recruitDeadline) {
+    const deadline = parseDate(dto.recruitDeadline);
+    if (deadline) {
+      if (deadline > now) {
+        // 모집 마감일이 아직 안 지났으면 recruiting
+        return 'recruiting';
+      } else {
+        // 모집 마감일이 지났으면 ongoing (종료일 체크는 위에서 이미 함)
+        return 'ongoing';
+      }
+    }
+  }
+  
+  // 시작일 체크 (시작 전이면 recruiting, 시작 후면 ongoing)
+  if (dto.startDate) {
+    const startDate = parseDate(dto.startDate);
+    if (startDate) {
+      if (startDate > now) {
+        // 아직 시작 안 했으면 recruiting
+        return 'recruiting';
+      } else {
+        // 이미 시작했으면 ongoing
+        return 'ongoing';
+      }
+    }
+  }
+  
+  // 날짜 정보가 하나도 없으면 recruiting으로 간주
+  // (새로 만든 스터디는 보통 모집중)
+  return 'recruiting';
 };
 
 // Helper: Get study theme color
@@ -173,6 +194,7 @@ const transformStudy = (dto: StudyDTO): Study => {
     generation: dto.generation || 1,
     tagline: dto.tagline || (dto.description ? dto.description.substring(0, 50) + (dto.description.length > 50 ? '...' : '') : ''),
     description: dto.description,
+    proposerId: dto.proposerId, // 스터디 제안자 ID 포함
     type: typeMap[dto.type || 'PARTICIPATORY'],
     typeLabel: typeLabelMap[dto.type || 'PARTICIPATORY'],
     leader: {
@@ -200,6 +222,69 @@ export interface GetStudiesParams {
   page?: number;
   size?: number;
   sort?: string;
+}
+
+// Study Proposal Request Type
+export interface StudyProposalRequest {
+  title: string;
+  description: string;
+  proposerId: string;
+  generation?: number;
+  slug?: string;
+  type?: StudyType;
+  tagline?: string;
+  schedule?: string;
+  duration?: string;
+  capacity?: number;
+  recruitDeadline?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+// Application related types
+export const ApplicationStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED', 
+  REJECTED: 'REJECTED'
+} as const;
+
+export type ApplicationStatus = typeof ApplicationStatus[keyof typeof ApplicationStatus];
+
+export interface ApplicationRequest {
+  applicantId: string;
+  answers: Record<string, string>;
+}
+
+export interface ApplicationResponse {
+  id: string;
+  studyId: string;
+  applicantId: string;
+  answers: Record<string, string>;
+  status: ApplicationStatus;
+  createdAt: string;
+  updatedAt: string;
+  reviewNote?: string;
+  reviewedBy?: string;
+}
+
+export interface AcceptApplicationRequest {
+  reviewerId: string;
+  note?: string;
+}
+
+export interface RejectApplicationRequest {
+  reviewerId: string;
+  reason: string;
+}
+
+// Member related types
+export interface MemberResponse {
+  id: string;
+  studyId: string;
+  userId: string;
+  role: string;
+  joinedAt: string;
+  status: string;
 }
 
 // Service class following JobNavigatorService pattern
@@ -350,6 +435,140 @@ class StudyService {
       study.tagline.toLowerCase().includes(lowerKeyword) ||
       (study.description?.toLowerCase().includes(lowerKeyword) ?? false)
     );
+  }
+
+  /**
+   * Propose a new study (requires authentication)
+   */
+  async proposeStudy(proposal: StudyProposalRequest): Promise<StudyDTO> {
+    const response = await apiClient.post<{
+      success: boolean;
+      data: StudyDTO;
+      error: any;
+      timestamp: number[];
+    }>(this.STUDY_API_PATH, proposal);
+    
+    // API가 success/data 구조로 응답하는 경우 처리
+    const study = response.data?.data || response.data;
+    
+    return study;
+  }
+
+  /**
+   * Apply to study (requires authentication)
+   */
+  async applyToStudy(studyId: string, application: ApplicationRequest): Promise<ApplicationResponse> {
+    const response = await apiClient.post<{
+      success: boolean;
+      data: ApplicationResponse;
+      error: any;
+      timestamp: number[];
+    }>(`${this.STUDY_API_PATH}/${studyId}/applications`, application);
+    
+    return response.data?.data || response.data;
+  }
+
+  /**
+   * Get applications for a study (host only)
+   */
+  async getStudyApplications(studyId: string, page: number = 0, size: number = 10): Promise<PagedResponse<ApplicationResponse>> {
+    const response = await apiClient.get<{
+      success: boolean;
+      data: PagedResponse<ApplicationResponse>;
+      error: any;
+      timestamp: number[];
+    } | PagedResponse<ApplicationResponse>>(`${this.STUDY_API_PATH}/${studyId}/applications`, {
+      params: { page, size }
+    });
+    
+    return (response.data as any)?.data || response.data;
+  }
+
+  /**
+   * Get single application details
+   */
+  async getApplication(studyId: string, applicationId: string): Promise<ApplicationResponse> {
+    const response = await apiClient.get<{
+      success: boolean;
+      data: ApplicationResponse;
+      error: any;
+      timestamp: number[];
+    }>(`${this.STUDY_API_PATH}/${studyId}/applications/${applicationId}`);
+    
+    return response.data?.data || response.data;
+  }
+
+  /**
+   * Accept application (host only)
+   */
+  async acceptApplication(studyId: string, applicationId: string, request: AcceptApplicationRequest): Promise<{ memberId: string; studyId: string; applicationId: string; acceptedAt: string; }> {
+    const response = await apiClient.post<{
+      success: boolean;
+      data: { memberId: string; studyId: string; applicationId: string; acceptedAt: string; };
+      error: any;
+      timestamp: number[];
+    }>(`${this.STUDY_API_PATH}/${studyId}/applications/${applicationId}/accept`, request);
+    
+    return response.data?.data || response.data;
+  }
+
+  /**
+   * Reject application (host only) 
+   */
+  async rejectApplication(studyId: string, applicationId: string, request: RejectApplicationRequest): Promise<void> {
+    await apiClient.post(`${this.STUDY_API_PATH}/${studyId}/applications/${applicationId}/reject`, request);
+  }
+
+  /**
+   * Cancel application (applicant only)
+   */
+  async cancelApplication(studyId: string, applicationId: string, applicantId: string): Promise<void> {
+    await apiClient.delete(`${this.STUDY_API_PATH}/${studyId}/applications/${applicationId}`, {
+      params: { applicantId }
+    });
+  }
+
+  /**
+   * Get study members (requires authentication)
+   */
+  async getStudyMembers(studyId: string, page: number = 0, size: number = 10): Promise<PagedResponse<MemberResponse>> {
+    const response = await apiClient.get<{
+      success: boolean;
+      data: PagedResponse<MemberResponse>;
+      error: any;
+      timestamp: number[];
+    } | PagedResponse<MemberResponse>>(`${this.STUDY_API_PATH}/${studyId}/members`, {
+      params: { page, size }
+    });
+    
+    return (response.data as any)?.data || response.data;
+  }
+
+  /**
+   * Get member count for study
+   */
+  async getStudyMemberCount(studyId: string): Promise<number> {
+    const response = await apiClient.get<{
+      success: boolean;
+      data: number;
+      error: any;
+      timestamp: number[];
+    } | number>(`${this.STUDY_API_PATH}/${studyId}/members/count`);
+    
+    // Handle both wrapped and direct response formats
+    if (typeof response.data === 'number') {
+      return response.data;
+    }
+    return (response.data as any)?.data || 0;
+  }
+
+  /**
+   * Leave study (member only)
+   */
+  async leaveStudy(studyId: string, userId: string): Promise<void> {
+    await apiClient.post(`${this.STUDY_API_PATH}/${studyId}/members/leave`, null, {
+      params: { userId }
+    });
   }
 }
 
