@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { STUDY_LIST, getStudyUrl } from '../../../constants/studies';
+import { Link } from 'react-router-dom';
+import studyService, { type Study } from '../../../api/studyService';
+import { handlePublicApiError } from '../../../api/publicClient';
 import './Studies.css';
 
 const Studies: React.FC = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [studies, setStudies] = useState<Study[]>([]);
+  const [recruitingStudies, setRecruitingStudies] = useState<Study[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const timer = setInterval(() => {
@@ -13,15 +19,94 @@ const Studies: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
   
-  const calculateDaysLeft = (deadline: Date): number => {
+  useEffect(() => {
+    const fetchStudies = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const allStudies = await studyService.getAllStudies();
+        const activeStudies = allStudies.filter(study => 
+          study.status === 'recruiting' || study.status === 'ongoing'
+        );
+        const recruitingOnly = allStudies.filter(study => study.status === 'recruiting');
+        
+        setStudies(activeStudies);
+        setRecruitingStudies(recruitingOnly);
+      } catch (err) {
+        console.error('Failed to load studies:', err);
+        const errorMessage = handlePublicApiError(err);
+        setError(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchStudies();
+  }, []);
+  
+  const calculateDaysLeft = (deadline: Date | null): number | null => {
+    if (!deadline) return null;
     const diff = deadline.getTime() - currentTime.getTime();
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
   
-  // 중앙화된 스터디 데이터 사용
-  const studies = STUDY_LIST.filter(study => study.status === 'recruiting' || study.status === 'ongoing');
-  const recruitingStudies = STUDY_LIST.filter(study => study.status === 'recruiting');
   const hasRecruitingStudies = recruitingStudies.length > 0;
+  
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="studies section-background" id="studies">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">지금 Async Site에서는</h2>
+          </div>
+          <div className="studies-loading">
+            <p>스터디 목록을 불러오고 있습니다...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  
+  // Error state
+  if (error) {
+    return (
+      <section className="studies section-background" id="studies">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">지금 Async Site에서는</h2>
+          </div>
+          <div className="studies-error">
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="retry-btn">
+              다시 시도
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  
+  // Empty state
+  if (studies.length === 0) {
+    return (
+      <section className="studies section-background" id="studies">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">지금 Async Site에서는</h2>
+          </div>
+          <div className="studies-empty">
+            <p>현재 진행 중인 스터디가 없습니다.</p>
+            <p>곧 새로운 스터디가 열릴 예정이니 기대해주세요!</p>
+            <Link to="/login" className="more-link join-us-btn">
+              JOIN US
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
   
   return (
     <section className="studies section-background" id="studies">
@@ -38,24 +123,25 @@ const Studies: React.FC = () => {
         <div className="studies-grid">
           {studies.map((study) => {
             const daysLeft = calculateDaysLeft(study.deadline);
-            const spotsLeft = study.capacity - study.enrolled;
-            const isAlmostFull = spotsLeft <= 5;
-            const progressPercentage = (study.enrolled / study.capacity) * 100;
+            const spotsLeft = study.capacity > 0 ? study.capacity - study.enrolled : 0;
+            const isAlmostFull = study.capacity > 0 && spotsLeft <= 5;
+            const progressPercentage = study.capacity > 0 ? (study.enrolled / study.capacity) * 100 : 0;
             
             return (
               <div 
                 key={study.id} 
                 className="study-card"
                 style={{
-                  '--study-primary': study.color.primary,
-                  '--study-glow': study.color.glow
+                  '--study-primary': study.color?.primary || '#82AAFF',
+                  '--study-glow': study.color?.glow || 'rgba(130, 170, 255, 0.3)'
                 } as React.CSSProperties}
               >
                 {/* 스터디 헤더 */}
                 <div className="study-header">
                   <div className="study-info">
                     <h3 className="study-name">
-                      {study.name} <span className="study-generation">{study.generation}기</span>
+                      {study.name} 
+                      {study.generation > 1 && <span className="study-generation">{study.generation}기</span>}
                     </h3>
                     <p className="study-tagline">{study.tagline}</p>
                   </div>
@@ -66,7 +152,7 @@ const Studies: React.FC = () => {
                       </span>
                       <span className="type-label">{study.typeLabel}</span>
                     </div>
-                    {daysLeft <= 7 && (
+                    {daysLeft !== null && daysLeft <= 7 && daysLeft > 0 && (
                       <div className="deadline-badge">
                         D-{daysLeft}
                       </div>
@@ -88,26 +174,33 @@ const Studies: React.FC = () => {
                 </div>
                 
                 {/* 스터디 정보 */}
-                <div className="study-details">
-                  <div className="detail-item">
-                    <span className="detail-icon">📅</span>
-                    <span>{study.schedule} {study.duration}</span>
+                {(study.schedule || study.duration) ? (
+                  <div className="study-details">
+                    <div className="detail-item">
+                      <span className="detail-icon">📅</span>
+                      <span>
+                        {study.schedule || '일정 미정'}
+                        {study.duration && ` ${study.duration}`}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                ) : null}
                 
                 {/* 참여 현황 */}
-                <div className="participation-status">
-                  <div className="status-text">
-                    <span>{spotsLeft}분의 자리가 남았어요</span>
-                    {isAlmostFull && <span className="almost-full">곧 마감</span>}
+                {study.capacity && study.capacity > 0 ? (
+                  <div className="participation-status">
+                    <div className="status-text">
+                      <span>{spotsLeft}분의 자리가 남았어요</span>
+                      {isAlmostFull && <span className="almost-full">곧 마감</span>}
+                    </div>
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill"
+                        style={{ width: `${progressPercentage}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="progress-bar">
-                    <div 
-                      className="progress-fill"
-                      style={{ width: `${progressPercentage}%` }}
-                    />
-                  </div>
-                </div>
+                ) : null}
                 
                 {/* 최근 후기 */}
                 {study.recentTestimonial && (
@@ -118,9 +211,9 @@ const Studies: React.FC = () => {
                 )}
                 
                 {/* CTA 버튼 */}
-                <a href={getStudyUrl(study)} className="study-cta">
+                <Link to={`/study/${study.slug}`} className="study-cta">
                   함께하기
-                </a>
+                </Link>
               </div>
             );
           })}
@@ -129,18 +222,18 @@ const Studies: React.FC = () => {
         {/* 더 많은 스터디 안내 */}
         <div className="more-studies">
           <p className="more-text">
-            {hasRecruitingStudies 
+            {studies.length > 0 
               ? "더 많은 스터디를 확인해보세요" 
-              : "아쉽지만 지금은 모집중인 스터디가 없어요! 알림을 보내드릴게요!"}
+              : "아쉽지만 지금은 진행중인 스터디가 없어요! 알림을 보내드릴게요!"}
           </p>
-          {hasRecruitingStudies ? (
-            <a href="/study" className="more-link">
+          {studies.length > 0 ? (
+            <Link to="/study" className="more-link">
               모든 스터디 보기 →
-            </a>
+            </Link>
           ) : (
-            <a href="/login" className="more-link join-us-btn">
+            <Link to="/login" className="more-link join-us-btn">
               JOIN US
-            </a>
+            </Link>
           )}
         </div>
       </div>

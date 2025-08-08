@@ -569,3 +569,71 @@
     transition: none;
   }
 }
+
+/* Loading, Error, Empty States */
+.studies-loading,
+.studies-error,
+.studies-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.studies-loading p {
+  font-size: 1.2rem;
+  color: #64748b;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.studies-error p {
+  font-size: 1.1rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.studies-empty p {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin: 0.5rem 0;
+}
+
+.studies-empty p:first-child {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.studies-empty .join-us-btn {
+  margin-top: 1rem;
+}
