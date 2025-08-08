@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { TemplateHeader } from '../components/layout';
 import { Footer } from '../components/layout';
+import { useAuth } from '../contexts/AuthContext';
 import studyService, { type Study } from '../api/studyService';
 
 const StudyDetailPage: React.FC = () => {
   const { studyIdentifier } = useParams<{ studyIdentifier: string }>();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [study, setStudy] = useState<Study | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -87,9 +90,82 @@ const StudyDetailPage: React.FC = () => {
               <li>상태: {study.status === 'recruiting' ? '모집중' : study.status === 'ongoing' ? '진행중' : '종료'}</li>
             </ul>
           </div>
+
+          {/* Action Buttons */}
+          <div style={{ 
+            marginTop: '40px', 
+            display: 'flex', 
+            gap: '16px', 
+            flexWrap: 'wrap' 
+          }}>
+            {/* 스터디 제안자인지 확인 */}
+            {isAuthenticated && user && study.proposerId === user.email ? (
+              /* 스터디 제안자는 관리 버튼만 표시 */
+              <button
+                onClick={() => navigate(`/study/${study.id}/manage`)}
+                style={{
+                  background: 'linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%)',
+                  border: 'none',
+                  color: '#1a1a1a',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(137, 221, 255, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(137, 221, 255, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(137, 221, 255, 0.3)';
+                }}
+              >
+                🎛️ 스터디 관리
+              </button>
+            ) : (
+              /* 일반 사용자는 참가 신청 버튼 표시 */
+              study.status === 'recruiting' && (
+                <button
+                  onClick={() => navigate(`/study/${study.id}/apply`)}
+                  style={{
+                    background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
+                    border: 'none',
+                    color: '#1a1a1a',
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 15px rgba(195, 232, 141, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(195, 232, 141, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(195, 232, 141, 0.3)';
+                  }}
+                >
+                  📝 참가 신청하기
+                </button>
+              )
+            )}
+          </div>
           
-          <div style={{ marginTop: '40px' }}>
-            <p>💡 이 페이지는 향후 각 스터디별 맞춤 페이지로 개발될 예정입니다.</p>
+          <div style={{ 
+            marginTop: '60px', 
+            padding: '24px',
+            background: 'rgba(137, 221, 255, 0.05)',
+            borderRadius: '12px',
+            border: '1px solid rgba(137, 221, 255, 0.2)'
+          }}>
+            <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.8)' }}>💡 이 페이지는 향후 각 스터디별 맞춤 페이지로 개발될 예정입니다.</p>
           </div>
         </div>
       </main>

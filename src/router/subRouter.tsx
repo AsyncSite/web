@@ -12,6 +12,8 @@ const StudyPage = lazy(() => import('../pages/StudyPage'));
 const TecoTecoPage = lazy(() => import('../pages/TecoTecoPage/TecoTecoPage'));
 const StudyDetailPage = lazy(() => import('../pages/StudyDetailPage'));
 const StudyProposalPage = lazy(() => import('../pages/StudyProposalPage'));
+const StudyApplicationPage = lazy(() => import('../pages/StudyApplicationPage'));
+const StudyManagementPage = lazy(() => import('../pages/StudyManagementPage'));
 
 // Ignition 관련 페이지들
 const IgnitionPage = lazy(() => import('../pages/ignition/IgnitionPage'));
@@ -40,6 +42,14 @@ const subRouter = [
       {
         path: 'propose',
         element: <StudyProposalPage />,
+      },
+      {
+        path: ':studyId/apply',
+        element: <StudyApplicationPage />,
+      },
+      {
+        path: ':studyId/manage',
+        element: <StudyManagementPage />,
       },
       // 레거시 URL 리다이렉트 (/study/1 -> /study/1-tecoteco)
       {
