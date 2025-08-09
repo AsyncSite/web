@@ -1,0 +1,78 @@
+/* 시간 입력 필드 스타일 */
+.time-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+}
+
+.time-input:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Chrome/Edge 시간 선택기 아이콘 스타일 */
+.time-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.time-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Firefox 시간 입력 스타일 */
+.time-input::-moz-time-picker {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+/* 날짜 입력 필드 스타일 */
+.date-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.date-input:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Chrome/Edge 날짜 선택기 아이콘 스타일 */
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
