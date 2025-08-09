@@ -4,6 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import StarBackground from '../../components/common/StarBackground';
 import { env } from '../../config/environment';
 import './LoginPage.css';
+import { createPasskey, getPasskey } from '../../utils/webauthn/helpers';
+import apiClient from '../../api/client';
 
 interface LoginFormData {
   username: string;
@@ -27,6 +29,10 @@ function LoginPage(): React.ReactNode {
   const [errors, setErrors] = useState<LoginFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [webauthnSupported, setWebauthnSupported] = useState<boolean>(false);
+  React.useEffect(() => {
+    setWebauthnSupported(typeof window !== 'undefined' && !!(navigator as any).credentials?.create);
+  }, []);
 
   // Get the redirect path from location state
   const from = location.state?.from?.pathname || '/users/me';
@@ -217,6 +223,51 @@ function LoginPage(): React.ReactNode {
           </svg>
           <span>Google로 계속하기</span>
         </button>
+
+        {webauthnSupported && (
+          <>
+            <div className="login-divider">
+              <span>또는</span>
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  // 1) 요청 옵션 가져오기
+                  const optionsRes = await apiClient.post('/api/webauthn/auth/options', { username: formData.username || undefined });
+                  const options = optionsRes.data.data;
+                  // 2) get 호출
+                  const assertion = await getPasskey(options);
+                  // 3) 검증 요청
+                  const verifyRes = await apiClient.post('/api/webauthn/auth/verify', {
+                    username: formData.username || undefined,
+                    id: assertion.id,
+                    rawId: assertion.rawId,
+                    response: {
+                      clientDataJSON: assertion.response.clientDataJSON,
+                      authenticatorData: assertion.response.authenticatorData,
+                      signature: assertion.response.signature,
+                      userHandle: assertion.response.userHandle
+                    }
+                  });
+                  const loginResponse = verifyRes.data.data; // LoginResponse 형태
+                  // 기존 저장 로직 재사용
+                  authService.storeAuthData(loginResponse);
+                  const userProfile = await userService.getProfile();
+                  setUser(userProfile);
+                  dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, { user: userProfile });
+                } catch (err) {
+                  console.error('Passkey login failed', err);
+                }
+              }}
+              className="auth-button auth-button-secondary"
+              type="button"
+              aria-label="Passkey로 로그인"
+              disabled={isSubmitting}
+            >
+              Passkey로 로그인
+            </button>
+          </>
+        )}
 
         <div className="login-footer">
           <p>

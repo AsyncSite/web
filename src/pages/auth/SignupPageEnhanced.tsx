@@ -13,6 +13,8 @@ import userService from '../../api/userService';
 import StarBackground from '../../components/common/StarBackground';
 import './auth-common.css';
 import './SignupPage.css';
+import { createPasskey } from '../../utils/webauthn/helpers';
+import apiClient from '../../api/client';
 
 // 새로운 검증 시스템 import
 import {
@@ -77,6 +79,11 @@ function SignupPageEnhanced(): React.ReactNode {
   const [emailCheckTriggered, setEmailCheckTriggered] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [webauthnSupported, setWebauthnSupported] = useState<boolean>(false);
+
+  useEffect(() => {
+    setWebauthnSupported(typeof window !== 'undefined' && !!(navigator as any).credentials?.create);
+  }, []);
   
   // 실시간 검증을 위한 상태
   const [realtimeValidation, setRealtimeValidation] = useState<{
@@ -782,6 +789,38 @@ function SignupPageEnhanced(): React.ReactNode {
                   >
                     {isSubmitting ? '가입 중...' : '회원가입 완료'}
                   </button>
+                  {webauthnSupported && (
+                    <button
+                      type="button"
+                      className="auth-button secondary full-width"
+                      disabled={isSubmitting || !formData.email || !formData.name}
+                      onClick={async () => {
+                        try {
+                          const optsRes = await apiClient.post('/api/webauthn/register/options', {
+                            userId: formData.email,
+                            username: formData.email,
+                            displayName: formData.name || formData.email
+                          });
+                          const options = optsRes.data.data;
+                          const cred = await createPasskey(options);
+                          await apiClient.post('/api/webauthn/register/verify', {
+                            userId: formData.email,
+                            id: cred.id,
+                            rawId: cred.rawId,
+                            response: {
+                              clientDataJSON: cred.response.clientDataJSON,
+                              attestationObject: cred.response.attestationObject
+                            }
+                          });
+                          alert('Passkey 등록이 완료되었습니다.');
+                        } catch (err) {
+                          console.error('Passkey registration failed', err);
+                        }
+                      }}
+                    >
+                      Passkey 등록하기
+                    </button>
+                  )}
                 </div>
               </div>
             </form>
