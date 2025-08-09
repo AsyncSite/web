@@ -198,7 +198,7 @@ function ProfilePage(): React.ReactNode {
                   </div>
                 )}
 
-                <Link to="/study" className="view-all-link">→ 모든 스터디 보기</Link>
+                <Link to="/study" className="view-all-link">모든 스터디 보기</Link>
               </>
             )}
           </section>
