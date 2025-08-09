@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import studyService, { StudyProposalRequest, StudyType, RecurrenceType } from '../api/studyService';
-import ScheduleInput from '../components/study/ScheduleInput';
+import ModernScheduleInput from '../components/study/ModernScheduleInput';
 import DurationInput from '../components/study/DurationInput';
+import { ToastContainer, useToast } from '../components/ui/Toast';
 import { 
   ScheduleFrequency, 
   DurationUnit,
@@ -16,6 +17,7 @@ import './StudyProposalPage.css';
 const StudyProposalPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+  const { messages, success, error, warning, removeToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // 기본 정보
@@ -39,10 +41,12 @@ const StudyProposalPage: React.FC = () => {
     value: 8,
     unit: DurationUnit.WEEKS
   });
+  const [selectedDate, setSelectedDate] = useState<string>('');
   
   // 모집 정보
   const [capacity, setCapacity] = useState('20');
   const [recruitDeadline, setRecruitDeadline] = useState('');
+  const [recruitDeadlineTime, setRecruitDeadlineTime] = useState('23:59');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -68,39 +72,94 @@ const StudyProposalPage: React.FC = () => {
     e.preventDefault();
     
     if (!isAuthenticated || !user) {
-      alert('스터디 제안을 위해서는 로그인이 필요합니다.');
-      navigate('/login', { state: { from: '/study/propose' } });
+      error('스터디 제안을 위해서는 로그인이 필요합니다.');
+      setTimeout(() => navigate('/login', { state: { from: '/study/propose' } }), 1500);
       return;
     }
     
     // 사용자 식별자 확인
     if (!user.id && !user.username && !user.email) {
       console.error('User object:', user);
-      alert('사용자 정보를 불러올 수 없습니다. 다시 로그인해주세요.');
-      navigate('/login', { state: { from: '/study/propose' } });
+      error('사용자 정보를 불러올 수 없습니다. 다시 로그인해주세요.');
+      setTimeout(() => navigate('/login', { state: { from: '/study/propose' } }), 1500);
       return;
     }
 
     // 필수 필드 검증
     if (!title.trim() || !description.trim()) {
-      alert('제목과 설명은 필수입니다.');
+      warning('제목과 설명은 필수입니다.');
       return;
     }
 
-    // 날짜 유효성 검증
-    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-      alert('시작일은 종료일보다 빠를 수 없습니다.');
-      return;
-    }
-
-    if (recruitDeadline && startDate && new Date(recruitDeadline) > new Date(startDate)) {
-      alert('모집 마감일은 시작일보다 빠를 수 없습니다.');
-      return;
+    // ONE_TIME 스터디의 경우 날짜 검증 조정
+    if (recurrenceType === 'ONE_TIME') {
+      if (!selectedDate) {
+        warning('1회성 스터디는 날짜를 선택해주세요.');
+        return;
+      }
+      if (!schedule.startTime || !schedule.endTime) {
+        warning('시작 시간과 종료 시간을 입력해주세요.');
+        return;
+      }
+    } else {
+      // 반복 스터디 날짜 검증
+      if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+        warning('시작일은 종료일보다 빠를 수 없습니다.');
+        return;
+      }
+      
+      if (recruitDeadline && startDate && new Date(recruitDeadline) > new Date(startDate)) {
+        warning('모집 마감일은 시작일보다 빠를 수 없습니다.');
+        return;
+      }
+      
+      if (schedule.daysOfWeek.length === 0) {
+        warning('반복 스터디는 요일을 선택해주세요.');
+        return;
+      }
+      
+      if (!schedule.startTime || !schedule.endTime) {
+        warning('시작 시간과 종료 시간을 입력해주세요.');
+        return;
+      }
     }
 
     setIsSubmitting(true);
     
     try {
+      // ONE_TIME인 경우 특별 처리
+      let finalStartDate = startDate;
+      let finalEndDate = endDate;
+      let scheduleString: string | undefined;
+      
+      if (recurrenceType === 'ONE_TIME') {
+        // ONE_TIME은 selectedDate를 사용
+        if (selectedDate) {
+          finalStartDate = selectedDate;
+          finalEndDate = selectedDate;
+        }
+        // ONE_TIME 스케줄 표시
+        if (selectedDate && schedule.startTime && schedule.endTime) {
+          const dateObj = new Date(selectedDate + 'T00:00:00');
+          scheduleString = `${dateObj.toLocaleDateString('ko-KR', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric', 
+            weekday: 'long' 
+          })} ${schedule.startTime}-${schedule.endTime}`;
+        }
+      } else {
+        // 반복 스터디는 기존 로직 사용
+        scheduleString = (schedule.daysOfWeek.length > 0 && schedule.startTime && schedule.endTime) 
+          ? formatScheduleToKorean(schedule) 
+          : undefined;
+      }
+      
+      // 모집 마감일시 생성 (날짜 + 시간)
+      const recruitDeadlineDateTime = recruitDeadline 
+        ? `${recruitDeadline}T${recruitDeadlineTime}:00`
+        : undefined;
+      
       // API 요청을 위한 데이터 준비
       const proposalRequest: StudyProposalRequest = {
         title: title.trim(),
@@ -110,30 +169,27 @@ const StudyProposalPage: React.FC = () => {
         generation: parseInt(generation) || 1,
         slug: slug || generateSlug(title),
         tagline: tagline || undefined,
-        // Convert structured schedule to string
-        schedule: (schedule.daysOfWeek.length > 0 && schedule.startTime && schedule.endTime) 
-          ? formatScheduleToKorean(schedule) 
-          : undefined,
-        // Convert structured duration to string  
-        duration: duration.value > 0 
+        schedule: scheduleString,
+        // ONE_TIME은 duration 없음
+        duration: recurrenceType !== 'ONE_TIME' && duration.value > 0 
           ? formatDurationToKorean(duration) 
           : undefined,
         capacity: parseInt(capacity) || undefined,
-        recruitDeadline: recruitDeadline || undefined,
-        startDate: startDate || undefined,
-        endDate: recurrenceType === 'ONE_TIME' && startDate && !endDate ? startDate : (endDate || undefined),
+        recruitDeadline: recruitDeadlineDateTime,
+        startDate: finalStartDate || undefined,
+        endDate: finalEndDate || undefined,
         recurrenceType: recurrenceType,
       };
       
       // API 호출
       await studyService.proposeStudy(proposalRequest);
       
-      alert('스터디 제안이 성공적으로 제출되었습니다!\n관리자 검토 후 연락드리겠습니다.');
-      navigate('/study');
-    } catch (error: any) {
-      console.error('스터디 제안 실패:', error);
-      const errorMessage = error.response?.data?.message || '스터디 제안 제출 중 오류가 발생했습니다. 다시 시도해주세요.';
-      alert(errorMessage);
+      success('스터디 제안이 성공적으로 제출되었습니다! 관리자 검토 후 연락드리겠습니다.');
+      setTimeout(() => navigate('/study'), 2000);
+    } catch (err: any) {
+      console.error('스터디 제안 실패:', err);
+      const errorMessage = err.response?.data?.message || '스터디 제안 제출 중 오류가 발생했습니다. 다시 시도해주세요.';
+      error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -141,6 +197,7 @@ const StudyProposalPage: React.FC = () => {
 
   return (
     <div className="study-proposal-page">
+      <ToastContainer messages={messages} onClose={removeToast} />
       <div className="proposal-container">
         <div className="proposal-header">
           <button 
@@ -183,8 +240,7 @@ const StudyProposalPage: React.FC = () => {
                 required
               >
                 <option value="PARTICIPATORY">참여형 (함께 학습하고 성장)</option>
-                <option value="EDUCATIONAL">교육형 (강의 중심)</option>
-                <option value="ONE_TIME">1회성 (단일 세션)</option>
+                <option value="EDUCATIONAL">교육형 (강의 중심 학습)</option>
               </select>
             </div>
 
@@ -197,14 +253,22 @@ const StudyProposalPage: React.FC = () => {
                 onChange={(e) => {
                   const newRecurrence = e.target.value as RecurrenceType;
                   setRecurrenceType(newRecurrence);
-                  // 1회성 선택 시 날짜 자동 조정
-                  if (newRecurrence === 'ONE_TIME' && startDate && !endDate) {
-                    setEndDate(startDate);
+                  
+                  // ONE_TIME 선택 시 초기화
+                  if (newRecurrence === 'ONE_TIME') {
+                    // 요일 선택 초기화
+                    setSchedule(prev => ({ ...prev, daysOfWeek: [] }));
+                    // 시작일/종료일 초기화
+                    setStartDate('');
+                    setEndDate('');
+                  } else {
+                    // 반복 스터디 선택 시 selectedDate 초기화
+                    setSelectedDate('');
                   }
                 }}
                 required
               >
-                <option value="ONE_TIME">1회성 - 한 번만 진행</option>
+                <option value="ONE_TIME">1회성 (한 번만 진행)</option>
                 <option value="DAILY">매일 - 매일 반복</option>
                 <option value="WEEKLY">매주 - 주 단위 반복</option>
                 <option value="BIWEEKLY">격주 - 2주 단위 반복</option>
@@ -283,21 +347,27 @@ const StudyProposalPage: React.FC = () => {
             
             <div className="form-group">
               <label>일정 설정</label>
-              <ScheduleInput
+              <ModernScheduleInput
                 value={schedule}
                 onChange={setSchedule}
+                recurrenceType={recurrenceType}
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
               />
             </div>
 
-            <div className="form-group">
-              <label>진행 기간</label>
-              <DurationInput
-                value={duration}
-                onChange={setDuration}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </div>
+            {/* 진행 기간 - ONE_TIME이 아닐 때만 표시 */}
+            {recurrenceType !== 'ONE_TIME' && (
+              <div className="form-group">
+                <label>진행 기간</label>
+                <DurationInput
+                  value={duration}
+                  onChange={setDuration}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </div>
+            )}
 
             <div className="form-row">
               <div className="form-group">
@@ -315,55 +385,60 @@ const StudyProposalPage: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="recruitDeadline">모집 마감일</label>
-                <input
-                  type="date"
-                  id="recruitDeadline"
-                  name="recruitDeadline"
-                  value={recruitDeadline}
-                  onChange={(e) => setRecruitDeadline(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                />
+                <label htmlFor="recruitDeadline">모집 마감일시</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="date"
+                    id="recruitDeadline"
+                    name="recruitDeadline"
+                    value={recruitDeadline}
+                    onChange={(e) => setRecruitDeadline(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                    style={{ flex: 1 }}
+                  />
+                  <input
+                    type="time"
+                    id="recruitDeadlineTime"
+                    name="recruitDeadlineTime"
+                    value={recruitDeadlineTime}
+                    onChange={(e) => setRecruitDeadlineTime(e.target.value)}
+                    style={{ width: '120px' }}
+                  />
+                </div>
+                <small style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginTop: '4px', display: 'block' }}>
+                  모집 마감 시간을 설정합니다 (기본: 23:59)
+                </small>
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="startDate">시작일</label>
-                <input
-                  type="date"
-                  id="startDate"
-                  name="startDate"
-                  value={startDate}
-                  onChange={(e) => {
-                    setStartDate(e.target.value);
-                    // 1회성인 경우 종료일도 같은 날로 자동 설정
-                    if (recurrenceType === 'ONE_TIME') {
-                      setEndDate(e.target.value);
-                    }
-                  }}
-                  min={new Date().toISOString().split('T')[0]}
-                />
-              </div>
+            {/* 시작일/종료일 - ONE_TIME이 아닐 때만 표시 */}
+            {recurrenceType !== 'ONE_TIME' && (
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="startDate">시작일</label>
+                  <input
+                    type="date"
+                    id="startDate"
+                    name="startDate"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
 
-              <div className="form-group">
-                <label htmlFor="endDate">종료일</label>
-                <input
-                  type="date"
-                  id="endDate"
-                  name="endDate"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  min={startDate || new Date().toISOString().split('T')[0]}
-                  disabled={recurrenceType === 'ONE_TIME'} // 1회성인 경우 수정 불가
-                />
-                {recurrenceType === 'ONE_TIME' && (
-                  <small style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
-                    1회성 스터디는 시작일과 종료일이 같습니다
-                  </small>
-                )}
+                <div className="form-group">
+                  <label htmlFor="endDate">종료일</label>
+                  <input
+                    type="date"
+                    id="endDate"
+                    name="endDate"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    min={startDate || new Date().toISOString().split('T')[0]}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
 

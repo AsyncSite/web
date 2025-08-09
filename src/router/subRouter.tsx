@@ -12,6 +12,7 @@ const StudyPage = lazy(() => import('../pages/StudyPage'));
 const TecoTecoPage = lazy(() => import('../pages/TecoTecoPage/TecoTecoPage'));
 const StudyDetailPage = lazy(() => import('../pages/StudyDetailPage'));
 const StudyProposalPage = lazy(() => import('../pages/StudyProposalPage'));
+const StudyProposalPageV2 = lazy(() => import('../pages/StudyProposalPageV2'));
 const StudyApplicationPage = lazy(() => import('../pages/StudyApplicationPage'));
 const StudyManagementPage = lazy(() => import('../pages/StudyManagementPage'));
 
@@ -41,6 +42,10 @@ const subRouter = [
       },
       {
         path: 'propose',
+        element: <StudyProposalPageV2 />,
+      },
+      {
+        path: 'propose-old',
         element: <StudyProposalPage />,
       },
       {

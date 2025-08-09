@@ -14,8 +14,7 @@ export type StudyStatus = typeof StudyStatus[keyof typeof StudyStatus];
 // Backend Study Type
 export const StudyType = {
   PARTICIPATORY: 'PARTICIPATORY',
-  EDUCATIONAL: 'EDUCATIONAL',
-  ONE_TIME: 'ONE_TIME'
+  EDUCATIONAL: 'EDUCATIONAL'
 } as const;
 
 export type StudyType = typeof StudyType[keyof typeof StudyType];
