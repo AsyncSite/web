@@ -81,7 +81,7 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.tab-navigation {
+.study-management-page .tab-navigation {
   display: flex;
   gap: 4px;
   margin-bottom: 32px;
@@ -90,7 +90,7 @@
   padding: 6px;
 }
 
-.tab-button {
+.study-management-page .tab-button {
   flex: 1;
   display: flex;
   align-items: center;
@@ -108,22 +108,22 @@
   position: relative;
 }
 
-.tab-button:hover {
+.study-management-page .tab-button:hover {
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.9);
 }
 
-.tab-button.active {
+.study-management-page .tab-button.active {
   background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
   color: #1a1a1a;
   font-weight: 600;
 }
 
-.tab-icon {
+.study-management-page .tab-icon {
   font-size: 16px;
 }
 
-.badge {
+.study-management-page .badge {
   background: #ff4757;
   color: white;
   font-size: 11px;
@@ -472,7 +472,7 @@
     grid-template-columns: 1fr;
   }
 
-  .tab-button {
+  .study-management-page .tab-button {
     padding: 10px 12px;
     font-size: 14px;
   }
