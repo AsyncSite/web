@@ -159,8 +159,10 @@ The code in this repository aims for the highest standards of readability, maint
 ### General Readability Principles
 
 * **Clear Naming**: Use clear and descriptive names for variables, functions, and components. Avoid abbreviations and use names that provide context and reveal intent.
-* **도메인 특화 명명 (Domain-Specific Naming)**: 코드의 규모가 커질수록 변수나 함수의 이름이 다른 기능과 충돌하거나 모호해질 수 있습니다. 이를 방지하기 위해, 단순히 일반적인 이름(e.g., `data`, `isLoading`, `handleSave`)을 사용하는 대신, 해당 변수나 함수가 속한 **도메인이나 기능의 맥락을 이름에 명확히 포함**시켜야 합니다.
-  * **좋은 예시**: `isLoading` → `isSnailGameProductListLoading`, `user` → `dudctionGameloggedInUser`, `handleSave` → `shuffleGameSaveUserSettings`
+* **구체적이고 상세한 도메인 특화 명명 (Detailed Domain-Specific Naming)**: 기존 소스 코드에 영향을 미치는 범위가 넓기 때문에, 변수나 함수명을 모호하게 지으면 이름 충돌로 인해 의도치 않은 결과가 발생할 수 있습니다. 이를 방지하기 위해, **반드시 변수명을 매우 상세하고 구체적으로 구성해야 합니다.** 단순히 조금 더 자세히 적는 수준을 넘어, 해당 변수나 함수가 사용되는 **도메인의 특성, 기능, 맥락을 모두 녹여낸 이름**을 사용해야 합니다.
+  * **나쁜 예시**: `data`, `isLoading`, `handleSave`, `user`
+  * **좋은 예시**: `isLoading` → `isSnailGameProductListLoading`, `user` → `deductionGameLoggedInUser`, `handleSave` → `shuffleGameSaveUserSettings`
+* **기존 코드의 점진적 개선 (Incremental Improvement of Existing Code)**: 기능을 개선하거나 리팩토링할 때, 기존 클래스를 복사하여 `MyClass-enhanced` 와 같이 `-enhanced` 접미사를 붙인 새 클래스를 만드는 방식을 **엄격히 금지합니다.** 개선 작업은 기존 코드베이스 위에서 직접 이루어져야 합니다. 이는 코드의 중복을 막고, 히스토리 추적을 용이하게 하며, 시스템의 복잡성을 낮추기 위함입니다.
 * **Single Responsibility Principle (SRP)**: Keep functions and components concise and focused on a single responsibility. If a component or function handles multiple tasks, actively consider refactoring it into smaller, more specialized units.
 * **File Length and Refactoring** 📏: As a practical extension of SRP, pay close attention to file length.
   * If a file exceeds **1,000 lines**, it should be reviewed as a strong indicator that it has multiple responsibilities and should be considered for refactoring.
@@ -311,3 +313,8 @@ Frontend development **must follow a scalable, feature-based architecture** to e
     }
   };
   ```
+---
+
+## 문서 관리 가이드라인 (Documentation Management Guidelines)
+
+* **기존 문서에 통합 (Consolidate into Existing Documents)**: 새로운 가이드라인이나 개발 규칙이 필요할 때, 무분별하게 새 문서를 만들기보다 **기존에 있는 관련 문서에 내용을 추가하고 통합하는 것을 원칙으로 합니다.** 예를 들어, 코딩 스타일에 관한 내용은 이 `CLAUDE.md` 파일에 추가하고, 배포 관련 내용은 `DOCKER_DEPLOYMENT_GUIDE.md` 에 추가하는 방식입니다. 문서를 중앙에서 관리하여 정보가 분산되는 것을 막고, 모든 팀원이 최신 정보를 쉽게 찾을 수 있도록 하기 위함입니다. 새 문서는 기존 문서들과 주제가 명확히 구분될 때만 생성해야 합니다.
