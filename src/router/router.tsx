@@ -10,6 +10,8 @@ const MainPage = lazy(() => import('../pages/MainPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
 const OAuthCallbackPage = lazy(() => import('../pages/auth/OAuthCallbackPage'));
+const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
 const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
 const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
 const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
       {
         path: 'auth/callback',
         element: <OAuthCallbackPage />,
+      },
+      {
+        path: 'forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: 'reset-password',
+        element: <ResetPasswordPage />,
       },
       {
         path: 'users/me',

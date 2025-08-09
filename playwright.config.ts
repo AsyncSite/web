@@ -68,8 +68,8 @@ export default defineConfig({
     // 네비게이션 타임아웃
     navigationTimeout: 30 * 1000,
     
-    // 권한 설정
-    permissions: ['clipboard-read', 'clipboard-write'],
+    // 권한 설정 (Chrome만 지원)
+    // permissions: ['clipboard-read', 'clipboard-write'],
     
     // 로케일 설정
     locale: 'ko-KR',
