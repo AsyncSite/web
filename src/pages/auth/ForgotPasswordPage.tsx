@@ -75,7 +75,7 @@ function ForgotPasswordPage(): React.ReactNode {
           } else if (response.status === 403) {
             errorMessage = '요청이 거부되었습니다. 잠시 후 다시 시도해주세요.';
           } else if (response.status === 404) {
-            errorMessage = '등록되지 않은 이메일입니다.';
+            errorMessage = '요청 처리 중 오류가 발생했습니다.';
           } else if (response.status === 500) {
             errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
           }
@@ -110,9 +110,9 @@ function ForgotPasswordPage(): React.ReactNode {
             <div className="forgot-password-success-header">
               <h1 className="forgot-password-success-title">이메일을 확인해주세요</h1>
               <p className="forgot-password-success-subtitle">
-                등록된 이메일인 경우 비밀번호 재설정 링크가 발송되었습니다.
+                입력하신 이메일 주소가 등록되어 있다면
                 <br />
-                메일함을 확인해주세요.
+                비밀번호 재설정 링크가 발송됩니다.
               </p>
             </div>
 

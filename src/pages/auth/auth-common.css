@@ -411,17 +411,16 @@
   color: #05060A;
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    0 0 40px rgba(195, 232, 141, 0.2);
-  font-weight: 800;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  /* text-shadow 제거 - 텍스트 겹침 문제 해결 */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: relative;
   z-index: 1;
 }
 
-/* 버튼 네온 효과 */
+/* 버튼 네온 효과 - blur 효과 줄임 */
 .auth-button-primary::before {
   content: '';
   position: absolute;
@@ -429,10 +428,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: inherit;
+  background: linear-gradient(135deg, var(--auth-primary-green) 0%, var(--auth-primary-green-dark) 100%);
   border-radius: inherit;
-  filter: blur(10px);
-  opacity: 0.5;
+  filter: blur(4px);
+  opacity: 0.3;
   z-index: -1;
   transition: all var(--auth-transition-base);
 }
