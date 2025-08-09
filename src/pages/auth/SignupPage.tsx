@@ -4,6 +4,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import userService from '../../api/userService';
 import StarBackground from '../../components/common/StarBackground';
+import { ValidationFeedback, PasswordStrengthMeter } from '../../components/common/validation';
+import { registrationEmailValidator, securePasswordValidator, profileNameValidator } from '../../utils/clientAuthValidation';
+import { RegistrationUserContext } from '../../utils/clientAuthValidation/types';
+import { env } from '../../config/environment';
 import './SignupPage.css';
 
 interface SignupFormData {
@@ -43,6 +47,11 @@ function SignupPage(): React.ReactNode {
   const [emailCheckTriggered, setEmailCheckTriggered] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Backend sync validation states
+  const [backendSync_emailValidationResult, setBackendSync_emailValidationResult] = useState<any>(null);
+  const [backendSync_passwordValidationResult, setBackendSync_passwordValidationResult] = useState<any>(null);
+  const [backendSync_showAdvancedValidation, setBackendSync_showAdvancedValidation] = useState(true); // Always enabled in production
   
   // Debounce email value for API calls
   const debouncedEmail = useDebounce(formData.email, 500);
@@ -147,30 +156,43 @@ function SignupPage(): React.ReactNode {
 
     switch (step) {
       case 'email':
-        const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        // Use backend-synced validation
+        const backendSync_emailResult = registrationEmailValidator.validateRegistrationEmail(formData.email);
         if (!formData.email.trim()) {
           newErrors.email = '이메일을 입력해주세요';
-        } else if (!emailRegex.test(formData.email)) {
-          newErrors.email = '올바른 이메일 형식이 아닙니다';
+        } else if (!backendSync_emailResult.isValid && backendSync_emailResult.fieldErrors.length > 0) {
+          newErrors.email = backendSync_emailResult.fieldErrors[0].errorMessage;
         }
+        setBackendSync_emailValidationResult(backendSync_emailResult);
         break;
         
       case 'name':
+        // Use backend-synced validation
+        const backendSync_nameResult = profileNameValidator.validateProfileName(formData.name);
         if (!formData.name.trim()) {
           newErrors.name = '이름을 입력해주세요';
-        } else if (formData.name.length < 2 || formData.name.length > 50) {
-          newErrors.name = '이름은 2자 이상 50자 이하여야 합니다';
+        } else if (!backendSync_nameResult.isValid && backendSync_nameResult.fieldErrors.length > 0) {
+          newErrors.name = backendSync_nameResult.fieldErrors[0].errorMessage;
         }
         break;
         
       case 'password':
+        // Use backend-synced validation with user context
+        const backendSync_userContext: RegistrationUserContext = {
+          registrationEmailValue: formData.email,
+          profileNameValue: formData.name
+        };
+        const backendSync_passwordResult = securePasswordValidator.validateSecurePassword(
+          formData.password,
+          backendSync_userContext
+        );
+        
         if (!formData.password) {
           newErrors.password = '비밀번호를 입력해주세요';
-        } else if (formData.password.length < 8) {
-          newErrors.password = '비밀번호는 최소 8자 이상이어야 합니다';
-        } else if (!/(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.password)) {
-          newErrors.password = '비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다';
+        } else if (!backendSync_passwordResult.isValid && backendSync_passwordResult.fieldErrors.length > 0) {
+          newErrors.password = backendSync_passwordResult.fieldErrors[0].errorMessage;
         }
+        setBackendSync_passwordValidationResult(backendSync_passwordResult);
         break;
         
       case 'confirmPassword':
@@ -347,7 +369,7 @@ function SignupPage(): React.ReactNode {
           <div className="signup-method-selection">
             {/* Google Sign up Button */}
             <button
-              onClick={() => window.location.href = 'http://localhost:8080/api/auth/oauth/google/login'}
+              onClick={() => window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`}
               className="google-signup-button auth-button"
               type="button"
               aria-label="Google 계정으로 회원가입"
@@ -446,6 +468,16 @@ function SignupPage(): React.ReactNode {
                   이메일 중복을 확인하고 있습니다...
                 </span>
               )}
+              {/* Backend-synced email validation feedback */}
+              {backendSync_showAdvancedValidation && formData.email && (
+                <ValidationFeedback
+                  fieldType="email"
+                  value={formData.email}
+                  debounceMs={500}
+                  showWarnings={true}
+                  showSuccessMessage={false}
+                />
+              )}
             </div>
           </div>
 
@@ -501,7 +533,7 @@ function SignupPage(): React.ReactNode {
                   onChange={handleChange}
                   onKeyPress={(e) => e.key === 'Enter' && handleStepComplete('password')}
                   className={`auth-input ${errors.password ? 'error' : ''}`}
-                  placeholder="8자 이상, 영문/숫자/특수문자 포함"
+                  placeholder="8자 이상, 대/소문자/숫자/특수문자 중 3종류"
                   autoComplete="new-password"
                 />
                 <button
@@ -523,21 +555,38 @@ function SignupPage(): React.ReactNode {
                   )}
                 </button>
               </div>
+              {/* Backend-synced password strength meter */}
               {formData.password && (
-                <div className="password-strength">
-                  <div className={`strength-bar ${formData.password.length >= 8 ? 'filled' : ''}`} />
-                  <div className={`strength-bar ${formData.password.length >= 8 && /(?=.*[a-zA-Z])(?=.*\d)/.test(formData.password) ? 'filled' : ''}`} />
-                  <div className={`strength-bar ${formData.password.length >= 8 && /(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.password) ? 'filled' : ''}`} />
-                  <span className="strength-text">
-                    {formData.password.length < 8 ? '약함' : 
-                     /(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.password) ? '강함' : '보통'}
-                  </span>
-                </div>
+                <PasswordStrengthMeter
+                  password={formData.password}
+                  userContext={{
+                    registrationEmailValue: formData.email,
+                    profileNameValue: formData.name
+                  }}
+                  showDetails={true}
+                  showCrackTime={true}
+                  showEntropyScore={true}
+                  showImprovementTips={false}
+                />
               )}
               {errors.password && (
                 <span className="error-message auth-error-message">
                   {errors.password}
                 </span>
+              )}
+              {/* Backend-synced password validation feedback */}
+              {backendSync_showAdvancedValidation && formData.password && (
+                <ValidationFeedback
+                  fieldType="password"
+                  value={formData.password}
+                  userContext={{
+                    registrationEmailValue: formData.email,
+                    profileNameValue: formData.name
+                  }}
+                  debounceMs={300}
+                  showWarnings={true}
+                  showSuccessMessage={false}
+                />
               )}
               {currentStep === 'password' && !completedSteps.includes('password') && 
                !(formData.password && formData.password.length >= 8) && (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import StarBackground from '../../components/common/StarBackground';
+import { env } from '../../config/environment';
 import './LoginPage.css';
 
 interface LoginFormData {
@@ -126,7 +127,7 @@ function LoginPage(): React.ReactNode {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group auth-form-group">
             <label htmlFor="username" className="auth-label">
-              이메일 또는 사용자명
+              이메일
             </label>
             <input
               type="text"
@@ -202,7 +203,7 @@ function LoginPage(): React.ReactNode {
         </div>
 
         <button
-          onClick={() => window.location.href = 'http://localhost:8080/api/auth/oauth/google/login'}
+          onClick={() => window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`}
           className="google-login-button auth-button"
           type="button"
           aria-label="Google 계정으로 로그인"
@@ -225,7 +226,14 @@ function LoginPage(): React.ReactNode {
             </Link>
           </p>
           <div className="additional-links">
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('비밀번호 찾기 기능은 준비 중입니다.'); }}>
+            <a 
+              href="#" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setErrors({ general: '비밀번호 찾기 기능은 준비 중입니다. 문의사항은 asyncsite@gmail.com으로 연락주세요.' }); 
+              }}
+              style={{ opacity: 0.7 }}
+            >
               비밀번호를 잊으셨나요?
             </a>
           </div>

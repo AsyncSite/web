@@ -172,7 +172,7 @@ const CTA: React.FC = () => {
             <a href="/study" className="btn-primary">
               지금 참여하기
             </a>
-            <a href="/auth/signup" className="btn-secondary">
+            <a href="/signup" className="btn-secondary">
               회원가입하고 시작하기
             </a>
           </div>
