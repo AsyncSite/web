@@ -50,7 +50,14 @@ function ResetPasswordPage(): React.ReactNode {
     const verifyToken = async () => {
       try {
         const response = await fetch(`${env.apiBaseUrl}/api/auth/password-reset/verify-token?token=${encodeURIComponent(token)}`);
-        const data = await response.json();
+        
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          console.error('JSON parsing error:', jsonError);
+          throw new Error('서버 응답을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.');
+        }
 
         if (!response.ok || !data.success) {
           throw new Error(data.error?.message || '토큰 검증에 실패했습니다');
@@ -62,9 +69,17 @@ function ResetPasswordPage(): React.ReactNode {
 
         setTokenInfo(data.data);
       } catch (error) {
-        setErrors({
-          general: error instanceof Error ? error.message : '토큰 검증 중 오류가 발생했습니다'
-        });
+        // 기술적인 에러 메시지는 콘솔에만 로깅
+        if (error instanceof Error && error.message.includes('Failed to')) {
+          console.error('Technical error:', error);
+          setErrors({
+            general: '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+          });
+        } else {
+          setErrors({
+            general: error instanceof Error ? error.message : '토큰 검증 중 오류가 발생했습니다'
+          });
+        }
       } finally {
         setIsVerifying(false);
       }
@@ -135,7 +150,20 @@ function ResetPasswordPage(): React.ReactNode {
         })
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON parsing error:', jsonError);
+        if (!response.ok) {
+          if (response.status === 403) {
+            throw new Error('요청이 거부되었습니다. 잠시 후 다시 시도해주세요.');
+          } else if (response.status === 500) {
+            throw new Error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          }
+        }
+        throw new Error('서버 응답을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.');
+      }
 
       if (!response.ok || !data.success) {
         throw new Error(data.error?.message || '비밀번호 재설정에 실패했습니다');
@@ -143,9 +171,17 @@ function ResetPasswordPage(): React.ReactNode {
 
       setIsSuccess(true);
     } catch (error) {
-      setErrors({
-        general: error instanceof Error ? error.message : '비밀번호 재설정 중 오류가 발생했습니다'
-      });
+      // 기술적인 에러 메시지는 콘솔에만 로깅
+      if (error instanceof Error && error.message.includes('Failed to')) {
+        console.error('Technical error:', error);
+        setErrors({
+          general: '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+        });
+      } else {
+        setErrors({
+          general: error instanceof Error ? error.message : '비밀번호 재설정 중 오류가 발생했습니다'
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
