@@ -135,17 +135,7 @@ export function PasswordStrengthMeter({
         </div>
       )}
       
-      {showImprovementTips && backendSyncStrength_tips && backendSyncStrength_tips.length > 0 && (
-        <div className="backendSync-strength-tips">
-          <div className="backendSync-tips-header">💡 보안 강화 팁</div>
-          {backendSyncStrength_tips.map((tip, index) => (
-            <div key={`tip-${index}`} className="backendSync-tip-item">
-              <span className="backendSync-tip-bullet">•</span>
-              <span className="backendSync-tip-text">{tip}</span>
-            </div>
-          ))}
-        </div>
-      )}
+      
       
       {backendSyncStrength_entropy < 35 && (
         <div className="backendSync-strength-warning">
