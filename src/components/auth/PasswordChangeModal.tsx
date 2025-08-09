@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { PasswordStrengthMeter, ValidationFeedback } from '../common/validation';
+import { securePasswordValidator } from '../../utils/clientAuthValidation';
+import { RegistrationUserContext } from '../../utils/clientAuthValidation/types';
 import './PasswordChangeModal.css';
 
 interface PasswordChangeModalProps {
@@ -33,6 +36,10 @@ function PasswordChangeModal({ isOpen, onClose }: PasswordChangeModalProps): Rea
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Backend sync validation states
+  const [backendSync_passwordValidationResult, setBackendSync_passwordValidationResult] = useState<any>(null);
+  const [backendSync_showEntropyValidation, setBackendSync_showEntropyValidation] = useState(true);
 
   if (!isOpen) return null;
 
@@ -45,10 +52,28 @@ function PasswordChangeModal({ isOpen, onClose }: PasswordChangeModalProps): Rea
 
     if (!formData.newPassword) {
       newErrors.newPassword = '새 비밀번호를 입력해주세요';
-    } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = '비밀번호는 최소 8자 이상이어야 합니다';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.newPassword)) {
-      newErrors.newPassword = '비밀번호는 대문자, 소문자, 숫자를 포함해야 합니다';
+    } else {
+      // Backend-synced password validation
+      const backendSync_userContext: RegistrationUserContext = {
+        // Use user's email/name if available from auth context
+        registrationEmailValue: '',  // Would get from auth context
+        profileNameValue: ''
+      };
+      
+      const backendSync_validationResult = securePasswordValidator.validateSecurePassword(
+        formData.newPassword,
+        backendSync_userContext
+      );
+      
+      setBackendSync_passwordValidationResult(backendSync_validationResult);
+      
+      if (!backendSync_validationResult.isValid && backendSync_validationResult.fieldErrors.length > 0) {
+        // Use the most critical error
+        const criticalError = backendSync_validationResult.fieldErrors.find(
+          e => e.errorSeverity === 'critical'
+        ) || backendSync_validationResult.fieldErrors[0];
+        newErrors.newPassword = criticalError.errorMessage;
+      }
     }
 
     if (!formData.confirmPassword) {
@@ -107,23 +132,7 @@ function PasswordChangeModal({ isOpen, onClose }: PasswordChangeModalProps): Rea
     onClose();
   };
 
-  const getPasswordStrength = (password: string): { strength: string; color: string } => {
-    if (!password) return { strength: '', color: '' };
-    
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (password.length >= 12) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/\d/.test(password)) strength++;
-    if (/[!@#$%^&*]/.test(password)) strength++;
-
-    if (strength <= 2) return { strength: '약함', color: 'var(--auth-text-error)' };
-    if (strength <= 4) return { strength: '보통', color: 'var(--auth-accent-pink)' };
-    return { strength: '강함', color: 'var(--auth-text-success)' };
-  };
-
-  const passwordStrength = getPasswordStrength(formData.newPassword);
+  // This function is replaced by backend-synced PasswordStrengthMeter component
 
   return (
     <>
@@ -204,15 +213,38 @@ function PasswordChangeModal({ isOpen, onClose }: PasswordChangeModalProps): Rea
                 {showNewPassword ? '👁️' : '👁️‍🗨️'}
               </button>
             </div>
-            {formData.newPassword && (
-              <div className="password-strength" style={{ color: passwordStrength.color }}>
-                비밀번호 강도: {passwordStrength.strength}
-              </div>
+            {/* Backend-synced password strength meter */}
+            {backendSync_showEntropyValidation && formData.newPassword && (
+              <PasswordStrengthMeter
+                password={formData.newPassword}
+                userContext={{
+                  registrationEmailValue: '',  // Would get from auth context
+                  profileNameValue: ''
+                }}
+                showDetails={true}
+                showCrackTime={true}
+                showEntropyScore={true}
+                showImprovementTips={true}
+              />
             )}
             {errors.newPassword && (
               <span className="error-message auth-error-message">
                 {errors.newPassword}
               </span>
+            )}
+            {/* Backend-synced validation feedback */}
+            {backendSync_showEntropyValidation && formData.newPassword && (
+              <ValidationFeedback
+                fieldType="password"
+                value={formData.newPassword}
+                userContext={{
+                  registrationEmailValue: '',
+                  profileNameValue: ''
+                }}
+                debounceMs={300}
+                showWarnings={true}
+                showSuccessMessage={false}
+              />
             )}
           </div>
 

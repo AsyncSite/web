@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
-import PasswordChangeModal from '../../components/auth/PasswordChangeModal';
+import PasswordChangeModal from '../../components/auth/PasswordChangeModalEnhanced';
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';

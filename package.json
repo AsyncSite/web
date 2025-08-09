@@ -35,7 +35,20 @@
     "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "e2e": "cucumber-js",
+    "e2e:headed": "HEADLESS=false cucumber-js",
+    "e2e:chrome": "BROWSER=chromium cucumber-js",
+    "e2e:firefox": "BROWSER=firefox cucumber-js",
+    "e2e:safari": "BROWSER=webkit cucumber-js",
+    "e2e:smoke": "cucumber-js --profile smoke",
+    "e2e:regression": "cucumber-js --profile regression",
+    "e2e:ci": "cucumber-js --profile ci",
+    "e2e:debug": "HEADLESS=false SLOW_MO=250 cucumber-js",
+    "e2e:trace": "TRACE=true cucumber-js",
+    "playwright:install": "playwright install",
+    "playwright:test": "playwright test",
+    "playwright:report": "playwright show-report tests/e2e/reports/html"
   },
   "browserslist": {
     "production": [
@@ -50,17 +63,37 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/register": "^7.27.1",
+    "@cucumber/cucumber": "^12.1.0",
+    "@cucumber/pretty-formatter": "^2.0.1",
+    "@playwright/test": "^1.54.2",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/dompurify": "^3.0.5",
-    "@types/node": "^22.16.0",
+    "@types/node": "^22.17.1",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
+    "dotenv": "^17.2.1",
+    "playwright-bdd": "^8.3.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "eslintConfig": {
     "extends": [],
     "rules": {}
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "ES2020",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true
+    }
   },
   "proxy": "http://localhost:8080"
 }
