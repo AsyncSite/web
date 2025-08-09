@@ -5,7 +5,7 @@ import { useDebounce } from '../../hooks/useDebounce';
 import userService from '../../api/userService';
 import StarBackground from '../../components/common/StarBackground';
 import { ValidationFeedback, PasswordStrengthMeter } from '../../components/common/validation';
-import { registrationEmailValidator, securePasswordValidator } from '../../utils/clientAuthValidation';
+import { registrationEmailValidator, securePasswordValidator, profileNameValidator } from '../../utils/clientAuthValidation';
 import { RegistrationUserContext } from '../../utils/clientAuthValidation/types';
 import { env } from '../../config/environment';
 import './SignupPage.css';
@@ -167,10 +167,12 @@ function SignupPage(): React.ReactNode {
         break;
         
       case 'name':
+        // Use backend-synced validation
+        const backendSync_nameResult = profileNameValidator.validateProfileName(formData.name);
         if (!formData.name.trim()) {
           newErrors.name = '이름을 입력해주세요';
-        } else if (formData.name.length < 2 || formData.name.length > 50) {
-          newErrors.name = '이름은 2자 이상 50자 이하여야 합니다';
+        } else if (!backendSync_nameResult.isValid && backendSync_nameResult.fieldErrors.length > 0) {
+          newErrors.name = backendSync_nameResult.fieldErrors[0].errorMessage;
         }
         break;
         

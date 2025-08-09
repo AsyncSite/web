@@ -263,14 +263,12 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       // Clear session storage as well
       sessionStorage.clear();
       
-      // Determine redirect path
+      // Determine redirect path - always go to landing page unless specified
       let redirectPath: string;
       if (options?.redirectTo) {
         redirectPath = options.redirectTo;
-      } else if (protectedRoutes.includes(currentPath)) {
-        redirectPath = '/';
       } else {
-        redirectPath = currentPath;
+        redirectPath = '/';
       }
       
       // Force navigation and reload to clear any cached state

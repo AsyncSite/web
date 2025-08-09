@@ -282,7 +282,7 @@ function ProfileEditPage(): React.ReactNode {
               value={formData.bio}
               onChange={handleBioChange}
               placeholder="당신의 이야기를 들려주세요... 어떤 여정을 걸어왔고, 무엇을 꿈꾸며, 어떤 가치를 추구하시나요?"
-              maxLength={2000}
+              maxLength={300}
               disabled={isSubmitting}
             />
             {errors.bio && (
