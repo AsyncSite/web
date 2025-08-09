@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import studyService, { StudyProposalRequest, StudyType } from '../api/studyService';
+import studyService, { StudyProposalRequest, StudyType, RecurrenceType } from '../api/studyService';
 import ScheduleInput from '../components/study/ScheduleInput';
 import DurationInput from '../components/study/DurationInput';
 import { 
@@ -20,11 +20,12 @@ const StudyProposalPage: React.FC = () => {
   
   // 기본 정보
   const [title, setTitle] = useState('');
-  const [type, setType] = useState<'PARTICIPATORY' | 'EDUCATIONAL'>('PARTICIPATORY');
+  const [type, setType] = useState<StudyType>('PARTICIPATORY');
   const [tagline, setTagline] = useState('');
   const [description, setDescription] = useState('');
   const [generation, setGeneration] = useState('1');
   const [slug, setSlug] = useState('');
+  const [recurrenceType, setRecurrenceType] = useState<RecurrenceType>('WEEKLY');
   
   // 일정 및 기간
   const [schedule, setSchedule] = useState<ScheduleData>({
@@ -120,7 +121,8 @@ const StudyProposalPage: React.FC = () => {
         capacity: parseInt(capacity) || undefined,
         recruitDeadline: recruitDeadline || undefined,
         startDate: startDate || undefined,
-        endDate: endDate || undefined,
+        endDate: recurrenceType === 'ONE_TIME' && startDate && !endDate ? startDate : (endDate || undefined),
+        recurrenceType: recurrenceType,
       };
       
       // API 호출
@@ -177,12 +179,42 @@ const StudyProposalPage: React.FC = () => {
                 id="type"
                 name="type"
                 value={type}
-                onChange={(e) => setType(e.target.value as 'PARTICIPATORY' | 'EDUCATIONAL')}
+                onChange={(e) => setType(e.target.value as StudyType)}
                 required
               >
                 <option value="PARTICIPATORY">참여형 (함께 학습하고 성장)</option>
                 <option value="EDUCATIONAL">교육형 (강의 중심)</option>
+                <option value="ONE_TIME">1회성 (단일 세션)</option>
               </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="recurrenceType">반복 유형 *</label>
+              <select
+                id="recurrenceType"
+                name="recurrenceType"
+                value={recurrenceType}
+                onChange={(e) => {
+                  const newRecurrence = e.target.value as RecurrenceType;
+                  setRecurrenceType(newRecurrence);
+                  // 1회성 선택 시 날짜 자동 조정
+                  if (newRecurrence === 'ONE_TIME' && startDate && !endDate) {
+                    setEndDate(startDate);
+                  }
+                }}
+                required
+              >
+                <option value="ONE_TIME">1회성 - 한 번만 진행</option>
+                <option value="DAILY">매일 - 매일 반복</option>
+                <option value="WEEKLY">매주 - 주 단위 반복</option>
+                <option value="BIWEEKLY">격주 - 2주 단위 반복</option>
+                <option value="MONTHLY">매월 - 월 단위 반복</option>
+              </select>
+              {recurrenceType === 'ONE_TIME' && (
+                <small style={{ fontSize: '12px', color: '#89DDFF', marginTop: '4px', display: 'block' }}>
+                  💡 1회성 스터디는 시작일과 종료일이 같습니다
+                </small>
+              )}
             </div>
 
             <div className="form-group">
@@ -303,7 +335,13 @@ const StudyProposalPage: React.FC = () => {
                   id="startDate"
                   name="startDate"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    // 1회성인 경우 종료일도 같은 날로 자동 설정
+                    if (recurrenceType === 'ONE_TIME') {
+                      setEndDate(e.target.value);
+                    }
+                  }}
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>
@@ -317,7 +355,13 @@ const StudyProposalPage: React.FC = () => {
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                   min={startDate || new Date().toISOString().split('T')[0]}
+                  disabled={recurrenceType === 'ONE_TIME'} // 1회성인 경우 수정 불가
                 />
+                {recurrenceType === 'ONE_TIME' && (
+                  <small style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
+                    1회성 스터디는 시작일과 종료일이 같습니다
+                  </small>
+                )}
               </div>
             </div>
           </div>

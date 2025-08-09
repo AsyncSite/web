@@ -14,10 +14,22 @@ export type StudyStatus = typeof StudyStatus[keyof typeof StudyStatus];
 // Backend Study Type
 export const StudyType = {
   PARTICIPATORY: 'PARTICIPATORY',
-  EDUCATIONAL: 'EDUCATIONAL'
+  EDUCATIONAL: 'EDUCATIONAL',
+  ONE_TIME: 'ONE_TIME'
 } as const;
 
 export type StudyType = typeof StudyType[keyof typeof StudyType];
+
+// Backend Recurrence Type
+export const RecurrenceType = {
+  ONE_TIME: 'ONE_TIME',
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  BIWEEKLY: 'BIWEEKLY',
+  MONTHLY: 'MONTHLY'
+} as const;
+
+export type RecurrenceType = typeof RecurrenceType[keyof typeof RecurrenceType];
 
 // Backend Study DTO
 export interface StudyDTO {
@@ -42,6 +54,7 @@ export interface StudyDTO {
   endDate?: string | number[];
   deleted?: boolean;
   deletedAt?: string | number[];
+  recurrenceType?: RecurrenceType;
 }
 
 // Paginated response
@@ -66,7 +79,7 @@ export interface Study {
   tagline: string;
   description?: string;
   proposerId: string; // 스터디 제안자 ID
-  type: 'participatory' | 'educational';
+  type: 'participatory' | 'educational' | 'one-time';
   typeLabel: string;
   leader: {
     name: string;
@@ -179,12 +192,14 @@ const getStudyTheme = (id: string) => {
 const transformStudy = (dto: StudyDTO): Study => {
   const typeMap = {
     PARTICIPATORY: 'participatory',
-    EDUCATIONAL: 'educational'
+    EDUCATIONAL: 'educational',
+    ONE_TIME: 'one-time'
   } as const;
   
   const typeLabelMap = {
     PARTICIPATORY: '참여형',
-    EDUCATIONAL: '교육형'
+    EDUCATIONAL: '교육형',
+    ONE_TIME: '1회성'
   } as const;
   
   return {
@@ -239,6 +254,7 @@ export interface StudyProposalRequest {
   recruitDeadline?: string;
   startDate?: string;
   endDate?: string;
+  recurrenceType?: RecurrenceType;
 }
 
 // Application related types
@@ -289,8 +305,8 @@ export interface MemberResponse {
 
 // Service class following JobNavigatorService pattern
 class StudyService {
-  private readonly STUDY_API_PATH = '/api/studies/v1/studies';
-  private readonly MY_API_PATH = '/api/studies/v1/my';
+  private readonly STUDY_API_PATH = '/api/studies';
+  private readonly MY_API_PATH = '/api/studies/my';
 
   /**
    * Get all studies (public endpoint)

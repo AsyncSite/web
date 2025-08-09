@@ -8,7 +8,7 @@ export interface StudyInfo {
   generation: number;
   tagline: string;
   description?: string;
-  type: 'participatory' | 'educational'; // 스터디 유형
+  type: 'participatory' | 'educational' | 'one-time'; // 스터디 유형
   typeLabel: string; // 한글 표시용 라벨
   leader: {
     name: string;
