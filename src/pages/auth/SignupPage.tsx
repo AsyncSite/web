@@ -8,6 +8,7 @@ import { ValidationFeedback, PasswordStrengthMeter } from '../../components/comm
 import { registrationEmailValidator, securePasswordValidator, profileNameValidator } from '../../utils/clientAuthValidation';
 import { RegistrationUserContext } from '../../utils/clientAuthValidation/types';
 import { env } from '../../config/environment';
+import './auth-common.css';
 import './SignupPage.css';
 
 interface SignupFormData {

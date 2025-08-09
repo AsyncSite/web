@@ -11,6 +11,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import userService from '../../api/userService';
 import StarBackground from '../../components/common/StarBackground';
+import './auth-common.css';
 import './SignupPage.css';
 
 // 새로운 검증 시스템 import
