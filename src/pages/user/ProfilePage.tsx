@@ -7,6 +7,8 @@ import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import './ProfilePage.css';
+import studyService from '../../api/studyService';
+import { handleApiError } from '../../api/client';
 
 function ProfilePage(): React.ReactNode {
   // Auth context에서 실제 사용자 정보 가져오기
@@ -76,21 +78,29 @@ function ProfilePage(): React.ReactNode {
     loadGameData();
   }, [authUser]);
 
-  // 테스트를 위한 토글 변수 (true: 데이터 있음, false: 빈 상태)
-  const hasData = true; // false로 변경하면 빈 상태를 볼 수 있습니다
-  
-  const studies = hasData ? {
-    participating: [
-      { id: 1, name: 'React 심화 스터디', members: 12, nextMeeting: '내일' },
-      { id: 2, name: '알고리즘 스터디', members: 8, nextMeeting: '목요일' },
-    ],
-    leading: [
-      { id: 3, name: 'TypeScript 입문', members: 15, nextMeeting: '수요일' },
-    ],
-  } : {
-    participating: [],
-    leading: [],
-  };
+  // 나의 스터디 데이터
+  const [myStudies, setMyStudies] = useState<{ participating: any[]; leading: any[] }>({ participating: [], leading: [] });
+  const [studiesLoading, setStudiesLoading] = useState<boolean>(true);
+  const [studiesError, setStudiesError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadMyStudies = async () => {
+      try {
+        setStudiesLoading(true);
+        const list = await studyService.getMyStudies();
+        const participating = list.filter(item => item.role !== 'OWNER');
+        const leading = list.filter(item => item.role === 'OWNER');
+        setMyStudies({ participating, leading });
+      } catch (e: any) {
+        setStudiesError(handleApiError(e));
+      } finally {
+        setStudiesLoading(false);
+      }
+    };
+    if (isAuthenticated) {
+      loadMyStudies();
+    }
+  }, [isAuthenticated]);
 
   const greeting = () => {
     const hour = new Date().getHours();
@@ -160,7 +170,30 @@ function ProfilePage(): React.ReactNode {
           <section className="study-section">
             <h2>나의 스터디</h2>
             
-            {studies.participating.length === 0 && studies.leading.length === 0 ? (
+            {studiesLoading ? (
+              <div className="study-loading-inline">스터디 불러오는 중…</div>
+            ) : studiesError ? (
+              <div className="empty-state">
+                <p>스터디 정보를 불러오지 못했어요.</p>
+                <p className="error-detail">{studiesError}</p>
+                <button className="retry-button" onClick={() => {
+                  setStudiesError(null);
+                  setStudiesLoading(true);
+                  (async () => {
+                    try {
+                      const list = await studyService.getMyStudies();
+                      const participating = list.filter(item => item.role !== 'OWNER');
+                      const leading = list.filter(item => item.role === 'OWNER');
+                      setMyStudies({ participating, leading });
+                    } catch (err) {
+                      setStudiesError(handleApiError(err));
+                    } finally {
+                      setStudiesLoading(false);
+                    }
+                  })();
+                }}>다시 시도</button>
+              </div>
+            ) : myStudies.participating.length === 0 && myStudies.leading.length === 0 ? (
               <div className="empty-state">
                 <p>아직 참여 중인 스터디가 없어요</p>
                 <p>스터디를 둘러보고 관심있는 주제에 참여해보세요!</p>
@@ -170,28 +203,29 @@ function ProfilePage(): React.ReactNode {
             ) : (
               <>
                 <div className="study-group">
-                  <h3>참여 중인 스터디 ({studies.participating.length})</h3>
+                  <h3>참여 중인 스터디 ({myStudies.participating.length})</h3>
                   <div className="study-cards">
-                    {studies.participating.map(study => (
-                      <div key={study.id} className="study-card">
-                        <h4>{study.name}</h4>
-                        <p className="study-meta">멤버 {study.members}명</p>
-                        <p className="next-meeting">다음 모임: {study.nextMeeting}</p>
+                    {myStudies.participating.map(study => (
+                      <div key={study.memberId} className="study-card">
+                        <h4>{study.studyTitle}</h4>
+                        <p className="study-meta">역할: {study.role}</p>
+                        <p className="study-meta">참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
+                        <p className="study-meta">출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {studies.leading.length > 0 && (
+                {myStudies.leading.length > 0 && (
                   <div className="study-group">
-                    <h3>내가 리드하는 스터디 ({studies.leading.length})</h3>
+                    <h3>내가 리드하는 스터디 ({myStudies.leading.length})</h3>
                     <div className="study-cards">
-                      {studies.leading.map(study => (
-                        <div key={study.id} className="study-card leading">
+                      {myStudies.leading.map(study => (
+                        <div key={study.memberId} className="study-card leading">
                           <span className="leader-badge">리더</span>
-                          <h4>{study.name}</h4>
-                          <p className="study-meta">멤버 {study.members}명</p>
-                          <p className="next-meeting">다음 모임: {study.nextMeeting}</p>
+                          <h4>{study.studyTitle}</h4>
+                          <p className="study-meta">참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
+                          <p className="study-meta">출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
                         </div>
                       ))}
                     </div>

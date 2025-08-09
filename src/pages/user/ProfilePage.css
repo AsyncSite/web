@@ -298,6 +298,29 @@
   min-height: 300px;
 }
 
+.study-loading-inline {
+  color: var(--auth-text-hint);
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.empty-state .error-detail {
+  color: #ef4444;
+  font-size: 0.9rem;
+}
+
+.empty-state .retry-button {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #05060A;
+  background: linear-gradient(135deg, var(--auth-primary-green), var(--auth-primary-green-dark));
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .tab-button {
   flex: 1;
   padding: 1rem 1.5rem;

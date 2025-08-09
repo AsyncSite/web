@@ -290,6 +290,7 @@ export interface MemberResponse {
 // Service class following JobNavigatorService pattern
 class StudyService {
   private readonly STUDY_API_PATH = '/api/studies/v1/studies';
+  private readonly MY_API_PATH = '/api/studies/v1/my';
 
   /**
    * Get all studies (public endpoint)
@@ -413,6 +414,42 @@ class StudyService {
   async getRecruitingStudies(): Promise<Study[]> {
     const studies = await this.getAllStudies();
     return studies.filter(study => study.status === 'recruiting');
+  }
+
+  /**
+   * Get my studies (requires authentication)
+   * Uses authenticated user context via gateway headers; no userId param.
+   */
+  async getMyStudies(): Promise<Array<{
+    memberId: string;
+    studyId: string;
+    studyTitle: string;
+    role: string;
+    joinedAt: string;
+    isActive: boolean;
+    attendanceRate: number | null;
+    warningCount: number;
+  }>> {
+    const response = await apiClient.get<{
+      success: boolean;
+      data: any[];
+      error: any;
+      timestamp: any;
+    } | any[]>(`${this.MY_API_PATH}/studies`);
+
+    const list = (response.data as any)?.data || response.data || [];
+    if (!Array.isArray(list)) return [];
+
+    return list.map(item => ({
+      memberId: item.memberId,
+      studyId: item.studyId,
+      studyTitle: item.studyTitle,
+      role: item.role,
+      joinedAt: item.joinedAt,
+      isActive: item.isActive,
+      attendanceRate: item.attendanceRate ?? null,
+      warningCount: item.warningCount ?? 0,
+    }));
   }
 
   /**
