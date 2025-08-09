@@ -30,6 +30,15 @@ export default publicApiClient;
  */
 export const handlePublicApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    // For public content, avoid suggesting login on authorization errors
+    if (status === 401 || status === 403) {
+      return '콘텐츠를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.';
+    }
+    // Friendly message for server errors
+    if (status && status >= 500) {
+      return '서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    }
     if (error.response?.data) {
       const data = error.response.data as any;
       

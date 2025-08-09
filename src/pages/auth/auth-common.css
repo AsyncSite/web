@@ -57,6 +57,19 @@
   
   /* Typography */
   --auth-font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Derived Background Tokens (for component-level use) */
+  --auth-bg-secondary: rgba(255, 255, 255, 0.04);
+  --auth-bg-tertiary: rgba(255, 255, 255, 0.06);
+
+  /* Secondary Button Design Tokens (scoped to auth domain) */
+  --auth-secondary-button-bg: var(--auth-bg-secondary);
+  --auth-secondary-button-bg-hover: var(--auth-bg-tertiary);
+  --auth-secondary-button-text: var(--auth-text-primary);
+  --auth-secondary-button-border: var(--auth-border-default);
+  --auth-secondary-button-border-hover: var(--auth-primary-green);
+  --auth-secondary-button-shadow: 0 2px 8px rgba(195, 232, 141, 0.15);
+  --auth-secondary-button-shadow-hover: 0 4px 12px rgba(195, 232, 141, 0.25);
 }
 
 /* 공통 애니메이션 */
@@ -450,6 +463,26 @@
 }
 
 .auth-button-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--auth-shadow-sm);
+}
+
+/* Secondary button style (scoped to auth) */
+.auth-button-secondary {
+  background: var(--auth-secondary-button-bg, rgba(255, 255, 255, 0.04));
+  color: var(--auth-secondary-button-text, var(--auth-text-primary));
+  border: 1px solid var(--auth-secondary-button-border, var(--auth-border-default));
+  box-shadow: var(--auth-secondary-button-shadow, none);
+}
+
+.auth-button-secondary:hover:not(:disabled) {
+  background: var(--auth-secondary-button-bg-hover, rgba(255, 255, 255, 0.06));
+  border-color: var(--auth-secondary-button-border-hover, var(--auth-primary-green));
+  transform: translateY(-1px);
+  box-shadow: var(--auth-secondary-button-shadow-hover, 0 2px 8px rgba(195, 232, 141, 0.2));
+}
+
+.auth-button-secondary:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: var(--auth-shadow-sm);
 }
