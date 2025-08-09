@@ -6,6 +6,9 @@ import { env } from '../../config/environment';
 import './LoginPage.css';
 import { createPasskey, getPasskey } from '../../utils/webauthn/helpers';
 import apiClient from '../../api/client';
+import authService from '../../api/authService';
+import userService from '../../api/userService';
+import { AUTH_EVENTS, dispatchAuthEvent } from '../../utils/authEvents';
 
 interface LoginFormData {
   username: string;
