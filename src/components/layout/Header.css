@@ -664,9 +664,8 @@
 
 /* 하단 GNB 드롭다운 스타일 (Hero 섹션) */
 @media (min-width: 769px) {
-  /* 하단 GNB일 때 드롭다운을 위로 표시 */
-  .header:not(.fixed-top) .nav-dropdown,
-  .header:not(.fixed-top) .user-menu-dropdown {
+  /* 하단 GNB일 때 STUDY 드롭다운을 위로 표시 */
+  .header:not(.fixed-top) .nav-dropdown {
     top: auto;
     bottom: calc(100% + 8px);
     animation: dropdownFadeInUp 0.2s ease-out;
@@ -686,6 +685,29 @@
     border-bottom: none;
     border-top: 6px solid rgba(13, 17, 23, 0.98);
   }
+
+  /* 사용자 메뉴를 위로 표시하는 명시적 클래스 */
+  .user-menu-dropdown.opens-up {
+    top: auto;
+    bottom: calc(100% + 8px);
+    animation: dropdownFadeInUp 0.2s ease-out;
+    margin-bottom: 8px; /* 하단 여백 추가 */
+  }
+
+  /* 사용자 메뉴 화살표를 위로 표시 */
+  .user-menu-dropdown.opens-up::before {
+    top: auto;
+    bottom: -6px;
+    border-bottom: none;
+    border-top: 6px solid rgba(195, 232, 141, 0.2);
+  }
+  
+  .user-menu-dropdown.opens-up::after {
+    top: auto;
+    bottom: -5px;
+    border-bottom: none;
+    border-top: 6px solid rgba(13, 17, 23, 0.98);
+  }
   
   /* 위로 나타나는 애니메이션 */
   @keyframes dropdownFadeInUp {
@@ -697,25 +719,5 @@
       opacity: 1;
       transform: translateY(0);
     }
-  }
-  
-  /* 사용자 메뉴 드롭다운 위치 조정 */
-  .header:not(.fixed-top) .user-menu-dropdown {
-    margin-bottom: 8px; /* 하단 여백 추가 */
-  }
-  
-  /* 하단 GNB일 때 사용자 메뉴 드롭다운 화살표 위치 조정 */
-  .header:not(.fixed-top) .user-menu-dropdown::before {
-    top: auto;
-    bottom: -6px;
-    border-bottom: none;
-    border-top: 6px solid rgba(195, 232, 141, 0.2);
-  }
-  
-  .header:not(.fixed-top) .user-menu-dropdown::after {
-    top: auto;
-    bottom: -5px;
-    border-bottom: none;
-    border-top: 6px solid rgba(13, 17, 23, 0.98);
   }
 }
