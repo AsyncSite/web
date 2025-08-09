@@ -51,7 +51,7 @@ function SignupPage(): React.ReactNode {
   // Backend sync validation states
   const [backendSync_emailValidationResult, setBackendSync_emailValidationResult] = useState<any>(null);
   const [backendSync_passwordValidationResult, setBackendSync_passwordValidationResult] = useState<any>(null);
-  const [backendSync_showAdvancedValidation, setBackendSync_showAdvancedValidation] = useState(false);
+  const [backendSync_showAdvancedValidation, setBackendSync_showAdvancedValidation] = useState(true); // Always enabled in production
   
   // Debounce email value for API calls
   const debouncedEmail = useDebounce(formData.email, 500);
@@ -670,18 +670,6 @@ function SignupPage(): React.ReactNode {
               로그인
             </Link>
           </p>
-          {/* Backend sync validation toggle - for testing */}
-          <div style={{ marginTop: '10px', fontSize: '12px', color: '#6b7280' }}>
-            <label style={{ cursor: 'pointer' }}>
-              <input
-                type="checkbox"
-                checked={backendSync_showAdvancedValidation}
-                onChange={(e) => setBackendSync_showAdvancedValidation(e.target.checked)}
-                style={{ marginRight: '5px' }}
-              />
-              고급 보안 검증 활성화 (백엔드 동기화)
-            </label>
-          </div>
         </div>
       </div>
     </div>
