@@ -226,16 +226,12 @@ function LoginPage(): React.ReactNode {
             </Link>
           </p>
           <div className="additional-links">
-            <a 
-              href="#" 
-              onClick={(e) => { 
-                e.preventDefault(); 
-                setErrors({ general: '비밀번호 찾기 기능은 준비 중입니다. 문의사항은 asyncsite@gmail.com으로 연락주세요.' }); 
-              }}
-              style={{ opacity: 0.7 }}
+            <Link 
+              to="/forgot-password"
+              className="forgot-password-link"
             >
               비밀번호를 잊으셨나요?
-            </a>
+            </Link>
           </div>
         </div>
       </div>
