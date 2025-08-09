@@ -153,10 +153,21 @@
   gap: 24px;
 }
 
+.study-card-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .study-card-link {
   text-decoration: none;
   color: inherit;
   display: block;
+  flex: 1;
+}
+
+.study-actions {
+  padding: 0;
+  margin-top: 0;
 }
 
 .study-card {
@@ -326,6 +337,31 @@
 
 .tab-icon {
   font-size: 1.25rem;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  color: #999;
+}
+
+.loading-spinner {
+  font-size: 48px;
+  animation: spin 2s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
