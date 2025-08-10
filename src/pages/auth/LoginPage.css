@@ -24,8 +24,8 @@
 
   /* Nudge arrow detailed variables */
   --auth-nudge-callout-max-width: 520px;
-  --auth-nudge-callout-padding-y: 8px;
-  --auth-nudge-callout-padding-x: 12px;
+  --auth-nudge-callout-padding-y: 6px;
+  --auth-nudge-callout-padding-x: 10px;
   --auth-nudge-callout-radius: 12px;
   --auth-nudge-callout-bg: rgba(20, 24, 32, 0.55);
   --auth-nudge-callout-border: 1px solid rgba(195, 232, 141, 0.25);
@@ -168,7 +168,7 @@
 
 /* Logo/Brand Section */
 .login-brand {
-  text-align: center;
+  text-align: left;
   margin-bottom: 2rem;
 }
 
