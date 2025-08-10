@@ -190,9 +190,12 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     }
   };
 
+  // 투명 헤더가 메인이 아닌 라우트에서 사용될 때도 상단 고정 동작/스타일을 일관되게 유지
+  const shouldForceFixedTop = transparent && location.pathname !== '/';
+
   const headerClasses = [
     'header',
-    (isFixedTop || alwaysFixed) && 'fixed-top',
+    (isFixedTop || alwaysFixed || shouldForceFixedTop) && 'fixed-top',
     transparent && 'transparent',
     transparent && isScrolled && 'scrolled'
   ].filter(Boolean).join(' ');
