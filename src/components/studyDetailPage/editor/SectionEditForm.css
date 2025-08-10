@@ -1,0 +1,42 @@
+.section-edit-form {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.form-header {
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(137, 221, 255, 0.1));
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #C3E88D;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-content {
+  padding: 0;
+}
+
+.unsupported-section {
+  padding: 40px;
+  text-align: center;
+}
+
+.unsupported-section p {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 20px;
+}
+
+.unsupported-section .form-actions {
+  margin-top: 20px;
+  border-top: none;
+  padding-top: 0;
+}

@@ -327,6 +327,12 @@
   margin-top: 32px;
   padding-top: 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 16px;
+}
+
+/* When only one button (다음 or 제안하기), align to the right */
+.form-actions-v2:has(button:only-child) {
+  justify-content: flex-end;
 }
 
 .btn-primary,
@@ -412,6 +418,57 @@
   box-shadow: 0 4px 12px rgba(195, 232, 141, 0.2);
 }
 
+/* Form Hint Text */
+.form-hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* Page Edit Notice - Subtle design */
+.page-edit-notice {
+  margin-top: 24px;
+  padding: 12px 16px;
+  background: rgba(195, 232, 141, 0.03);
+  border-left: 3px solid rgba(195, 232, 141, 0.3);
+  border-radius: 4px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.notice-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+  display: block;
+}
+
+.page-edit-notice strong {
+  color: rgba(195, 232, 141, 0.8);
+  font-weight: 500;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .form-row-v2 {
@@ -434,5 +491,10 @@
     width: 40px;
     height: 40px;
     font-size: 16px;
+  }
+  
+  .page-edit-notice {
+    margin-top: 16px;
+    padding: 10px 12px;
   }
 }

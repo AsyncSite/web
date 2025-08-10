@@ -1,0 +1,157 @@
+/* StudyDetailPageRenderer - Async Site 톤앤매너 적용 */
+
+.study-detail-page-renderer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #000; /* Async Site 기본 검정 배경 */
+  color: var(--white-text, #f0f0f0);
+  font-family: 'PretendardVariable', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+}
+
+.study-detail-page-content {
+  flex: 1;
+  padding-top: 80px; /* Header height */
+  min-height: calc(100vh - 80px);
+  background-color: #000;
+}
+
+.loading-container,
+.error-container,
+.empty-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-container p {
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  color: var(--muted-text, #aaa);
+}
+
+.error-icon,
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: var(--primary-green, #C3E88D);
+}
+
+.error-container h2,
+.empty-page-container h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--white-text, #f0f0f0);
+  font-family: 'Source Code Pro', monospace;
+}
+
+.error-container p,
+.empty-page-container p {
+  font-size: 1.125rem;
+  color: var(--secondary-text, #ddd);
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--primary-green, #C3E88D) 0%, var(--secondary-green, #82aaff) 100%);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(195, 232, 141, 0.3);
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(195, 232, 141, 0.4);
+}
+
+.sections-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* 섹션 기본 스타일 - TecoTecoPage와 일치 */
+.section-wrapper > div[class*="study-detail-"] {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+/* Hero 섹션은 전체 너비 */
+.study-detail-hero-section {
+  background-color: #0d0d0d !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  margin: 0 -20px;
+  width: calc(100% + 40px);
+}
+
+/* Rich Text, FAQ 등 일반 섹션들 */
+.study-detail-rich-text-section,
+.study-detail-faq-section,
+.study-detail-gallery-section,
+.study-detail-members-section {
+  padding: 30px 25px;
+}
+
+/* Override any conflicting global styles */
+.study-detail-page-renderer section,
+.study-detail-page-renderer > .study-detail-page-content > .sections-container > .section-wrapper > div {
+  min-height: auto !important;
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .study-detail-page-content {
+    padding-top: 60px;
+    min-height: calc(100vh - 60px);
+  }
+  
+  .sections-container {
+    padding: 0 15px;
+  }
+  
+  .section-wrapper > div[class*="study-detail-"] {
+    padding: 20px 15px;
+  }
+  
+  .study-detail-hero-section {
+    margin: 0 -15px;
+    width: calc(100% + 30px);
+  }
+  
+  .error-icon,
+  .empty-icon {
+    font-size: 3rem;
+  }
+  
+  .error-container h2,
+  .empty-page-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .error-container p,
+  .empty-page-container p {
+    font-size: 1rem;
+  }
+}

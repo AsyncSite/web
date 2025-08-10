@@ -62,10 +62,7 @@ const StudyDetailPage: React.FC = () => {
     return <Navigate to="/study" replace />;
   }
 
-  // 테코테코는 전용 페이지로 리다이렉트
-  if (study.slug === 'tecoteco') {
-    return <Navigate to="/study/1-tecoteco" replace />;
-  }
+  // 테코테코는 동적 페이지로 렌더링되므로 리다이렉트 제거
 
   // 기본 스터디 상세 페이지 (향후 개발)
   return (

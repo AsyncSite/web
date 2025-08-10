@@ -24,7 +24,7 @@ const StudyProposalPage: React.FC = () => {
   const [title, setTitle] = useState('');
   const [type, setType] = useState<StudyType>('PARTICIPATORY');
   const [tagline, setTagline] = useState('');
-  const [description, setDescription] = useState('');
+  // description 제거: 상세 콘텐츠는 DetailPage 섹션으로 대체
   const [generation, setGeneration] = useState('1');
   const [slug, setSlug] = useState('');
   const [recurrenceType, setRecurrenceType] = useState<RecurrenceType>('WEEKLY');
@@ -86,8 +86,8 @@ const StudyProposalPage: React.FC = () => {
     }
 
     // 필수 필드 검증
-    if (!title.trim() || !description.trim()) {
-      warning('제목과 설명은 필수입니다.');
+    if (!title.trim()) {
+      warning('제목은 필수입니다.');
       return;
     }
 
@@ -163,7 +163,6 @@ const StudyProposalPage: React.FC = () => {
       // API 요청을 위한 데이터 준비
       const proposalRequest: StudyProposalRequest = {
         title: title.trim(),
-        description: description.trim(),
         proposerId: user.id || user.username || user.email, // 사용 가능한 식별자 사용
         type: type as StudyType,
         generation: parseInt(generation) || 1,
@@ -179,6 +178,18 @@ const StudyProposalPage: React.FC = () => {
         startDate: finalStartDate || undefined,
         endDate: finalEndDate || undefined,
         recurrenceType: recurrenceType,
+        detailPage: {
+          sections: [
+            {
+              type: 'HERO',
+              content: {
+                title: title.trim(),
+                subtitle: tagline || '',
+                description: '소개 텍스트는 제출 후 상세페이지에서 자유롭게 편집하세요.'
+              }
+            }
+          ]
+        }
       };
       
       // API 호출
@@ -294,20 +305,7 @@ const StudyProposalPage: React.FC = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="description">상세 설명 *</label>
-              <textarea
-                id="description"
-                name="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="스터디의 목표, 진행 방식, 기대 효과 등을 자세히 설명해주세요"
-                required
-                rows={6}
-                maxLength={1000}
-              />
-              <span className="char-count">{description.length}/1000</span>
-            </div>
+            {/* 상세 설명 필드는 StudyDetailPage 섹션으로 대체되었습니다. */}
 
             <div className="form-row">
               <div className="form-group">

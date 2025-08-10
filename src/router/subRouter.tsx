@@ -11,6 +11,7 @@ const SpotlightArenaPage = lazy(() => import('../pages/lab/spotlight-arena/Spotl
 const StudyPage = lazy(() => import('../pages/StudyPage'));
 const TecoTecoPage = lazy(() => import('../pages/TecoTecoPage/TecoTecoPage'));
 const StudyDetailPage = lazy(() => import('../pages/StudyDetailPage'));
+const StudyDetailPageRenderer = lazy(() => import('../components/studyDetailPage/StudyDetailPageRenderer'));
 const StudyProposalPage = lazy(() => import('../pages/StudyProposalPage'));
 const StudyProposalPageV2 = lazy(() => import('../pages/StudyProposalPageV2'));
 const StudyApplicationPage = lazy(() => import('../pages/StudyApplicationPage'));
@@ -83,14 +84,10 @@ const subRouter = [
         path: '1-tecoteco',
         element: <TecoTecoPage />,
       },
-      {
-        path: 'tecoteco',
-        element: <Navigate to="/study/1-tecoteco" replace />,
-      },
-      // 다른 스터디들을 위한 동적 라우트 (향후 확장)
+      // 다른 스터디들을 위한 동적 라우트
       {
         path: ':studyIdentifier',
-        element: <StudyDetailPage />,
+        element: <StudyDetailPageRenderer />,
       },
     ],
   },

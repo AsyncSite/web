@@ -26,7 +26,7 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
     // Always use production API for Vercel deployments
     apiBaseUrl = 'https://api.asyncsite.com';
   } else {
-    // Use environment variable for local development, fallback to localhost
+    // Use gateway for local development by default
     apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
   }
   

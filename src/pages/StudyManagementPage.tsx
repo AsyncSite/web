@@ -2,29 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import studyService, { Study, ApplicationResponse, MemberResponse, ApplicationStatus } from '../api/studyService';
+import studyDetailPageService, { 
+  StudyDetailPageData, 
+  PageSection, 
+  SectionType,
+  AddSectionRequest 
+} from '../api/studyDetailPageService';
+import { SectionRenderer } from '../components/studyDetailPage/sections';
+import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 import './StudyManagementPage.css';
+import '../components/studyDetailPage/StudyDetailPageRenderer.css';
 
 interface TabType {
-  key: 'applications' | 'members';
+  key: 'applications' | 'members' | 'page-editor';
   label: string;
   icon: string;
 }
 
 const tabs: TabType[] = [
   { key: 'applications', label: '참가 신청', icon: '📋' },
-  { key: 'members', label: '멤버 관리', icon: '👥' }
+  { key: 'members', label: '멤버 관리', icon: '👥' },
+  { key: 'page-editor', label: '상세 페이지 편집', icon: '✏️' }
 ];
 
 const StudyManagementPage: React.FC = () => {
   const navigate = useNavigate();
   const { studyId } = useParams<{ studyId: string }>();
   const { user, isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState<'applications' | 'members'>('applications');
+  const [activeTab, setActiveTab] = useState<'applications' | 'members' | 'page-editor'>('applications');
   const [study, setStudy] = useState<Study | null>(null);
   const [applications, setApplications] = useState<ApplicationResponse[]>([]);
   const [members, setMembers] = useState<MemberResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  
+  // Page editor states
+  const [pageData, setPageData] = useState<StudyDetailPageData | null>(null);
+  const [selectedSection, setSelectedSection] = useState<PageSection | null>(null);
+  const [showAddSection, setShowAddSection] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +90,25 @@ const StudyManagementPage: React.FC = () => {
         } catch (error) {
           console.warn('Failed to fetch members:', error);
           setMembers([]);
+        }
+
+        // Fetch page data for editor
+        try {
+          const pageData = await studyDetailPageService.getDraftPage(studyId);
+          setPageData(pageData);
+        } catch (error) {
+          console.warn('Failed to fetch page data, trying to fetch by slug:', error);
+          // Try to fetch by slug if draft page doesn't exist
+          if (studyData.slug) {
+            try {
+              const pageData = await studyDetailPageService.getPublishedPageBySlug(studyData.slug);
+              setPageData(pageData);
+            } catch (error) {
+              console.warn('Failed to fetch page by slug:', error);
+              // Page doesn't exist yet, that's okay
+              setPageData(null);
+            }
+          }
         }
 
       } catch (error) {
@@ -127,6 +164,119 @@ const StudyManagementPage: React.FC = () => {
       alert(errorMessage);
     } finally {
       setActionLoading(null);
+    }
+  };
+
+  // Page editor handlers
+  const handleAddSection = async (type: SectionType, props: any) => {
+    if (!studyId) return;
+
+    try {
+      setSaving(true);
+      const request: AddSectionRequest = { type, props };
+      const updatedPage = await studyDetailPageService.addSection(studyId, request);
+      setPageData(updatedPage);
+      setShowAddSection(false);
+    } catch (err) {
+      console.error('Failed to add section:', err);
+      alert('섹션 추가에 실패했습니다');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleUpdateSection = async (sectionId: string, sectionType: SectionType, props: any) => {
+    if (!studyId) return;
+
+    try {
+      setSaving(true);
+      const request: AddSectionRequest = { type: sectionType, props };
+      const updatedPage = await studyDetailPageService.updateSection(studyId, sectionId, request);
+      setPageData(updatedPage);
+      setSelectedSection(null);
+    } catch (err) {
+      console.error('Failed to update section:', err);
+      alert('섹션 업데이트에 실패했습니다');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteSection = async (sectionId: string) => {
+    if (!studyId) return;
+    
+    if (!window.confirm('정말로 이 섹션을 삭제하시겠습니까?')) return;
+
+    try {
+      setSaving(true);
+      const updatedPage = await studyDetailPageService.removeSection(studyId, sectionId);
+      setPageData(updatedPage);
+    } catch (err) {
+      console.error('Failed to delete section:', err);
+      alert('섹션 삭제에 실패했습니다');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReorderSection = async (sectionId: string, newOrder: number) => {
+    if (!studyId || !pageData) return;
+
+    try {
+      setSaving(true);
+      // Create new order array with the section moved
+      const sections = [...pageData.sections];
+      const currentIndex = sections.findIndex(s => s.id === sectionId);
+      if (currentIndex === -1) return;
+      
+      const [removed] = sections.splice(currentIndex, 1);
+      sections.splice(newOrder, 0, removed);
+      
+      const sectionIds = sections.map(s => s.id);
+      const updatedPage = await studyDetailPageService.reorderSections(studyId, sectionIds);
+      setPageData(updatedPage);
+    } catch (err) {
+      console.error('Failed to reorder section:', err);
+      alert('섹션 순서 변경에 실패했습니다');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    if (!studyId || !pageData) return;
+
+    try {
+      setSaving(true);
+      const updatedPage = await studyDetailPageService.saveDraft(studyId, {
+        theme: pageData.theme,
+        sections: pageData.sections
+      });
+      setPageData(updatedPage);
+      alert('초안이 저장되었습니다');
+    } catch (err) {
+      console.error('Failed to save draft:', err);
+      alert('초안 저장에 실패했습니다');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handlePublishPage = async () => {
+    if (!studyId) return;
+    
+    if (!window.confirm('페이지를 발행하시겠습니까?')) return;
+
+    try {
+      setSaving(true);
+      const updatedPage = await studyDetailPageService.publish(studyId);
+      setPageData(updatedPage);
+      alert('페이지가 발행되었습니다');
+    } catch (err) {
+      console.error('Failed to publish page:', err);
+      alert('페이지 발행에 실패했습니다');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -370,6 +520,179 @@ const StudyManagementPage: React.FC = () => {
                 <div className="empty-icon">👥</div>
                 <h3>아직 멤버가 없습니다</h3>
                 <p>참가 신청을 승인하면 멤버로 추가됩니다.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'page-editor' && (
+          <div className="page-editor-section">
+            <div className="editor-header">
+              <h3>상세 페이지 편집</h3>
+              <div className="editor-actions">
+                <button 
+                  className="btn-preview"
+                  onClick={() => setPreviewMode(!previewMode)}
+                >
+                  {previewMode ? '편집 모드' : '미리보기'}
+                </button>
+                <button 
+                  className="btn-save"
+                  onClick={handleSaveDraft}
+                  disabled={saving}
+                >
+                  초안 저장
+                </button>
+                <button 
+                  className="btn-publish"
+                  onClick={handlePublishPage}
+                  disabled={saving}
+                >
+                  발행하기
+                </button>
+                {study?.slug && (
+                  <button 
+                    className="btn-view"
+                    onClick={() => window.open(`/study/${study.slug}`, '_blank')}
+                  >
+                    페이지 보기 →
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {!pageData ? (
+              <div className="no-page-message">
+                <p>아직 상세 페이지가 생성되지 않았습니다.</p>
+                <button 
+                  onClick={async () => {
+                    if (!studyId) return;
+                    try {
+                      setSaving(true);
+                      const newPage = await studyDetailPageService.createPage(studyId, {
+                        slug: study?.slug || studyId,
+                      });
+                      setPageData(newPage);
+                    } catch (err) {
+                      console.error('Failed to create page:', err);
+                      alert('페이지 생성에 실패했습니다');
+                    } finally {
+                      setSaving(false);
+                    }
+                  }}
+                  disabled={saving}
+                >
+                  페이지 생성하기
+                </button>
+              </div>
+            ) : previewMode ? (
+              <div className="preview-container">
+                <h4>미리보기</h4>
+                <div className="preview-content study-detail-page-content">
+                  <div className="sections-container">
+                    {pageData.sections.length === 0 ? (
+                      <p style={{ textAlign: 'center', padding: '40px', color: '#999' }}>아직 섹션이 없습니다.</p>
+                    ) : (
+                      pageData.sections.map((section) => (
+                        <div key={section.id} className="section-wrapper">
+                          <SectionRenderer type={section.type} data={section.props} />
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="editor-content">
+                <div className="sections-manager">
+                  <div className="sections-header">
+                    <h4>섹션 관리</h4>
+                    <button 
+                      className="btn-add-section"
+                      onClick={() => setShowAddSection(true)}
+                    >
+                      + 섹션 추가
+                    </button>
+                  </div>
+
+                  {showAddSection && (
+                    <div className="add-section-modal">
+                      <div className="modal-content">
+                        <h5>새 섹션 추가</h5>
+                        <div className="section-types">
+                          {Object.values(SectionType).map((type) => (
+                            <button
+                              key={type}
+                              className="section-type-btn"
+                              onClick={() => {
+                                setSelectedSection({
+                                  id: 'new',
+                                  type,
+                                  props: {},
+                                  order: pageData.sections.length
+                                });
+                                setShowAddSection(false);
+                              }}
+                            >
+                              {type}
+                            </button>
+                          ))}
+                        </div>
+                        <button 
+                          className="btn-cancel"
+                          onClick={() => setShowAddSection(false)}
+                        >
+                          취소
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="sections-list">
+                    {pageData.sections.length === 0 ? (
+                      <p className="empty-message">아직 섹션이 없습니다. 섹션을 추가해주세요.</p>
+                    ) : (
+                      pageData.sections.map((section, index) => (
+                        <div key={section.id} className="section-item">
+                          <div className="section-info">
+                            <span className="section-type">{section.type}</span>
+                            <span className="section-order">순서: {section.order}</span>
+                          </div>
+                          <div className="section-actions">
+                            <button onClick={() => setSelectedSection(section)}>편집</button>
+                            <button onClick={() => handleReorderSection(section.id, Math.max(0, section.order - 1))}>↑</button>
+                            <button onClick={() => handleReorderSection(section.id, section.order + 1)}>↓</button>
+                            <button onClick={() => handleDeleteSection(section.id)}>삭제</button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {selectedSection && (
+                  <div className="section-editor">
+                    <SectionEditForm
+                      sectionType={selectedSection.type}
+                      initialData={selectedSection.props}
+                      onSave={(data) => {
+                        if (selectedSection.id === 'new') {
+                          handleAddSection(selectedSection.type, data);
+                        } else {
+                          handleUpdateSection(selectedSection.id, selectedSection.type, data);
+                        }
+                      }}
+                      onCancel={() => setSelectedSection(null)}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {saving && (
+              <div className="saving-overlay">
+                <LoadingSpinner />
+                <p>저장 중...</p>
               </div>
             )}
           </div>

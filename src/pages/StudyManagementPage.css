@@ -491,3 +491,288 @@
     flex-direction: column;
   }
 }
+
+/* Page Editor Section */
+.page-editor-section {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.editor-header h3 {
+  font-size: 1.5rem;
+  color: #89DDFF;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.editor-actions button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.btn-preview {
+  background: rgba(137, 221, 255, 0.1);
+  color: #89DDFF;
+  border-color: rgba(137, 221, 255, 0.3);
+}
+
+.btn-save {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-publish {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.btn-view {
+  background: transparent;
+  color: #C3E88D;
+  border-color: #C3E88D;
+}
+
+/* No Page Message */
+.no-page-message {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+/* Preview Container */
+.preview-container {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.preview-content {
+  background: #000;
+  border-radius: 8px;
+  padding: 0 !important;
+  min-height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+/* 미리보기는 실제 페이지의 CSS를 그대로 상속받음 */
+.preview-content .sections-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.preview-content .section-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* 섹션 기본 스타일 - 실제 페이지와 동일 */
+.preview-content .section-wrapper > div[class*="study-detail-"] {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+/* Hero 섹션은 전체 너비 - 실제 페이지와 동일 */
+.preview-content .study-detail-hero-section {
+  background-color: #0d0d0d !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  margin: 0 -20px;
+  width: calc(100% + 40px);
+}
+
+/* Rich Text, FAQ 등 일반 섹션들 */
+.preview-content .study-detail-rich-text-section,
+.preview-content .study-detail-faq-section,
+.preview-content .study-detail-gallery-section,
+.preview-content .study-detail-members-section {
+  padding: 30px 25px;
+}
+
+/* Editor Content */
+.editor-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+}
+
+/* Sections Manager */
+.sections-manager {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.sections-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-add-section {
+  background: rgba(195, 232, 141, 0.1);
+  color: #C3E88D;
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Add Section Modal */
+.add-section-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #2d2d2d;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.section-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.section-type-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* Sections List */
+.sections-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.section-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.section-type {
+  font-weight: 600;
+  color: #C3E88D;
+}
+
+.section-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.section-actions button {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* Section Editor */
+.section-editor {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.section-edit-form textarea {
+  background: #1a1a1a;
+  color: #C3E88D;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 15px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.form-actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Saving Overlay */
+.saving-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}

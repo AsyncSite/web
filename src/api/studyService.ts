@@ -34,7 +34,7 @@ export type RecurrenceType = typeof RecurrenceType[keyof typeof RecurrenceType];
 export interface StudyDTO {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   proposerId: string;
   status: StudyStatus;
   createdAt: string | number[];
@@ -241,7 +241,6 @@ export interface GetStudiesParams {
 // Study Proposal Request Type
 export interface StudyProposalRequest {
   title: string;
-  description: string;
   proposerId: string;
   generation?: number;
   slug?: string;
@@ -254,6 +253,12 @@ export interface StudyProposalRequest {
   startDate?: string;
   endDate?: string;
   recurrenceType?: RecurrenceType;
+  detailPage: {
+    sections: Array<{
+      type: string;
+      content: any;
+    }>;
+  };
 }
 
 // Application related types

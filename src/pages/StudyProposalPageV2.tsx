@@ -22,7 +22,7 @@ const StudyProposalPageV2: React.FC = () => {
     type: 'PARTICIPATORY' as StudyType,
     recurrenceType: 'WEEKLY' as RecurrenceType,
     tagline: '',
-    description: '',
+    // description 제거: 상세 콘텐츠는 DetailPage 섹션으로 대체
     generation: 1,
     slug: '',
     selectedDate: '',
@@ -116,7 +116,7 @@ const StudyProposalPageV2: React.FC = () => {
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 0:
-        return formData.title.trim() !== '' && formData.description.trim() !== '';
+        return formData.title.trim() !== '';
       case 1:
         if (formData.recurrenceType === 'ONE_TIME') {
           return formData.selectedDate !== '' && formData.startTime !== '' && formData.endTime !== '';
@@ -170,7 +170,6 @@ const StudyProposalPageV2: React.FC = () => {
 
       const proposalRequest: StudyProposalRequest = {
         title: formData.title.trim(),
-        description: formData.description.trim(),
         proposerId: user.id || user.username || user.email,
         type: formData.type as StudyType,
         generation: formData.generation,
@@ -185,6 +184,18 @@ const StudyProposalPageV2: React.FC = () => {
         startDate: finalStartDate || undefined,
         endDate: finalEndDate || undefined,
         recurrenceType: formData.recurrenceType,
+        detailPage: {
+          sections: [
+            {
+              type: 'HERO',
+              content: {
+                title: formData.title.trim(),
+                subtitle: formData.tagline || '',
+                description: '소개 텍스트는 제출 후 상세페이지에서 자유롭게 편집하세요.'
+              }
+            }
+          ]
+        }
       };
 
       await studyService.proposeStudy(proposalRequest);
@@ -288,18 +299,9 @@ const StudyProposalPageV2: React.FC = () => {
                   placeholder="스터디를 한 문장으로 표현해주세요"
                   className="modern-input"
                 />
-              </div>
-
-              <div className="form-group-v2">
-                <label>상세 설명 *</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="스터디의 목표, 진행 방식, 기대 효과 등을 자세히 설명해주세요"
-                  className="modern-textarea"
-                  rows={6}
-                />
-                <div className="char-count">{formData.description.length}/1000</div>
+                <span className="form-hint">
+                  상세 소개와 콘텐츠는 스터디 생성 후 관리 페이지에서 편집할 수 있습니다
+                </span>
               </div>
 
               <div className="form-row-v2">
@@ -529,6 +531,12 @@ const StudyProposalPageV2: React.FC = () => {
                   <li>승인되면 이메일로 안내드립니다.</li>
                   <li>스터디 페이지에 공개되어 모집이 시작됩니다.</li>
                 </ol>
+              </div>
+
+              <div className="page-edit-notice">
+                <span className="notice-text">
+                  💡 스터디 생성 후 관리 페이지에서 상세 페이지를 자유롭게 편집할 수 있어요
+                </span>
               </div>
             </div>
           )}
