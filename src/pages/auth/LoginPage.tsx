@@ -180,7 +180,7 @@ function LoginPage(): React.ReactNode {
   return (
     <div className="login-page auth-page">
       <StarBackground />
-      <div className="login-container auth-container auth-fade-in">
+      <div className="login-container auth-container wide auth-fade-in">
         <div className="login-brand"><div className="login-logo">AS</div></div>
         <div className="login-header">
           <h1>로그인</h1>
@@ -396,6 +396,12 @@ function LoginPage(): React.ReactNode {
 
         <div className="login-divider"><span>또는</span></div>
         <button onClick={() => window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`} className="google-login-button auth-button" type="button" aria-label="Google 계정으로 로그인" disabled={isSubmitting}>
+          <svg width="20" height="20" viewBox="0 0 533.5 544.3" aria-hidden="true" focusable="false">
+            <path fill="#4285F4" d="M533.5 278.4c0-18.5-1.7-36.3-4.9-53.6H272v101.4h146.9c-6.3 34-25 62.7-53.5 82v68.2h86.5c50.7-46.7 81.6-115.4 81.6-198z"/>
+            <path fill="#34A853" d="M272 544.3c73.9 0 135.9-24.5 181.1-66.2l-86.5-68.2c-24.1 16.1-55 25.6-94.6 25.6-72.7 0-134.3-49-156.3-114.9H26.7v71.9C71.6 486.2 165.5 544.3 272 544.3z"/>
+            <path fill="#FBBC05" d="M115.7 320.6c-10.9-32.7-10.9-68.2 0-100.9v-71.9H26.7C-8.9 196.4-8.9 348 26.7 420.6l89-70z"/>
+            <path fill="#EA4335" d="M272 106.7c39.9 0 75.8 13.7 104.1 40.7l78.2-78.2C407.8 27.6 345.8 0 272 0 165.5 0 71.6 58.1 26.7 164.8l89 71.9C137.7 155.8 199.3 106.7 272 106.7z"/>
+          </svg>
           <span>Google로 계속하기</span>
         </button>
 
