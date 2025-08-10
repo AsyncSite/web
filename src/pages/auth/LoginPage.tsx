@@ -35,6 +35,7 @@ function LoginPage(): React.ReactNode {
   const [showPassword, setShowPassword] = useState(false);
   const [webauthnSupported, setWebauthnSupported] = useState<boolean>(false);
   const [passkeyError, setPasskeyError] = useState<string | React.ReactNode>('');
+  const [tab, setTab] = useState<'passkey' | 'password'>('passkey');
   const [showPasskeyPrompt, setShowPasskeyPrompt] = useState(false);
   const [userInfo, setUserInfo] = useState<{ email: string; name: string } | null>(null);
   const [conditionalUISupported, setConditionalUISupported] = useState(false);
@@ -185,11 +186,12 @@ function LoginPage(): React.ReactNode {
 
         {/* Tabs: Passkey / Email+Password */}
         <div className="tab-navigation" style={{ marginBottom: 12 }}>
-          <button className={`tab-button ${passkeyError !== '' ? '' : 'active'}`} onClick={() => { /* visual only */ }}>🔐 패스키</button>
-          <button className={`tab-button ${passkeyError !== '' ? 'active' : ''}`} onClick={() => { /* visual only */ }}>이메일+비밀번호</button>
+          <button className={`tab-button ${tab === 'passkey' ? 'active' : ''}`} onClick={() => setTab('passkey')}>🔐 패스키</button>
+          <button className={`tab-button ${tab === 'password' ? 'active' : ''}`} onClick={() => setTab('password')}>이메일+비밀번호</button>
         </div>
 
         {/* Passkey pane */}
+        {tab === 'passkey' && (
         <div className="tab-content">
           <div className="form-group auth-form-group">
             <label htmlFor="username" className="auth-label">이메일</label>
@@ -252,10 +254,12 @@ function LoginPage(): React.ReactNode {
             </div>
           )}
         </div>
+        )}
 
         <div className="login-divider"><span>또는</span></div>
 
         {/* Email+Password pane */}
+        {tab === 'password' && (
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group auth-form-group">
             <label htmlFor="username2" className="auth-label">이메일</label>
@@ -291,6 +295,7 @@ function LoginPage(): React.ReactNode {
             {isSubmitting ? '' : '이메일+비밀번호로 로그인'}
           </button>
         </form>
+        )}
 
         <div className="login-divider"><span>또는</span></div>
         <button onClick={() => window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`} className="google-login-button auth-button" type="button" aria-label="Google 계정으로 로그인" disabled={isSubmitting}>
