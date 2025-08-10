@@ -36,6 +36,7 @@
   --auth-nudge-pointer-border-color: rgba(195, 232, 141, 0.25);
   --auth-nudge-pointer-bounce-distance: 4px;
   --auth-nudge-pointer-bounce-duration: 1.6s;
+  --auth-nudge-pointer-offset-percent: 25%;
 }
 
 .tab-navigation {
@@ -269,7 +270,7 @@
 /* Nudge callout (speech-bubble) guiding to Passkey CTA */
 .nudge-callout {
   display: block;
-  margin: 6px auto 10px auto;
+  margin: 4px auto 6px auto;
   max-width: var(--auth-nudge-callout-max-width);
   padding: var(--auth-nudge-callout-padding-y) var(--auth-nudge-callout-padding-x);
   border-radius: var(--auth-nudge-callout-radius);
@@ -277,15 +278,15 @@
   border: var(--auth-nudge-callout-border);
   box-shadow: var(--auth-nudge-callout-shadow);
   color: var(--auth-nudge-callout-text-color);
-  text-align: center;
+  text-align: left !important;
   position: relative;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .nudge-callout::after {
   content: '';
   position: absolute;
-  left: 22%; /* point roughly to the first (Passkey) tab */
+  left: var(--auth-nudge-pointer-offset-percent); /* roughly center of the first (Passkey) tab */
   transform: translateX(0);
   bottom: calc(-1 * var(--auth-nudge-pointer-size) + 1px);
   width: 0;
@@ -300,7 +301,7 @@
   /* thin border for the triangle to match callout border */
   content: '';
   position: absolute;
-  left: calc(22% - 1px);
+  left: calc(var(--auth-nudge-pointer-offset-percent) - 1px);
   transform: translateX(0);
   bottom: calc(-1 * var(--auth-nudge-pointer-size) - 0px);
   width: 0;
