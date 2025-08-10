@@ -111,14 +111,18 @@ apiClient.interceptors.response.use(
               refreshToken
             });
             
-            const { accessToken, refreshToken: newRefreshToken } = response.data;
-            localStorage.setItem('authToken', accessToken);
+            const data = response.data as any;
+            // Support both wrapped and flat responses
+            const accessToken = data?.data?.accessToken || data?.accessToken;
+            const newRefreshToken = data?.data?.refreshToken || data?.refreshToken;
+            if (accessToken) {
+              localStorage.setItem('authToken', accessToken);
+              apiClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+            }
             if (newRefreshToken) {
               localStorage.setItem('refreshToken', newRefreshToken);
             }
-            
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             
             processQueue(null, accessToken);
             return apiClient(originalRequest);

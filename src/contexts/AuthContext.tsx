@@ -206,6 +206,22 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
     return cleanup;
   }, [navigate, location.pathname]);
 
+  // Listen for login success events (e.g., WebAuthn flows that bypass AuthContext.login)
+  useEffect(() => {
+    const handleLoginSuccess = async () => {
+      try {
+        // Token should already be stored by the caller
+        const userProfile = await userService.getProfile();
+        setUser(userProfile);
+      } catch (error) {
+        // If fetching profile fails, keep token-based auth; UI can retry later
+      }
+    };
+
+    const cleanup = addAuthEventListener(AUTH_EVENTS.LOGIN_SUCCESS, handleLoginSuccess as any);
+    return cleanup;
+  }, []);
+
   // Check authentication status on mount
   useEffect(() => {
     const checkAuth = async () => {
@@ -319,7 +335,8 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
 
   const value: AuthContextType = {
     user,
-    isAuthenticated: !!user,
+    // Consider token presence as authenticated to avoid flicker right after external login
+    isAuthenticated: !!user || !!authService.getStoredToken(),
     isLoading,
     login,
     logout,
