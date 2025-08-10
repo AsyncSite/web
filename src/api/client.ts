@@ -141,13 +141,22 @@ apiClient.interceptors.response.use(
             isRefreshing = false;
           }
         } else {
-          // No refresh token - clear auth and redirect
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('user');
-          dispatchAuthEvent(AUTH_EVENTS.UNAUTHORIZED, { 
-            from: requestUrl,
-            statusCode: 401 
-          });
+          // No refresh token scenario: don't globally log out for non-critical endpoints
+          const criticalPaths = [
+            '/api/auth/validate',
+            '/api/users/me',
+            '/api/auth/logout'
+          ];
+          const isCritical = criticalPaths.some(path => requestUrl.includes(path));
+          if (isCritical) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            dispatchAuthEvent(AUTH_EVENTS.UNAUTHORIZED, { 
+              from: requestUrl,
+              statusCode: 401 
+            });
+          }
+          // For non-critical requests, propagate the 401 to the caller without clearing session
         }
       }
     }
