@@ -310,9 +310,14 @@ function LoginPage(): React.ReactNode {
                 setIsSubmitting(true);
                 
                 try {
+                  // Enforce directed flow: require email to align with server challenge storage
+                  if (!formData.username || !formData.username.trim()) {
+                    setErrors(prev => ({ ...prev, username: '이메일을 입력해주세요' }));
+                    return;
+                  }
                   // 1) 요청 옵션 가져오기
                   const optionsRes = await apiClient.post('/api/webauthn/auth/options', { 
-                    username: formData.username || undefined 
+                    username: formData.username 
                   });
                   const options = optionsRes.data.data;
                   
@@ -321,7 +326,7 @@ function LoginPage(): React.ReactNode {
                   
                   // 3) 검증 요청
                   const verifyRes = await apiClient.post('/api/webauthn/auth/verify', {
-                    username: formData.username || undefined,
+                    username: formData.username,
                     id: assertion.id,
                     rawId: assertion.rawId,
                     response: {

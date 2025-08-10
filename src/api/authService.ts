@@ -58,7 +58,12 @@ class AuthService {
    */
   storeAuthData(loginResponse: LoginResponse): void {
     localStorage.setItem('authToken', loginResponse.accessToken);
-    localStorage.setItem('refreshToken', loginResponse.refreshToken);
+    if (loginResponse.refreshToken) {
+      localStorage.setItem('refreshToken', loginResponse.refreshToken);
+    } else {
+      // Ensure we don't keep an old or the string "null" value
+      localStorage.removeItem('refreshToken');
+    }
     
     // Store user data
     const user: Partial<User> = {
