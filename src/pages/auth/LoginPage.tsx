@@ -184,7 +184,12 @@ function LoginPage(): React.ReactNode {
         <div className="login-brand"><div className="login-logo">AS</div></div>
         <div className="login-header">
           <h1>로그인</h1>
-          <p>가장 빠르고 안전한 로그인: 패스키(지문/얼굴/핀) 권장</p>
+          <p>패스키로 시작해보세요! 비밀번호를 서버에 저장하지 않고 안전하고 빨라요!</p>
+        </div>
+        <div className="nudge" aria-hidden="true">
+          <svg className="nudge-arrow" width="20" height="20" viewBox="0 0 24 24" focusable="false">
+            <path d="M12 3a1 1 0 011 1v11.586l3.293-3.293a1 1 0 111.414 1.414l-5 5a1 1 0 01-1.414 0l-5-5A1 1 0 116.707 12.293L10 15.586V4a1 1 0 011-1z" />
+          </svg>
         </div>
         {errors.general && (<div className="error-message general-error auth-error-shake">{errors.general}</div>)}
 

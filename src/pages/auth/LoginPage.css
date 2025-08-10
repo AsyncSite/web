@@ -251,6 +251,24 @@
   text-transform: uppercase;
 }
 
+/* Nudge arrow under header to guide attention to Passkey CTA */
+.nudge {
+  display: flex;
+  justify-content: center;
+  margin: -6px 0 6px 0;
+}
+
+.nudge-arrow {
+  fill: var(--auth-primary-green);
+  opacity: 0.85;
+  animation: nudgeBounce 1.8s ease-in-out infinite;
+}
+
+@keyframes nudgeBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
 /* Form Styles */
 .login-form {
   display: flex;
