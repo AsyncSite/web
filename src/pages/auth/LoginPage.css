@@ -6,6 +6,53 @@
   /* Using auth-page from common */
 }
 
+/* Tab styles for prototype B (and future use) */
+:root {
+  --auth-tabs-border-color-neutral-200: rgba(255,255,255,0.14);
+  --auth-tabs-border-color-active-300: rgba(195,232,141,0.6);
+  --auth-tabs-text-color-inactive-500: rgba(255,255,255,0.6);
+  --auth-tabs-text-color-active-900: #ffffff;
+  --auth-tabs-bg-color-container-950: rgba(5,6,10,0.35);
+  --auth-tabs-bg-color-active-900: rgba(5,6,10,0.6);
+  --auth-tabs-radius-md-10px: 10px;
+  --auth-tabs-radius-lg-14px: 14px;
+  --auth-tabs-transition-duration-200ms: 200ms;
+  --auth-tabs-transition-ease-fn: ease-in-out;
+  --auth-tabs-button-padding-vertical-10px: 10px;
+  --auth-tabs-button-padding-horizontal-16px: 16px;
+  --auth-tabs-font-weight-semibold-600: 600;
+}
+
+.tab-navigation {
+  display: inline-flex;
+  background: var(--auth-tabs-bg-color-container-950);
+  border: 1px solid var(--auth-tabs-border-color-neutral-200);
+  border-radius: var(--auth-tabs-radius-lg-14px);
+  padding: 4px;
+}
+
+.tab-button {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--auth-tabs-text-color-inactive-500);
+  padding: var(--auth-tabs-button-padding-vertical-10px) var(--auth-tabs-button-padding-horizontal-16px);
+  border-radius: var(--auth-tabs-radius-md-10px);
+  cursor: pointer;
+  font-weight: var(--auth-tabs-font-weight-semibold-600);
+  transition: all var(--auth-tabs-transition-duration-200ms) var(--auth-tabs-transition-ease-fn);
+}
+
+.tab-button:hover {
+  color: var(--auth-tabs-text-color-active-900);
+}
+
+.tab-button.active {
+  background: var(--auth-tabs-bg-color-active-900);
+  color: var(--auth-tabs-text-color-active-900);
+  border-color: var(--auth-tabs-border-color-active-300);
+}
+
 .login-page-loading {
   min-height: 100vh;
   display: flex;
