@@ -189,7 +189,7 @@ function LoginPage(): React.ReactNode {
 
         {/* Nudge callout above tab navigation, pointing to Passkey tab */}
         <div className="nudge-callout nudge-callout--compact" aria-live="polite">
-          패스키로 시작해보세요! 비밀번호를 서버에 저장하지 않고 안전하고 빨라요!
+          패스키로 시작해보세요! <br />비밀번호를 서버에 저장하지 않고 안전하고 빨라요!
         </div>
 
         {/* Tabs: Passkey / Email+Password */}
