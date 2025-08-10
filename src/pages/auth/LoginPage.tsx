@@ -253,11 +253,9 @@ function LoginPage(): React.ReactNode {
                     }
                   });
                   const loginResponse = verifyRes.data.data; // LoginResponse 형태
-                  // 기존 저장 로직 재사용
+                  // 기존 저장 로직 재사용 (AuthContext는 자동 토큰 검증 후 프로필 로드)
                   authService.storeAuthData(loginResponse);
-                  const userProfile = await userService.getProfile();
-                  setUser(userProfile);
-                  dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, { user: userProfile });
+                  dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
                 } catch (err) {
                   console.error('Passkey login failed', err);
                 }
