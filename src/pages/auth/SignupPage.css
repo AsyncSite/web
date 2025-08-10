@@ -126,8 +126,9 @@
   filter: blur(8px);
 } */
 
+/* Reduce hover motion to keep things stable */
 .signup-logo:hover {
-  transform: rotate(0deg) scale(1.1);
+  transform: rotate(0deg) scale(1.02);
   animation: none;
 }
 
@@ -360,8 +361,7 @@
 .check-button:hover:not(:disabled) {
   background: var(--auth-accent-purple);
   color: #05060A;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(187, 134, 252, 0.4);
+  box-shadow: 0 2px 8px rgba(187, 134, 252, 0.25);
 }
 
 .check-button:disabled {

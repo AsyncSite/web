@@ -269,9 +269,8 @@ export class ProfileNameInputValidator {
     const upperName = name.toUpperCase();
 
     for (const keyword of PROFILE_NAME_SQL_KEYWORDS) {
-      // 단어 경계 검사 (단독 키워드만 검출)
-      const regex = new RegExp(`\\b${keyword}\\b`);
-      if (regex.test(upperName)) {
+      // 모든 키워드를 직접 문자열 비교로 체크 (정규표현식 사용 안함)
+      if (upperName.includes(keyword)) {
         return this.createError(
           ClientAuthValidationErrorCodes.PROFILE_NAME_SQL_KEYWORDS_DETECTED,
           'critical',

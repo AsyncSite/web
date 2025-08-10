@@ -94,7 +94,8 @@ export class SecurePasswordInputValidator {
     if (charTypeValidation.error) {
       errors.push(charTypeValidation.error);
     }
-    improvementTips.push(...charTypeValidation.tips);
+    // tips는 나중에 generateImprovementTips에서 한 번만 추가하도록 제거
+    // improvementTips.push(...charTypeValidation.tips);
 
     // 4. 연속/반복 문자 검증
     const patternValidation = this.validatePatterns(password);
@@ -564,33 +565,30 @@ export class SecurePasswordInputValidator {
   }
 
   /**
-   * 개선 제안 생성
+   * 개선 제안 생성 - 중복 제거하고 최대 2개만 반환
    */
   private generateImprovementTips(password: string, currentTypes: string[]): string[] {
     const tips: string[] = [];
 
-    if (password.length < SECURE_PASSWORD_LENGTH_LIMITS.OPTIMAL_MIN) {
+    // 가장 중요한 개선사항만 추가 (우선순위 순)
+    if (!currentTypes.includes('uppercase')) {
+      tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.ADD_UPPERCASE);
+    }
+    
+    if (!currentTypes.includes('special')) {
+      tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.ADD_SPECIAL);
+    }
+    
+    if (tips.length < 2 && !currentTypes.includes('numbers')) {
+      tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.ADD_NUMBERS);
+    }
+    
+    if (tips.length < 2 && password.length < SECURE_PASSWORD_LENGTH_LIMITS.OPTIMAL_MIN) {
       tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.ADD_LENGTH);
     }
 
-    if (currentTypes.length < SECURE_PASSWORD_CHARACTER_REQUIREMENTS.RECOMMENDED_CHARACTER_TYPES) {
-      if (!currentTypes.includes('uppercase')) {
-        tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.ADD_UPPERCASE);
-      }
-      if (!currentTypes.includes('special')) {
-        tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.ADD_SPECIAL);
-      }
-    }
-
-    if (this.hasKeyboardPattern(password) || this.hasSequentialCharacters(password)) {
-      tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.AVOID_PATTERNS);
-    }
-
-    if (tips.length === 0 && password.length < 20) {
-      tips.push(SECURE_PASSWORD_IMPROVEMENT_TIPS.USE_PASSPHRASE);
-    }
-
-    return tips;
+    // 최대 2개만 반환
+    return tips.slice(0, 2);
   }
 
   /**

@@ -1,0 +1,256 @@
+.passkey-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.passkey-modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.passkey-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.passkey-modal-close:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.passkey-modal-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.passkey-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.passkey-modal-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+}
+
+.passkey-modal-header .subtitle {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+.passkey-modal-benefits {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.benefit-item:last-child {
+  margin-bottom: 0;
+}
+
+.benefit-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.benefit-item strong {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.benefit-item p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.passkey-modal-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.passkey-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.passkey-register-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.passkey-register-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.passkey-register-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.passkey-later-btn {
+  background: none;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.passkey-later-btn:hover:not(:disabled) {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+}
+
+.passkey-later-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.passkey-modal-note {
+  text-align: center;
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+/* Success state */
+.passkey-modal-success {
+  text-align: center;
+  padding: 20px;
+}
+
+.passkey-modal-success .success-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: bounceIn 0.5s;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.passkey-modal-success h2 {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  color: #4CAF50;
+}
+
+.passkey-modal-success p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+}
+
+/* 모바일 대응 */
+@media (max-width: 480px) {
+  .passkey-modal-content {
+    padding: 24px;
+    width: 95%;
+  }
+  
+  .passkey-icon {
+    font-size: 36px;
+  }
+  
+  .passkey-modal-header h2 {
+    font-size: 20px;
+  }
+  
+  .benefit-item {
+    font-size: 13px;
+  }
+}

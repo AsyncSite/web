@@ -4,10 +4,14 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import userService from '../../api/userService';
 import StarBackground from '../../components/common/StarBackground';
-import { ValidationFeedback, PasswordStrengthMeter } from '../../components/common/validation';
-import { registrationEmailValidator, securePasswordValidator, profileNameValidator } from '../../utils/clientAuthValidation';
-import { RegistrationUserContext } from '../../utils/clientAuthValidation/types';
+import { ValidationFeedback } from '../../components/common/validation';
+import { registrationEmailValidator, profileNameValidator } from '../../utils/clientAuthValidation';
 import { env } from '../../config/environment';
+import { createPasskey, getPasskey } from '../../utils/webauthn/helpers';
+import apiClient from '../../api/client';
+import PasskeyPromptModal from '../../components/auth/PasskeyPromptModal';
+import authService from '../../api/authService';
+import { AUTH_EVENTS, dispatchAuthEvent } from '../../utils/authEvents';
 import './auth-common.css';
 import './SignupPage.css';
 
@@ -27,7 +31,7 @@ interface SignupFormErrors {
 }
 
 type SignupStep = 'email' | 'name' | 'password' | 'confirmPassword';
-type SignupMethod = 'google' | 'email' | null;
+type SignupMethod = 'google' | 'email' | 'passkey' | null;
 
 function SignupPage(): React.ReactNode {
   const { register, isAuthenticated, isLoading } = useAuth();
@@ -48,10 +52,16 @@ function SignupPage(): React.ReactNode {
   const [emailCheckTriggered, setEmailCheckTriggered] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [webauthnSupported, setWebauthnSupported] = useState<boolean>(false);
+  const [showPasskeyPrompt, setShowPasskeyPrompt] = useState(false);
+  const [registrationCompleted, setRegistrationCompleted] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  // Minimal password UX flags
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [passwordNextAttempted, setPasswordNextAttempted] = useState(false);
   
   // Backend sync validation states
   const [backendSync_emailValidationResult, setBackendSync_emailValidationResult] = useState<any>(null);
-  const [backendSync_passwordValidationResult, setBackendSync_passwordValidationResult] = useState<any>(null);
   const [backendSync_showAdvancedValidation, setBackendSync_showAdvancedValidation] = useState(true); // Always enabled in production
   
   // Debounce email value for API calls
@@ -62,6 +72,11 @@ function SignupPage(): React.ReactNode {
   const nameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
+
+  // WebAuthn support check
+  useEffect(() => {
+    setWebauthnSupported(typeof window !== 'undefined' && !!(navigator as any).credentials?.create);
+  }, []);
 
   // Focus management
   useEffect(() => {
@@ -127,8 +142,8 @@ function SignupPage(): React.ReactNode {
     }
   }, [emailAvailable, currentStep, completedSteps]);
 
-  // Redirect if already authenticated - MUST be after all hooks
-  if (isAuthenticated) {
+  // Redirect if already authenticated and should redirect - MUST be after all hooks
+  if (isAuthenticated && shouldRedirect) {
     return <Navigate to="/users/me" replace />;
   }
 
@@ -157,14 +172,20 @@ function SignupPage(): React.ReactNode {
 
     switch (step) {
       case 'email':
-        // Use backend-synced validation
-        const backendSync_emailResult = registrationEmailValidator.validateRegistrationEmail(formData.email);
+        // Prefer a single phrasing for invalid format
+        const simpleEmailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         if (!formData.email.trim()) {
           newErrors.email = '이메일을 입력해주세요';
-        } else if (!backendSync_emailResult.isValid && backendSync_emailResult.fieldErrors.length > 0) {
-          newErrors.email = backendSync_emailResult.fieldErrors[0].errorMessage;
+        } else if (!simpleEmailRegex.test(formData.email)) {
+          newErrors.email = '올바른 이메일 형식을 입력해주세요';
+        } else {
+          // Use backend-synced validation only if format is valid
+          const backendSync_emailResult = registrationEmailValidator.validateRegistrationEmail(formData.email);
+          if (!backendSync_emailResult.isValid && backendSync_emailResult.fieldErrors.length > 0) {
+            newErrors.email = backendSync_emailResult.fieldErrors[0].errorMessage;
+          }
+          setBackendSync_emailValidationResult(backendSync_emailResult);
         }
-        setBackendSync_emailValidationResult(backendSync_emailResult);
         break;
         
       case 'name':
@@ -178,22 +199,12 @@ function SignupPage(): React.ReactNode {
         break;
         
       case 'password':
-        // Use backend-synced validation with user context
-        const backendSync_userContext: RegistrationUserContext = {
-          registrationEmailValue: formData.email,
-          profileNameValue: formData.name
-        };
-        const backendSync_passwordResult = securePasswordValidator.validateSecurePassword(
-          formData.password,
-          backendSync_userContext
-        );
-        
+        // Minimal rule: show only length error
         if (!formData.password) {
           newErrors.password = '비밀번호를 입력해주세요';
-        } else if (!backendSync_passwordResult.isValid && backendSync_passwordResult.fieldErrors.length > 0) {
-          newErrors.password = backendSync_passwordResult.fieldErrors[0].errorMessage;
+        } else if (formData.password.length < 8) {
+          newErrors.password = '8자 이상 입력해주세요';
         }
-        setBackendSync_passwordValidationResult(backendSync_passwordResult);
         break;
         
       case 'confirmPassword':
@@ -215,8 +226,10 @@ function SignupPage(): React.ReactNode {
         setCompletedSteps([...completedSteps, step]);
       }
       
-      // Move to next step
-      const steps: SignupStep[] = ['email', 'name', 'password', 'confirmPassword'];
+      // Move to next step (depend on signup method)
+      const steps: SignupStep[] = signupMethod === 'passkey'
+        ? ['email', 'name']
+        : ['email', 'name', 'password', 'confirmPassword'];
       const currentIndex = steps.indexOf(step);
       if (currentIndex < steps.length - 1) {
         setCurrentStep(steps[currentIndex + 1]);
@@ -232,16 +245,14 @@ function SignupPage(): React.ReactNode {
     if (!formData.email.trim()) {
       newErrors.email = '이메일을 입력해주세요';
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = '올바른 이메일 형식이 아닙니다';
+      newErrors.email = '올바른 이메일 형식을 입력해주세요';
     }
 
-    // Password validation
+    // Password validation (minimal): only length
     if (!formData.password) {
       newErrors.password = '비밀번호를 입력해주세요';
     } else if (formData.password.length < 8) {
-      newErrors.password = '비밀번호는 최소 8자 이상이어야 합니다';
-    } else if (!/(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.password)) {
-      newErrors.password = '비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다';
+      newErrors.password = '8자 이상 입력해주세요';
     }
 
     // Confirm password validation
@@ -308,9 +319,17 @@ function SignupPage(): React.ReactNode {
         password: formData.password,
         name: formData.name
       });
-      // register 함수가 내부적으로 login을 호출하므로
-      // navigate는 제거하고 AuthContext의 isAuthenticated 상태에 의존
-      // 성공 시 isSubmitting을 false로 설정하지 않음 - 리다이렉트 될 때까지 로딩 상태 유지
+      
+      setRegistrationCompleted(true);
+      
+      // WebAuthn 지원 여부 확인 후 패스키 모달 표시
+      if (webauthnSupported) {
+        setShowPasskeyPrompt(true);
+        setIsSubmitting(false);
+      } else {
+        // WebAuthn 미지원 시 바로 리다이렉트
+        setShouldRedirect(true);
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : '회원가입에 실패했습니다';
       // The error message is already translated by handleApiError
@@ -321,6 +340,81 @@ function SignupPage(): React.ReactNode {
         setErrors({ general: message });
       }
       // 에러 발생 시에만 isSubmitting을 false로 설정
+      setIsSubmitting(false);
+    }
+  };
+
+  // Passkey-only signup (email + name, no password)
+  const handlePasskeySignup = async () => {
+    // Validate email and name only
+    const emailValid = validateStep('email');
+    const nameValid = validateStep('name');
+    if (!emailValid || !nameValid) return;
+
+    if (!webauthnSupported) {
+      setErrors({ general: '이 브라우저는 패스키를 지원하지 않습니다. 다른 브라우저에서 시도해주세요.' });
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setErrors({});
+
+      // 1) Registration options
+      const regOptionsRes = await apiClient.post('/api/webauthn/register/options', {
+        userId: formData.email,
+        username: formData.email,
+        displayName: formData.name || formData.email
+      });
+      const regOptions = regOptionsRes.data.data;
+
+      // 2) Create credential
+      const credential = await createPasskey(regOptions);
+
+      // 3) Verify registration
+      await apiClient.post('/api/webauthn/register/verify', {
+        userId: formData.email,
+        id: credential.id,
+        rawId: credential.rawId,
+        response: {
+          clientDataJSON: credential.response.clientDataJSON,
+          attestationObject: credential.response.attestationObject
+        }
+      });
+
+      // 4) Immediately authenticate to issue JWT
+      const authOptionsRes = await apiClient.post('/api/webauthn/auth/options', {
+        username: formData.email
+      });
+      const authOptions = authOptionsRes.data.data;
+      const assertion = await getPasskey(authOptions);
+
+      const verifyRes = await apiClient.post('/api/webauthn/auth/verify', {
+        username: formData.email,
+        id: assertion.id,
+        rawId: assertion.rawId,
+        response: {
+          clientDataJSON: assertion.response.clientDataJSON,
+          authenticatorData: assertion.response.authenticatorData,
+          signature: assertion.response.signature,
+          userHandle: assertion.response.userHandle
+        }
+      });
+
+      const loginResponse = verifyRes.data.data;
+      authService.storeAuthData(loginResponse);
+      dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
+      navigate('/users/me', { replace: true });
+    } catch (err: any) {
+      console.error('Passkey signup failed', err);
+      if (err?.name === 'NotAllowedError') {
+        setErrors({ general: '패스키 등록이 취소되었습니다. 다시 시도해주세요.' });
+      } else if (err?.message?.includes('relying party') || err?.message?.includes('origin')) {
+        setErrors({ general: '보안 설정(rpId/origin)과 현재 도메인이 일치하지 않습니다. HTTPS 환경에서 다시 시도해주세요.' });
+      } else {
+        setErrors({ general: '패스키 가입에 실패했습니다. 다시 시도해주세요.' });
+      }
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -402,6 +496,31 @@ function SignupPage(): React.ReactNode {
               </svg>
               <span>이메일로 가입하기</span>
             </button>
+
+            {/* Passkey Signup Button */}
+            <div className="signup-divider">
+              <span>또는</span>
+            </div>
+            <button
+              onClick={() => {
+                setSignupMethod('passkey');
+                setCurrentStep('email');
+                setCompletedSteps([]);
+                setEmailAvailable(null);
+                setEmailCheckTriggered(false);
+              }}
+              className="auth-button auth-button-secondary"
+              type="button"
+              aria-label="패스키로 계속하기(비밀번호 없이)"
+              disabled={!webauthnSupported}
+            >
+              🔐 패스키로 계속하기 (비밀번호 없이)
+            </button>
+            {!webauthnSupported && (
+              <div className="info-message auth-info-message" style={{ marginTop: '8px' }}>
+                현재 브라우저에서 패스키를 사용할 수 없습니다.
+              </div>
+            )}
           </div>
         ) : (
           <>
@@ -469,16 +588,7 @@ function SignupPage(): React.ReactNode {
                   이메일 중복을 확인하고 있습니다...
                 </span>
               )}
-              {/* Backend-synced email validation feedback */}
-              {backendSync_showAdvancedValidation && formData.email && (
-                <ValidationFeedback
-                  fieldType="email"
-                  value={formData.email}
-                  debounceMs={500}
-                  showWarnings={true}
-                  showSuccessMessage={false}
-                />
-              )}
+              {/* Realtime email validation feedback removed to prevent duplicate messages */}
             </div>
           </div>
 
@@ -518,7 +628,8 @@ function SignupPage(): React.ReactNode {
             </div>
           </div>
 
-          {/* Password Step */}
+          {/* Password Step (email method only) */}
+          {signupMethod === 'email' && (
           <div className={`form-step-wrapper ${completedSteps.includes('name') || completedSteps.includes('password') ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('password') ? 'completed' : ''}`}>
             <div className="form-group auth-form-group">
               <label htmlFor="password" className="auth-label">
@@ -532,9 +643,10 @@ function SignupPage(): React.ReactNode {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
+                  onBlur={() => setPasswordTouched(true)}
                   onKeyPress={(e) => e.key === 'Enter' && handleStepComplete('password')}
                   className={`auth-input ${errors.password ? 'error' : ''}`}
-                  placeholder="8자 이상, 대/소문자/숫자/특수문자 중 3종류"
+                  placeholder="8자 이상 입력"
                   autoComplete="new-password"
                 />
                 <button
@@ -556,44 +668,17 @@ function SignupPage(): React.ReactNode {
                   )}
                 </button>
               </div>
-              {/* Backend-synced password strength meter */}
-              {formData.password && (
-                <PasswordStrengthMeter
-                  password={formData.password}
-                  userContext={{
-                    registrationEmailValue: formData.email,
-                    profileNameValue: formData.name
-                  }}
-                  showDetails={true}
-                  showCrackTime={true}
-                  showEntropyScore={true}
-                  showImprovementTips={false}
-                />
-              )}
-              {errors.password && (
+              {/* Show a single-line password error only after blur or next-step attempt */}
+              {errors.password && (passwordTouched || passwordNextAttempted) && (
                 <span className="error-message auth-error-message">
                   {errors.password}
                 </span>
-              )}
-              {/* Backend-synced password validation feedback */}
-              {backendSync_showAdvancedValidation && formData.password && (
-                <ValidationFeedback
-                  fieldType="password"
-                  value={formData.password}
-                  userContext={{
-                    registrationEmailValue: formData.email,
-                    profileNameValue: formData.name
-                  }}
-                  debounceMs={300}
-                  showWarnings={true}
-                  showSuccessMessage={false}
-                />
               )}
               {currentStep === 'password' && !completedSteps.includes('password') && 
                !(formData.password && formData.password.length >= 8) && (
                 <button
                   type="button"
-                  onClick={() => handleStepComplete('password')}
+                  onClick={() => { setPasswordNextAttempted(true); handleStepComplete('password'); }}
                   className="next-button auth-button auth-button-primary"
                   disabled={!formData.password}
                 >
@@ -602,8 +687,10 @@ function SignupPage(): React.ReactNode {
               )}
             </div>
           </div>
+          )}
 
-          {/* Confirm Password Step - Show only after password step is completed or being filled */}
+          {/* Confirm Password Step (email method only) */}
+          {signupMethod === 'email' && (
           <div className={`form-step-wrapper ${(completedSteps.includes('password') || (currentStep === 'password' && formData.password && formData.password.length >= 8)) || completedSteps.includes('confirmPassword') ? 'auth-fade-in' : 'hidden'} ${completedSteps.includes('confirmPassword') ? 'completed' : ''}`}>
             <div className="form-group auth-form-group">
               <label htmlFor="confirmPassword" className="auth-label">
@@ -662,6 +749,23 @@ function SignupPage(): React.ReactNode {
               )}
             </div>
           </div>
+          )}
+
+          {/* Passkey submit (passkey method only) */}
+          {signupMethod === 'passkey' && (
+            <div className={`form-step-wrapper ${(completedSteps.includes('name')) ? 'auth-fade-in' : 'hidden'}`}>
+              <div className="form-group auth-form-group">
+                <button
+                  type="button"
+                  onClick={handlePasskeySignup}
+                  className={`signup-button auth-button auth-button-primary ${isSubmitting ? 'loading' : ''}`}
+                  disabled={isSubmitting || !webauthnSupported}
+                >
+                  {isSubmitting ? '' : '🔐 패스키로 가입하기'}
+                </button>
+              </div>
+            </div>
+          )}
         </form>
           </>
         )}
@@ -675,6 +779,19 @@ function SignupPage(): React.ReactNode {
           </p>
         </div>
       </div>
+      
+      {/* 패스키 등록 모달 */}
+      {showPasskeyPrompt && isAuthenticated && (
+        <PasskeyPromptModal
+          isOpen={showPasskeyPrompt}
+          onClose={() => {
+            setShowPasskeyPrompt(false);
+            setShouldRedirect(true);
+          }}
+          userEmail={formData.email}
+          userName={formData.name}
+        />
+      )}
     </div>
   );
 }

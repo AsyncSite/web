@@ -86,52 +86,30 @@ export const PROFILE_NAME_BLOCKED_HTML_TAGS = [
  * SQL Injection 키워드
  */
 export const PROFILE_NAME_SQL_KEYWORDS = [
-  // DML
-  'SELECT',
-  'INSERT',
-  'UPDATE',
-  'DELETE',
-  'MERGE',
-  
-  // DDL
-  'CREATE',
-  'ALTER',
-  'DROP',
-  'TRUNCATE',
-  
-  // DCL
-  'GRANT',
-  'REVOKE',
-  
-  // TCL
-  'COMMIT',
-  'ROLLBACK',
-  'SAVEPOINT',
-  
-  // 기타 위험 키워드
-  'UNION',
-  'JOIN',
-  'WHERE',
-  'HAVING',
-  'ORDER BY',
-  'GROUP BY',
-  'EXEC',
-  'EXECUTE',
-  'CAST',
-  'CONVERT',
-  
-  // 주석
+  // 주석과 특수 패턴만 체크 (일반 SQL 키워드는 이름에서 흔히 사용될 수 있음)
   '--',
   '/*',
   '*/',
   
-  // 특수 문자 조합
+  // 명백한 SQL Injection 패턴만
   'OR 1=1',
   'AND 1=1',
   '\' OR \'',
   '" OR "',
   '1=1',
-  '\'=\''
+  '\'=\'',
+  
+  // 위험한 조합만
+  'DROP TABLE',
+  'DROP DATABASE',
+  'DELETE FROM',
+  'INSERT INTO',
+  'UPDATE SET',
+  'SELECT * FROM',
+  'EXEC(',
+  'EXECUTE(',
+  'UNION SELECT',
+  'UNION ALL SELECT'
 ] as const;
 
 /**

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import StarBackground from '../../components/common/StarBackground';
@@ -9,6 +9,7 @@ import apiClient from '../../api/client';
 import authService from '../../api/authService';
 import userService from '../../api/userService';
 import { AUTH_EVENTS, dispatchAuthEvent } from '../../utils/authEvents';
+import PasskeyPromptModal from '../../components/auth/PasskeyPromptModal';
 
 interface LoginFormData {
   username: string;
@@ -33,8 +34,32 @@ function LoginPage(): React.ReactNode {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [webauthnSupported, setWebauthnSupported] = useState<boolean>(false);
+  const [passkeyError, setPasskeyError] = useState<string | React.ReactNode>('');
+  const [showPasskeyPrompt, setShowPasskeyPrompt] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ email: string; name: string } | null>(null);
+  const [conditionalUISupported, setConditionalUISupported] = useState(false);
+  
   React.useEffect(() => {
+    // WebAuthn 지원 체크
     setWebauthnSupported(typeof window !== 'undefined' && !!(navigator as any).credentials?.create);
+    
+    // Conditional UI 지원 체크
+    if (typeof window !== 'undefined' && 'PublicKeyCredential' in window) {
+      (async () => {
+        try {
+          // Conditional UI 지원 여부 확인
+          const available = await (PublicKeyCredential as any).isConditionalMediationAvailable?.();
+          if (available) {
+            setConditionalUISupported(true);
+            // Chrome/Edge가 username 필드에서 자동으로 패스키를 제안합니다
+            // autocomplete="username webauthn" 속성이 이미 추가되어 있으므로
+            // 사용자가 입력 필드를 클릭하면 브라우저가 처리합니다
+          }
+        } catch (err) {
+          console.log('Conditional UI not supported:', err);
+        }
+      })();
+    }
   }, []);
 
   // Get the redirect path from location state
@@ -69,6 +94,23 @@ function LoginPage(): React.ReactNode {
     }
   };
 
+  // 패스키 등록 여부 확인 함수
+  const checkPasskeyRegistration = async (email: string) => {
+    try {
+      // /api/webauthn/auth/options 엔드포인트로 확인
+      const response = await apiClient.post('/api/webauthn/auth/options', { 
+        username: email 
+      });
+      const options = response.data.data;
+      // allowCredentials가 비어있으면 패스키 미등록
+      return options.allowCredentials && options.allowCredentials.length > 0;
+    } catch (error) {
+      console.error('Failed to check passkey registration:', error);
+      return false;
+    }
+  };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -82,9 +124,38 @@ function LoginPage(): React.ReactNode {
         username: formData.username,
         password: formData.password
       });
-      // 로그인 성공 시 AuthContext의 isAuthenticated가 true가 되면서
-      // 위의 Navigate 컴포넌트가 자동으로 리다이렉트를 처리합니다
-      // 따라서 여기서는 추가 navigate 호출이 필요 없습니다
+      
+      // 로그인 성공 후 사용자 정보 가져오기
+      try {
+        const profileResponse = await userService.getProfile();
+        if (profileResponse && webauthnSupported) {
+          const hasPasskey = await checkPasskeyRegistration(formData.username);
+          
+          if (!hasPasskey) {
+            // 패스키가 없으면 프롬프트 표시
+            setUserInfo({
+              email: formData.username,
+              name: profileResponse.name || formData.username
+            });
+            setShowPasskeyPrompt(true);
+            
+            // 3초 후 자동으로 페이지 이동 (모달이 닫히지 않았다면)
+            setTimeout(() => {
+              if (showPasskeyPrompt) {
+                navigate(from, { replace: true });
+              }
+            }, 3000);
+          } else {
+            // 패스키가 있으면 바로 이동
+            navigate(from, { replace: true });
+          }
+        } else {
+          navigate(from, { replace: true });
+        }
+      } catch (profileError) {
+        // 프로필 가져오기 실패해도 로그인은 성공이므로 이동
+        navigate(from, { replace: true });
+      }
     } catch (error) {
       setErrors({
         general: error instanceof Error ? error.message : '로그인에 실패했습니다'
@@ -133,6 +204,7 @@ function LoginPage(): React.ReactNode {
           </div>
         )}
 
+
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group auth-form-group">
             <label htmlFor="username" className="auth-label">
@@ -146,7 +218,7 @@ function LoginPage(): React.ReactNode {
               onChange={handleChange}
               className={`auth-input ${errors.username ? 'error' : ''}`}
               placeholder="example@email.com"
-              autoComplete="username"
+              autoComplete="username webauthn"
               disabled={isSubmitting}
             />
             {errors.username && (
@@ -234,12 +306,19 @@ function LoginPage(): React.ReactNode {
             </div>
             <button
               onClick={async () => {
+                setPasskeyError(''); // 이전 에러 초기화
+                setIsSubmitting(true);
+                
                 try {
                   // 1) 요청 옵션 가져오기
-                  const optionsRes = await apiClient.post('/api/webauthn/auth/options', { username: formData.username || undefined });
+                  const optionsRes = await apiClient.post('/api/webauthn/auth/options', { 
+                    username: formData.username || undefined 
+                  });
                   const options = optionsRes.data.data;
+                  
                   // 2) get 호출
                   const assertion = await getPasskey(options);
+                  
                   // 3) 검증 요청
                   const verifyRes = await apiClient.post('/api/webauthn/auth/verify', {
                     username: formData.username || undefined,
@@ -252,12 +331,34 @@ function LoginPage(): React.ReactNode {
                       userHandle: assertion.response.userHandle
                     }
                   });
-                  const loginResponse = verifyRes.data.data; // LoginResponse 형태
-                  // 기존 저장 로직 재사용 (AuthContext는 자동 토큰 검증 후 프로필 로드)
+                  
+                  const loginResponse = verifyRes.data.data;
                   authService.storeAuthData(loginResponse);
                   dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
-                } catch (err) {
+                  navigate(from, { replace: true });
+                } catch (err: any) {
                   console.error('Passkey login failed', err);
+                  
+                  // 에러 메시지 처리
+                  if (err?.name === 'NotAllowedError') {
+                    setPasskeyError('패스키 인증이 취소되었습니다.');
+                  } else if (err?.message?.includes('No available authenticator') || 
+                             err?.name === 'InvalidStateError') {
+                    setPasskeyError(
+                      <>
+                        이 기기에 등록된 패스키가 없습니다.
+                        <br />
+                        <Link to="/signup" style={{ color: '#4CAF50', textDecoration: 'underline' }}>
+                          회원가입
+                        </Link>
+                        {' '}페이지에서 먼저 패스키를 등록해주세요.
+                      </>
+                    );
+                  } else {
+                    setPasskeyError('패스키 로그인에 실패했습니다. 다시 시도해주세요.');
+                  }
+                } finally {
+                  setIsSubmitting(false);
                 }
               }}
               className="auth-button auth-button-secondary"
@@ -265,28 +366,56 @@ function LoginPage(): React.ReactNode {
               aria-label="Passkey로 로그인"
               disabled={isSubmitting}
             >
-              Passkey로 로그인
+              {isSubmitting ? '인증 중...' : '🔐 Passkey로 로그인'}
             </button>
+            
+            {passkeyError && (
+              <div className="auth-error" style={{ 
+                marginTop: '12px', 
+                padding: '10px', 
+                backgroundColor: '#fff3cd', 
+                border: '1px solid #ffc107',
+                borderRadius: '4px',
+                color: '#856404',
+                fontSize: '14px',
+                textAlign: 'center'
+              }}>
+                {passkeyError}
+              </div>
+            )}
+            
           </>
         )}
 
         <div className="login-footer">
-          <p>
-            아직 계정이 없으신가요?{' '}
+          <p style={{ marginBottom: '12px' }}>
+            계정이 없으신가요?{' '}
             <Link to="/signup" className="signup-link">
               회원가입
             </Link>
           </p>
-          <div className="additional-links">
-            <Link 
-              to="/forgot-password"
-              className="forgot-password-link"
-            >
-              비밀번호를 잊으셨나요?
-            </Link>
-          </div>
+          <Link 
+            to="/forgot-password"
+            className="forgot-password-link"
+            style={{ fontSize: '13px', color: '#999' }}
+          >
+            비밀번호를 잊으셨나요?
+          </Link>
         </div>
       </div>
+      
+      {/* 패스키 등록 유도 모달 */}
+      {userInfo && (
+        <PasskeyPromptModal
+          isOpen={showPasskeyPrompt}
+          onClose={() => {
+            setShowPasskeyPrompt(false);
+            navigate(from, { replace: true });
+          }}
+          userEmail={userInfo.email}
+          userName={userInfo.name}
+        />
+      )}
     </div>
   );
 }
