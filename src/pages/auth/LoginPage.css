@@ -269,9 +269,11 @@
 
 /* Nudge callout (speech-bubble) guiding to Passkey CTA */
 .nudge-callout {
-  display: block;
-  margin: 4px auto 6px auto;
+  display: inline-block;
+  /* shrink to content width, but cap overall width for wrap */
+  width: max-content;
   max-width: var(--auth-nudge-callout-max-width);
+  margin: 4px auto 6px auto; /* centered above tabs */
   padding: var(--auth-nudge-callout-padding-y) var(--auth-nudge-callout-padding-x);
   border-radius: var(--auth-nudge-callout-radius);
   background: var(--auth-nudge-callout-bg);
@@ -281,6 +283,7 @@
   text-align: left !important;
   position: relative;
   font-size: 0.8rem;
+  line-height: 1.25;
 }
 
 .nudge-callout::after {
