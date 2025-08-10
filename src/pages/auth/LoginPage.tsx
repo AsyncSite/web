@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import StarBackground from '../../components/common/StarBackground';
 import { env } from '../../config/environment';
 import './LoginPage.css';
-import { getPasskey } from '../../utils/webauthn/helpers';
+import { createPasskey, getPasskey } from '../../utils/webauthn/helpers';
 import apiClient from '../../api/client';
 import authService from '../../api/authService';
 import userService from '../../api/userService';
@@ -39,6 +39,10 @@ function LoginPage(): React.ReactNode {
   const [showPasskeyPrompt, setShowPasskeyPrompt] = useState(false);
   const [userInfo, setUserInfo] = useState<{ email: string; name: string } | null>(null);
   const [conditionalUISupported, setConditionalUISupported] = useState(false);
+  // Unified flow state machine
+  const [flowState, setFlowState] = useState<'idle' | 'starting' | 'authenticating' | 'awaitingOtp' | 'registering' | 'finishing' | 'success'>('idle');
+  const [otpCode, setOtpCode] = useState('');
+  const [otpError, setOtpError] = useState('');
   
   React.useEffect(() => {
     // WebAuthn 지원 체크
@@ -176,7 +180,7 @@ function LoginPage(): React.ReactNode {
   return (
     <div className="login-page auth-page">
       <StarBackground />
-      <div className="login-container auth-container auth-fade-in">
+      <div className="login-container auth-container wide auth-fade-in">
         <div className="login-brand"><div className="login-logo">AS</div></div>
         <div className="login-header">
           <h1>로그인</h1>
@@ -211,46 +215,141 @@ function LoginPage(): React.ReactNode {
           <button
             onClick={async () => {
               setPasskeyError('');
+              setOtpError('');
               setIsSubmitting(true);
               try {
                 if (!formData.username || !formData.username.trim()) {
                   setErrors(prev => ({ ...prev, username: '이메일을 입력해주세요' }));
                   return;
                 }
-                const optionsRes = await apiClient.post('/api/webauthn/auth/options', { username: formData.username });
-                const options = optionsRes.data.data;
-                const assertion = await getPasskey(options);
-                const verifyRes = await apiClient.post('/api/webauthn/auth/verify', {
-                  username: formData.username,
-                  id: assertion.id,
-                  rawId: assertion.rawId,
-                  response: {
-                    clientDataJSON: assertion.response.clientDataJSON,
-                    authenticatorData: assertion.response.authenticatorData,
-                    signature: assertion.response.signature,
-                    userHandle: assertion.response.userHandle
-                  }
-                });
-                const loginResponse = verifyRes.data.data;
-                authService.storeAuthData(loginResponse);
-                dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
-                navigate(from, { replace: true });
+                setFlowState('starting');
+                const startRes = await apiClient.post('/api/webauthn/start', { email: formData.username.trim() });
+                const data = startRes.data.data;
+                if (data.mode === 'authenticate') {
+                  setFlowState('authenticating');
+                  const assertion = await getPasskey(data.authOptions);
+                  setFlowState('finishing');
+                  const finishRes = await apiClient.post('/api/webauthn/finish', {
+                    mode: 'authenticate',
+                    email: formData.username.trim(),
+                    webauthnPayload: {
+                      id: assertion.id,
+                      rawId: assertion.rawId,
+                      clientDataJSON: assertion.response.clientDataJSON,
+                      authenticatorData: assertion.response.authenticatorData,
+                      signature: assertion.response.signature,
+                      userHandle: assertion.response.userHandle
+                    }
+                  });
+                  const loginResponse = finishRes.data.data;
+                  authService.storeAuthData(loginResponse);
+                  dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
+                  setFlowState('success');
+                  navigate(from, { replace: true });
+                } else {
+                  // verifyEmailRequired
+                  setFlowState('awaitingOtp');
+                  // fire-and-forget send OTP
+                  await apiClient.post('/api/webauthn/otp/start', { email: formData.username.trim() });
+                }
               } catch (err: any) {
-                setPasskeyError(err?.name === 'NotAllowedError' ? '패스키 인증이 취소되었습니다.' : '패스키 로그인에 실패했습니다. 다시 시도해주세요.');
+                const name = err?.name;
+                if (name === 'NotAllowedError') {
+                  setPasskeyError('취소했어요. 필요할 때 언제든 다시 시작할 수 있어요.');
+                } else if (err?.response?.data?.error?.code === 'SECURITY_ORIGIN_MISMATCH') {
+                  setPasskeyError('보안상 현재 도메인과 맞지 않습니다. https://asyncsite.com에서 다시 시작해 주세요.');
+                } else {
+                  setPasskeyError('패스키 시작에 실패했습니다. 다시 시도해주세요.');
+                }
+                setFlowState('idle');
               } finally {
                 setIsSubmitting(false);
               }
             }}
             className="auth-button auth-button-primary"
             type="button"
-            aria-label="Passkey로 로그인"
-            disabled={isSubmitting}
+            aria-label="패스키로 시작하기"
+            disabled={isSubmitting || !webauthnSupported}
           >
-            {isSubmitting ? '인증 중...' : '🔐 패스키로 로그인'}
+            {isSubmitting || flowState !== 'idle' ? '진행 중...' : '🔐 패스키로 시작하기'}
           </button>
           {passkeyError && (
             <div className="auth-error" style={{ marginTop: 12, padding: 10, backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: 4, color: '#856404', fontSize: 14, textAlign: 'center' }}>
               {passkeyError}
+            </div>
+          )}
+
+          {flowState === 'awaitingOtp' && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 14, color: '#ddd', marginBottom: 8 }}>이메일로 6자리 코드를 보냈어요</div>
+              <div className="form-group auth-form-group">
+                <label htmlFor="otp" className="auth-label">6자리 코드</label>
+                <input
+                  id="otp"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  className="auth-input"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, ''))}
+                  disabled={isSubmitting}
+                />
+              </div>
+              {otpError && <div className="auth-error" style={{ marginTop: 8 }}>{otpError}</div>}
+              <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                <button
+                  type="button"
+                  className="auth-button auth-button-secondary"
+                  disabled={isSubmitting || otpCode.length !== 6}
+                  onClick={async () => {
+                    setIsSubmitting(true);
+                    setOtpError('');
+                    try {
+                      const verifyRes = await apiClient.post('/api/webauthn/otp/verify', { email: formData.username.trim(), code: otpCode });
+                      const data = verifyRes.data.data;
+                      if (data?.mode === 'register') {
+                        setFlowState('registering');
+                        const credential = await createPasskey(data.registerOptions);
+                        setFlowState('finishing');
+                        const finishRes = await apiClient.post('/api/webauthn/finish', {
+                          mode: 'register',
+                          email: formData.username.trim(),
+                          webauthnPayload: {
+                            id: credential.id,
+                            rawId: credential.rawId,
+                            clientDataJSON: credential.response.clientDataJSON,
+                            attestationObject: credential.response.attestationObject
+                          }
+                        });
+                        const loginResponse = finishRes.data.data;
+                        authService.storeAuthData(loginResponse);
+                        dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
+                        setFlowState('success');
+                        navigate(from, { replace: true });
+                      }
+                    } catch (err: any) {
+                      const code = err?.response?.data?.error?.code;
+                      if (code === 'OTP_INVALID') setOtpError('코드가 올바르지 않아요. 다시 시도해 주세요.');
+                      else if (code === 'OTP_EXPIRED') setOtpError('코드가 만료되었어요. 다시 요청해 주세요.');
+                      else if (code === 'OTP_ATTEMPTS_EXCEEDED') setOtpError('시도 횟수를 초과했어요. 잠시 후 다시 시도해 주세요.');
+                      else setOtpError('확인에 실패했어요. 잠시 후 다시 시도해 주세요.');
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                >코드 확인</button>
+                <button
+                  type="button"
+                  className="auth-button"
+                  disabled={isSubmitting}
+                  onClick={async () => {
+                    try {
+                      await apiClient.post('/api/webauthn/otp/start', { email: formData.username.trim() });
+                    } catch (_) {}
+                  }}
+                >재전송</button>
+              </div>
             </div>
           )}
         </div>
@@ -297,6 +396,12 @@ function LoginPage(): React.ReactNode {
 
         <div className="login-divider"><span>또는</span></div>
         <button onClick={() => window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`} className="google-login-button auth-button" type="button" aria-label="Google 계정으로 로그인" disabled={isSubmitting}>
+          <svg width="20" height="20" viewBox="0 0 533.5 544.3" aria-hidden="true" focusable="false">
+            <path fill="#4285F4" d="M533.5 278.4c0-18.5-1.7-36.3-4.9-53.6H272v101.4h146.9c-6.3 34-25 62.7-53.5 82v68.2h86.5c50.7-46.7 81.6-115.4 81.6-198z"/>
+            <path fill="#34A853" d="M272 544.3c73.9 0 135.9-24.5 181.1-66.2l-86.5-68.2c-24.1 16.1-55 25.6-94.6 25.6-72.7 0-134.3-49-156.3-114.9H26.7v71.9C71.6 486.2 165.5 544.3 272 544.3z"/>
+            <path fill="#FBBC05" d="M115.7 320.6c-10.9-32.7-10.9-68.2 0-100.9v-71.9H26.7C-8.9 196.4-8.9 348 26.7 420.6l89-70z"/>
+            <path fill="#EA4335" d="M272 106.7c39.9 0 75.8 13.7 104.1 40.7l78.2-78.2C407.8 27.6 345.8 0 272 0 165.5 0 71.6 58.1 26.7 164.8l89 71.9C137.7 155.8 199.3 106.7 272 106.7z"/>
+          </svg>
           <span>Google로 계속하기</span>
         </button>
 
