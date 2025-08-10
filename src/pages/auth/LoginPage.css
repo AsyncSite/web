@@ -23,15 +23,15 @@
   --auth-tabs-font-weight-semibold-600: 600;
 
   /* Nudge arrow detailed variables */
-  --auth-nudge-callout-max-width: 640px;
-  --auth-nudge-callout-padding-y: 12px;
-  --auth-nudge-callout-padding-x: 16px;
+  --auth-nudge-callout-max-width: 520px;
+  --auth-nudge-callout-padding-y: 8px;
+  --auth-nudge-callout-padding-x: 12px;
   --auth-nudge-callout-radius: 12px;
   --auth-nudge-callout-bg: rgba(20, 24, 32, 0.55);
   --auth-nudge-callout-border: 1px solid rgba(195, 232, 141, 0.25);
   --auth-nudge-callout-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
   --auth-nudge-callout-text-color: var(--auth-text-secondary);
-  --auth-nudge-pointer-size: 10px;
+  --auth-nudge-pointer-size: 8px;
   --auth-nudge-pointer-color: var(--auth-nudge-callout-bg);
   --auth-nudge-pointer-border-color: rgba(195, 232, 141, 0.25);
   --auth-nudge-pointer-bounce-distance: 4px;
@@ -269,7 +269,7 @@
 /* Nudge callout (speech-bubble) guiding to Passkey CTA */
 .nudge-callout {
   display: block;
-  margin: -6px auto 12px auto;
+  margin: 8px auto 6px auto;
   max-width: var(--auth-nudge-callout-max-width);
   padding: var(--auth-nudge-callout-padding-y) var(--auth-nudge-callout-padding-x);
   border-radius: var(--auth-nudge-callout-radius);
@@ -279,14 +279,15 @@
   color: var(--auth-nudge-callout-text-color);
   text-align: center;
   position: relative;
+  font-size: 0.85rem;
 }
 
 .nudge-callout::after {
   content: '';
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(-1 * var(--auth-nudge-pointer-size));
+  left: 24px; /* align arrow tip near the start of the primary button */
+  transform: translateX(0);
+  bottom: calc(-1 * var(--auth-nudge-pointer-size) + 1px);
   width: 0;
   height: 0;
   border-left: var(--auth-nudge-pointer-size) solid transparent;
@@ -299,9 +300,9 @@
   /* thin border for the triangle to match callout border */
   content: '';
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(-1 * var(--auth-nudge-pointer-size) - 1px);
+  left: 23px;
+  transform: translateX(0);
+  bottom: calc(-1 * var(--auth-nudge-pointer-size) - 0px);
   width: 0;
   height: 0;
   border-left: calc(var(--auth-nudge-pointer-size) + 1px) solid transparent;
@@ -311,8 +312,8 @@
 }
 
 @keyframes nudgePointerBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(var(--auth-nudge-pointer-bounce-distance)); }
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(0) translateY(var(--auth-nudge-pointer-bounce-distance)); }
 }
 
 /* Form Styles */
