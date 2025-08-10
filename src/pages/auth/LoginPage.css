@@ -23,13 +23,19 @@
   --auth-tabs-font-weight-semibold-600: 600;
 
   /* Nudge arrow detailed variables */
-  --auth-nudge-arrow-size: 20px;
-  --auth-nudge-arrow-color: var(--auth-primary-green);
-  --auth-nudge-arrow-opacity: 0.85;
-  --auth-nudge-arrow-bounce-distance: 6px;
-  --auth-nudge-arrow-bounce-duration: 1.8s;
-  --auth-nudge-margin-top: -6px;
-  --auth-nudge-margin-bottom: 6px;
+  --auth-nudge-callout-max-width: 640px;
+  --auth-nudge-callout-padding-y: 12px;
+  --auth-nudge-callout-padding-x: 16px;
+  --auth-nudge-callout-radius: 12px;
+  --auth-nudge-callout-bg: rgba(20, 24, 32, 0.55);
+  --auth-nudge-callout-border: 1px solid rgba(195, 232, 141, 0.25);
+  --auth-nudge-callout-shadow: 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+  --auth-nudge-callout-text-color: var(--auth-text-secondary);
+  --auth-nudge-pointer-size: 10px;
+  --auth-nudge-pointer-color: var(--auth-nudge-callout-bg);
+  --auth-nudge-pointer-border-color: rgba(195, 232, 141, 0.25);
+  --auth-nudge-pointer-bounce-distance: 4px;
+  --auth-nudge-pointer-bounce-duration: 1.6s;
 }
 
 .tab-navigation {
@@ -260,24 +266,53 @@
   text-transform: uppercase;
 }
 
-/* Nudge arrow under header to guide attention to Passkey CTA */
-.nudge {
-  display: flex;
-  justify-content: center;
-  margin: var(--auth-nudge-margin-top) 0 var(--auth-nudge-margin-bottom) 0;
+/* Nudge callout (speech-bubble) guiding to Passkey CTA */
+.nudge-callout {
+  display: block;
+  margin: -6px auto 12px auto;
+  max-width: var(--auth-nudge-callout-max-width);
+  padding: var(--auth-nudge-callout-padding-y) var(--auth-nudge-callout-padding-x);
+  border-radius: var(--auth-nudge-callout-radius);
+  background: var(--auth-nudge-callout-bg);
+  border: var(--auth-nudge-callout-border);
+  box-shadow: var(--auth-nudge-callout-shadow);
+  color: var(--auth-nudge-callout-text-color);
+  text-align: center;
+  position: relative;
 }
 
-.nudge-arrow {
-  width: var(--auth-nudge-arrow-size);
-  height: var(--auth-nudge-arrow-size);
-  fill: var(--auth-nudge-arrow-color);
-  opacity: var(--auth-nudge-arrow-opacity);
-  animation: nudgeBounce var(--auth-nudge-arrow-bounce-duration) ease-in-out infinite;
+.nudge-callout::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(-1 * var(--auth-nudge-pointer-size));
+  width: 0;
+  height: 0;
+  border-left: var(--auth-nudge-pointer-size) solid transparent;
+  border-right: var(--auth-nudge-pointer-size) solid transparent;
+  border-top: var(--auth-nudge-pointer-size) solid var(--auth-nudge-pointer-color);
+  animation: nudgePointerBounce var(--auth-nudge-pointer-bounce-duration) ease-in-out infinite;
 }
 
-@keyframes nudgeBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(var(--auth-nudge-arrow-bounce-distance)); }
+.nudge-callout::before {
+  /* thin border for the triangle to match callout border */
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(-1 * var(--auth-nudge-pointer-size) - 1px);
+  width: 0;
+  height: 0;
+  border-left: calc(var(--auth-nudge-pointer-size) + 1px) solid transparent;
+  border-right: calc(var(--auth-nudge-pointer-size) + 1px) solid transparent;
+  border-top: calc(var(--auth-nudge-pointer-size) + 1px) solid var(--auth-nudge-pointer-border-color);
+  filter: blur(0.2px);
+}
+
+@keyframes nudgePointerBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(var(--auth-nudge-pointer-bounce-distance)); }
 }
 
 /* Form Styles */
