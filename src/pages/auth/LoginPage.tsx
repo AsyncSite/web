@@ -184,7 +184,7 @@ function LoginPage(): React.ReactNode {
         <div className="login-brand"><div className="login-logo">AS</div></div>
         <div className="login-header">
           <h1>로그인</h1>
-          <p>원하는 방법을 선택하세요</p>
+          <p>가장 빠르고 안전한 로그인: 패스키(지문/얼굴/핀) 권장</p>
         </div>
         {errors.general && (<div className="error-message general-error auth-error-shake">{errors.general}</div>)}
 

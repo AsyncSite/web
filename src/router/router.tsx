@@ -8,8 +8,6 @@ import PrivateRoute from '../components/auth/PrivateRoute';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
-const LoginPageA = lazy(() => import('../pages/auth/LoginPageA'));
-const LoginPageB = lazy(() => import('../pages/auth/LoginPageB'));
 const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
 const OAuthCallbackPage = lazy(() => import('../pages/auth/OAuthCallbackPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
@@ -38,14 +36,6 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <LoginPage />,
-      },
-      {
-        path: 'login-a',
-        element: <LoginPageA />,
-      },
-      {
-        path: 'login-b',
-        element: <LoginPageB />,
       },
       {
         path: 'signup',
