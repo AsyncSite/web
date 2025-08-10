@@ -34,15 +34,6 @@ function ProfilePage(): React.ReactNode {
     }
   }, [isAuthenticated, isLoading, navigate]);
   
-  // 로딩 중이거나 사용자 정보가 없는 경우 로딩 화면 표시
-  if (isLoading || !authUser) {
-    return (
-      <div className="profile-page-loading">
-        <div className="loading-spinner">로딩 중...</div>
-      </div>
-    );
-  }
-  
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState<'study' | 'game'>('study');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -117,6 +108,11 @@ function ProfilePage(): React.ReactNode {
       {/* 별 배경 효과 */}
       <StarBackground />
       
+      {(isLoading || !authUser) ? (
+        <div className="profile-page-loading">
+          <div className="loading-spinner">로딩 중...</div>
+        </div>
+      ) : (
       <div className="profile-container">
       {/* 프로필 요약 섹션 */}
       <section className="profile-summary">
@@ -339,17 +335,18 @@ function ProfilePage(): React.ReactNode {
       <div className="motivation-message">
         <p>오늘도 열공하세요!</p>
       </div>
-    </div>
-
-    {/* 모달 컴포넌트들 */}
-    <PasswordChangeModal 
-      isOpen={showPasswordModal} 
-      onClose={() => setShowPasswordModal(false)} 
-    />
-    <LogoutConfirmModal 
-      isOpen={showLogoutModal} 
-      onClose={() => setShowLogoutModal(false)} 
-    />
+      </div>
+      )}
+      
+      {/* 모달 컴포넌트들 */}
+      <PasswordChangeModal 
+        isOpen={showPasswordModal} 
+        onClose={() => setShowPasswordModal(false)} 
+      />
+      <LogoutConfirmModal 
+        isOpen={showLogoutModal} 
+        onClose={() => setShowLogoutModal(false)} 
+      />
     </div>
   );
 }
