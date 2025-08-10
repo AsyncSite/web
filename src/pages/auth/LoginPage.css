@@ -21,6 +21,15 @@
   --auth-tabs-button-padding-vertical-10px: 10px;
   --auth-tabs-button-padding-horizontal-16px: 16px;
   --auth-tabs-font-weight-semibold-600: 600;
+
+  /* Nudge arrow detailed variables */
+  --auth-nudge-arrow-size: 20px;
+  --auth-nudge-arrow-color: var(--auth-primary-green);
+  --auth-nudge-arrow-opacity: 0.85;
+  --auth-nudge-arrow-bounce-distance: 6px;
+  --auth-nudge-arrow-bounce-duration: 1.8s;
+  --auth-nudge-margin-top: -6px;
+  --auth-nudge-margin-bottom: 6px;
 }
 
 .tab-navigation {
@@ -255,18 +264,20 @@
 .nudge {
   display: flex;
   justify-content: center;
-  margin: -6px 0 6px 0;
+  margin: var(--auth-nudge-margin-top) 0 var(--auth-nudge-margin-bottom) 0;
 }
 
 .nudge-arrow {
-  fill: var(--auth-primary-green);
-  opacity: 0.85;
-  animation: nudgeBounce 1.8s ease-in-out infinite;
+  width: var(--auth-nudge-arrow-size);
+  height: var(--auth-nudge-arrow-size);
+  fill: var(--auth-nudge-arrow-color);
+  opacity: var(--auth-nudge-arrow-opacity);
+  animation: nudgeBounce var(--auth-nudge-arrow-bounce-duration) ease-in-out infinite;
 }
 
 @keyframes nudgeBounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
+  50% { transform: translateY(var(--auth-nudge-arrow-bounce-distance)); }
 }
 
 /* Form Styles */
