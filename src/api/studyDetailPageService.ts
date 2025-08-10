@@ -84,65 +84,65 @@ export interface AddSectionRequest {
 const studyDetailPageService = {
   // Public endpoints
   async getPublishedPageBySlug(slug: string): Promise<StudyDetailPageData> {
-    const response = await apiClient.get(`/api/v1/study-pages/slug/${slug}`);
+    const response = await apiClient.get(`/api/study-pages/slug/${slug}`);
     return response.data;
   },
 
   // Authenticated endpoints
   async getDraftPage(studyId: string): Promise<StudyDetailPageData> {
-    const response = await apiClient.get(`/api/v1/study-pages/${studyId}/draft`);
+    const response = await apiClient.get(`/api/study-pages/${studyId}/draft`);
     return response.data;
   },
 
   async createPage(studyId: string, request: CreatePageRequest): Promise<StudyDetailPageData> {
-    const response = await apiClient.post(`/api/v1/study-pages/${studyId}`, request);
+    const response = await apiClient.post(`/api/study-pages/${studyId}`, request);
     return response.data;
   },
 
   async saveDraft(studyId: string, request: UpdatePageRequest): Promise<StudyDetailPageData> {
-    const response = await apiClient.put(`/api/v1/study-pages/${studyId}/draft`, request);
+    const response = await apiClient.put(`/api/study-pages/${studyId}/draft`, request);
     return response.data;
   },
 
   async addSection(studyId: string, request: AddSectionRequest): Promise<StudyDetailPageData> {
-    const response = await apiClient.post(`/api/v1/study-pages/${studyId}/sections`, request);
+    const response = await apiClient.post(`/api/study-pages/${studyId}/sections`, request);
     return response.data;
   },
 
   async removeSection(studyId: string, sectionId: string): Promise<StudyDetailPageData> {
-    const response = await apiClient.delete(`/api/v1/study-pages/${studyId}/sections/${sectionId}`);
+    const response = await apiClient.delete(`/api/study-pages/${studyId}/sections/${sectionId}`);
     return response.data;
   },
 
   async updateSection(studyId: string, sectionId: string, request: AddSectionRequest): Promise<StudyDetailPageData> {
-    const response = await apiClient.put(`/api/v1/study-pages/${studyId}/sections/${sectionId}`, request);
+    const response = await apiClient.put(`/api/study-pages/${studyId}/sections/${sectionId}`, request);
     return response.data;
   },
 
   async reorderSections(studyId: string, sectionIds: string[]): Promise<StudyDetailPageData> {
-    const response = await apiClient.put(`/api/v1/study-pages/${studyId}/sections/reorder`, { sectionIds });
+    const response = await apiClient.put(`/api/study-pages/${studyId}/sections/reorder`, { sectionIds });
     return response.data;
   },
 
   async requestReview(studyId: string): Promise<StudyDetailPageData> {
-    const response = await apiClient.post(`/api/v1/study-pages/${studyId}/request-review`);
+    const response = await apiClient.post(`/api/study-pages/${studyId}/request-review`);
     return response.data;
   },
 
   async rejectReview(studyId: string, reason?: string): Promise<StudyDetailPageData> {
-    const response = await apiClient.post(`/api/v1/study-pages/${studyId}/reject-review`, null, {
+    const response = await apiClient.post(`/api/study-pages/${studyId}/reject-review`, null, {
       params: { reason }
     });
     return response.data;
   },
 
   async publish(studyId: string): Promise<StudyDetailPageData> {
-    const response = await apiClient.post(`/api/v1/study-pages/${studyId}/publish`);
+    const response = await apiClient.post(`/api/study-pages/${studyId}/publish`);
     return response.data;
   },
 
   async archive(studyId: string): Promise<StudyDetailPageData> {
-    const response = await apiClient.post(`/api/v1/study-pages/${studyId}/archive`);
+    const response = await apiClient.post(`/api/study-pages/${studyId}/archive`);
     return response.data;
   }
 };

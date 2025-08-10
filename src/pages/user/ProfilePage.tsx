@@ -217,11 +217,17 @@ function ProfilePage(): React.ReactNode {
                     <h3>내가 리드하는 스터디 ({myStudies.leading.length})</h3>
                     <div className="study-cards">
                       {myStudies.leading.map(study => (
-                        <div key={study.memberId} className="study-card leading">
+                        <div 
+                          key={study.memberId} 
+                          className="study-card leading clickable"
+                          onClick={() => navigate(`/study/${study.studyId}/manage`)}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <span className="leader-badge">리더</span>
                           <h4>{study.studyTitle}</h4>
                           <p className="study-meta">참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
                           <p className="study-meta">출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
+                          <p className="study-action">→ 관리 페이지로 이동</p>
                         </div>
                       ))}
                     </div>
