@@ -187,6 +187,11 @@ function LoginPage(): React.ReactNode {
         </div>
         {errors.general && (<div className="error-message general-error auth-error-shake">{errors.general}</div>)}
 
+        {/* Nudge callout above tab navigation, pointing to Passkey tab */}
+        <div className="nudge-callout nudge-callout--compact" aria-live="polite">
+          패스키로 시작해보세요! 비밀번호를 서버에 저장하지 않고 안전하고 빨라요!
+        </div>
+
         {/* Tabs: Passkey / Email+Password */}
         <div className="tab-navigation" style={{ marginBottom: 12 }}>
           <button className={`tab-button ${tab === 'passkey' ? 'active' : ''}`} onClick={() => setTab('passkey')}>🔐 패스키</button>
@@ -210,9 +215,6 @@ function LoginPage(): React.ReactNode {
               disabled={isSubmitting}
             />
             {errors.username && (<span className="error-message auth-error-message">{errors.username}</span>)}
-          </div>
-          <div className="nudge-callout nudge-callout--compact" aria-live="polite">
-            패스키로 시작해보세요! 비밀번호를 서버에 저장하지 않고 안전하고 빨라요!
           </div>
           <button
             onClick={async () => {

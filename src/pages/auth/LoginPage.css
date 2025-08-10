@@ -269,7 +269,7 @@
 /* Nudge callout (speech-bubble) guiding to Passkey CTA */
 .nudge-callout {
   display: block;
-  margin: 8px auto 6px auto;
+  margin: 6px auto 10px auto;
   max-width: var(--auth-nudge-callout-max-width);
   padding: var(--auth-nudge-callout-padding-y) var(--auth-nudge-callout-padding-x);
   border-radius: var(--auth-nudge-callout-radius);
@@ -285,7 +285,7 @@
 .nudge-callout::after {
   content: '';
   position: absolute;
-  left: 24px; /* align arrow tip near the start of the primary button */
+  left: 22%; /* point roughly to the first (Passkey) tab */
   transform: translateX(0);
   bottom: calc(-1 * var(--auth-nudge-pointer-size) + 1px);
   width: 0;
@@ -300,7 +300,7 @@
   /* thin border for the triangle to match callout border */
   content: '';
   position: absolute;
-  left: 23px;
+  left: calc(22% - 1px);
   transform: translateX(0);
   bottom: calc(-1 * var(--auth-nudge-pointer-size) - 0px);
   width: 0;
