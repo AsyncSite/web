@@ -256,8 +256,6 @@ function LoginPage(): React.ReactNode {
         </div>
         )}
 
-        <div className="login-divider"><span>또는</span></div>
-
         {/* Email+Password pane */}
         {tab === 'password' && (
         <form onSubmit={handleSubmit} className="login-form">
