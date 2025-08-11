@@ -282,6 +282,37 @@
 }
 
 /* RichText Form specific styles */
+.editor-mode-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  border-color: transparent;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
 .template-buttons {
   display: flex;
   gap: 8px;
@@ -324,6 +355,20 @@
   padding: 8px;
   background: rgba(255, 255, 255, 0.03);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.toolbar-label {
+  margin: 0 8px 0 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.toolbar-separator {
+  margin: 0 8px;
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .toolbar-btn {
@@ -341,6 +386,37 @@
 .toolbar-btn:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #C3E88D;
+}
+
+.toolbar-btn.color-btn {
+  font-weight: 600;
+  padding: 6px 14px;
+}
+
+.toolbar-btn.color-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.toolbar-btn.special-btn {
+  background: rgba(195, 232, 141, 0.1);
+  border-color: rgba(195, 232, 141, 0.2);
+  color: #C3E88D;
+}
+
+.toolbar-btn.special-btn:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+}
+
+.html-mode-notice {
+  padding: 12px;
+  background: rgba(137, 221, 255, 0.1);
+  border: 1px solid rgba(137, 221, 255, 0.3);
+  border-radius: 6px;
+  color: #89DDFF;
+  font-size: 13px;
+  margin-bottom: 8px;
 }
 
 .code-editor {
@@ -400,6 +476,69 @@
   text-decoration: underline;
 }
 
+/* Custom field row for members */
+.custom-field-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+/* Badge selector */
+.badge-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.badge-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.badge-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.badge-option input[type="checkbox"] {
+  margin: 0;
+}
+
+.badge-option span {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Template buttons active state */
+.template-btn.active {
+  background: rgba(195, 232, 141, 0.2);
+  border-color: #C3E88D;
+  color: #C3E88D;
+}
+
+/* Stats fields */
+.stats-fields {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.stats-fields h4 {
+  margin: 0 0 16px 0;
+  color: #89DDFF;
+  font-size: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .form-row,
@@ -416,4 +555,32 @@
   .template-btn {
     width: 100%;
   }
+  
+  .editor-mode-selector {
+    flex-direction: column;
+  }
+  
+  .mode-btn {
+    width: 100%;
+  }
+  
+  .editor-toolbar {
+    padding: 6px;
+  }
+  
+  .toolbar-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  
+  .toolbar-label {
+    font-size: 11px;
+    margin: 0 4px;
+  }
+}
+.form-help-text {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #666;
+  font-style: italic;
 }

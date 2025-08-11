@@ -19,9 +19,12 @@ const StatsSection = lazy(() => import('./StatsSection'));
 const TableSection = lazy(() => import('./TableSection'));
 const CustomHTMLSection = lazy(() => import('./CustomHTMLSection'));
 const CodeBlockSection = lazy(() => import('./CodeBlockSection'));
+const HowWeRollSection = lazy(() => import('./HowWeRollSection'));
+const JourneySection = lazy(() => import('./JourneySection'));
+const ExperienceSection = lazy(() => import('./ExperienceSection'));
 
 // Section registry mapping section types to components
-export const sectionRegistry: Record<SectionType, React.LazyExoticComponent<React.FC<any>>> = {
+export const sectionRegistry: Record<SectionType | string, React.LazyExoticComponent<React.FC<any>>> = {
   [SectionType.RICH_TEXT]: RichTextSection,
   [SectionType.HERO]: HeroSection,
   [SectionType.GALLERY]: GallerySection,
@@ -38,10 +41,13 @@ export const sectionRegistry: Record<SectionType, React.LazyExoticComponent<Reac
   [SectionType.TABLE]: TableSection,
   [SectionType.CUSTOM_HTML]: CustomHTMLSection,
   [SectionType.CODE_BLOCK]: CodeBlockSection,
+  [SectionType.HOW_WE_ROLL]: HowWeRollSection,
+  [SectionType.JOURNEY]: JourneySection,
+  ['EXPERIENCE']: ExperienceSection,
 };
 
 interface SectionRendererProps {
-  type: SectionType;
+  type: SectionType | string;
   data: any;
 }
 

@@ -1,0 +1,177 @@
+.how-we-roll-section-form {
+  /* legacy existing styles kept, new scoped classes below */
+}
+
+/* Scoped editor-only styles to avoid renderer CSS bleed */
+.study-management-how-we-roll-section-editor {}
+.study-management-how-we-roll-section-editor .form-group {
+  margin-bottom: 24px;
+}
+
+.study-management-how-we-roll-section-editor .form-section {
+  margin-bottom: 24px;
+}
+
+.study-management-how-we-roll-section-editor .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.study-management-how-we-roll-section-editor label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.study-management-how-we-roll-section-editor small {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+.study-management-how-we-roll-section-editor__overview-list,
+.study-management-how-we-roll-section-editor__schedule-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.study-management-how-we-roll-section-editor__overview-item,
+.study-management-how-we-roll-section-editor__schedule-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.study-management-how-we-roll-section-editor__overview-item-header,
+.study-management-how-we-roll-section-editor__schedule-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.study-management-how-we-roll-section-editor__overview-item-header h4,
+.study-management-how-we-roll-section-editor__schedule-item-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #89DDFF;
+}
+
+.study-management-how-we-roll-section-editor__remove-button {
+  background: rgba(255, 77, 77, 0.85);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.study-management-how-we-roll-section-editor__remove-button:hover {
+  background: #ff4d4d;
+}
+
+.study-management-how-we-roll-section-editor__item-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.study-management-how-we-roll-section-editor__icon-input {
+  width: 80px;
+  text-align: center;
+}
+
+.study-management-how-we-roll-section-editor__add-button {
+  margin-top: 16px;
+  padding: 10px 20px;
+  width: 100%;
+  border-radius: 6px;
+  background: rgba(195, 232, 141, 0.1);
+  color: #c3e88d;
+  border: 2px dashed rgba(195, 232, 141, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-how-we-roll-section-editor__add-button:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+}
+
+/* Display rows (read mode) scoped under editor */
+.study-management-how-we-roll-section-editor .overview-display {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 4px;
+}
+.study-management-how-we-roll-section-editor .overview-display .icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.study-management-how-we-roll-section-editor .overview-display .content strong {
+  color: #C3E88D;
+  display: block;
+}
+.study-management-how-we-roll-section-editor .overview-display .content .highlight {
+  color: #82AAFF;
+  margin-left: 8px;
+}
+.study-management-how-we-roll-section-editor .overview-display .content p {
+  margin: 6px 0 0 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.study-management-how-we-roll-section-editor .schedule-display {
+  display: block;
+}
+.study-management-how-we-roll-section-editor .schedule-display strong {
+  color: #C3E88D;
+}
+.study-management-how-we-roll-section-editor .schedule-display .activity {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.study-management-how-we-roll-section-editor .schedule-display .activity.primary {
+  background: rgba(195, 232, 141, 0.12);
+  color: #C3E88D;
+}
+.study-management-how-we-roll-section-editor .schedule-display .activity.secondary {
+  background: rgba(130, 170, 255, 0.12);
+  color: #82AAFF;
+}
+.study-management-how-we-roll-section-editor .schedule-display p {
+  margin: 6px 0 0 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Item actions buttons (완료/삭제) */
+.study-management-how-we-roll-section-editor .item-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.study-management-how-we-roll-section-editor .item-actions button {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+.study-management-how-we-roll-section-editor .item-actions .study-management-how-we-roll-section-editor__remove-button {
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.3);
+  color: #ff4336;
+}

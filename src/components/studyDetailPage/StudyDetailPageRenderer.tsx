@@ -6,13 +6,15 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import studyDetailPageService, { StudyDetailPageData, PageSection, SectionType } from '../../api/studyDetailPageService';
 import { SectionRenderer } from './sections';
 import { RichTextConverter } from '../common/richtext/RichTextConverter';
+import { restoreSectionTypes } from './utils/sectionTypeAdapter';
+import { normalizeMembersPropsForUI } from './utils/membersAdapter';
 import './StudyDetailPageRenderer.css';
 
 /**
  * Maps API section props to component expected props structure
  * This adapter layer ensures components remain independent from API structure
  */
-const mapSectionPropsToComponentData = (section: PageSection): any => {
+const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDetailPageData | null): any => {
   switch (section.type) {
     case SectionType.RICH_TEXT:
       // API returns 'text' but component expects 'content'
@@ -25,9 +27,19 @@ const mapSectionPropsToComponentData = (section: PageSection): any => {
     
     case SectionType.FAQ:
       // API returns 'questions' but component expects 'items'
+      // Pass all props including theme, tagHeader, showIcons for TecoTeco style
+      // Also pass Join CTA props for TecoTeco theme
       return {
         items: section.props.questions || section.props.items || [],
-        title: section.props.title
+        title: section.props.title,
+        theme: section.props.theme,
+        tagHeader: section.props.tagHeader,
+        showIcons: section.props.showIcons,
+        showJoinCTA: section.props.showJoinCTA,
+        joinTitle: section.props.joinTitle,
+        joinDescription: section.props.joinDescription,
+        joinButtonText: section.props.joinButtonText,
+        joinButtonAction: section.props.joinButtonAction
       };
     
     case SectionType.CTA:
@@ -77,6 +89,40 @@ const mapSectionPropsToComponentData = (section: PageSection): any => {
       
       return heroData;
     
+    case SectionType.HOW_WE_ROLL:
+    case 'HOW_WE_ROLL':
+      // HOW_WE_ROLL section props are already in the correct format
+      return section.props;
+    
+    case SectionType.MEMBERS:
+    case 'MEMBERS':
+      // MEMBERS 섹션 props 매핑
+      const membersProps = { ...section.props };
+      
+      // TecoTeco 페이지는 항상 tecoteco 테마 사용
+      if (pageData && pageData.slug === 'tecoteco') {
+        membersProps.theme = 'tecoteco';
+        
+        // weeklyMvp 설정 (배지에서 추출)
+        if (!membersProps.weeklyMvp && membersProps.members) {
+          const mvpMember = membersProps.members.find((m: any) => 
+            m.badges?.some((b: any) => b.type === 'mvp')
+          );
+          if (mvpMember) {
+            membersProps.weeklyMvp = mvpMember.name;
+          }
+        }
+        
+        // popularAlgorithms 배열 변환
+        if (membersProps.stats && typeof membersProps.stats.popularAlgorithms === 'string') {
+          membersProps.stats.popularAlgorithms = membersProps.stats.popularAlgorithms
+            .split(',')
+            .map((s: string) => s.trim());
+        }
+      }
+      
+      return membersProps;
+    
     default:
       // For other section types, pass props as is
       return section.props;
@@ -103,6 +149,10 @@ const StudyDetailPageRenderer: React.FC = () => {
         
         // Try to fetch published page by slug
         const data = await studyDetailPageService.getPublishedPageBySlug(studyIdentifier);
+        // 받은 데이터의 섹션 타입을 복원
+        if (data && data.sections) {
+          data.sections = restoreSectionTypes(data.sections);
+        }
         setPageData(data);
       } catch (err: any) {
         console.error('Failed to fetch study detail page:', err);
@@ -205,7 +255,7 @@ const StudyDetailPageRenderer: React.FC = () => {
               <div key={section.id} className="section-wrapper">
                 <SectionRenderer 
                   type={section.type} 
-                  data={mapSectionPropsToComponentData(section)}
+                  data={mapSectionPropsToComponentData(section, pageData)}
                 />
               </div>
             ))}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './SectionForms.css';
+import './TimelineSectionForm.css';
 
 interface TimelineEvent {
   date: string;
@@ -116,7 +117,7 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="section-form timeline-form">
+    <form onSubmit={handleSubmit} className="section-form timeline-form study-management-journey-section-editor">
       <div className="form-group">
         <label>섹션 제목</label>
         <input
@@ -140,25 +141,25 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
           </button>
         </div>
         
-        <div className="timeline-list">
+        <div className="study-management-journey-section-editor__list">
           {events.map((event, index) => (
-            <div key={index} className="timeline-item">
-              <div className="item-header">
+            <div key={index} className="study-management-journey-section-editor__item">
+              <div className="study-management-journey-section-editor__item-header">
                 <h4>이벤트 {index + 1}</h4>
                 {events.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveEvent(index)}
-                    className="remove-btn"
+                    className="study-management-journey-section-editor__remove-button"
                   >
                     삭제
                   </button>
                 )}
               </div>
               
-              <div className="item-fields">
-                <div className="field-row">
-                  <div className="field">
+              <div className="study-management-journey-section-editor__item-fields">
+                <div className="study-management-journey-section-editor__field-row">
+                  <div className="study-management-journey-section-editor__field">
                     <label>날짜 *</label>
                     <input
                       type="date"
@@ -169,7 +170,7 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
                     />
                   </div>
                   
-                  <div className="field">
+                  <div className="study-management-journey-section-editor__field">
                     <label>이벤트 유형</label>
                     <select
                       value={event.type}
@@ -184,7 +185,7 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
                   </div>
                 </div>
                 
-                <div className="field">
+                <div className="study-management-journey-section-editor__field">
                   <label>제목 *</label>
                   <input
                     type="text"
@@ -196,7 +197,7 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
                   />
                 </div>
                 
-                <div className="field">
+                <div className="study-management-journey-section-editor__field">
                   <label>설명</label>
                   <textarea
                     value={event.description}
@@ -214,7 +215,7 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
         <button
           type="button"
           onClick={handleAddEvent}
-          className="add-btn"
+          className="study-management-journey-section-editor__add-button"
         >
           + 이벤트 추가
         </button>

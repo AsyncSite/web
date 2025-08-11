@@ -1,0 +1,75 @@
+.study-management-journey-section-editor {
+  position: relative;
+}
+
+.study-management-journey-section-editor__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.study-management-journey-section-editor__item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.study-management-journey-section-editor__item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.study-management-journey-section-editor__item-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #89DDFF;
+}
+
+.study-management-journey-section-editor__remove-button {
+  background: rgba(255, 77, 77, 0.85);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.study-management-journey-section-editor__remove-button:hover {
+  background: #ff4d4d;
+}
+
+.study-management-journey-section-editor__item-fields { 
+  display: block;
+}
+
+.study-management-journey-section-editor__field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.study-management-journey-section-editor__field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.study-management-journey-section-editor__add-button {
+  margin-top: 16px;
+  padding: 10px 20px;
+  width: 100%;
+  border-radius: 6px;
+  background: rgba(195, 232, 141, 0.1);
+  color: #c3e88d;
+  border: 2px dashed rgba(195, 232, 141, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-journey-section-editor__add-button:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+}

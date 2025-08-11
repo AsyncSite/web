@@ -1,6 +1,52 @@
+/* CSS Variables for TecoTeco theme */
+:root {
+  --color-primary: #c3e88d; /* 연한 연두색 */
+  --color-secondary: #82aaff; /* 밝은 파란색 */
+  --color-accent: #ffea00; /* 노란색 */
+  --color-text-primary: #f0f0f0; /* 거의 흰색 */
+  --color-text-secondary: #ddd; /* 살짝 어두운 흰색 */
+  --color-text-muted: #aaa;
+}
+
+/* 기본 스타일 */
 .study-detail-faq-section {
-  padding: 4rem 0;
-  background: #f7fafc;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 30px 25px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* TecoTeco FAQ Join Section - Exactly matching hardcoded page */
+.tecoteco-faq-join-section {
+  position: relative;
+  padding: 50px 30px 40px;
+  margin-bottom: 25px;
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  min-height: auto;
+}
+
+.tecoteco-faq-join-section .section-tag-header {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.tecoteco-faq-join-section .section-title {
+  color: var(--color-text-primary);
+  font-size: 2.5rem;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  text-align: left;
+  display: block;
 }
 
 .faq-container {
@@ -103,4 +149,182 @@
   .faq-answer {
     padding: 0 1.25rem 1.25rem;
   }
+}
+
+/* TecoTeco FAQ 아이템 스타일 */
+.tecoteco-faq-items {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tecoteco-faq-item {
+  background-color: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.tecoteco-faq-item.open {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
+}
+
+.tecoteco-faq-question {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  background-color: #1f2a44;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: background-color 0.2s ease;
+}
+
+.tecoteco-faq-question:hover {
+  background-color: #2b3a58;
+}
+
+.tecoteco-faq-icon {
+  font-size: 1.2rem;
+  color: #ffcb6b;
+  margin-right: 12px;
+  font-family: 'Source Code Pro', monospace;
+  font-weight: 700;
+}
+
+.tecoteco-faq-question-text {
+  flex-grow: 1;
+  font-size: 1.05rem;
+}
+
+.tecoteco-faq-toggle-icon {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-left: 15px;
+  transition: transform 0.2s ease;
+}
+
+.tecoteco-faq-item.open .tecoteco-faq-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.tecoteco-faq-answer {
+  padding: 15px 20px 15px 50px;
+  background-color: #2a2a2a;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  animation: fadeIn 0.3s ease-out;
+  display: flex;
+  align-items: flex-start;
+}
+
+.tecoteco-faq-answer p {
+  margin: 0;
+  flex-grow: 1;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Q/A 아이콘 스타일 (기본 테마용) */
+.faq-q-icon, .faq-a-icon {
+  font-weight: 700;
+  margin-right: 10px;
+  font-family: 'Source Code Pro', monospace;
+}
+
+.faq-q-icon {
+  color: #3182ce;
+}
+
+.faq-a-icon {
+  color: #38a169;
+}
+
+.faq-question-text {
+  flex-grow: 1;
+}
+
+.faq-toggle-icon {
+  font-size: 1.2rem;
+  color: #718096;
+}
+
+.faq-answer-text {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Tag header 스타일 */
+.faq-tag-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #667eea;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* Join CTA Block - TecoTeco FAQ 섹션 하단 */
+.join-cta-block {
+  text-align: center;
+  margin-top: 50px;
+  padding: 30px;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid rgba(130, 170, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.join-cta-title {
+  font-size: 1.8rem;
+  color: var(--color-secondary);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.join-cta-block .join-description {
+  font-size: 1.15rem;
+  margin-bottom: 25px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.join-cta-block .join-contact-button {
+  background-color: var(--color-primary);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 35px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.join-cta-block .join-contact-button:hover {
+  background-color: #b5d97f;
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
 }

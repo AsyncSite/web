@@ -8,6 +8,8 @@ import ReviewsSectionForm from './forms/ReviewsSectionForm';
 import FAQSectionForm from './forms/FAQSectionForm';
 import CTASectionForm from './forms/CTASectionForm';
 import RichTextSectionForm from './forms/RichTextSectionForm';
+import HowWeRollSectionForm from './forms/HowWeRollSectionForm';
+import JourneySectionForm from './forms/JourneySectionForm';
 import './SectionEditForm.css';
 
 interface SectionEditFormProps {
@@ -91,6 +93,24 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
       case SectionType.RICH_TEXT:
         return (
           <RichTextSectionForm
+            initialData={initialData}
+            onSave={onSave}
+            onCancel={onCancel}
+          />
+        );
+      
+      case SectionType.HOW_WE_ROLL:
+        return (
+          <HowWeRollSectionForm
+            initialData={initialData}
+            onSave={onSave}
+            onCancel={onCancel}
+          />
+        );
+      
+      case SectionType.JOURNEY:
+        return (
+          <JourneySectionForm
             initialData={initialData}
             onSave={onSave}
             onCancel={onCancel}

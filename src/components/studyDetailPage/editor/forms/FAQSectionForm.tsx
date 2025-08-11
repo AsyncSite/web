@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './SectionForms.css';
+import './FAQSectionForm.css';
 
 interface FAQItem {
   question: string;
@@ -10,7 +11,16 @@ interface FAQItem {
 interface FAQSectionFormProps {
   initialData?: {
     title?: string;
+    tagHeader?: string;
     faqs?: FAQItem[];
+    items?: FAQItem[]; // FAQSection uses 'items' not 'faqs'
+    theme?: 'default' | 'tecoteco' | 'modern';
+    showIcons?: boolean;
+    showJoinCTA?: boolean;
+    joinTitle?: string;
+    joinDescription?: string;
+    joinButtonText?: string;
+    joinButtonAction?: string;
   };
   onSave: (data: any) => void;
   onCancel: () => void;
@@ -22,8 +32,17 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   onCancel
 }) => {
   const [title, setTitle] = useState(initialData.title || '자주 묻는 질문');
+  const [tagHeader, setTagHeader] = useState(initialData.tagHeader || '');
+  const [theme, setTheme] = useState(initialData.theme || 'default');
+  const [showIcons, setShowIcons] = useState(initialData.showIcons || false);
+  const [showJoinCTA, setShowJoinCTA] = useState(initialData.showJoinCTA || false);
+  const [joinTitle, setJoinTitle] = useState(initialData.joinTitle || 'TecoTeco, 당신의 합류를 기다려요!');
+  const [joinDescription, setJoinDescription] = useState(initialData.joinDescription || '');
+  const [joinButtonText, setJoinButtonText] = useState(initialData.joinButtonText || '@renechoi에게 커피챗 요청하기 ☕');
+  const [joinButtonAction, setJoinButtonAction] = useState(initialData.joinButtonAction || '@renechoi에게 커피챗 요청!');
   const [faqs, setFaqs] = useState<FAQItem[]>(
-    initialData.faqs || [
+    // FAQSection uses 'items' not 'faqs'
+    initialData.items || initialData.faqs || [
       { question: '', answer: '', category: '' }
     ]
   );
@@ -58,11 +77,19 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
 
     onSave({
       title,
-      faqs: validFaqs
+      tagHeader,
+      theme,
+      showIcons,
+      showJoinCTA,
+      joinTitle,
+      joinDescription,
+      joinButtonText,
+      joinButtonAction,
+      items: validFaqs, // FAQSection expects 'items' not 'faqs'
     });
   };
 
-  // TecoTeco 예시 데이터
+  // 일반 예시 데이터
   const loadExampleData = () => {
     setTitle('자주 묻는 질문');
     setFaqs([
@@ -98,9 +125,73 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       }
     ]);
   };
+  
+  // TecoTeco FAQ 템플릿
+  const loadTecotecoData = () => {
+    setTitle('FAQ');
+    setTagHeader('궁금증 해결');
+    setTheme('tecoteco');
+    setShowIcons(true);
+    setShowJoinCTA(true);
+    setJoinTitle('TecoTeco, 당신의 합류를 기다려요!');
+    setJoinDescription('');
+    setJoinButtonText('@renechoi에게 커피챗 요청하기 ☕');
+    setJoinButtonAction('@renechoi에게 커피챗 요청!');
+    setFaqs([
+      {
+        question: '테코테코는 어떤 스터디인가요?',
+        answer: '테코테코는 코딩 테스트 완전 정복을 목표로 하는 알고리즘 스터디입니다. 단순히 문제를 푸는 것을 넘어, 논리적 사고력과 커뮤니케이션 역량 강화를 지향합니다.',
+        category: ''
+      },
+      {
+        question: '모임은 언제, 어디서 진행되나요?',
+        answer: '매주 금요일 저녁 7:30 ~ 9:30에 강남역 인근 스터디룸에서 오프라인 모임을 중심으로 진행됩니다. 상황에 따라 온라인(Discord)으로 전환될 수 있습니다.',
+        category: ''
+      },
+      {
+        question: '스터디 비용은 어떻게 되나요?',
+        answer: '스터디룸 대관료는 참석자끼리 N/1로 정산합니다. 별도의 회비나 멤버십 비용은 없습니다.',
+        category: ''
+      },
+      {
+        question: '참여하려면 어떻게 해야 하나요?',
+        answer: '현재는 공식 모집은 진행하고 있지 않아요. 관심 있으신 분들은 @renechoi에게 커피챗을 요청해주시면 참여 방법을 안내해 드립니다.',
+        category: ''
+      },
+      {
+        question: '코딩 테스트 실력이 부족해도 참여할 수 있나요?',
+        answer: '네, 실력에 관계없이 누구나 참여할 수 있습니다. 함께의 가치를 중요하게 생각하며, 서로 돕고 배우며 성장할 수 있는 환경을 지향합니다.',
+        category: ''
+      }
+    ]);
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="section-form faq-form">
+    <form onSubmit={handleSubmit} className="section-form faq-form study-management-faq-section-editor">
+      <div className="form-group">
+        <label>테마</label>
+        <select
+          value={theme}
+          onChange={(e) => setTheme(e.target.value as any)}
+          className="form-input"
+        >
+          <option value="default">기본</option>
+          <option value="tecoteco">테코테코</option>
+          <option value="modern">모던</option>
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label>태그 헤더 (선택사항)</label>
+        <input
+          type="text"
+          value={tagHeader}
+          onChange={(e) => setTagHeader(e.target.value)}
+          placeholder="예: 궁금증 해결"
+          className="form-input"
+        />
+      </div>
+      
       <div className="form-group">
         <label>섹션 제목</label>
         <input
@@ -111,37 +202,58 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
           className="form-input"
         />
       </div>
+      
+      <div className="form-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={showIcons}
+            onChange={(e) => setShowIcons(e.target.checked)}
+          />
+          Q/A 아이콘 표시
+        </label>
+      </div>
 
       <div className="form-group">
         <div className="group-header">
           <label>FAQ 목록</label>
-          <button 
-            type="button" 
-            onClick={loadExampleData}
-            className="example-btn"
-          >
-            예시 데이터 불러오기
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button 
+              type="button" 
+              onClick={loadExampleData}
+              className="example-btn"
+            >
+              예시 데이터
+            </button>
+            <button 
+              type="button" 
+              onClick={loadTecotecoData}
+              className="example-btn"
+              style={{ background: '#C3E88D', color: '#000' }}
+            >
+              TecoTeco FAQ
+            </button>
+          </div>
         </div>
         
-        <div className="faq-list">
+        <div className="study-management-faq-section-editor__list">
           {faqs.map((faq, index) => (
-            <div key={index} className="faq-item">
-              <div className="item-header">
+            <div key={index} className="study-management-faq-section-editor__item">
+              <div className="study-management-faq-section-editor__item-header">
                 <h4>FAQ {index + 1}</h4>
                 {faqs.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveFAQ(index)}
-                    className="remove-btn"
+                    className="study-management-faq-section-editor__remove-button"
                   >
                     삭제
                   </button>
                 )}
               </div>
               
-              <div className="item-fields">
-                <div className="field">
+              <div className="study-management-faq-section-editor__item-fields">
+                <div className="study-management-faq-section-editor__field">
                   <label>카테고리</label>
                   <input
                     type="text"
@@ -152,7 +264,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
                   />
                 </div>
                 
-                <div className="field">
+                <div className="study-management-faq-section-editor__field">
                   <label>질문 *</label>
                   <input
                     type="text"
@@ -164,7 +276,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
                   />
                 </div>
                 
-                <div className="field">
+                <div className="study-management-faq-section-editor__field">
                   <label>답변 *</label>
                   <textarea
                     value={faq.answer}
@@ -183,11 +295,74 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
         <button
           type="button"
           onClick={handleAddFAQ}
-          className="add-btn"
+          className="study-management-faq-section-editor__add-button"
         >
           + FAQ 추가
         </button>
       </div>
+      
+      {theme === 'tecoteco' && (
+        <>
+          <div className="form-group">
+            <label>
+              <input
+                type="checkbox"
+                checked={showJoinCTA}
+                onChange={(e) => setShowJoinCTA(e.target.checked)}
+              />
+              Join CTA 블록 표시 (TecoTeco 테마)
+            </label>
+          </div>
+          
+          {showJoinCTA && (
+            <>
+              <div className="form-group">
+                <label>Join CTA 제목</label>
+                <input
+                  type="text"
+                  value={joinTitle}
+                  onChange={(e) => setJoinTitle(e.target.value)}
+                  placeholder="예: TecoTeco, 당신의 합류를 기다려요!"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Join CTA 설명 (선택사항)</label>
+                <textarea
+                  value={joinDescription}
+                  onChange={(e) => setJoinDescription(e.target.value)}
+                  placeholder="추가 설명 텍스트"
+                  className="form-textarea"
+                  rows={2}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>버튼 텍스트</label>
+                <input
+                  type="text"
+                  value={joinButtonText}
+                  onChange={(e) => setJoinButtonText(e.target.value)}
+                  placeholder="예: @renechoi에게 커피챗 요청하기 ☕"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>버튼 클릭 액션 메시지</label>
+                <input
+                  type="text"
+                  value={joinButtonAction}
+                  onChange={(e) => setJoinButtonAction(e.target.value)}
+                  placeholder="예: @renechoi에게 커피챗 요청!"
+                  className="form-input"
+                />
+              </div>
+            </>
+          )}
+        </>
+      )}
 
       <div className="form-actions">
         <button type="button" onClick={onCancel} className="cancel-btn">

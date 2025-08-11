@@ -10,7 +10,9 @@ import studyDetailPageService, {
 } from '../api/studyDetailPageService';
 import { SectionRenderer } from '../components/studyDetailPage/sections';
 import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
+import { normalizeMembersPropsForUI, serializeMembersPropsForAPI } from '../components/studyDetailPage/utils/membersAdapter';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { adaptSectionForBackend, restoreSectionTypes, isExtendedSection } from '../components/studyDetailPage/utils/sectionTypeAdapter';
 import './StudyManagementPage.css';
 import '../components/studyDetailPage/StudyDetailPageRenderer.css';
 
@@ -95,6 +97,10 @@ const StudyManagementPage: React.FC = () => {
         // Fetch page data for editor
         try {
           const pageData = await studyDetailPageService.getDraftPage(studyId);
+          // 받은 데이터의 섹션 타입을 복원
+          if (pageData && pageData.sections) {
+            pageData.sections = restoreSectionTypes(pageData.sections);
+          }
           setPageData(pageData);
         } catch (error) {
           console.warn('Failed to fetch page data, trying to fetch by slug:', error);
@@ -102,6 +108,10 @@ const StudyManagementPage: React.FC = () => {
           if (studyData.slug) {
             try {
               const pageData = await studyDetailPageService.getPublishedPageBySlug(studyData.slug);
+              // 받은 데이터의 섹션 타입을 복원
+              if (pageData && pageData.sections) {
+                pageData.sections = restoreSectionTypes(pageData.sections);
+              }
               setPageData(pageData);
             } catch (error) {
               console.warn('Failed to fetch page by slug:', error);
@@ -168,13 +178,22 @@ const StudyManagementPage: React.FC = () => {
   };
 
   // Page editor handlers
-  const handleAddSection = async (type: SectionType, props: any) => {
+  const handleAddSection = async (type: SectionType | string, props: any) => {
     if (!studyId) return;
 
     try {
       setSaving(true);
-      const request: AddSectionRequest = { type, props };
+      // 확장 타입인 경우 어댑터를 통해 변환
+      const adapted = adaptSectionForBackend(type, props);
+      const request: AddSectionRequest = { 
+        type: adapted.type, 
+        props: adapted.props 
+      };
       const updatedPage = await studyDetailPageService.addSection(studyId, request);
+      // 받은 데이터의 섹션 타입을 복원
+      if (updatedPage && updatedPage.sections) {
+        updatedPage.sections = restoreSectionTypes(updatedPage.sections);
+      }
       setPageData(updatedPage);
       setShowAddSection(false);
     } catch (err) {
@@ -185,13 +204,22 @@ const StudyManagementPage: React.FC = () => {
     }
   };
 
-  const handleUpdateSection = async (sectionId: string, sectionType: SectionType, props: any) => {
+  const handleUpdateSection = async (sectionId: string, sectionType: SectionType | string, props: any) => {
     if (!studyId) return;
 
     try {
       setSaving(true);
-      const request: AddSectionRequest = { type: sectionType, props };
+      // 확장 타입인 경우 어댑터를 통해 변환
+      const adapted = adaptSectionForBackend(sectionType, props);
+      const request: AddSectionRequest = { 
+        type: adapted.type, 
+        props: adapted.props 
+      };
       const updatedPage = await studyDetailPageService.updateSection(studyId, sectionId, request);
+      // 받은 데이터의 섹션 타입을 복원
+      if (updatedPage && updatedPage.sections) {
+        updatedPage.sections = restoreSectionTypes(updatedPage.sections);
+      }
       setPageData(updatedPage);
       setSelectedSection(null);
     } catch (err) {
@@ -618,14 +646,14 @@ const StudyManagementPage: React.FC = () => {
                       <div className="modal-content">
                         <h5>새 섹션 추가</h5>
                         <div className="section-types">
-                          {Object.values(SectionType).map((type) => (
+                          {[...Object.values(SectionType), 'HOW_WE_ROLL', 'JOURNEY', 'EXPERIENCE'].map((type) => (
                             <button
                               key={type}
                               className="section-type-btn"
                               onClick={() => {
                                 setSelectedSection({
                                   id: 'new',
-                                  type,
+                                  type: type as any,
                                   props: {},
                                   order: pageData.sections.length
                                 });
@@ -672,12 +700,17 @@ const StudyManagementPage: React.FC = () => {
                   <div className="section-editor">
                     <SectionEditForm
                       sectionType={selectedSection.type}
-                      initialData={selectedSection.props}
+                      initialData={selectedSection.type === SectionType.MEMBERS
+                        ? normalizeMembersPropsForUI(selectedSection.props || {})
+                        : (selectedSection.props || {})}
                       onSave={(data) => {
+                        const outgoing = selectedSection.type === SectionType.MEMBERS
+                          ? serializeMembersPropsForAPI(data)
+                          : data;
                         if (selectedSection.id === 'new') {
-                          handleAddSection(selectedSection.type, data);
+                          handleAddSection(selectedSection.type, outgoing);
                         } else {
-                          handleUpdateSection(selectedSection.id, selectedSection.type, data);
+                          handleUpdateSection(selectedSection.id, selectedSection.type, outgoing);
                         }
                       }}
                       onCancel={() => setSelectedSection(null)}

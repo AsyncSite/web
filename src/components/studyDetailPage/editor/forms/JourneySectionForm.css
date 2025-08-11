@@ -1,0 +1,265 @@
+/* JourneySectionForm Styles */
+
+.journey-section-form {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+.journey-section-form .form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.journey-section-form .form-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #C3E88D;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Generations List */
+.generations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.generation-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Generation Display Mode */
+.generation-display {
+  padding: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.generation-display:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.generation-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.generation-header .icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.generation-header strong {
+  flex: 1;
+  font-size: 1.1rem;
+  color: #C3E88D;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.completed {
+  background: rgba(195, 232, 141, 0.2);
+  color: #C3E88D;
+  border: 1px solid rgba(195, 232, 141, 0.3);
+}
+
+.status-badge.ongoing {
+  background: rgba(130, 170, 255, 0.2);
+  color: #82aaff;
+  border: 1px solid rgba(130, 170, 255, 0.3);
+}
+
+.status-badge.planned {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.generation-display p {
+  margin: 0 0 12px 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.achievements-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.achievement-tag {
+  padding: 3px 8px;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid rgba(130, 170, 255, 0.2);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  color: #82aaff;
+}
+
+.generation-actions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 4px;
+}
+
+.move-btn {
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.move-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #C3E88D;
+}
+
+.move-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Generation Edit Mode */
+.generation-edit {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.generation-edit .form-row {
+  display: flex;
+  gap: 8px;
+}
+
+.generation-edit .item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.generation-edit .save-btn {
+  flex: 1;
+  padding: 8px 16px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.generation-edit .save-btn:hover {
+  background: rgba(195, 232, 141, 0.2);
+}
+
+.generation-edit .delete-btn {
+  padding: 8px 16px;
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.3);
+  border-radius: 6px;
+  color: #ff4336;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.generation-edit .delete-btn:hover {
+  background: rgba(255, 67, 54, 0.2);
+}
+
+/* Stats Fields */
+.stats-fields {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 12px;
+}
+
+.stats-fields h4 {
+  margin: 0 0 16px 0;
+  color: #89DDFF;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 기존 SectionForms.css 스타일 활용 */
+.journey-section-form .form-section {
+  margin: 32px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.journey-section-form .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.journey-section-form .section-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #89DDFF;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .journey-section-form .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .generation-actions {
+    position: static;
+    margin-top: 12px;
+    justify-content: flex-end;
+  }
+  
+  .generation-edit .form-row {
+    flex-direction: column;
+  }
+  
+  .generation-edit .form-row input,
+  .generation-edit .form-row select {
+    width: 100%;
+  }
+}

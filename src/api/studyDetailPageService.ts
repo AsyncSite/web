@@ -40,7 +40,9 @@ export enum SectionType {
   STATS = 'STATS',
   TABLE = 'TABLE',
   CUSTOM_HTML = 'CUSTOM_HTML',
-  CODE_BLOCK = 'CODE_BLOCK'
+  CODE_BLOCK = 'CODE_BLOCK',
+  HOW_WE_ROLL = 'HOW_WE_ROLL',
+  JOURNEY = 'JOURNEY'
 }
 
 export enum PageStatus {
