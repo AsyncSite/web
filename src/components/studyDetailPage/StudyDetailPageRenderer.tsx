@@ -5,6 +5,7 @@ import { Footer } from '../layout';
 import LoadingSpinner from '../common/LoadingSpinner';
 import studyDetailPageService, { StudyDetailPageData, PageSection, SectionType } from '../../api/studyDetailPageService';
 import { SectionRenderer } from './sections';
+import { RichTextConverter } from '../common/richtext/RichTextConverter';
 import './StudyDetailPageRenderer.css';
 
 /**
@@ -39,16 +40,42 @@ const mapSectionPropsToComponentData = (section: PageSection): any => {
       };
     
     case SectionType.HERO:
-      // HERO section props mapping
-      return {
-        title: section.props.title,
-        subtitle: section.props.subtitle,
+      // HERO section props mapping with RichText conversion
+      const heroData: any = {
         emoji: section.props.emoji,
         image: section.props.image || section.props.backgroundImage,
-        infoBox: section.props.infoBox,
         ctaText: section.props.ctaText,
         ctaLink: section.props.ctaLink
       };
+      
+      // Title 변환: 문자열이면 RichText로 변환
+      if (section.props.title) {
+        heroData.title = typeof section.props.title === 'string' 
+          ? RichTextConverter.fromHTML(section.props.title)
+          : section.props.title;
+      }
+      
+      // Subtitle 변환
+      if (section.props.subtitle) {
+        heroData.subtitle = typeof section.props.subtitle === 'string'
+          ? RichTextConverter.fromHTML(section.props.subtitle)
+          : section.props.subtitle;
+      }
+      
+      // InfoBox items 변환
+      if (section.props.infoBox) {
+        heroData.infoBox = {
+          header: section.props.infoBox.header,
+          items: section.props.infoBox.items?.map((item: any) => ({
+            icon: item.icon,
+            text: typeof item.text === 'string'
+              ? RichTextConverter.fromHTML(item.text)
+              : item.text
+          }))
+        };
+      }
+      
+      return heroData;
     
     default:
       // For other section types, pass props as is

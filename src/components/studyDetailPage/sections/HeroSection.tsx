@@ -1,17 +1,20 @@
 import React from 'react';
+import RichTextRenderer from '../../common/richtext/RichTextRenderer';
+import { RichTextData } from '../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../common/richtext/RichTextConverter';
 import './HeroSection.css';
 
 interface HeroSectionProps {
   data: {
-    title: string;
-    subtitle?: string;
+    title: string | RichTextData;
+    subtitle?: string | RichTextData;
     emoji?: string;
     image?: string;
     infoBox?: {
       header?: string;
       items?: Array<{
         icon?: string;
-        text: string;
+        text: string | RichTextData;
         highlight?: string;
       }>;
     };
@@ -31,11 +34,26 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
     <div className="study-detail-hero-section">
       <div className="hero-content">
         {/* 제목 (이모지 포함 가능) */}
-        <h1 className="hero-title" dangerouslySetInnerHTML={{ __html: title }} />
+        <h1 className="hero-title">
+          <RichTextRenderer data={title} />
+        </h1>
         
         {/* 부제목 */}
         {subtitle && (
-          <p className="hero-subtitle" dangerouslySetInnerHTML={{ __html: subtitle }} />
+          <div className="hero-subtitle">
+            <RichTextRenderer 
+              data={subtitle} 
+              theme={{
+                colors: {
+                  primary: '#c3e88d',
+                  secondary: '#82aaff',
+                  highlight: '#c3e88d',  // subtitle용 연두색
+                  subtleHighlight: '#82aaff',
+                  text: '#f0f0f0'
+                }
+              }}
+            />
+          </div>
         )}
         
         {/* 이미지 (옵션) */}
@@ -56,7 +74,20 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
             {infoBox.items.map((item, index) => (
               <div key={index} className="info-line-item">
                 {item.icon && <span className="line-icon">{item.icon}</span>}
-                <p className="line-text" dangerouslySetInnerHTML={{ __html: item.text }} />
+                <div className="line-text">
+                  <RichTextRenderer 
+                    data={item.text} 
+                    theme={{
+                      colors: {
+                        primary: '#c3e88d',
+                        secondary: '#82aaff',
+                        highlight: '#ffea00',  // InfoBox용 노란색
+                        subtleHighlight: '#ff9800',
+                        text: '#f0f0f0'
+                      }
+                    }}
+                  />
+                </div>
               </div>
             ))}
           </div>

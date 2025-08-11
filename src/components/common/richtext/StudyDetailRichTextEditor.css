@@ -1,0 +1,415 @@
+/* 
+ * Study Detail Page RichText Editor Styles
+ * 모든 클래스는 sdpre__ 접두사 사용
+ * TipTap 생성 요소는 data-sdpre-scope로 스코핑
+ */
+
+/* ============================================
+   컨테이너 및 기본 구조
+   ============================================ */
+.sdpre__container {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.sdpre__label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f0f0f0;
+}
+
+/* ============================================
+   툴바 스타일
+   ============================================ */
+.sdpre__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  background-color: rgba(30, 30, 30, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.sdpre__toolbar-button {
+  padding: 6px 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f0f0f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.sdpre__toolbar-button:hover {
+  background-color: rgba(195, 232, 141, 0.2);
+  border-color: rgba(195, 232, 141, 0.4);
+  transform: translateY(-1px);
+}
+
+.sdpre__toolbar-button--active {
+  background-color: rgba(195, 232, 141, 0.3) !important;
+  border-color: #c3e88d !important;
+  color: #c3e88d !important;
+}
+
+.sdpre__toolbar-icon {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.sdpre__toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 8px;
+}
+
+/* ============================================
+   에디터 콘텐츠 영역
+   ============================================ */
+.sdpre__content-area {
+  position: relative;
+}
+
+.sdpre__tiptap-wrapper {
+  min-height: 100px;
+  background-color: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 8px 8px;
+  border-top: none;
+}
+
+.sdpre__toolbar + .sdpre__content-area .sdpre__tiptap-wrapper {
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+/* ============================================
+   TipTap ProseMirror 스타일 (data 속성 스코핑)
+   ============================================ */
+[data-sdpre-scope="study-detail"] .ProseMirror {
+  outline: none;
+  min-height: 100px;
+  padding: 12px;
+  color: #f0f0f0 !important;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+[data-sdpre-scope="study-detail"] .ProseMirror:focus {
+  outline: none;
+}
+
+[data-sdpre-scope="study-detail"] .ProseMirror p {
+  margin: 0 0 0.5em 0;
+}
+
+[data-sdpre-scope="study-detail"] .ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+/* Placeholder */
+[data-sdpre-scope="study-detail"] .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  height: 0;
+}
+
+/* ============================================
+   텍스트 포맷팅 스타일
+   ============================================ */
+
+/* 굵게 - 녹색 */
+[data-sdpre-scope="study-detail"] .ProseMirror strong {
+  font-weight: bold !important;
+  color: #c3e88d !important;
+}
+
+/* 이탤릭 - 파란색 */
+[data-sdpre-scope="study-detail"] .ProseMirror em {
+  font-style: italic !important;
+  color: #82aaff !important;
+}
+
+/* 모든 mark 태그에 기본 노란색 하이라이트 적용 */
+[data-sdpre-scope="study-detail"] .ProseMirror mark,
+[data-sdpre-scope="study-detail"] .sdpre__prosemirror mark,
+[data-sdpre-scope="study-detail"] .sdpre__tiptap-wrapper mark,
+[data-sdpre-scope="study-detail"] mark {
+  background-color: rgba(255, 234, 0, 0.5) !important;
+  color: #1a1a1a !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+}
+
+/* 인라인 스타일로 background-color가 설정된 mark - 노란색 */
+[data-sdpre-scope="study-detail"] .ProseMirror mark[style*="background-color: rgb(255, 234, 0)"],
+[data-sdpre-scope="study-detail"] .sdpre__prosemirror mark[style*="background-color: rgb(255, 234, 0)"],
+[data-sdpre-scope="study-detail"] .sdpre__tiptap-wrapper mark[style*="background-color: rgb(255, 234, 0)"] {
+  background-color: rgba(255, 234, 0, 0.5) !important;
+}
+
+/* 파란색 하이라이트 - subtle-highlight 용 */
+[data-sdpre-scope="study-detail"] .ProseMirror mark.sdpre-highlight-blue,
+[data-sdpre-scope="study-detail"] .sdpre__prosemirror mark.sdpre-highlight-blue,
+[data-sdpre-scope="study-detail"] .sdpre__tiptap-wrapper mark.sdpre-highlight-blue,
+[data-sdpre-scope="study-detail"] mark.sdpre-highlight-blue,
+[data-sdpre-scope="study-detail"] mark[style*="background-color: rgb(130, 170, 255)"] {
+  background-color: rgba(130, 170, 255, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* 텍스트 색상 - 인라인 스타일 적용 */
+[data-sdpre-scope="study-detail"] .ProseMirror span[style*="color"] {
+  /* 인라인 스타일이 그대로 적용됨 */
+}
+
+/* 링크 */
+[data-sdpre-scope="study-detail"] .ProseMirror a {
+  color: #82aaff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+[data-sdpre-scope="study-detail"] .ProseMirror a:hover {
+  color: #c3e88d;
+}
+
+/* 리스트 */
+[data-sdpre-scope="study-detail"] .ProseMirror ul,
+[data-sdpre-scope="study-detail"] .ProseMirror ol {
+  padding-left: 20px;
+  margin: 0.5em 0;
+}
+
+[data-sdpre-scope="study-detail"] .ProseMirror li {
+  margin: 0.25em 0;
+}
+
+/* 제목 */
+[data-sdpre-scope="study-detail"] .ProseMirror h1,
+[data-sdpre-scope="study-detail"] .ProseMirror h2,
+[data-sdpre-scope="study-detail"] .ProseMirror h3 {
+  color: #c3e88d;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+[data-sdpre-scope="study-detail"] .ProseMirror h1 { font-size: 2em; }
+[data-sdpre-scope="study-detail"] .ProseMirror h2 { font-size: 1.5em; }
+[data-sdpre-scope="study-detail"] .ProseMirror h3 { font-size: 1.2em; }
+
+/* ============================================
+   미리보기 모드
+   ============================================ */
+.sdpre__preview {
+  min-height: 100px;
+  padding: 12px;
+  background-color: rgba(30, 30, 30, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #f0f0f0 !important;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.sdpre__content-area--preview .sdpre__preview {
+  border-radius: 0 0 8px 8px;
+  border-top: none;
+}
+
+/* 미리보기 모드 텍스트 스타일 */
+.sdpre__preview p {
+  margin: 0 0 0.5em 0;
+  color: #f0f0f0 !important;
+}
+
+.sdpre__preview p:last-child {
+  margin-bottom: 0;
+}
+
+.sdpre__preview strong {
+  font-weight: bold !important;
+  color: #c3e88d !important;
+}
+
+.sdpre__preview em {
+  font-style: italic !important;
+  color: #82aaff !important;
+}
+
+/* 미리보기 모드 mark 태그 기본 스타일 */
+.sdpre__preview mark {
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+  color: #1a1a1a !important;
+}
+
+/* 미리보기 모드 노란색 하이라이트 */
+.sdpre__preview mark[style*="background-color: rgb(255, 234, 0)"] {
+  background-color: rgba(255, 234, 0, 0.5) !important;
+}
+
+/* 미리보기 모드 파란색 하이라이트 */
+.sdpre__preview mark[style*="background-color: rgb(130, 170, 255)"] {
+  background-color: rgba(130, 170, 255, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* 미리보기 모드 기본 mark (스타일 없을 때) */
+.sdpre__preview mark:not([style]) {
+  background-color: rgba(255, 234, 0, 0.5) !important;
+}
+
+.sdpre__preview span[style*="color"] {
+  /* 인라인 스타일이 그대로 적용됨 */
+}
+
+.sdpre__preview a {
+  color: #82aaff !important;
+  text-decoration: underline;
+}
+
+.sdpre__preview a:hover {
+  color: #c3e88d !important;
+}
+
+/* ============================================
+   색상 선택기
+   ============================================ */
+.sdpre__color-picker {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background-color: rgba(30, 30, 30, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  min-width: 280px;
+}
+
+.sdpre__color-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f0f0f0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sdpre__color-picker-close {
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.sdpre__color-picker-close:hover {
+  color: #ff6b6b;
+}
+
+.sdpre__color-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.sdpre__preset-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-right: 8px;
+  min-width: 70px;
+}
+
+.sdpre__color-preset {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sdpre__color-preset:hover {
+  transform: scale(1.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sdpre__color-reset {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sdpre__reset-btn {
+  padding: 4px 12px;
+  background-color: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.sdpre__reset-btn:hover {
+  background-color: rgba(255, 107, 107, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   글자수 카운터
+   ============================================ */
+.sdpre__char-count {
+  text-align: right;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+  padding: 0 4px;
+}
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+@media (max-width: 768px) {
+  .sdpre__toolbar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .sdpre__color-picker {
+    width: 100%;
+    max-width: 320px;
+  }
+}

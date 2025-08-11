@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
+import { RichTextData } from '../../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import './SectionForms.css';
 
 interface InfoBoxItem {
   icon: string;
-  text: string;
+  text: string | RichTextData;
 }
 
 interface HeroSectionFormProps {
@@ -29,31 +32,48 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
   onSave,
   onCancel
 }) => {
-  const [title, setTitle] = useState(initialData.title || '');
-  const [subtitle, setSubtitle] = useState(initialData.subtitle || '');
+  // Title과 Subtitle을 RichText로 관리 (초기값이 HTML이면 변환)
+  const [title, setTitle] = useState<RichTextData | string>(
+    initialData.title ? 
+      (typeof initialData.title === 'string' ? RichTextConverter.fromHTML(initialData.title) : initialData.title)
+      : ''
+  );
+  const [subtitle, setSubtitle] = useState<RichTextData | string>(
+    initialData.subtitle ?
+      (typeof initialData.subtitle === 'string' ? RichTextConverter.fromHTML(initialData.subtitle) : initialData.subtitle)
+      : ''
+  );
   const [description, setDescription] = useState(initialData.description || '');
   const [buttonText, setButtonText] = useState(initialData.buttonText || '참가 신청하기');
   const [buttonLink, setButtonLink] = useState(initialData.buttonLink || '#apply');
   const [backgroundImage, setBackgroundImage] = useState(initialData.backgroundImage || initialData.image || '');
   
-  // InfoBox 관련 상태
+  // InfoBox 관련 상태 (초기값이 HTML이면 변환)
   const [useInfoBox, setUseInfoBox] = useState(!!initialData.infoBox);
   const [infoBoxHeader, setInfoBoxHeader] = useState(initialData.infoBox?.header || '');
   const [infoBoxItems, setInfoBoxItems] = useState<InfoBoxItem[]>(
-    initialData.infoBox?.items || []
+    initialData.infoBox?.items?.map((item: any) => ({
+      icon: item.icon,
+      text: typeof item.text === 'string' ? RichTextConverter.fromHTML(item.text) : item.text
+    })) || []
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title) {
+    // RichText 또는 문자열 체크
+    const titleText = typeof title === 'string' ? title : 
+      (title as RichTextData)?.content?.[0]?.content?.[0]?.text || '';
+    
+    if (!titleText) {
       alert('제목은 필수 입력 항목입니다.');
       return;
     }
 
+    // RichText를 HTML로 변환하여 저장
     const data: any = {
-      title,
-      subtitle,
+      title: typeof title === 'string' ? title : RichTextConverter.toHTML(title),
+      subtitle: typeof subtitle === 'string' ? subtitle : RichTextConverter.toHTML(subtitle),
       description,
       buttonText,
       buttonLink,
@@ -64,7 +84,10 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
     if (useInfoBox && (infoBoxHeader || infoBoxItems.length > 0)) {
       data.infoBox = {
         header: infoBoxHeader,
-        items: infoBoxItems
+        items: infoBoxItems.map(item => ({
+          icon: item.icon,
+          text: typeof item.text === 'string' ? item.text : RichTextConverter.toHTML(item.text)
+        }))
       };
     }
 
@@ -82,7 +105,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
   };
 
   // InfoBox 아이템 업데이트
-  const updateInfoBoxItem = (index: number, field: 'icon' | 'text', value: string) => {
+  const updateInfoBoxItem = (index: number, field: 'icon' | 'text', value: string | RichTextData) => {
     const updatedItems = [...infoBoxItems];
     updatedItems[index] = { ...updatedItems[index], [field]: value };
     setInfoBoxItems(updatedItems);
@@ -90,8 +113,9 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
 
   // TecoTeco 예시 데이터
   const loadExampleData = () => {
-    setTitle('💯 코테 스터디<br/>테코테코');
-    setSubtitle('변화 속에서<br/><span class="highlight">변치 않는 ____를 찾다</span>');
+    // RichText 형식으로 변환
+    setTitle(RichTextConverter.fromHTML('💯 코테 스터디<br/>테코테코'));
+    setSubtitle(RichTextConverter.fromHTML('변화 속에서<br/><span class="highlight">변치 않는 ____를 찾다</span>'));
     setDescription('기술 변화 속 흔들리지 않는 개발자 사고의 뿌리를 탐구하고, 단순한 코딩 테스트를 넘어 자료구조와 알고리즘의 본질에 Deep Dive합니다.');
     setButtonText('참가 신청하기');
     setButtonLink('#apply');
@@ -103,15 +127,15 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
     setInfoBoxItems([
       {
         icon: '💡',
-        text: '기술 변화 속 <span class="highlight">흔들리지 않는 개발자 사고의 뿌리</span>를 탐구해요.'
+        text: RichTextConverter.fromHTML('기술 변화 속 <span class="highlight">흔들리지 않는 개발자 사고의 뿌리</span>를 탐구해요.')
       },
       {
         icon: '📚',
-        text: '단순한 코딩 테스트 넘어, <span class="highlight">자료구조와 알고리즘의 본질</span>에 Deep Dive 해요.'
+        text: RichTextConverter.fromHTML('단순한 코딩 테스트 넘어, <span class="highlight">자료구조와 알고리즘의 본질</span>에 Deep Dive 해요.')
       },
       {
         icon: '🤝',
-        text: '서로의 질문이 <span class="highlight">해답</span>이 되고, <span class="highlight">함께 성장</span>하는 시너지를 경험해요.'
+        text: RichTextConverter.fromHTML('서로의 질문이 <span class="highlight">해답</span>이 되고, <span class="highlight">함께 성장</span>하는 시너지를 경험해요.')
       }
     ]);
   };
@@ -119,25 +143,24 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="section-form hero-form">
       <div className="form-group">
-        <label>제목 * <small style={{ color: 'rgba(255, 255, 255, 0.5)' }}>(HTML 태그 사용 가능)</small></label>
-        <input
-          type="text"
+        <label>제목 *</label>
+        <StudyDetailRichTextEditor
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="예: 💯 코테 스터디<br/>테코테코"
-          className="form-input"
-          required
+          onChange={setTitle}
+          placeholder="예: 💯 코테 스터디 [줄바꿈] 테코테코"
+          toolbar={['break', 'emoji', 'bold', 'color']}
+          singleLine={false}
         />
       </div>
 
       <div className="form-group">
-        <label>부제목 <small style={{ color: 'rgba(255, 255, 255, 0.5)' }}>(HTML 태그 사용 가능)</small></label>
-        <input
-          type="text"
+        <label>부제목</label>
+        <StudyDetailRichTextEditor
           value={subtitle}
-          onChange={(e) => setSubtitle(e.target.value)}
-          placeholder='예: 변화 속에서<br/><span class="highlight">변치 않는 ____를 찾다</span>'
-          className="form-input"
+          onChange={setSubtitle}
+          placeholder="예: 변화 속에서 [줄바꿈] 변치 않는 ____를 찾다 (텍스트 선택 후 하이라이트)"
+          toolbar={['break', 'highlight', 'subtle-highlight', 'color']}
+          singleLine={false}
         />
       </div>
 
@@ -270,13 +293,13 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
                       />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <label>텍스트 <small style={{ color: 'rgba(255, 255, 255, 0.5)' }}>(HTML 태그 사용 가능)</small></label>
-                      <input
-                        type="text"
+                      <label>텍스트</label>
+                      <StudyDetailRichTextEditor
                         value={item.text}
-                        onChange={(e) => updateInfoBoxItem(index, 'text', e.target.value)}
-                        placeholder='예: 기술 변화 속 <span class="highlight">흔들리지 않는 개발자 사고의 뿌리</span>를 탐구해요.'
-                        className="form-input"
+                        onChange={(value) => updateInfoBoxItem(index, 'text', value)}
+                        placeholder="예: 기술 변화 속 [선택 후 하이라이트] 흔들리지 않는 개발자 사고의 뿌리를 탐구해요."
+                        toolbar={['bold', 'italic', 'highlight', 'subtle-highlight']}
+                        singleLine={false}
                       />
                     </div>
                     <div style={{ flex: '0 0 60px', display: 'flex', alignItems: 'flex-end' }}>

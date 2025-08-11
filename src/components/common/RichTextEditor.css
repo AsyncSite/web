@@ -130,8 +130,8 @@
   padding: 16px;
 }
 
-/* ProseMirror Editor Styles */
-.tiptap-editor-content .ProseMirror {
+/* ProseMirror Editor Styles - Scoped to Profile Editor Only */
+[data-profile-editor] .tiptap-editor-content .ProseMirror {
   min-height: 168px;
   outline: none;
   color: rgba(255, 255, 255, 0.9);
@@ -139,51 +139,51 @@
   line-height: 1.6;
 }
 
-.tiptap-editor-content .ProseMirror p {
+[data-profile-editor] .tiptap-editor-content .ProseMirror p {
   margin: 0 0 1em 0;
 }
 
-.tiptap-editor-content .ProseMirror p:last-child {
+[data-profile-editor] .tiptap-editor-content .ProseMirror p:last-child {
   margin-bottom: 0;
 }
 
-.tiptap-editor-content .ProseMirror strong {
+[data-profile-editor] .tiptap-editor-content .ProseMirror strong {
   font-weight: bold;
   color: rgba(255, 255, 255, 0.95);
 }
 
-.tiptap-editor-content .ProseMirror em {
+[data-profile-editor] .tiptap-editor-content .ProseMirror em {
   font-style: italic;
 }
 
-.tiptap-editor-content .ProseMirror s {
+[data-profile-editor] .tiptap-editor-content .ProseMirror s {
   text-decoration: line-through;
   opacity: 0.7;
 }
 
-.tiptap-editor-content .ProseMirror ul,
-.tiptap-editor-content .ProseMirror ol {
+[data-profile-editor] .tiptap-editor-content .ProseMirror ul,
+[data-profile-editor] .tiptap-editor-content .ProseMirror ol {
   padding-left: 24px;
   margin: 0.5em 0;
 }
 
-.tiptap-editor-content .ProseMirror li {
+[data-profile-editor] .tiptap-editor-content .ProseMirror li {
   margin: 0.25em 0;
 }
 
-.tiptap-editor-content .ProseMirror a {
+[data-profile-editor] .tiptap-editor-content .ProseMirror a {
   color: #a5b4fc;
   text-decoration: underline;
   cursor: pointer;
 }
 
-.tiptap-editor-content .ProseMirror a:hover {
+[data-profile-editor] .tiptap-editor-content .ProseMirror a:hover {
   color: #c7d2fe;
   text-decoration: none;
 }
 
 /* Placeholder Text */
-.tiptap-editor-content .ProseMirror p.is-editor-empty:first-child::before {
+[data-profile-editor] .tiptap-editor-content .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   color: rgba(255, 255, 255, 0.3);
   pointer-events: none;
@@ -238,7 +238,7 @@
     padding: 12px;
   }
   
-  .tiptap-editor-content .ProseMirror {
+  [data-profile-editor] .tiptap-editor-content .ProseMirror {
     font-size: 15px;
   }
   
@@ -298,23 +298,23 @@
     background: rgba(0, 0, 0, 0.1);
   }
   
-  .tiptap-editor-content .ProseMirror {
+  [data-profile-editor] .tiptap-editor-content .ProseMirror {
     color: rgba(0, 0, 0, 0.9);
   }
   
-  .tiptap-editor-content .ProseMirror strong {
+  [data-profile-editor] .tiptap-editor-content .ProseMirror strong {
     color: rgba(0, 0, 0, 0.95);
   }
   
-  .tiptap-editor-content .ProseMirror p.is-editor-empty:first-child::before {
+  [data-profile-editor] .tiptap-editor-content .ProseMirror p.is-editor-empty:first-child::before {
     color: rgba(0, 0, 0, 0.3);
   }
   
-  .tiptap-editor-content .ProseMirror a {
+  [data-profile-editor] .tiptap-editor-content .ProseMirror a {
     color: #6366f1;
   }
   
-  .tiptap-editor-content .ProseMirror a:hover {
+  [data-profile-editor] .tiptap-editor-content .ProseMirror a:hover {
     color: #4f46e5;
   }
   

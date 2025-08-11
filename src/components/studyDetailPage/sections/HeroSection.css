@@ -159,9 +159,16 @@
   margin: 0;
 }
 
-.line-text .highlight {
+.line-text .highlight,
+.line-text .richtext-highlight {
   color: #ffea00;
   font-weight: 500;
+}
+
+/* RichTextRenderer 하이라이트 스타일 */
+.hero-subtitle .richtext-highlight {
+  color: #c3e88d;
+  font-weight: 600;
 }
 
 /* 오른쪽 장식 라인 */

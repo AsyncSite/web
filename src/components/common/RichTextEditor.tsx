@@ -106,7 +106,7 @@ function RichTextEditor({
   };
 
   return (
-    <div className={`tiptap-editor-wrapper ${disabled ? 'tiptap-editor-disabled' : ''}`}>
+    <div className={`tiptap-editor-wrapper ${disabled ? 'tiptap-editor-disabled' : ''}`} data-profile-editor="true">
       <div className="tiptap-editor-toolbar">
         <div className="tiptap-toolbar-group">
           <button

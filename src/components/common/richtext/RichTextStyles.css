@@ -1,0 +1,505 @@
+/* RichText 시스템 공통 스타일 */
+
+/* CSS 변수 정의 */
+.richtext-renderer,
+.richtext-editor {
+  --richtext-primary: #c3e88d;
+  --richtext-secondary: #82aaff;
+  --richtext-highlight: #c3e88d;
+  --richtext-subtle-highlight: #82aaff;
+  --richtext-text: #f0f0f0;
+  --richtext-background: transparent;
+  --richtext-font-heading: inherit;
+  --richtext-font-body: inherit;
+}
+
+/* ========================= */
+/* RichTextRenderer 스타일 */
+/* ========================= */
+
+.richtext-renderer {
+  color: var(--richtext-text);
+  background-color: var(--richtext-background);
+  font-family: var(--richtext-font-body);
+  line-height: 1.6;
+}
+
+/* 제목 스타일 */
+.richtext-heading {
+  font-family: var(--richtext-font-heading);
+  font-weight: 700;
+  margin: 1em 0 0.5em;
+  line-height: 1.2;
+}
+
+.richtext-h1 { font-size: 2.5rem; }
+.richtext-h2 { font-size: 2rem; }
+.richtext-h3 { font-size: 1.75rem; }
+.richtext-h4 { font-size: 1.5rem; }
+.richtext-h5 { font-size: 1.25rem; }
+.richtext-h6 { font-size: 1rem; }
+
+/* 문단 스타일 */
+.richtext-paragraph {
+  margin: 0.5em 0;
+}
+
+.richtext-paragraph:first-child {
+  margin-top: 0;
+}
+
+.richtext-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* 하이라이트 스타일 */
+.richtext-highlight {
+  color: var(--richtext-highlight);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.richtext-subtle-highlight {
+  color: var(--richtext-subtle-highlight);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* 링크 스타일 */
+.richtext-link {
+  color: var(--richtext-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.richtext-link:hover {
+  border-bottom-color: var(--richtext-secondary);
+}
+
+/* 코드 스타일 */
+.richtext-code {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.9em;
+}
+
+/* 리스트 스타일 */
+.richtext-list {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.richtext-list-item {
+  margin: 0.25em 0;
+}
+
+/* 인용문 스타일 */
+.richtext-quote {
+  border-left: 4px solid var(--richtext-primary);
+  padding-left: 1em;
+  margin: 1em 0;
+  color: rgba(240, 240, 240, 0.8);
+  font-style: italic;
+}
+
+/* ========================= */
+/* RichTextEditor 스타일 */
+/* ========================= */
+
+.richtext-editor {
+  position: relative;
+  background-color: rgba(26, 26, 26, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease;
+}
+
+.richtext-editor:focus-within {
+  border-color: var(--richtext-primary);
+  box-shadow: 0 0 0 2px rgba(195, 232, 141, 0.1);
+}
+
+/* 라벨 */
+.richtext-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--richtext-text);
+  font-weight: 500;
+}
+
+/* 툴바 */
+.richtext-toolbar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.richtext-toolbar-button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--richtext-text);
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.richtext-toolbar-button:hover {
+  background: rgba(195, 232, 141, 0.2);
+  border-color: var(--richtext-primary);
+  transform: translateY(-1px);
+}
+
+.richtext-toolbar-button:active {
+  transform: translateY(0);
+}
+
+.richtext-toolbar-button.active {
+  background: rgba(195, 232, 141, 0.3);
+  border-color: var(--richtext-primary);
+  color: var(--richtext-primary);
+}
+
+.toolbar-icon {
+  font-size: 16px;
+}
+
+.toolbar-separator {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 8px;
+}
+
+/* TipTap 에디터 영역 */
+.richtext-content {
+  position: relative;
+}
+
+.richtext-tiptap-editor {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100px;
+  transition: all 0.2s ease;
+}
+
+/* TipTap 에디터 기본 텍스트 색상 - 더 구체적인 선택자 */
+.richtext-editor .richtext-tiptap-editor .ProseMirror {
+  color: #f0f0f0 !important;
+}
+
+/* TipTap ProseMirror 스타일 */
+.ProseMirror {
+  outline: none;
+  min-height: 100px;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+.richtext-tiptap-editor:focus-within {
+  border-color: var(--richtext-primary);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* TipTap placeholder */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(240, 240, 240, 0.4);
+  pointer-events: none;
+  height: 0;
+}
+
+/* TipTap 텍스트 포맷팅 */
+.ProseMirror p {
+  margin: 0 0 0.5em 0;
+}
+
+.ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+/* 더 구체적인 선택자로 우선순위 높이기 */
+.richtext-editor .ProseMirror strong,
+.richtext-tiptap-editor .ProseMirror strong {
+  font-weight: bold !important;
+  color: #c3e88d !important;
+}
+
+.richtext-editor .ProseMirror em,
+.richtext-tiptap-editor .ProseMirror em {
+  font-style: italic !important;
+  color: #82aaff !important;
+}
+
+/* TipTap 하이라이트 스타일 제거 - StudyDetailRichTextEditor에서 자체 처리 */
+/* 이 파일은 RichTextRenderer에서만 사용되며, RichTextRenderer는 TipTap을 사용하지 않음 */
+
+/* TipTap 관련 스타일 제거 - 각 에디터에서 자체 처리 */
+
+/* 링크 - RichTextRenderer용 */
+.richtext-renderer a {
+  color: var(--richtext-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.richtext-renderer a:hover {
+  color: var(--richtext-primary);
+}
+
+/* TipTap 리스트 */
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 20px;
+  margin: 0.5em 0;
+}
+
+.ProseMirror li {
+  margin: 0.25em 0;
+}
+
+/* TipTap 제목 */
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3 {
+  color: var(--richtext-primary);
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.ProseMirror h1 { font-size: 2em; }
+.ProseMirror h2 { font-size: 1.5em; }
+.ProseMirror h3 { font-size: 1.2em; }
+
+/* 문자 수 카운터 */
+.richtext-char-count {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 12px;
+  color: rgba(240, 240, 240, 0.5);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* 미리보기 */
+.richtext-preview {
+  min-height: 100px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #f0f0f0 !important;
+}
+
+/* 미리보기 모드 기본 텍스트 색상 */
+.richtext-preview,
+.richtext-preview p {
+  color: #f0f0f0;
+}
+
+/* 미리보기 모드 스타일 */
+.richtext-preview strong {
+  color: #c3e88d !important;
+  font-weight: bold;
+}
+
+.richtext-preview em {
+  color: #82aaff !important;
+  font-style: italic;
+}
+
+/* 미리보기 모드 하이라이트 */
+.richtext-preview mark {
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 500;
+  /* background-color는 인라인 스타일로 적용됨 */
+}
+
+/* 미리보기 모드 하이라이트 색상별 텍스트 색상 */
+.richtext-preview mark[style*="background-color"] {
+  color: #1a1a1a !important; /* 하이라이트 배경에 대비되는 어두운 텍스트 */
+}
+
+.richtext-preview mark[style*="rgb(255, 234, 0)"] {
+  color: #1a1a1a !important; /* 노란 배경에 검은 텍스트 */
+}
+
+.richtext-preview mark[style*="rgb(130, 170, 255)"] {
+  color: #ffffff !important; /* 파란 배경에 흰 텍스트 */
+}
+
+/* 미리보기 모드 텍스트 색상 - 인라인 스타일 그대로 사용 */
+.richtext-preview span[style*="color"] {
+  /* 인라인 스타일이 그대로 적용됨 */
+}
+
+/* 색상 선택기 */
+.richtext-color-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+}
+
+.color-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  color: var(--richtext-text);
+}
+
+.color-picker-close {
+  background: none;
+  border: none;
+  color: var(--richtext-text);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.color-picker-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.color-presets {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.preset-label {
+  font-size: 12px;
+  color: rgba(240, 240, 240, 0.7);
+  margin-right: 8px;
+  min-width: 70px;
+}
+
+.color-preset {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.color-preset:hover {
+  transform: scale(1.1);
+  border-color: var(--richtext-primary);
+}
+
+/* 색상 초기화 버튼 */
+.color-reset {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reset-btn {
+  padding: 4px 12px;
+  background-color: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.reset-btn:hover {
+  background-color: rgba(255, 107, 107, 0.3);
+  transform: translateY(-1px);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .richtext-editor {
+    padding: 8px;
+  }
+
+  .richtext-toolbar {
+    gap: 2px;
+  }
+
+  .richtext-toolbar-button {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-width: 28px;
+    height: 28px;
+  }
+
+  .toolbar-icon {
+    font-size: 14px;
+  }
+
+  .richtext-textarea {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* 다크 모드 최적화 */
+@media (prefers-color-scheme: dark) {
+  .richtext-renderer,
+  .richtext-editor {
+    --richtext-text: #f0f0f0;
+    --richtext-background: transparent;
+  }
+}
+
+/* 애니메이션 */
+@keyframes highlight-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.richtext-highlight:hover,
+.richtext-subtle-highlight:hover {
+  animation: highlight-pulse 1s ease-in-out infinite;
+}
