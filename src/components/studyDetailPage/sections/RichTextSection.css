@@ -205,17 +205,41 @@
   font-weight: 500 !important;
 }
 
-/* 마지막 문단 특별 스타일 (CTA) */
-.tecoteco-theme .tecoteco-content p[style*="text-align: center"] {
-  font-size: 1.3rem !important;
-  color: #f0f0f0 !important;
+/* 명시적 Callout 클래스 - 사용자가 선택했을 때만 적용 */
+.tecoteco-theme .tecoteco-callout {
+  font-size: 1.3rem;
+  color: #f0f0f0;
   margin-top: 35px;
+  margin-bottom: 20px;
   font-weight: 600;
   padding: 20px;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+}
+
+.tecoteco-theme .tecoteco-callout-green {
   background-color: rgba(195, 232, 141, 0.05);
   border-left: 4px solid #c3e88d;
-  border-radius: 0 8px 8px 0;
-  text-align: left !important; /* 중앙 정렬 오버라이드 */
+}
+
+.tecoteco-theme .tecoteco-callout-blue {
+  background-color: rgba(130, 170, 255, 0.05);
+  border-left: 4px solid #82aaff;
+}
+
+.tecoteco-theme .tecoteco-callout-yellow {
+  background-color: rgba(255, 234, 0, 0.05);
+  border-left: 4px solid #ffea00;
+}
+
+.tecoteco-theme .tecoteco-callout-red {
+  background-color: rgba(255, 107, 107, 0.05);
+  border-left: 4px solid #ff6b6b;
+}
+
+.tecoteco-theme .tecoteco-callout .callout-icon {
+  margin-right: 10px;
+  font-size: 1.2rem;
 }
 
 /* ul/li 목록 스타일 */
