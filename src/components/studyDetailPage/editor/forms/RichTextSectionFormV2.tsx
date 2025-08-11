@@ -5,15 +5,21 @@ import {
   BlockAlign,
   HeadingLevel,
   CalloutStyle,
-  ListStyle
+  ListStyle,
+  BlockContent
 } from '../../types/RichTextTypes';
 import {
   createBlock,
   moveBlock,
   duplicateBlock,
   blocksToHTML,
-  htmlToBlocks
+  htmlToBlocks,
+  contentToPlainText,
+  contentToHTML
 } from '../../utils/RichTextHelpers';
+import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
+import { RichTextData } from '../../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import './RichTextSectionForm.css';
 
 interface RichTextSectionFormProps {
@@ -126,44 +132,44 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
         id: '1',
         type: 'heading',
         level: 2,
-        text: '변화하는 세상에서 흔들리지 않을 \'나\'를 위한 스터디'
+        content: '변화하는 세상에서 흔들리지 않을 \'나\'를 위한 스터디'
       },
       {
         id: '2',
         type: 'paragraph',
-        text: '코딩과 지식의 가치가 흔해지는 시절입니다. AI가 순식간에 코드를 작성하고, 개발 도구들이 날마다 진화하는 지금. 개발자로서 우리가 정말 집중해야 할 것은 무엇일까요?'
+        content: RichTextConverter.fromHTML('코딩과 지식의 가치가 흔해지는 시절입니다. AI가 순식간에 코드를 작성하고, 개발 도구들이 날마다 진화하는 지금. 개발자로서 우리가 정말 집중해야 할 것은 무엇일까요?')
       },
       {
         id: '3',
         type: 'highlight',
-        text: '변하지 않는 개발자의 핵심 역량',
+        content: RichTextConverter.fromHTML('<span style="color: #c3e88d; font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>'),
         color: 'green'
       },
       {
         id: '4',
         type: 'heading',
         level: 3,
-        text: '물고기를 잡는 방법을 익히는 것'
+        content: '물고기를 잡는 방법을 익히는 것'
       },
       {
         id: '5',
         type: 'paragraph',
-        text: '우리는 \'물고기 그 자체\'가 아닌, \'물고기를 잡는 방법\'에 집중합니다. 단순히 문제를 푸는 것을 넘어서, 문제의 본질을 이해하고 견고한 사고력과 논리력을 단련하는 것이 목표입니다.'
+        content: RichTextConverter.fromHTML('우리는 \'물고기 그 자체\'가 아닌, <span style="color: #82aaff; font-weight: 500;">\'물고기를 잡는 방법\'</span>에 집중합니다. 단순히 문제를 푸는 것을 넘어서, 문제의 본질을 이해하고 <span style="color: #82aaff; font-weight: 500;">견고한 사고력과 논리력</span>을 단련하는 것이 목표입니다.')
       },
       {
         id: '6',
         type: 'infoBox',
         header: '💡 핵심 포인트',
         items: [
-          { icon: '📌', text: '단순 암기가 아닌 사고력 향상' },
-          { icon: '🎯', text: 'AI와의 협업 능력 개발' },
-          { icon: '🚀', text: '변화에 흔들리지 않는 개발자 핵심 역량' }
+          { icon: '📌', content: RichTextConverter.fromHTML('단순 암기가 아닌 <span style="color: #ffea00; font-weight: 500;">사고력 향상</span>') },
+          { icon: '🎯', content: RichTextConverter.fromHTML('AI와의 <span style="color: #ffea00; font-weight: 500;">협업 능력</span> 개발') },
+          { icon: '🚀', content: RichTextConverter.fromHTML('변화에 흔들리지 않는 <span style="color: #ffea00; font-weight: 500;">개발자 핵심 역량</span>') }
         ]
       },
       {
         id: '7',
         type: 'callout',
-        text: '우리가 찾는 건 변화 속에서도 흔들리지 않을 \'나\', 생각하는 힘이에요.',
+        content: RichTextConverter.fromHTML('우리가 찾는 건 변화 속에서도 <span style="color: #c3e88d; font-weight: 600;">흔들리지 않을 \'나\'</span>, 생각하는 힘이에요.'),
         icon: '✨',
         style: 'green'
       }
@@ -243,12 +249,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
               <option value="3">H3</option>
               <option value="4">H4</option>
             </select>
-            <input
-              type="text"
-              value={block.text}
-              onChange={(e) => updateBlock(block.id, { text: e.target.value })}
-              className="study-management-richtext-input"
+            <StudyDetailRichTextEditor
+              value={block.content}
+              onChange={(value) => updateBlock(block.id, { content: value })}
               placeholder="제목 텍스트"
+              toolbar={['bold', 'italic', 'color']}
+              singleLine={true}
             />
           </div>
         );
@@ -265,12 +271,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
               <option value="center">가운데 정렬</option>
               <option value="right">오른쪽 정렬</option>
             </select>
-            <textarea
-              value={block.text}
-              onChange={(e) => updateBlock(block.id, { text: e.target.value })}
-              className="study-management-richtext-textarea"
+            <StudyDetailRichTextEditor
+              value={block.content}
+              onChange={(value) => updateBlock(block.id, { content: value })}
               placeholder="단락 내용"
-              rows={3}
+              toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+              singleLine={false}
             />
           </div>
         );
@@ -298,12 +304,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
                 <option value="red">빨강</option>
               </select>
             </div>
-            <textarea
-              value={block.text}
-              onChange={(e) => updateBlock(block.id, { text: e.target.value })}
-              className="study-management-richtext-textarea"
+            <StudyDetailRichTextEditor
+              value={block.content}
+              onChange={(value) => updateBlock(block.id, { content: value })}
               placeholder="강조할 내용"
-              rows={2}
+              toolbar={['bold', 'italic', 'highlight', 'color']}
+              singleLine={false}
             />
           </div>
         );
@@ -321,16 +327,16 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
             </select>
             {block.items.map((item, index) => (
               <div key={index} className="study-management-richtext-list-item">
-                <input
-                  type="text"
+                <StudyDetailRichTextEditor
                   value={item}
-                  onChange={(e) => {
+                  onChange={(value) => {
                     const newItems = [...block.items];
-                    newItems[index] = e.target.value;
+                    newItems[index] = value;
                     updateBlock(block.id, { items: newItems });
                   }}
-                  className="study-management-richtext-input"
                   placeholder={`항목 ${index + 1}`}
+                  toolbar={['bold', 'italic', 'highlight', 'color']}
+                  singleLine={true}
                 />
                 <button
                   type="button"
@@ -378,16 +384,16 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
                   placeholder="아이콘"
                   style={{ width: '80px' }}
                 />
-                <input
-                  type="text"
-                  value={item.text}
-                  onChange={(e) => {
+                <StudyDetailRichTextEditor
+                  value={item.content}
+                  onChange={(value) => {
                     const newItems = [...block.items];
-                    newItems[index] = { ...newItems[index], text: e.target.value };
+                    newItems[index] = { ...newItems[index], content: value };
                     updateBlock(block.id, { items: newItems });
                   }}
-                  className="study-management-richtext-input"
                   placeholder="정보 텍스트"
+                  toolbar={['bold', 'italic', 'highlight', 'color']}
+                  singleLine={true}
                 />
                 <button
                   type="button"
@@ -403,7 +409,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
             ))}
             <button
               type="button"
-              onClick={() => updateBlock(block.id, { items: [...block.items, { text: '' }] })}
+              onClick={() => updateBlock(block.id, { items: [...block.items, { content: '' }] })}
               className="study-management-richtext-add-list-item"
             >
               + 정보 추가
@@ -414,12 +420,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       case 'quote':
         return (
           <div className="study-management-richtext-block-form">
-            <textarea
-              value={block.text}
-              onChange={(e) => updateBlock(block.id, { text: e.target.value })}
-              className="study-management-richtext-textarea"
+            <StudyDetailRichTextEditor
+              value={block.content}
+              onChange={(value) => updateBlock(block.id, { content: value })}
               placeholder="인용문"
-              rows={2}
+              toolbar={['bold', 'italic', 'highlight', 'color']}
+              singleLine={false}
             />
             <input
               type="text"
@@ -490,12 +496,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
               <option value="blue">파랑</option>
               <option value="yellow">노랑</option>
             </select>
-            <input
-              type="text"
-              value={block.text}
-              onChange={(e) => updateBlock(block.id, { text: e.target.value })}
-              className="study-management-richtext-input"
+            <StudyDetailRichTextEditor
+              value={block.content}
+              onChange={(value) => updateBlock(block.id, { content: value })}
               placeholder="강조할 텍스트"
+              toolbar={['bold', 'italic']}
+              singleLine={true}
             />
           </div>
         );
@@ -513,16 +519,16 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
     switch (block.type) {
       case 'heading':
         const HeadingTag = `h${block.level}` as keyof JSX.IntrinsicElements;
-        return <HeadingTag>{block.text}</HeadingTag>;
+        return <HeadingTag dangerouslySetInnerHTML={{ __html: contentToHTML(block.content) }} />;
 
       case 'paragraph':
-        return <p style={{ textAlign: block.align }}>{block.text}</p>;
+        return <p style={{ textAlign: block.align }} dangerouslySetInnerHTML={{ __html: contentToHTML(block.content) }} />;
 
       case 'callout':
         return (
           <div className={`study-management-richtext-callout-preview callout-${block.style}`}>
             {block.icon && <span className="callout-icon">{block.icon}</span>}
-            <span>{block.text}</span>
+            <span dangerouslySetInnerHTML={{ __html: contentToHTML(block.content) }} />
           </div>
         );
 
@@ -531,7 +537,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
         return (
           <ListTag>
             {block.items.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li key={index} dangerouslySetInnerHTML={{ __html: contentToHTML(item) }} />
             ))}
           </ListTag>
         );
@@ -543,7 +549,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
             {block.items.map((item, index) => (
               <div key={index} className="info-item">
                 {item.icon && <span className="info-icon">{item.icon}</span>}
-                <span>{item.text}</span>
+                <span dangerouslySetInnerHTML={{ __html: contentToHTML(item.content) }} />
               </div>
             ))}
           </div>
@@ -552,7 +558,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       case 'quote':
         return (
           <blockquote>
-            <p>{block.text}</p>
+            <p dangerouslySetInnerHTML={{ __html: contentToHTML(block.content) }} />
             {block.author && <cite>— {block.author}</cite>}
           </blockquote>
         );
@@ -574,7 +580,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
 
       case 'highlight':
         return (
-          <span className={`highlight-${block.color}`}>{block.text}</span>
+          <span className={`highlight-${block.color}`} dangerouslySetInnerHTML={{ __html: contentToHTML(block.content) }} />
         );
 
       case 'divider':

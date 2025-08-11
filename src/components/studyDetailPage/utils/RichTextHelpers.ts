@@ -12,12 +12,46 @@ import {
   DividerBlock,
   ImageBlock,
   HighlightBlock,
-  RichTextSectionData
+  RichTextSectionData,
+  BlockContent
 } from '../types/RichTextTypes';
+import { RichTextData } from '../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../common/richtext/RichTextConverter';
 
 // Generate unique ID for blocks
 export const generateId = (): string => {
   return `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
+
+// Convert BlockContent to HTML string
+export const contentToHTML = (content: BlockContent): string => {
+  if (typeof content === 'string') {
+    return escapeHtml(content);
+  }
+  // If it's RichTextData, convert to HTML
+  return RichTextConverter.toHTML(content);
+};
+
+// Convert HTML string to BlockContent (tries to parse as RichTextData)
+export const htmlToContent = (html: string): BlockContent => {
+  // Try to parse as RichTextData for inline styling
+  try {
+    return RichTextConverter.fromHTML(html);
+  } catch {
+    // If fails, return as plain string
+    return html;
+  }
+};
+
+// Get plain text from BlockContent (for forms)
+export const contentToPlainText = (content: BlockContent): string => {
+  if (typeof content === 'string') {
+    return content;
+  }
+  // Extract plain text from RichTextData
+  return content.content
+    .map(block => block.content.map(inline => inline.text || '').join(''))
+    .join('');
 };
 
 // Create new block with default values
@@ -30,14 +64,14 @@ export const createBlock = (type: RichTextBlock['type']): RichTextBlock => {
         id,
         type: 'heading',
         level: 2,
-        text: '새 제목'
+        content: '새 제목'
       } as HeadingBlock;
 
     case 'paragraph':
       return {
         id,
         type: 'paragraph',
-        text: '새 단락을 입력하세요.',
+        content: '새 단락을 입력하세요.',
         align: 'left'
       } as ParagraphBlock;
 
@@ -45,7 +79,7 @@ export const createBlock = (type: RichTextBlock['type']): RichTextBlock => {
       return {
         id,
         type: 'callout',
-        text: '중요한 내용을 강조하세요.',
+        content: '중요한 내용을 강조하세요.',
         icon: '💡',
         style: 'green'
       } as CalloutBlock;
@@ -54,7 +88,7 @@ export const createBlock = (type: RichTextBlock['type']): RichTextBlock => {
       return {
         id,
         type: 'quote',
-        text: '인용문을 입력하세요.',
+        content: '인용문을 입력하세요.',
         author: ''
       } as QuoteBlock;
 
@@ -72,8 +106,8 @@ export const createBlock = (type: RichTextBlock['type']): RichTextBlock => {
         type: 'infoBox',
         header: '정보 박스',
         items: [
-          { icon: '📌', text: '첫 번째 정보' },
-          { icon: '🎯', text: '두 번째 정보' }
+          { icon: '📌', content: '첫 번째 정보' },
+          { icon: '🎯', content: '두 번째 정보' }
         ]
       } as InfoBoxBlock;
 
@@ -104,7 +138,7 @@ export const createBlock = (type: RichTextBlock['type']): RichTextBlock => {
       return {
         id,
         type: 'highlight',
-        text: '강조할 텍스트',
+        content: '강조할 텍스트',
         color: 'green'
       } as HighlightBlock;
 
@@ -138,37 +172,37 @@ export const blocksToHTML = (blocks: RichTextBlock[]): string => {
   return blocks.map(block => {
     switch (block.type) {
       case 'heading':
-        return `<h${block.level}>${escapeHtml(block.text)}</h${block.level}>`;
+        return `<h${block.level}>${contentToHTML(block.content)}</h${block.level}>`;
 
       case 'paragraph':
         const alignStyle = block.align && block.align !== 'left' 
           ? ` style="text-align: ${block.align};"` 
           : '';
-        return `<p${alignStyle}>${escapeHtml(block.text)}</p>`;
+        return `<p${alignStyle}>${contentToHTML(block.content)}</p>`;
 
       case 'callout':
         // TecoTeco 스타일 callout - 명시적 클래스 사용
         return `<div class="tecoteco-callout tecoteco-callout-${block.style || 'green'}">
           ${block.icon ? `<span class="callout-icon">${block.icon}</span>` : ''}
-          <p>${escapeHtml(block.text)}</p>
+          <p>${contentToHTML(block.content)}</p>
         </div>`;
 
       case 'quote':
         return `<blockquote>
-          <p>${escapeHtml(block.text)}</p>
+          <p>${contentToHTML(block.content)}</p>
           ${block.author ? `<cite>${escapeHtml(block.author)}</cite>` : ''}
         </blockquote>`;
 
       case 'list':
         const tag = block.style === 'number' ? 'ol' : 'ul';
-        const items = block.items.map(item => `<li>${escapeHtml(item)}</li>`).join('\n');
+        const items = block.items.map(item => `<li>${contentToHTML(item)}</li>`).join('\n');
         return `<${tag}>\n${items}\n</${tag}>`;
 
       case 'infoBox':
         const infoItems = block.items.map(item => `
           <div class="study-management-richtext-info-item">
             ${item.icon ? `<span class="study-management-richtext-info-icon">${item.icon}</span>` : ''}
-            <span class="study-management-richtext-info-text">${escapeHtml(item.text)}</span>
+            <span class="study-management-richtext-info-text">${contentToHTML(item.content)}</span>
           </div>
         `).join('\n');
         
@@ -196,7 +230,7 @@ export const blocksToHTML = (blocks: RichTextBlock[]): string => {
 
       case 'highlight':
         const colorClass = `highlight-${block.color}`;
-        return `<span class="study-management-richtext-${colorClass}">${escapeHtml(block.text)}</span>`;
+        return `<span class="study-management-richtext-${colorClass}">${contentToHTML(block.content)}</span>`;
 
       default:
         return '';
@@ -221,7 +255,7 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
         id: generateId(),
         type: 'heading',
         level,
-        text: element.textContent || ''
+        content: htmlToContent(element.innerHTML)
       });
     }
     
@@ -243,7 +277,7 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
       blocks.push({
         id: generateId(),
         type: 'paragraph',
-        text: element.textContent || '',
+        content: htmlToContent(element.innerHTML),
         align
       });
     }
@@ -251,7 +285,8 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
     // Callout div
     else if (tagName === 'div' && element.classList.contains('tecoteco-callout')) {
       const icon = element.querySelector('.callout-icon')?.textContent || '';
-      const text = element.querySelector('p')?.textContent || element.textContent || '';
+      const pElement = element.querySelector('p');
+      const content = pElement ? htmlToContent(pElement.innerHTML) : htmlToContent(element.innerHTML);
       let style: 'green' | 'blue' | 'yellow' | 'red' = 'green';
       
       if (element.classList.contains('tecoteco-callout-blue')) style = 'blue';
@@ -261,7 +296,7 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
       blocks.push({
         id: generateId(),
         type: 'callout',
-        text,
+        content,
         icon,
         style
       });
@@ -270,10 +305,13 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
     // Info Box
     else if (tagName === 'div' && element.classList.contains('study-management-richtext-info-box')) {
       const header = element.querySelector('.study-management-richtext-info-header')?.textContent || '';
-      const items = Array.from(element.querySelectorAll('.study-management-richtext-info-item')).map(item => ({
-        icon: item.querySelector('.study-management-richtext-info-icon')?.textContent || '',
-        text: item.querySelector('.study-management-richtext-info-text')?.textContent || ''
-      }));
+      const items = Array.from(element.querySelectorAll('.study-management-richtext-info-item')).map(item => {
+        const textElement = item.querySelector('.study-management-richtext-info-text');
+        return {
+          icon: item.querySelector('.study-management-richtext-info-icon')?.textContent || '',
+          content: textElement ? htmlToContent(textElement.innerHTML) : ''
+        };
+      });
       
       blocks.push({
         id: generateId(),
@@ -285,20 +323,21 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
     
     // Quote
     else if (tagName === 'blockquote') {
-      const text = element.querySelector('p')?.textContent || element.textContent || '';
+      const pElement = element.querySelector('p');
+      const content = pElement ? htmlToContent(pElement.innerHTML) : htmlToContent(element.innerHTML);
       const author = element.querySelector('cite')?.textContent || '';
       
       blocks.push({
         id: generateId(),
         type: 'quote',
-        text,
+        content,
         author
       });
     }
     
     // List
     else if (tagName === 'ul' || tagName === 'ol') {
-      const items = Array.from(element.querySelectorAll('li')).map(li => li.textContent || '');
+      const items = Array.from(element.querySelectorAll('li')).map(li => htmlToContent(li.innerHTML));
       
       blocks.push({
         id: generateId(),

@@ -1,9 +1,13 @@
 // RichTextSection Block Types Definition
+import { RichTextData } from '../../common/richtext/RichTextTypes';
 
 export type BlockAlign = 'left' | 'center' | 'right';
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export type ListStyle = 'bullet' | 'number';
 export type CalloutStyle = 'green' | 'blue' | 'yellow' | 'red';
+
+// Content can be either plain string or RichTextData for inline styling
+export type BlockContent = string | RichTextData;
 
 // Base Block Interface
 interface BaseBlock {
@@ -15,20 +19,20 @@ interface BaseBlock {
 export interface HeadingBlock extends BaseBlock {
   type: 'heading';
   level: HeadingLevel;
-  text: string;
+  content: BlockContent;  // Changed from text to content
 }
 
 // Paragraph Block
 export interface ParagraphBlock extends BaseBlock {
   type: 'paragraph';
-  text: string;
+  content: BlockContent;  // Changed from text to content
   align?: BlockAlign;
 }
 
 // Callout Block (명시적 CTA/강조 박스)
 export interface CalloutBlock extends BaseBlock {
   type: 'callout';
-  text: string;
+  content: BlockContent;  // Changed from text to content
   icon?: string;
   style?: CalloutStyle;
 }
@@ -36,7 +40,7 @@ export interface CalloutBlock extends BaseBlock {
 // Quote Block
 export interface QuoteBlock extends BaseBlock {
   type: 'quote';
-  text: string;
+  content: BlockContent;  // Changed from text to content
   author?: string;
 }
 
@@ -44,7 +48,7 @@ export interface QuoteBlock extends BaseBlock {
 export interface ListBlock extends BaseBlock {
   type: 'list';
   style: ListStyle;
-  items: string[];
+  items: BlockContent[];  // Changed to support rich text in list items
 }
 
 // Info Box Block (TecoTeco 스타일 정보 박스)
@@ -53,7 +57,7 @@ export interface InfoBoxBlock extends BaseBlock {
   header?: string;
   items: Array<{
     icon?: string;
-    text: string;
+    content: BlockContent;  // Changed from text to content
   }>;
 }
 
@@ -80,7 +84,7 @@ export interface ImageBlock extends BaseBlock {
 // Highlighted Text Block (색상 강조)
 export interface HighlightBlock extends BaseBlock {
   type: 'highlight';
-  text: string;
+  content: BlockContent;  // Changed from text to content
   color: 'green' | 'blue' | 'yellow';
 }
 
