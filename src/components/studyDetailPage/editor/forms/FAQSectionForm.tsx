@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './SectionForms.css';
 import './FAQSectionForm.css';
 
 interface FAQItem {
@@ -167,13 +166,13 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="section-form faq-form study-management-faq-section-editor">
-      <div className="form-group">
+    <form onSubmit={handleSubmit} className="study-management-faq-form">
+      <div className="study-management-faq-form-group">
         <label>테마</label>
         <select
           value={theme}
           onChange={(e) => setTheme(e.target.value as any)}
-          className="form-input"
+          className="study-management-faq-input"
         >
           <option value="default">기본</option>
           <option value="tecoteco">테코테코</option>
@@ -181,29 +180,29 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
         </select>
       </div>
 
-      <div className="form-group">
+      <div className="study-management-faq-form-group">
         <label>태그 헤더 (선택사항)</label>
         <input
           type="text"
           value={tagHeader}
           onChange={(e) => setTagHeader(e.target.value)}
           placeholder="예: 궁금증 해결"
-          className="form-input"
+          className="study-management-faq-input"
         />
       </div>
       
-      <div className="form-group">
+      <div className="study-management-faq-form-group">
         <label>섹션 제목</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="예: 자주 묻는 질문"
-          className="form-input"
+          className="study-management-faq-input"
         />
       </div>
       
-      <div className="form-group">
+      <div className="study-management-faq-form-group">
         <label>
           <input
             type="checkbox"
@@ -214,21 +213,21 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
         </label>
       </div>
 
-      <div className="form-group">
-        <div className="group-header">
+      <div className="study-management-faq-form-group">
+        <div className="study-management-faq-group-header">
           <label>FAQ 목록</label>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button 
               type="button" 
               onClick={loadExampleData}
-              className="example-btn"
+              className="study-management-faq-example-btn"
             >
               예시 데이터
             </button>
             <button 
               type="button" 
               onClick={loadTecotecoData}
-              className="example-btn"
+              className="study-management-faq-example-btn"
               style={{ background: '#C3E88D', color: '#000' }}
             >
               TecoTeco FAQ
@@ -236,53 +235,53 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
           </div>
         </div>
         
-        <div className="study-management-faq-section-editor__list">
+        <div className="study-management-faq-list">
           {faqs.map((faq, index) => (
-            <div key={index} className="study-management-faq-section-editor__item">
-              <div className="study-management-faq-section-editor__item-header">
+            <div key={index} className="study-management-faq-item">
+              <div className="study-management-faq-item-header">
                 <h4>FAQ {index + 1}</h4>
                 {faqs.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveFAQ(index)}
-                    className="study-management-faq-section-editor__remove-button"
+                    className="study-management-faq-remove-button"
                   >
                     삭제
                   </button>
                 )}
               </div>
               
-              <div className="study-management-faq-section-editor__item-fields">
-                <div className="study-management-faq-section-editor__field">
+              <div className="study-management-faq-item-fields">
+                <div className="study-management-faq-field">
                   <label>카테고리</label>
                   <input
                     type="text"
                     value={faq.category}
                     onChange={(e) => handleFAQChange(index, 'category', e.target.value)}
                     placeholder="예: 참가 자격"
-                    className="form-input"
+                    className="study-management-faq-input"
                   />
                 </div>
                 
-                <div className="study-management-faq-section-editor__field">
+                <div className="study-management-faq-field">
                   <label>질문 *</label>
                   <input
                     type="text"
                     value={faq.question}
                     onChange={(e) => handleFAQChange(index, 'question', e.target.value)}
                     placeholder="예: 프로그래밍 초보자도 참여할 수 있나요?"
-                    className="form-input"
+                    className="study-management-faq-input"
                     required
                   />
                 </div>
                 
-                <div className="study-management-faq-section-editor__field">
+                <div className="study-management-faq-field">
                   <label>답변 *</label>
                   <textarea
                     value={faq.answer}
                     onChange={(e) => handleFAQChange(index, 'answer', e.target.value)}
                     placeholder="예: 네, 가능합니다! 기본적인 프로그래밍 문법만..."
-                    className="form-textarea"
+                    className="study-management-faq-textarea"
                     rows={3}
                     required
                   />
@@ -295,7 +294,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
         <button
           type="button"
           onClick={handleAddFAQ}
-          className="study-management-faq-section-editor__add-button"
+          className="study-management-faq-add-button"
         >
           + FAQ 추가
         </button>
@@ -303,7 +302,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       
       {theme === 'tecoteco' && (
         <>
-          <div className="form-group">
+          <div className="study-management-faq-form-group">
             <label>
               <input
                 type="checkbox"
@@ -316,47 +315,47 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
           
           {showJoinCTA && (
             <>
-              <div className="form-group">
+              <div className="study-management-faq-form-group">
                 <label>Join CTA 제목</label>
                 <input
                   type="text"
                   value={joinTitle}
                   onChange={(e) => setJoinTitle(e.target.value)}
                   placeholder="예: TecoTeco, 당신의 합류를 기다려요!"
-                  className="form-input"
+                  className="study-management-faq-input"
                 />
               </div>
               
-              <div className="form-group">
+              <div className="study-management-faq-form-group">
                 <label>Join CTA 설명 (선택사항)</label>
                 <textarea
                   value={joinDescription}
                   onChange={(e) => setJoinDescription(e.target.value)}
                   placeholder="추가 설명 텍스트"
-                  className="form-textarea"
+                  className="study-management-faq-textarea"
                   rows={2}
                 />
               </div>
               
-              <div className="form-group">
+              <div className="study-management-faq-form-group">
                 <label>버튼 텍스트</label>
                 <input
                   type="text"
                   value={joinButtonText}
                   onChange={(e) => setJoinButtonText(e.target.value)}
                   placeholder="예: @renechoi에게 커피챗 요청하기 ☕"
-                  className="form-input"
+                  className="study-management-faq-input"
                 />
               </div>
               
-              <div className="form-group">
+              <div className="study-management-faq-form-group">
                 <label>버튼 클릭 액션 메시지</label>
                 <input
                   type="text"
                   value={joinButtonAction}
                   onChange={(e) => setJoinButtonAction(e.target.value)}
                   placeholder="예: @renechoi에게 커피챗 요청!"
-                  className="form-input"
+                  className="study-management-faq-input"
                 />
               </div>
             </>
@@ -364,11 +363,11 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
         </>
       )}
 
-      <div className="form-actions">
-        <button type="button" onClick={onCancel} className="cancel-btn">
+      <div className="study-management-faq-form-actions">
+        <button type="button" onClick={onCancel} className="study-management-faq-cancel-btn">
           취소
         </button>
-        <button type="submit" className="save-btn">
+        <button type="submit" className="study-management-faq-save-btn">
           저장
         </button>
       </div>

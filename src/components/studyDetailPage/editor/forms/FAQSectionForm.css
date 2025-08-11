@@ -1,71 +1,257 @@
-.study-management-faq-section-editor {
-  /* Ensure editor styles are scoped and not affected by renderer CSS */
-  position: relative;
+/* FAQ Section Editor - Fully Scoped Styles */
+/* All classes use study-management-faq- prefix to prevent conflicts */
+
+/* Main Form Container */
+.study-management-faq-form {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
 }
 
-.study-management-faq-section-editor__list {
+/* Form Groups */
+.study-management-faq-form-group {
+  margin-bottom: 24px;
+}
+
+.study-management-faq-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Checkbox labels */
+.study-management-faq-form-group label input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* Form Inputs */
+.study-management-faq-input,
+.study-management-faq-select,
+.study-management-faq-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.study-management-faq-input:focus,
+.study-management-faq-select:focus,
+.study-management-faq-textarea:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.study-management-faq-textarea {
+  resize: vertical;
+  line-height: 1.5;
+  min-height: 60px;
+}
+
+.study-management-faq-select {
+  cursor: pointer;
+}
+
+.study-management-faq-select option {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+/* Group Header */
+.study-management-faq-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Example Buttons */
+.study-management-faq-example-btn {
+  padding: 8px 16px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-faq-example-btn:hover {
+  background: rgba(195, 232, 141, 0.2);
+  transform: translateY(-1px);
+}
+
+/* FAQ List */
+.study-management-faq-list {
   display: flex;
   flex-direction: column;
+  gap: 0; /* margin-bottom handles spacing */
 }
 
-.study-management-faq-section-editor__item {
+/* FAQ Items */
+.study-management-faq-item {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
+  transition: all 0.3s ease;
 }
 
-.study-management-faq-section-editor__item-header {
+.study-management-faq-item:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Item Header */
+.study-management-faq-item-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.study-management-faq-section-editor__item-header h4 {
+.study-management-faq-item-header h4 {
   margin: 0;
   font-size: 16px;
   color: #89DDFF;
 }
 
-.study-management-faq-section-editor__remove-button {
-  background: rgba(255, 77, 77, 0.85);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
-.study-management-faq-section-editor__remove-button:hover {
-  background: #ff4d4d;
-}
-
-.study-management-faq-section-editor__item-fields {
-  /* Use vertical spacing like SectionForms */
-  display: block;
-}
-
-.study-management-faq-section-editor__field label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.study-management-faq-section-editor__add-button {
-  margin-top: 16px;
-  padding: 10px 20px;
-  width: 100%;
-  border-radius: 6px;
-  background: rgba(195, 232, 141, 0.1);
-  color: #c3e88d;
-  border: 2px dashed rgba(195, 232, 141, 0.3);
+/* Remove Button */
+.study-management-faq-remove-button {
+  padding: 6px 12px;
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #ff4336;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.study-management-faq-section-editor__add-button:hover {
+.study-management-faq-remove-button:hover {
+  background: rgba(255, 67, 54, 0.2);
+}
+
+/* Item Fields Container */
+.study-management-faq-item-fields {
+  display: block;
+}
+
+/* Field */
+.study-management-faq-field {
+  margin-bottom: 12px;
+}
+
+.study-management-faq-field:last-child {
+  margin-bottom: 0;
+}
+
+.study-management-faq-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* Add Button */
+.study-management-faq-add-button {
+  margin-top: 16px;
+  padding: 10px 20px;
+  width: 100%;
+  background: rgba(195, 232, 141, 0.1);
+  border: 2px dashed rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-faq-add-button:hover {
   background: rgba(195, 232, 141, 0.15);
   border-color: #C3E88D;
+  transform: translateY(-1px);
+}
+
+/* Form Actions */
+.study-management-faq-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-management-faq-cancel-btn,
+.study-management-faq-save-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.study-management-faq-cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.study-management-faq-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.study-management-faq-save-btn {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.study-management-faq-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+/* Special styles for inline elements */
+.study-management-faq-form-group div[style] {
+  /* For the button container with display: flex; gap: 10px */
+  display: flex;
+  gap: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .study-management-faq-form {
+    padding: 16px;
+  }
+  
+  .study-management-faq-group-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .study-management-faq-form-actions {
+    flex-direction: column;
+  }
+  
+  .study-management-faq-cancel-btn,
+  .study-management-faq-save-btn {
+    width: 100%;
+  }
 }

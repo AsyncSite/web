@@ -1,0 +1,431 @@
+/* Members Section Editor - Fully Scoped Styles */
+/* All classes use study-management-members- prefix to prevent conflicts */
+
+/* Main Form Container */
+.study-management-members-form {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+/* Form Groups */
+.study-management-members-form-group {
+  margin-bottom: 24px;
+}
+
+.study-management-members-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Checkbox labels */
+.study-management-members-form-group label input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* Form Inputs */
+.study-management-members-input,
+.study-management-members-select,
+.study-management-members-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.study-management-members-input:focus,
+.study-management-members-select:focus,
+.study-management-members-textarea:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.study-management-members-textarea {
+  resize: vertical;
+  line-height: 1.5;
+  min-height: 60px;
+}
+
+.study-management-members-select {
+  cursor: pointer;
+}
+
+.study-management-members-select option {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+/* Group Header */
+.study-management-members-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* Example Button */
+.study-management-members-example-btn {
+  padding: 8px 16px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-members-example-btn:hover {
+  background: rgba(195, 232, 141, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Template Buttons */
+.study-management-members-template-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.study-management-members-template-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-members-template-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #C3E88D;
+  color: #C3E88D;
+}
+
+.study-management-members-template-btn.active {
+  background: rgba(195, 232, 141, 0.2);
+  border-color: #C3E88D;
+  color: #C3E88D;
+}
+
+/* Members List */
+.study-management-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* margin-bottom handles spacing */
+}
+
+/* Member Item */
+.study-management-members-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.study-management-members-item:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Item Header */
+.study-management-members-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.study-management-members-item-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #89DDFF;
+}
+
+/* Remove Button */
+.study-management-members-remove-btn {
+  padding: 6px 12px;
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #ff4336;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-members-remove-btn:hover {
+  background: rgba(255, 67, 54, 0.2);
+}
+
+/* Member Fields */
+.study-management-members-fields {
+  display: block;
+}
+
+/* Field */
+.study-management-members-field {
+  margin-bottom: 12px;
+}
+
+.study-management-members-field:last-child {
+  margin-bottom: 0;
+}
+
+.study-management-members-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* Field Row */
+.study-management-members-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.study-management-members-field-row .study-management-members-field {
+  margin-bottom: 0;
+}
+
+/* Custom Field Row */
+.study-management-members-custom-field-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+/* Icon Input */
+.study-management-members-icon-input {
+  width: 60px !important;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.study-management-members-icon-input:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Custom Field Inputs */
+.study-management-members-custom-label,
+.study-management-members-custom-value {
+  flex: 1;
+}
+
+/* Custom Remove Button */
+.study-management-members-custom-remove-btn {
+  padding: 8px 12px;
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #ff4336;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.study-management-members-custom-remove-btn:hover {
+  background: rgba(255, 67, 54, 0.2);
+}
+
+/* Custom Add Button */
+.study-management-members-custom-add-btn {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-members-custom-add-btn:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+}
+
+/* Badge Selector */
+.study-management-members-badge-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.study-management-members-badge-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-members-badge-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.study-management-members-badge-option input[type="checkbox"] {
+  margin: 0;
+}
+
+.study-management-members-badge-option span {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Add Button */
+.study-management-members-add-btn {
+  margin-top: 16px;
+  padding: 10px 20px;
+  width: 100%;
+  background: rgba(195, 232, 141, 0.1);
+  border: 2px dashed rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-members-add-btn:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+  transform: translateY(-1px);
+}
+
+/* Stats Fields */
+.study-management-members-stats-fields {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.study-management-members-stats-fields h4 {
+  margin: 0 0 16px 0;
+  color: #89DDFF;
+  font-size: 1rem;
+}
+
+/* Help Text */
+.study-management-members-help-text {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Form Actions */
+.study-management-members-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-management-members-cancel-btn,
+.study-management-members-save-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.study-management-members-cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.study-management-members-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.study-management-members-save-btn {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.study-management-members-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .study-management-members-form {
+    padding: 16px;
+  }
+  
+  .study-management-members-field-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .study-management-members-template-buttons {
+    flex-direction: column;
+  }
+  
+  .study-management-members-template-btn {
+    width: 100%;
+  }
+  
+  .study-management-members-form-actions {
+    flex-direction: column;
+  }
+  
+  .study-management-members-cancel-btn,
+  .study-management-members-save-btn {
+    width: 100%;
+  }
+  
+  .study-management-members-badge-selector {
+    flex-direction: column;
+  }
+  
+  .study-management-members-badge-option {
+    width: 100%;
+  }
+}

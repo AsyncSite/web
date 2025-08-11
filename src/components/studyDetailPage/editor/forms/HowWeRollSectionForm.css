@@ -1,25 +1,56 @@
-.how-we-roll-section-form {
-  /* legacy existing styles kept, new scoped classes below */
+/* HOW WE ROLL Section Editor - Fully Scoped Styles */
+/* All classes use study-management-hwr- prefix to prevent conflicts */
+
+/* Main Form Container */
+.study-management-hwr-form {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
 }
 
-/* Scoped editor-only styles to avoid renderer CSS bleed */
-.study-management-how-we-roll-section-editor {}
-.study-management-how-we-roll-section-editor .form-group {
+/* Form Header */
+.study-management-hwr-form-header {
   margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.study-management-how-we-roll-section-editor .form-section {
-  margin-bottom: 24px;
-}
-
-.study-management-how-we-roll-section-editor .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.study-management-hwr-form-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #C3E88D;
   margin-bottom: 16px;
 }
 
-.study-management-how-we-roll-section-editor label {
+/* Template Buttons */
+.study-management-hwr-template-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.study-management-hwr-template-btn {
+  padding: 8px 16px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-hwr-template-btn:hover {
+  background: rgba(195, 232, 141, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Form Groups */
+.study-management-hwr-form-group {
+  margin-bottom: 24px;
+}
+
+.study-management-hwr-form-group label {
   display: block;
   margin-bottom: 8px;
   font-size: 14px;
@@ -27,151 +58,331 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.study-management-how-we-roll-section-editor small {
+/* Form Inputs */
+.study-management-hwr-input,
+.study-management-hwr-select,
+.study-management-hwr-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.study-management-hwr-input:focus,
+.study-management-hwr-select:focus,
+.study-management-hwr-textarea:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.study-management-hwr-textarea {
+  resize: vertical;
+  line-height: 1.5;
+  min-height: 60px;
+}
+
+.study-management-hwr-select {
+  cursor: pointer;
+}
+
+.study-management-hwr-select option {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+/* Help Text */
+.study-management-hwr-help-text {
   display: block;
   margin-top: 4px;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.6);
 }
 
-
-.study-management-how-we-roll-section-editor__overview-list,
-.study-management-how-we-roll-section-editor__schedule-list {
-  display: flex;
-  flex-direction: column;
+/* Form Sections */
+.study-management-hwr-form-section {
+  margin-bottom: 32px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.study-management-how-we-roll-section-editor__overview-item,
-.study-management-how-we-roll-section-editor__schedule-item {
+.study-management-hwr-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.study-management-hwr-section-header h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #89DDFF;
+  margin: 0;
+}
+
+/* Overview & Schedule Lists */
+.study-management-hwr-overview-list,
+.study-management-hwr-schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* margin-bottom handles spacing */
+}
+
+/* Overview & Schedule Items */
+.study-management-hwr-overview-item,
+.study-management-hwr-schedule-item {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
+  transition: all 0.3s ease;
 }
 
-.study-management-how-we-roll-section-editor__overview-item-header,
-.study-management-how-we-roll-section-editor__schedule-item-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+.study-management-hwr-overview-item:hover,
+.study-management-hwr-schedule-item:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.study-management-how-we-roll-section-editor__overview-item-header h4,
-.study-management-how-we-roll-section-editor__schedule-item-header h4 {
-  margin: 0;
-  font-size: 16px;
-  color: #89DDFF;
-}
-
-.study-management-how-we-roll-section-editor__remove-button {
-  background: rgba(255, 77, 77, 0.85);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
-.study-management-how-we-roll-section-editor__remove-button:hover {
-  background: #ff4d4d;
-}
-
-.study-management-how-we-roll-section-editor__item-edit-grid {
+/* Edit Grid */
+.study-management-hwr-item-edit-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 12px;
 }
 
-.study-management-how-we-roll-section-editor__icon-input {
-  width: 80px;
+/* Icon Input */
+.study-management-hwr-icon-input {
+  width: 80px !important;
   text-align: center;
+  font-size: 1.2rem;
 }
 
-.study-management-how-we-roll-section-editor__add-button {
-  margin-top: 16px;
+/* Add Button */
+.study-management-hwr-add-button {
   padding: 10px 20px;
-  width: 100%;
-  border-radius: 6px;
   background: rgba(195, 232, 141, 0.1);
-  color: #c3e88d;
   border: 2px dashed rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.study-management-hwr-add-button:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+  transform: translateY(-1px);
+}
+
+/* Item Actions */
+.study-management-hwr-item-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.study-management-hwr-done-btn {
+  padding: 6px 16px;
+  background: rgba(137, 221, 255, 0.1);
+  border: 1px solid rgba(137, 221, 255, 0.3);
+  border-radius: 4px;
+  color: #89DDFF;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.study-management-how-we-roll-section-editor__add-button:hover {
-  background: rgba(195, 232, 141, 0.15);
-  border-color: #C3E88D;
+.study-management-hwr-done-btn:hover {
+  background: rgba(137, 221, 255, 0.2);
 }
 
-/* Display rows (read mode) scoped under editor */
-.study-management-how-we-roll-section-editor .overview-display {
+.study-management-hwr-remove-button {
+  padding: 6px 12px;
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #ff4336;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-management-hwr-remove-button:hover {
+  background: rgba(255, 67, 54, 0.2);
+}
+
+/* Overview Display (Read Mode) */
+.study-management-hwr-overview-display {
   display: flex;
   gap: 12px;
-  align-items: center;
-  padding: 8px 4px;
-}
-.study-management-how-we-roll-section-editor .overview-display .icon {
-  font-size: 1.1rem;
-  flex-shrink: 0;
-}
-.study-management-how-we-roll-section-editor .overview-display .content strong {
-  color: #C3E88D;
-  display: block;
-}
-.study-management-how-we-roll-section-editor .overview-display .content .highlight {
-  color: #82AAFF;
-  margin-left: 8px;
-}
-.study-management-how-we-roll-section-editor .overview-display .content p {
-  margin: 6px 0 0 0;
-  color: rgba(255, 255, 255, 0.8);
+  align-items: flex-start;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
-.study-management-how-we-roll-section-editor .schedule-display {
+.study-management-hwr-overview-display:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.study-management-hwr-overview-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
+}
+
+.study-management-hwr-overview-content {
+  flex: 1;
+}
+
+.study-management-hwr-overview-content strong {
   display: block;
-}
-.study-management-how-we-roll-section-editor .schedule-display strong {
   color: #C3E88D;
+  font-size: 15px;
+  margin-bottom: 4px;
 }
-.study-management-how-we-roll-section-editor .schedule-display .activity {
+
+.study-management-hwr-overview-highlight {
+  color: #82AAFF;
+  font-size: 14px;
   margin-left: 8px;
+  font-weight: 500;
+}
+
+.study-management-hwr-overview-content p {
+  margin: 8px 0 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Schedule Display (Read Mode) */
+.study-management-hwr-schedule-display {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.study-management-hwr-schedule-display:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.study-management-hwr-schedule-time {
+  display: inline-block;
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 12px;
+}
+
+.study-management-hwr-schedule-activity {
+  display: inline-block;
   padding: 2px 8px;
   border-radius: 4px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
 }
-.study-management-how-we-roll-section-editor .schedule-display .activity.primary {
+
+.study-management-hwr-schedule-activity.primary {
   background: rgba(195, 232, 141, 0.12);
   color: #C3E88D;
 }
-.study-management-how-we-roll-section-editor .schedule-display .activity.secondary {
+
+.study-management-hwr-schedule-activity.secondary {
   background: rgba(130, 170, 255, 0.12);
   color: #82AAFF;
 }
-.study-management-how-we-roll-section-editor .schedule-display p {
-  margin: 6px 0 0 0;
-  color: rgba(255, 255, 255, 0.8);
+
+.study-management-hwr-schedule-detail {
+  margin: 8px 0 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-/* Item actions buttons (완료/삭제) */
-.study-management-how-we-roll-section-editor .item-actions {
+/* Form Actions */
+.study-management-hwr-form-actions {
   display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  margin-top: 8px;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
-.study-management-how-we-roll-section-editor .item-actions button {
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.9);
+
+.study-management-hwr-cancel-btn,
+.study-management-hwr-save-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
 }
-.study-management-how-we-roll-section-editor .item-actions .study-management-how-we-roll-section-editor__remove-button {
-  background: rgba(255, 67, 54, 0.1);
-  border: 1px solid rgba(255, 67, 54, 0.3);
-  color: #ff4336;
+
+.study-management-hwr-cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.study-management-hwr-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.study-management-hwr-save-btn {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.study-management-hwr-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .study-management-hwr-form {
+    padding: 16px;
+  }
+  
+  .study-management-hwr-template-buttons {
+    flex-direction: column;
+  }
+  
+  .study-management-hwr-template-btn {
+    width: 100%;
+  }
+  
+  .study-management-hwr-form-actions {
+    flex-direction: column;
+  }
+  
+  .study-management-hwr-cancel-btn,
+  .study-management-hwr-save-btn {
+    width: 100%;
+  }
 }

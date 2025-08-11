@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './SectionForms.css';
+import './MembersSectionForm.css';
 import { 
   MemberProfile, 
   CustomField, 
@@ -23,7 +23,8 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
 }) => {
   const [title, setTitle] = useState(initialData.title || '함께하는 사람들');
   const [subtitle, setSubtitle] = useState(initialData.subtitle || '');
-  const [theme, setTheme] = useState<MemberCardTheme>(initialData.theme || 'classic');
+  // tecoteco 테마로 고정
+  const theme: MemberCardTheme = 'tecoteco';
   const [layout, setLayout] = useState<MemberLayoutType>(initialData.layout || 'grid');
   const [studyType, setStudyType] = useState<keyof typeof STUDY_TEMPLATES | 'custom'>(
     initialData.studyType || 'custom'
@@ -143,7 +144,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   const loadTecoTecoExample = () => {
     setTitle('함께하는 사람들');
     setSubtitle('더 멋진 여정이 펼쳐질 거예요, 함께라면.');
-    setTheme('modern');
+    // tecoteco 테마 고정됨
     setLayout('carousel');
     setStudyType('algorithm');
     setShowStats(true);
@@ -256,7 +257,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
     onSave({
       title,
       subtitle,
-      theme,
+      theme: 'tecoteco',
       layout,
       studyType: studyType === 'custom' ? undefined : studyType as keyof typeof STUDY_TEMPLATES,
       members: validMembers,
@@ -267,112 +268,96 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="section-form members-form">
+    <form onSubmit={handleSubmit} className="study-management-members-form">
       {/* 섹션 헤더 */}
-      <div className="form-group">
+      <div className="study-management-members-form-group">
         <label>섹션 제목</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="예: 함께하는 사람들"
-          className="form-input"
+          className="study-management-members-input"
         />
       </div>
 
-      <div className="form-group">
+      <div className="study-management-members-form-group">
         <label>섹션 부제목 (선택)</label>
         <input
           type="text"
           value={subtitle}
           onChange={(e) => setSubtitle(e.target.value)}
           placeholder="예: 더 멋진 여정이 펼쳐질 거예요, 함께라면."
-          className="form-input"
+          className="study-management-members-input"
         />
       </div>
 
-      {/* 스타일 설정 */}
-      <div className="form-row">
-        <div className="form-group">
-          <label>테마</label>
-          <select
-            value={theme}
-            onChange={(e) => setTheme(e.target.value as MemberCardTheme)}
-            className="form-select"
-          >
-            <option value="classic">Classic (깔끔한 카드)</option>
-            <option value="modern">Modern (TecoTeco 스타일)</option>
-            <option value="minimal">Minimal (심플)</option>
-          <option value="tecoteco">TecoTeco (하드코딩 동일 UI)</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>레이아웃</label>
-          <select
-            value={layout}
-            onChange={(e) => setLayout(e.target.value as MemberLayoutType)}
-            className="form-select"
-          >
-            <option value="grid">그리드</option>
-            <option value="list">리스트</option>
-            <option value="carousel">캐러셀 (자동 스크롤)</option>
-          </select>
-        </div>
+      {/* 레이아웃 설정 (테마는 tecoteco로 고정) */}
+      <div className="study-management-members-form-group">
+        <label>레이아웃</label>
+        <select
+          value={layout}
+          onChange={(e) => setLayout(e.target.value as MemberLayoutType)}
+          className="study-management-members-select"
+        >
+          <option value="grid">그리드</option>
+          <option value="list">리스트</option>
+          <option value="carousel">캐러셀 (자동 스크롤)</option>
+        </select>
       </div>
 
       {/* 스터디 템플릿 */}
-      <div className="form-group">
-        <div className="group-header">
+      <div className="study-management-members-form-group">
+        <div className="study-management-members-group-header">
           <label>스터디 템플릿</label>
           <button
             type="button"
             onClick={loadTecoTecoExample}
-            className="example-btn"
+            className="study-management-members-example-btn"
           >
             TecoTeco 예시 불러오기
           </button>
         </div>
-        <div className="template-buttons">
+        <div className="study-management-members-template-buttons">
           <button
             type="button"
             onClick={() => applyStudyTemplate('algorithm')}
-            className={`template-btn ${studyType === 'algorithm' ? 'active' : ''}`}
+            className={`study-management-members-template-btn ${studyType === 'algorithm' ? 'active' : ''}`}
           >
             알고리즘
           </button>
           <button
             type="button"
             onClick={() => applyStudyTemplate('development')}
-            className={`template-btn ${studyType === 'development' ? 'active' : ''}`}
+            className={`study-management-members-template-btn ${studyType === 'development' ? 'active' : ''}`}
           >
             개발
           </button>
           <button
             type="button"
             onClick={() => applyStudyTemplate('design')}
-            className={`template-btn ${studyType === 'design' ? 'active' : ''}`}
+            className={`study-management-members-template-btn ${studyType === 'design' ? 'active' : ''}`}
           >
             디자인
           </button>
           <button
             type="button"
             onClick={() => applyStudyTemplate('language')}
-            className={`template-btn ${studyType === 'language' ? 'active' : ''}`}
+            className={`study-management-members-template-btn ${studyType === 'language' ? 'active' : ''}`}
           >
             언어
           </button>
           <button
             type="button"
             onClick={() => applyStudyTemplate('reading')}
-            className={`template-btn ${studyType === 'reading' ? 'active' : ''}`}
+            className={`study-management-members-template-btn ${studyType === 'reading' ? 'active' : ''}`}
           >
             독서
           </button>
           <button
             type="button"
             onClick={() => setStudyType('custom')}
-            className={`template-btn ${studyType === 'custom' ? 'active' : ''}`}
+            className={`study-management-members-template-btn ${studyType === 'custom' ? 'active' : ''}`}
           >
             커스텀
           </button>
@@ -380,197 +365,188 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       </div>
 
       {/* 멤버 리스트 */}
-      <div className="members-list">
+      <div className="study-management-members-list">
         {members.map((member, memberIndex) => (
-          <div key={memberIndex} className="member-item">
-            <div className="member-header">
+          <div key={memberIndex} className="study-management-members-item">
+            <div className="study-management-members-item-header">
               <h4>멤버 {memberIndex + 1}</h4>
               {members.length > 1 && (
                 <button
                   type="button"
                   onClick={() => handleRemoveMember(memberIndex)}
-                  className="remove-btn"
+                  className="study-management-members-remove-btn"
                 >
                   삭제
                 </button>
               )}
             </div>
 
-            <div className="member-fields">
+            <div className="study-management-members-fields">
               {/* 기본 정보 */}
-              <div className="field-row">
-                <div className="field">
+              <div className="study-management-members-field-row">
+                <div className="study-management-members-field">
                   <label>이름 *</label>
                   <input
                     type="text"
                     value={member.name}
                     onChange={(e) => handleMemberChange(memberIndex, 'name', e.target.value)}
                     placeholder="예: 홍길동"
-                    className="form-input"
+                    className="study-management-members-input"
                     required
                   />
                 </div>
-                <div className="field">
+                <div className="study-management-members-field">
                   <label>역할 *</label>
                   <input
                     type="text"
                     value={member.role}
                     onChange={(e) => handleMemberChange(memberIndex, 'role', e.target.value)}
                     placeholder="예: 스터디 리더, 멤버, 멘토"
-                    className="form-input"
+                    className="study-management-members-input"
                     required
                   />
                 </div>
               </div>
 
-              <div className="field-row">
-                <div className="field">
+              <div className="study-management-members-field-row">
+                <div className="study-management-members-field">
                   <label>프로필 이미지 URL</label>
                   <input
                     type="text"
                     value={member.imageUrl || ''}
                     onChange={(e) => handleMemberChange(memberIndex, 'imageUrl', e.target.value)}
                     placeholder="예: /images/profile.png"
-                    className="form-input"
+                    className="study-management-members-input"
                   />
                 </div>
-                <div className="field">
+                <div className="study-management-members-field">
                   <label>가입일</label>
                   <input
                     type="date"
                     value={member.joinDate || ''}
                     onChange={(e) => handleMemberChange(memberIndex, 'joinDate', e.target.value)}
-                    className="form-input"
+                    className="study-management-members-input"
                   />
                 </div>
               </div>
 
               {/* 텍스트 필드 */}
-              <div className="field">
+              <div className="study-management-members-field">
                 <label>한 줄 소개</label>
                 <input
                   type="text"
                   value={member.tagline || ''}
                   onChange={(e) => handleMemberChange(memberIndex, 'tagline', e.target.value)}
                   placeholder="예: 모임을 처음 시작한 사람 🏆"
-                  className="form-input"
+                  className="study-management-members-input"
                 />
               </div>
 
-              <div className="field">
+              <div className="study-management-members-field">
                 <label>주요 성과/배운 점</label>
                 <textarea
                   value={member.achievement || ''}
                   onChange={(e) => handleMemberChange(memberIndex, 'achievement', e.target.value)}
                   placeholder="예: DP의 최적화 방법과 스터디 운영의 노하우를 얻었어요"
-                  className="form-textarea"
+                  className="study-management-members-textarea"
                   rows={2}
                 />
               </div>
 
-              <div className="field-row">
-                <div className="field">
+              <div className="study-management-members-field-row">
+                <div className="study-management-members-field">
                   <label>동료의 한마디</label>
                   <input
                     type="text"
                     value={member.message || ''}
                     onChange={(e) => handleMemberChange(memberIndex, 'message', e.target.value)}
                     placeholder="예: 리더십과 실력 모두 뛰어나요!"
-                    className="form-input"
+                    className="study-management-members-input"
                   />
                 </div>
-                <div className="field">
+                <div className="study-management-members-field">
                   <label>작성자</label>
                   <input
                     type="text"
                     value={member.messageFrom || ''}
                     onChange={(e) => handleMemberChange(memberIndex, 'messageFrom', e.target.value)}
                     placeholder="예: kdelay"
-                    className="form-input"
+                    className="study-management-members-input"
                   />
                 </div>
               </div>
 
-              {/* 커스텀 필드 */}
-              {theme !== 'minimal' && (
-                <div className="field">
-                  <label>커스텀 필드 (최대 3개)</label>
-                  {member.customFields?.map((field, fieldIndex) => (
-                    <div key={fieldIndex} className="custom-field-row">
-                      <input
-                        type="text"
-                        value={field.icon || ''}
-                        onChange={(e) => handleCustomFieldChange(memberIndex, fieldIndex, 'icon', e.target.value)}
-                        placeholder="아이콘"
-                        className="form-input field-icon-input"
-                        style={{ width: '60px' }}
-                      />
-                      <input
-                        type="text"
-                        value={field.label}
-                        onChange={(e) => handleCustomFieldChange(memberIndex, fieldIndex, 'label', e.target.value)}
-                        placeholder="필드명"
-                        className="form-input"
-                        style={{ flex: 1 }}
-                      />
-                      <input
-                        type="text"
-                        value={field.value}
-                        onChange={(e) => handleCustomFieldChange(memberIndex, fieldIndex, 'value', e.target.value)}
-                        placeholder="값"
-                        className="form-input"
-                        style={{ flex: 1 }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveCustomField(memberIndex, fieldIndex)}
-                        className="remove-btn"
-                        style={{ padding: '8px 12px' }}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                  {(!member.customFields || member.customFields.length < 3) && (
+              {/* 커스텀 필드 - tecoteco는 항상 표시 */}
+              <div className="study-management-members-field">
+                <label>커스텀 필드 (최대 3개)</label>
+                {member.customFields?.map((field, fieldIndex) => (
+                  <div key={fieldIndex} className="study-management-members-custom-field-row">
+                    <input
+                      type="text"
+                      value={field.icon || ''}
+                      onChange={(e) => handleCustomFieldChange(memberIndex, fieldIndex, 'icon', e.target.value)}
+                      placeholder="아이콘"
+                      className="study-management-members-icon-input"
+                    />
+                    <input
+                      type="text"
+                      value={field.label}
+                      onChange={(e) => handleCustomFieldChange(memberIndex, fieldIndex, 'label', e.target.value)}
+                      placeholder="필드명"
+                      className="study-management-members-input study-management-members-custom-label"
+                    />
+                    <input
+                      type="text"
+                      value={field.value}
+                      onChange={(e) => handleCustomFieldChange(memberIndex, fieldIndex, 'value', e.target.value)}
+                      placeholder="값"
+                      className="study-management-members-input study-management-members-custom-value"
+                    />
                     <button
                       type="button"
-                      onClick={() => handleAddCustomField(memberIndex)}
-                      className="add-btn"
-                      style={{ marginTop: '8px', padding: '8px 16px' }}
+                      onClick={() => handleRemoveCustomField(memberIndex, fieldIndex)}
+                      className="study-management-members-custom-remove-btn"
                     >
-                      + 커스텀 필드 추가
+                      ×
                     </button>
-                  )}
-                </div>
-              )}
-
-              {/* 배지 */}
-              {theme === 'modern' && (
-                <div className="field">
-                  <label>배지</label>
-                  <div className="badge-selector">
-                    {[
-                      { type: 'mvp' as const, label: '이주의 MVP', icon: '👑' },
-                      { type: 'streak' as const, label: '개근왕', icon: '🔥' },
-                      { type: 'achievement' as const, label: '우수 멤버', icon: '🏆' },
-                      { type: 'special' as const, label: '멘토', icon: '🌟' }
-                    ].map(badge => (
-                      <label key={badge.type} className="badge-option">
-                        <input
-                          type="checkbox"
-                          checked={member.badges?.some(b => b.type === badge.type) || false}
-                          onChange={() => handleBadgeToggle(memberIndex, badge)}
-                        />
-                        <span>{badge.icon} {badge.label}</span>
-                      </label>
-                    ))}
                   </div>
+                ))}
+                {(!member.customFields || member.customFields.length < 3) && (
+                  <button
+                    type="button"
+                    onClick={() => handleAddCustomField(memberIndex)}
+                    className="study-management-members-custom-add-btn"
+                  >
+                    + 커스텀 필드 추가
+                  </button>
+                )}
+              </div>
+
+              {/* 배지 - tecoteco는 항상 표시 */}
+              <div className="study-management-members-field">
+                <label>배지</label>
+                <div className="study-management-members-badge-selector">
+                  {[
+                    { type: 'mvp' as const, label: '이주의 MVP', icon: '👑' },
+                    { type: 'streak' as const, label: '개근왕', icon: '🔥' },
+                    { type: 'achievement' as const, label: '우수 멤버', icon: '🏆' },
+                    { type: 'special' as const, label: '멘토', icon: '🌟' }
+                  ].map(badge => (
+                    <label key={badge.type} className="study-management-members-badge-option">
+                      <input
+                        type="checkbox"
+                        checked={member.badges?.some(b => b.type === badge.type) || false}
+                        onChange={() => handleBadgeToggle(memberIndex, badge)}
+                      />
+                      <span>{badge.icon} {badge.label}</span>
+                    </label>
+                  ))}
                 </div>
-              )}
+              </div>
 
               {/* 상태 */}
-              <div className="field-row">
-                <div className="field">
+              <div className="study-management-members-field-row">
+                <div className="study-management-members-field">
                   <label>
                     <input
                       type="checkbox"
@@ -580,14 +556,14 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
                     활동 중 (활동 표시)
                   </label>
                 </div>
-                <div className="field">
+                <div className="study-management-members-field">
                   <label>최근 활동</label>
                   <input
                     type="text"
                     value={member.lastActivity || ''}
                     onChange={(e) => handleMemberChange(memberIndex, 'lastActivity', e.target.value)}
                     placeholder="예: 1일 전"
-                    className="form-input"
+                    className="study-management-members-input"
                   />
                 </div>
               </div>
@@ -595,13 +571,13 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
           </div>
         ))}
 
-        <button type="button" onClick={handleAddMember} className="add-btn">
+        <button type="button" onClick={handleAddMember} className="study-management-members-add-btn">
           + 멤버 추가
         </button>
       </div>
 
       {/* 통계 섹션 */}
-      <div className="form-group">
+      <div className="study-management-members-form-group">
         <label>
           <input
             type="checkbox"
@@ -613,44 +589,44 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       </div>
 
       {showStats && (
-        <div className="stats-fields">
+        <div className="study-management-members-stats-fields">
           <h4>통계 정보</h4>
-          <div className="field-row">
-            <div className="field">
+          <div className="study-management-members-field-row">
+            <div className="study-management-members-field">
               <label>전체 멤버</label>
               <input
                 type="number"
                 value={stats.totalMembers || 0}
                 onChange={(e) => setStats({ ...stats, totalMembers: parseInt(e.target.value) || 0 })}
-                className="form-input"
+                className="study-management-members-input"
               />
             </div>
-            <div className="field">
+            <div className="study-management-members-field">
               <label>활동 멤버</label>
               <input
                 type="number"
                 value={stats.activeMembers || 0}
                 onChange={(e) => setStats({ ...stats, activeMembers: parseInt(e.target.value) || 0 })}
-                className="form-input"
+                className="study-management-members-input"
               />
             </div>
-            <div className="field">
+            <div className="study-management-members-field">
               <label>함께한 시간</label>
               <input
                 type="number"
                 value={stats.totalHours || 0}
                 onChange={(e) => setStats({ ...stats, totalHours: parseInt(e.target.value) || 0 })}
-                className="form-input"
+                className="study-management-members-input"
               />
             </div>
           </div>
-          <div className="field">
+          <div className="study-management-members-field">
             <label>인기 알고리즘 태그 (쉼표로 구분)</label>
             <input
               type="text"
               value={(stats.popularAlgorithms || []).join(', ')}
               onChange={(e) => setStats({ ...stats, popularAlgorithms: e.target.value.split(',').map(v => v.trim()).filter(Boolean) })}
-              className="form-input"
+              className="study-management-members-input"
               placeholder="예: DP, 그래프, 이분탐색"
             />
           </div>
@@ -658,24 +634,24 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       )}
 
       {/* 강조 멤버 */}
-      <div className="form-group">
+      <div className="study-management-members-form-group">
         <label>이주의 MVP (이름)</label>
         <input
           type="text"
           value={weeklyMvp || ''}
           onChange={(e) => setWeeklyMvp(e.target.value || undefined)}
           placeholder="예: renechoi"
-          className="form-input"
+          className="study-management-members-input"
         />
-        <p className="form-help-text">TecoTeco 테마에서 MVP 배지를 강조 표시합니다.</p>
+        <p className="study-management-members-help-text">TecoTeco 테마에서 MVP 배지를 강조 표시합니다.</p>
       </div>
 
       {/* 폼 액션 */}
-      <div className="form-actions">
-        <button type="button" onClick={onCancel} className="cancel-btn">
+      <div className="study-management-members-form-actions">
+        <button type="button" onClick={onCancel} className="study-management-members-cancel-btn">
           취소
         </button>
-        <button type="submit" className="save-btn">
+        <button type="submit" className="study-management-members-save-btn">
           저장
         </button>
       </div>

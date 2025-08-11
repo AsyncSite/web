@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './SectionForms.css';
 import './TimelineSectionForm.css';
 
 interface TimelineEvent {
@@ -117,65 +116,65 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="section-form timeline-form study-management-journey-section-editor">
-      <div className="form-group">
+    <form onSubmit={handleSubmit} className="study-management-journey-form">
+      <div className="study-management-journey-form-group">
         <label>섹션 제목</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="예: 스터디 진행 일정"
-          className="form-input"
+          className="study-management-journey-input"
         />
       </div>
 
-      <div className="form-group">
-        <div className="group-header">
+      <div className="study-management-journey-form-group">
+        <div className="study-management-journey-group-header">
           <label>타임라인 이벤트</label>
           <button 
             type="button" 
             onClick={loadExampleData}
-            className="example-btn"
+            className="study-management-journey-example-btn"
           >
             예시 데이터 불러오기
           </button>
         </div>
         
-        <div className="study-management-journey-section-editor__list">
+        <div className="study-management-journey-list">
           {events.map((event, index) => (
-            <div key={index} className="study-management-journey-section-editor__item">
-              <div className="study-management-journey-section-editor__item-header">
+            <div key={index} className="study-management-journey-item">
+              <div className="study-management-journey-item-header">
                 <h4>이벤트 {index + 1}</h4>
                 {events.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveEvent(index)}
-                    className="study-management-journey-section-editor__remove-button"
+                    className="study-management-journey-remove-button"
                   >
                     삭제
                   </button>
                 )}
               </div>
               
-              <div className="study-management-journey-section-editor__item-fields">
-                <div className="study-management-journey-section-editor__field-row">
-                  <div className="study-management-journey-section-editor__field">
+              <div className="study-management-journey-item-fields">
+                <div className="study-management-journey-field-row">
+                  <div className="study-management-journey-field">
                     <label>날짜 *</label>
                     <input
                       type="date"
                       value={event.date}
                       onChange={(e) => handleEventChange(index, 'date', e.target.value)}
-                      className="form-input"
+                      className="study-management-journey-input"
                       required
                     />
                   </div>
                   
-                  <div className="study-management-journey-section-editor__field">
+                  <div className="study-management-journey-field">
                     <label>이벤트 유형</label>
                     <select
                       value={event.type}
                       onChange={(e) => handleEventChange(index, 'type', e.target.value)}
-                      className="form-select"
+                      className="study-management-journey-select"
                     >
                       <option value="event">일반 이벤트</option>
                       <option value="milestone">마일스톤</option>
@@ -185,25 +184,25 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
                   </div>
                 </div>
                 
-                <div className="study-management-journey-section-editor__field">
+                <div className="study-management-journey-field">
                   <label>제목 *</label>
                   <input
                     type="text"
                     value={event.title}
                     onChange={(e) => handleEventChange(index, 'title', e.target.value)}
                     placeholder="예: 스터디 시작"
-                    className="form-input"
+                    className="study-management-journey-input"
                     required
                   />
                 </div>
                 
-                <div className="study-management-journey-section-editor__field">
+                <div className="study-management-journey-field">
                   <label>설명</label>
                   <textarea
                     value={event.description}
                     onChange={(e) => handleEventChange(index, 'description', e.target.value)}
                     placeholder="예: 12주간의 여정이 시작됩니다"
-                    className="form-textarea"
+                    className="study-management-journey-textarea"
                     rows={2}
                   />
                 </div>
@@ -215,17 +214,17 @@ const TimelineSectionForm: React.FC<TimelineSectionFormProps> = ({
         <button
           type="button"
           onClick={handleAddEvent}
-          className="study-management-journey-section-editor__add-button"
+          className="study-management-journey-add-button"
         >
           + 이벤트 추가
         </button>
       </div>
 
-      <div className="form-actions">
-        <button type="button" onClick={onCancel} className="cancel-btn">
+      <div className="study-management-journey-form-actions">
+        <button type="button" onClick={onCancel} className="study-management-journey-cancel-btn">
           취소
         </button>
-        <button type="submit" className="save-btn">
+        <button type="submit" className="study-management-journey-save-btn">
           저장
         </button>
       </div>
