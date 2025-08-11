@@ -1,0 +1,308 @@
+/* HeroSection Editor - Fully Scoped Styles */
+/* All classes use study-management-hero- prefix to prevent conflicts */
+
+/* Main Form Container */
+.study-management-hero-form {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+/* Form Groups */
+.study-management-hero-form-group {
+  margin-bottom: 24px;
+}
+
+.study-management-hero-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Form Inputs */
+.study-management-hero-input,
+.study-management-hero-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.study-management-hero-input:focus,
+.study-management-hero-textarea:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.study-management-hero-textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Icon Input - Center Aligned */
+.study-management-hero-input.study-management-hero-icon-input {
+  text-align: center;
+}
+
+/* Form Row */
+.study-management-hero-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Form Section */
+.study-management-hero-form-section {
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+/* Checkbox Label */
+.study-management-hero-checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.study-management-hero-checkbox-label input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* Image Preview */
+.study-management-hero-image-preview {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.study-management-hero-image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Info Box Item Container */
+.study-management-hero-info-box-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Info Box Item Layout */
+.study-management-hero-info-box-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px;
+  gap: 16px;
+  align-items: start;
+}
+
+.study-management-hero-icon-column {
+  flex: 0 0 80px;
+}
+
+.study-management-hero-text-column {
+  flex: 1;
+}
+
+.study-management-hero-action-column {
+  flex: 0 0 60px;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Add Item Button */
+.study-management-hero-add-item-btn {
+  margin-left: 10px;
+  padding: 6px 12px;
+  background: rgba(195, 232, 141, 0.2);
+  color: #C3E88D;
+  border: 1px solid #C3E88D;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.study-management-hero-add-item-btn:hover {
+  background: rgba(195, 232, 141, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Remove Button */
+.study-management-hero-remove-btn {
+  width: 100%;
+  padding: 8px;
+  background: rgba(255, 68, 68, 0.8);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.study-management-hero-remove-btn:hover {
+  background: #ff4444;
+}
+
+/* Example Button */
+.study-management-hero-example-btn {
+  padding: 10px 20px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.study-management-hero-example-btn:hover {
+  background: rgba(195, 232, 141, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Empty State Message */
+.study-management-hero-empty-state {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Form Actions */
+.study-management-hero-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-management-hero-cancel-btn,
+.study-management-hero-save-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.study-management-hero-cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.study-management-hero-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.study-management-hero-save-btn {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.study-management-hero-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+/* Label with Button */
+.study-management-hero-label-with-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .study-management-hero-form {
+    padding: 16px;
+  }
+  
+  .study-management-hero-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .study-management-hero-info-box-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .study-management-hero-icon-column,
+  .study-management-hero-action-column {
+    width: 100%;
+  }
+  
+  .study-management-hero-form-actions {
+    flex-direction: column;
+  }
+  
+  .study-management-hero-cancel-btn,
+  .study-management-hero-save-btn {
+    width: 100%;
+  }
+  
+  .study-management-hero-add-item-btn {
+    margin-left: 0;
+    margin-top: 8px;
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .study-management-hero-form {
+    padding: 12px;
+  }
+  
+  .study-management-hero-form-group {
+    margin-bottom: 16px;
+  }
+  
+  .study-management-hero-info-box-item {
+    padding: 12px;
+  }
+  
+  .study-management-hero-input,
+  .study-management-hero-textarea {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  .study-management-hero-cancel-btn,
+  .study-management-hero-save-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}

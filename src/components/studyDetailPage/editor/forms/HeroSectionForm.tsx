@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import './SectionForms.css';
+import './HeroSectionForm.css';
 
 interface InfoBoxItem {
   icon: string;
@@ -141,8 +141,8 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="section-form hero-form">
-      <div className="form-group">
+    <form onSubmit={handleSubmit} className="study-management-hero-form">
+      <div className="study-management-hero-form-group">
         <label>제목 *</label>
         <StudyDetailRichTextEditor
           value={title}
@@ -153,7 +153,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
         />
       </div>
 
-      <div className="form-group">
+      <div className="study-management-hero-form-group">
         <label>부제목</label>
         <StudyDetailRichTextEditor
           value={subtitle}
@@ -164,61 +164,61 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
         />
       </div>
 
-      <div className="form-group">
+      <div className="study-management-hero-form-group">
         <label>설명</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="스터디에 대한 자세한 설명을 입력하세요"
-          className="form-textarea"
+          className="study-management-hero-textarea"
           rows={4}
         />
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
+      <div className="study-management-hero-form-row">
+        <div className="study-management-hero-form-group">
           <label>버튼 텍스트</label>
           <input
             type="text"
             value={buttonText}
             onChange={(e) => setButtonText(e.target.value)}
             placeholder="예: 참가 신청하기"
-            className="form-input"
+            className="study-management-hero-input"
           />
         </div>
 
-        <div className="form-group">
+        <div className="study-management-hero-form-group">
           <label>버튼 링크</label>
           <input
             type="text"
             value={buttonLink}
             onChange={(e) => setButtonLink(e.target.value)}
             placeholder="예: #apply 또는 /study/apply"
-            className="form-input"
+            className="study-management-hero-input"
           />
         </div>
       </div>
 
-      <div className="form-group">
+      <div className="study-management-hero-form-group">
         <label>이미지 URL</label>
         <input
           type="text"
           value={backgroundImage}
           onChange={(e) => setBackgroundImage(e.target.value)}
           placeholder="예: /images/tecoteco/profile1.svg"
-          className="form-input"
+          className="study-management-hero-input"
         />
         {backgroundImage && (
-          <div className="image-preview">
+          <div className="study-management-hero-image-preview">
             <img src={backgroundImage} alt="이미지 미리보기" />
           </div>
         )}
       </div>
 
       {/* InfoBox 섹션 */}
-      <div className="form-section">
-        <div className="form-group">
-          <label>
+      <div className="study-management-hero-form-section">
+        <div className="study-management-hero-form-group">
+          <label className="study-management-hero-checkbox-label">
             <input
               type="checkbox"
               checked={useInfoBox}
@@ -230,69 +230,43 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
 
         {useInfoBox && (
           <>
-            <div className="form-group">
+            <div className="study-management-hero-form-group">
               <label>정보 박스 헤더</label>
               <input
                 type="text"
                 value={infoBoxHeader}
                 onChange={(e) => setInfoBoxHeader(e.target.value)}
                 placeholder="예: TecoTeco: 함께 성장할 용기"
-                className="form-input"
+                className="study-management-hero-input"
               />
             </div>
 
-            <div className="form-group">
-              <label>
-                정보 박스 아이템
+            <div className="study-management-hero-form-group">
+              <div className="study-management-hero-label-with-button">
+                <label>정보 박스 아이템</label>
                 <button
                   type="button"
                   onClick={addInfoBoxItem}
-                  className="add-item-btn"
-                  style={{ 
-                    marginLeft: '10px',
-                    padding: '6px 12px',
-                    backgroundColor: 'rgba(195, 232, 141, 0.2)',
-                    color: '#C3E88D',
-                    border: '1px solid #C3E88D',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '13px',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(195, 232, 141, 0.3)';
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(195, 232, 141, 0.2)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
+                  className="study-management-hero-add-item-btn"
                 >
                   + 아이템 추가
                 </button>
-              </label>
+              </div>
               
               {infoBoxItems.map((item, index) => (
-                <div key={index} className="info-box-item" style={{ 
-                  marginBottom: '15px', 
-                  padding: '15px', 
-                  border: '1px solid rgba(255, 255, 255, 0.2)', 
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)'
-                }}>
-                  <div className="form-row">
-                    <div style={{ flex: '0 0 80px' }}>
+                <div key={index} className="study-management-hero-info-box-item">
+                  <div className="study-management-hero-info-box-row">
+                    <div className="study-management-hero-icon-column">
                       <label>아이콘</label>
                       <input
                         type="text"
                         value={item.icon}
                         onChange={(e) => updateInfoBoxItem(index, 'icon', e.target.value)}
                         placeholder="예: 💡"
-                        className="form-input"
-                        style={{ textAlign: 'center' }}
+                        className="study-management-hero-input study-management-hero-icon-input"
                       />
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div className="study-management-hero-text-column">
                       <label>텍스트</label>
                       <StudyDetailRichTextEditor
                         value={item.text}
@@ -302,23 +276,11 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
                         singleLine={false}
                       />
                     </div>
-                    <div style={{ flex: '0 0 60px', display: 'flex', alignItems: 'flex-end' }}>
+                    <div className="study-management-hero-action-column">
                       <button
                         type="button"
                         onClick={() => removeInfoBoxItem(index)}
-                        className="remove-btn"
-                        style={{ 
-                          width: '100%',
-                          padding: '8px',
-                          backgroundColor: 'rgba(255, 68, 68, 0.8)',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          transition: 'background-color 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ff4444'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 68, 68, 0.8)'}
+                        className="study-management-hero-remove-btn"
                       >
                         삭제
                       </button>
@@ -328,7 +290,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
               ))}
 
               {infoBoxItems.length === 0 && (
-                <p style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '14px' }}>
+                <p className="study-management-hero-empty-state">
                   아이템을 추가하여 정보 박스를 구성하세요
                 </p>
               )}
@@ -337,21 +299,21 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
         )}
       </div>
 
-      <div className="form-group">
+      <div className="study-management-hero-form-group">
         <button 
           type="button" 
           onClick={loadExampleData}
-          className="example-btn"
+          className="study-management-hero-example-btn"
         >
           TecoTeco 예시 데이터 불러오기
         </button>
       </div>
 
-      <div className="form-actions">
-        <button type="button" onClick={onCancel} className="cancel-btn">
+      <div className="study-management-hero-form-actions">
+        <button type="button" onClick={onCancel} className="study-management-hero-cancel-btn">
           취소
         </button>
-        <button type="submit" className="save-btn">
+        <button type="submit" className="study-management-hero-save-btn">
           저장
         </button>
       </div>
