@@ -107,7 +107,6 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({
               className="richtext-highlight highlight"
               style={{ 
                 color: mark.color || theme.colors.highlight || '#c3e88d',
-                backgroundColor: mark.backgroundColor,
                 fontWeight: 600
               }}
             >
@@ -123,7 +122,6 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({
               className="richtext-subtle-highlight subtle-highlight"
               style={{ 
                 color: mark.color || theme.colors.subtleHighlight || '#82aaff',
-                backgroundColor: mark.backgroundColor,
                 fontWeight: 500
               }}
             >

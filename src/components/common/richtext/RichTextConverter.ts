@@ -8,6 +8,8 @@ export class RichTextConverter {
    * HTML 문자열을 RichText 데이터 구조로 변환
    */
   static fromHTML(html: string): RichTextData {
+    console.log('[RichTextConverter.fromHTML] Input HTML:', html);
+    
     if (!html || html.trim() === '') {
       return {
         type: 'richtext',
@@ -22,6 +24,8 @@ export class RichTextConverter {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const body = doc.body;
+    
+    console.log('[RichTextConverter.fromHTML] Parsed body innerHTML:', body.innerHTML);
 
     // 노드 순회하며 변환
     const processNode = (node: Node): void => {
@@ -111,8 +115,84 @@ export class RichTextConverter {
             if (blocks.length === 0) {
               blocks.push({ type: 'paragraph', content: [] });
             }
-            const inlineContent = processInlineElements(element);
-            blocks[blocks.length - 1].content.push(...inlineContent);
+            // Root-level inline elements need special handling to preserve their styles
+            // We process them as inline nodes directly, not just their children
+            const tempInlines: Inline[] = [];
+            const processRootInline = (node: Node, marks: Mark[] = []): void => {
+              if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent || '';
+                if (text) {
+                  const parts = text.split('\n');
+                  parts.forEach((part, index) => {
+                    if (part) {
+                      tempInlines.push({
+                        type: 'text',
+                        text: part,
+                        marks: marks.length > 0 ? [...marks] : undefined
+                      });
+                    }
+                    if (index < parts.length - 1) {
+                      tempInlines.push({ type: 'break' });
+                    }
+                  });
+                }
+              } else if (node.nodeType === Node.ELEMENT_NODE) {
+                const el = node as HTMLElement;
+                const newMarks = [...marks];
+                
+                // Extract marks from the element
+                const elTag = el.tagName.toLowerCase();
+                switch (elTag) {
+                  case 'b':
+                  case 'strong':
+                    newMarks.push({ type: 'bold' });
+                    break;
+                  case 'i':
+                  case 'em':
+                    newMarks.push({ type: 'italic' });
+                    break;
+                  case 'u':
+                    newMarks.push({ type: 'underline' });
+                    break;
+                  case 'code':
+                    newMarks.push({ type: 'code' });
+                    break;
+                  case 'span':
+                    // Handle span color styles
+                    const styleColor = el.style?.color;
+                    if (styleColor) {
+                      const normalizedColor = styleColor.replace(/\s+/g, ' ').trim();
+                      if (normalizedColor.includes('255') && normalizedColor.includes('234')) {
+                        newMarks.push({ type: 'highlight', color: normalizedColor });
+                      } else if (normalizedColor.includes('130') && normalizedColor.includes('170')) {
+                        newMarks.push({ type: 'subtle-highlight', color: normalizedColor });
+                      } else if (normalizedColor.includes('195') && normalizedColor.includes('232')) {
+                        newMarks.push({ type: 'highlight', color: normalizedColor });
+                      } else {
+                        newMarks.push({ type: 'custom', color: normalizedColor });
+                      }
+                    }
+                    break;
+                  case 'a':
+                    // Links need special handling
+                    const href = el.getAttribute('href') || '#';
+                    const linkText = el.textContent || '';
+                    tempInlines.push({
+                      type: 'link',
+                      text: linkText,
+                      href,
+                      marks: newMarks.length > 0 ? newMarks : undefined
+                    });
+                    return; // Don't process children for links
+                }
+                
+                // Process children with accumulated marks
+                el.childNodes.forEach(child => processRootInline(child, newMarks));
+              }
+            };
+            
+            processRootInline(element);
+            blocks[blocks.length - 1].content.push(...tempInlines);
             break;
 
           default:
@@ -188,14 +268,39 @@ export class RichTextConverter {
 
           case 'span':
               const className = el.className;
-              if (className.includes('highlight')) {
+              if (className && className.includes('highlight')) {
                 newMarks.push({ type: 'highlight' });
-              } else if (className.includes('subtle-highlight')) {
+              } else if (className && className.includes('subtle-highlight')) {
                 newMarks.push({ type: 'subtle-highlight' });
               }
-              // 인라인 텍스트 색상 유지
-              if (el.style && el.style.color) {
-                newMarks.push({ type: 'custom', color: el.style.color });
+              
+              // 인라인 텍스트 색상 유지 - style.color 직접 접근
+              const styleColor = el.style?.color;
+              console.log('[RichTextConverter] span element:', {
+                tagName: el.tagName,
+                className: el.className,
+                styleColor: styleColor,
+                styleObj: el.style,
+                getAttribute: el.getAttribute ? el.getAttribute('style') : 'no getAttribute',
+                outerHTML: el.outerHTML?.substring(0, 100)
+              });
+              
+              if (styleColor) {
+                console.log('[RichTextConverter] Found style.color:', styleColor);
+                // RGB 색상 정규화
+                const normalizedColor = styleColor.replace(/\s+/g, ' ').trim();
+                
+                // 대표 색상 매핑
+                if (normalizedColor.includes('255') && normalizedColor.includes('234')) {
+                  newMarks.push({ type: 'highlight', color: normalizedColor });
+                } else if (normalizedColor.includes('130') && normalizedColor.includes('170')) {
+                  newMarks.push({ type: 'subtle-highlight', color: normalizedColor });
+                } else if (normalizedColor.includes('195') && normalizedColor.includes('232')) {
+                  // 테마 기본 하이라이트 색상
+                  newMarks.push({ type: 'highlight', color: normalizedColor });
+                } else {
+                  newMarks.push({ type: 'custom', color: normalizedColor });
+                }
               }
               break;
             case 'br':
@@ -258,11 +363,15 @@ export class RichTextConverter {
       }
     }
 
-    return {
+    const result: RichTextData = {
       type: 'richtext',
       version: '1.0',
       content: blocks
     };
+    
+    console.log('[RichTextConverter.fromHTML] Output RichTextData:', JSON.stringify(result, null, 2));
+    
+    return result;
   }
 
   /**
@@ -310,14 +419,18 @@ export class RichTextConverter {
             case 'code':
               result = `<code>${result}</code>`;
               break;
-            case 'highlight':
-              // 의도: 노란 텍스트 강조 (배경 아님)
-              result = `<span class="highlight">${result}</span>`;
+            case 'highlight': {
+              // 텍스트 색상 강조 (배경 미사용)
+              const color = mark.color || 'rgb(255, 234, 0)';
+              result = `<span class="highlight" style="color: ${color}">${result}</span>`;
               break;
-            case 'subtle-highlight':
-              // 의도: 파란 텍스트 약한 강조
-              result = `<span class="subtle-highlight">${result}</span>`;
+            }
+            case 'subtle-highlight': {
+              // 텍스트 색상 약한 강조 (배경 미사용)
+              const subtle = mark.color || 'rgb(130, 170, 255)';
+              result = `<span class="subtle-highlight" style="color: ${subtle}">${result}</span>`;
               break;
+            }
             case 'custom':
               const style = [];
               if (mark.color) style.push(`color: ${mark.color}`);

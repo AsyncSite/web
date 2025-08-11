@@ -280,3 +280,115 @@ type BlockType = 'paragraph' | 'heading' | 'list' | 'quote' |
 - 기존 TecoTeco 페이지의 디자인과 100% 일치 유지
 - 사용자가 HTML을 몰라도 동일한 결과 생성 가능
 - 점진적 마이그레이션으로 서비스 중단 없음
+
+## 11. 구현 현황 (2025-08-11 업데이트)
+
+### 11.1 완료된 작업
+
+#### ✅ 기본 구조 구축
+- `StudyDetailRichTextEditor` 컴포넌트 구현 완료
+- TipTap 2.x 기반 에디터 통합
+- CSS 네이밍 충돌 해결 (sdpre__ prefix 사용)
+- 컴포넌트 파일 구조 완성:
+  ```
+  /components/common/richtext/
+  ├── StudyDetailRichTextEditor.tsx    # 에디터 컴포넌트
+  ├── StudyDetailRichTextEditor.css    # 전용 스타일
+  ├── RichTextConverter.ts             # HTML ↔ RichText 변환
+  ├── RichTextRenderer.tsx             # 렌더러
+  └── RichTextTypes.ts                 # 타입 정의
+  ```
+
+#### ✅ 기능 구현
+- 텍스트 포맷팅: Bold (B) - 완벽 작동
+- 텍스트 색상 변경: setColor() 사용 - 실시간 동기화 작동
+- 에디터/미리보기 모드 전환
+- 툴바 UI 구현
+
+### 11.2 현재 문제점 및 근본 원인
+
+#### 🔴 Critical Issues
+
+1. **초기 데이터 로딩 실패**
+   - **현상**: RichTextData 타입 데이터가 에디터에 표시되지 않음
+   - **원인**: useEffect에서 RichTextData 타입일 때 의도적으로 setContent 스킵
+   - **코드 위치**: `StudyDetailRichTextEditor.tsx:133-143`
+   ```javascript
+   // RichTextData가 내려오는 경우는 에디터가 소스오브트루스이므로 setContent로 덮지 않음
+   ```
+
+2. **데이터 형식 불일치**
+   - **현상**: 저장된 변경사항이 렌더러에서 표시 안됨
+   - **원인**: 
+     - 에디터: `<span style="color: rgb(255, 234, 0)">` 생성 (텍스트 색상)
+     - 렌더러: `<mark style="background-color: rgb(255, 234, 0)">` 기대 (배경 하이라이트)
+   - **영향**: RichTextRenderer가 span 태그의 color 스타일을 highlight로 인식 못함
+
+3. **미리보기 동기화 실패**
+   - **현상**: 편집한 내용이 미리보기에 반영 안됨
+   - **원인**: mark vs span 태그 불일치로 스타일 적용 안됨
+
+#### 🟡 근본 원인 분석
+
+**"highlight"의 해석 차이**:
+- **원래 의도**: 노란색 배경 하이라이트 (mark 태그 + background-color)
+- **현재 구현**: 노란색 텍스트 색상 (span 태그 + color)
+- **결과**: 시스템 전체에서 데이터 형식 불일치 발생
+
+### 11.3 단기 목표 (즉시 해결 필요)
+
+1. **데이터 로딩 수정**
+   - RichTextData를 HTML로 변환하여 에디터에 로드
+   - 무한 루프 방지 로직 추가
+
+2. **데이터 형식 통일**
+   - Option A: 에디터를 mark/background-color 방식으로 수정
+   - Option B: 렌더러를 span/color 방식으로 수정
+   - **권장**: Option A (기존 시스템과 호환성 유지)
+
+3. **저장/로드 사이클 완성**
+   - RichTextConverter가 양방향 변환 올바르게 처리
+   - 데이터 일관성 유지
+
+### 11.4 최종 목표
+
+1. **완전한 RichText 시스템**
+   - XSS 방지하면서 풍부한 텍스트 편집 기능
+   - TecoTeco 페이지와 100% 동일한 비주얼 구현
+   - 사용자가 HTML 지식 없이도 사용 가능
+
+2. **확장 가능한 구조**
+   - 새로운 포맷 쉽게 추가
+   - 다른 섹션에도 재사용 가능
+   - 테마별 커스터마이징 지원
+
+### 11.5 작업 계획
+
+#### Phase 1: 긴급 수정 (1-2일)
+- [ ] 초기 데이터 로딩 문제 해결
+- [ ] mark/background-color 방식으로 통일
+- [ ] 저장/로드 사이클 테스트
+
+#### Phase 2: 안정화 (3-5일)
+- [ ] 모든 포맷팅 옵션 구현 (italic, underline 등)
+- [ ] 색상 선택기 완성
+- [ ] 에러 핸들링 강화
+
+#### Phase 3: 확장 (1주)
+- [ ] 다른 섹션 적용
+- [ ] 이미지/링크 삽입 기능
+- [ ] 실행 취소/다시 실행 기능
+
+### 11.6 기술적 결정 사항
+
+1. **TipTap vs Custom Editor**
+   - **결정**: TipTap 2.x 사용
+   - **이유**: 안정적, 확장 가능, ProseMirror 기반
+
+2. **CSS 스코핑 전략**
+   - **결정**: sdpre__ prefix + data-sdpre-scope 속성
+   - **이유**: 다른 에디터 인스턴스와 스타일 충돌 방지
+
+3. **데이터 저장 형식**
+   - **결정**: RichTextData 구조체
+   - **이유**: 타입 안전성, 확장성, 마이그레이션 용이

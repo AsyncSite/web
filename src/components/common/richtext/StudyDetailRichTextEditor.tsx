@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { TextStyle } from '@tiptap/extension-text-style';
@@ -16,6 +16,7 @@ import {
 } from './RichTextTypes';
 import { RichTextConverter } from './RichTextConverter';
 import './StudyDetailRichTextEditor.css';
+import RichTextRenderer from './RichTextRenderer';
 
 interface StudyDetailRichTextEditorProps {
   value: RichTextData | string | null;
@@ -48,6 +49,12 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorTarget, setColorTarget] = useState<'text' | 'highlight' | null>(null);
   const [isPreview, setIsPreview] = useState(false);
+  const [previewData, setPreviewData] = useState<RichTextData | null>(null);
+
+  // 동기화 제어 플래그
+  const hasInitializedRef = useRef(false);
+  const lastLoadedJsonRef = useRef<string | null>(null);
+  const isApplyingExternalRef = useRef(false);
 
   // TipTap 에디터 초기화
   const editor = useEditor({
@@ -112,10 +119,12 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
       }
     },
     onUpdate: ({ editor }) => {
+      if (isApplyingExternalRef.current) return;
       try {
         const html = editor.getHTML();
         const richTextData = RichTextConverter.fromHTML(html);
         onChange(richTextData);
+        setPreviewData(richTextData);
         if (DEBUG) {
           // eslint-disable-next-line no-console
           console.log('[SDPRE] onUpdate: HTML=', html);
@@ -129,17 +138,35 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
     }
   });
 
-  // 초기값 설정
+  // 초기값 및 외부 값 반영 (루프 방지 가드 포함)
   useEffect(() => {
     if (!editor || value == null) return;
-    // 외부에서 문자열(레거시 HTML)로 들어올 때만 setContent로 초기 세팅
+
+    // 문자열(레거시 HTML)
     if (typeof value === 'string') {
       const html = value;
       if (editor.getHTML() !== html) {
+        isApplyingExternalRef.current = true;
         editor.commands.setContent(html);
+        isApplyingExternalRef.current = false;
+        setPreviewData(RichTextConverter.fromHTML(html));
+        lastLoadedJsonRef.current = html;
       }
+      hasInitializedRef.current = true;
+      return;
     }
-    // RichTextData가 내려오는 경우는 에디터가 소스오브트루스이므로 setContent로 덮지 않음
+
+    // RichTextData
+    const json = JSON.stringify(value);
+    if (!hasInitializedRef.current || lastLoadedJsonRef.current !== json) {
+      const html = RichTextConverter.toHTML(value);
+      isApplyingExternalRef.current = true;
+      editor.commands.setContent(html);
+      isApplyingExternalRef.current = false;
+      setPreviewData(value);
+      lastLoadedJsonRef.current = json;
+      hasInitializedRef.current = true;
+    }
   }, [editor, value]);
 
 
@@ -163,9 +190,9 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
         editor.chain().focus().setHardBreak().run();
         break;
       case 'highlight': {
-        // 노란 텍스트 강조 (배경 아님) - 테코테코 의도
-        if (DEBUG) console.log('[SDPRE] toolbar: highlight (yellow text)');
-        const target = 'rgb(255, 234, 0)';
+        // 주 강조: 텍스트 색상
+        if (DEBUG) console.log('[SDPRE] toolbar: highlight (text color)');
+        const target = theme.colors.highlight;
         const isActive = editor.isActive('textStyle', { color: target });
         const chain = editor.chain().focus();
         if (isActive) {
@@ -177,9 +204,9 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
         break;
       }
       case 'subtle-highlight': {
-        // 파란 텍스트 약한 강조 (배경 아님)
-        if (DEBUG) console.log('[SDPRE] toolbar: subtle-highlight (blue text)');
-        const target = 'rgb(130, 170, 255)';
+        // 약한 강조: 텍스트 색상
+        if (DEBUG) console.log('[SDPRE] toolbar: subtle-highlight (text color)');
+        const target = theme.colors.subtleHighlight;
         const isActive = editor.isActive('textStyle', { color: target });
         const chain = editor.chain().focus();
         if (isActive) {
@@ -224,11 +251,9 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
   const applyColor = (color: string) => {
     if (!editor || !colorTarget) return;
 
-    if (colorTarget === 'text') {
-      editor.chain().focus().setColor(color).run();
-    } else if (colorTarget === 'highlight') {
+    if (colorTarget === 'text' || colorTarget === 'highlight') {
       const rgbColor = color.startsWith('#') ? hexToRgb(color) : color;
-      editor.chain().focus().toggleHighlight({ color: rgbColor }).run();
+      editor.chain().focus().setColor(rgbColor).run();
     }
 
     setShowColorPicker(false);
@@ -284,7 +309,9 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
         case 'italic':
           return editor.isActive('italic');
         case 'highlight':
-          return editor.isActive('highlight');
+          return editor.isActive('textStyle', { color: theme.colors.highlight });
+        case 'subtle-highlight':
+          return editor.isActive('textStyle', { color: theme.colors.subtleHighlight });
         case 'heading':
           return editor.isActive('heading');
         case 'list':
@@ -416,7 +443,7 @@ const StudyDetailRichTextEditor: React.FC<StudyDetailRichTextEditorProps> = ({
       <div className={`sdpre__content-area ${isPreview ? 'sdpre__content-area--preview' : 'sdpre__content-area--edit'}`}>
         {isPreview ? (
           <div className="sdpre__preview">
-            <div dangerouslySetInnerHTML={{ __html: editor?.getHTML() || '' }} />
+            <RichTextRenderer data={previewData || (editor ? RichTextConverter.fromHTML(editor.getHTML()) : null)} />
           </div>
         ) : (
           <div className="sdpre__tiptap-wrapper">

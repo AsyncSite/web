@@ -271,6 +271,10 @@ const StudyManagementPage: React.FC = () => {
       setSaving(true);
       const updatedPage = await studyDetailPageService.publish(studyId);
       setPageData(updatedPage);
+      
+      // 발행 후 선택된 섹션을 해제하여 최신 데이터로 다시 로드하도록 유도
+      setSelectedSection(null);
+      
       alert('페이지가 발행되었습니다');
     } catch (err) {
       console.error('Failed to publish page:', err);
@@ -536,13 +540,7 @@ const StudyManagementPage: React.FC = () => {
                 >
                   {previewMode ? '편집 모드' : '미리보기'}
                 </button>
-                <button 
-                  className="btn-save"
-                  onClick={handleSaveDraft}
-                  disabled={saving}
-                >
-                  초안 저장
-                </button>
+                {/* 초안 저장 버튼 제거: 스냅샷 미도입 상태에서 혼란 방지 */}
                 <button 
                   className="btn-publish"
                   onClick={handlePublishPage}
