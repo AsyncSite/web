@@ -7,7 +7,7 @@ import TimelineSectionForm from './forms/TimelineSectionForm';
 import ReviewsSectionForm from './forms/ReviewsSectionForm';
 import FAQSectionForm from './forms/FAQSectionForm';
 import CTASectionForm from './forms/CTASectionForm';
-import RichTextSectionForm from './forms/RichTextSectionForm';
+import RichTextSectionForm from './forms/RichTextSectionFormV2';
 import HowWeRollSectionForm from './forms/HowWeRollSectionForm';
 import JourneySectionForm from './forms/JourneySectionForm';
 import './SectionEditForm.css';

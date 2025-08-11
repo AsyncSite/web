@@ -28,7 +28,7 @@ interface RichTextSectionFormProps {
   onCancel: () => void;
 }
 
-const RichTextSectionFormV2: React.FC<RichTextSectionFormProps> = ({
+const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
   initialData = {},
   onSave,
   onCancel
@@ -722,4 +722,4 @@ const RichTextSectionFormV2: React.FC<RichTextSectionFormProps> = ({
   );
 };
 
-export default RichTextSectionFormV2;
+export default RichTextSectionForm;
