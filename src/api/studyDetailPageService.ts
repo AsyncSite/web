@@ -29,12 +29,9 @@ export enum SectionType {
   HERO = 'HERO',
   GALLERY = 'GALLERY',
   MEMBERS = 'MEMBERS',
-  SCHEDULE = 'SCHEDULE',
   FAQ = 'FAQ',
   REVIEWS = 'REVIEWS',
   VIDEO_EMBED = 'VIDEO_EMBED',
-  TIMELINE = 'TIMELINE',
-  CTA = 'CTA',
   TABS = 'TABS',
   ACCORDION = 'ACCORDION',
   STATS = 'STATS',
@@ -42,7 +39,8 @@ export enum SectionType {
   CUSTOM_HTML = 'CUSTOM_HTML',
   CODE_BLOCK = 'CODE_BLOCK',
   HOW_WE_ROLL = 'HOW_WE_ROLL',
-  JOURNEY = 'JOURNEY'
+  JOURNEY = 'JOURNEY',
+  EXPERIENCE = 'EXPERIENCE'
 }
 
 export enum PageStatus {

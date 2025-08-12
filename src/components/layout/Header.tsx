@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { STUDY_LIST, getStudyUrl } from '../../constants/studies';
+import { getStudyDisplayInfo } from '../../utils/studyStatusUtils';
 import './Header.css';
 
 interface HeaderProps {
@@ -265,7 +266,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                 </button>
                 {showStudyDropdown && (
                   <div className="nav-dropdown">
-                    {STUDY_LIST.filter(study => study.status !== 'closed').map(study => (
+                    {STUDY_LIST.filter(study => study.status !== 'COMPLETED').map(study => (
                       <Link 
                         key={study.id} 
                         to={getStudyUrl(study)} 
@@ -276,8 +277,8 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                         }}
                       >
                         <span className="dropdown-item-name">{study.name}</span>
-                        <span className={`dropdown-item-badge ${study.status}`}>
-                          {study.status === 'recruiting' ? '모집중' : '진행중'}
+                        <span className={`dropdown-item-badge ${study.status.toLowerCase()}`}>
+                          {getStudyDisplayInfo(study.status as any, study.deadline.toISOString()).label}
                         </span>
                       </Link>
                     ))}

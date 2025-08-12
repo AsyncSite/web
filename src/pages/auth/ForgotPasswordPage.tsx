@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import StarBackground from '../../components/common/StarBackground';
-import { env } from '../../config/environment';
+import apiClient from '../../api/client';
 import './auth-common.css';
 import './ForgotPasswordPage.css';
 
@@ -54,35 +54,10 @@ function ForgotPasswordPage(): React.ReactNode {
     setErrors({});
 
     try {
-      const response = await fetch(`${env.apiBaseUrl}/api/auth/password-reset/reset-request`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: formData.email })
+      await apiClient.post('/api/auth/password-reset/reset-request', { 
+        email: formData.email 
       });
-
-      if (!response.ok) {
-        // JSON 파싱 시도, 실패하면 기본 메시지
-        let errorMessage = '요청 처리 중 오류가 발생했습니다';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch (jsonError) {
-          // JSON 파싱 실패 시 상태 코드에 따른 메시지
-          if (response.status === 401) {
-            errorMessage = '인증 오류가 발생했습니다. 서버 설정을 확인해주세요.';
-          } else if (response.status === 403) {
-            errorMessage = '요청이 거부되었습니다. 잠시 후 다시 시도해주세요.';
-          } else if (response.status === 404) {
-            errorMessage = '요청 처리 중 오류가 발생했습니다.';
-          } else if (response.status === 500) {
-            errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
-          }
-        }
-        throw new Error(errorMessage);
-      }
-
+      
       setIsSuccess(true);
     } catch (error) {
       // 기술적인 에러 메시지는 콘솔에만 로깅

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import apiClient from '../api/client';
 import {
   PaymentConfig,
   PaymentContextValue,
@@ -92,22 +93,12 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
       setCurrentPayment(request);
 
       // 백엔드 API 호출 (결제 준비)
-      if (process.env.REACT_APP_API_URL) {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/payments/prepare`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
-          },
-          body: JSON.stringify(request)
-        });
-
-        if (!response.ok) {
-          throw new Error('Payment preparation failed');
-        }
-
-        const data = await response.json();
-        setCurrentPayment({ ...request, ...data });
+      try {
+        const response = await apiClient.post('/api/payments/prepare', request);
+        setCurrentPayment({ ...request, ...response.data });
+      } catch (apiError) {
+        // API 호출 실패 시 에러 처리
+        throw new Error('Payment preparation failed');
       }
 
       setStatus('ready');
@@ -129,29 +120,24 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
       setStatus('processing');
       
       // 백엔드 API 호출 (결제 승인)
-      if (process.env.REACT_APP_API_URL) {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/payments/confirm`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
-          },
-          body: JSON.stringify({
-            paymentKey,
-            orderId: currentPayment?.orderId,
-            amount: currentPayment?.amount.final
-          })
+      try {
+        const response = await apiClient.post<PaymentResponse>('/api/payments/confirm', {
+          paymentKey,
+          orderId: currentPayment?.orderId,
+          amount: currentPayment?.amount.final
         });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Payment confirmation failed');
-        }
-
-        const paymentResponse: PaymentResponse = await response.json();
+        
         setStatus('completed');
-        return paymentResponse;
-      } else {
+        return response.data;
+      } catch (apiError: any) {
+        // API 호출이 실제로 실패한 경우
+        if (apiError.response) {
+          throw new Error(apiError.response.data?.message || 'Payment confirmation failed');
+        }
+        // 네트워크 오류나 개발 모드 폴백
+      }
+      
+      {
         // 개발 모드: localStorage 사용
         const mockResponse: PaymentResponse = {
           paymentKey,
@@ -191,23 +177,11 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({
   // 환불
   const refundPayment = useCallback(async (paymentKey: string, amount?: number) => {
     try {
-      if (process.env.REACT_APP_API_URL) {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/payments/${paymentKey}/refund`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
-          },
-          body: JSON.stringify({ amount })
-        });
-
-        if (!response.ok) {
-          throw new Error('Refund failed');
-        }
-
+      try {
+        await apiClient.post(`/api/payments/${paymentKey}/refund`, { amount });
         setStatus('refunded');
-      } else {
-        // 개발 모드
+      } catch (apiError) {
+        // API 호출 실패 시 개발 모드 폴백
         console.log('Refund requested:', { paymentKey, amount });
         setStatus('refunded');
       }

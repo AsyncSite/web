@@ -21,14 +21,22 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
     startDate: new Date().toISOString().split('T')[0],
     calculateDays: true,
     generations: [],
-    theme: 'tecoteco',
     layout: 'list',
     showAchievements: true,
     showIcons: true,
     showStats: false
   };
 
-  const [data, setData] = useState<JourneySectionData>(initialData || defaultData);
+  // initialData가 있으면 generations 필드가 반드시 존재하도록 보장
+  const mergedData: JourneySectionData = initialData 
+    ? {
+        ...defaultData,
+        ...initialData,
+        generations: initialData.generations || []
+      }
+    : defaultData;
+
+  const [data, setData] = useState<JourneySectionData>(mergedData);
   const [editingGenerationIndex, setEditingGenerationIndex] = useState<number | null>(null);
 
   // 템플릿 로드
@@ -134,31 +142,47 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="section-form journey-section-form">
-      <div className="form-header">
-        <h3>🚀 Journey 섹션 편집</h3>
-        <div className="template-buttons">
-          <button
-            type="button"
-            onClick={() => loadTemplate('algorithm')}
-            className="template-btn"
-          >
-            알고리즘 템플릿
-          </button>
-          <button
-            type="button"
-            onClick={() => loadTemplate('project')}
-            className="template-btn"
-          >
-            프로젝트 템플릿
-          </button>
-          <button
-            type="button"
-            onClick={() => loadTemplate('reading')}
-            className="template-btn"
-          >
-            독서 템플릿
-          </button>
-        </div>
+      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '20px'
+      }}>
+        <button 
+          type="button" 
+          onClick={() => loadTemplate('algorithm')}
+          className="journey-example-btn"
+          style={{
+            padding: '8px 16px',
+            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
+            border: '1px solid rgba(195, 232, 141, 0.3)',
+            borderRadius: '6px',
+            color: '#C3E88D',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            whiteSpace: 'nowrap'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ fontSize: '16px' }}>✨</span>
+          예시 데이터 불러오기
+        </button>
       </div>
 
       {/* 기본 정보 */}
@@ -219,34 +243,18 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
         />
       </div>
 
-      {/* 테마 및 레이아웃 */}
-      <div className="form-row">
-        <div className="form-group">
-          <label>테마</label>
-          <select
-            value={data.theme}
-            onChange={(e) => setData({ ...data, theme: e.target.value as any })}
-            className="form-select"
-          >
-            <option value="tecoteco">TecoTeco</option>
-            <option value="modern">Modern</option>
-            <option value="classic">Classic</option>
-            <option value="timeline">Timeline</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>레이아웃</label>
-          <select
-            value={data.layout}
-            onChange={(e) => setData({ ...data, layout: e.target.value as any })}
-            className="form-select"
-          >
-            <option value="list">리스트</option>
-            <option value="timeline">타임라인</option>
-            <option value="cards">카드</option>
-          </select>
-        </div>
+      {/* 레이아웃 */}
+      <div className="form-group">
+        <label>레이아웃</label>
+        <select
+          value={data.layout}
+          onChange={(e) => setData({ ...data, layout: e.target.value as any })}
+          className="form-select"
+        >
+          <option value="list">리스트</option>
+          <option value="timeline">타임라인</option>
+          <option value="cards">카드</option>
+        </select>
       </div>
 
       <div className="form-group">
@@ -279,7 +287,7 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
         </div>
 
         <div className="generations-list">
-          {data.generations.map((generation, index) => (
+          {data.generations && data.generations.length > 0 ? data.generations.map((generation, index) => (
             <div key={index} className="generation-item">
               {editingGenerationIndex === index ? (
                 // 편집 모드
@@ -400,14 +408,12 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
                 </div>
               )}
             </div>
-          ))}
+          )) : (
+            <p style={{ color: 'rgba(255, 255, 255, 0.5)', textAlign: 'center' }}>
+              세대/시즌을 추가하여 여정을 구성하세요
+            </p>
+          )}
         </div>
-
-        {data.generations.length === 0 && (
-          <p style={{ color: 'rgba(255, 255, 255, 0.5)', textAlign: 'center' }}>
-            세대/시즌을 추가하여 여정을 구성하세요
-          </p>
-        )}
       </div>
 
       {/* 통계 섹션 */}

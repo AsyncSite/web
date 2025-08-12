@@ -142,8 +142,65 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="study-management-hero-form">
+      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '20px'
+      }}>
+        <button 
+          type="button" 
+          onClick={loadExampleData}
+          className="study-management-hero-example-btn"
+          style={{
+            padding: '8px 16px',
+            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
+            border: '1px solid rgba(195, 232, 141, 0.3)',
+            borderRadius: '6px',
+            color: '#C3E88D',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            whiteSpace: 'nowrap'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ fontSize: '16px' }}>✨</span>
+          예시 데이터 불러오기
+        </button>
+      </div>
+
       <div className="study-management-hero-form-group">
-        <label>제목 *</label>
+        <div style={{
+          marginBottom: '12px'
+        }}>
+          <label style={{
+            margin: 0,
+            fontSize: '16px',
+            fontWeight: '600',
+            color: '#C3E88D'
+          }}>제목 *</label>
+          <p style={{
+            margin: '2px 0 0 0',
+            fontSize: '13px',
+            color: 'rgba(255, 255, 255, 0.5)'
+          }}>스터디의 메인 타이틀을 입력하세요</p>
+        </div>
         <StudyDetailRichTextEditor
           value={title}
           onChange={setTitle}
@@ -154,7 +211,21 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
       </div>
 
       <div className="study-management-hero-form-group">
-        <label>부제목</label>
+        <div style={{
+          marginBottom: '12px'
+        }}>
+          <label style={{
+            margin: 0,
+            fontSize: '16px',
+            fontWeight: '600',
+            color: '#82AAFF'
+          }}>부제목</label>
+          <p style={{
+            margin: '2px 0 0 0',
+            fontSize: '13px',
+            color: 'rgba(255, 255, 255, 0.5)'
+          }}>하이라이트로 강조할 수 있습니다</p>
+        </div>
         <StudyDetailRichTextEditor
           value={subtitle}
           onChange={setSubtitle}
@@ -165,13 +236,45 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
       </div>
 
       <div className="study-management-hero-form-group">
-        <label>설명</label>
+        <div style={{
+          marginBottom: '12px'
+        }}>
+          <label style={{
+            margin: 0,
+            fontSize: '16px',
+            fontWeight: '600',
+            color: '#FFB5BA'
+          }}>설명</label>
+          <p style={{
+            margin: '2px 0 0 0',
+            fontSize: '13px',
+            color: 'rgba(255, 255, 255, 0.5)'
+          }}>스터디의 상세한 소개를 작성하세요</p>
+        </div>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="스터디에 대한 자세한 설명을 입력하세요"
           className="study-management-hero-textarea"
           rows={4}
+          style={{
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '8px',
+            padding: '12px',
+            fontSize: '14px',
+            lineHeight: '1.6',
+            color: 'rgba(255, 255, 255, 0.9)',
+            transition: 'all 0.3s ease'
+          }}
+          onFocus={(e) => {
+            e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+            e.target.style.borderColor = 'rgba(255, 179, 186, 0.4)';
+          }}
+          onBlur={(e) => {
+            e.target.style.background = 'rgba(255, 255, 255, 0.03)';
+            e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          }}
         />
       </div>
 
@@ -297,16 +400,6 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
             </div>
           </>
         )}
-      </div>
-
-      <div className="study-management-hero-form-group">
-        <button 
-          type="button" 
-          onClick={loadExampleData}
-          className="study-management-hero-example-btn"
-        >
-          TecoTeco 예시 데이터 불러오기
-        </button>
       </div>
 
       <div className="study-management-hero-form-actions">

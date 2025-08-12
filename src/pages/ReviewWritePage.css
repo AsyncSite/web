@@ -1,0 +1,225 @@
+.review-write-page {
+  min-height: 100vh;
+  background: #0a0a0f;
+}
+
+.review-write-page .page-content {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.review-write-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(26, 26, 46, 0.5);
+  border: 1px solid rgba(137, 221, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.review-write-header {
+  background: linear-gradient(135deg, rgba(137, 221, 255, 0.1) 0%, rgba(195, 232, 141, 0.1) 100%);
+  padding: 40px;
+  border-bottom: 1px solid rgba(137, 221, 255, 0.1);
+}
+
+.review-write-header .back-button {
+  background: none;
+  border: none;
+  color: #89DDFF;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: opacity 0.3s ease;
+}
+
+.review-write-header .back-button:hover {
+  opacity: 0.8;
+}
+
+.review-write-header h1 {
+  font-size: 32px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.review-write-header .study-info h2 {
+  font-size: 24px;
+  color: #C3E88D;
+  margin-bottom: 10px;
+}
+
+.review-write-header .study-tagline {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+}
+
+.review-form {
+  padding: 40px;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.form-group label {
+  display: block;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.review-type-selector {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.type-button {
+  flex: 1;
+  min-width: 150px;
+  padding: 16px 24px;
+  background: rgba(137, 221, 255, 0.05);
+  border: 1px solid rgba(137, 221, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.type-button:hover {
+  background: rgba(137, 221, 255, 0.1);
+  border-color: rgba(137, 221, 255, 0.3);
+  color: #ffffff;
+}
+
+.type-button.active {
+  background: linear-gradient(135deg, rgba(137, 221, 255, 0.2) 0%, rgba(195, 232, 141, 0.2) 100%);
+  border-color: #89DDFF;
+  color: #ffffff;
+}
+
+.rating-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.star-button.active {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.star-button:hover {
+  transform: scale(1.2);
+}
+
+.rating-text {
+  margin-left: 16px;
+  color: #C3E88D;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 16px;
+  background: rgba(26, 26, 46, 0.5);
+  border: 1px solid rgba(137, 221, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: #89DDFF;
+  background: rgba(26, 26, 46, 0.7);
+}
+
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+.cancel-button,
+.submit-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.cancel-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cancel-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  box-shadow: 0 4px 15px rgba(195, 232, 141, 0.3);
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(195, 232, 141, 0.4);
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.loading-spinner {
+  font-size: 48px;
+  margin-bottom: 20px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

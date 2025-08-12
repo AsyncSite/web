@@ -147,7 +147,6 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
     subtitle,
     highlightText,
     steps = [],
-    theme = 'tecoteco',
     layout = 'horizontal',
     enableAnimation = true,
     animationType = 'fadeIn',
@@ -215,10 +214,8 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
     return <p className="section-subtitle">{subtitle}</p>;
   };
 
-  // 테마별 클래스명 결정
-  const sectionClassName = theme === 'tecoteco' 
-    ? 'tecoteco-experience-section'
-    : `study-detail-experience-section ${theme}-theme`;
+  // 항상 tecoteco 스타일 사용
+  const sectionClassName = 'tecoteco-experience-section';
 
   const customStyles = {
     ...(primaryColor && { '--primary-color': primaryColor }),

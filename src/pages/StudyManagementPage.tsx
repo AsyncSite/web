@@ -12,7 +12,8 @@ import { SectionRenderer } from '../components/studyDetailPage/sections';
 import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
 import { normalizeMembersPropsForUI, serializeMembersPropsForAPI } from '../components/studyDetailPage/utils/membersAdapter';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { adaptSectionForBackend, restoreSectionTypes, isExtendedSection } from '../components/studyDetailPage/utils/sectionTypeAdapter';
+import ConfirmModal from '../components/common/ConfirmModal';
+import { ToastContainer, ToastType } from '../components/common/Toast';
 import './StudyManagementPage.css';
 import '../components/studyDetailPage/StudyDetailPageRenderer.css';
 
@@ -45,6 +46,28 @@ const StudyManagementPage: React.FC = () => {
   const [showAddSection, setShowAddSection] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [draggedSectionId, setDraggedSectionId] = useState<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  
+  // Modal and Toast states
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    confirmButtonClass?: string;
+  }>({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    onConfirm: () => {},
+    confirmButtonClass: 'confirm-button'
+  });
+  const [toasts, setToasts] = useState<Array<{
+    id: string;
+    message: string;
+    type?: ToastType;
+  }>>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,8 +84,19 @@ const StudyManagementPage: React.FC = () => {
       try {
         setLoading(true);
         
-        // Fetch study details
-        const studyData = await studyService.getStudyById(studyId);
+        // Fetch study details - studyId가 실제로는 slug일 수도 있음
+        let studyData = null;
+        
+        // UUID 패턴 체크 (숫자나 slug가 아닌 경우)
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(studyId);
+        
+        if (isUUID) {
+          studyData = await studyService.getStudyById(studyId);
+        } else {
+          // slug로 먼저 시도
+          studyData = await studyService.getStudyBySlug(studyId);
+        }
+        
         if (!studyData) {
           alert('존재하지 않는 스터디입니다.');
           navigate('/study');
@@ -76,31 +110,27 @@ const StudyManagementPage: React.FC = () => {
         // 현재는 프론트엔드에서만 체크하므로 보안상 완벽하지 않습니다.
         // 백엔드에서 proposerId나 role 정보를 확인해야 합니다.
         
-        // Fetch applications
+        // Fetch applications - 실제 study ID 사용
         try {
-          const applicationsData = await studyService.getStudyApplications(studyId, 0, 50);
+          const applicationsData = await studyService.getStudyApplications(studyData.id, 0, 50);
           setApplications(applicationsData.content);
         } catch (error) {
           console.warn('Failed to fetch applications:', error);
           setApplications([]);
         }
 
-        // Fetch members
+        // Fetch members - 실제 study ID 사용
         try {
-          const membersData = await studyService.getStudyMembers(studyId, 0, 50);
+          const membersData = await studyService.getStudyMembers(studyData.id, 0, 50);
           setMembers(membersData.content);
         } catch (error) {
           console.warn('Failed to fetch members:', error);
           setMembers([]);
         }
 
-        // Fetch page data for editor
+        // Fetch page data for editor - 실제 study ID 사용
         try {
-          const pageData = await studyDetailPageService.getDraftPage(studyId);
-          // 받은 데이터의 섹션 타입을 복원
-          if (pageData && pageData.sections) {
-            pageData.sections = restoreSectionTypes(pageData.sections);
-          }
+          const pageData = await studyDetailPageService.getDraftPage(studyData.id);
           setPageData(pageData);
         } catch (error) {
           console.warn('Failed to fetch page data, trying to fetch by slug:', error);
@@ -108,10 +138,6 @@ const StudyManagementPage: React.FC = () => {
           if (studyData.slug) {
             try {
               const pageData = await studyDetailPageService.getPublishedPageBySlug(studyData.slug);
-              // 받은 데이터의 섹션 타입을 복원
-              if (pageData && pageData.sections) {
-                pageData.sections = restoreSectionTypes(pageData.sections);
-              }
               setPageData(pageData);
             } catch (error) {
               console.warn('Failed to fetch page by slug:', error);
@@ -134,18 +160,33 @@ const StudyManagementPage: React.FC = () => {
   }, [studyId, navigate, isAuthenticated, user]);
 
   const handleAcceptApplication = async (applicationId: string) => {
-    if (!studyId || !user) return;
+    if (!study || !user) return;
 
     const application = applications.find(app => app.id === applicationId);
     if (!application) return;
 
-    const confirmMessage = `${application.applicantId}님의 참가 신청을 승인하시겠습니까?`;
-    if (!confirm(confirmMessage)) return;
+    setConfirmModal({
+      isOpen: true,
+      title: '참가 신청 승인',
+      message: `${application.applicantId}님의 참가 신청을 승인하시겠습니까?`,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        await doAcceptApplication(applicationId);
+      },
+      confirmButtonClass: 'confirm-button'
+    });
+  };
+  
+  const doAcceptApplication = async (applicationId: string) => {
+    if (!study || !user) return;
+    
+    const application = applications.find(app => app.id === applicationId);
+    if (!application) return;
 
     setActionLoading(applicationId);
     
     try {
-      await studyService.acceptApplication(studyId, applicationId, {
+      await studyService.acceptApplication(study.id, applicationId, {
         reviewerId: user.email,
         note: '참가 승인'
       });
@@ -159,11 +200,11 @@ const StudyManagementPage: React.FC = () => {
         )
       );
 
-      alert('참가 신청이 승인되었습니다.');
+      addToast('참가 신청이 승인되었습니다.', 'success');
       
       // Refresh members list
       try {
-        const membersData = await studyService.getStudyMembers(studyId, 0, 50);
+        const membersData = await studyService.getStudyMembers(study.id, 0, 50);
         setMembers(membersData.content);
       } catch (error) {
         console.warn('Failed to refresh members:', error);
@@ -171,7 +212,7 @@ const StudyManagementPage: React.FC = () => {
     } catch (error: any) {
       console.error('승인 처리 실패:', error);
       const errorMessage = error.response?.data?.message || '승인 처리 중 오류가 발생했습니다.';
-      alert(errorMessage);
+      addToast(errorMessage, 'error');
     } finally {
       setActionLoading(null);
     }
@@ -179,26 +220,20 @@ const StudyManagementPage: React.FC = () => {
 
   // Page editor handlers
   const handleAddSection = async (type: SectionType | string, props: any) => {
-    if (!studyId) return;
+    if (!study) return;
 
     try {
       setSaving(true);
-      // 확장 타입인 경우 어댑터를 통해 변환
-      const adapted = adaptSectionForBackend(type, props);
       const request: AddSectionRequest = { 
-        type: adapted.type, 
-        props: adapted.props 
+        type: type as SectionType, 
+        props: props 
       };
-      const updatedPage = await studyDetailPageService.addSection(studyId, request);
-      // 받은 데이터의 섹션 타입을 복원
-      if (updatedPage && updatedPage.sections) {
-        updatedPage.sections = restoreSectionTypes(updatedPage.sections);
-      }
+      const updatedPage = await studyDetailPageService.addSection(study!.id, request);
       setPageData(updatedPage);
       setShowAddSection(false);
     } catch (err) {
       console.error('Failed to add section:', err);
-      alert('섹션 추가에 실패했습니다');
+      addToast('섹션 추가에 실패했습니다', 'error');
     } finally {
       setSaving(false);
     }
@@ -209,22 +244,16 @@ const StudyManagementPage: React.FC = () => {
 
     try {
       setSaving(true);
-      // 확장 타입인 경우 어댑터를 통해 변환
-      const adapted = adaptSectionForBackend(sectionType, props);
       const request: AddSectionRequest = { 
-        type: adapted.type, 
-        props: adapted.props 
+        type: sectionType as SectionType, 
+        props: props 
       };
-      const updatedPage = await studyDetailPageService.updateSection(studyId, sectionId, request);
-      // 받은 데이터의 섹션 타입을 복원
-      if (updatedPage && updatedPage.sections) {
-        updatedPage.sections = restoreSectionTypes(updatedPage.sections);
-      }
+      const updatedPage = await studyDetailPageService.updateSection(study!.id, sectionId, request);
       setPageData(updatedPage);
       setSelectedSection(null);
     } catch (err) {
       console.error('Failed to update section:', err);
-      alert('섹션 업데이트에 실패했습니다');
+      addToast('섹션 업데이트에 실패했습니다', 'error');
     } finally {
       setSaving(false);
     }
@@ -233,21 +262,34 @@ const StudyManagementPage: React.FC = () => {
   const handleDeleteSection = async (sectionId: string) => {
     if (!studyId) return;
     
-    if (!window.confirm('정말로 이 섹션을 삭제하시겠습니까?')) return;
+    setConfirmModal({
+      isOpen: true,
+      title: '섹션 삭제',
+      message: '정말로 이 섹션을 삭제하시겠습니까?',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        await doDeleteSection(sectionId);
+      },
+      confirmButtonClass: 'delete-confirm-button'
+    });
+  };
+  
+  const doDeleteSection = async (sectionId: string) => {
+    if (!studyId) return;
 
     try {
       setSaving(true);
-      const updatedPage = await studyDetailPageService.removeSection(studyId, sectionId);
+      const updatedPage = await studyDetailPageService.removeSection(study!.id, sectionId);
       setPageData(updatedPage);
     } catch (err) {
       console.error('Failed to delete section:', err);
-      alert('섹션 삭제에 실패했습니다');
+      addToast('섹션 삭제에 실패했습니다', 'error');
     } finally {
       setSaving(false);
     }
   };
 
-  const handleReorderSection = async (sectionId: string, newOrder: number) => {
+  const handleReorderSection = async (sectionId: string, newIndex: number) => {
     if (!studyId || !pageData) return;
 
     try {
@@ -258,17 +300,84 @@ const StudyManagementPage: React.FC = () => {
       if (currentIndex === -1) return;
       
       const [removed] = sections.splice(currentIndex, 1);
-      sections.splice(newOrder, 0, removed);
+      sections.splice(newIndex, 0, removed);
       
       const sectionIds = sections.map(s => s.id);
-      const updatedPage = await studyDetailPageService.reorderSections(studyId, sectionIds);
+      const updatedPage = await studyDetailPageService.reorderSections(study!.id, sectionIds);
       setPageData(updatedPage);
     } catch (err) {
       console.error('Failed to reorder section:', err);
-      alert('섹션 순서 변경에 실패했습니다');
+      addToast('섹션 순서 변경에 실패했습니다', 'error');
     } finally {
       setSaving(false);
     }
+  };
+
+  // 드래그 앤 드롭 핸들러
+  const handleDragStart = (e: React.DragEvent, sectionId: string) => {
+    setDraggedSectionId(sectionId);
+    e.dataTransfer.effectAllowed = 'move';
+    // 드래그 중인 요소 스타일 설정
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '0.5';
+    }
+  };
+
+  // 키보드 접근성을 위한 핸들러
+  const handleKeyDown = (e: React.KeyboardEvent, section: PageSection, index: number) => {
+    if (!pageData) return;
+
+    // Alt + 화살표 키로 순서 변경
+    if (e.altKey) {
+      if (e.key === 'ArrowUp' && index > 0) {
+        e.preventDefault();
+        handleReorderSection(section.id, index - 1);
+      } else if (e.key === 'ArrowDown' && index < pageData.sections.length - 1) {
+        e.preventDefault();
+        handleReorderSection(section.id, index + 1);
+      }
+    }
+    // Enter 키로 편집
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      setSelectedSection(section);
+    }
+    // Delete 키로 삭제
+    else if (e.key === 'Delete') {
+      e.preventDefault();
+      handleDeleteSection(section.id);
+    }
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    // 드래그 종료 시 스타일 복원
+    if (e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.style.opacity = '1';
+    }
+    setDraggedSectionId(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    setDragOverIndex(null);
+    
+    if (!draggedSectionId || !pageData) return;
+    
+    const draggedIndex = pageData.sections.findIndex(s => s.id === draggedSectionId);
+    if (draggedIndex === -1 || draggedIndex === dropIndex) return;
+    
+    await handleReorderSection(draggedSectionId, dropIndex);
   };
 
   const handleSaveDraft = async () => {
@@ -276,15 +385,15 @@ const StudyManagementPage: React.FC = () => {
 
     try {
       setSaving(true);
-      const updatedPage = await studyDetailPageService.saveDraft(studyId, {
+      const updatedPage = await studyDetailPageService.saveDraft(study!.id, {
         theme: pageData.theme,
         sections: pageData.sections
       });
       setPageData(updatedPage);
-      alert('초안이 저장되었습니다');
+      addToast('초안이 저장되었습니다', 'success');
     } catch (err) {
       console.error('Failed to save draft:', err);
-      alert('초안 저장에 실패했습니다');
+      addToast('초안 저장에 실패했습니다', 'error');
     } finally {
       setSaving(false);
     }
@@ -293,25 +402,48 @@ const StudyManagementPage: React.FC = () => {
   const handlePublishPage = async () => {
     if (!studyId) return;
     
-    if (!window.confirm('페이지를 발행하시겠습니까?')) return;
+    setConfirmModal({
+      isOpen: true,
+      title: '페이지 발행',
+      message: '페이지를 발행하시겠습니까?',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        await doPublishPage();
+      },
+      confirmButtonClass: 'confirm-button'
+    });
+  };
+  
+  const doPublishPage = async () => {
+    if (!studyId) return;
 
     try {
       setSaving(true);
-      const updatedPage = await studyDetailPageService.publish(studyId);
+      const updatedPage = await studyDetailPageService.publish(study!.id);
       setPageData(updatedPage);
       
       // 발행 후 선택된 섹션을 해제하여 최신 데이터로 다시 로드하도록 유도
       setSelectedSection(null);
       
-      alert('페이지가 발행되었습니다');
+      addToast('페이지가 발행되었습니다', 'success');
     } catch (err) {
       console.error('Failed to publish page:', err);
-      alert('페이지 발행에 실패했습니다');
+      addToast('페이지 발행에 실패했습니다', 'error');
     } finally {
       setSaving(false);
     }
   };
 
+  // Toast helper function
+  const addToast = (message: string, type?: ToastType) => {
+    const id = Date.now().toString();
+    setToasts(prev => [...prev, { id, message, type }]);
+  };
+  
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
+  
   const handleRejectApplication = async (applicationId: string) => {
     if (!studyId || !user) return;
 
@@ -338,11 +470,11 @@ const StudyManagementPage: React.FC = () => {
         )
       );
 
-      alert('참가 신청이 거절되었습니다.');
+      addToast('참가 신청이 거절되었습니다.', 'info');
     } catch (error: any) {
       console.error('거절 처리 실패:', error);
       const errorMessage = error.response?.data?.message || '거절 처리 중 오류가 발생했습니다.';
-      alert(errorMessage);
+      addToast(errorMessage, 'error');
     } finally {
       setActionLoading(null);
     }
@@ -595,13 +727,13 @@ const StudyManagementPage: React.FC = () => {
                     if (!studyId) return;
                     try {
                       setSaving(true);
-                      const newPage = await studyDetailPageService.createPage(studyId, {
+                      const newPage = await studyDetailPageService.createPage(study!.id, {
                         slug: study?.slug || studyId,
                       });
                       setPageData(newPage);
                     } catch (err) {
                       console.error('Failed to create page:', err);
-                      alert('페이지 생성에 실패했습니다');
+                      addToast('페이지 생성에 실패했습니다', 'error');
                     } finally {
                       setSaving(false);
                     }
@@ -629,8 +761,8 @@ const StudyManagementPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="editor-content">
-                <div className="sections-manager">
+              <div className="editor-content" style={{ display: 'flex', gap: '24px' }}>
+                <div className="sections-manager" style={{ flex: '0 0 380px', minWidth: '380px' }}>
                   <div className="sections-header">
                     <h4>섹션 관리</h4>
                     <button 
@@ -646,7 +778,16 @@ const StudyManagementPage: React.FC = () => {
                       <div className="modal-content">
                         <h5>새 섹션 추가</h5>
                         <div className="section-types">
-                          {[...Object.values(SectionType), 'HOW_WE_ROLL', 'JOURNEY', 'EXPERIENCE'].map((type) => (
+                          {[
+                            SectionType.HERO,
+                            SectionType.RICH_TEXT,
+                            SectionType.MEMBERS,
+                            SectionType.FAQ,
+                            SectionType.REVIEWS,
+                            SectionType.HOW_WE_ROLL,
+                            SectionType.JOURNEY,
+                            SectionType.EXPERIENCE
+                          ].map((type) => (
                             <button
                               key={type}
                               className="section-type-btn"
@@ -674,27 +815,57 @@ const StudyManagementPage: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="sections-list">
+                  <div className="study-mgmt-sections-list">
                     {pageData.sections.length === 0 ? (
-                      <p className="empty-message">아직 섹션이 없습니다. 섹션을 추가해주세요.</p>
+                      <p className="study-mgmt-empty-message">아직 섹션이 없습니다. 섹션을 추가해주세요.</p>
                     ) : (
                       pageData.sections.map((section, index) => (
-                        <div key={section.id} className="section-item">
-                          <div className="section-info">
-                            <span className="section-type">{section.type}</span>
-                            <span className="section-order">순서: {section.order}</span>
+                        <div 
+                          key={section.id} 
+                          className={`study-mgmt-section-item ${
+                            draggedSectionId === section.id ? 'study-mgmt-section-dragging' : ''
+                          } ${
+                            dragOverIndex === index ? 'study-mgmt-section-drag-over' : ''
+                          }`}
+                          draggable
+                          tabIndex={0}
+                          role="listitem"
+                          aria-label={`${section.type} 섹션, ${index + 1}번째 위치. Alt+화살표로 순서 변경, Enter로 편집, Delete로 삭제`}
+                          onDragStart={(e) => handleDragStart(e, section.id)}
+                          onDragEnd={handleDragEnd}
+                          onDragOver={(e) => handleDragOver(e, index)}
+                          onDragLeave={handleDragLeave}
+                          onDrop={(e) => handleDrop(e, index)}
+                          onKeyDown={(e) => handleKeyDown(e, section, index)}
+                        >
+                          <div className="study-mgmt-drag-handle" title="드래그하여 순서 변경">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <circle cx="6" cy="4" r="1.5" fill="currentColor" opacity="0.6"/>
+                              <circle cx="6" cy="10" r="1.5" fill="currentColor" opacity="0.6"/>
+                              <circle cx="6" cy="16" r="1.5" fill="currentColor" opacity="0.6"/>
+                              <circle cx="14" cy="4" r="1.5" fill="currentColor" opacity="0.6"/>
+                              <circle cx="14" cy="10" r="1.5" fill="currentColor" opacity="0.6"/>
+                              <circle cx="14" cy="16" r="1.5" fill="currentColor" opacity="0.6"/>
+                            </svg>
                           </div>
-                          <div className="section-actions">
-                            <button onClick={() => setSelectedSection(section)}>편집</button>
+                          <div className="study-mgmt-section-info">
+                            <span className="study-mgmt-section-type">{section.type}</span>
+                          </div>
+                          <div className="study-mgmt-section-actions">
                             <button 
-                              onClick={() => handleReorderSection(section.id, Math.max(0, index - 1))}
-                              disabled={index === 0}
-                            >↑</button>
+                              className="study-mgmt-edit-btn"
+                              onClick={() => setSelectedSection(section)}
+                              title="섹션 편집"
+                            >
+                              ✏️
+                            </button>
                             <button 
-                              onClick={() => handleReorderSection(section.id, Math.min(pageData.sections.length - 1, index + 1))}
-                              disabled={index === pageData.sections.length - 1}
-                            >↓</button>
-                            <button onClick={() => handleDeleteSection(section.id)}>삭제</button>
+                              className="study-mgmt-delete-btn"
+                              onClick={() => handleDeleteSection(section.id)}
+                              title="섹션 삭제"
+                            >
+                              🗑️
+                            </button>
                           </div>
                         </div>
                       ))
@@ -703,9 +874,10 @@ const StudyManagementPage: React.FC = () => {
                 </div>
 
                 {selectedSection && (
-                  <div className="section-editor">
+                  <div className="section-editor" style={{ flex: 1, minWidth: 0 }}>
                     <SectionEditForm
                       sectionType={selectedSection.type}
+                      studyId={study?.id}  // 실제 스터디 ID 전달
                       initialData={selectedSection.type === SectionType.MEMBERS
                         ? normalizeMembersPropsForUI(selectedSection.props || {})
                         : (selectedSection.props || {})}
@@ -735,6 +907,17 @@ const StudyManagementPage: React.FC = () => {
           </div>
         )}
       </div>
+      
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmButtonClass={confirmModal.confirmButtonClass}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
+      
+      <ToastContainer toasts={toasts} onClose={removeToast} />
     </div>
   );
 };

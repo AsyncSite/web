@@ -13,7 +13,6 @@ interface FAQSectionFormProps {
     tagHeader?: string;
     faqs?: FAQItem[];
     items?: FAQItem[]; // FAQSection uses 'items' not 'faqs'
-    theme?: 'default' | 'tecoteco' | 'modern';
     showIcons?: boolean;
     showJoinCTA?: boolean;
     joinTitle?: string;
@@ -32,7 +31,6 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
 }) => {
   const [title, setTitle] = useState(initialData.title || '자주 묻는 질문');
   const [tagHeader, setTagHeader] = useState(initialData.tagHeader || '');
-  const [theme, setTheme] = useState(initialData.theme || 'default');
   const [showIcons, setShowIcons] = useState(initialData.showIcons || false);
   const [showJoinCTA, setShowJoinCTA] = useState(initialData.showJoinCTA || false);
   const [joinTitle, setJoinTitle] = useState(initialData.joinTitle || 'TecoTeco, 당신의 합류를 기다려요!');
@@ -77,7 +75,6 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
     onSave({
       title,
       tagHeader,
-      theme,
       showIcons,
       showJoinCTA,
       joinTitle,
@@ -129,7 +126,6 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   const loadTecotecoData = () => {
     setTitle('FAQ');
     setTagHeader('궁금증 해결');
-    setTheme('tecoteco');
     setShowIcons(true);
     setShowJoinCTA(true);
     setJoinTitle('TecoTeco, 당신의 합류를 기다려요!');
@@ -167,19 +163,49 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="study-management-faq-form">
-      <div className="study-management-faq-form-group">
-        <label>테마</label>
-        <select
-          value={theme}
-          onChange={(e) => setTheme(e.target.value as any)}
-          className="study-management-faq-input"
+      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '20px'
+      }}>
+        <button 
+          type="button" 
+          onClick={loadExampleData}
+          className="study-management-faq-example-btn"
+          style={{
+            padding: '8px 16px',
+            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
+            border: '1px solid rgba(195, 232, 141, 0.3)',
+            borderRadius: '6px',
+            color: '#C3E88D',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            whiteSpace: 'nowrap'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
         >
-          <option value="default">기본</option>
-          <option value="tecoteco">테코테코</option>
-          <option value="modern">모던</option>
-        </select>
+          <span style={{ fontSize: '16px' }}>✨</span>
+          예시 데이터 불러오기
+        </button>
       </div>
-
+      
       <div className="study-management-faq-form-group">
         <label>태그 헤더 (선택사항)</label>
         <input
@@ -216,23 +242,14 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       <div className="study-management-faq-form-group">
         <div className="study-management-faq-group-header">
           <label>FAQ 목록</label>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button 
-              type="button" 
-              onClick={loadExampleData}
-              className="study-management-faq-example-btn"
-            >
-              예시 데이터
-            </button>
-            <button 
-              type="button" 
-              onClick={loadTecotecoData}
-              className="study-management-faq-example-btn"
-              style={{ background: '#C3E88D', color: '#000' }}
-            >
-              TecoTeco FAQ
-            </button>
-          </div>
+          <button 
+            type="button" 
+            onClick={loadTecotecoData}
+            className="study-management-faq-example-btn"
+            style={{ background: '#C3E88D', color: '#000' }}
+          >
+            TecoTeco FAQ
+          </button>
         </div>
         
         <div className="study-management-faq-list">
@@ -300,66 +317,62 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
         </button>
       </div>
       
-      {theme === 'tecoteco' && (
+      <div className="study-management-faq-form-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={showJoinCTA}
+            onChange={(e) => setShowJoinCTA(e.target.checked)}
+          />
+          Join CTA 블록 표시
+        </label>
+      </div>
+      
+      {showJoinCTA && (
         <>
           <div className="study-management-faq-form-group">
-            <label>
-              <input
-                type="checkbox"
-                checked={showJoinCTA}
-                onChange={(e) => setShowJoinCTA(e.target.checked)}
-              />
-              Join CTA 블록 표시 (TecoTeco 테마)
-            </label>
+            <label>Join CTA 제목</label>
+            <input
+              type="text"
+              value={joinTitle}
+              onChange={(e) => setJoinTitle(e.target.value)}
+              placeholder="예: TecoTeco, 당신의 합류를 기다려요!"
+              className="study-management-faq-input"
+            />
           </div>
           
-          {showJoinCTA && (
-            <>
-              <div className="study-management-faq-form-group">
-                <label>Join CTA 제목</label>
-                <input
-                  type="text"
-                  value={joinTitle}
-                  onChange={(e) => setJoinTitle(e.target.value)}
-                  placeholder="예: TecoTeco, 당신의 합류를 기다려요!"
-                  className="study-management-faq-input"
-                />
-              </div>
-              
-              <div className="study-management-faq-form-group">
-                <label>Join CTA 설명 (선택사항)</label>
-                <textarea
-                  value={joinDescription}
-                  onChange={(e) => setJoinDescription(e.target.value)}
-                  placeholder="추가 설명 텍스트"
-                  className="study-management-faq-textarea"
-                  rows={2}
-                />
-              </div>
-              
-              <div className="study-management-faq-form-group">
-                <label>버튼 텍스트</label>
-                <input
-                  type="text"
-                  value={joinButtonText}
-                  onChange={(e) => setJoinButtonText(e.target.value)}
-                  placeholder="예: @renechoi에게 커피챗 요청하기 ☕"
-                  className="study-management-faq-input"
-                />
-              </div>
-              
-              <div className="study-management-faq-form-group">
-                <label>버튼 클릭 액션 메시지</label>
-                <input
-                  type="text"
-                  value={joinButtonAction}
-                  onChange={(e) => setJoinButtonAction(e.target.value)}
-                  placeholder="예: @renechoi에게 커피챗 요청!"
-                  className="study-management-faq-input"
-                />
-              </div>
-            </>
-          )}
+          <div className="study-management-faq-form-group">
+            <label>Join CTA 설명 (선택사항)</label>
+            <textarea
+              value={joinDescription}
+              onChange={(e) => setJoinDescription(e.target.value)}
+              placeholder="추가 설명 텍스트"
+              className="study-management-faq-textarea"
+              rows={2}
+            />
+          </div>
+          
+          <div className="study-management-faq-form-group">
+            <label>버튼 텍스트</label>
+            <input
+              type="text"
+              value={joinButtonText}
+              onChange={(e) => setJoinButtonText(e.target.value)}
+              placeholder="예: @renechoi에게 커피챗 요청하기 ☕"
+              className="study-management-faq-input"
+            />
+          </div>
+          
+          <div className="study-management-faq-form-group">
+            <label>버튼 클릭 액션 메시지</label>
+            <input
+              type="text"
+              value={joinButtonAction}
+              onChange={(e) => setJoinButtonAction(e.target.value)}
+              placeholder="예: @renechoi에게 커피챗 요청!"
+              className="study-management-faq-input"
+            />
+          </div>
         </>
       )}
 

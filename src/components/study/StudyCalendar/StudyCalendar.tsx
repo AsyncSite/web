@@ -171,7 +171,7 @@ const StudyCalendar: React.FC = () => {
       }
 
       // 모집 마감일 이벤트
-      if (study.status === 'recruiting' && study.deadline) {
+      if (study.status === 'APPROVED' && study.deadline) {
         const deadline = new Date(study.deadline);
         if (deadline.getMonth() === currentMonth && deadline.getFullYear() === currentYear) {
           events.push({

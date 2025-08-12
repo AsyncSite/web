@@ -132,7 +132,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
         id: '1',
         type: 'heading',
         level: 2,
-        content: '변화하는 세상에서 흔들리지 않을 \'나\'를 위한 스터디'
+        content: RichTextConverter.fromHTML('변화하는 세상에서<br/>흔들리지 않을 \'나\'를 위한 스터디')
       },
       {
         id: '2',
@@ -141,35 +141,40 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       },
       {
         id: '3',
-        type: 'highlight',
-        content: RichTextConverter.fromHTML('<span style="color: #c3e88d; font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>'),
-        color: 'green'
+        type: 'paragraph',
+        content: RichTextConverter.fromHTML('TecoTeco는 이런 질문에서 출발했습니다. 기술이 아무리 발달해도 <span style="color: #c3e88d; font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.')
       },
       {
         id: '4',
         type: 'heading',
         level: 3,
-        content: '물고기를 잡는 방법을 익히는 것'
+        content: RichTextConverter.fromHTML('<span style="color: #c3e88d;">물고기를 잡는 방법을 익히는 것</span>')
       },
       {
         id: '5',
         type: 'paragraph',
-        content: RichTextConverter.fromHTML('우리는 \'물고기 그 자체\'가 아닌, <span style="color: #82aaff; font-weight: 500;">\'물고기를 잡는 방법\'</span>에 집중합니다. 단순히 문제를 푸는 것을 넘어서, 문제의 본질을 이해하고 <span style="color: #82aaff; font-weight: 500;">견고한 사고력과 논리력</span>을 단련하는 것이 목표입니다.')
+        content: RichTextConverter.fromHTML('우리는 \'물고기 그 자체\'가 아닌, <span style="color: #82aaff;">\'물고기를 잡는 방법\'</span>에 집중합니다. 단순히 문제를 푸는 것을 넘어서, 문제의 본질을 이해하고 <span style="color: #82aaff;">견고한 사고력과 논리력</span>을 단련하는 것이 목표입니다.')
       },
       {
         id: '6',
-        type: 'infoBox',
-        header: '💡 핵심 포인트',
-        items: [
-          { icon: '📌', content: RichTextConverter.fromHTML('단순 암기가 아닌 <span style="color: #ffea00; font-weight: 500;">사고력 향상</span>') },
-          { icon: '🎯', content: RichTextConverter.fromHTML('AI와의 <span style="color: #ffea00; font-weight: 500;">협업 능력</span> 개발') },
-          { icon: '🚀', content: RichTextConverter.fromHTML('변화에 흔들리지 않는 <span style="color: #ffea00; font-weight: 500;">개발자 핵심 역량</span>') }
-        ]
+        type: 'paragraph',
+        content: RichTextConverter.fromHTML('매주 함께 모여 한 문제를 깊이 파고들고, 서로 다른 관점으로 접근해보며 사고의 폭을 넓혀갑니다. 왜 이 알고리즘을 선택했는지, 다른 방법은 없었는지, 이 문제에서 배울 수 있는 더 큰 인사이트는 무엇인지 함께 고민해요.')
       },
       {
         id: '7',
+        type: 'heading',
+        level: 3,
+        content: RichTextConverter.fromHTML('<span style="color: #c3e88d;">물고기를 \'잘\' 잡는 방법을 모색하는 것</span>')
+      },
+      {
+        id: '8',
+        type: 'paragraph',
+        content: RichTextConverter.fromHTML('AI를 배척하지 않고 <span style="color: #82aaff;">현명하게 활용하는 방법</span>을 함께 모색합니다. AI와 페어 코딩하고, 비판적으로 분석하며 코드를 개선합니다. AI가 <span style="color: #82aaff;">우리의 통찰력을 확장시키는 강력한 파트너</span>가 될 수 있음을 증명해나가고 있어요.')
+      },
+      {
+        id: '9',
         type: 'callout',
-        content: RichTextConverter.fromHTML('우리가 찾는 건 변화 속에서도 <span style="color: #c3e88d; font-weight: 600;">흔들리지 않을 \'나\'</span>, 생각하는 힘이에요.'),
+        content: RichTextConverter.fromHTML('우리가 찾는 건 변화 속에서도 <span style="color: #c3e88d; font-weight: 600;">흔들리지 않을 \'나\'</span><br/>생각하는 힘이에요.'),
         icon: '✨',
         style: 'green'
       }
@@ -610,6 +615,49 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="study-management-richtext-form">
+      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '20px'
+      }}>
+        <button 
+          type="button" 
+          onClick={loadExampleData}
+          className="study-management-richtext-template-btn study-management-richtext-example"
+          style={{
+            padding: '8px 16px',
+            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
+            border: '1px solid rgba(195, 232, 141, 0.3)',
+            borderRadius: '6px',
+            color: '#C3E88D',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            whiteSpace: 'nowrap'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ fontSize: '16px' }}>✨</span>
+          예시 데이터 불러오기
+        </button>
+      </div>
+
       <div className="study-management-richtext-form-group">
         <label>섹션 제목 (선택)</label>
         <input
@@ -668,16 +716,6 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
             blocks.map(block => renderBlockEditor(block))
           )}
         </div>
-      </div>
-
-      <div className="study-management-richtext-form-group">
-        <button 
-          type="button" 
-          onClick={loadExampleData}
-          className="study-management-richtext-template-btn study-management-richtext-example"
-        >
-          TecoTeco 예시 데이터 불러오기
-        </button>
       </div>
 
       <div className="study-management-richtext-form-row">

@@ -4,6 +4,7 @@ import { TemplateHeader } from '../components/layout';
 import { Footer } from '../components/layout';
 import { useAuth } from '../contexts/AuthContext';
 import studyService, { type Study } from '../api/studyService';
+import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 
 const StudyDetailPage: React.FC = () => {
   const { studyIdentifier } = useParams<{ studyIdentifier: string }>();
@@ -16,6 +17,8 @@ const StudyDetailPage: React.FC = () => {
   useEffect(() => {
     const fetchStudy = async () => {
       if (!studyIdentifier) {
+        setError('스터디 식별자가 없습니다');
+        setLoading(false);
         return;
       }
       
@@ -37,10 +40,6 @@ const StudyDetailPage: React.FC = () => {
     fetchStudy();
   }, [studyIdentifier]);
   
-  if (!studyIdentifier) {
-    return <Navigate to="/study" replace />;
-  }
-  
   if (loading) {
     return (
       <div className="study-detail-page">
@@ -58,7 +57,7 @@ const StudyDetailPage: React.FC = () => {
     );
   }
   
-  if (error || !study) {
+  if (!studyIdentifier || error || !study) {
     return <Navigate to="/study" replace />;
   }
 
@@ -84,7 +83,7 @@ const StudyDetailPage: React.FC = () => {
                 <li>정원: {study.capacity}명 (현재 {study.enrolled}명 참여)</li>
               )}
               <li>리더: {study.leader.name}</li>
-              <li>상태: {study.status === 'recruiting' ? '모집중' : study.status === 'ongoing' ? '진행중' : '종료'}</li>
+              <li>상태: {getStudyDisplayInfo(study.status, study.deadline?.toISOString()).label}</li>
             </ul>
           </div>
 
@@ -99,7 +98,7 @@ const StudyDetailPage: React.FC = () => {
             {isAuthenticated && user && study.proposerId === user.email ? (
               /* 스터디 제안자는 관리 버튼만 표시 */
               <button
-                onClick={() => navigate(`/study/${study.id}/manage`)}
+                onClick={() => navigate(`/study/${study.slug}/manage`)}
                 style={{
                   background: 'linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%)',
                   border: 'none',
@@ -125,9 +124,9 @@ const StudyDetailPage: React.FC = () => {
               </button>
             ) : (
               /* 일반 사용자는 참가 신청 버튼 표시 */
-              study.status === 'recruiting' && (
+              getStudyDisplayInfo(study.status, study.deadline?.toISOString()).canApply && (
                 <button
-                  onClick={() => navigate(`/study/${study.id}/apply`)}
+                  onClick={() => navigate(`/study/${study.slug}/apply`)}
                   style={{
                     background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
                     border: 'none',

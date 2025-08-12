@@ -20,7 +20,7 @@ export interface StudyInfo {
   capacity: number;
   enrolled: number;
   deadline: Date;
-  status: 'recruiting' | 'ongoing' | 'closed';
+  status: 'APPROVED' | 'IN_PROGRESS' | 'COMPLETED'; // 백엔드 상태값 사용
   detailPageComponent?: string; // 커스텀 상세 페이지 컴포넌트 이름
   recentTestimonial?: {
     content: string;
@@ -52,7 +52,7 @@ export const STUDY_LIST: StudyInfo[] = [
     capacity: 20,
     enrolled: 17,
     deadline: new Date('2024-12-25'),
-    status: 'recruiting',
+    status: 'APPROVED',
     detailPageComponent: 'TecoTecoPage', // 전용 상세 페이지 존재
     recentTestimonial: {
       content: '처음엔 어려웠지만, 동료들과 함께하니 재미있어졌어요',
@@ -82,7 +82,7 @@ export const STUDY_LIST: StudyInfo[] = [
     capacity: 30,
     enrolled: 23,
     deadline: new Date('2024-12-20'),
-    status: 'recruiting',
+    status: 'APPROVED',
     recentTestimonial: {
       content: '온라인이지만 진짜 동료를 만난 느낌이에요',
       author: '1기 수료생'
@@ -111,7 +111,7 @@ export const STUDY_LIST: StudyInfo[] = [
     capacity: 15,
     enrolled: 12,
     deadline: new Date('2024-12-28'),
-    status: 'recruiting',
+    status: 'APPROVED',
     recentTestimonial: {
       content: '글쓰기가 이렇게 즐거운 일인지 처음 알았어요',
       author: '현재 참여자'
@@ -150,7 +150,7 @@ export const getStudyByIdOrSlug = (identifier: string): StudyInfo | undefined =>
 };
 
 export const getActiveStudies = (): StudyInfo[] => {
-  return STUDY_LIST.filter(study => study.status === 'recruiting' || study.status === 'ongoing');
+  return STUDY_LIST.filter(study => study.status === 'APPROVED' || study.status === 'IN_PROGRESS');
 };
 
 export const getStudyUrl = (study: StudyInfo): string => {

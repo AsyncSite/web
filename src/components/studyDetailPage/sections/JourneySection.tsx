@@ -7,7 +7,6 @@ interface JourneySectionProps {
 }
 
 const JourneySection: React.FC<JourneySectionProps> = ({ data }) => {
-  const theme = data.theme || 'tecoteco';
   const layout = data.layout || 'list';
   
   // 경과일 계산
@@ -23,10 +22,8 @@ const JourneySection: React.FC<JourneySectionProps> = ({ data }) => {
   
   const daysSinceStart = calculateDays();
   
-  // tecoteco 테마일 때는 하드코딩된 페이지와 동일한 클래스명 사용
-  const sectionClassName = theme === 'tecoteco'
-    ? 'tecoteco-journey-section'
-    : `study-detail-journey-section ${theme}-theme ${layout}-layout`;
+  // 항상 tecoteco 스타일 사용
+  const sectionClassName = 'tecoteco-journey-section';
   
   // 동적 제목 생성
   const renderTitle = () => {

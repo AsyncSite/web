@@ -7,12 +7,8 @@ interface HowWeRollSectionProps {
 }
 
 const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
-  const theme = data.theme || 'tecoteco';
-  
-  // tecoteco 테마일 때는 하드코딩된 페이지와 동일한 클래스명 사용
-  const sectionClassName = theme === 'tecoteco' 
-    ? 'tecoteco-how-we-roll-section'
-    : `study-detail-how-we-roll-section ${theme}-theme`;
+  // 항상 tecoteco 스타일 사용
+  const sectionClassName = 'tecoteco-how-we-roll-section';
   
   return (
     <section className={sectionClassName}>
@@ -55,10 +51,8 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
               {item.description && (
                 <p>
                   {item.description.split(' ').map((word, i) => {
-                    // Highlight specific words based on theme
-                    const highlightWords = theme === 'tecoteco' 
-                      ? ['오프라인', '중심으로', '백준,', '프로그래머스를']
-                      : [];
+                    // Highlight specific words
+                    const highlightWords = ['오프라인', '중심으로', '백준,', '프로그래머스를'];
                     
                     if (highlightWords.includes(word)) {
                       const colorClass = word === '오프라인' || word === '중심으로' 

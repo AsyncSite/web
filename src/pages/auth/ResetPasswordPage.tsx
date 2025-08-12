@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import StarBackground from '../../components/common/StarBackground';
-import { env } from '../../config/environment';
+import apiClient from '../../api/client';
 import './auth-common.css';
 import './ResetPasswordPage.css';
 
@@ -49,17 +49,13 @@ function ResetPasswordPage(): React.ReactNode {
     // Verify token
     const verifyToken = async () => {
       try {
-        const response = await fetch(`${env.apiBaseUrl}/api/auth/password-reset/verify-token?token=${encodeURIComponent(token)}`);
+        const response = await apiClient.get('/api/auth/password-reset/verify-token', {
+          params: { token }
+        });
         
-        let data;
-        try {
-          data = await response.json();
-        } catch (jsonError) {
-          console.error('JSON parsing error:', jsonError);
-          throw new Error('서버 응답을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.');
-        }
-
-        if (!response.ok || !data.success) {
+        const data = response.data;
+        
+        if (!data.success) {
           throw new Error(data.error?.message || '토큰 검증에 실패했습니다');
         }
 
@@ -138,34 +134,15 @@ function ResetPasswordPage(): React.ReactNode {
     setErrors({});
 
     try {
-      const response = await fetch(`${env.apiBaseUrl}/api/auth/password-reset/reset`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token,
-          newPassword: formData.newPassword,
-          confirmPassword: formData.confirmPassword
-        })
+      const response = await apiClient.post('/api/auth/password-reset/reset', {
+        token,
+        newPassword: formData.newPassword,
+        confirmPassword: formData.confirmPassword
       });
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        console.error('JSON parsing error:', jsonError);
-        if (!response.ok) {
-          if (response.status === 403) {
-            throw new Error('요청이 거부되었습니다. 잠시 후 다시 시도해주세요.');
-          } else if (response.status === 500) {
-            throw new Error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-          }
-        }
-        throw new Error('서버 응답을 처리할 수 없습니다. 잠시 후 다시 시도해주세요.');
-      }
-
-      if (!response.ok || !data.success) {
+      
+      const data = response.data;
+      
+      if (!data.success) {
         throw new Error(data.error?.message || '비밀번호 재설정에 실패했습니다');
       }
 

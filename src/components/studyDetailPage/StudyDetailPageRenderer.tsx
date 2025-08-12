@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { TemplateHeader } from '../layout';
 import { Footer } from '../layout';
 import LoadingSpinner from '../common/LoadingSpinner';
 import studyDetailPageService, { StudyDetailPageData, PageSection, SectionType } from '../../api/studyDetailPageService';
+import studyService from '../../api/studyService';
 import { SectionRenderer } from './sections';
+import { ReviewSection } from '../review';
+import MemberOnlySection from '../study/MemberOnlySection';
 import { RichTextConverter } from '../common/richtext/RichTextConverter';
-import { restoreSectionTypes } from './utils/sectionTypeAdapter';
 import { normalizeMembersPropsForUI } from './utils/membersAdapter';
 import { blocksToHTML } from './utils/RichTextHelpers';
+import { getStudyDisplayInfo } from '../../utils/studyStatusUtils';
 import './StudyDetailPageRenderer.css';
 
 /**
@@ -57,15 +61,6 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
         joinButtonAction: section.props.joinButtonAction
       };
     
-    case SectionType.CTA:
-      // Ensure all expected props are present
-      return {
-        title: section.props.title,
-        subtitle: section.props.subtitle || '',
-        buttonText: section.props.buttonText,
-        buttonLink: section.props.buttonLink
-      };
-    
     case SectionType.HERO:
       // HERO section props mapping with RichText conversion
       const heroData: any = {
@@ -105,12 +100,18 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
       return heroData;
     
     case SectionType.HOW_WE_ROLL:
-    case 'HOW_WE_ROLL':
       // HOW_WE_ROLL section props are already in the correct format
       return section.props;
     
+    case SectionType.JOURNEY:
+      // JOURNEY section props are already in the correct format
+      return section.props;
+    
+    case SectionType.EXPERIENCE:
+      // EXPERIENCE section props are already in the correct format
+      return section.props;
+    
     case SectionType.MEMBERS:
-    case 'MEMBERS':
       // MEMBERS 섹션 props 매핑
       const membersProps = { ...section.props };
       
@@ -146,7 +147,10 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
 
 const StudyDetailPageRenderer: React.FC = () => {
   const { studyIdentifier } = useParams<{ studyIdentifier: string }>();
+  const { user, isAuthenticated } = useAuth();
   const [pageData, setPageData] = useState<StudyDetailPageData | null>(null);
+  const [studyData, setStudyData] = useState<any>(null);
+  const [isMember, setIsMember] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -162,22 +166,35 @@ const StudyDetailPageRenderer: React.FC = () => {
         setLoading(true);
         setError(null);
         
-        // Try to fetch published page by slug
-        const data = await studyDetailPageService.getPublishedPageBySlug(studyIdentifier);
-        // 받은 데이터의 섹션 타입을 복원
-        if (data && data.sections) {
-          data.sections = restoreSectionTypes(data.sections);
-        }
-        setPageData(data);
-      } catch (err: any) {
-        console.error('Failed to fetch study detail page:', err);
+        // Fetch both page data and study data in parallel
+        const [pageDataResult, studyDataResult] = await Promise.allSettled([
+          studyDetailPageService.getPublishedPageBySlug(studyIdentifier),
+          studyService.getStudyBySlug(studyIdentifier)
+        ]);
         
-        // If page not found or error, show error
-        if (err.response?.status === 404) {
-          setError('페이지를 찾을 수 없습니다');
+        // Handle page data
+        if (pageDataResult.status === 'fulfilled') {
+          const data = pageDataResult.value;
+          setPageData(data);
         } else {
-          setError('페이지를 불러오는 중 오류가 발생했습니다');
+          console.error('Failed to fetch study detail page:', pageDataResult.reason);
+          if (pageDataResult.reason?.response?.status === 404) {
+            setError('페이지를 찾을 수 없습니다');
+          } else {
+            setError('페이지를 불러오는 중 오류가 발생했습니다');
+          }
         }
+        
+        // Handle study data
+        if (studyDataResult.status === 'fulfilled') {
+          setStudyData(studyDataResult.value);
+        } else {
+          console.error('Failed to fetch study data:', studyDataResult.reason);
+          // Study data is optional, so we don't set error
+        }
+      } catch (err: any) {
+        console.error('Failed to fetch data:', err);
+        setError('데이터를 불러오는 중 오류가 발생했습니다');
       } finally {
         setLoading(false);
       }
@@ -186,14 +203,44 @@ const StudyDetailPageRenderer: React.FC = () => {
     fetchPageData();
   }, [studyIdentifier]);
   
-  // Apply custom theme if available (removed - using site default theme)
+  // Check membership status
   useEffect(() => {
-    // Theme application removed - using Async Site default theme
-    // The site already has a consistent dark theme defined in index.css
-    return () => {
-      // Cleanup if needed
+    const checkMembership = async () => {
+      if (!isAuthenticated || !user || !studyData?.id) return;
+      
+      try {
+        const myStudies = await studyService.getMyStudies();
+        const isStudyMember = myStudies.some(study => study.studyId === studyData.id);
+        setIsMember(isStudyMember);
+      } catch (error) {
+        console.error('Failed to check membership:', error);
+      }
     };
-  }, []);
+    
+    checkMembership();
+  }, [isAuthenticated, user, studyData]);
+  
+  // Sort sections by order (pageData가 있을 때만 사용됨)
+  // Hero 섹션을 항상 첫 번째로, 나머지는 order 순서대로
+  const sortedSections = pageData ? [...pageData.sections].sort((a, b) => {
+    // Hero 섹션을 최우선으로
+    if (a.type === 'HERO' && b.type !== 'HERO') return -1;
+    if (a.type !== 'HERO' && b.type === 'HERO') return 1;
+    
+    // 그 다음 RICH_TEXT 중에서도 테스트 쓰레기 텍스트는 맨 뒤로
+    const isTestContentA = a.type === 'RICH_TEXT' && 
+      (a.props?.content?.includes('Welcome to Our Dynamic Study Page') || 
+       a.props?.text?.includes('Welcome to Our Dynamic Study Page'));
+    const isTestContentB = b.type === 'RICH_TEXT' && 
+      (b.props?.content?.includes('Welcome to Our Dynamic Study Page') ||
+       b.props?.text?.includes('Welcome to Our Dynamic Study Page'));
+    
+    if (isTestContentA && !isTestContentB) return 1;
+    if (!isTestContentA && isTestContentB) return -1;
+    
+    // 나머지는 order 순서대로
+    return a.order - b.order;
+  }) : [];
   
   if (loading) {
     return (
@@ -203,6 +250,43 @@ const StudyDetailPageRenderer: React.FC = () => {
           <div className="loading-container">
             <LoadingSpinner />
             <p>페이지를 불러오는 중...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+  
+  // pageData가 없지만 studyData가 있으면 기본 스터디 페이지 표시
+  if (!pageData && studyData) {
+    return (
+      <div className="study-detail-page-renderer">
+        <TemplateHeader />
+        <main className="study-detail-page-content">
+          <div className="container" style={{ paddingTop: '100px', paddingBottom: '100px' }}>
+            <h1>{studyData.name} {studyData.generation > 1 ? `${studyData.generation}기` : ''}</h1>
+            <p>{studyData.tagline}</p>
+            {studyData.description && <p>{studyData.description}</p>}
+            
+            <div style={{ marginTop: '40px' }}>
+              <h2>스터디 정보</h2>
+              <ul>
+                {(studyData.schedule || studyData.duration) && (
+                  <li>일정: {studyData.schedule} {studyData.duration}</li>
+                )}
+                {studyData.capacity > 0 && (
+                  <li>정원: {studyData.capacity}명 (현재 {studyData.enrolled}명 참여)</li>
+                )}
+                <li>리더: {studyData.leader.name}</li>
+                <li>상태: {getStudyDisplayInfo(studyData.status, studyData.deadline?.toISOString()).label}</li>
+              </ul>
+            </div>
+            
+            {/* 리뷰 섹션 추가 */}
+            <ReviewSection 
+              studyId={studyData.id}
+              studyStatus={studyData.status}
+            />
           </div>
         </main>
         <Footer />
@@ -232,28 +316,6 @@ const StudyDetailPageRenderer: React.FC = () => {
     );
   }
   
-  // Sort sections by order
-  // Hero 섹션을 항상 첫 번째로, 나머지는 order 순서대로
-  const sortedSections = [...pageData.sections].sort((a, b) => {
-    // Hero 섹션을 최우선으로
-    if (a.type === 'HERO' && b.type !== 'HERO') return -1;
-    if (a.type !== 'HERO' && b.type === 'HERO') return 1;
-    
-    // 그 다음 RICH_TEXT 중에서도 테스트 쓰레기 텍스트는 맨 뒤로
-    const isTestContentA = a.type === 'RICH_TEXT' && 
-      (a.props?.content?.includes('Welcome to Our Dynamic Study Page') || 
-       a.props?.text?.includes('Welcome to Our Dynamic Study Page'));
-    const isTestContentB = b.type === 'RICH_TEXT' && 
-      (b.props?.content?.includes('Welcome to Our Dynamic Study Page') ||
-       b.props?.text?.includes('Welcome to Our Dynamic Study Page'));
-    
-    if (isTestContentA && !isTestContentB) return 1;
-    if (!isTestContentA && isTestContentB) return -1;
-    
-    // 나머지는 order 순서대로
-    return a.order - b.order;
-  });
-  
   return (
     <div className="study-detail-page-renderer">
       <TemplateHeader />
@@ -266,14 +328,63 @@ const StudyDetailPageRenderer: React.FC = () => {
           </div>
         ) : (
           <div className="sections-container">
+            {/* Study Status Banner */}
+            {studyData && (
+              <div className={`study-status-banner status-${studyData.status?.toLowerCase()}`}>
+                {studyData.status === 'APPROVED' && (
+                  <>
+                    <span className="status-icon">🚀</span>
+                    <div className="status-info">
+                      <h3>모집 중인 스터디입니다</h3>
+                      <p>마감일: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}</p>
+                    </div>
+                    {!isMember && (
+                      <button className="apply-button" onClick={() => window.location.href = `/study/${studyData.id}/apply`}>
+                        지원하기
+                      </button>
+                    )}
+                  </>
+                )}
+                {studyData.status === 'IN_PROGRESS' && (
+                  <>
+                    <span className="status-icon">📚</span>
+                    <div className="status-info">
+                      <h3>진행 중인 스터디입니다</h3>
+                      <p>현재 활발히 진행되고 있습니다</p>
+                    </div>
+                  </>
+                )}
+                {studyData.status === 'COMPLETED' && (
+                  <>
+                    <span className="status-icon">✅</span>
+                    <div className="status-info">
+                      <h3>완료된 스터디입니다</h3>
+                      <p>스터디가 성공적으로 종료되었습니다</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
             {sortedSections.map((section) => (
               <div key={section.id} className="section-wrapper">
                 <SectionRenderer 
                   type={section.type} 
                   data={mapSectionPropsToComponentData(section, pageData)}
+                  studyId={pageData.studyId}
                 />
               </div>
             ))}
+            
+            {/* Review Section - Show after all other sections */}
+            {pageData.studyId && (
+              <div className="section-wrapper review-section-wrapper">
+                <ReviewSection 
+                  studyId={pageData.studyId}
+                  studyStatus={studyData?.status}
+                />
+              </div>
+            )}
           </div>
         )}
       </main>

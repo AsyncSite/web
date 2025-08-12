@@ -155,3 +155,83 @@
     font-size: 1rem;
   }
 }
+/* Study Status Banner */
+.study-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-status-banner.status-approved {
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1) 0%, rgba(195, 232, 141, 0.05) 100%);
+  border-color: rgba(195, 232, 141, 0.2);
+}
+
+.study-status-banner.status-in-progress,
+.study-status-banner.status-in_progress {
+  background: linear-gradient(135deg, rgba(130, 170, 255, 0.1) 0%, rgba(130, 170, 255, 0.05) 100%);
+  border-color: rgba(130, 170, 255, 0.2);
+}
+
+.study-status-banner.status-completed {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+  border-color: rgba(76, 175, 80, 0.2);
+}
+
+.status-icon {
+  font-size: 32px;
+}
+
+.status-info {
+  flex: 1;
+}
+
+.status-info h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.status-info p {
+  font-size: 14px;
+  color: #aaa;
+  margin: 0;
+}
+
+.apply-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.apply-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.member-section-wrapper {
+  margin: 60px 0;
+}
+
+@media (max-width: 768px) {
+  .study-status-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .apply-button {
+    width: 100%;
+  }
+}

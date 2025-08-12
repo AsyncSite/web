@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import studyService, { Study, ApplicationRequest } from '../api/studyService';
+import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 import './StudyApplicationPage.css';
 
 const StudyApplicationPage: React.FC = () => {
@@ -38,7 +39,12 @@ const StudyApplicationPage: React.FC = () => {
           return;
         }
 
-        if (studyData.status !== 'recruiting') {
+        const displayInfo = getStudyDisplayInfo(
+          studyData.status,
+          studyData.deadline?.toISOString()
+        );
+        
+        if (!displayInfo.canApply) {
           alert('현재 모집 중이지 않은 스터디입니다.');
           navigate('/study');
           return;

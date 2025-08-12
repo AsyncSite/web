@@ -5,6 +5,8 @@ import apiClient from './client';
 export const StudyStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
   REJECTED: 'REJECTED',
   TERMINATED: 'TERMINATED'
 } as const;
@@ -90,7 +92,7 @@ export interface Study {
   capacity: number;
   enrolled: number;
   deadline: Date | null;
-  status: 'recruiting' | 'ongoing' | 'closed';
+  status: StudyStatus; // 백엔드 status 타입 그대로 사용
   recentTestimonial?: {
     content: string;
     author: string;
@@ -116,60 +118,9 @@ const parseDate = (dateValue: string | number[] | undefined): Date | null => {
   return new Date(dateValue);
 };
 
-// Helper: Determine study status
-const determineStudyStatus = (dto: StudyDTO): Study['status'] => {
-  // APPROVED가 아닌 스터디는 모두 closed
-  if (dto.status !== 'APPROVED') {
-    return 'closed';
-  }
-  
-  const now = new Date();
-  
-  // 종료일이 있고 지났으면 closed
-  if (dto.endDate) {
-    const endDate = parseDate(dto.endDate);
-    if (endDate && endDate <= now) {
-      return 'closed';
-    }
-  }
-  
-  // 정원이 차면 closed (enrolled >= capacity)
-  if (dto.capacity && dto.enrolled && dto.enrolled >= dto.capacity) {
-    return 'closed';
-  }
-  
-  // 모집 마감일 체크
-  if (dto.recruitDeadline) {
-    const deadline = parseDate(dto.recruitDeadline);
-    if (deadline) {
-      if (deadline > now) {
-        // 모집 마감일이 아직 안 지났으면 recruiting
-        return 'recruiting';
-      } else {
-        // 모집 마감일이 지났으면 ongoing (종료일 체크는 위에서 이미 함)
-        return 'ongoing';
-      }
-    }
-  }
-  
-  // 시작일 체크 (시작 전이면 recruiting, 시작 후면 ongoing)
-  if (dto.startDate) {
-    const startDate = parseDate(dto.startDate);
-    if (startDate) {
-      if (startDate > now) {
-        // 아직 시작 안 했으면 recruiting
-        return 'recruiting';
-      } else {
-        // 이미 시작했으면 ongoing
-        return 'ongoing';
-      }
-    }
-  }
-  
-  // 날짜 정보가 하나도 없으면 recruiting으로 간주
-  // (새로 만든 스터디는 보통 모집중)
-  return 'recruiting';
-};
+// 이 함수는 더 이상 사용되지 않습니다.
+// utils/studyStatusUtils.ts의 getStudyDisplayInfo를 사용하세요.
+// const determineStudyStatus = (dto: StudyDTO): Study['status'] => { ... }
 
 // Helper: Get study theme color
 const getStudyTheme = (id: string) => {
@@ -222,7 +173,7 @@ const transformStudy = (dto: StudyDTO): Study => {
     capacity: dto.capacity || 0, // 기본값을 0으로 (UI에서 처리)
     enrolled: dto.enrolled || 0,
     deadline: dto.recruitDeadline ? (parseDate(dto.recruitDeadline) || null) : null,
-    status: determineStudyStatus(dto),
+    status: dto.status, // 백엔드 status 값을 그대로 사용
     recentTestimonial: undefined, // TODO: Fetch from testimonial service
     color: getStudyTheme(dto.id)
   };
@@ -265,7 +216,8 @@ export interface StudyProposalRequest {
 export const ApplicationStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED', 
-  REJECTED: 'REJECTED'
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
 } as const;
 
 export type ApplicationStatus = typeof ApplicationStatus[keyof typeof ApplicationStatus];
@@ -287,6 +239,16 @@ export interface ApplicationResponse {
   reviewedBy?: string;
 }
 
+// My Applications (for My Page)
+export interface MyApplicationItem {
+  applicationId: string;
+  studyId: string;
+  studyTitle: string;
+  status: ApplicationStatus;
+  appliedAt: string; // ISO string
+  reviewNote?: string;
+}
+
 export interface AcceptApplicationRequest {
   reviewerId: string;
   note?: string;
@@ -302,6 +264,7 @@ export interface MemberResponse {
   id: string;
   studyId: string;
   userId: string;
+  profileImage?: string;  // 사용자 프로필 이미지
   role: string;
   joinedAt: string;
   status: string;
@@ -405,7 +368,13 @@ class StudyService {
       // API가 success/data 구조로 응답하는 경우 처리
       const study = (response.data as any)?.data || response.data;
       
-      if (!study || study.status !== 'APPROVED' || study.deleted) {
+      if (!study || study.deleted) {
+        return null;
+      }
+      
+      // APPROVED, IN_PROGRESS, COMPLETED 상태의 스터디는 모두 표시
+      const allowedStatuses = ['APPROVED', 'IN_PROGRESS', 'COMPLETED'];
+      if (!allowedStatuses.includes(study.status)) {
         return null;
       }
       
@@ -419,21 +388,23 @@ class StudyService {
   }
 
   /**
-   * Get active studies (recruiting or ongoing)
+   * Get active studies (APPROVED or IN_PROGRESS)
    */
   async getActiveStudies(): Promise<Study[]> {
     const studies = await this.getAllStudies();
     return studies.filter(study => 
-      study.status === 'recruiting' || study.status === 'ongoing'
+      study.status === 'APPROVED' || study.status === 'IN_PROGRESS'
     );
   }
 
   /**
-   * Get recruiting studies only
+   * Get recruiting studies only (APPROVED with deadline not passed)
+   * Note: This should use getStudyDisplayInfo from utils/studyStatusUtils.ts
+   * for accurate recruitment status checking
    */
   async getRecruitingStudies(): Promise<Study[]> {
     const studies = await this.getAllStudies();
-    return studies.filter(study => study.status === 'recruiting');
+    return studies.filter(study => study.status === 'APPROVED');
   }
 
   /**
@@ -470,6 +441,33 @@ class StudyService {
       attendanceRate: item.attendanceRate ?? null,
       warningCount: item.warningCount ?? 0,
     }));
+  }
+
+  /**
+   * Get my applications (requires authentication)
+   */
+  async getMyApplications(): Promise<MyApplicationItem[]> {
+    const response = await apiClient.get<{
+      success: boolean;
+      data: any[];
+      error: any;
+      timestamp: any;
+    } | any[]>(`${this.MY_API_PATH}/applications`);
+
+    const list = (response.data as any)?.data || response.data || [];
+    if (!Array.isArray(list)) return [];
+
+    return list.map((item: any) => {
+      const appliedAtDate = parseDate(item.appliedAt);
+      return {
+        applicationId: item.applicationId,
+        studyId: item.studyId,
+        studyTitle: item.studyTitle,
+        status: (item.status as ApplicationStatus) || ApplicationStatus.PENDING,
+        appliedAt: appliedAtDate ? appliedAtDate.toISOString() : new Date().toISOString(),
+        reviewNote: item.reviewNote || undefined,
+      } as MyApplicationItem;
+    });
   }
 
   /**

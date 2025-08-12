@@ -2,18 +2,17 @@ import React from 'react';
 import { SectionType } from '../../../api/studyDetailPageService';
 import HeroSectionForm from './forms/HeroSectionForm';
 import MembersSectionForm from './forms/MembersSectionForm';
-import ScheduleSectionForm from './forms/ScheduleSectionForm';
-import TimelineSectionForm from './forms/TimelineSectionForm';
 import ReviewsSectionForm from './forms/ReviewsSectionForm';
 import FAQSectionForm from './forms/FAQSectionForm';
-import CTASectionForm from './forms/CTASectionForm';
 import RichTextSectionForm from './forms/RichTextSectionFormV2';
 import HowWeRollSectionForm from './forms/HowWeRollSectionForm';
 import JourneySectionForm from './forms/JourneySectionForm';
+import ExperienceSectionForm from './forms/ExperienceSectionForm';
 import './SectionEditForm.css';
 
 interface SectionEditFormProps {
-  sectionType: SectionType;
+  sectionType: SectionType | string;
+  studyId?: string;  // 스터디 ID 추가
   initialData?: any;
   onSave: (data: any) => void;
   onCancel: () => void;
@@ -21,6 +20,7 @@ interface SectionEditFormProps {
 
 const SectionEditForm: React.FC<SectionEditFormProps> = ({
   sectionType,
+  studyId,
   initialData = {},
   onSave,
   onCancel
@@ -39,24 +39,7 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
       case SectionType.MEMBERS:
         return (
           <MembersSectionForm
-            initialData={initialData}
-            onSave={onSave}
-            onCancel={onCancel}
-          />
-        );
-      
-      case SectionType.SCHEDULE:
-        return (
-          <ScheduleSectionForm
-            initialData={initialData}
-            onSave={onSave}
-            onCancel={onCancel}
-          />
-        );
-      
-      case SectionType.TIMELINE:
-        return (
-          <TimelineSectionForm
+            studyId={studyId}  // studyId 전달
             initialData={initialData}
             onSave={onSave}
             onCancel={onCancel}
@@ -75,15 +58,6 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
       case SectionType.FAQ:
         return (
           <FAQSectionForm
-            initialData={initialData}
-            onSave={onSave}
-            onCancel={onCancel}
-          />
-        );
-      
-      case SectionType.CTA:
-        return (
-          <CTASectionForm
             initialData={initialData}
             onSave={onSave}
             onCancel={onCancel}
@@ -111,6 +85,15 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
       case SectionType.JOURNEY:
         return (
           <JourneySectionForm
+            initialData={initialData}
+            onSave={onSave}
+            onCancel={onCancel}
+          />
+        );
+      
+      case SectionType.EXPERIENCE:
+        return (
+          <ExperienceSectionForm
             initialData={initialData}
             onSave={onSave}
             onCancel={onCancel}

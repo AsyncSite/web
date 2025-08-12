@@ -1,0 +1,694 @@
+/* ============================================
+   MembersSectionForm Styles - Optimized Version
+   ============================================ */
+
+/* Base Form Container */
+.study-management-members-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   Form Groups & Sections
+   ============================================ */
+
+/* Basic Form Group */
+.study-management-members-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.study-management-members-form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 4px;
+}
+
+/* Group Header with Action Button */
+.study-management-members-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.study-management-members-group-header label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #89DDFF;
+  margin: 0;
+}
+
+/* ============================================
+   Input & Select Styles
+   ============================================ */
+
+/* Base Input Style */
+.study-management-members-input,
+.study-management-members-select,
+.study-management-members-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.study-management-members-input:focus,
+.study-management-members-select:focus,
+.study-management-members-textarea:focus {
+  outline: none;
+  border-color: #89DDFF;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(137, 221, 255, 0.1);
+}
+
+.study-management-members-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.study-management-members-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+/* Select Dropdown */
+.study-management-members-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+  padding-right: 40px;
+}
+
+/* ============================================
+   Template Buttons Section
+   ============================================ */
+
+.study-management-members-template-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.study-management-members-template-btn {
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.study-management-members-template-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.study-management-members-template-btn.active {
+  background: linear-gradient(135deg, rgba(137, 221, 255, 0.15), rgba(195, 232, 141, 0.15));
+  border-color: #89DDFF;
+  color: #89DDFF;
+}
+
+/* Example Button */
+.study-management-members-example-btn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%);
+  border: none;
+  border-radius: 6px;
+  color: #1a1a1a;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.study-management-members-example-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(137, 221, 255, 0.3);
+}
+
+/* ============================================
+   Members List Section
+   ============================================ */
+
+.study-management-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Empty State */
+.study-management-members-list > div:first-child:last-child {
+  text-align: center;
+  padding: 48px 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+}
+
+/* Member Item Card */
+.study-management-members-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.study-management-members-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Member Item Header */
+.study-management-members-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.study-management-members-item-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #89DDFF;
+}
+
+/* Member Fields Container */
+.study-management-members-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Field Row Layout */
+.study-management-members-field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* Individual Field */
+.study-management-members-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.study-management-members-field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ============================================
+   Themed Sections (TecoTeco fields)
+   ============================================ */
+
+/* Section Base Style */
+.study-management-members-tecoteco-section,
+.study-management-members-stats-section,
+.study-management-members-experience-section,
+.study-management-members-testimonial-section,
+.study-management-members-activity-status-section {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Section Headers */
+.study-management-members-tecoteco-section h5,
+.study-management-members-stats-section h5,
+.study-management-members-experience-section h5,
+.study-management-members-testimonial-section h5,
+.study-management-members-activity-status-section h5 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* TecoTeco Section - Blue Theme */
+.study-management-members-tecoteco-section {
+  background: linear-gradient(135deg, rgba(137, 221, 255, 0.03), rgba(137, 221, 255, 0.01));
+  border-color: rgba(137, 221, 255, 0.15);
+}
+
+.study-management-members-tecoteco-section h5 {
+  color: #89DDFF;
+}
+
+/* Stats Section - Green Theme */
+.study-management-members-stats-section {
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.03), rgba(195, 232, 141, 0.01));
+  border-color: rgba(195, 232, 141, 0.15);
+}
+
+.study-management-members-stats-section h5 {
+  color: #C3E88D;
+}
+
+/* Experience Section - Orange Theme */
+.study-management-members-experience-section {
+  background: linear-gradient(135deg, rgba(255, 203, 107, 0.03), rgba(255, 203, 107, 0.01));
+  border-color: rgba(255, 203, 107, 0.15);
+}
+
+.study-management-members-experience-section h5 {
+  color: #FFCB6B;
+}
+
+/* Testimonial Section - Purple Theme */
+.study-management-members-testimonial-section {
+  background: linear-gradient(135deg, rgba(199, 146, 234, 0.03), rgba(199, 146, 234, 0.01));
+  border-color: rgba(199, 146, 234, 0.15);
+}
+
+.study-management-members-testimonial-section h5 {
+  color: #C792EA;
+}
+
+/* Activity Status Section */
+.study-management-members-activity-status-section {
+  background: linear-gradient(135deg, rgba(130, 170, 255, 0.03), rgba(130, 170, 255, 0.01));
+  border-color: rgba(130, 170, 255, 0.15);
+}
+
+.study-management-members-activity-status-section h5 {
+  color: #82AAFF;
+}
+
+/* ============================================
+   Specialized Input Fields
+   ============================================ */
+
+/* Number inputs for stats */
+.study-management-members-input-streak-days,
+.study-management-members-input-solved-problems {
+  max-width: 120px;
+}
+
+/* Smaller width inputs */
+.study-management-members-input-last-activity,
+.study-management-members-input-recent-activity {
+  max-width: 200px;
+}
+
+/* Text areas with proper sizing */
+.study-management-members-textarea-what-gained,
+.study-management-members-textarea-testimonial {
+  min-height: 80px;
+  max-height: 150px;
+}
+
+/* ============================================
+   Custom Fields Section
+   ============================================ */
+
+.study-management-members-custom-field-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.study-management-members-icon-input {
+  width: 60px !important;
+  text-align: center;
+  font-size: 16px;
+}
+
+.study-management-members-custom-label,
+.study-management-members-custom-value {
+  width: 100%;
+}
+
+.study-management-members-custom-remove-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.2);
+  border-radius: 6px;
+  color: #ff4336;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-management-members-custom-remove-btn:hover {
+  background: rgba(255, 67, 54, 0.2);
+  border-color: rgba(255, 67, 54, 0.3);
+}
+
+.study-management-members-custom-add-btn {
+  margin-top: 8px;
+  padding: 10px 16px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-management-members-custom-add-btn:hover {
+  background: rgba(195, 232, 141, 0.15);
+  border-color: #C3E88D;
+}
+
+/* ============================================
+   Badge Selector
+   ============================================ */
+
+.study-management-members-badge-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.study-management-members-badge-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-management-members-badge-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.study-management-members-badge-option input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.study-management-members-badge-option span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  user-select: none;
+}
+
+/* ============================================
+   Action Buttons
+   ============================================ */
+
+/* Remove Member Button */
+.study-management-members-remove-btn {
+  padding: 6px 12px;
+  background: rgba(255, 67, 54, 0.1);
+  border: 1px solid rgba(255, 67, 54, 0.2);
+  border-radius: 6px;
+  color: #ff4336;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-management-members-remove-btn:hover {
+  background: rgba(255, 67, 54, 0.15);
+  border-color: rgba(255, 67, 54, 0.3);
+}
+
+/* Add Member Button */
+.study-management-members-add-btn {
+  margin-top: 16px;
+  padding: 12px 20px;
+  width: 100%;
+  background: transparent;
+  border: 2px dashed rgba(195, 232, 141, 0.3);
+  border-radius: 8px;
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-management-members-add-btn:hover {
+  background: rgba(195, 232, 141, 0.05);
+  border-color: #C3E88D;
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   Stats Section
+   ============================================ */
+
+.study-management-members-stats-fields {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 8px;
+}
+
+.study-management-members-stats-fields h4 {
+  margin: 0 0 16px 0;
+  color: #89DDFF;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ============================================
+   Form Actions (Save/Cancel)
+   ============================================ */
+
+.study-management-members-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.study-management-members-cancel-btn,
+.study-management-members-save-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.study-management-members-cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.study-management-members-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.study-management-members-save-btn {
+  background: linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%);
+  color: #1a1a1a;
+}
+
+.study-management-members-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(137, 221, 255, 0.3);
+}
+
+/* ============================================
+   Help Text
+   ============================================ */
+
+.study-management-members-help-text {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
+}
+
+/* ============================================
+   Checkbox Styles
+   ============================================ */
+
+.study-management-members-field input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: #89DDFF;
+}
+
+.study-management-members-field label input[type="checkbox"] {
+  vertical-align: middle;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+  .study-management-members-form {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .study-management-members-field-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .study-management-members-template-buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  .study-management-members-custom-field-row {
+    grid-template-columns: 50px 1fr auto;
+  }
+  
+  .study-management-members-custom-value {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+  }
+  
+  .study-management-members-form-actions {
+    flex-direction: column;
+  }
+  
+  .study-management-members-cancel-btn,
+  .study-management-members-save-btn {
+    width: 100%;
+  }
+  
+  .study-management-members-badge-selector {
+    flex-direction: column;
+  }
+  
+  .study-management-members-badge-option {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .study-management-members-item {
+    padding: 16px;
+  }
+  
+  .study-management-members-group-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .study-management-members-example-btn {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   Loading & Disabled States
+   ============================================ */
+
+.study-management-members-input:disabled,
+.study-management-members-select:disabled,
+.study-management-members-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.study-management-members-item {
+  animation: fadeIn 0.3s ease;
+}
+
+/* ============================================
+   Scrollbar Styles
+   ============================================ */
+
+.study-management-members-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.study-management-members-form::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.study-management-members-form::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.study-management-members-form::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

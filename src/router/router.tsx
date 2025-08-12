@@ -12,7 +12,7 @@ const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
 const OAuthCallbackPage = lazy(() => import('../pages/auth/OAuthCallbackPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
-const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
+const ProfilePage = lazy(() => import('../pages/user/ProfilePageNew'));
 const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
 const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가

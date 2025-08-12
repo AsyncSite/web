@@ -1,0 +1,351 @@
+/* Experience Section Editor - Fully Scoped Styles */
+/* All classes use study-management-experience- prefix to prevent conflicts */
+
+/* Main Form Container */
+.study-management-experience-form {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+/* Form Title */
+.study-management-experience-form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Form Groups */
+.study-management-experience-form-group {
+  margin-bottom: 24px;
+}
+
+.study-management-experience-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.study-management-experience-form-group small {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Form Inputs */
+.study-management-experience-input,
+.study-management-experience-select,
+.study-management-experience-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.study-management-experience-input:focus,
+.study-management-experience-select:focus,
+.study-management-experience-textarea:focus {
+  outline: none;
+  border-color: #C3E88D;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 2px rgba(195, 232, 141, 0.1);
+}
+
+.study-management-experience-textarea {
+  resize: vertical;
+  line-height: 1.5;
+  min-height: 60px;
+}
+
+/* Steps Editor Container */
+.study-management-experience-steps-editor {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Step Editor Item */
+.study-management-experience-step-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.study-management-experience-step-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(195, 232, 141, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Step Header */
+.study-management-experience-step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-management-experience-step-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: #82AAFF;
+  background: rgba(130, 170, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Step Actions */
+.study-management-experience-step-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.study-management-experience-move-btn,
+.study-management-experience-remove-btn {
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-management-experience-move-btn:hover:not(:disabled) {
+  background: rgba(130, 170, 255, 0.1);
+  border-color: rgba(130, 170, 255, 0.3);
+  color: #82AAFF;
+  transform: translateY(-1px);
+}
+
+.study-management-experience-move-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.study-management-experience-remove-btn:hover {
+  background: rgba(255, 71, 87, 0.1);
+  border-color: rgba(255, 71, 87, 0.3);
+  color: #ff4757;
+}
+
+/* Step Fields Container */
+.study-management-experience-step-fields {
+  space-y: 12px;
+}
+
+.study-management-experience-step-fields label {
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Field Row for 2-column layout */
+.study-management-experience-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.study-management-experience-field-col label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Add Step Button */
+.study-management-experience-add-step-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1));
+  border: 2px dashed rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 16px;
+}
+
+.study-management-experience-add-step-btn:hover {
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.15), rgba(130, 170, 255, 0.15));
+  border-color: rgba(195, 232, 141, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(195, 232, 141, 0.2);
+}
+
+/* Empty State */
+.study-management-experience-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Style Settings Section */
+.study-management-experience-style-section {
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-management-experience-style-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: #89DDFF;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Form Row */
+.study-management-experience-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Checkbox Groups */
+.study-management-experience-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.study-management-experience-checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s ease;
+}
+
+.study-management-experience-checkbox-label:hover {
+  color: #C3E88D;
+}
+
+.study-management-experience-checkbox-label input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/* Form Actions */
+.study-management-experience-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-management-experience-cancel-btn,
+.study-management-experience-save-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.study-management-experience-cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.study-management-experience-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.study-management-experience-save-btn {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.study-management-experience-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .study-management-experience-form {
+    padding: 16px;
+  }
+  
+  .study-management-experience-field-row,
+  .study-management-experience-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .study-management-experience-step-actions {
+    flex-wrap: wrap;
+  }
+  
+  .study-management-experience-form-actions {
+    flex-direction: column;
+  }
+  
+  .study-management-experience-cancel-btn,
+  .study-management-experience-save-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .study-management-experience-form {
+    padding: 12px;
+  }
+  
+  .study-management-experience-step-item {
+    padding: 12px;
+  }
+  
+  .study-management-experience-form-title {
+    font-size: 1.2rem;
+  }
+}

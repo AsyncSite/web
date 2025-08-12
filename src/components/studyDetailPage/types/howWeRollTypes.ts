@@ -27,7 +27,6 @@ export interface HowWeRollData {
   schedule: ScheduleItem[];
   subHeading?: string;
   closingMessage?: string;
-  theme?: 'tecoteco' | 'modern' | 'classic';
 }
 
 // Study type specific templates

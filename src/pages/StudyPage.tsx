@@ -7,6 +7,7 @@ import { PaymentRequest, PaymentResponse } from '../types/payment';
 import EmptyState from '../components/ui/EmptyState';
 import studyService, { Study } from '../api/studyService';
 import { useAuth } from '../contexts/AuthContext';
+import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 import './TabPage.css';
 
 const StudyPage: React.FC = () => {
@@ -38,9 +39,12 @@ const StudyPage: React.FC = () => {
     fetchStudies();
   }, []);
 
-  const recruitingStudies = studies.filter(study => study.status === 'recruiting');
-  const ongoingStudies = studies.filter(study => study.status === 'ongoing');
-  const closedStudies = studies.filter(study => study.status === 'closed');
+  const recruitingStudies = studies.filter(study => {
+    const displayInfo = getStudyDisplayInfo(study.status, study.deadline?.toISOString());
+    return displayInfo.canApply;
+  });
+  const ongoingStudies = studies.filter(study => study.status === 'IN_PROGRESS');
+  const closedStudies = studies.filter(study => study.status === 'COMPLETED' || study.status === 'TERMINATED');
 
 
   const handleTabChange = (tab: 'list' | 'calendar') => {
@@ -205,7 +209,7 @@ const StudyPage: React.FC = () => {
                             <button 
                               onClick={(e) => {
                                 e.preventDefault();
-                                navigate(`/study/${study.id}/manage`);
+                                navigate(`/study/${study.slug}/manage`);
                               }}
                               className="manage-button"
                               style={{
@@ -237,7 +241,7 @@ const StudyPage: React.FC = () => {
                             <button 
                               onClick={(e) => {
                                 e.preventDefault();
-                                navigate(`/study/${study.id}/apply`);
+                                navigate(`/study/${study.slug}/apply`);
                               }}
                               className="apply-button"
                               style={{

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import studyService, { type Study } from '../../../api/studyService';
 import { handlePublicApiError } from '../../../api/publicClient';
+import { getStudyDisplayInfo } from '../../../utils/studyStatusUtils';
 import './Studies.css';
 
 const Studies: React.FC = () => {
@@ -26,10 +27,22 @@ const Studies: React.FC = () => {
         setError(null);
         
         const allStudies = await studyService.getAllStudies();
-        const activeStudies = allStudies.filter(study => 
-          study.status === 'recruiting' || study.status === 'ongoing'
-        );
-        const recruitingOnly = allStudies.filter(study => study.status === 'recruiting');
+        // 활성 스터디: 모집 중이거나 진행 중인 스터디
+        const activeStudies = allStudies.filter(study => {
+          const displayInfo = getStudyDisplayInfo(
+            study.status,
+            study.deadline?.toISOString()
+          );
+          return displayInfo.canApply || displayInfo.isActive;
+        });
+        // 모집 중인 스터디만
+        const recruitingOnly = allStudies.filter(study => {
+          const displayInfo = getStudyDisplayInfo(
+            study.status,
+            study.deadline?.toISOString()
+          );
+          return displayInfo.canApply;
+        });
         
         setStudies(activeStudies);
         setRecruitingStudies(recruitingOnly);

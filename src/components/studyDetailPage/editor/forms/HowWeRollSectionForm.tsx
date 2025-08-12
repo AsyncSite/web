@@ -24,7 +24,6 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
   const [scheduleIntro, setScheduleIntro] = useState(initialData?.scheduleIntro || '');
   const [subHeading, setSubHeading] = useState(initialData?.subHeading || '');
   const [closingMessage, setClosingMessage] = useState(initialData?.closingMessage || '');
-  const [theme, setTheme] = useState<'tecoteco' | 'modern' | 'classic'>(initialData?.theme || 'tecoteco');
   
   const [meetingOverview, setMeetingOverview] = useState<MeetingOverviewItem[]>(
     initialData?.meetingOverview || []
@@ -101,7 +100,6 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
       scheduleIntro: scheduleIntro || undefined,
       subHeading: subHeading || undefined,
       closingMessage: closingMessage || undefined,
-      theme,
       meetingOverview,
       schedule
     };
@@ -111,28 +109,47 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
 
   return (
     <form className="study-management-hwr-form" onSubmit={handleSubmit}>
-      <div className="study-management-hwr-form-header">
-        <h3>모임 진행 방식 섹션 편집</h3>
-        <div className="study-management-hwr-template-buttons">
-          <button type="button" onClick={() => loadTemplate('algorithm')} className="study-management-hwr-template-btn">
-            알고리즘 템플릿
-          </button>
-          <button type="button" onClick={() => loadTemplate('design')} className="study-management-hwr-template-btn">
-            디자인 템플릿
-          </button>
-          <button type="button" onClick={() => loadTemplate('language')} className="study-management-hwr-template-btn">
-            언어 템플릿
-          </button>
-        </div>
-      </div>
-
-      <div className="study-management-hwr-form-group">
-        <label>테마</label>
-        <select value={theme} onChange={(e) => setTheme(e.target.value as any)} className="study-management-hwr-select">
-          <option value="tecoteco">TecoTeco (다크)</option>
-          <option value="modern">Modern (밝은)</option>
-          <option value="classic">Classic (심플)</option>
-        </select>
+      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '20px'
+      }}>
+        <button 
+          type="button" 
+          onClick={() => loadTemplate('algorithm')}
+          className="study-management-hwr-example-btn"
+          style={{
+            padding: '8px 16px',
+            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
+            border: '1px solid rgba(195, 232, 141, 0.3)',
+            borderRadius: '6px',
+            color: '#C3E88D',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            whiteSpace: 'nowrap'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ fontSize: '16px' }}>✨</span>
+          예시 데이터 불러오기
+        </button>
       </div>
 
       <div className="study-management-hwr-form-group">

@@ -25,14 +25,14 @@ export interface MemberProfile {
   // === 레거시 호환 ===
   bio?: string;           // 기존 bio 필드 호환
 
-  // === TecoTeco 전용/고급 필드 (선택) ===
-  // 하드코딩 테코테코 UI와 동일한 표시를 위한 보강 필드들
+  // === 고급 필드 (선택) ===
+  // 더 풍부한 정보 표시를 위한 추가 필드들
   streak?: number;               // 연속 참여 일수 (예: 15)
   currentFocus?: string;         // 현재 집중 분야 (예: "그래프 최단경로")
   memorableProblem?: string;     // 기억에 남는 문제 (예: "BOJ 1753 - 최단경로")
-  tecotecoContribution?: string; // 카드 하단 한줄 기여/특징 (tagline과 별도 사용 가능)
   solvedProblems?: number;       // 해결한 문제 수 (모달 통계용)
   whatIGained?: string;          // 스터디에서 얻은 것 (모달용)
+  customMetricLabel?: string;    // 커스텀 메트릭 라벨 (예: "완료한 과제" 대신 사용자 정의)
   recentActivity?: string;       // 최근 활동 (예: "1일 전 활동")
   testimonial?: string;          // 동료의 평가 (호버/모달용)
   from?: string;                 // 평가 작성자
@@ -50,9 +50,6 @@ export interface Badge {
   icon?: string;
 }
 
-// 스타일 테마 타입
-// TecoTeco 하드코딩 UI를 완벽히 재현하기 위한 전용 테마를 추가
-export type MemberCardTheme = 'modern' | 'classic' | 'minimal' | 'tecoteco';
 
 // 레이아웃 타입
 export type MemberLayoutType = 'grid' | 'list' | 'carousel';
@@ -125,7 +122,6 @@ export const STUDY_TEMPLATES = {
 export interface MembersSectionData {
   title?: string;
   subtitle?: string;
-  theme?: MemberCardTheme;
   layout?: MemberLayoutType;
   studyType?: keyof typeof STUDY_TEMPLATES;
   members: MemberProfile[];
@@ -147,6 +143,6 @@ export interface StudyStats {
     value: string | number;
     icon?: string;
   }>;
-  // 테코테코 UI의 "인기 알고리즘" 태그 영역
+  // "인기 알고리즘" 태그 영역
   popularAlgorithms?: string[];
 }

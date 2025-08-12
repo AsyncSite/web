@@ -7,12 +7,9 @@ const RichTextSection = lazy(() => import('./RichTextSection'));
 const HeroSection = lazy(() => import('./HeroSection'));
 const GallerySection = lazy(() => import('./GallerySection'));
 const MembersSection = lazy(() => import('./MembersSection'));
-const ScheduleSection = lazy(() => import('./ScheduleSection'));
 const FAQSection = lazy(() => import('./FAQSection'));
 const ReviewsSection = lazy(() => import('./ReviewsSection'));
 const VideoEmbedSection = lazy(() => import('./VideoEmbedSection'));
-const TimelineSection = lazy(() => import('./TimelineSection'));
-const CTASection = lazy(() => import('./CTASection'));
 const TabsSection = lazy(() => import('./TabsSection'));
 const AccordionSection = lazy(() => import('./AccordionSection'));
 const StatsSection = lazy(() => import('./StatsSection'));
@@ -29,12 +26,9 @@ export const sectionRegistry: Record<SectionType | string, React.LazyExoticCompo
   [SectionType.HERO]: HeroSection,
   [SectionType.GALLERY]: GallerySection,
   [SectionType.MEMBERS]: MembersSection,
-  [SectionType.SCHEDULE]: ScheduleSection,
   [SectionType.FAQ]: FAQSection,
   [SectionType.REVIEWS]: ReviewsSection,
   [SectionType.VIDEO_EMBED]: VideoEmbedSection,
-  [SectionType.TIMELINE]: TimelineSection,
-  [SectionType.CTA]: CTASection,
   [SectionType.TABS]: TabsSection,
   [SectionType.ACCORDION]: AccordionSection,
   [SectionType.STATS]: StatsSection,
@@ -43,15 +37,16 @@ export const sectionRegistry: Record<SectionType | string, React.LazyExoticCompo
   [SectionType.CODE_BLOCK]: CodeBlockSection,
   [SectionType.HOW_WE_ROLL]: HowWeRollSection,
   [SectionType.JOURNEY]: JourneySection,
-  ['EXPERIENCE']: ExperienceSection,
+  [SectionType.EXPERIENCE]: ExperienceSection,
 };
 
 interface SectionRendererProps {
   type: SectionType | string;
   data: any;
+  studyId?: string; // Pass studyId to components that need it
 }
 
-export const SectionRenderer: React.FC<SectionRendererProps> = ({ type, data }) => {
+export const SectionRenderer: React.FC<SectionRendererProps> = ({ type, data, studyId }) => {
   const SectionComponent = sectionRegistry[type];
   
   if (!SectionComponent) {
@@ -59,9 +54,14 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ type, data }) 
     return null;
   }
   
+  // Pass studyId to components that need it (currently MembersSection)
+  const componentProps = type === SectionType.MEMBERS && studyId 
+    ? { data, studyId }
+    : { data };
+  
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <SectionComponent data={data} />
+      <SectionComponent {...componentProps} />
     </Suspense>
   );
 };

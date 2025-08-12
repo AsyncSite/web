@@ -57,9 +57,6 @@ export interface JourneySectionData {
   // 마무리 메시지 (선택적)
   closingMessage?: string;
   
-  // 테마
-  theme?: 'tecoteco' | 'modern' | 'classic' | 'timeline';
-  
   // 레이아웃 옵션
   layout?: 'list' | 'timeline' | 'cards';
   showAchievements?: boolean;

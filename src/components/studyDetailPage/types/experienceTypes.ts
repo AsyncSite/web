@@ -21,9 +21,6 @@ export interface ExperienceSectionData {
   // 스텝 콘텐츠 배열 (기본 5개, 최대 7개)
   steps: StepContent[];
   
-  // 테마 설정
-  theme?: 'tecoteco' | 'modern' | 'classic' | 'minimal';
-  
   // 레이아웃 옵션
   layout?: 'horizontal' | 'vertical' | 'grid';
   

@@ -7,7 +7,7 @@ import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import './ProfilePage.css';
-import studyService from '../../api/studyService';
+import studyService, { ApplicationStatus, type MyApplicationItem } from '../../api/studyService';
 import { handleApiError } from '../../api/client';
 
 function ProfilePage(): React.ReactNode {
@@ -71,10 +71,23 @@ function ProfilePage(): React.ReactNode {
 
   // 나의 스터디 데이터
   const [myStudies, setMyStudies] = useState<{ participating: any[]; leading: any[] }>({ participating: [], leading: [] });
+  const [myApplications, setMyApplications] = useState<MyApplicationItem[]>([]);
   const [studiesLoading, setStudiesLoading] = useState<boolean>(true);
   const [studiesError, setStudiesError] = useState<string | null>(null);
+  const [applicationsLoading, setApplicationsLoading] = useState<boolean>(true);
+  const [applicationsError, setApplicationsError] = useState<string | null>(null);
+  const [applicationFilter, setApplicationFilter] = useState<'ALL' | ApplicationStatus>(ApplicationStatus.PENDING);
+  const [participatingCollapsed, setParticipatingCollapsed] = useState<boolean>(true);
+  const [leadingCollapsed, setLeadingCollapsed] = useState<boolean>(true);
 
   useEffect(() => {
+    // Set initial collapsed state responsively: desktop expanded, mobile collapsed
+    try {
+      const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+      setParticipatingCollapsed(!isDesktop);
+      setLeadingCollapsed(!isDesktop);
+    } catch {}
+
     const loadMyStudies = async () => {
       try {
         setStudiesLoading(true);
@@ -88,8 +101,20 @@ function ProfilePage(): React.ReactNode {
         setStudiesLoading(false);
       }
     };
+    const loadMyApplications = async () => {
+      try {
+        setApplicationsLoading(true);
+        const apps = await studyService.getMyApplications();
+        setMyApplications(apps);
+      } catch (e: any) {
+        setApplicationsError(handleApiError(e));
+      } finally {
+        setApplicationsLoading(false);
+      }
+    };
     if (isAuthenticated) {
       loadMyStudies();
+      loadMyApplications();
     }
   }, [isAuthenticated]);
 
@@ -164,8 +189,112 @@ function ProfilePage(): React.ReactNode {
         {/* 스터디 탭 콘텐츠 */}
         {activeTab === 'study' && (
           <section className="study-section">
+            {/* 신청 내역 섹션 (고유 접두사: myapps-) */}
+            <div className="myapps-section">
+              <div className="myapps-header">
+                <h3 className="myapps-title">신청 내역 <span className="myapps-count-badge">대기 {myApplications.filter(a => a.status === ApplicationStatus.PENDING).length}</span></h3>
+                <div className="myapps-filters">
+                  {(() => {
+                    const counts = {
+                      PENDING: myApplications.filter(a => a.status === ApplicationStatus.PENDING).length,
+                      ACCEPTED: myApplications.filter(a => a.status === ApplicationStatus.ACCEPTED).length,
+                      REJECTED: myApplications.filter(a => a.status === ApplicationStatus.REJECTED).length,
+                      ALL: myApplications.filter(a => a.status !== ApplicationStatus.CANCELLED).length,
+                    };
+                    return ([ApplicationStatus.PENDING, ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED, 'ALL'] as const).map(key => (
+                      <button
+                        key={key}
+                        className={`myapps-chip ${applicationFilter === key ? 'active' : ''}`}
+                        onClick={() => setApplicationFilter(key)}
+                      >
+                        {key === 'ALL' ? '전체' : key === ApplicationStatus.PENDING ? '대기 중' : key === ApplicationStatus.ACCEPTED ? '승인됨' : '거절됨'}
+                        <span className="myapps-chip-count">{counts[key as keyof typeof counts]}</span>
+                      </button>
+                    ));
+                  })()}
+                </div>
+              </div>
+
+              {applicationsLoading ? (
+                <div className="myapps-loading">신청 내역을 불러오는 중…</div>
+              ) : applicationsError ? (
+                <div className="myapps-empty">
+                  <p>신청 내역을 불러오지 못했어요.</p>
+                  <p className="error-detail">{applicationsError}</p>
+                </div>
+              ) : (
+                (() => {
+                  const base = applicationFilter === 'ALL'
+                    ? myApplications.filter(a => a.status !== ApplicationStatus.CANCELLED) // ALL에도 취소는 제외해서 잡음 최소화
+                    : myApplications.filter(app => app.status === applicationFilter);
+                  const filtered = base
+                    .sort((a, b) => new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime());
+
+                  if (filtered.length === 0) {
+                    return <div className="myapps-empty">{applicationFilter === ApplicationStatus.PENDING ? '대기 중인 신청이 없습니다.' : applicationFilter === ApplicationStatus.ACCEPTED ? '승인된 신청이 없습니다.' : applicationFilter === ApplicationStatus.REJECTED ? '거절된 신청이 없습니다.' : '표시할 신청 내역이 없습니다.'}</div>;
+                  }
+
+                  return (
+                    <ul className="myapps-list">
+                      {filtered.map(app => (
+                        <li key={app.applicationId} className={`myapps-item myapps-status-${(app.status || 'PENDING').toLowerCase()}`}>
+                          <div className="myapps-main">
+                            <div className="myapps-title-line">
+                              <span className="myapps-study-title">{app.studyTitle}</span>
+                              <span className="myapps-badge">
+                                {app.status === ApplicationStatus.PENDING && '대기 중'}
+                                {app.status === ApplicationStatus.ACCEPTED && '승인됨'}
+                                {app.status === ApplicationStatus.REJECTED && '거절됨'}
+                              </span>
+                            </div>
+                            <div className="myapps-meta">
+                              <span>신청일: {new Date(app.appliedAt).toLocaleString()}</span>
+                              {app.reviewNote && <span className="myapps-note">메모: {app.reviewNote}</span>}
+                            </div>
+                          </div>
+                          <div className="myapps-actions">
+                            {app.status === ApplicationStatus.PENDING ? (
+                              <button
+                                className="myapps-btn-cancel"
+                                onClick={async () => {
+                                  try {
+                                    await studyService.cancelApplication(app.studyId, app.applicationId, authUser?.email || authUser?.username);
+                                    // 낙관적 업데이트
+                                    setMyApplications(prev => prev.map(x => x.applicationId === app.applicationId ? { ...x, status: ApplicationStatus.CANCELLED } : x));
+                                  } catch (err) {
+                                    console.error(err);
+                                    alert('신청 취소에 실패했습니다.');
+                                  }
+                                }}
+                              >
+                                신청 취소
+                              </button>
+                            ) : app.status === ApplicationStatus.REJECTED ? (
+                              <button
+                                className="myapps-btn-reapply"
+                                onClick={() => navigate(`/study/${app.studyId}/apply`)}
+                              >
+                                다시 신청
+                              </button>
+                            ) : (
+                              <button
+                                className="myapps-btn-goto"
+                                onClick={() => navigate(`/study/${app.studyId}/manage`)}
+                              >
+                                스터디로 이동
+                              </button>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                })()
+              )}
+            </div>
+
+            {/* 나의 스터디 섹션 */}
             <h2>나의 스터디</h2>
-            
             {studiesLoading ? (
               <div className="study-loading-inline">스터디 불러오는 중…</div>
             ) : studiesError ? (
@@ -199,14 +328,41 @@ function ProfilePage(): React.ReactNode {
             ) : (
               <>
                 <div className="study-group">
-                  <h3>참여 중인 스터디 ({myStudies.participating.length})</h3>
+                  <div className="myst-section-header">
+                    <h3>참여 중인 스터디 <span className="myst-badge">{myStudies.participating.length}</span></h3>
+                    {myStudies.participating.length > 3 && (
+                      <button className="myst-toggle" onClick={() => setParticipatingCollapsed(c => !c)}>
+                        {participatingCollapsed ? '모두 보기' : '접기'}
+                      </button>
+                    )}
+                  </div>
                   <div className="study-cards">
-                    {myStudies.participating.map(study => (
+                    {(participatingCollapsed ? myStudies.participating.slice(0, 3) : myStudies.participating).map(study => (
                       <div key={study.memberId} className="study-card">
-                        <h4>{study.studyTitle}</h4>
+                        <h4>
+                          {study.studyTitle}
+                          {study.studyStatus && (
+                            <span className={`study-status-badge study-status-${study.studyStatus.toLowerCase()}`}>
+                              {study.studyStatus === 'IN_PROGRESS' ? '진행중' : 
+                               study.studyStatus === 'COMPLETED' ? '완료' :
+                               study.studyStatus === 'APPROVED' ? '모집중' :
+                               study.studyStatus === 'TERMINATED' ? '종료' : study.studyStatus}
+                            </span>
+                          )}
+                        </h4>
                         <p className="study-meta">역할: {study.role}</p>
                         <p className="study-meta">참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
                         <p className="study-meta">출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
+                        {study.studyStatus === 'COMPLETED' && (
+                          <div className="study-actions">
+                            <button 
+                              className="review-action-button"
+                              onClick={() => navigate(`/study/${study.studyId}#reviews`)}
+                            >
+                              리뷰 작성
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -214,9 +370,16 @@ function ProfilePage(): React.ReactNode {
 
                 {myStudies.leading.length > 0 && (
                   <div className="study-group">
-                    <h3>내가 리드하는 스터디 ({myStudies.leading.length})</h3>
+                    <div className="myst-section-header">
+                      <h3>내가 리드하는 스터디 <span className="myst-badge">{myStudies.leading.length}</span></h3>
+                      {myStudies.leading.length > 3 && (
+                        <button className="myst-toggle" onClick={() => setLeadingCollapsed(c => !c)}>
+                          {leadingCollapsed ? '모두 보기' : '접기'}
+                        </button>
+                      )}
+                    </div>
                     <div className="study-cards">
-                      {myStudies.leading.map(study => (
+                      {(leadingCollapsed ? myStudies.leading.slice(0, 3) : myStudies.leading).map(study => (
                         <div 
                           key={study.memberId} 
                           className="study-card leading clickable"
@@ -224,10 +387,24 @@ function ProfilePage(): React.ReactNode {
                           style={{ cursor: 'pointer' }}
                         >
                           <span className="leader-badge">리더</span>
-                          <h4>{study.studyTitle}</h4>
+                          <h4>
+                            {study.studyTitle}
+                            {study.studyStatus && (
+                              <span className={`study-status-badge study-status-${study.studyStatus.toLowerCase()}`}>
+                                {study.studyStatus === 'IN_PROGRESS' ? '진행중' : 
+                                 study.studyStatus === 'COMPLETED' ? '완료' :
+                                 study.studyStatus === 'APPROVED' ? '모집중' :
+                                 study.studyStatus === 'TERMINATED' ? '종료' : study.studyStatus}
+                              </span>
+                            )}
+                          </h4>
                           <p className="study-meta">참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
                           <p className="study-meta">출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
-                          <p className="study-action">→ 관리 페이지로 이동</p>
+                          {study.studyStatus === 'COMPLETED' ? (
+                            <p className="study-action">→ 리뷰 관리</p>
+                          ) : (
+                            <p className="study-action">→ 관리 페이지로 이동</p>
+                          )}
                         </div>
                       ))}
                     </div>

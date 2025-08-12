@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MembersSection.css';
 import './MembersSection-tecoteco.css';
 import {
   MemberProfile, 
-  MemberCardTheme, 
   MemberLayoutType,
   MembersSectionData 
 } from '../types/memberTypes';
+import { fetchAndMergeMembersData } from '../utils/membersDataFetcher';
 
 interface MembersSectionProps {
   data: MembersSectionData;
+  studyId?: string; // Optional studyId to fetch real member data
 }
 
 // 개별 멤버 카드 컴포넌트
 const MemberCard: React.FC<{
   member: MemberProfile;
-  theme: MemberCardTheme;
   onClick?: () => void;
-  // tecoteco 전용 상호작용 지원
+  // 상호작용 지원
   onHoverChange?: (hovered: boolean) => void;
   hoveredActiveName?: string | null;
   isMvpHint?: boolean;
-}> = ({ member, theme, onClick, onHoverChange, hoveredActiveName, isMvpHint }) => {
+}> = ({ member, onClick, onHoverChange, hoveredActiveName, isMvpHint }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [hoverPos, setHoverPos] = useState<{x:number; y:number}>({ x: 0, y: 0 });
   
@@ -36,112 +36,61 @@ const MemberCard: React.FC<{
     const joined = new Date(joinDate);
     const today = new Date();
     const months = (today.getFullYear() - joined.getFullYear()) * 12 + today.getMonth() - joined.getMonth();
-    // tecoteco 카드 표기와 동일: "함께한 지 N개월"
-    if (theme === 'tecoteco') return `함께한 지 ${months}개월`;
-    // 기본 표기
-    if (months === 0) return '이번 달 합류';
-    if (months === 1) return '1개월째';
-    return `${months}개월째`;
+    // 기본 표기: "함께한 지 N개월"
+    return `함께한 지 ${months}개월`;
   };
   
   const isBlurred = !!hoveredActiveName && hoveredActiveName !== member.name;
 
   return (
     <div 
-      className={`${theme === 'tecoteco' ? 'tecoteco-contributor-card' : 'member-card member-card-' + theme} ${isHovered ? 'hovered' : ''} ${isBlurred ? 'blurred' : ''} ${isMvpHint ? 'mvp-card' : ''}`}
+      className={`tecoteco-contributor-card ${isHovered ? 'hovered' : ''} ${isBlurred ? 'blurred' : ''} ${isMvpHint ? 'mvp-card' : ''}`}
       onClick={onClick}
       onMouseEnter={(e) => { setIsHovered(true); onHoverChange?.(true); setHoverPos({ x: e.clientX, y: e.clientY }); }}
       onMouseMove={(e) => { if (isHovered) setHoverPos({ x: e.clientX, y: e.clientY }); }}
       onMouseLeave={() => { setIsHovered(false); onHoverChange?.(false); }}
     >
-      {/* MVP 배지 (테코테코 테마) */}
-      {theme === 'tecoteco' && (isMvpHint || (member.badges && member.badges.some(b => b.type === 'mvp'))) && (
+      {/* MVP 배지 */}
+      {(isMvpHint || (member.badges && member.badges.some(b => b.type === 'mvp'))) && (
         <div className="mvp-badge">👑 이주의 MVP</div>
-      )}
-      {/* 일반 배지 표시 */}
-      {theme !== 'tecoteco' && member.badges && member.badges.length > 0 && (
-        <div className="member-badges">
-          {member.badges.map((badge, idx) => (
-            <span key={idx} className={`badge badge-${badge.type}`}>
-              {badge.icon} {badge.label}
-            </span>
-          ))}
-        </div>
       )}
       
       {/* 프로필 이미지 */}
-      <div className={theme === 'tecoteco' ? 'tecoteco-profile-wrapper' : 'member-image-wrapper'}>
+      <div className="tecoteco-profile-wrapper">
         <img 
           src={member.imageUrl || '/images/default-avatar.png'} 
           alt={member.name}
           onError={handleImageError}
-          className={theme === 'tecoteco' ? 'tecoteco-profile-img' : 'member-image'}
+          className="tecoteco-profile-img"
         />
         {member.isActive && <div className="activity-indicator" />}
       </div>
       
       {/* 기본 정보 */}
-      <h3 className={theme === 'tecoteco' ? 'tecoteco-contributor-name' : 'member-name'}>{member.name}</h3>
-      {theme !== 'tecoteco' && (
-        <p className="member-role">{member.role}</p>
-      )}
+      <h3 className="tecoteco-contributor-name">{member.name}</h3>
       
       {/* 가입 기간 */}
       {member.joinDate && (
-        <p className={theme === 'tecoteco' ? 'tecoteco-contributor-duration' : 'member-duration'}>{getMemberDuration(member.joinDate)}</p>
+        <p className="tecoteco-contributor-duration">{getMemberDuration(member.joinDate)}</p>
       )}
       
-      {/* 한 줄 소개 / tecoteco 전용 기여 문구 우선 */}
-      {(theme === 'tecoteco' && member.tecotecoContribution) ? (
-        <p className={theme === 'tecoteco' ? 'tecoteco-contributor-contribution' : 'member-tagline'}>{member.tecotecoContribution}</p>
-      ) : (
-        member.tagline && (
-          <p className="member-tagline">{member.tagline}</p>
-        )
+      {/* 한 줄 소개 */}
+      {member.tagline && (
+        <p className="tecoteco-contributor-contribution">
+          {member.tagline}
+        </p>
       )}
       
-      {/* 커스텀 필드 */}
-      {theme !== 'tecoteco' && member.customFields && member.customFields.length > 0 && (
-        <div className="member-custom-fields">
-          {member.customFields.map((field, idx) => (
-            <div key={idx} className="custom-field">
-              <span className="field-icon">{field.icon}</span>
-              <span className="field-label">{field.label}:</span>
-              <span className="field-value">{field.value}</span>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {/* tecoteco 미니 통계 프리뷰 (streak) */}
-      {theme === 'tecoteco' && typeof member.streak === 'number' && (
+      {/* 미니 통계 프리뷰 (streak) */}
+      {typeof member.streak === 'number' && (
         <div className="member-stats-preview">
           <span className="streak-preview">🔥 {member.streak}</span>
         </div>
       )}
       
-      {/* 호버 시 추가 정보 (modern 테마) */}
-      {theme === 'modern' && isHovered && (
-        <div className="member-hover-info">
-          {member.achievement && (
-            <div className="hover-achievement">
-              <strong>성과</strong>
-              <p>{member.achievement}</p>
-            </div>
-          )}
-          {member.message && (
-            <div className="hover-message">
-              <p>"{member.message}"</p>
-              {member.messageFrom && (
-                <span className="message-from">- {member.messageFrom}</span>
-              )}
-            </div>
-          )}
-          <div className="hover-cta">자세히 보기 →</div>
-        </div>
-      )}
-      {/* tecoteco 전용: 호버 디테일(화면 중앙 고정) */}
-      {theme === 'tecoteco' && isHovered && (
+      {/* 호버 디테일(화면 중앙 고정) */}
+      {isHovered && (
         <div className="hover-detail-overlay">
           <div className="hover-detail-popup">
             <div className="hover-detail-header">
@@ -299,22 +248,66 @@ const StatsSection: React.FC<{ stats: any }> = ({ stats }) => {
 };
 
 // 메인 MembersSection 컴포넌트
-const MembersSection: React.FC<MembersSectionProps> = ({ data }) => {
+const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   const { 
-    members = [], 
+    members: initialMembers = [], 
     title = '함께하는 사람들',
     subtitle,
-    theme = 'classic',
-    layout = 'grid',
+    layout = 'carousel',
     showStats = false,
-    stats
+    stats,
+    weeklyMvp
   } = data;
   
+  const [members, setMembers] = useState<MemberProfile[]>(initialMembers);
   const [selectedMember, setSelectedMember] = useState<MemberProfile | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoadingMembers, setIsLoadingMembers] = useState(false);
+  // tecoteco 테마에서 사용될 state들을 미리 선언 (조건부 hooks 에러 방지)
+  const [hoveredName, setHoveredName] = useState<string | null>(null);
+  const [hoveredMember, setHoveredMember] = useState<MemberProfile | null>(null);
   
-  if (members.length === 0) {
+  // Fetch real member data when studyId is provided
+  useEffect(() => {
+    const loadMemberData = async () => {
+      if (!studyId) {
+        // No studyId, use initial members as-is
+        setMembers(initialMembers);
+        return;
+      }
+      
+      setIsLoadingMembers(true);
+      try {
+        const mergedMembers = await fetchAndMergeMembersData(studyId, initialMembers);
+        setMembers(mergedMembers);
+      } catch (error) {
+        console.error('Failed to fetch member data:', error);
+        // Fallback to initial members
+        setMembers(initialMembers);
+      } finally {
+        setIsLoadingMembers(false);
+      }
+    };
+    
+    loadMemberData();
+  }, [studyId, initialMembers]);
+  
+  if (members.length === 0 && !isLoadingMembers) {
     return null;
+  }
+  
+  // Show loading state while fetching real member data
+  if (isLoadingMembers) {
+    return (
+      <section className="study-detail-members-section tecoteco-members-section">
+        <div className="section-tag-header">함께하는 멤버들이에요</div>
+        {title && <h2 className="section-title">{title}</h2>}
+        {subtitle && <p className="section-subtitle">{subtitle}</p>}
+        <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
+          멤버 정보를 불러오는 중...
+        </div>
+      </section>
+    );
   }
   
   const handleMemberClick = (member: MemberProfile) => {
@@ -327,194 +320,117 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data }) => {
     setSelectedMember(null);
   };
   
-  // tecoteco 테마일 때는 하드코딩 페이지와 동일한 DOM 구조/클래스 일부를 재현
-  if (theme === 'tecoteco') {
-    const weeklyMvpName = data.weeklyMvp;
-    const [hoveredName, setHoveredName] = useState<string | null>(null);
-    const [hoveredMember, setHoveredMember] = useState<MemberProfile | null>(null);
-    return (
-      <section className={`study-detail-members-section theme-tecoteco tecoteco-members-section`}>
-        {/* 태그 헤더 및 타이틀 (좌측 정렬) */}
-        <div className="section-tag-header">함께하는 멤버들이에요</div>
-        <h2 className="section-title">더 멋진 여정이 펼쳐질 거예요, <br /> 함께라면.</h2>
-
-        {/* 멤버 카드 캐러셀: 두 번 렌더링하여 무한 스크롤 효과 */}
-        <div className="scrolling-members-wrapper">
-          <div className="scrolling-members-inner">
-            <div className="tecoteco-contributors-list">
-              {members.map((member, index) => (
-                <MemberCard
-                  key={index}
-                  member={member}
-                  theme={theme}
-                  onClick={() => handleMemberClick(member)}
-                  onHoverChange={(h) => {
-                    setHoveredName(h ? member.name : null);
-                    setHoveredMember(h ? member : null);
-                  }}
-                  hoveredActiveName={hoveredName}
-                  isMvpHint={weeklyMvpName ? member.name === weeklyMvpName : false}
-                />
-              ))}
-            </div>
-            <div className="tecoteco-contributors-list" aria-hidden="true">
-              {members.map((member, index) => (
-                <MemberCard
-                  key={`duplicate-${index}`}
-                  member={member}
-                  theme={theme}
-                  onClick={() => handleMemberClick(member)}
-                  onHoverChange={(h) => {
-                    setHoveredName(h ? member.name : null);
-                    setHoveredMember(h ? member : null);
-                  }}
-                  hoveredActiveName={hoveredName}
-                  isMvpHint={weeklyMvpName ? member.name === weeklyMvpName : false}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* 인터랙션 힌트 */}
-        <p className="members-intro">
-          각자의 성장 스토리가 모여 더 큰 시너지를 만들어가고 있어요.
-          <br />
-          <span className="interactive-hint">💡 멤버 카드를 클릭해서 더 자세한 이야기를 확인해보세요!</span>
-        </p>
-
-        {/* 연결성 장식 라인 */}
-        <div className="connection-lines">
-          <svg className="connections-svg" viewBox="0 0 100 20">
-            <path
-              d="M 10 10 Q 30 5 50 10 T 90 10"
-              className="connection-path"
-              stroke="rgba(195, 232, 141, 0.3)"
-              strokeWidth="1"
-              fill="none"
-            />
-          </svg>
-          <span className="connection-text">서로 영감을 주고받으며</span>
-        </div>
-
-        {/* 통계 섹션 (테코테코 스타일) */}
-        {showStats && stats && (
-          <div className="stats-container">
-            <h3 className="stats-title">한땀 한땀 쌓인 작지만 확실한 성취들</h3>
-            <div className="stats-grid">
-              {stats.totalProblems && (
-                <div className="stat-item">
-                  <span className="stat-number">{stats.totalProblems.toLocaleString()}</span>
-                  <span className="stat-label">총 해결한 문제</span>
-                </div>
-              )}
-              {stats.totalHours && (
-                <div className="stat-item">
-                  <span className="stat-number">{stats.totalHours}시간+</span>
-                  <span className="stat-label">함께한 시간</span>
-                </div>
-              )}
-              {stats.participationRate && (
-                <div className="stat-item">
-                  <span className="stat-number">{stats.participationRate}%</span>
-                  <span className="stat-label">평균 참여율</span>
-                </div>
-              )}
-              {Array.isArray(stats.popularAlgorithms) && (
-                <div className="stat-item popular-algorithms">
-                  <span className="stat-label">인기 알고리즘</span>
-                  <div className="algorithm-tags">
-                    {stats.popularAlgorithms.map((algo, index) => (
-                      <span key={index} className="algorithm-tag">{algo}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* 호버 디테일은 각 카드에서 처리됨 */}
-
-        {/* 멤버 상세 모달 */}
-        {selectedMember && (
-          <MemberDetailModal
-            member={selectedMember}
-            isOpen={isModalOpen}
-            onClose={closeModal}
-          />
-        )}
-      </section>
-    );
-  }
-
+  
   return (
-    <div className={`study-detail-members-section theme-${theme}`}>
-      <div className="members-container">
-        {/* 헤더 */}
-        <div className="members-header">
-          {title && <h2 className="members-title">{title}</h2>}
-          {subtitle && <p className="members-subtitle">{subtitle}</p>}
+    <section className="study-detail-members-section tecoteco-members-section">
+      {/* 태그 헤더 및 타이틀 (좌측 정렬) */}
+      <div className="section-tag-header">함께하는 멤버들이에요</div>
+      {title && <h2 className="section-title">{title}</h2>}
+      {subtitle && <p className="section-subtitle">{subtitle}</p>}
+
+      {/* 멤버 카드 캐러셀: 두 번 렌더링하여 무한 스크롤 효과 */}
+      <div className="scrolling-members-wrapper">
+        <div className="scrolling-members-inner">
+          <div className="tecoteco-contributors-list">
+            {members.map((member, index) => (
+              <MemberCard
+                key={index}
+                member={member}
+                onClick={() => handleMemberClick(member)}
+                onHoverChange={(h) => {
+                  setHoveredName(h ? member.name : null);
+                  setHoveredMember(h ? member : null);
+                }}
+                hoveredActiveName={hoveredName}
+                isMvpHint={weeklyMvp ? member.name === weeklyMvp : false}
+              />
+            ))}
+          </div>
+          <div className="tecoteco-contributors-list" aria-hidden="true">
+            {members.map((member, index) => (
+              <MemberCard
+                key={`duplicate-${index}`}
+                member={member}
+                onClick={() => handleMemberClick(member)}
+                onHoverChange={(h) => {
+                  setHoveredName(h ? member.name : null);
+                  setHoveredMember(h ? member : null);
+                }}
+                hoveredActiveName={hoveredName}
+                isMvpHint={weeklyMvp ? member.name === weeklyMvp : false}
+              />
+            ))}
+          </div>
         </div>
-        
-        {/* 멤버 리스트 */}
-        <div className={`members-layout layout-${layout}`}>
-          {layout === 'carousel' ? (
-            <div className="members-carousel">
-              <div className="carousel-track">
-                {members.map((member, index) => (
-                  <MemberCard
-                    key={index}
-                    member={member}
-                    theme={theme}
-                    onClick={() => handleMemberClick(member)}
-                  />
-                ))}
-                {/* 무한 스크롤을 위한 복제 */}
-                {members.map((member, index) => (
-                  <MemberCard
-                    key={`duplicate-${index}`}
-                    member={member}
-                    theme={theme}
-                    onClick={() => handleMemberClick(member)}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className={`members-${layout}`}>
-              {members.map((member, index) => (
-                <MemberCard
-                  key={index}
-                  member={member}
-                  theme={theme}
-                  onClick={() => handleMemberClick(member)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-        
-        {/* 인터랙션 힌트 */}
-        {theme === 'modern' && (
-          <p className="members-interaction-hint">
-            💡 멤버 카드를 클릭해서 더 자세한 이야기를 확인해보세요!
-          </p>
-        )}
-        
-        {/* 통계 섹션 */}
-        {showStats && stats && <StatsSection stats={stats} />}
-        
-        {/* 멤버 상세 모달 */}
-        {selectedMember && (
-          <MemberDetailModal
-            member={selectedMember}
-            isOpen={isModalOpen}
-            onClose={closeModal}
-          />
-        )}
       </div>
-    </div>
+
+      {/* 인터랙션 힌트 */}
+      <p className="members-intro">
+        각자의 성장 스토리가 모여 더 큰 시너지를 만들어가고 있어요.
+        <br />
+        <span className="interactive-hint">💡 멤버 카드를 클릭해서 더 자세한 이야기를 확인해보세요!</span>
+      </p>
+
+      {/* 연결성 장식 라인 */}
+      <div className="connection-lines">
+        <svg className="connections-svg" viewBox="0 0 100 20">
+          <path
+            d="M 10 10 Q 30 5 50 10 T 90 10"
+            className="connection-path"
+            stroke="rgba(195, 232, 141, 0.3)"
+            strokeWidth="1"
+            fill="none"
+          />
+        </svg>
+        <span className="connection-text">서로 영감을 주고받으며</span>
+      </div>
+
+      {/* 통계 섹션 (테코테코 스타일) */}
+      {showStats && stats && (
+        <div className="stats-container">
+          <h3 className="stats-title">한땀 한땀 쌓인 작지만 확실한 성취들</h3>
+          <div className="stats-grid">
+            {stats.totalProblems && (
+              <div className="stat-item">
+                <span className="stat-number">{stats.totalProblems.toLocaleString()}</span>
+                <span className="stat-label">총 해결한 문제</span>
+              </div>
+            )}
+            {stats.totalHours && (
+              <div className="stat-item">
+                <span className="stat-number">{stats.totalHours}시간+</span>
+                <span className="stat-label">함께한 시간</span>
+              </div>
+            )}
+            {stats.participationRate && (
+              <div className="stat-item">
+                <span className="stat-number">{stats.participationRate}%</span>
+                <span className="stat-label">평균 참여율</span>
+              </div>
+            )}
+            {Array.isArray(stats.popularAlgorithms) && (
+              <div className="stat-item popular-algorithms">
+                <span className="stat-label">인기 알고리즘</span>
+                <div className="algorithm-tags">
+                  {stats.popularAlgorithms.map((algo, index) => (
+                    <span key={index} className="algorithm-tag">{algo}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 멤버 상세 모달 */}
+      {selectedMember && (
+        <MemberDetailModal
+          member={selectedMember}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      )}
+    </section>
   );
 };
 
