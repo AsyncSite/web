@@ -686,8 +686,14 @@ const StudyManagementPage: React.FC = () => {
                           </div>
                           <div className="section-actions">
                             <button onClick={() => setSelectedSection(section)}>편집</button>
-                            <button onClick={() => handleReorderSection(section.id, Math.max(0, section.order - 1))}>↑</button>
-                            <button onClick={() => handleReorderSection(section.id, section.order + 1)}>↓</button>
+                            <button 
+                              onClick={() => handleReorderSection(section.id, Math.max(0, index - 1))}
+                              disabled={index === 0}
+                            >↑</button>
+                            <button 
+                              onClick={() => handleReorderSection(section.id, Math.min(pageData.sections.length - 1, index + 1))}
+                              disabled={index === pageData.sections.length - 1}
+                            >↓</button>
                             <button onClick={() => handleDeleteSection(section.id)}>삭제</button>
                           </div>
                         </div>
