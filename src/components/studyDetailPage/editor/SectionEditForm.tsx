@@ -2,7 +2,7 @@ import React from 'react';
 import { SectionType } from '../../../api/studyDetailPageService';
 import HeroSectionForm from './forms/HeroSectionForm';
 import MembersSectionForm from './forms/MembersSectionForm';
-import ReviewsSectionForm from './forms/ReviewsSectionForm';
+import ReviewSectionForm from './forms/ReviewSectionForm';
 import FAQSectionForm from './forms/FAQSectionForm';
 import RichTextSectionForm from './forms/RichTextSectionFormV2';
 import HowWeRollSectionForm from './forms/HowWeRollSectionForm';
@@ -48,7 +48,8 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
       
       case SectionType.REVIEWS:
         return (
-          <ReviewsSectionForm
+          <ReviewSectionForm
+            studyId={studyId}  // studyId 전달 (API 호출용)
             initialData={initialData}
             onSave={onSave}
             onCancel={onCancel}
