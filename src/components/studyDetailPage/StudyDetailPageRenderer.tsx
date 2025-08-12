@@ -8,6 +8,7 @@ import { SectionRenderer } from './sections';
 import { RichTextConverter } from '../common/richtext/RichTextConverter';
 import { restoreSectionTypes } from './utils/sectionTypeAdapter';
 import { normalizeMembersPropsForUI } from './utils/membersAdapter';
+import { blocksToHTML } from './utils/RichTextHelpers';
 import './StudyDetailPageRenderer.css';
 
 /**
@@ -17,12 +18,26 @@ import './StudyDetailPageRenderer.css';
 const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDetailPageData | null): any => {
   switch (section.type) {
     case SectionType.RICH_TEXT:
-      // API returns 'text' but component expects 'content'
+      // Handle both block-based and HTML-based content
+      let content = '';
+      if (section.props.blocks && Array.isArray(section.props.blocks)) {
+        // Convert blocks to HTML
+        console.log('[StudyDetailPageRenderer] Converting blocks to HTML:', section.props.blocks);
+        content = blocksToHTML(section.props.blocks);
+        console.log('[StudyDetailPageRenderer] Converted HTML result:', content);
+      } else {
+        // Fallback to text or content property
+        content = section.props.text || section.props.content || '';
+      }
+      
       return {
-        content: section.props.text || section.props.content || '',
+        content,
+        title: section.props.title,
         alignment: section.props.alignment,
         padding: section.props.padding,
-        maxWidth: section.props.maxWidth
+        maxWidth: section.props.maxWidth,
+        backgroundColor: section.props.backgroundColor,
+        theme: section.props.theme
       };
     
     case SectionType.FAQ:

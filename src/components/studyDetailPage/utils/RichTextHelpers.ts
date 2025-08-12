@@ -29,7 +29,10 @@ export const contentToHTML = (content: BlockContent): string => {
     return escapeHtml(content);
   }
   // If it's RichTextData, convert to HTML
-  return RichTextConverter.toHTML(content);
+  console.log('[contentToHTML] Converting RichTextData:', content);
+  const html = RichTextConverter.toHTML(content);
+  console.log('[contentToHTML] Converted HTML:', html);
+  return html;
 };
 
 // Convert HTML string to BlockContent (tries to parse as RichTextData)
