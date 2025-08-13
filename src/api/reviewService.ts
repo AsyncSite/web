@@ -180,10 +180,43 @@ class ReviewService {
    */
   async getReviewStatistics(studyId: string): Promise<ReviewStatistics> {
     try {
-      const response = await apiClient.get<{ data: ReviewStatistics }>(
-        `${this.basePath}/studies/${studyId}/statistics`
-      );
-      return response.data.data;
+      const [statsResponse, reviewsResponse] = await Promise.all([
+        apiClient.get<{ data: any }>(`${this.basePath}/studies/${studyId}/statistics`),
+        apiClient.get<{ data: PageResponse<ReviewResponse> }>(`${this.basePath}/studies/${studyId}`)
+      ]);
+      
+      const data = statsResponse.data.data;
+      
+      // 리뷰가 있는데 ratingDistribution이 모두 0인 경우 직접 계산
+      if (data.totalCount > 0 && Array.isArray(data.ratingDistribution)) {
+        const allZeros = data.ratingDistribution.every((count: number) => count === 0);
+        
+        if (allZeros) {
+          // 실제 리뷰 데이터에서 분포 계산
+          const reviews = reviewsResponse.data.data.content;
+          const distribution: { [key: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+          
+          reviews.forEach(review => {
+            if (review.rating >= 1 && review.rating <= 5) {
+              distribution[review.rating]++;
+            }
+          });
+          
+          data.ratingDistribution = distribution;
+        } else {
+          // 배열 인덱스를 1-5 점수로 매핑
+          const distribution: { [key: number]: number } = {};
+          data.ratingDistribution.forEach((count: number, index: number) => {
+            distribution[index + 1] = count;
+          });
+          data.ratingDistribution = distribution;
+        }
+      } else if (Array.isArray(data.ratingDistribution)) {
+        // 리뷰가 없는 경우 기본값
+        data.ratingDistribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      }
+      
+      return data;
     } catch (error) {
       throw new Error(handleApiError(error));
     }

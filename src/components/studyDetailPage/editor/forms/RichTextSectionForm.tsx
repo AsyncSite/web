@@ -30,7 +30,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
     e.preventDefault();
     
     if (!content) {
-      alert('내용은 필수 입력 항목입니다.');
+      // Validation failed - content is required
       return;
     }
 
@@ -86,8 +86,8 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
     setBackgroundColor('transparent');
     // tecoteco 테마 고정됨
     
-    // 사용자에게 안내 메시지
-    alert('💡 TecoTeco 예시가 로드되었습니다!\n\n비주얼 에디터의 버튼들을 사용하여 이런 콘텐츠를 만들 수 있습니다.\nHTML 모드로 전환하면 코드를 직접 편집할 수도 있어요.');
+    // Example loaded successfully
+    // Parent component can show a success message if needed
   };
 
   // 템플릿 예시

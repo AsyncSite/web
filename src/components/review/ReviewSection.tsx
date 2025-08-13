@@ -119,12 +119,8 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
   const hasAnyReviews = statistics && statistics.totalReviews > 0;
   const canWriteAnyReview = Object.values(canWriteReview).some(v => v);
   
-  // Show section if: study is completed/in-progress OR has reviews OR user can write review
-  const shouldShowSection = isStudyCompletedOrInProgress || hasAnyReviews || (isMember && canWriteAnyReview);
-  
-  if (!shouldShowSection) {
-    return null;
-  }
+  // 항상 리뷰 섹션을 표시
+  // 리뷰가 없어도 "아직 리뷰가 없습니다" 메시지를 보여주기 위함
 
   return (
     <div className="review-section">

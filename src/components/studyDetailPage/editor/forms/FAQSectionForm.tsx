@@ -68,7 +68,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
     const validFaqs = faqs.filter(faq => faq.question && faq.answer);
     
     if (validFaqs.length === 0) {
-      alert('최소 한 개의 FAQ를 입력해주세요.');
+      // Validation failed - at least one FAQ is required
       return;
     }
 

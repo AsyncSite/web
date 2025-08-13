@@ -584,3 +584,149 @@
   color: #666;
   font-style: italic;
 }
+
+/* ==========================================
+   Study Management Editor Common Checkbox Styles
+   매우 구체적인 클래스명으로 충돌 방지
+   ========================================== */
+
+/* 기본 체크박스 래퍼 - 라벨과 체크박스를 감싸는 컨테이너 */
+.study-management-editor-checkbox-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.study-management-editor-checkbox-wrapper:hover {
+  opacity: 0.85;
+}
+
+/* 체크박스 input 스타일 - 커스텀 디자인 */
+.study-management-editor-checkbox-input {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+/* 체크박스 hover 상태 */
+.study-management-editor-checkbox-input:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(195, 232, 141, 0.5);
+}
+
+/* 체크박스 focus 상태 - 접근성을 위한 포커스 링 */
+.study-management-editor-checkbox-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(195, 232, 141, 0.2);
+  border-color: #C3E88D;
+}
+
+/* 체크박스 checked 상태 */
+.study-management-editor-checkbox-input:checked {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  border-color: #C3E88D;
+}
+
+/* 체크박스 checked 후 체크마크 표시 */
+.study-management-editor-checkbox-input:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 체크박스 disabled 상태 */
+.study-management-editor-checkbox-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.study-management-editor-checkbox-input:disabled:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 체크박스 라벨 스타일 */
+.study-management-editor-checkbox-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+/* 체크박스가 체크되었을 때 라벨 강조 */
+.study-management-editor-checkbox-input:checked + .study-management-editor-checkbox-label {
+  color: #C3E88D;
+  font-weight: 500;
+}
+
+/* 인라인 체크박스 그룹 */
+.study-management-editor-checkbox-group-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 12px 0;
+}
+
+/* 세로 체크박스 그룹 */
+.study-management-editor-checkbox-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+/* 체크박스 섹션 컨테이너 */
+.study-management-editor-checkbox-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.study-management-editor-checkbox-section-title {
+  color: #89DDFF;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+/* 애니메이션 효과 */
+@keyframes study-management-checkbox-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(195, 232, 141, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(195, 232, 141, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(195, 232, 141, 0);
+  }
+}
+
+.study-management-editor-checkbox-input:checked {
+  animation: study-management-checkbox-pulse 0.4s ease;
+}

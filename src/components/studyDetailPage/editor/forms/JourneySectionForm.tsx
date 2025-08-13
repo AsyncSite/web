@@ -125,7 +125,7 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
     e.preventDefault();
     
     if (data.generations.length === 0) {
-      alert('최소 하나 이상의 세대/시즌을 추가해주세요.');
+      // Validation failed - at least one generation is required
       return;
     }
 

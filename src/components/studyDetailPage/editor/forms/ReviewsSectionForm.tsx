@@ -54,7 +54,7 @@ const ReviewsSectionForm: React.FC<ReviewsSectionFormProps> = ({
     const validReviews = reviews.filter(review => review.author && review.content);
     
     if (validReviews.length === 0) {
-      alert('최소 한 개의 후기를 입력해주세요.');
+      // Validation failed - at least one review is required
       return;
     }
 
