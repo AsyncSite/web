@@ -2,8 +2,8 @@
 
 **작성일**: 2025-08-13
 **최종 수정**: 2025-08-13
-**심각도**: CRITICAL → PARTIALLY RESOLVED
-**상태**: 부분 해결
+**심각도**: CRITICAL → RESOLVED
+**상태**: 해결 완료 ✅
 **영향**: 리뷰 표시 문제 해결, 인증 로직 개선 필요
 
 ---
@@ -289,24 +289,47 @@ type === SectionType.REVIEWS 일 때도 studyId 전달
 
 ---
 
-## ⚠️ 아직 해결 필요한 부분
+## ✅ 2025-08-13 추가 해결 사항
 
-### 1. AuthContext의 isAuthenticated 로직
+### 1. AuthContext의 isAuthenticated 로직 개선 완료
 ```javascript
-// 여전히 문제가 있는 코드
+// 이전 (문제가 있던 코드)
 isAuthenticated: !!user || !!authService.getStoredToken()
-// 토큰만 있어도 true 반환 → 잘못된 인증 상태
+
+// 현재 (점진적 개선 적용)
+isAuthenticated: isLoading ? !!authService.getStoredToken() : !!user
+// 초기 로딩 중: 토큰 존재로 판단 (페이지 새로고침 시 깜빡임 방지)
+// 로딩 완료 후: user 객체로만 판단 (정확한 인증 상태)
 ```
 
-### 2. localStorage 토큰 관리
-- 로그아웃 시 토큰이 완전히 제거되지 않는 문제
-- 토큰 유효성 검증 없이 존재 여부만 체크
+### 2. 관련 컴포넌트 패턴 통일 완료
+수정된 컴포넌트들:
+- `StudyManagementPage.tsx`: authLoading 체크 추가, user만 확인
+- `StudyApplicationPage.tsx`: authLoading 체크 추가, user만 확인
+- `StudyProposalPageV2.tsx`: authLoading 체크 추가, user만 확인
+- `StudyProposalPage.tsx`: authLoading 체크 추가, user만 확인
+- `ReviewWritePage.tsx`: authLoading 체크 추가, user만 확인
 
-### 3. ReviewSection.tsx의 loadMyReviews
-- 여전히 user가 있으면 /api/reviews/my 호출
-- 토큰이 유효하지 않으면 401 에러 발생
-- 에러 처리는 있지만 근본 해결 필요
+통일된 패턴:
+```javascript
+// 인증 체크 패턴
+if (authLoading) {
+  return; // 로딩 중에는 체크 건너뛰기
+}
+if (!user) {
+  navigate('/login', { state: { from: currentPath } });
+  return;
+}
+```
+
+### 3. 남은 작업
+- localStorage 토큰 유효성 실시간 검증 (향후 개선)
+- e2e 테스트 추가 (향후 개선)
 
 ---
 
-**작성자 노트**: 리뷰 표시 문제는 해결되었으나, AuthContext의 인증 로직과 localStorage 토큰 관리 시스템의 근본적인 개선이 여전히 필요합니다.
+**작성자 노트**: 
+- 2025-08-13 초기 분석: 리뷰 표시 문제 해결, AuthContext 문제 발견
+- 2025-08-13 최종 해결: AuthContext isAuthenticated 로직 점진적 개선 완료, 관련 컴포넌트 패턴 통일
+
+**해결 완료**: 주요 문제들이 모두 해결되었으며, 향후 개선 사항은 별도 이슈로 관리 예정

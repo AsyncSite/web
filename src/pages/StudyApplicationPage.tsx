@@ -8,7 +8,7 @@ import './StudyApplicationPage.css';
 const StudyApplicationPage: React.FC = () => {
   const navigate = useNavigate();
   const { studyId } = useParams<{ studyId: string }>();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [study, setStudy] = useState<Study | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -73,7 +73,13 @@ const StudyApplicationPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isAuthenticated || !user) {
+    // Skip check during auth loading
+    if (authLoading) {
+      return;
+    }
+    
+    // Check for user after loading is complete
+    if (!user) {
       alert('스터디 참여 신청을 위해서는 로그인이 필요합니다.');
       navigate('/login', { state: { from: `/study/${studyId}/apply` } });
       return;

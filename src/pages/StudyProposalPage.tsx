@@ -16,7 +16,7 @@ import './StudyProposalPage.css';
 
 const StudyProposalPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { messages, success, error, warning, removeToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -71,7 +71,13 @@ const StudyProposalPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isAuthenticated || !user) {
+    // Skip check during auth loading
+    if (authLoading) {
+      return;
+    }
+    
+    // Check for user after loading is complete
+    if (!user) {
       error('스터디 제안을 위해서는 로그인이 필요합니다.');
       setTimeout(() => navigate('/login', { state: { from: '/study/propose' } }), 1500);
       return;

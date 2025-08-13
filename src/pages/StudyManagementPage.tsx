@@ -33,7 +33,7 @@ const tabs: TabType[] = [
 const StudyManagementPage: React.FC = () => {
   const navigate = useNavigate();
   const { studyId } = useParams<{ studyId: string }>();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'applications' | 'members' | 'page-editor'>('applications');
   const [study, setStudy] = useState<Study | null>(null);
   const [applications, setApplications] = useState<ApplicationResponse[]>([]);
@@ -90,7 +90,13 @@ const StudyManagementPage: React.FC = () => {
         return;
       }
 
-      if (!isAuthenticated || !user) {
+      // Skip authentication check during initial loading
+      if (authLoading) {
+        return;
+      }
+
+      // After loading is complete, check for user existence
+      if (!user) {
         navigate('/login', { state: { from: `/study/${studyId}/manage` } });
         return;
       }
@@ -171,7 +177,7 @@ const StudyManagementPage: React.FC = () => {
     };
 
     fetchData();
-  }, [studyId, navigate, isAuthenticated, user]);
+  }, [studyId, navigate, authLoading, user]);
 
   const handleAcceptApplication = async (applicationId: string) => {
     if (!study || !user) return;

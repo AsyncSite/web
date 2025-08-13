@@ -16,7 +16,7 @@ import './ReviewWritePage.css';
 const ReviewWritePage: React.FC = () => {
   const { studyId } = useParams<{ studyId: string }>();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   
   const [study, setStudy] = useState<Study | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,13 @@ const ReviewWritePage: React.FC = () => {
         return;
       }
 
-      if (!isAuthenticated) {
+      // Skip check during auth loading
+      if (authLoading) {
+        return;
+      }
+
+      // Check for user after loading is complete
+      if (!user) {
         navigate('/login', { state: { from: `/study/${studyId}/review/write` } });
         return;
       }
@@ -66,7 +72,7 @@ const ReviewWritePage: React.FC = () => {
     };
 
     fetchStudy();
-  }, [studyId, isAuthenticated, navigate]);
+  }, [studyId, authLoading, user, navigate]);
 
   const handleTagToggle = (tagId: string) => {
     const newSelectedTags = new Set(selectedTags);

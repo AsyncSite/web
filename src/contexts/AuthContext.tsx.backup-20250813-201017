@@ -335,11 +335,8 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
 
   const value: AuthContextType = {
     user,
-    // Progressive authentication check:
-    // - During initial loading: check token existence to prevent redirect flicker on page refresh
-    // - After loading complete: rely only on user object for accurate authentication state
-    // This prevents 401 errors when token exists but is invalid/expired
-    isAuthenticated: isLoading ? !!authService.getStoredToken() : !!user,
+    // Consider token presence as authenticated to avoid flicker right after external login
+    isAuthenticated: !!user || !!authService.getStoredToken(),
     isLoading,
     login,
     logout,
