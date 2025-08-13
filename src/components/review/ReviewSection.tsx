@@ -19,7 +19,7 @@ interface ReviewSectionProps {
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isLoading } = useAuth();
   // showForm과 editingReview 제거 - ReviewWritePage 사용
   const [statistics, setStatistics] = useState<ReviewStatistics | null>(null);
   const [isMember, setIsMember] = useState(false);
@@ -37,25 +37,29 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    // 인증 상태가 확정될 때까지 대기
+    if (isLoading) return;
+    
     loadStatistics();
-    if (isAuthenticated && user) {
+    // user 존재 여부만 체크 (isAuthenticated는 토큰만 있어도 true라서 신뢰할 수 없음)
+    if (user) {
       checkMembership();
       loadMyReviews();
     }
-  }, [studyId, isAuthenticated, user]);
+  }, [studyId, user, isLoading]);
 
   // 멤버십 로딩 상태 추가
   const [membershipLoading, setMembershipLoading] = useState(true);
   
   // URL 해시를 체크하여 자동으로 리뷰 폼 열기
   useEffect(() => {
-    if (window.location.hash === '#write-review' && isAuthenticated) {
+    if (window.location.hash === '#write-review' && user) {
       // 해시가 있으면 일단 폼을 열고 멤버십은 나중에 체크
       // ReviewWritePage로 이동
       // 해시 제거
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
   const loadStatistics = async () => {
     try {
@@ -99,7 +103,10 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
         [ReviewType.FINAL_REVIEW]: !writtenTypes.includes(ReviewType.FINAL_REVIEW)
       });
     } catch (error) {
-      console.error('Failed to load my reviews:', error);
+      // 인증 에러는 무시 (로그인하지 않은 경우)
+      if (error instanceof Error && !error.message.includes('인증')) {
+        console.error('Failed to load my reviews:', error);
+      }
     }
   };
 
@@ -134,13 +141,13 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
 
       {/* ReviewForm 제거 - ReviewWritePage 사용 */}
 
-      {!isAuthenticated && !hasAnyReviews && (
+      {!user && !hasAnyReviews && (
         <div className="review-login-prompt">
           <p>리뷰를 작성하려면 로그인이 필요합니다.</p>
         </div>
       )}
 
-      {isAuthenticated && !isMember && !hasAnyReviews && (
+      {user && !isMember && !hasAnyReviews && (
         <div className="review-member-prompt">
           <p>스터디 멤버만 리뷰를 작성할 수 있습니다.</p>
         </div>

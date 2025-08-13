@@ -234,21 +234,13 @@ const StudyManagementPage: React.FC = () => {
 
   // Page editor handlers
   const handleAddSection = async (type: SectionType | string, props: any) => {
-    if (!study || !pageData) return;
+    if (!study) return;
 
     try {
       setSaving(true);
-      // 새 섹션의 order 값 계산 - 기존 최대값 + 100
-      const maxOrder = pageData.sections.length > 0 
-        ? Math.max(...pageData.sections.map(s => s.order || 0))
-        : 0;
-      
       const request: AddSectionRequest = { 
         type: type as SectionType, 
-        props: {
-          ...props,
-          order: maxOrder + 100  // 명시적으로 order 값 설정
-        }
+        props: props 
       };
       const updatedPage = await studyDetailPageService.addSection(study!.id, request);
       setPageData(updatedPage);
@@ -316,33 +308,17 @@ const StudyManagementPage: React.FC = () => {
 
     try {
       setSaving(true);
-      // 섹션을 order 기준으로 정렬한 후 재정렬
-      const sortedSections = [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-      const currentIndex = sortedSections.findIndex(s => s.id === sectionId);
+      // Create new order array with the section moved
+      const sections = [...pageData.sections];
+      const currentIndex = sections.findIndex(s => s.id === sectionId);
       if (currentIndex === -1) return;
       
-      const [removed] = sortedSections.splice(currentIndex, 1);
-      sortedSections.splice(newIndex, 0, removed);
+      const [removed] = sections.splice(currentIndex, 1);
+      sections.splice(newIndex, 0, removed);
       
-      // order 값 재계산 - 100씩 간격을 두어 추후 중간 삽입 가능
-      const reorderedSections = sortedSections.map((section, index) => ({
-        ...section,
-        order: (index + 1) * 100
-      }));
-      
-      const sectionIds = reorderedSections.map(s => s.id);
+      const sectionIds = sections.map(s => s.id);
       const updatedPage = await studyDetailPageService.reorderSections(study!.id, sectionIds);
-      
-      // 로컬 상태도 order 값 업데이트
-      if (updatedPage) {
-        setPageData({
-          ...updatedPage,
-          sections: updatedPage.sections.map(s => {
-            const reordered = reorderedSections.find(rs => rs.id === s.id);
-            return reordered ? { ...s, order: reordered.order } : s;
-          })
-        });
-      }
+      setPageData(updatedPage);
     } catch (err) {
       console.error('Failed to reorder section:', err);
       addToast('섹션 순서 변경에 실패했습니다', 'error');
@@ -412,9 +388,7 @@ const StudyManagementPage: React.FC = () => {
     
     if (!draggedSectionId || !pageData) return;
     
-    // 정렬된 섹션 배열에서 인덱스 찾기
-    const sortedSections = [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-    const draggedIndex = sortedSections.findIndex(s => s.id === draggedSectionId);
+    const draggedIndex = pageData.sections.findIndex(s => s.id === draggedSectionId);
     if (draggedIndex === -1 || draggedIndex === dropIndex) return;
     
     await handleReorderSection(draggedSectionId, dropIndex);
@@ -740,18 +714,6 @@ const StudyManagementPage: React.FC = () => {
           <div className="page-editor-section">
             <div className="editor-header">
               <h3>상세 페이지 편집</h3>
-              {pageData && (
-                <div className="publish-status">
-                  <span className={`status-badge ${pageData.status === 'PUBLISHED' ? 'published' : 'draft'}`}>
-                    {pageData.status === 'PUBLISHED' ? '✅ 발행됨' : '📝 초안'}
-                  </span>
-                  {pageData.publishedAt && (
-                    <span className="last-published">
-                      마지막 발행: {new Date(pageData.publishedAt).toLocaleDateString()}
-                    </span>
-                  )}
-                </div>
-              )}
               <div className="editor-actions">
                 <button 
                   className="btn-preview"
@@ -810,8 +772,7 @@ const StudyManagementPage: React.FC = () => {
                     {pageData.sections.length === 0 ? (
                       <p style={{ textAlign: 'center', padding: '40px', color: '#999' }}>아직 섹션이 없습니다.</p>
                     ) : (
-                      // 퍼블릭 렌더러와 동일한 정렬 적용 - order 값 기준
-                      [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section) => (
+                      pageData.sections.map((section) => (
                         <div key={section.id} className="section-wrapper">
                           <SectionRenderer type={section.type} data={section.props} />
                         </div>
@@ -831,15 +792,6 @@ const StudyManagementPage: React.FC = () => {
                     >
                       + 섹션 추가
                     </button>
-                  </div>
-                  
-                  <div className="keyboard-shortcuts-hint">
-                    <span className="shortcut-icon">⌨️</span>
-                    <span className="shortcut-text">
-                      <span className="key">Alt + ↑↓</span> 이동 · 
-                      <span className="key">Enter</span> 편집 · 
-                      <span className="key">Delete</span> 삭제
-                    </span>
                   </div>
 
                   {showAddSection && (
@@ -888,8 +840,7 @@ const StudyManagementPage: React.FC = () => {
                     {pageData.sections.length === 0 ? (
                       <p className="study-mgmt-empty-message">아직 섹션이 없습니다. 섹션을 추가해주세요.</p>
                     ) : (
-                      // 섹션 목록도 order 값 기준으로 정렬
-                      [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section, index) => (
+                      pageData.sections.map((section, index) => (
                         <div 
                           key={section.id} 
                           className={`study-mgmt-section-item ${
@@ -945,13 +896,6 @@ const StudyManagementPage: React.FC = () => {
 
                 {selectedSection && (
                   <div className="section-editor" style={{ flex: 1, minWidth: 0 }}>
-                    <button 
-                      className="section-editor-close"
-                      onClick={() => setSelectedSection(null)}
-                      aria-label="편집창 닫기"
-                    >
-                      ✕
-                    </button>
                     <SectionEditForm
                       sectionType={selectedSection.type}
                       studyId={study?.id}  // 실제 스터디 ID 전달

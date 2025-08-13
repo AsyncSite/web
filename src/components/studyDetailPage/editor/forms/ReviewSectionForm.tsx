@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
+import { RichTextData } from '../../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import { 
   ReviewSectionData, 
   Review, 
   ReviewStats,
   sampleReviews,
-  sampleReviewStats
+  sampleReviewStats,
+  sampleTecotecoReviewData,
+  sampleTecotecoReviews
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
 import './ReviewSectionForm.css';
@@ -24,9 +29,23 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
 }) => {
   // 기본 상태
   const [enabled, setEnabled] = useState(initialData?.enabled ?? true);
-  const [title, setTitle] = useState(initialData?.title || '수강생 후기');
-  const [subtitle, setSubtitle] = useState(initialData?.subtitle || '');
+  const [tagHeader, setTagHeader] = useState(initialData?.tagHeader || '');
+  
+  // Title과 Subtitle을 RichText로 관리
+  const [title, setTitle] = useState<RichTextData | string>(
+    initialData?.title ? 
+      (typeof initialData.title === 'string' ? RichTextConverter.fromHTML(initialData.title) : initialData.title)
+      : ''
+  );
+  const [subtitle, setSubtitle] = useState<RichTextData | string>(
+    initialData?.subtitle ?
+      (typeof initialData.subtitle === 'string' ? RichTextConverter.fromHTML(initialData.subtitle) : initialData.subtitle)
+      : ''
+  );
+  
   const [showStats, setShowStats] = useState(initialData?.showStats ?? true);
+  const [showKeywords, setShowKeywords] = useState(initialData?.showKeywords ?? true);
+  const [keywords, setKeywords] = useState<string[]>(initialData?.keywords || []);
   const [displayCount, setDisplayCount] = useState(initialData?.displayCount || 10);
   const [sortBy, setSortBy] = useState<ReviewSectionData['sortBy']>(initialData?.sortBy || 'latest');
   
@@ -34,6 +53,7 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState<ReviewStats | undefined>();
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
+  const [extractedKeywords, setExtractedKeywords] = useState<string[]>([]);
 
   // 컴포넌트 마운트 시 리뷰 데이터 로드
   useEffect(() => {
@@ -109,24 +129,80 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
       
       setReviews(transformedReviews);
       setStats(transformedStats);
+      
+      // 리뷰 태그에서 키워드 자동 추출
+      extractKeywordsFromReviews(transformedReviews);
     } catch (error) {
       console.error('Failed to load reviews:', error);
       // 에러 시 샘플 데이터 사용 (개발 편의를 위해)
       setReviews(sampleReviews);
       setStats(sampleReviewStats);
+      extractKeywordsFromReviews(sampleReviews);
     } finally {
       setIsLoadingReviews(false);
+    }
+  };
+
+  // 리뷰 태그에서 키워드 추출
+  const extractKeywordsFromReviews = (reviewList: Review[]) => {
+    const tagCounts: Record<string, number> = {};
+    
+    reviewList.forEach(review => {
+      review.tags?.forEach(tag => {
+        const key = tag.emoji ? `${tag.emoji} ${tag.label}` : tag.label;
+        tagCounts[key] = (tagCounts[key] || 0) + 1;
+      });
+    });
+    
+    // 상위 10개 키워드 추출 (빈도순)
+    const topKeywords = Object.entries(tagCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([keyword]) => keyword);
+    
+    setExtractedKeywords(topKeywords);
+    
+    // keywords가 비어있으면 자동으로 설정
+    if (keywords.length === 0) {
+      setKeywords(topKeywords);
+    }
+  };
+
+
+  // 예시 데이터 로드 (TecoTeco 데이터 사용)
+  const loadExampleData = () => {
+    setTagHeader(sampleTecotecoReviewData.tagHeader || '솔직한 후기');
+    setTitle(RichTextConverter.fromHTML(sampleTecotecoReviewData.title));
+    setSubtitle(RichTextConverter.fromHTML(sampleTecotecoReviewData.subtitle || ''));
+    setShowKeywords(sampleTecotecoReviewData.showKeywords ?? true);
+    setDisplayCount(sampleTecotecoReviewData.displayCount || 3);
+    setSortBy(sampleTecotecoReviewData.sortBy || 'latest');
+    setShowStats(false); // TecoTeco는 통계를 표시하지 않음
+    
+    // TecoTeco 리뷰 샘플 데이터 로드
+    setReviews(sampleTecotecoReviews);
+    
+    // TecoTeco 리뷰에서 키워드 자동 추출
+    extractKeywordsFromReviews(sampleTecotecoReviews);
+    
+    // TecoTeco는 기본 키워드도 사용 (자동 추출 + 하드코딩된 키워드)
+    if (sampleTecotecoReviewData.keywords) {
+      setKeywords(sampleTecotecoReviewData.keywords);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // RichText를 HTML로 변환하여 저장
     const data: ReviewSectionData = {
       enabled,
-      title,
-      subtitle,
+      tagHeader,
+      title: typeof title === 'string' ? title : RichTextConverter.toHTML(title),
+      subtitle: typeof subtitle === 'string' ? subtitle : RichTextConverter.toHTML(subtitle),
       showStats,
+      showKeywords,
+      keywords,
       stats,
       displayCount,
       sortBy,
@@ -153,6 +229,49 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="study-management-review-form">
+      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '20px'
+      }}>
+        <button 
+          type="button" 
+          onClick={loadExampleData}
+          className="example-btn"
+          style={{
+            padding: '8px 16px',
+            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
+            border: '1px solid rgba(195, 232, 141, 0.3)',
+            borderRadius: '6px',
+            color: '#C3E88D',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            whiteSpace: 'nowrap'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
+            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <span style={{ fontSize: '16px' }}>✨</span>
+          예시 데이터 불러오기
+        </button>
+      </div>
+
       {/* 섹션 활성화 토글 */}
       <div className="study-management-review-section-toggle">
         <label className="study-management-review-toggle-container">
@@ -174,28 +293,127 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
 
       {enabled && (
         <>
-          {/* 섹션 제목 설정 */}
+          {/* 태그 헤더 설정 */}
           <div className="study-management-review-form-group">
-            <label>섹션 제목</label>
+            <label>태그 헤더 (선택사항)</label>
             <input
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="예: 수강생 후기, 참여자 리뷰"
+              value={tagHeader}
+              onChange={(e) => setTagHeader(e.target.value)}
+              placeholder="예: 솔직한 후기"
               className="study-management-review-input"
             />
           </div>
 
+          {/* 섹션 제목 - Rich Text Editor */}
           <div className="study-management-review-form-group">
-            <label>부제목 (선택)</label>
-            <input
-              type="text"
-              value={subtitle}
-              onChange={(e) => setSubtitle(e.target.value)}
-              placeholder="예: 실제 참여자들의 생생한 후기를 확인해보세요"
-              className="study-management-review-input"
+            <label>섹션 제목 *</label>
+            <StudyDetailRichTextEditor
+              value={title}
+              onChange={setTitle}
+              placeholder="예: 가장 진솔한 이야기, TecoTeco 멤버들의 목소리 🗣️"
+              toolbar={['break', 'bold', 'italic', 'highlight', 'color']}
+              singleLine={false}
             />
           </div>
+
+          {/* 부제목 - Rich Text Editor */}
+          <div className="study-management-review-form-group">
+            <label>부제목 (선택사항)</label>
+            <StudyDetailRichTextEditor
+              value={subtitle}
+              onChange={setSubtitle}
+              placeholder="예: 숫자와 코드만으로는 설명할 수 없는 우리 모임의 진짜 가치를 들어보세요."
+              toolbar={['break', 'bold', 'italic', 'highlight', 'color']}
+              singleLine={false}
+            />
+          </div>
+
+          {/* 키워드 설정 */}
+          <div className="study-management-review-form-group">
+            <label>
+              <input
+                type="checkbox"
+                checked={showKeywords}
+                onChange={(e) => setShowKeywords(e.target.checked)}
+              />
+              키워드 표시
+            </label>
+          </div>
+
+          {showKeywords && (
+            <div className="study-management-review-form-group">
+              <label>키워드 목록 (리뷰에서 자동 추출)</label>
+              
+              {/* 자동 추출된 키워드 표시 - 읽기 전용 */}
+              {extractedKeywords.length > 0 ? (
+                <div style={{ 
+                  padding: '15px',
+                  background: 'rgba(195, 232, 141, 0.05)', 
+                  borderRadius: '8px',
+                  border: '1px solid rgba(195, 232, 141, 0.2)'
+                }}>
+                  <div style={{ 
+                    fontSize: '0.85rem', 
+                    color: '#888', 
+                    marginBottom: '12px'
+                  }}>
+                    <span style={{ color: '#C3E88D', fontWeight: '600' }}>✨ 자동 추출된 인기 키워드</span>
+                    <br />
+                    <span style={{ fontSize: '0.8rem' }}>
+                      실제 리뷰어들이 가장 많이 사용한 태그에서 추출됩니다
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {extractedKeywords.map((keyword, index) => (
+                      <span 
+                        key={index}
+                        style={{
+                          padding: '6px 12px',
+                          background: '#3a3a3a',
+                          borderRadius: '20px',
+                          color: '#f0f0f0',
+                          fontSize: '0.9rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          border: '1px solid rgba(195, 232, 141, 0.3)'
+                        }}
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+                  <div style={{ 
+                    marginTop: '12px', 
+                    padding: '10px', 
+                    background: 'rgba(255, 193, 7, 0.1)',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    color: '#ffc107'
+                  }}>
+                    ⚠️ 키워드는 실제 리뷰 데이터에서 자동으로 추출되며, 수동으로 편집할 수 없습니다.
+                    <br />
+                    리뷰어가 태그를 추가하면 자동으로 업데이트됩니다.
+                  </div>
+                </div>
+              ) : (
+                <div style={{ 
+                  padding: '20px',
+                  background: '#2a2a2a',
+                  borderRadius: '8px',
+                  textAlign: 'center',
+                  color: '#666'
+                }}>
+                  아직 리뷰가 없어 키워드를 추출할 수 없습니다.
+                  <br />
+                  <span style={{ fontSize: '0.85rem' }}>
+                    리뷰가 작성되면 자동으로 키워드가 표시됩니다.
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* 표시 옵션 */}
           <div className="study-management-review-options-section">

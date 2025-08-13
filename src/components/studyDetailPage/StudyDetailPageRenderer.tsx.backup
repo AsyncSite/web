@@ -223,13 +223,26 @@ const StudyDetailPageRenderer: React.FC = () => {
     checkMembership();
   }, [user, studyData, authLoading]);
   
-  // Sort sections by order - DB에 저장된 순서를 그대로 사용
-  // 프론트엔드에서 임의로 정렬하지 않음 (Single Source of Truth)
+  // Sort sections by order (pageData가 있을 때만 사용됨)
+  // Hero 섹션을 항상 첫 번째로, 나머지는 order 순서대로
   const sortedSections = pageData ? [...pageData.sections].sort((a, b) => {
-    // null/undefined order는 0으로 처리
-    const orderA = a.order ?? 0;
-    const orderB = b.order ?? 0;
-    return orderA - orderB;
+    // Hero 섹션을 최우선으로
+    if (a.type === 'HERO' && b.type !== 'HERO') return -1;
+    if (a.type !== 'HERO' && b.type === 'HERO') return 1;
+    
+    // 그 다음 RICH_TEXT 중에서도 테스트 쓰레기 텍스트는 맨 뒤로
+    const isTestContentA = a.type === 'RICH_TEXT' && 
+      (a.props?.content?.includes('Welcome to Our Dynamic Study Page') || 
+       a.props?.text?.includes('Welcome to Our Dynamic Study Page'));
+    const isTestContentB = b.type === 'RICH_TEXT' && 
+      (b.props?.content?.includes('Welcome to Our Dynamic Study Page') ||
+       b.props?.text?.includes('Welcome to Our Dynamic Study Page'));
+    
+    if (isTestContentA && !isTestContentB) return 1;
+    if (!isTestContentA && isTestContentB) return -1;
+    
+    // 나머지는 order 순서대로
+    return a.order - b.order;
   }) : [];
   
   if (loading) {

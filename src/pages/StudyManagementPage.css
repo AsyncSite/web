@@ -509,11 +509,49 @@
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .editor-header h3 {
   font-size: 1.5rem;
   color: #89DDFF;
+  margin: 0;
+}
+
+.publish-status {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  justify-content: center;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-badge.published {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid #4CAF50;
+  color: #4CAF50;
+}
+
+.status-badge.draft {
+  background: rgba(255, 152, 0, 0.2);
+  border: 1px solid #FF9800;
+  color: #FF9800;
+}
+
+.last-published {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .editor-actions {
@@ -728,9 +766,54 @@
   color: rgba(255, 99, 71, 0.8);
 }
 
+/* Keyboard Shortcuts Hint */
+.keyboard-shortcuts-hint {
+  background: rgba(137, 221, 255, 0.05);
+  border: 1px solid rgba(137, 221, 255, 0.1);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.keyboard-shortcuts-hint:hover {
+  background: rgba(137, 221, 255, 0.08);
+  border-color: rgba(137, 221, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.shortcut-icon {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.shortcut-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.shortcut-text .key {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #89DDFF;
+  font-size: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
 /* Sections List - Drag & Drop Enhanced */
 .study-mgmt-sections-list {
-  max-height: calc(100vh - 400px);
+  max-height: calc(100vh - 350px);
+  min-height: 400px;
   overflow-y: auto;
   padding: 4px;
 }
@@ -758,9 +841,10 @@
 
 /* 드래그 중인 섹션 스타일 */
 .study-mgmt-section-dragging {
-  opacity: 0.5;
+  opacity: 0.4;
   transform: scale(0.98);
   cursor: grabbing;
+  background: rgba(195, 232, 141, 0.1);
 }
 
 /* 드롭 가능 영역 하이라이트 */
@@ -920,6 +1004,39 @@
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
   padding: 20px;
+  position: relative;
+}
+
+.section-editor-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 20px;
+  font-weight: 300;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.section-editor-close:hover {
+  background: rgba(255, 107, 107, 0.15);
+  border-color: rgba(255, 107, 107, 0.3);
+  color: #FF6B6B;
+  transform: scale(1.05);
+}
+
+.section-editor-close:active {
+  transform: scale(0.95);
 }
 
 .section-edit-form textarea {

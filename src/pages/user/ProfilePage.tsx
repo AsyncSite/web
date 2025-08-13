@@ -112,11 +112,15 @@ function ProfilePage(): React.ReactNode {
         setApplicationsLoading(false);
       }
     };
-    if (isAuthenticated) {
+    // 인증 상태가 확정될 때까지 대기
+    if (isLoading) return;
+    
+    // user 존재 여부만 체크 (isAuthenticated는 신뢰할 수 없음)
+    if (authUser) {
       loadMyStudies();
       loadMyApplications();
     }
-  }, [isAuthenticated]);
+  }, [authUser, isLoading]);
 
   const greeting = () => {
     const hour = new Date().getHours();

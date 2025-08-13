@@ -55,6 +55,7 @@ function ProfileEditPage(): React.ReactNode {
   const [errors, setErrors] = useState<ProfileFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  
 
   useEffect(() => {
     if (user) {
@@ -177,6 +178,8 @@ function ProfileEditPage(): React.ReactNode {
       setIsSubmitting(false);
     }
   };
+
+  
 
   const handleCancel = () => {
     navigate('/users/me');
@@ -306,6 +309,7 @@ function ProfileEditPage(): React.ReactNode {
               placeholder="https://example.com/image.jpg"
               disabled={isSubmitting}
             />
+            
             {errors.profileImage && (
               <span className="error-message auth-error-message">
                 {errors.profileImage}

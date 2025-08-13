@@ -87,7 +87,7 @@
 .schedule-list,
 .timeline-list,
 .reviews-list,
-.faq-list {
+.section-forms-faq-list {
   space-y: 16px;
 }
 
@@ -95,7 +95,7 @@
 .schedule-item,
 .timeline-item,
 .review-item,
-.faq-item {
+.section-forms-faq-item {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;

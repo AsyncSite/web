@@ -49,13 +49,13 @@
   display: block;
 }
 
-.faq-container {
+.study-detail-faq-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-.faq-title {
+.study-detail-faq-title {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
@@ -63,13 +63,13 @@
   color: #2d3748;
 }
 
-.faq-list {
+.study-detail-faq-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.faq-item {
+.study-detail-faq-item {
   background: white;
   border-radius: 8px;
   overflow: hidden;
@@ -77,11 +77,11 @@
   transition: all 0.3s ease;
 }
 
-.faq-item-open {
+.study-detail-faq-item-open {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-.faq-question {
+.study-detail-faq-question {
   width: 100%;
   padding: 1.25rem 1.5rem;
   background: white;
@@ -97,11 +97,11 @@
   transition: background-color 0.2s ease;
 }
 
-.faq-question:hover {
+.study-detail-faq-question:hover {
   background-color: #f7fafc;
 }
 
-.faq-icon {
+.study-detail-faq-icon {
   font-size: 1.5rem;
   color: #667eea;
   transition: transform 0.3s ease;
@@ -109,11 +109,11 @@
   margin-left: 1rem;
 }
 
-.faq-item-open .faq-icon {
+.study-detail-faq-item-open .study-detail-faq-icon {
   transform: rotate(45deg);
 }
 
-.faq-answer {
+.study-detail-faq-answer {
   padding: 0 1.5rem 1.5rem;
   color: #4a5568;
   line-height: 1.7;
@@ -136,17 +136,17 @@
     padding: 3rem 0;
   }
   
-  .faq-title {
+  .study-detail-faq-title {
     font-size: 1.75rem;
     margin-bottom: 2rem;
   }
   
-  .faq-question {
+  .study-detail-faq-question {
     font-size: 1rem;
     padding: 1rem 1.25rem;
   }
   
-  .faq-answer {
+  .study-detail-faq-answer {
     padding: 0 1.25rem 1.25rem;
   }
 }
@@ -240,37 +240,37 @@
 }
 
 /* Q/A 아이콘 스타일 (기본 테마용) */
-.faq-q-icon, .faq-a-icon {
+.study-detail-faq-q-icon, .study-detail-faq-a-icon {
   font-weight: 700;
   margin-right: 10px;
   font-family: 'Source Code Pro', monospace;
 }
 
-.faq-q-icon {
+.study-detail-faq-q-icon {
   color: #3182ce;
 }
 
-.faq-a-icon {
+.study-detail-faq-a-icon {
   color: #38a169;
 }
 
-.faq-question-text {
+.study-detail-faq-question-text {
   flex-grow: 1;
 }
 
-.faq-toggle-icon {
+.study-detail-faq-toggle-icon {
   font-size: 1.2rem;
   color: #718096;
 }
 
-.faq-answer-text {
+.study-detail-faq-answer-text {
   flex-grow: 1;
   display: flex;
   align-items: flex-start;
 }
 
 /* Tag header 스타일 */
-.faq-tag-header {
+.study-detail-faq-tag-header {
   font-size: 1rem;
   font-weight: 600;
   color: #667eea;

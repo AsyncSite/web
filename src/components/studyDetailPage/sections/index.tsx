@@ -54,8 +54,8 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ type, data, st
     return null;
   }
   
-  // Pass studyId to components that need it (currently MembersSection)
-  const componentProps = type === SectionType.MEMBERS && studyId 
+  // Pass studyId to components that need it (MembersSection and ReviewsSection)
+  const componentProps = (type === SectionType.MEMBERS || type === SectionType.REVIEWS) && studyId 
     ? { data, studyId }
     : { data };
   

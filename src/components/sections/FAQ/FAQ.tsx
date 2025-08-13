@@ -57,34 +57,34 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="faq section-background" id="faq">
+    <section className="main-page-faq section-background" id="faq">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">FAQ</h2>
           <p className="section-subtitle">궁금한 점들을 확인해보세요</p>
         </div>
 
-        <div className="faq-list">
+        <div className="main-page-faq-list">
           {faqData.map((faq) => (
-            <div key={faq.id} className={`faq-item card ${openFAQId === faq.id ? 'open' : ''}`}>
+            <div key={faq.id} className={`main-page-faq-item card ${openFAQId === faq.id ? 'open' : ''}`}>
               <div
-                className="faq-question"
+                className="main-page-faq-question"
                 onClick={() => toggleFAQ(faq.id)}
               >
                 <h3>{faq.question}</h3>
-                <span className="faq-icon">
+                <span className="main-page-faq-icon">
                   {openFAQId === faq.id ? '−' : '+'}
                 </span>
               </div>
 
-              <div className="faq-answer">
+              <div className="main-page-faq-answer">
                 {typeof faq.answer === 'string' ? <p>{faq.answer}</p> : faq.answer}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="faq-contact">
+        <div className="main-page-faq-contact">
           <h3>더 궁금한 점이 있으신가요?</h3>
           <div className="contact-options">
             <div className="contact-main">

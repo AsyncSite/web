@@ -1,64 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ReviewSectionData, Review } from '../types/reviewTypes';
 import { CATEGORY_LABELS } from '../../../types/reviewTags';
+import reviewService from '../../../api/reviewService';
 import './ReviewsSection.css';
 
 interface ReviewsSectionProps {
   data: ReviewSectionData;
+  studyId?: string;
 }
 
 const ReviewCard: React.FC<{ review: Review }> = ({ review }) => (
-  <div className="study-detail-review-card">
-    <div className="study-detail-review-header">
-      <div className="study-detail-reviewer-info">
-        {review.userProfileImage && (
-          <img 
-            src={review.userProfileImage} 
-            alt={review.userName}
-            className="study-detail-reviewer-avatar" 
-          />
-        )}
-        <div className="study-detail-reviewer-details">
-          <span className="study-detail-reviewer-name">{review.userName}</span>
-          {review.isVerified && <span className="study-detail-verified-badge">✓ 인증</span>}
-        </div>
-      </div>
-      <span className="study-detail-review-meta">
-        {review.attendCount && `모임에 ${review.attendCount}회 참석 · `}
-        {review.timeAgo || new Date(review.createdAt).toLocaleDateString()}
+  <div className="tecoteco-review-card">
+    <div className="tecoteco-review-header">
+      <span className="tecoteco-reviewer-name">{review.userName}</span>
+      <span className="tecoteco-review-meta">
+        모임에 {review.attendCount || 0}회 참석하고 작성한 후기예요. {review.timeAgo || new Date(review.createdAt).toLocaleDateString()}
       </span>
     </div>
-    
-    <div className="study-detail-review-rating">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span 
-          key={star} 
-          className={`study-detail-star ${star <= review.rating ? 'filled' : ''}`}
-        >
-          ★
-        </span>
-      ))}
-    </div>
-    
-    <h4 className="study-detail-review-title">{review.title}</h4>
-    <p className="study-detail-review-content">{review.content}</p>
-    
-    <div className="study-detail-review-footer">
-      {review.tags && review.tags.length > 0 && (
-        <div className="study-detail-review-tags">
-          {review.tags.map((tag, idx) => (
-            <span key={idx} className="study-detail-review-tag" title={tag.description}>
-              <span className="study-detail-tag-emoji">{tag.emoji}</span>
-              <span className="study-detail-tag-label">{tag.label}</span>
-            </span>
-          ))}
-        </div>
-      )}
-      {review.helpfulCount !== undefined && review.helpfulCount > 0 && (
-        <span className="study-detail-review-helpful">
-          도움이 돼요 {review.helpfulCount}
-        </span>
-      )}
+    <h4 className="tecoteco-review-title">{review.title}</h4>
+    <p className="tecoteco-review-content">{review.content}</p>
+    <div className="tecoteco-review-footer">
+      <div className="tecoteco-review-emojis">
+        {review.tags && review.tags.length > 0 ? (
+          review.tags.slice(0, 3).map((tag, idx) => {
+            // tag.label에서 이모지만 추출 (첫 번째 공백 전까지)
+            const emoji = tag.label ? tag.label.split(' ')[0] : tag.emoji;
+            return <span key={idx}>{emoji}</span>;
+          })
+        ) : (
+          ['😃', '✨', '🔥'].map((emoji, idx) => (
+            <span key={idx}>{emoji}</span>
+          ))
+        )}
+      </div>
+      <span className="tecoteco-review-likes">🧡 {review.helpfulCount || 0}</span>
     </div>
   </div>
 );
@@ -116,16 +91,78 @@ const ReviewStats: React.FC<{ stats: ReviewSectionData['stats'] }> = ({ stats })
   );
 };
 
-const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data }) => {
+const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data, studyId }) => {
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(data.displayCount || 3);
   const [isLoading, setIsLoading] = useState(false);
   const [reviews, setReviews] = useState<Review[]>(data.reviews || []);
+  const [dynamicReviews, setDynamicReviews] = useState<any[]>([]);
+  const [extractedKeywords, setExtractedKeywords] = useState<string[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
   
-  // 정렬 적용
+  // studyId가 있으면 API에서 리뷰 동적으로 로드
   useEffect(() => {
-    if (data.reviews) {
-      let sortedReviews = [...data.reviews];
+    const loadReviews = async () => {
+      if (studyId) {
+        try {
+          const response = await reviewService.getReviews(studyId);
+          // API 응답을 ReviewsSection 형식으로 변환
+          const apiReviews = response.content.map((r: any) => ({
+            id: r.id,
+            userName: r.authorName || r.reviewerName, // authorName 우선 사용
+            userProfileImage: null,
+            isVerified: true,
+            rating: r.rating,
+            title: r.title,
+            content: r.content,
+            tags: r.tags?.map((tag: string) => ({
+              id: tag,
+              label: tag,
+              emoji: '',
+              category: 'general',
+              description: ''
+            })) || [],
+            attendCount: r.attendCountSnapshot || r.attendanceCount || 0,
+            helpfulCount: r.likeCount || 0,
+            createdAt: r.createdAt,
+            timeAgo: r.timeAgo || r.createdAt
+          }));
+          setDynamicReviews(apiReviews);
+        } catch (error) {
+          console.error('Failed to load reviews:', error);
+        }
+      }
+    };
+    
+    loadReviews();
+  }, [studyId]);
+
+  // 키워드 추출 로직 - 항상 리뷰 데이터에서만 추출
+  useEffect(() => {
+    if (reviews.length > 0) {
+      // 리뷰 데이터에서 태그 추출
+      const tagCounts: Record<string, number> = {};
+      reviews.forEach(review => {
+        review.tags?.forEach(tag => {
+          const key = tag.emoji ? `${tag.emoji} ${tag.label}` : tag.label;
+          tagCounts[key] = (tagCounts[key] || 0) + 1;
+        });
+      });
+      
+      // 상위 10개 키워드 추출
+      const topKeywords = Object.entries(tagCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([keyword]) => keyword);
+      
+      setExtractedKeywords(topKeywords);
+    }
+  }, [reviews]);
+
+  // 정렬 적용 - dynamicReviews가 있으면 사용, 없으면 data.reviews 사용
+  useEffect(() => {
+    const reviewsToSort = dynamicReviews.length > 0 ? dynamicReviews : (data.reviews || []);
+    if (reviewsToSort.length > 0) {
+      let sortedReviews = [...reviewsToSort];
       
       switch (data.sortBy) {
         case 'latest':
@@ -148,7 +185,7 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data }) => {
       
       setReviews(sortedReviews);
     }
-  }, [data.reviews, data.sortBy]);
+  }, [data.reviews, data.sortBy, dynamicReviews]);
   
   if (!data.enabled) {
     return null;
@@ -189,100 +226,101 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data }) => {
     .sort((a, b) => b.count - a.count)
     .slice(0, 10);
   
+  // 기본 키워드 (키워드가 없을 때 사용)
+  const defaultKeywords = [
+    '😌 편안한 분위기',
+    '💥 사고의 확장',
+    '🤗 배려왕 멤버',
+    '🥳 즐거운 분위기',
+    '📝 꼼꼼한 코드 리뷰',
+    '👩‍💻 실전 코딩',
+    '🧠 논리적 사고력',
+    '🗣️ 커뮤니케이션 역량',
+    '🤖 AI 활용',
+    '🌱 함께 성장'
+  ];
+  
+  // 키워드는 항상 추출된 것만 사용 (기본 키워드 사용하지 않음)
+  const displayKeywords = extractedKeywords;
+
   return (
-    <section className="study-detail-reviews-section" ref={sectionRef}>
-      <div className="study-detail-section-header">
-        <h2 className="study-detail-section-title">{data.title}</h2>
-        {data.subtitle && (
-          <p className="study-detail-section-subtitle">{data.subtitle}</p>
-        )}
-      </div>
-      
-      {data.showStats && data.stats && (
-        <ReviewStats stats={data.stats} />
+    <section className="study-detail-reviews-section tecoteco-reviews-section" ref={sectionRef}>
+      {data.tagHeader && (
+        <div className="section-tag-header">{data.tagHeader}</div>
       )}
       
-      {popularTags.length > 0 && (
-        <div className="study-detail-popular-tags">
-          <h3 className="study-detail-tags-title">자주 언급된 키워드</h3>
-          <div className="study-detail-tags-list">
-            {popularTags.map((tag, idx) => (
-              <span key={idx} className="study-detail-popular-tag">
-                <span className="study-detail-tag-emoji">{tag.emoji}</span>
-                <span className="study-detail-tag-label">{tag.label}</span>
-                <span className="study-detail-tag-count">({tag.count})</span>
-              </span>
-            ))}
-          </div>
+      <h2 className="section-title" dangerouslySetInnerHTML={{ 
+        __html: data.title || '리뷰' 
+      }} />
+      
+      {data.subtitle && (
+        <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: data.subtitle }} />
+      )}
+      
+      {data.showKeywords !== false && displayKeywords.length > 0 && (
+        <div className="tecoteco-keywords-list">
+          {displayKeywords.map((keyword, index) => (
+            <span key={index} className="tecoteco-keyword-tag">
+              {keyword}
+            </span>
+          ))}
         </div>
       )}
       
-      {reviews.length > 0 ? (
-        <>
-          <div className={`study-detail-reviews-grid ${isLoading ? 'loading' : ''}`}>
-            {reviews.slice(0, visibleReviewsCount).map((review) => (
-              <ReviewCard key={review.id} review={review} />
-            ))}
-            
-            {isLoading && 
-              Array.from({ length: Math.min(5, remainingReviews) }).map((_, index) => (
-                <div key={`skeleton-${index}`} className="study-detail-review-card skeleton">
-                  <div className="skeleton-header">
-                    <div className="skeleton-avatar"></div>
-                    <div className="skeleton-info">
-                      <div className="skeleton-name"></div>
-                      <div className="skeleton-meta"></div>
-                    </div>
-                  </div>
-                  <div className="skeleton-rating"></div>
-                  <div className="skeleton-title"></div>
-                  <div className="skeleton-content">
-                    <div className="skeleton-line"></div>
-                    <div className="skeleton-line"></div>
-                    <div className="skeleton-line short"></div>
-                  </div>
-                  <div className="skeleton-tags"></div>
-                </div>
-              ))
-            }
-          </div>
-          
-          {hasMoreReviews && !isLoading && (
-            <div className="study-detail-view-more-wrapper">
-              <button
-                className="study-detail-view-more-button"
-                onClick={handleViewMore}
-                disabled={isLoading}
-              >
-                <span>후기 더 보기</span>
-                <span className="study-detail-remaining-count">
-                  ({remainingReviews}개 남음)
-                </span>
-              </button>
+      <div className={`tecoteco-reviews-grid ${isLoading ? 'loading' : ''}`}>
+        {reviews.slice(0, visibleReviewsCount).map((review, index) => (
+          <ReviewCard key={index} review={review} />
+        ))}
+        
+        {isLoading && 
+          Array.from({ length: Math.min(5, remainingReviews) }).map((_, index) => (
+            <div key={`skeleton-${index}`} className="tecoteco-review-card skeleton-card">
+              <div className="skeleton-header">
+                <div className="skeleton-name"></div>
+                <div className="skeleton-meta"></div>
+              </div>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-content">
+                <div className="skeleton-line"></div>
+                <div className="skeleton-line"></div>
+                <div className="skeleton-line short"></div>
+              </div>
+              <div className="skeleton-footer">
+                <div className="skeleton-emojis"></div>
+                <div className="skeleton-likes"></div>
+              </div>
             </div>
-          )}
-          
-          {isLoading && (
-            <div className="study-detail-loading-indicator">
-              <div className="study-detail-loading-spinner"></div>
-              <span>더 많은 후기를 불러오는 중...</span>
-            </div>
-          )}
-          
-          {!hasMoreReviews && visibleReviewsCount > 3 && (
-            <div className="study-detail-all-loaded">
-              <span className="study-detail-completion-message">
-                ✨ 모든 후기를 확인했어요!
-              </span>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="study-detail-no-reviews">
-          <p>아직 작성된 후기가 없습니다.</p>
-          <p className="study-detail-no-reviews-sub">
-            첫 번째 후기를 남겨주세요!
-          </p>
+          ))
+        }
+      </div>
+      
+      {hasMoreReviews && !isLoading && (
+        <div className="tecoteco-view-all-reviews-wrapper">
+          <button
+            className="tecoteco-view-all-reviews-button"
+            onClick={handleViewMore}
+            disabled={isLoading}
+          >
+            <span className="button-text">
+              후기 더 보기
+              <span className="remaining-count">({remainingReviews}개 남음)</span>
+            </span>
+            <span className="button-icon">📝</span>
+          </button>
+        </div>
+      )}
+      
+      {isLoading && (
+        <div className="loading-indicator">
+          <div className="loading-spinner"></div>
+          <span>더 많은 후기를 불러오는 중...</span>
+        </div>
+      )}
+      
+      {!hasMoreReviews && visibleReviewsCount > 3 && (
+        <div className="all-reviews-loaded">
+          <span className="completion-message">✨ 모든 후기를 확인했어요!</span>
+          <p className="thank-you-message">소중한 후기를 남겨주신 모든 멤버분들께 감사드려요 💝</p>
         </div>
       )}
     </section>

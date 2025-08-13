@@ -98,29 +98,29 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
   // 기본 스타일
   return (
     <div className={`study-detail-faq-section ${theme}-theme`}>
-      <div className="faq-container">
-        {tagHeader && <div className="faq-tag-header">{tagHeader}</div>}
-        {title && <h2 className="faq-title">{title}</h2>}
+      <div className="study-detail-faq-container">
+        {tagHeader && <div className="study-detail-faq-tag-header">{tagHeader}</div>}
+        {title && <h2 className="study-detail-faq-title">{title}</h2>}
         
-        <div className="faq-list">
+        <div className="study-detail-faq-list">
           {items.map((item, index) => (
             <div 
               key={item.id || index}
-              className={`faq-item ${openIndex === index ? 'faq-item-open' : ''}`}
+              className={`study-detail-faq-item ${openIndex === index ? 'study-detail-faq-item-open' : ''}`}
             >
               <button
-                className="faq-question"
+                className="study-detail-faq-question"
                 onClick={() => handleToggle(index)}
               >
-                {showIcons && <span className="faq-q-icon">Q.</span>}
-                <span className="faq-question-text">{item.question}</span>
-                <span className="faq-toggle-icon">{openIndex === index ? '−' : '+'}</span>
+                {showIcons && <span className="study-detail-faq-q-icon">Q.</span>}
+                <span className="study-detail-faq-question-text">{item.question}</span>
+                <span className="study-detail-faq-toggle-icon">{openIndex === index ? '−' : '+'}</span>
               </button>
               
               {openIndex === index && (
-                <div className="faq-answer">
-                  {showIcons && <span className="faq-a-icon">A.</span>}
-                  <div className="faq-answer-text">
+                <div className="study-detail-faq-answer">
+                  {showIcons && <span className="study-detail-faq-a-icon">A.</span>}
+                  <div className="study-detail-faq-answer-text">
                     <RichTextDisplay content={item.answer} />
                   </div>
                 </div>
