@@ -4,6 +4,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { TemplateHeader, Footer } from '../components/layout';
 import studyService, { Study } from '../api/studyService';
 import reviewService, { CreateReviewRequest, ReviewType } from '../api/reviewService';
+import { 
+  REVIEW_TAGS, 
+  ReviewTagCategory, 
+  CATEGORY_LABELS, 
+  TAG_SELECTION_RULES,
+  getTagsByCategory 
+} from '../types/reviewTags';
 import './ReviewWritePage.css';
 
 const ReviewWritePage: React.FC = () => {
@@ -16,6 +23,8 @@ const ReviewWritePage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState('');
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+  const [showTagSelector, setShowTagSelector] = useState(false);
 
   useEffect(() => {
     const fetchStudy = async () => {
@@ -59,6 +68,39 @@ const ReviewWritePage: React.FC = () => {
     fetchStudy();
   }, [studyId, isAuthenticated, navigate]);
 
+  const handleTagToggle = (tagId: string) => {
+    const newSelectedTags = new Set(selectedTags);
+    
+    if (newSelectedTags.has(tagId)) {
+      newSelectedTags.delete(tagId);
+    } else {
+      if (newSelectedTags.size >= TAG_SELECTION_RULES.maxTags) {
+        alert(`최대 ${TAG_SELECTION_RULES.maxTags}개의 태그만 선택할 수 있습니다.`);
+        return;
+      }
+      
+      const tag = REVIEW_TAGS[tagId];
+      const sameCategoryTags = Array.from(newSelectedTags).filter(
+        id => REVIEW_TAGS[id].category === tag.category
+      );
+      
+      if (sameCategoryTags.length >= TAG_SELECTION_RULES.maxPerCategory) {
+        alert(`${CATEGORY_LABELS[tag.category]} 카테고리에서는 최대 ${TAG_SELECTION_RULES.maxPerCategory}개까지만 선택할 수 있습니다.`);
+        return;
+      }
+      
+      newSelectedTags.add(tagId);
+    }
+    
+    setSelectedTags(newSelectedTags);
+  };
+
+  const getCategoryTagCount = (category: ReviewTagCategory) => {
+    return Array.from(selectedTags).filter(
+      id => REVIEW_TAGS[id].category === category
+    ).length;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -76,7 +118,8 @@ const ReviewWritePage: React.FC = () => {
         type: ReviewType.STUDY_EXPERIENCE,  // 백엔드 enum에 맞게 변경
         title: `${study.name} 리뷰`,
         rating,
-        content
+        content,
+        tags: Array.from(selectedTags)
       };
       
       console.log('Sending review data:', reviewData);
@@ -169,6 +212,79 @@ const ReviewWritePage: React.FC = () => {
                   required
                 />
                 <span className="char-count">{content.length}/1000</span>
+              </div>
+
+              <div className="form-group">
+                <label>태그 선택 (선택사항)</label>
+                <div className="tag-selection-info">
+                  <span>최대 {TAG_SELECTION_RULES.maxTags}개 선택 가능</span>
+                  <span className="selected-count">
+                    {selectedTags.size}개 선택됨
+                  </span>
+                </div>
+                
+                {selectedTags.size > 0 && (
+                  <div className="selected-tags">
+                    {Array.from(selectedTags).map(tagId => {
+                      const tag = REVIEW_TAGS[tagId];
+                      return (
+                        <span key={tagId} className="selected-tag-chip">
+                          <span className="tag-emoji">{tag.emoji}</span>
+                          <span className="tag-label">{tag.label}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleTagToggle(tagId)}
+                            className="remove-tag"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+                
+                <button
+                  type="button"
+                  onClick={() => setShowTagSelector(!showTagSelector)}
+                  className="toggle-tag-selector-button"
+                >
+                  {showTagSelector ? '태그 선택 닫기' : '태그 선택하기'}
+                </button>
+                
+                {showTagSelector && (
+                  <div className="tag-selector">
+                    {Object.values(ReviewTagCategory).map(category => (
+                      <div key={category} className="tag-category">
+                        <h4 className="category-title">
+                          {CATEGORY_LABELS[category]}
+                          <span className="category-count">
+                            ({getCategoryTagCount(category)}/{TAG_SELECTION_RULES.maxPerCategory})
+                          </span>
+                        </h4>
+                        <div className="tag-grid">
+                          {getTagsByCategory(category).map(tag => (
+                            <button
+                              key={tag.id}
+                              type="button"
+                              className={`tag-option ${selectedTags.has(tag.id) ? 'selected' : ''}`}
+                              onClick={() => handleTagToggle(tag.id)}
+                              title={tag.description}
+                              disabled={
+                                !selectedTags.has(tag.id) && 
+                                (selectedTags.size >= TAG_SELECTION_RULES.maxTags ||
+                                 getCategoryTagCount(category) >= TAG_SELECTION_RULES.maxPerCategory)
+                              }
+                            >
+                              <span className="tag-emoji">{tag.emoji}</span>
+                              <span className="tag-label">{tag.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="form-actions">
