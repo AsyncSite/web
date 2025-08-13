@@ -1,0 +1,175 @@
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Modal Container */
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1c1f26;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  min-width: 320px;
+  max-width: 480px;
+  width: 90%;
+  animation: slideUp 0.3s ease;
+  border: 1px solid rgba(48, 54, 61, 0.8);
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modal-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.modal-title {
+  margin: 0;
+  color: #e6edf3;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 1rem 1.5rem;
+}
+
+.modal-message {
+  margin: 0;
+  color: #8b949e;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Modal Buttons */
+.modal-btn {
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+.modal-btn-cancel {
+  background: transparent;
+  color: #8b949e;
+  border: 1px solid rgba(48, 54, 61, 0.8);
+}
+
+.modal-btn-cancel:hover {
+  background: rgba(48, 54, 61, 0.3);
+  border-color: rgba(139, 148, 158, 0.3);
+}
+
+.modal-btn-confirm {
+  background: #238636;
+  color: white;
+}
+
+.modal-btn-confirm:hover {
+  background: #2ea043;
+}
+
+/* Type Variants */
+.modal-info .modal-btn-info {
+  background: #1f6feb;
+}
+
+.modal-info .modal-btn-info:hover {
+  background: #388bfd;
+}
+
+.modal-warning .modal-btn-warning {
+  background: #d29922;
+}
+
+.modal-warning .modal-btn-warning:hover {
+  background: #e3b341;
+}
+
+.modal-error .modal-btn-error {
+  background: #da3633;
+}
+
+.modal-error .modal-btn-error:hover {
+  background: #f85149;
+}
+
+.modal-success .modal-btn-success {
+  background: #238636;
+}
+
+.modal-success .modal-btn-success:hover {
+  background: #2ea043;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .modal-container {
+    width: 95%;
+    min-width: 280px;
+  }
+  
+  .modal-header {
+    padding: 1.25rem 1.25rem 0.5rem;
+  }
+  
+  .modal-body {
+    padding: 0.75rem 1.25rem;
+  }
+  
+  .modal-footer {
+    padding: 0.75rem 1.25rem 1.25rem;
+  }
+}

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import studyService, { Study, ApplicationRequest } from '../api/studyService';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
+import Modal from '../components/common/Modal/Modal';
 import './StudyApplicationPage.css';
 
 const StudyApplicationPage: React.FC = () => {
@@ -12,6 +13,16 @@ const StudyApplicationPage: React.FC = () => {
   const [study, setStudy] = useState<Study | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState<{
+    title?: string;
+    message: string;
+    type: 'info' | 'warning' | 'error' | 'success';
+    onConfirm?: () => void;
+  }>({
+    message: '',
+    type: 'info'
+  });
   
   // Application form state
   const [answers, setAnswers] = useState<Record<string, string>>({
@@ -26,6 +37,21 @@ const StudyApplicationPage: React.FC = () => {
     const fetchStudy = async () => {
       if (!studyId) {
         navigate('/study');
+        return;
+      }
+
+      // Check authentication first
+      if (!authLoading && !isAuthenticated) {
+        setModalConfig({
+          title: '로그인 필요',
+          message: '스터디 참가 신청을 위해서는 로그인이 필요합니다.',
+          type: 'info',
+          onConfirm: () => {
+            navigate('/login', { state: { from: `/study/${studyId}/apply` } });
+          }
+        });
+        setShowModal(true);
+        setLoading(false);
         return;
       }
 
@@ -60,8 +86,10 @@ const StudyApplicationPage: React.FC = () => {
       }
     };
 
-    fetchStudy();
-  }, [studyId, navigate]);
+    if (!authLoading) {
+      fetchStudy();
+    }
+  }, [studyId, navigate, authLoading, isAuthenticated]);
 
   const handleInputChange = (key: string, value: string) => {
     setAnswers(prev => ({
@@ -110,20 +138,35 @@ const StudyApplicationPage: React.FC = () => {
       
       await studyService.applyToStudy(studyId, applicationRequest);
       
-      alert('스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.');
-      navigate(`/study/${study?.slug || studyId}`);
+      setModalConfig({
+        title: '신청 완료',
+        message: '스터디 참여 신청이 완료되었습니다! 스터디 호스트가 검토 후 연락드릴 예정입니다.',
+        type: 'success',
+        onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+      });
+      setShowModal(true);
     } catch (error: any) {
       console.error('스터디 신청 실패:', error);
       
       // 중복 신청 체크 (409 Conflict)
       if (error.response?.status === 409) {
-        alert('이미 이 스터디에 참가 신청을 하셨습니다.\n관리자가 검토 중이니 조금만 기다려주세요.');
-        navigate(`/study/${study?.slug || studyId}`);
+        setModalConfig({
+          title: '중복 신청',
+          message: '이미 이 스터디에 참가 신청을 하셨습니다. 관리자가 검토 중이니 조금만 기다려주세요.',
+          type: 'warning',
+          onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+        });
+        setShowModal(true);
         return;
       }
       
       const errorMessage = error.response?.data?.message || '스터디 신청 중 오류가 발생했습니다. 다시 시도해주세요.';
-      alert(errorMessage);
+      setModalConfig({
+        title: '오류',
+        message: errorMessage,
+        type: 'error'
+      });
+      setShowModal(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -140,12 +183,20 @@ const StudyApplicationPage: React.FC = () => {
     );
   }
 
-  if (!study) {
-    return null;
+  // 로그인 확인 모달을 보여주기 위해 study가 없어도 렌더링
+  if (!study && !showModal) {
+    return (
+      <div className="study-application-page">
+        <div className="loading-state">
+          <p>스터디 정보를 확인하고 있습니다...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="study-application-page">
+      {study ? (
       <div className="application-container">
         <div className="application-header">
           <button 
@@ -280,6 +331,28 @@ const StudyApplicationPage: React.FC = () => {
           </p>
         </div>
       </div>
+      ) : (
+        <div className="loading-state">
+          <p>로그인 확인 중...</p>
+        </div>
+      )}
+      
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          if (modalConfig.onConfirm && modalConfig.type === 'success') {
+            modalConfig.onConfirm();
+          }
+        }}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        type={modalConfig.type}
+        confirmText="확인"
+        cancelText="취소"
+        showCancel={modalConfig.type === 'info' && !!modalConfig.onConfirm}
+        onConfirm={modalConfig.onConfirm}
+      />
     </div>
   );
 };

@@ -263,7 +263,7 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   const [selectedMember, setSelectedMember] = useState<MemberProfile | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoadingMembers, setIsLoadingMembers] = useState(false);
-  // tecoteco 테마에서 사용될 state들을 미리 선언 (조건부 hooks 에러 방지)
+  // tecoteco 상호작용 상태
   const [hoveredName, setHoveredName] = useState<string | null>(null);
   const [hoveredMember, setHoveredMember] = useState<MemberProfile | null>(null);
   

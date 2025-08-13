@@ -432,7 +432,6 @@ const StudyManagementPage: React.FC = () => {
     try {
       setSaving(true);
       const updatedPage = await studyDetailPageService.saveDraft(study!.id, {
-        theme: pageData.theme,
         sections: pageData.sections
       });
       setPageData(updatedPage);
@@ -792,9 +791,8 @@ const StudyManagementPage: React.FC = () => {
                     if (!studyId) return;
                     try {
                       setSaving(true);
-                      const newPage = await studyDetailPageService.createPage(study!.id, {
-                        slug: study?.slug || studyId,
-                      });
+                      // 백엔드가 study.slug를 사용해 생성한다는 전제
+                      const newPage = await studyDetailPageService.createPage(study!.id, { slug: study!.slug });
                       setPageData(newPage);
                     } catch (err) {
                       console.error('Failed to create page:', err);

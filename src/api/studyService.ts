@@ -93,6 +93,9 @@ export interface Study {
   enrolled: number;
   deadline: Date | null;
   status: StudyStatus; // 백엔드 status 타입 그대로 사용
+  recurrenceType?: RecurrenceType;
+  startDate?: Date | string | number[] | null;
+  endDate?: Date | string | number[] | null;
   recentTestimonial?: {
     content: string;
     author: string;
@@ -154,7 +157,7 @@ const transformStudy = (dto: StudyDTO): Study => {
   
   return {
     id: dto.id, // UUID 문자열 그대로 사용
-    slug: dto.slug || dto.title.toLowerCase().replace(/\s+/g, '-'),
+    slug: dto.slug || '',
     name: dto.title,
     generation: dto.generation || 1,
     tagline: dto.tagline || (dto.description ? dto.description.substring(0, 50) + (dto.description.length > 50 ? '...' : '') : ''),
@@ -174,6 +177,9 @@ const transformStudy = (dto: StudyDTO): Study => {
     enrolled: dto.enrolled || 0,
     deadline: dto.recruitDeadline ? (parseDate(dto.recruitDeadline) || null) : null,
     status: dto.status, // 백엔드 status 값을 그대로 사용
+    recurrenceType: dto.recurrenceType,
+    startDate: dto.startDate,
+    endDate: dto.endDate,
     recentTestimonial: undefined, // TODO: Fetch from testimonial service
     color: getStudyTheme(dto.id)
   };

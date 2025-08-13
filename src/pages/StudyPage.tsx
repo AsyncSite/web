@@ -562,7 +562,7 @@ const StudyPage: React.FC = () => {
               </div>
             </>
           ) : (
-            <StudyCalendar />
+            <StudyCalendar studies={studies} />
           )}
           </div>
         </main>

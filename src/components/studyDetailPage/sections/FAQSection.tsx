@@ -27,7 +27,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
     items = [], 
     title = '자주 묻는 질문',
     tagHeader,
-    theme = 'default',
+    theme = 'tecoteco',
     showIcons = false,
     showJoinCTA = false,
     joinTitle = 'TecoTeco, 당신의 합류를 기다려요!',
@@ -46,8 +46,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
     return null;
   }
   
-  // TecoTeco 테마일 때는 다른 클래스명과 구조 사용
-  if (theme === 'tecoteco') {
+  // 테마 분기 제거: 테코테코 스타일을 기본으로 사용
+  if (true) {
     return (
       <section className="tecoteco-faq-join-section">
         {tagHeader && <div className="section-tag-header">{tagHeader}</div>}
@@ -95,42 +95,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
     );
   }
   
-  // 기본 스타일
-  return (
-    <div className={`study-detail-faq-section ${theme}-theme`}>
-      <div className="study-detail-faq-container">
-        {tagHeader && <div className="study-detail-faq-tag-header">{tagHeader}</div>}
-        {title && <h2 className="study-detail-faq-title">{title}</h2>}
-        
-        <div className="study-detail-faq-list">
-          {items.map((item, index) => (
-            <div 
-              key={item.id || index}
-              className={`study-detail-faq-item ${openIndex === index ? 'study-detail-faq-item-open' : ''}`}
-            >
-              <button
-                className="study-detail-faq-question"
-                onClick={() => handleToggle(index)}
-              >
-                {showIcons && <span className="study-detail-faq-q-icon">Q.</span>}
-                <span className="study-detail-faq-question-text">{item.question}</span>
-                <span className="study-detail-faq-toggle-icon">{openIndex === index ? '−' : '+'}</span>
-              </button>
-              
-              {openIndex === index && (
-                <div className="study-detail-faq-answer">
-                  {showIcons && <span className="study-detail-faq-a-icon">A.</span>}
-                  <div className="study-detail-faq-answer-text">
-                    <RichTextDisplay content={item.answer} />
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  // dead branch (kept for reference) - unreachable due to defaulting to tecoteco
+  return null;
 };
 
 export default FAQSection;

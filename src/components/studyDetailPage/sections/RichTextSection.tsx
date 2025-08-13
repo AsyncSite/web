@@ -21,12 +21,11 @@ const RichTextSection: React.FC<RichTextSectionProps> = ({ data }) => {
     alignment = 'left', 
     padding,
     maxWidth,
-    backgroundColor,
-    theme = 'tecoteco' // 기본값을 tecoteco로 설정
+    backgroundColor
   } = data;
   
-  // TecoTeco 테마인 경우 특별한 스타일 적용
-  const isTecoteco = theme === 'tecoteco';
+  // 테마 제거: 항상 tecoteco 스타일 적용
+  const isTecoteco = true;
   
   return (
     <div 
@@ -49,10 +48,7 @@ const RichTextSection: React.FC<RichTextSectionProps> = ({ data }) => {
           margin: '0 auto'
         }}
       >
-        {/* 일반 타이틀 (TecoTeco가 아닌 경우) */}
-        {!isTecoteco && title && (
-          <h2 className="rich-text-title">{title}</h2>
-        )}
+        {/* 제목은 테코테코 스타일에서는 태그 헤더로만 노출 */}
         
         {/* HTML 컨텐츠 - TecoTeco 스타일 적용 */}
         <div 

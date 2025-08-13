@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { TemplateHeader } from '../layout';
 import { Footer } from '../layout';
@@ -13,6 +13,7 @@ import { RichTextConverter } from '../common/richtext/RichTextConverter';
 import { normalizeMembersPropsForUI } from './utils/membersAdapter';
 import { blocksToHTML } from './utils/RichTextHelpers';
 import { getStudyDisplayInfo } from '../../utils/studyStatusUtils';
+import Modal from '../common/Modal/Modal';
 import './StudyDetailPageRenderer.css';
 
 /**
@@ -40,8 +41,7 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
         alignment: section.props.alignment,
         padding: section.props.padding,
         maxWidth: section.props.maxWidth,
-        backgroundColor: section.props.backgroundColor,
-        theme: section.props.theme
+        backgroundColor: section.props.backgroundColor
       };
     
     case SectionType.FAQ:
@@ -51,7 +51,6 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
       return {
         items: section.props.questions || section.props.items || [],
         title: section.props.title,
-        theme: section.props.theme,
         tagHeader: section.props.tagHeader,
         showIcons: section.props.showIcons,
         showJoinCTA: section.props.showJoinCTA,
@@ -114,29 +113,23 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
     case SectionType.MEMBERS:
       // MEMBERS 섹션 props 매핑
       const membersProps = { ...section.props };
-      
-      // TecoTeco 페이지는 항상 tecoteco 테마 사용
-      if (pageData && pageData.slug === 'tecoteco') {
-        membersProps.theme = 'tecoteco';
-        
-        // weeklyMvp 설정 (배지에서 추출)
-        if (!membersProps.weeklyMvp && membersProps.members) {
-          const mvpMember = membersProps.members.find((m: any) => 
-            m.badges?.some((b: any) => b.type === 'mvp')
-          );
-          if (mvpMember) {
-            membersProps.weeklyMvp = mvpMember.name;
-          }
-        }
-        
-        // popularAlgorithms 배열 변환
-        if (membersProps.stats && typeof membersProps.stats.popularAlgorithms === 'string') {
-          membersProps.stats.popularAlgorithms = membersProps.stats.popularAlgorithms
-            .split(',')
-            .map((s: string) => s.trim());
+
+      // 테마/슬러그 분기 없이 일관된 데이터 정규화 적용
+      if (!membersProps.weeklyMvp && membersProps.members) {
+        const mvpMember = membersProps.members.find((m: any) =>
+          m.badges?.some((b: any) => b.type === 'mvp')
+        );
+        if (mvpMember) {
+          membersProps.weeklyMvp = mvpMember.name;
         }
       }
-      
+
+      if (membersProps.stats && typeof membersProps.stats.popularAlgorithms === 'string') {
+        membersProps.stats.popularAlgorithms = membersProps.stats.popularAlgorithms
+          .split(',')
+          .map((s: string) => s.trim());
+      }
+
       return membersProps;
     
     default:
@@ -147,7 +140,8 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
 
 const StudyDetailPageRenderer: React.FC = () => {
   const { studyIdentifier } = useParams<{ studyIdentifier: string }>();
-  const { user, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const { user, isLoading: authLoading, isAuthenticated } = useAuth();
   const [pageData, setPageData] = useState<StudyDetailPageData | null>(null);
   const [studyData, setStudyData] = useState<any>(null);
   const [isMember, setIsMember] = useState(false);
@@ -155,6 +149,7 @@ const StudyDetailPageRenderer: React.FC = () => {
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   
   useEffect(() => {
     const fetchPageData = async () => {
@@ -351,7 +346,23 @@ const StudyDetailPageRenderer: React.FC = () => {
                     </div>
                     {/* 상태별 버튼 표시 */}
                     {applicationStatus === 'none' && (
-                      <button className="apply-button" onClick={() => window.location.href = `/study/${studyData.id}/apply`}>
+                      <button 
+                        className="apply-button" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          
+                          // 로그인 상태 확인
+                          if (!user || !isAuthenticated) {
+                            console.log('로그인 필요: user=', user, 'isAuthenticated=', isAuthenticated);
+                            setShowLoginModal(true);
+                            return;
+                          }
+                          
+                          // 로그인된 경우에만 이동
+                          navigate(`/study/${studyData.id}/apply`);
+                        }}
+                      >
                         참가 신청하기
                       </button>
                     )}
@@ -391,7 +402,20 @@ const StudyDetailPageRenderer: React.FC = () => {
                       </button>
                     )}
                     {applicationStatus === 'rejected' && (
-                      <button className="apply-button rejected" onClick={() => window.location.href = `/study/${studyData.id}/apply`}>
+                      <button 
+                        className="apply-button rejected" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          
+                          if (!user || !isAuthenticated) {
+                            setShowLoginModal(true);
+                            return;
+                          }
+                          
+                          navigate(`/study/${studyData.id}/apply`);
+                        }}
+                      >
                         재신청하기
                       </button>
                     )}
@@ -431,6 +455,20 @@ const StudyDetailPageRenderer: React.FC = () => {
         )}
       </main>
       <Footer />
+      
+      <Modal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="로그인 필요"
+        message="스터디 참가 신청을 위해서는 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?"
+        type="info"
+        confirmText="로그인"
+        cancelText="취소"
+        showCancel={true}
+        onConfirm={() => {
+          navigate('/login', { state: { from: `/study/${studyData?.id}/apply` } });
+        }}
+      />
     </div>
   );
 };
