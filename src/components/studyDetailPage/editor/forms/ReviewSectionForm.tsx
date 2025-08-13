@@ -73,12 +73,24 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
         userName: r.reviewerName,
         userProfileImage: undefined, // API에서 제공 안됨
         rating: r.rating,
+        title: r.title || '', // 제목 추가
         content: r.content,
         createdAt: r.createdAt,
         updatedAt: r.updatedAt,
         isVerified: r.attendanceCount > 0, // 출석 기록이 있으면 인증된 것으로 간주
+        attendCount: r.attendanceCount, // 참석 횟수 추가
         helpfulCount: r.likeCount,
-        tags: r.tags
+        tags: r.tags ? r.tags.map(tagId => {
+          // 태그 ID를 실제 태그 객체로 변환 (임시)
+          // TODO: 백엔드에서 태그 정보도 함께 전달받도록 수정
+          return {
+            id: tagId,
+            category: 'ATMOSPHERE' as any,
+            label: tagId,
+            emoji: '✨'
+          };
+        }) : undefined,
+        timeAgo: undefined // 프론트에서 계산
       }));
       
       // ReviewStatistics를 ReviewStats 타입으로 변환
@@ -326,6 +338,10 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
                       </div>
                     </div>
                     
+                    {review.title && (
+                      <h5 className="study-management-review-item-title">{review.title}</h5>
+                    )}
+                    
                     <div className="study-management-review-item-content">
                       {review.content}
                     </div>
@@ -333,8 +349,9 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
                     {review.tags && review.tags.length > 0 && (
                       <div className="study-management-review-item-tags">
                         {review.tags.map((tag, index) => (
-                          <span key={index} className="study-management-review-item-tag">
-                            #{tag}
+                          <span key={index} className="study-management-review-item-tag" title={tag.description}>
+                            <span className="study-management-review-tag-emoji">{tag.emoji}</span>
+                            <span className="study-management-review-tag-label">{tag.label}</span>
                           </span>
                         ))}
                       </div>

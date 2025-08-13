@@ -1,0 +1,548 @@
+/* ReviewsSection.css - Study Detail Page Review Section Styles */
+
+.study-detail-reviews-section {
+  padding: 4rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.study-detail-section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.study-detail-section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.study-detail-section-subtitle {
+  font-size: 1.125rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* Review Stats */
+.study-detail-review-stats {
+  background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.study-detail-stats-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.study-detail-average-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.study-detail-rating-number {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.study-detail-rating-stars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.study-detail-star {
+  font-size: 1.25rem;
+  color: #e2e8f0;
+  transition: color 0.3s ease;
+}
+
+.study-detail-star.filled {
+  color: #fbbf24;
+}
+
+.study-detail-total-reviews {
+  font-size: 1.125rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.study-detail-recommendation-rate {
+  font-size: 1.125rem;
+  color: #475569;
+}
+
+.study-detail-recommendation-rate strong {
+  color: #667eea;
+  font-size: 1.5rem;
+}
+
+/* Rating Distribution */
+.study-detail-rating-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.study-detail-rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.study-detail-rating-label {
+  min-width: 40px;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.study-detail-bar-container {
+  flex: 1;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.study-detail-bar-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.study-detail-rating-count {
+  min-width: 30px;
+  text-align: right;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Popular Tags */
+.study-detail-popular-tags {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 20px;
+}
+
+.study-detail-tags-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  text-align: center;
+}
+
+.study-detail-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.study-detail-popular-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.study-detail-popular-tag:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.study-detail-tag-emoji {
+  font-size: 1.125rem;
+}
+
+.study-detail-tag-label {
+  color: #475569;
+  font-weight: 500;
+}
+
+.study-detail-tag-count {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+/* Reviews Grid */
+.study-detail-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.study-detail-reviews-grid.loading {
+  opacity: 0.7;
+}
+
+/* Review Card */
+.study-detail-review-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  height: fit-content;
+}
+
+.study-detail-review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.study-detail-review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.study-detail-reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.study-detail-reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f1f5f9;
+}
+
+.study-detail-reviewer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.study-detail-reviewer-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.study-detail-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 0.125rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.study-detail-review-meta {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.study-detail-review-rating {
+  display: flex;
+  gap: 0.125rem;
+  margin-bottom: 1rem;
+}
+
+.study-detail-review-rating .study-detail-star {
+  font-size: 1rem;
+}
+
+.study-detail-review-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.study-detail-review-content {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.study-detail-review-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.study-detail-review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.study-detail-review-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 16px;
+  font-size: 0.8rem;
+  cursor: help;
+  transition: all 0.2s ease;
+}
+
+.study-detail-review-tag:hover {
+  background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.study-detail-review-helpful {
+  font-size: 0.875rem;
+  color: #667eea;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+/* Skeleton Loading */
+.study-detail-review-card.skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton-header {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e2e8f0;
+}
+
+.skeleton-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeleton-name {
+  height: 16px;
+  width: 100px;
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.skeleton-meta {
+  height: 12px;
+  width: 150px;
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.skeleton-rating {
+  height: 20px;
+  width: 100px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.skeleton-title {
+  height: 20px;
+  width: 80%;
+  background: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton-line {
+  height: 14px;
+  width: 100%;
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-tags {
+  height: 30px;
+  width: 200px;
+  background: #e2e8f0;
+  border-radius: 16px;
+}
+
+/* View More Button */
+.study-detail-view-more-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.study-detail-view-more-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.study-detail-view-more-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.study-detail-view-more-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.study-detail-remaining-count {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+/* Loading Indicator */
+.study-detail-loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: #64748b;
+}
+
+.study-detail-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* All Reviews Loaded */
+.study-detail-all-loaded {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+}
+
+.study-detail-completion-message {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+/* No Reviews */
+.study-detail-no-reviews {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f8fafc;
+  border-radius: 20px;
+  border: 2px dashed #e2e8f0;
+}
+
+.study-detail-no-reviews p {
+  font-size: 1.125rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.study-detail-no-reviews-sub {
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .study-detail-reviews-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .study-detail-stats-summary {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .study-detail-section-title {
+    font-size: 2rem;
+  }
+  
+  .study-detail-rating-number {
+    font-size: 2.5rem;
+  }
+}

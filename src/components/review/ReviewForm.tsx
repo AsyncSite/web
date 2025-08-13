@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ReviewType, CreateReviewRequest, UpdateReviewRequest, ReviewResponse } from '../../api/reviewService';
+import { 
+  REVIEW_TAGS, 
+  ReviewTag, 
+  ReviewTagCategory, 
+  CATEGORY_LABELS, 
+  TAG_SELECTION_RULES,
+  getTagsByCategory 
+} from '../../types/reviewTags';
 import './Review.css';
 
 interface ReviewFormProps {
@@ -22,7 +30,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     rating: existingReview?.rating || 5,
     tags: existingReview?.tags || []
   });
-  const [tagInput, setTagInput] = useState('');
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(
+    new Set(existingReview?.tags || [])
+  );
+  const [showTagSelector, setShowTagSelector] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -82,29 +93,45 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     setFormData(prev => ({ ...prev, rating }));
   };
 
-  const handleAddTag = () => {
-    const trimmedTag = tagInput.trim();
-    if (trimmedTag && !formData.tags?.includes(trimmedTag)) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...(prev.tags || []), trimmedTag]
-      }));
-      setTagInput('');
+  const handleTagToggle = (tagId: string) => {
+    const newSelectedTags = new Set(selectedTags);
+    
+    if (newSelectedTags.has(tagId)) {
+      // 태그 제거
+      newSelectedTags.delete(tagId);
+    } else {
+      // 태그 추가 전 검증
+      if (newSelectedTags.size >= TAG_SELECTION_RULES.maxTags) {
+        alert(`최대 ${TAG_SELECTION_RULES.maxTags}개의 태그만 선택할 수 있습니다.`);
+        return;
+      }
+      
+      // 같은 카테고리 태그 개수 확인
+      const tag = REVIEW_TAGS[tagId];
+      const sameCategoryTags = Array.from(newSelectedTags).filter(
+        id => REVIEW_TAGS[id].category === tag.category
+      );
+      
+      if (sameCategoryTags.length >= TAG_SELECTION_RULES.maxPerCategory) {
+        alert(`${CATEGORY_LABELS[tag.category]} 카테고리에서는 최대 ${TAG_SELECTION_RULES.maxPerCategory}개까지만 선택할 수 있습니다.`);
+        return;
+      }
+      
+      newSelectedTags.add(tagId);
     }
+    
+    setSelectedTags(newSelectedTags);
+    setFormData(prev => ({ ...prev, tags: Array.from(newSelectedTags) }));
   };
 
-  const handleRemoveTag = (tagToRemove: string) => {
-    setFormData(prev => ({
-      ...prev,
-      tags: prev.tags?.filter(tag => tag !== tagToRemove) || []
-    }));
+  const getSelectedTagsCount = () => {
+    return selectedTags.size;
   };
 
-  const handleTagInputKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddTag();
-    }
+  const getCategoryTagCount = (category: ReviewTagCategory) => {
+    return Array.from(selectedTags).filter(
+      id => REVIEW_TAGS[id].category === category
+    ).length;
   };
 
   return (
@@ -174,37 +201,75 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       </div>
 
       <div className="form-group">
-        <label htmlFor="review-tags">태그 (선택)</label>
-        <div className="tag-input-wrapper">
-          <input
-            id="review-tags"
-            type="text"
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            onKeyPress={handleTagInputKeyPress}
-            placeholder="태그를 입력하고 Enter를 누르세요"
-          />
-          <button
-            type="button"
-            onClick={handleAddTag}
-            className="add-tag-button"
-          >
-            추가
-          </button>
+        <label>태그 선택 (선택)</label>
+        <div className="tag-selection-info">
+          <span>최대 {TAG_SELECTION_RULES.maxTags}개 선택 가능</span>
+          <span className="selected-count">
+            {getSelectedTagsCount()}개 선택됨
+          </span>
         </div>
-        {formData.tags && formData.tags.length > 0 && (
-          <div className="tag-list">
-            {formData.tags.map((tag, index) => (
-              <span key={index} className="tag-chip">
-                #{tag}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveTag(tag)}
-                  className="remove-tag"
-                >
-                  ×
-                </button>
-              </span>
+        
+        {/* 선택된 태그 표시 */}
+        {selectedTags.size > 0 && (
+          <div className="selected-tags">
+            {Array.from(selectedTags).map(tagId => {
+              const tag = REVIEW_TAGS[tagId];
+              return (
+                <span key={tagId} className="selected-tag-chip">
+                  <span className="tag-emoji">{tag.emoji}</span>
+                  <span className="tag-label">{tag.label}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleTagToggle(tagId)}
+                    className="remove-tag"
+                  >
+                    ×
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+        )}
+        
+        <button
+          type="button"
+          onClick={() => setShowTagSelector(!showTagSelector)}
+          className="toggle-tag-selector-button"
+        >
+          {showTagSelector ? '태그 선택 닫기' : '태그 선택하기'}
+        </button>
+        
+        {/* 태그 선택기 */}
+        {showTagSelector && (
+          <div className="tag-selector">
+            {Object.values(ReviewTagCategory).map(category => (
+              <div key={category} className="tag-category">
+                <h4 className="category-title">
+                  {CATEGORY_LABELS[category]}
+                  <span className="category-count">
+                    ({getCategoryTagCount(category)}/{TAG_SELECTION_RULES.maxPerCategory})
+                  </span>
+                </h4>
+                <div className="tag-grid">
+                  {getTagsByCategory(category).map(tag => (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      className={`tag-option ${selectedTags.has(tag.id) ? 'selected' : ''}`}
+                      onClick={() => handleTagToggle(tag.id)}
+                      title={tag.description}
+                      disabled={
+                        !selectedTags.has(tag.id) && 
+                        (getSelectedTagsCount() >= TAG_SELECTION_RULES.maxTags ||
+                         getCategoryTagCount(category) >= TAG_SELECTION_RULES.maxPerCategory)
+                      }
+                    >
+                      <span className="tag-emoji">{tag.emoji}</span>
+                      <span className="tag-label">{tag.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}

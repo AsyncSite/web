@@ -439,6 +439,14 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
+.study-management-review-item-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
 .study-management-review-item-content {
   font-size: 14px;
   line-height: 1.6;
@@ -454,12 +462,31 @@
 }
 
 .study-management-review-item-tag {
-  padding: 4px 8px;
-  background: rgba(130, 170, 255, 0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba(130, 170, 255, 0.1), rgba(195, 232, 141, 0.1));
   border: 1px solid rgba(130, 170, 255, 0.2);
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 11px;
+  transition: all 0.2s ease;
+  cursor: help;
+}
+
+.study-management-review-item-tag:hover {
+  background: linear-gradient(135deg, rgba(130, 170, 255, 0.15), rgba(195, 232, 141, 0.15));
+  border-color: rgba(130, 170, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.study-management-review-tag-emoji {
+  font-size: 13px;
+}
+
+.study-management-review-tag-label {
   color: #82AAFF;
+  font-weight: 500;
 }
 
 .study-management-review-item-helpful {
