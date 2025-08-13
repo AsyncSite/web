@@ -151,6 +151,8 @@ const StudyDetailPageRenderer: React.FC = () => {
   const [pageData, setPageData] = useState<StudyDetailPageData | null>(null);
   const [studyData, setStudyData] = useState<any>(null);
   const [isMember, setIsMember] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
+  const [applicationId, setApplicationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -203,24 +205,48 @@ const StudyDetailPageRenderer: React.FC = () => {
     fetchPageData();
   }, [studyIdentifier]);
   
-  // Check membership status
+  // Check membership and application status
   useEffect(() => {
-    const checkMembership = async () => {
+    const checkMembershipAndApplication = async () => {
       // 인증 상태가 확정될 때까지 대기
       if (authLoading) return;
       // user 존재 여부만 체크 (isAuthenticated는 신뢰할 수 없음)
       if (!user || !studyData?.id) return;
       
       try {
+        // 멤버십 확인
         const myStudies = await studyService.getMyStudies();
         const isStudyMember = myStudies.some(study => study.studyId === studyData.id);
         setIsMember(isStudyMember);
+        
+        // 이미 멤버라면 신청 상태는 체크할 필요 없음
+        if (isStudyMember) {
+          setApplicationStatus('approved');
+        } else {
+          // 신청 상태 확인
+          const myApplications = await studyService.getMyApplications();
+          const application = myApplications.find(app => app.studyId === studyData.id);
+          
+          if (application) {
+            setApplicationId(application.applicationId);
+            // ApplicationStatus enum 값에 따라 상태 설정
+            if (application.status === 'PENDING') {
+              setApplicationStatus('pending');
+            } else if (application.status === 'ACCEPTED') {
+              setApplicationStatus('approved');
+            } else if (application.status === 'REJECTED') {
+              setApplicationStatus('rejected');
+            }
+          } else {
+            setApplicationStatus('none');
+          }
+        }
       } catch (error) {
-        console.error('Failed to check membership:', error);
+        console.error('Failed to check membership and application:', error);
       }
     };
     
-    checkMembership();
+    checkMembershipAndApplication();
   }, [user, studyData, authLoading]);
   
   // Sort sections by order - DB에 저장된 순서를 그대로 사용
@@ -323,9 +349,50 @@ const StudyDetailPageRenderer: React.FC = () => {
                       <h3>모집 중인 스터디입니다</h3>
                       <p>마감일: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}</p>
                     </div>
-                    {!isMember && (
+                    {/* 상태별 버튼 표시 */}
+                    {applicationStatus === 'none' && (
                       <button className="apply-button" onClick={() => window.location.href = `/study/${studyData.id}/apply`}>
-                        지원하기
+                        참가 신청하기
+                      </button>
+                    )}
+                    {applicationStatus === 'pending' && (
+                      <div className="application-status-container">
+                        <button className="apply-button disabled" disabled>
+                          심사 대기중
+                        </button>
+                        <button 
+                          className="cancel-button"
+                          onClick={async () => {
+                            if (window.confirm('신청을 취소하시겠습니까?')) {
+                              if (!applicationId) {
+                                alert('신청 정보를 찾을 수 없습니다.');
+                                return;
+                              }
+                              try {
+                                const userIdentifier = user?.email || user?.username || '';
+                                await studyService.cancelApplication(studyData.id, applicationId, userIdentifier);
+                                setApplicationStatus('none');
+                                setApplicationId(null);
+                                window.location.reload();
+                              } catch (err) {
+                                console.error('Failed to cancel application:', err);
+                                alert('신청 취소에 실패했습니다.');
+                              }
+                            }
+                          }}
+                        >
+                          신청 취소
+                        </button>
+                      </div>
+                    )}
+                    {applicationStatus === 'approved' && isMember && (
+                      <button className="apply-button approved" disabled>
+                        ✅ 참여 중
+                      </button>
+                    )}
+                    {applicationStatus === 'rejected' && (
+                      <button className="apply-button rejected" onClick={() => window.location.href = `/study/${studyData.id}/apply`}>
+                        재신청하기
                       </button>
                     )}
                   </>

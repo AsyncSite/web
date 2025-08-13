@@ -194,7 +194,6 @@ export interface StudyProposalRequest {
   title: string;
   proposerId: string;
   generation?: number;
-  slug?: string;
   type?: StudyType;
   tagline?: string;
   schedule?: string;
@@ -204,7 +203,7 @@ export interface StudyProposalRequest {
   startDate?: string;
   endDate?: string;
   recurrenceType?: RecurrenceType;
-  detailPage: {
+  detailPage?: {
     sections: Array<{
       type: string;
       content: any;

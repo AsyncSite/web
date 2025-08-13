@@ -8,6 +8,7 @@ import gameActivityService, { GameActivity } from '../../services/gameActivitySe
 import StarBackground from '../../components/common/StarBackground';
 import './ProfilePage.css';
 import studyService, { ApplicationStatus, type MyApplicationItem } from '../../api/studyService';
+import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
 
 function ProfilePage(): React.ReactNode {
@@ -76,6 +77,7 @@ function ProfilePage(): React.ReactNode {
   const [studiesError, setStudiesError] = useState<string | null>(null);
   const [applicationsLoading, setApplicationsLoading] = useState<boolean>(true);
   const [applicationsError, setApplicationsError] = useState<string | null>(null);
+  const [studyReviews, setStudyReviews] = useState<Record<string, boolean>>({});
   const [applicationFilter, setApplicationFilter] = useState<'ALL' | ApplicationStatus>(ApplicationStatus.PENDING);
   const [participatingCollapsed, setParticipatingCollapsed] = useState<boolean>(true);
   const [leadingCollapsed, setLeadingCollapsed] = useState<boolean>(true);
@@ -92,10 +94,33 @@ function ProfilePage(): React.ReactNode {
       try {
         setStudiesLoading(true);
         const list = await studyService.getMyStudies();
+        console.log('My studies list:', list);
         const participating = list.filter(item => item.role !== 'OWNER');
         const leading = list.filter(item => item.role === 'OWNER');
         setMyStudies({ participating, leading });
+        
+        // 각 스터디별 리뷰 작성 여부 확인
+        try {
+          const myReviews = await reviewService.getMyReviews();
+          console.log('=== Review Debug ===');
+          console.log('My reviews:', myReviews);
+          console.log('Participating studies:', participating.map(s => ({ studyId: s.studyId, title: s.studyTitle })));
+          const reviewedStudies: Record<string, boolean> = {};
+          myReviews.forEach((review: any) => {
+            console.log(`Review type: ${review.type}, studyId: ${review.studyId}`);
+            if (review.type === 'STUDY_EXPERIENCE') {
+              reviewedStudies[review.studyId] = true;
+            }
+          });
+          console.log('Reviewed studies map:', reviewedStudies);
+          console.log('===================');
+          setStudyReviews(reviewedStudies);
+        } catch (error) {
+          console.error('Failed to fetch reviews:', error);
+          // 리뷰 조회 실패해도 계속 진행
+        }
       } catch (e: any) {
+        console.error('Failed to load studies:', e);
         setStudiesError(handleApiError(e));
       } finally {
         setStudiesLoading(false);
@@ -361,9 +386,14 @@ function ProfilePage(): React.ReactNode {
                           <div className="study-actions">
                             <button 
                               className="review-action-button"
-                              onClick={() => navigate(`/study/${study.studyId}#reviews`)}
+                              onClick={() => {
+                                console.log('Button clicked for study:', study.studyId);
+                                console.log('studyReviews state:', studyReviews);
+                                console.log('Has review?', studyReviews[study.studyId]);
+                                navigate(`/study/${study.studyId}/review/write`);
+                              }}
                             >
-                              리뷰 작성
+                              {studyReviews[study.studyId] ? '리뷰 수정' : '리뷰 작성'}
                             </button>
                           </div>
                         )}

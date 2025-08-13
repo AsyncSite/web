@@ -25,6 +25,8 @@ const ReviewWritePage: React.FC = () => {
   const [content, setContent] = useState('');
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [showTagSelector, setShowTagSelector] = useState(false);
+  const [existingReview, setExistingReview] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     const fetchStudy = async () => {
@@ -62,6 +64,27 @@ const ReviewWritePage: React.FC = () => {
         }
         
         setStudy(studyData);
+        
+        // 기존 리뷰 확인
+        try {
+          const myReviews = await reviewService.getMyReviews();
+          const existingStudyReview = myReviews.find(
+            (review: any) => review.studyId === studyData.id && 
+                           review.type === ReviewType.STUDY_EXPERIENCE
+          );
+          
+          if (existingStudyReview) {
+            setExistingReview(existingStudyReview);
+            setIsEditMode(true);
+            setRating(existingStudyReview.rating);
+            setContent(existingStudyReview.content);
+            setSelectedTags(new Set(existingStudyReview.tags || []));
+            console.log('Existing review found, switching to edit mode:', existingStudyReview);
+          }
+        } catch (error) {
+          console.log('No existing reviews or failed to fetch:', error);
+          // 기존 리뷰가 없어도 계속 진행
+        }
       } catch (error) {
         console.error('Failed to fetch study:', error);
         alert('스터디 정보를 불러올 수 없습니다.');
@@ -120,27 +143,51 @@ const ReviewWritePage: React.FC = () => {
     setSubmitting(true);
     
     try {
-      const reviewData: CreateReviewRequest = {
-        type: ReviewType.STUDY_EXPERIENCE,  // 백엔드 enum에 맞게 변경
-        title: `${study.name} 리뷰`,
-        rating,
-        content,
-        tags: Array.from(selectedTags)
-      };
-      
-      console.log('Sending review data:', reviewData);
-      console.log('Study ID:', study.id);
-      
-      await reviewService.createReview(study.id, reviewData);
-      alert('리뷰가 성공적으로 작성되었습니다!');
+      if (isEditMode && existingReview) {
+        // 수정 모드
+        const updateData = {
+          title: `${study.name} 리뷰`,
+          content,
+          rating,
+          tags: Array.from(selectedTags)
+        };
+        
+        console.log('Updating review:', existingReview.id, updateData);
+        await reviewService.updateReview(existingReview.id, updateData);
+        alert('리뷰가 성공적으로 수정되었습니다!');
+      } else {
+        // 생성 모드
+        const reviewData: CreateReviewRequest = {
+          type: ReviewType.STUDY_EXPERIENCE,  // 백엔드 enum에 맞게 변경
+          title: `${study.name} 리뷰`,
+          rating,
+          content,
+          tags: Array.from(selectedTags)
+        };
+        
+        console.log('Sending review data:', reviewData);
+        console.log('Study ID:', study.id);
+        
+        await reviewService.createReview(study.id, reviewData);
+        alert('리뷰가 성공적으로 작성되었습니다!');
+      }
       navigate('/users/me');
     } catch (error: any) {
-      console.error('Failed to create review:', error);
+      console.error('Failed to create/update review:', error);
       
+      // 409 Conflict - 중복 리뷰 (백엔드 수정 후)
       if (error.response?.status === 409) {
-        alert('이미 이 유형의 리뷰를 작성하셨습니다.');
+        alert('이미 이 스터디에 대한 후기를 작성하셨습니다.\n\n기존 리뷰를 수정하시려면 마이페이지에서 리뷰 수정 버튼을 클릭해주세요.');
+        navigate('/users/me');
+      } 
+      // 백엔드가 아직 수정 안 된 경우 500 에러 처리
+      else if (error.response?.status === 500 && 
+          (error.response?.data?.message?.includes('already exists') || 
+           error.message?.includes('already exists'))) {
+        alert('이미 이 스터디에 대한 후기를 작성하셨습니다.\n\n페이지를 새로고침하여 수정 모드로 전환됩니다.');
+        window.location.reload();
       } else {
-        alert('리뷰 작성 중 오류가 발생했습니다.');
+        alert(`리뷰 ${isEditMode ? '수정' : '작성'} 중 오류가 발생했습니다.\n\n${error.response?.data?.message || error.message || '잠시 후 다시 시도해주세요.'}`);
       }
     } finally {
       setSubmitting(false);
@@ -181,10 +228,22 @@ const ReviewWritePage: React.FC = () => {
               >
                 ← 돌아가기
               </button>
-              <h1>리뷰 작성</h1>
+              <h1>{isEditMode ? '리뷰 수정' : '리뷰 작성'}</h1>
               <div className="study-info">
                 <h2>{study.name} {study.generation > 1 && `${study.generation}기`}</h2>
                 <p className="study-tagline">{study.tagline}</p>
+                {isEditMode && (
+                  <div style={{
+                    marginTop: '10px',
+                    padding: '10px',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    border: '1px solid rgba(255, 193, 7, 0.3)',
+                    borderRadius: '8px',
+                    color: '#ffc107'
+                  }}>
+                    ⚠️ 이미 작성하신 리뷰가 있습니다. 기존 리뷰를 수정합니다.
+                  </div>
+                )}
               </div>
             </div>
 
@@ -306,7 +365,7 @@ const ReviewWritePage: React.FC = () => {
                   className="submit-button"
                   disabled={submitting}
                 >
-                  {submitting ? '작성 중...' : '리뷰 작성하기'}
+                  {submitting ? (isEditMode ? '수정 중...' : '작성 중...') : (isEditMode ? '리뷰 수정하기' : '리뷰 작성하기')}
                 </button>
               </div>
             </form>

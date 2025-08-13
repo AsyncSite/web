@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ReviewResponse, ReviewType } from '../../api/reviewService';
 import { useAuth } from '../../contexts/AuthContext';
+import { REVIEW_TAGS } from '../../types/reviewTags';
 import './Review.css';
 
 interface ReviewItemProps {
@@ -10,6 +11,7 @@ interface ReviewItemProps {
   onLike?: (reviewId: string) => void;
   onUnlike?: (reviewId: string) => void;
 }
+
 
 const ReviewItem: React.FC<ReviewItemProps> = ({
   review,
@@ -24,6 +26,64 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
 
   const isOwner = user?.email === review.reviewerId || user?.username === review.reviewerId;
+
+  // 태그 처리 함수 - 연결된 태그 문자열을 개별 태그로 분리
+  const processReviewTags = (tags: string[]): string[] => {
+    // 만약 tags가 단일 요소 배열이고 그 요소가 연결된 태그들이면 분리
+    if (tags.length === 1 && typeof tags[0] === 'string') {
+      const singleTag = tags[0];
+      
+      // REVIEW_TAGS의 키가 아니면서 대문자와 언더스코어로만 구성된 경우
+      // 연결된 태그로 간주
+      if (!REVIEW_TAGS[singleTag] && /^[A-Z_]+$/.test(singleTag)) {
+        return splitConcatenatedTags(singleTag);
+      }
+    }
+    
+    // 일반적인 경우 - 각 태그를 확인
+    return tags.flatMap(tag => {
+      // REVIEW_TAGS에 없고 대문자/언더스코어로만 구성되어 있으면 분리 시도
+      if (!REVIEW_TAGS[tag] && /^[A-Z_]+$/.test(tag) && tag.length > 10) {
+        return splitConcatenatedTags(tag);
+      }
+      return tag;
+    });
+  };
+
+  // 연결된 태그 문자열을 개별 태그로 분리
+  const splitConcatenatedTags = (concatenatedTag: string): string[] => {
+    // REVIEW_TAGS에서 가져오기
+    const knownTagIds = Object.keys(REVIEW_TAGS);
+    const result: string[] = [];
+    let remaining = concatenatedTag;
+    
+    // 가장 긴 태그부터 매칭 시도
+    const sortedTags = knownTagIds.sort((a, b) => b.length - a.length);
+    
+    while (remaining.length > 0) {
+      let matched = false;
+      
+      for (const tagId of sortedTags) {
+        if (remaining.startsWith(tagId)) {
+          result.push(tagId);
+          remaining = remaining.substring(tagId.length);
+          matched = true;
+          break;
+        }
+      }
+      
+      // 매칭되지 않으면 남은 전체를 추가하고 종료
+      if (!matched) {
+        // 남은 부분이 있으면 그대로 추가
+        if (remaining.length > 0) {
+          result.push(remaining);
+        }
+        break;
+      }
+    }
+    
+    return result.length > 0 ? result : [concatenatedTag];
+  };
 
   const handleLikeToggle = async () => {
     if (!onLike || !onUnlike || isProcessing) return;
@@ -121,11 +181,27 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
         
         {review.tags && review.tags.length > 0 && (
           <div className="review-tags">
-            {review.tags.map((tag, index) => (
-              <span key={index} className="review-tag">
-                #{tag}
-              </span>
-            ))}
+            {processReviewTags(review.tags).map((tagId, index) => {
+              // REVIEW_TAGS에서 태그 정보 가져오기 (ReviewWritePage와 동일한 방식)
+              const tag = REVIEW_TAGS[tagId];
+              
+              // 태그 정보가 있으면 이모지와 라벨 표시
+              if (tag) {
+                return (
+                  <span key={index} className="review-tag">
+                    <span className="tag-emoji">{tag.emoji}</span>
+                    <span className="tag-label">{tag.label}</span>
+                  </span>
+                );
+              }
+              
+              // 태그 정보가 없으면 원본 표시 (폴백)
+              return (
+                <span key={index} className="review-tag">
+                  {tagId}
+                </span>
+              );
+            })}
           </div>
         )}
       </div>

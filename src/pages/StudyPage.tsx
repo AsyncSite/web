@@ -18,6 +18,8 @@ const StudyPage: React.FC = () => {
     location.pathname.includes('/calendar') ? 'calendar' : 'list'
   );
   const [studies, setStudies] = useState<Study[]>([]);
+  const [myApplications, setMyApplications] = useState<any[]>([]);
+  const [myStudies, setMyStudies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,6 +30,21 @@ const StudyPage: React.FC = () => {
         setError(null);
         const data = await studyService.getAllStudies();
         setStudies(data);
+        
+        // 로그인한 경우에만 내 신청과 스터디 정보 가져오기
+        if (isAuthenticated && user) {
+          try {
+            const [applications, userStudies] = await Promise.all([
+              studyService.getMyApplications(),
+              studyService.getMyStudies()
+            ]);
+            setMyApplications(applications);
+            setMyStudies(userStudies);
+          } catch (err) {
+            console.error('Failed to fetch user study data:', err);
+            // 사용자 데이터 실패는 무시 (로그인하지 않은 사용자도 있음)
+          }
+        }
       } catch (err) {
         // 스터디가 없는 경우는 에러가 아니라 빈 상태로 처리
         setStudies([]);
@@ -37,7 +54,30 @@ const StudyPage: React.FC = () => {
     };
 
     fetchStudies();
-  }, []);
+  }, [isAuthenticated, user]);
+
+  // 스터디별 상태 확인 헬퍼 함수
+  const getStudyUserStatus = (studyId: string) => {
+    // 멤버인지 확인
+    const isMember = myStudies.some(s => s.studyId === studyId);
+    if (isMember) {
+      return { status: 'member', applicationId: null };
+    }
+    
+    // 신청 상태 확인
+    const application = myApplications.find(app => app.studyId === studyId);
+    if (application) {
+      if (application.status === 'PENDING') {
+        return { status: 'pending', applicationId: application.applicationId };
+      } else if (application.status === 'ACCEPTED') {
+        return { status: 'accepted', applicationId: application.applicationId };
+      } else if (application.status === 'REJECTED') {
+        return { status: 'rejected', applicationId: application.applicationId };
+      }
+    }
+    
+    return { status: 'none', applicationId: null };
+  };
 
   const recruitingStudies = studies.filter(study => {
     const displayInfo = getStudyDisplayInfo(study.status, study.deadline?.toISOString());
@@ -203,72 +243,205 @@ const StudyPage: React.FC = () => {
                           </div>
                         </Link>
                         <div className="study-actions">
-                          {/* 스터디 제안자 여부에 따라 다른 버튼 표시 */}
-                          {isAuthenticated && user && study.proposerId === user.email ? (
-                            /* 스터디 제안자는 관리 버튼 */
-                            <button 
-                              onClick={(e) => {
-                                e.preventDefault();
-                                navigate(`/study/${study.slug}/manage`);
-                              }}
-                              className="manage-button"
-                              style={{
-                                background: 'linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%)',
-                                border: 'none',
-                                color: '#1a1a1a',
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: '600',
-                                transition: 'all 0.3s ease',
-                                marginTop: '12px',
-                                width: '100%'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-1px)';
-                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(137, 221, 255, 0.3)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = 'none';
-                              }}
-                            >
-                              🎛️ 스터디 관리
-                            </button>
-                          ) : (
-                            /* 일반 사용자는 참가 신청 버튼 */
-                            <button 
-                              onClick={(e) => {
-                                e.preventDefault();
-                                navigate(`/study/${study.slug}/apply`);
-                              }}
-                              className="apply-button"
-                              style={{
-                                background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
-                                border: 'none',
-                                color: '#1a1a1a',
-                                padding: '8px 16px',
-                                borderRadius: '6px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: '600',
-                                transition: 'all 0.3s ease',
-                                marginTop: '12px',
-                                width: '100%'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-1px)';
-                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(195, 232, 141, 0.3)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = 'none';
-                              }}
-                            >
-                              📝 참가 신청하기
-                            </button>
-                          )}
+                          {(() => {
+                            // 스터디 제안자인 경우
+                            if (isAuthenticated && user && study.proposerId === user.email) {
+                              return (
+                                <button 
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate(`/study/${study.slug}/manage`);
+                                  }}
+                                  className="manage-button"
+                                  style={{
+                                    background: 'linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%)',
+                                    border: 'none',
+                                    color: '#1a1a1a',
+                                    padding: '8px 16px',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease',
+                                    marginTop: '12px',
+                                    width: '100%'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-1px)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(137, 221, 255, 0.3)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                  }}
+                                >
+                                  🎛️ 스터디 관리
+                                </button>
+                              );
+                            }
+                            
+                            // 사용자 상태 확인
+                            const userStatus = getStudyUserStatus(study.id);
+                            
+                            // 이미 멤버인 경우
+                            if (userStatus.status === 'member' || userStatus.status === 'accepted') {
+                              return (
+                                <button 
+                                  disabled
+                                  className="apply-button"
+                                  style={{
+                                    background: 'linear-gradient(135deg, #4caf50 0%, #45a049 100%)',
+                                    border: 'none',
+                                    color: 'white',
+                                    padding: '8px 16px',
+                                    borderRadius: '6px',
+                                    cursor: 'default',
+                                    fontSize: '14px',
+                                    fontWeight: '600',
+                                    marginTop: '12px',
+                                    width: '100%',
+                                    opacity: 0.9
+                                  }}
+                                >
+                                  ✅ 참여 중
+                                </button>
+                              );
+                            }
+                            
+                            // 신청 대기 중인 경우
+                            if (userStatus.status === 'pending') {
+                              return (
+                                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                                  <button 
+                                    disabled
+                                    className="apply-button"
+                                    style={{
+                                      background: '#888',
+                                      border: 'none',
+                                      color: 'white',
+                                      padding: '8px 16px',
+                                      borderRadius: '6px',
+                                      cursor: 'not-allowed',
+                                      fontSize: '14px',
+                                      fontWeight: '600',
+                                      flex: 1,
+                                      opacity: 0.7
+                                    }}
+                                  >
+                                    ⏳ 심사 대기중
+                                  </button>
+                                  <button 
+                                    onClick={async (e) => {
+                                      e.preventDefault();
+                                      if (window.confirm('신청을 취소하시겠습니까?')) {
+                                        try {
+                                          const userIdentifier = user?.email || user?.username || '';
+                                          await studyService.cancelApplication(study.id, userStatus.applicationId!, userIdentifier);
+                                          // 페이지 새로고침
+                                          window.location.reload();
+                                        } catch (err) {
+                                          console.error('Failed to cancel application:', err);
+                                          alert('신청 취소에 실패했습니다.');
+                                        }
+                                      }
+                                    }}
+                                    className="cancel-button"
+                                    style={{
+                                      background: 'transparent',
+                                      border: '1px solid #ff6b6b',
+                                      color: '#ff6b6b',
+                                      padding: '8px 12px',
+                                      borderRadius: '6px',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      fontWeight: '600',
+                                      transition: 'all 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.background = '#ff6b6b';
+                                      e.currentTarget.style.color = 'white';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.background = 'transparent';
+                                      e.currentTarget.style.color = '#ff6b6b';
+                                    }}
+                                  >
+                                    취소
+                                  </button>
+                                </div>
+                              );
+                            }
+                            
+                            // 거절된 경우
+                            if (userStatus.status === 'rejected') {
+                              return (
+                                <button 
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate(`/study/${study.slug}/apply`);
+                                  }}
+                                  className="apply-button"
+                                  style={{
+                                    background: 'linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%)',
+                                    border: 'none',
+                                    color: 'white',
+                                    padding: '8px 16px',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease',
+                                    marginTop: '12px',
+                                    width: '100%'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-1px)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 107, 107, 0.3)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                  }}
+                                >
+                                  🔄 재신청하기
+                                </button>
+                              );
+                            }
+                            
+                            // 기본: 신청 가능
+                            return (
+                              <button 
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  navigate(`/study/${study.slug}/apply`);
+                                }}
+                                className="apply-button"
+                                style={{
+                                  background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
+                                  border: 'none',
+                                  color: '#1a1a1a',
+                                  padding: '8px 16px',
+                                  borderRadius: '6px',
+                                  cursor: 'pointer',
+                                  fontSize: '14px',
+                                  fontWeight: '600',
+                                  transition: 'all 0.3s ease',
+                                  marginTop: '12px',
+                                  width: '100%'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.transform = 'translateY(-1px)';
+                                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(195, 232, 141, 0.3)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.transform = 'translateY(0)';
+                                  e.currentTarget.style.boxShadow = 'none';
+                                }}
+                              >
+                                📝 참가 신청하기
+                              </button>
+                            );
+                          })()}
                         </div>
                       </div>
                     ))}

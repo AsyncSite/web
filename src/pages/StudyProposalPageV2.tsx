@@ -24,7 +24,6 @@ const StudyProposalPageV2: React.FC = () => {
     tagline: '',
     // description 제거: 상세 콘텐츠는 DetailPage 섹션으로 대체
     generation: 1,
-    slug: '',
     selectedDate: '',
     daysOfWeek: [] as number[],
     startTime: '',
@@ -38,22 +37,9 @@ const StudyProposalPageV2: React.FC = () => {
     endDate: '',
   });
 
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9가-힣]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-  };
-
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => {
       const newData = { ...prev, [field]: value };
-      
-      // Auto-generate slug
-      if (field === 'title' && (!prev.slug || prev.slug === generateSlug(prev.title))) {
-        newData.slug = generateSlug(value);
-      }
       
       // Auto-calculate end date when start date or duration changes
       if (prev.recurrenceType !== 'ONE_TIME') {
@@ -142,6 +128,61 @@ const StudyProposalPageV2: React.FC = () => {
       return;
     }
 
+    // 날짜 검증
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // 시작일 검증
+    if (formData.startDate) {
+      const start = new Date(formData.startDate);
+      start.setHours(0, 0, 0, 0);
+      if (start < today) {
+        error('시작일은 오늘 이후여야 합니다.');
+        return;
+      }
+    }
+
+    // 종료일 검증
+    if (formData.startDate && formData.endDate) {
+      const start = new Date(formData.startDate);
+      const end = new Date(formData.endDate);
+      if (start > end) {
+        error('시작일은 종료일보다 이전이어야 합니다.');
+        return;
+      }
+    }
+
+    // 모집 마감일 검증
+    if (formData.recruitDeadline) {
+      const deadline = new Date(formData.recruitDeadline);
+      deadline.setHours(0, 0, 0, 0);
+      
+      if (deadline < today) {
+        error('모집 마감일은 오늘 이후여야 합니다.');
+        return;
+      }
+      
+      if (formData.startDate) {
+        const start = new Date(formData.startDate);
+        start.setHours(0, 0, 0, 0);
+        if (deadline > start) {
+          error('모집 마감일은 스터디 시작일 이전이어야 합니다.');
+          return;
+        }
+      }
+    }
+
+    // ONE_TIME 스터디의 경우 selectedDate 검증
+    if (formData.recurrenceType === 'ONE_TIME' && formData.selectedDate) {
+      const selectedDate = new Date(formData.selectedDate);
+      selectedDate.setHours(0, 0, 0, 0);
+      
+      if (selectedDate < today) {
+        error('스터디 날짜는 오늘 이후여야 합니다.');
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -174,12 +215,23 @@ const StudyProposalPageV2: React.FC = () => {
         ? `${formData.recruitDeadline}T${formData.recruitDeadlineTime}:00`
         : undefined;
 
+      // 날짜 값 검증 (디버그용)
+      console.log('Submitting with dates:', {
+        recruitDeadline: recruitDeadlineDateTime,
+        startDate: finalStartDate,
+        endDate: finalEndDate,
+        formData: {
+          recruitDeadline: formData.recruitDeadline,
+          startDate: formData.startDate,
+          endDate: formData.endDate
+        }
+      });
+
       const proposalRequest: StudyProposalRequest = {
         title: formData.title.trim(),
         proposerId: user.id || user.username || user.email,
         type: formData.type as StudyType,
         generation: formData.generation,
-        slug: formData.slug || generateSlug(formData.title),
         tagline: formData.tagline || undefined,
         schedule: scheduleString,
         duration: formData.recurrenceType !== 'ONE_TIME' && formData.duration > 0 
@@ -190,18 +242,8 @@ const StudyProposalPageV2: React.FC = () => {
         startDate: finalStartDate || undefined,
         endDate: finalEndDate || undefined,
         recurrenceType: formData.recurrenceType,
-        detailPage: {
-          sections: [
-            {
-              type: 'HERO',
-              content: {
-                title: formData.title.trim(),
-                subtitle: formData.tagline || '',
-                description: '소개 텍스트는 제출 후 상세페이지에서 자유롭게 편집하세요.'
-              }
-            }
-          ]
-        }
+        // detailPage는 제안 단계에서는 보내지 않음 - 승인 후 관리 페이지에서 생성
+        // detailPage: undefined
       };
 
       await studyService.proposeStudy(proposalRequest);
@@ -322,17 +364,6 @@ const StudyProposalPageV2: React.FC = () => {
                     max="100"
                   />
                 </div>
-
-                <div className="form-group-v2">
-                  <label>URL 식별자</label>
-                  <input
-                    type="text"
-                    value={formData.slug}
-                    onChange={(e) => handleInputChange('slug', e.target.value)}
-                    placeholder="자동 생성됨"
-                    className="modern-input"
-                  />
-                </div>
               </div>
             </div>
           )}
@@ -345,9 +376,24 @@ const StudyProposalPageV2: React.FC = () => {
                     <label>스터디 날짜 *</label>
                     <DatePickerCustom
                       value={formData.selectedDate}
-                      onChange={(value) => handleInputChange('selectedDate', value)}
+                      onChange={(value) => {
+                        handleInputChange('selectedDate', value);
+                        // 과거 날짜 검증
+                        if (value) {
+                          const selected = new Date(value);
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          if (selected < today) {
+                            error('스터디 날짜는 오늘 이후여야 합니다.');
+                          }
+                        }
+                      }}
                       placeholder="날짜를 선택해주세요"
+                      min={new Date().toISOString().split('T')[0]}
                     />
+                    <span className="form-hint">
+                      오늘 이후 날짜를 선택해주세요
+                    </span>
                   </div>
 
                   <div className="form-row-v2">
@@ -466,16 +512,40 @@ const StudyProposalPageV2: React.FC = () => {
                       <label>시작일</label>
                       <DatePickerCustom
                         value={formData.startDate}
-                        onChange={(value) => handleInputChange('startDate', value)}
+                        onChange={(value) => {
+                          handleInputChange('startDate', value);
+                          // 모집 마감일 검증
+                          if (value && formData.recruitDeadline) {
+                            const start = new Date(value);
+                            const deadline = new Date(formData.recruitDeadline);
+                            if (deadline > start) {
+                              warning('모집 마감일이 스터디 시작일보다 늦습니다. 모집 마감일을 다시 설정해주세요.');
+                            }
+                          }
+                        }}
                         placeholder="시작일 선택"
+                        min={new Date().toISOString().split('T')[0]}
                       />
+                      <span className="form-hint">
+                        오늘 이후 날짜를 선택해주세요
+                      </span>
                     </div>
 
                     <div className="form-group-v2">
                       <label>종료일</label>
                       <DatePickerCustom
                         value={formData.endDate}
-                        onChange={(value) => handleInputChange('endDate', value)}
+                        onChange={(value) => {
+                          handleInputChange('endDate', value);
+                          // 시작일과 비교 검증
+                          if (value && formData.startDate) {
+                            const end = new Date(value);
+                            const start = new Date(formData.startDate);
+                            if (end < start) {
+                              error('종료일은 시작일 이후여야 합니다.');
+                            }
+                          }
+                        }}
                         min={formData.startDate || new Date().toISOString().split('T')[0]}
                         placeholder="종료일 선택"
                       />
@@ -514,9 +584,26 @@ const StudyProposalPageV2: React.FC = () => {
                   <label>모집 마감일</label>
                   <DatePickerCustom
                     value={formData.recruitDeadline}
-                    onChange={(value) => handleInputChange('recruitDeadline', value)}
+                    onChange={(value) => {
+                      handleInputChange('recruitDeadline', value);
+                      // 실시간 검증
+                      if (value && formData.startDate) {
+                        const deadline = new Date(value);
+                        const start = new Date(formData.startDate);
+                        if (deadline > start) {
+                          warning('모집 마감일은 스터디 시작일 이전이어야 합니다.');
+                        }
+                      }
+                    }}
                     placeholder="모집 마감일 선택"
+                    min={new Date().toISOString().split('T')[0]}
+                    max={formData.startDate || undefined}
                   />
+                  {formData.startDate && (
+                    <span className="form-hint">
+                      ⚠️ 스터디 시작일({formData.startDate}) 이전으로 설정해주세요
+                    </span>
+                  )}
                 </div>
 
                 <div className="form-group-v2">

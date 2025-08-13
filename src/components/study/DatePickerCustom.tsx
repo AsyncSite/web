@@ -5,6 +5,7 @@ interface DatePickerCustomProps {
   value: string;
   onChange: (value: string) => void;
   min?: string;
+  max?: string;
   placeholder?: string;
 }
 
@@ -12,6 +13,7 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
   value, 
   onChange, 
   min = new Date().toISOString().split('T')[0],
+  max,
   placeholder = '날짜 선택' 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,7 +117,14 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
 
   const isDateDisabled = (date: Date) => {
     const minDate = new Date(min + 'T00:00:00');
-    return date < minDate;
+    if (date < minDate) return true;
+    
+    if (max) {
+      const maxDate = new Date(max + 'T00:00:00');
+      if (date > maxDate) return true;
+    }
+    
+    return false;
   };
 
   const isToday = (date: Date) => {
@@ -203,8 +212,11 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
               className="today-button"
               onClick={() => {
                 const today = new Date();
-                handleDateSelect(today);
+                if (!isDateDisabled(today)) {
+                  handleDateSelect(today);
+                }
               }}
+              disabled={isDateDisabled(new Date())}
             >
               오늘 선택
             </button>

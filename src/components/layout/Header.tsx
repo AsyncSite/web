@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { STUDY_LIST, getStudyUrl } from '../../constants/studies';
+import studyService, { Study } from '../../api/studyService';
 import { getStudyDisplayInfo } from '../../utils/studyStatusUtils';
 import './Header.css';
 
@@ -23,12 +23,36 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
   const studyDropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [studies, setStudies] = useState<Study[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   
   // 모바일 여부 감지
   const [isMobile, setIsMobile] = useState(false);
+  
+  // 스터디 목록 가져오기
+  useEffect(() => {
+    const fetchStudies = async () => {
+      try {
+        const allStudies = await studyService.getAllStudies();
+        // 모집 중이거나 진행 중인 스터디만 필터링하고 최대 3개까지
+        const activeStudies = allStudies
+          .filter(study => {
+            const displayInfo = getStudyDisplayInfo(study.status, study.deadline?.toISOString());
+            return displayInfo.canApply || study.status === 'IN_PROGRESS';
+          })
+          .slice(0, 3);
+        setStudies(activeStudies);
+      } catch (error) {
+        console.error('Failed to fetch studies:', error);
+        // 에러 시 빈 배열 유지
+        setStudies([]);
+      }
+    };
+
+    fetchStudies();
+  }, []);
   
   useEffect(() => {
     const checkMobile = () => {
@@ -266,33 +290,44 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                 </button>
                 {showStudyDropdown && (
                   <div className="nav-dropdown">
-                    {STUDY_LIST.filter(study => study.status !== 'COMPLETED').map(study => (
-                      <Link 
-                        key={study.id} 
-                        to={getStudyUrl(study)} 
-                        className="nav-dropdown-item"
-                        onClick={() => {
-                          setShowStudyDropdown(false);
-                          setIsMobileMenuOpen(false);
-                        }}
-                      >
-                        <span className="dropdown-item-name">{study.name}</span>
-                        <span className={`dropdown-item-badge ${study.status.toLowerCase()}`}>
-                          {getStudyDisplayInfo(study.status as any, study.deadline.toISOString()).label}
-                        </span>
-                      </Link>
-                    ))}
-                    <div className="nav-dropdown-divider"></div>
-                    <Link 
-                      to="/study" 
-                      className="nav-dropdown-item nav-dropdown-all"
-                      onClick={() => {
-                        setShowStudyDropdown(false);
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      모든 스터디 보기 →
-                    </Link>
+                    {studies.length > 0 ? (
+                      <>
+                        {studies.map(study => (
+                          <Link 
+                            key={study.id} 
+                            to={`/study/${study.slug}`} 
+                            className="nav-dropdown-item"
+                            onClick={() => {
+                              setShowStudyDropdown(false);
+                              setIsMobileMenuOpen(false);
+                            }}
+                          >
+                            <span className="dropdown-item-name">
+                              {study.name}
+                              {study.generation > 1 && <span className="generation-badge"> {study.generation}기</span>}
+                            </span>
+                            <span className={`dropdown-item-badge ${study.status.toLowerCase()}`}>
+                              {getStudyDisplayInfo(study.status, study.deadline?.toISOString()).label}
+                            </span>
+                          </Link>
+                        ))}
+                        <div className="nav-dropdown-divider"></div>
+                        <Link 
+                          to="/study" 
+                          className="nav-dropdown-item nav-dropdown-all"
+                          onClick={() => {
+                            setShowStudyDropdown(false);
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          모든 스터디 보기 →
+                        </Link>
+                      </>
+                    ) : (
+                      <div className="nav-dropdown-empty">
+                        <span>스터디를 불러오는 중...</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </li>

@@ -8,6 +8,7 @@ import gameActivityService, { GameActivity } from '../../services/gameActivitySe
 import StarBackground from '../../components/common/StarBackground';
 import './ProfilePage.css';
 import studyService, { ApplicationStatus, type MyApplicationItem } from '../../api/studyService';
+import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
 
 // 통합된 스터디 활동 인터페이스
@@ -54,6 +55,7 @@ function ProfilePage(): React.ReactNode {
   const [myStudies, setMyStudies] = useState<any[]>([]);
   const [myApplications, setMyApplications] = useState<MyApplicationItem[]>([]);
   const [allStudies, setAllStudies] = useState<any[]>([]);
+  const [myReviews, setMyReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -87,14 +89,16 @@ function ProfilePage(): React.ReactNode {
       
       try {
         setLoading(true);
-        const [studiesData, applicationsData, allStudiesData] = await Promise.all([
+        const [studiesData, applicationsData, allStudiesData, reviewsData] = await Promise.all([
           studyService.getMyStudies(),
           studyService.getMyApplications(),
-          studyService.getAllStudies()
+          studyService.getAllStudies(),
+          reviewService.getMyReviews().catch(() => []) // 리뷰 API 실패해도 계속 진행
         ]);
         setMyStudies(studiesData);
         setMyApplications(applicationsData);
         setAllStudies(allStudiesData);
+        setMyReviews(reviewsData);
       } catch (e: any) {
         setError(handleApiError(e));
       } finally {
@@ -114,9 +118,20 @@ function ProfilePage(): React.ReactNode {
       // Find slug from allStudies
       const fullStudy = allStudies.find(s => s.id === study.studyId);
       
-      // studyStatus가 IN_PROGRESS면 active, COMPLETED면 completed
+      // 해당 스터디에 대한 리뷰가 있는지 체크
+      const hasReview = myReviews.some((review: any) => review.studyId === study.studyId);
+      
+      // studyStatus 우선순위: study.studyStatus > fullStudy.status > study.isActive에 따른 추론
+      let studyStatus = study.studyStatus || fullStudy?.status;
+      
+      // studyStatus가 없으면 isActive로 추론
+      if (!studyStatus) {
+        studyStatus = study.isActive ? 'IN_PROGRESS' : 'COMPLETED';
+      }
+      
+      // 카테고리 결정
       let category: 'active' | 'completed' = 'active';
-      if (study.studyStatus === 'COMPLETED' || study.studyStatus === 'TERMINATED') {
+      if (studyStatus === 'COMPLETED' || studyStatus === 'TERMINATED') {
         category = 'completed';
       }
       
@@ -125,12 +140,12 @@ function ProfilePage(): React.ReactNode {
         studyId: study.studyId,
         studySlug: fullStudy?.slug,
         studyTitle: study.studyTitle,
-        status: study.studyStatus || 'UNKNOWN',
+        status: studyStatus,
         category,
         role: study.role,
         joinedAt: study.joinedAt,
         attendanceRate: study.attendanceRate,
-        hasReview: false // TODO: 실제 리뷰 여부 체크
+        hasReview: hasReview
       });
     });
     
@@ -159,12 +174,20 @@ function ProfilePage(): React.ReactNode {
       // Find slug from allStudies
       const fullStudy = allStudies.find(s => s.id === study.studyId);
       
+      // studyStatus 우선순위: study.studyStatus > fullStudy.status > study.isActive에 따른 추론
+      let studyStatus = study.studyStatus || fullStudy?.status;
+      
+      // studyStatus가 없으면 isActive로 추론
+      if (!studyStatus) {
+        studyStatus = study.isActive ? 'IN_PROGRESS' : 'COMPLETED';
+      }
+      
       activities.push({
         id: study.memberId,
         studyId: study.studyId,
         studySlug: fullStudy?.slug,
         studyTitle: study.studyTitle,
-        status: study.studyStatus || 'UNKNOWN',
+        status: studyStatus,
         category: 'leading',
         role: study.role,
         joinedAt: study.joinedAt,
@@ -173,7 +196,7 @@ function ProfilePage(): React.ReactNode {
     });
     
     return activities;
-  }, [myStudies, myApplications, allStudies]);
+  }, [myStudies, myApplications, allStudies, myReviews]);
 
   // 카테고리별 필터링
   const categorizedActivities = useMemo(() => ({
@@ -182,6 +205,25 @@ function ProfilePage(): React.ReactNode {
     completed: studyActivities.filter(a => a.category === 'completed'),
     leading: studyActivities.filter(a => a.category === 'leading')
   }), [studyActivities]);
+
+  // 날짜 파싱 헬퍼 함수
+  const parseDate = (dateValue: string | number[] | undefined): Date | null => {
+    if (!dateValue) return null;
+    
+    // 배열 형식 [년, 월, 일, 시, 분, 초] 처리
+    if (Array.isArray(dateValue)) {
+      const [year, month, day, hour = 0, minute = 0, second = 0] = dateValue;
+      return new Date(year, month - 1, day, hour, minute, second);
+    }
+    
+    // ISO 문자열 형식 처리
+    try {
+      const date = new Date(dateValue);
+      return isNaN(date.getTime()) ? null : date;
+    } catch {
+      return null;
+    }
+  };
 
   const greeting = () => {
     const hour = new Date().getHours();
@@ -196,9 +238,11 @@ function ProfilePage(): React.ReactNode {
       'COMPLETED': { label: '완료', className: 'study-status-completed' },
       'APPROVED': { label: '모집중', className: 'study-status-approved' },
       'TERMINATED': { label: '종료', className: 'study-status-terminated' },
-      'PENDING_APPLICATION': { label: '심사중', className: 'study-status-pending' }
+      'PENDING_APPLICATION': { label: '심사중', className: 'study-status-pending' },
+      'PENDING': { label: '대기중', className: 'study-status-pending' },
+      'UNKNOWN': { label: '확인중', className: 'study-status-default' }
     };
-    return statusMap[status] || { label: status, className: 'study-status-default' };
+    return statusMap[status] || { label: '확인중', className: 'study-status-default' };
   };
 
   const handleCancelApplication = async (studyId: string, applicationId: string) => {
@@ -304,7 +348,9 @@ function ProfilePage(): React.ReactNode {
                               </div>
                               <div className="study-card-meta">
                                 {activity.role && <p>역할: {activity.role}</p>}
-                                {activity.joinedAt && <p>참여일: {new Date(activity.joinedAt).toLocaleDateString()}</p>}
+                                {activity.joinedAt && parseDate(activity.joinedAt) && (
+                                  <p>참여일: {parseDate(activity.joinedAt)!.toLocaleDateString('ko-KR')}</p>
+                                )}
                                 {activity.attendanceRate !== null && activity.attendanceRate !== undefined && (
                                   <p>출석률: {activity.attendanceRate}%</p>
                                 )}
@@ -316,14 +362,12 @@ function ProfilePage(): React.ReactNode {
                                 >
                                   스터디 페이지
                                 </button>
-                                {!activity.hasReview && (
-                                  <button 
-                                    className="action-button review"
-                                    onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}/review/write`)}
-                                  >
-                                    리뷰 작성
-                                  </button>
-                                )}
+                                <button 
+                                  className="action-button review"
+                                  onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}/review/write`)}
+                                >
+                                  {activity.hasReview ? '리뷰 수정' : '리뷰 작성'}
+                                </button>
                               </div>
                             </div>
                           ))}
@@ -349,7 +393,9 @@ function ProfilePage(): React.ReactNode {
                                 </span>
                               </div>
                               <div className="study-card-meta">
-                                {activity.appliedAt && <p>신청일: {new Date(activity.appliedAt).toLocaleDateString()}</p>}
+                                {activity.appliedAt && parseDate(activity.appliedAt) && (
+                                  <p>신청일: {parseDate(activity.appliedAt)!.toLocaleDateString('ko-KR')}</p>
+                                )}
                                 {activity.reviewNote && <p className="review-note">메모: {activity.reviewNote}</p>}
                               </div>
                               <div className="study-card-actions">
@@ -384,25 +430,26 @@ function ProfilePage(): React.ReactNode {
                                 </span>
                               </div>
                               <div className="study-card-meta">
-                                {activity.joinedAt && <p>참여 기간: {new Date(activity.joinedAt).toLocaleDateString()}</p>}
+                                {activity.joinedAt && parseDate(activity.joinedAt) && (
+                                  <p>참여 기간: {parseDate(activity.joinedAt)!.toLocaleDateString('ko-KR')}</p>
+                                )}
                                 {activity.attendanceRate !== null && activity.attendanceRate !== undefined && (
                                   <p>최종 출석률: {activity.attendanceRate}%</p>
                                 )}
                               </div>
                               <div className="study-card-actions">
-                                {!activity.hasReview ? (
-                                  <button 
-                                    className="action-button review"
-                                    onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}/review/write`)}
-                                  >
-                                    리뷰 작성
-                                  </button>
-                                ) : (
+                                <button 
+                                  className="action-button review"
+                                  onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}/review/write`)}
+                                >
+                                  {activity.hasReview ? '리뷰 수정' : '리뷰 작성'}
+                                </button>
+                                {activity.hasReview && (
                                   <button 
                                     className="action-button secondary"
                                     onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}#reviews`)}
                                   >
-                                    리뷰 보기
+                                    내 리뷰 보기
                                   </button>
                                 )}
                               </div>
@@ -431,7 +478,9 @@ function ProfilePage(): React.ReactNode {
                                 </span>
                               </div>
                               <div className="study-card-meta">
-                                {activity.joinedAt && <p>생성일: {new Date(activity.joinedAt).toLocaleDateString()}</p>}
+                                {activity.joinedAt && parseDate(activity.joinedAt) && (
+                                  <p>생성일: {parseDate(activity.joinedAt)!.toLocaleDateString('ko-KR')}</p>
+                                )}
                               </div>
                               <div className="study-card-actions">
                                 <button 

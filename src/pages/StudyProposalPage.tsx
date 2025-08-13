@@ -26,7 +26,6 @@ const StudyProposalPage: React.FC = () => {
   const [tagline, setTagline] = useState('');
   // description 제거: 상세 콘텐츠는 DetailPage 섹션으로 대체
   const [generation, setGeneration] = useState('1');
-  const [slug, setSlug] = useState('');
   const [recurrenceType, setRecurrenceType] = useState<RecurrenceType>('WEEKLY');
   
   // 일정 및 기간
@@ -50,22 +49,9 @@ const StudyProposalPage: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9가-힣]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-  };
-
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    
-    // 자동으로 slug 생성 (사용자가 slug를 직접 입력하지 않은 경우)
-    if (!slug || slug === generateSlug(title)) {
-      setSlug(generateSlug(newTitle));
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -172,7 +158,6 @@ const StudyProposalPage: React.FC = () => {
         proposerId: user.id || user.username || user.email, // 사용 가능한 식별자 사용
         type: type as StudyType,
         generation: parseInt(generation) || 1,
-        slug: slug || generateSlug(title),
         tagline: tagline || undefined,
         schedule: scheduleString,
         // ONE_TIME은 duration 없음
@@ -328,21 +313,6 @@ const StudyProposalPage: React.FC = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="slug">URL 식별자</label>
-                <input
-                  type="text"
-                  id="slug"
-                  name="slug"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                  placeholder="자동 생성됨"
-                  pattern="[a-z0-9-]+"
-                />
-                <small style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
-                  /study/{slug || 'url-식별자'}
-                </small>
-              </div>
             </div>
           </div>
 

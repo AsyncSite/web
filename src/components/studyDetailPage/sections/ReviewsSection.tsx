@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ReviewSectionData, Review } from '../types/reviewTypes';
-import { CATEGORY_LABELS } from '../../../types/reviewTags';
+import { CATEGORY_LABELS, REVIEW_TAGS } from '../../../types/reviewTags';
 import reviewService from '../../../api/reviewService';
 import './ReviewsSection.css';
 
@@ -91,6 +91,45 @@ const ReviewStats: React.FC<{ stats: ReviewSectionData['stats'] }> = ({ stats })
   );
 };
 
+// 연결된 태그 문자열을 개별 태그로 분리하는 헬퍼 함수
+const splitConcatenatedTags = (concatenatedTag: string): string[] => {
+  // 이미 개별 태그인 경우 (REVIEW_TAGS에 존재)
+  if (REVIEW_TAGS[concatenatedTag]) {
+    return [concatenatedTag];
+  }
+  
+  // 연결된 태그 분리 (예: "CHALLENGINGEXCITING_ATMOSPHERECOMFORTABLE_ATMOSPHERE")
+  const knownTagIds = Object.keys(REVIEW_TAGS);
+  const result: string[] = [];
+  let remaining = concatenatedTag;
+  
+  // 가장 긴 태그부터 매칭 시도 (EXCITING_ATMOSPHERE가 EXCITING보다 먼저 매칭되도록)
+  const sortedTags = knownTagIds.sort((a, b) => b.length - a.length);
+  
+  while (remaining.length > 0) {
+    let matched = false;
+    
+    for (const tagId of sortedTags) {
+      if (remaining.startsWith(tagId)) {
+        result.push(tagId);
+        remaining = remaining.substring(tagId.length);
+        matched = true;
+        break;
+      }
+    }
+    
+    // 매칭되지 않으면 남은 전체를 추가하고 종료
+    if (!matched) {
+      if (remaining.length > 0) {
+        result.push(remaining);
+      }
+      break;
+    }
+  }
+  
+  return result.length > 0 ? result : [concatenatedTag];
+};
+
 const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data, studyId }) => {
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(data.displayCount || 3);
   const [isLoading, setIsLoading] = useState(false);
@@ -114,13 +153,30 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data, studyId }) => {
             rating: r.rating,
             title: r.title,
             content: r.content,
-            tags: r.tags?.map((tag: string) => ({
-              id: tag,
-              label: tag,
-              emoji: '',
-              category: 'general',
-              description: ''
-            })) || [],
+            tags: r.tags?.flatMap((tagString: string) => {
+              // 연결된 태그 문자열 처리
+              const processedTags = splitConcatenatedTags(tagString);
+              return processedTags.map(tagId => {
+                const tagInfo = REVIEW_TAGS[tagId];
+                if (tagInfo) {
+                  return {
+                    id: tagInfo.id,
+                    label: `${tagInfo.emoji} ${tagInfo.label}`,
+                    emoji: tagInfo.emoji,
+                    category: tagInfo.category,
+                    description: tagInfo.description || ''
+                  };
+                }
+                // 알 수 없는 태그는 그대로 반환
+                return {
+                  id: tagId,
+                  label: tagId,
+                  emoji: '',
+                  category: 'general',
+                  description: ''
+                };
+              });
+            }) || [],
             attendCount: r.attendCountSnapshot || r.attendanceCount || 0,
             helpfulCount: r.likeCount || 0,
             createdAt: r.createdAt,
