@@ -9,7 +9,7 @@ import reviewService, {
 } from '../../api/reviewService';
 import studyService from '../../api/studyService';
 import ReviewList from './ReviewList';
-import ReviewForm from './ReviewForm';
+// ReviewForm 제거 - ReviewWritePage 사용
 import ReviewStatisticsComponent from './ReviewStatistics';
 import './Review.css';
 
