@@ -8,7 +8,7 @@ import EmptyState from '../components/ui/EmptyState';
 import studyService, { Study } from '../api/studyService';
 import { useAuth } from '../contexts/AuthContext';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
-import './TabPage.css';
+import styles from './StudyPage.module.css';
 
 const StudyPage: React.FC = () => {
   const location = useLocation();
@@ -135,14 +135,14 @@ const StudyPage: React.FC = () => {
 
   return (
     <PaymentProvider>
-      <div className="page-container">
-        <main className="page-content">
-          <div className="study-list-page">
+      <div className={styles['page-container']}>
+        <main className={styles['page-content']}>
+          <div className={styles['study-list-page']}>
             <h1>STUDY</h1>
-            <p className="page-description">함께 성장하는 개발자들의 커뮤니티</p>
+            <p className={styles['page-description']}>함께 성장하는 개발자들의 커뮤니티</p>
           
             {/* Study Actions */}
-            <div className="study-actions" style={{
+            <div className={styles['study-actions']} style={{
               display: 'flex',
               justifyContent: 'center',
               marginTop: '20px',
@@ -150,7 +150,7 @@ const StudyPage: React.FC = () => {
             }}>
               <button 
                 onClick={() => navigate('/study/propose')} 
-                className="propose-study-btn"
+                className={styles['propose-study-btn']}
                 style={{
                   padding: '12px 24px',
                   fontSize: '16px',
@@ -180,19 +180,19 @@ const StudyPage: React.FC = () => {
             </div>
           
             {/* Tab Navigation */}
-            <div className="tab-navigation">
+            <div className={styles['tab-navigation']}>
               <button
-                className={`tab-button ${activeTab === 'list' ? 'active' : ''}`}
+                className={`${styles['tab-button']} ${activeTab === 'list' ? styles.active : ''}`}
                 onClick={() => handleTabChange('list')}
               >
-                <span className="tab-icon">📚</span>
+                <span className={styles['tab-icon']}>📚</span>
                 스터디 목록
               </button>
               <button
-                className={`tab-button ${activeTab === 'calendar' ? 'active' : ''}`}
+                className={`${styles['tab-button']} ${activeTab === 'calendar' ? styles.active : ''}`}
                 onClick={() => handleTabChange('calendar')}
               >
-                <span className="tab-icon">📅</span>
+                <span className={styles['tab-icon']}>📅</span>
                 일정 캘린더
               </button>
             </div>
@@ -200,8 +200,8 @@ const StudyPage: React.FC = () => {
           {/* Tab Content */}
           {activeTab === 'list' ? (
             loading ? (
-              <div className="loading-state">
-                <div className="loading-spinner">⏳</div>
+              <div className={styles['loading-state']}>
+                <div className={styles['loading-spinner']}>⏳</div>
                 <p>스터디를 불러오는 중...</p>
               </div>
             ) : (recruitingStudies.length === 0 && ongoingStudies.length === 0 && closedStudies.length === 0) ? (
@@ -217,22 +217,22 @@ const StudyPage: React.FC = () => {
             ) :
             <>
               {recruitingStudies.length > 0 && (
-                <section className="study-section">
+                <section className={styles['study-section']}>
                   <h2>📢 모집 중인 스터디</h2>
-                  <div className="study-grid">
+                  <div className={styles['study-grid']}>
                     {recruitingStudies.map(study => (
-                      <div key={study.id} className="study-card-wrapper">
-                        <Link to={`/study/${study.slug}`} className="study-card-link">
-                          <div className="study-card">
-                            <div className="study-header">
+                      <div key={study.id} className={styles['study-card-wrapper']}>
+                        <Link to={`/study/${study.slug}`} className={styles['study-card-link']}>
+                          <div className={styles['study-card']}>
+                            <div className={styles['study-header']}>
                               <h3>
                                 {study.name}
-                                {study.generation > 1 && <span className="generation">{study.generation}기</span>}
+                                {study.generation > 1 && <span className={styles.generation}>{study.generation}기</span>}
                               </h3>
-                              <span className="status-badge recruiting">모집중</span>
+                              <span className={`${styles['status-badge']} ${styles.recruiting}`}>모집중</span>
                             </div>
-                            <p className="study-tagline">{study.tagline}</p>
-                            <div className="study-meta">
+                            <p className={styles['study-tagline']}>{study.tagline}</p>
+                            <div className={styles['study-meta']}>
                               {study.schedule && study.schedule !== '매주 수요일' && (
                                 <span>📅 {study.schedule} {study.duration && study.duration !== '19:00-21:00' && study.duration}</span>
                               )}
@@ -242,7 +242,7 @@ const StudyPage: React.FC = () => {
                             </div>
                           </div>
                         </Link>
-                        <div className="study-actions">
+                        <div className={styles['study-actions']}>
                           {(() => {
                             // 스터디 제안자인 경우
                             if (isAuthenticated && user && study.proposerId === user.email) {
@@ -252,7 +252,7 @@ const StudyPage: React.FC = () => {
                                     e.preventDefault();
                                     navigate(`/study/${study.slug}/manage`);
                                   }}
-                                  className="manage-button"
+                                  className={styles['manage-button']}
                                   style={{
                                     background: 'linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%)',
                                     border: 'none',
@@ -288,7 +288,7 @@ const StudyPage: React.FC = () => {
                               return (
                                 <button 
                                   disabled
-                                  className="apply-button"
+                                  className={styles['apply-button']}
                                   style={{
                                     background: 'linear-gradient(135deg, #4caf50 0%, #45a049 100%)',
                                     border: 'none',
@@ -314,7 +314,7 @@ const StudyPage: React.FC = () => {
                                 <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
                                   <button 
                                     disabled
-                                    className="apply-button"
+                                    className={styles['apply-button']}
                                     style={{
                                       background: '#888',
                                       border: 'none',
@@ -345,7 +345,7 @@ const StudyPage: React.FC = () => {
                                         }
                                       }
                                     }}
-                                    className="cancel-button"
+                                    className={styles['cancel-button']}
                                     style={{
                                       background: 'transparent',
                                       border: '1px solid #ff6b6b',
@@ -380,7 +380,7 @@ const StudyPage: React.FC = () => {
                                     e.preventDefault();
                                     navigate(`/study/${study.slug}/apply`);
                                   }}
-                                  className="apply-button"
+                                  className={styles['apply-button']}
                                   style={{
                                     background: 'linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%)',
                                     border: 'none',
@@ -450,18 +450,18 @@ const StudyPage: React.FC = () => {
               )}
 
               {ongoingStudies.length > 0 && (
-                <section className="study-section">
+                <section className={styles['study-section']}>
                   <h2>🚀 진행 중인 스터디</h2>
-                  <div className="study-grid">
+                  <div className={styles['study-grid']}>
                     {ongoingStudies.map(study => (
-                      <Link to={`/study/${study.slug}`} key={study.id} className="study-card-link">
-                        <div className="study-card">
+                      <Link to={`/study/${study.slug}`} key={study.id} className={styles['study-card-link']}>
+                        <div className={styles['study-card']}>
                           <div className="study-header">
                             <h3>
                               {study.name}
                               {study.generation > 1 && <span className="generation">{study.generation}기</span>}
                             </h3>
-                            <span className="status-badge ongoing">진행중</span>
+                            <span className={`${styles['status-badge']} ${styles.ongoing}`}>진행중</span>
                           </div>
                           <p className="study-tagline">{study.tagline}</p>
                           <div className="study-meta">
@@ -480,17 +480,17 @@ const StudyPage: React.FC = () => {
               )}
 
               {closedStudies.length > 0 && (
-                <section className="study-section">
+                <section className={styles['study-section']}>
                   <h2>🏁 종료된 스터디</h2>
-                  <div className="study-grid">
+                  <div className={styles['study-grid']}>
                     {closedStudies.map(study => (
-                      <div key={study.id} className="study-card disabled">
+                      <div key={study.id} className={`${styles['study-card']} ${styles.disabled}`}>
                         <div className="study-header">
                           <h3>
                             {study.name}
                             {study.generation > 1 && <span className="generation">{study.generation}기</span>}
                           </h3>
-                          <span className="status-badge closed">종료</span>
+                          <span className={`${styles['status-badge']} ${styles.closed}`}>종료</span>
                         </div>
                         <p className="study-tagline">{study.tagline}</p>
                       </div>
@@ -500,7 +500,7 @@ const StudyPage: React.FC = () => {
               )}
 
               {/* 결제 시스템 테스트 섹션 (임시) */}
-              <div className="payment-test-section" style={{
+              <div className={styles['payment-test-section']} style={{
                 marginTop: '40px',
                 padding: '24px',
                 background: 'rgba(195, 232, 141, 0.05)',

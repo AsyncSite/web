@@ -147,7 +147,7 @@ function ProfileEditPage(): React.ReactNode {
         role: formData.role || undefined,
         quote: formData.quote || undefined,
         bio: formData.bio || undefined,
-        profileImage: formData.profileImage || undefined
+        profileImage: formData.profileImage // 빈 문자열도 유효한 값으로 처리
       });
 
       // 알림 설정 업데이트

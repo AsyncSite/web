@@ -6,7 +6,7 @@ import PasswordChangeModal from '../../components/auth/PasswordChangeModalEnhanc
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
-import './ProfilePage.css';
+import styles from './ProfilePage.module.css';
 import studyService, { ApplicationStatus, type MyApplicationItem } from '../../api/studyService';
 import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
@@ -258,55 +258,55 @@ function ProfilePage(): React.ReactNode {
   };
 
   return (
-    <div className="profile-page">
+    <div className={styles['profile-page']}>
       <Header transparent />
       <StarBackground />
       
       {(isLoading || !authUser) ? (
-        <div className="profile-page-loading">
-          <div className="loading-spinner">로딩 중...</div>
+        <div className={styles['profile-page-loading']}>
+          <div className={styles['loading-spinner']}>로딩 중...</div>
         </div>
       ) : (
-      <div className="profile-container">
+      <div className={styles['profile-container']}>
         {/* 프로필 요약 섹션 */}
-        <section className="profile-summary">
-          <div className="profile-header">
-            <div className="profile-image">
+        <section className={styles['profile-summary']}>
+          <div className={styles['profile-header']}>
+            <div className={styles['profile-image']}>
               {user.profileImage ? (
                 <img src={user.profileImage} alt="프로필" />
               ) : (
-                <div className="profile-placeholder">
+                <div className={styles['profile-placeholder']}>
                   {user.name?.[0] || '?'}
                 </div>
               )}
               {/* Admin Badge */}
               {(authUser?.systemRole === 'ROLE_ADMIN' || authUser?.roles?.includes('ROLE_ADMIN') || authUser?.roles?.includes('ADMIN')) && (
-                <div className="profile-admin-badge" title="AsyncSite Administrator">
-                  <svg className="profile-admin-icon" viewBox="0 0 24 24" width="18" height="18">
+                <div className={styles['profile-admin-badge']} title="AsyncSite Administrator">
+                  <svg className={styles['profile-admin-icon']} viewBox="0 0 24 24" width="18" height="18">
                     <path fill="white" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
                   </svg>
                 </div>
               )}
             </div>
-            <div className="profile-info">
+            <div className={styles['profile-info']}>
               <h1>{greeting()}, {user.name}님!</h1>
-              <p className="join-info">AsyncSite와 함께한 지 <span className="highlight">{user.joinedDays}일째</span></p>
+              <p className={styles['join-info']}>AsyncSite와 함께한 지 <span className={styles.highlight}>{user.joinedDays}일째</span></p>
             </div>
           </div>
         </section>
 
         {/* 탭 섹션 컨테이너 */}
-        <div className="tab-section-container">
+        <div className={styles['tab-section-container']}>
           {/* 탭 네비게이션 */}
-          <div className="tab-navigation">
+          <div className={styles['tab-navigation']}>
             <button
-              className={`tab-button ${activeTab === 'study' ? 'active' : ''}`}
+              className={`${styles['tab-button']} ${activeTab === 'study' ? styles.active : ''}`}
               onClick={() => setActiveTab('study')}
             >
               스터디
             </button>
             <button
-              className={`tab-button ${activeTab === 'game' ? 'active' : ''}`}
+              className={`${styles['tab-button']} ${activeTab === 'game' ? styles.active : ''}`}
               onClick={() => setActiveTab('game')}
             >
               게임 활동
@@ -314,39 +314,39 @@ function ProfilePage(): React.ReactNode {
           </div>
 
           {/* 탭 콘텐츠 영역 */}
-          <div className="tab-content">
+          <div className={styles['tab-content']}>
             {/* 스터디 탭 콘텐츠 - 개선된 버전 */}
             {activeTab === 'study' && (
-              <section className="study-section-new">
-                <h2 className="section-main-title">나의 스터디 활동</h2>
+              <section className={styles['study-section-new']}>
+                <h2 className={styles['section-main-title']}>나의 스터디 활동</h2>
                 
                 {loading ? (
-                  <div className="loading-state">스터디 정보를 불러오는 중...</div>
+                  <div className={styles['loading-state']}>스터디 정보를 불러오는 중...</div>
                 ) : error ? (
-                  <div className="error-state">
+                  <div className={styles['error-state']}>
                     <p>스터디 정보를 불러오지 못했습니다.</p>
-                    <p className="error-detail">{error}</p>
+                    <p className={styles['error-detail']}>{error}</p>
                   </div>
                 ) : (
-                  <div className="study-categories">
+                  <div className={styles['study-categories']}>
                     {/* 진행 중인 스터디 */}
                     {categorizedActivities.active.length > 0 && (
-                      <div className="study-category">
-                        <h3 className="category-title">
-                          <span className="category-icon">🟢</span>
+                      <div className={styles['study-category']}>
+                        <h3 className={styles['category-title']}>
+                          <span className={styles['category-icon']}>🟢</span>
                           진행 중 
-                          <span className="category-count">{categorizedActivities.active.length}</span>
+                          <span className={styles['category-count']}>{categorizedActivities.active.length}</span>
                         </h3>
-                        <div className="study-grid">
+                        <div className={styles['study-grid']}>
                           {categorizedActivities.active.map(activity => (
-                            <div key={activity.id} className="study-card-new">
-                              <div className="study-card-header">
-                                <h4 className="study-name">{activity.studyTitle}</h4>
-                                <span className={`status-badge ${getStatusBadge(activity.status).className}`}>
+                            <div key={activity.id} className={styles['study-card-new']}>
+                              <div className={styles['study-card-header']}>
+                                <h4 className={styles['study-name']}>{activity.studyTitle}</h4>
+                                <span className={`${styles['status-badge']} ${styles[getStatusBadge(activity.status).className]}`}>
                                   {getStatusBadge(activity.status).label}
                                 </span>
                               </div>
-                              <div className="study-card-meta">
+                              <div className={styles['study-card-meta']}>
                                 {activity.role && <p>역할: {activity.role}</p>}
                                 {activity.joinedAt && parseDate(activity.joinedAt) && (
                                   <p>참여일: {parseDate(activity.joinedAt)!.toLocaleDateString('ko-KR')}</p>
@@ -355,15 +355,15 @@ function ProfilePage(): React.ReactNode {
                                   <p>출석률: {activity.attendanceRate}%</p>
                                 )}
                               </div>
-                              <div className="study-card-actions">
+                              <div className={styles['study-card-actions']}>
                                 <button 
-                                  className="action-button primary"
+                                  className={`${styles['action-button']} ${styles.primary}`}
                                   onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}`)}
                                 >
                                   스터디 페이지
                                 </button>
                                 <button 
-                                  className="action-button review"
+                                  className={`${styles['action-button']} ${styles.review}`}
                                   onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}/review/write`)}
                                 >
                                   {activity.hasReview ? '리뷰 수정' : '리뷰 작성'}
@@ -377,30 +377,30 @@ function ProfilePage(): React.ReactNode {
 
                     {/* 대기 중인 신청 */}
                     {categorizedActivities.pending.length > 0 && (
-                      <div className="study-category">
-                        <h3 className="category-title">
-                          <span className="category-icon">🟡</span>
+                      <div className={styles['study-category']}>
+                        <h3 className={styles['category-title']}>
+                          <span className={styles['category-icon']}>🟡</span>
                           대기 중
-                          <span className="category-count">{categorizedActivities.pending.length}</span>
+                          <span className={styles['category-count']}>{categorizedActivities.pending.length}</span>
                         </h3>
-                        <div className="study-grid">
+                        <div className={styles['study-grid']}>
                           {categorizedActivities.pending.map(activity => (
-                            <div key={activity.id} className="study-card-new">
-                              <div className="study-card-header">
-                                <h4 className="study-name">{activity.studyTitle}</h4>
-                                <span className={`status-badge ${getStatusBadge(activity.status).className}`}>
+                            <div key={activity.id} className={styles['study-card-new']}>
+                              <div className={styles['study-card-header']}>
+                                <h4 className={styles['study-name']}>{activity.studyTitle}</h4>
+                                <span className={`${styles['status-badge']} ${styles[getStatusBadge(activity.status).className]}`}>
                                   {getStatusBadge(activity.status).label}
                                 </span>
                               </div>
-                              <div className="study-card-meta">
+                              <div className={styles['study-card-meta']}>
                                 {activity.appliedAt && parseDate(activity.appliedAt) && (
                                   <p>신청일: {parseDate(activity.appliedAt)!.toLocaleDateString('ko-KR')}</p>
                                 )}
-                                {activity.reviewNote && <p className="review-note">메모: {activity.reviewNote}</p>}
+                                {activity.reviewNote && <p className={styles['review-note']}>메모: {activity.reviewNote}</p>}
                               </div>
-                              <div className="study-card-actions">
+                              <div className={styles['study-card-actions']}>
                                 <button 
-                                  className="action-button cancel"
+                                  className={`${styles['action-button']} ${styles.cancel}`}
                                   onClick={() => handleCancelApplication(activity.studyId, activity.applicationId!)}
                                 >
                                   신청 취소
@@ -414,22 +414,22 @@ function ProfilePage(): React.ReactNode {
 
                     {/* 완료된 스터디 */}
                     {categorizedActivities.completed.length > 0 && (
-                      <div className="study-category">
-                        <h3 className="category-title">
-                          <span className="category-icon">✅</span>
+                      <div className={styles['study-category']}>
+                        <h3 className={styles['category-title']}>
+                          <span className={styles['category-icon']}>✅</span>
                           완료됨
-                          <span className="category-count">{categorizedActivities.completed.length}</span>
+                          <span className={styles['category-count']}>{categorizedActivities.completed.length}</span>
                         </h3>
-                        <div className="study-grid">
+                        <div className={styles['study-grid']}>
                           {categorizedActivities.completed.map(activity => (
-                            <div key={activity.id} className="study-card-new">
-                              <div className="study-card-header">
-                                <h4 className="study-name">{activity.studyTitle}</h4>
-                                <span className={`status-badge ${getStatusBadge(activity.status).className}`}>
+                            <div key={activity.id} className={styles['study-card-new']}>
+                              <div className={styles['study-card-header']}>
+                                <h4 className={styles['study-name']}>{activity.studyTitle}</h4>
+                                <span className={`${styles['status-badge']} ${styles[getStatusBadge(activity.status).className]}`}>
                                   {getStatusBadge(activity.status).label}
                                 </span>
                               </div>
-                              <div className="study-card-meta">
+                              <div className={styles['study-card-meta']}>
                                 {activity.joinedAt && parseDate(activity.joinedAt) && (
                                   <p>참여 기간: {parseDate(activity.joinedAt)!.toLocaleDateString('ko-KR')}</p>
                                 )}
@@ -437,16 +437,16 @@ function ProfilePage(): React.ReactNode {
                                   <p>최종 출석률: {activity.attendanceRate}%</p>
                                 )}
                               </div>
-                              <div className="study-card-actions">
+                              <div className={styles['study-card-actions']}>
                                 <button 
-                                  className="action-button review"
+                                  className={`${styles['action-button']} ${styles.review}`}
                                   onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}/review/write`)}
                                 >
                                   {activity.hasReview ? '리뷰 수정' : '리뷰 작성'}
                                 </button>
                                 {activity.hasReview && (
                                   <button 
-                                    className="action-button secondary"
+                                    className={`${styles['action-button']} ${styles.secondary}`}
                                     onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}#reviews`)}
                                   >
                                     내 리뷰 보기
@@ -461,30 +461,30 @@ function ProfilePage(): React.ReactNode {
 
                     {/* 리드하는 스터디 */}
                     {categorizedActivities.leading.length > 0 && (
-                      <div className="study-category">
-                        <h3 className="category-title">
-                          <span className="category-icon">👑</span>
+                      <div className={styles['study-category']}>
+                        <h3 className={styles['category-title']}>
+                          <span className={styles['category-icon']}>👑</span>
                           리드 중
-                          <span className="category-count">{categorizedActivities.leading.length}</span>
+                          <span className={styles['category-count']}>{categorizedActivities.leading.length}</span>
                         </h3>
-                        <div className="study-grid">
+                        <div className={styles['study-grid']}>
                           {categorizedActivities.leading.map(activity => (
-                            <div key={activity.id} className="study-card-new leading">
-                              <div className="leader-badge">리더</div>
-                              <div className="study-card-header">
-                                <h4 className="study-name">{activity.studyTitle}</h4>
-                                <span className={`status-badge ${getStatusBadge(activity.status).className}`}>
+                            <div key={activity.id} className={styles['study-card-new'] + ' ' + styles['leading']}>
+                              <div className={styles['leader-badge']}>리더</div>
+                              <div className={styles['study-card-header']}>
+                                <h4 className={styles['study-name']}>{activity.studyTitle}</h4>
+                                <span className={`${styles['status-badge']} ${styles[getStatusBadge(activity.status).className]}`}>
                                   {getStatusBadge(activity.status).label}
                                 </span>
                               </div>
-                              <div className="study-card-meta">
+                              <div className={styles['study-card-meta']}>
                                 {activity.joinedAt && parseDate(activity.joinedAt) && (
                                   <p>생성일: {parseDate(activity.joinedAt)!.toLocaleDateString('ko-KR')}</p>
                                 )}
                               </div>
-                              <div className="study-card-actions">
+                              <div className={styles['study-card-actions']}>
                                 <button 
-                                  className="action-button manage"
+                                  className={styles['action-button'] + ' ' + styles['manage']}
                                   onClick={() => navigate(`/study/${activity.studySlug || activity.studyId}/manage`)}
                                 >
                                   {activity.status === 'COMPLETED' ? '리뷰 관리' : '스터디 관리'}
@@ -498,10 +498,10 @@ function ProfilePage(): React.ReactNode {
 
                     {/* 아무 스터디도 없을 때 */}
                     {studyActivities.length === 0 && (
-                      <div className="empty-state">
+                      <div className={styles['empty-state']}>
                         <p>아직 참여 중인 스터디가 없어요</p>
                         <p>스터디를 둘러보고 관심있는 주제에 참여해보세요!</p>
-                        <Link to="/study" className="browse-button">스터디 둘러보기</Link>
+                        <Link to="/study" className={styles['browse-button']}>스터디 둘러보기</Link>
                       </div>
                     )}
                   </div>
@@ -511,58 +511,58 @@ function ProfilePage(): React.ReactNode {
 
             {/* 게임 활동 탭 콘텐츠 */}
             {activeTab === 'game' && (
-              <section className="game-section">
+              <section className={styles['game-section']}>
                 <h2>게임 활동</h2>
                 
                 {gameActivities.length > 0 ? (
                   <>
                     {gameSummary.totalGames > 0 && (
-                      <div className="game-summary">
-                        <div className="summary-item">
-                          <span className="summary-label">총 게임 횟수</span>
-                          <span className="summary-value">{gameSummary.totalGames}회</span>
+                      <div className={styles['game-summary']}>
+                        <div className={styles['summary-item']}>
+                          <span className={styles['summary-label']}>총 게임 횟수</span>
+                          <span className={styles['summary-value']}>{gameSummary.totalGames}회</span>
                         </div>
                         {gameSummary.totalWins > 0 && (
-                          <div className="summary-item">
-                            <span className="summary-label">총 승리</span>
-                            <span className="summary-value">{gameSummary.totalWins}회</span>
+                          <div className={styles['summary-item']}>
+                            <span className={styles['summary-label']}>총 승리</span>
+                            <span className={styles['summary-value']}>{gameSummary.totalWins}회</span>
                           </div>
                         )}
                         {gameSummary.favoriteGame && (
-                          <div className="summary-item">
-                            <span className="summary-label">즐겨하는 게임</span>
-                            <span className="summary-value">{gameSummary.favoriteGame}</span>
+                          <div className={styles['summary-item']}>
+                            <span className={styles['summary-label']}>즐겨하는 게임</span>
+                            <span className={styles['summary-value']}>{gameSummary.favoriteGame}</span>
                           </div>
                         )}
                       </div>
                     )}
                     
-                    <div className="game-cards">
+                    <div className={styles['game-cards']}>
                       {gameActivities.map((activity, index) => (
-                        <div key={index} className="game-card">
-                          <div className="game-header">
+                        <div key={index} className={styles['game-card']}>
+                          <div className={styles['game-header']}>
                             <h3>{activity.name}</h3>
                             {activity.lastPlayed && (
-                              <span className="last-played">마지막 플레이: {activity.lastPlayed}</span>
+                              <span className={styles['last-played']}>마지막 플레이: {activity.lastPlayed}</span>
                             )}
                           </div>
-                          <div className="game-stats">
-                            <div className="stat-item">
-                              <span className="stat-label">플레이 횟수</span>
-                              <span className="stat-value">{activity.totalCount}회</span>
+                          <div className={styles['game-stats']}>
+                            <div className={styles['stat-item']}>
+                              <span className={styles['stat-label']}>플레이 횟수</span>
+                              <span className={styles['stat-value']}>{activity.totalCount}회</span>
                             </div>
                             {activity.myRanking && activity.totalRanking && (
-                              <div className="stat-item">
-                                <span className="stat-label">랭킹</span>
-                                <span className="stat-value ranking">
+                              <div className={styles['stat-item']}>
+                                <span className={styles['stat-label']}>랭킹</span>
+                                <span className={styles['stat-value'] + ' ' + styles['ranking']}>
                                   {activity.myRanking}위 / {activity.totalRanking}명
                                 </span>
                               </div>
                             )}
                             {activity.wins !== undefined && activity.participations !== undefined && (
-                              <div className="stat-item">
-                                <span className="stat-label">승률</span>
-                                <span className="stat-value">
+                              <div className={styles['stat-item']}>
+                                <span className={styles['stat-label']}>승률</span>
+                                <span className={styles['stat-value']}>
                                   {activity.participations > 0 
                                     ? Math.round((activity.wins / activity.participations) * 100) 
                                     : 0}%
@@ -570,7 +570,7 @@ function ProfilePage(): React.ReactNode {
                               </div>
                             )}
                           </div>
-                          <Link to={activity.link} className="play-button">
+                          <Link to={activity.link} className={styles['play-button']}>
                             게임하러 가기
                           </Link>
                         </div>
@@ -578,10 +578,10 @@ function ProfilePage(): React.ReactNode {
                     </div>
                   </>
                 ) : (
-                  <div className="empty-state">
+                  <div className={styles['empty-state']}>
                     <p>아직 플레이한 게임이 없어요</p>
                     <p>스터디 쉬는 시간에 재미있는 게임 한 판 어떠세요?</p>
-                    <Link to="/lab" className="browse-button">게임 둘러보기</Link>
+                    <Link to="/lab" className={styles['browse-button']}>게임 둘러보기</Link>
                   </div>
                 )}
               </section>
@@ -590,9 +590,9 @@ function ProfilePage(): React.ReactNode {
         </div>
 
         {/* 설정 섹션 */}
-        <section className="settings-section">
+        <section className={styles['settings-section']}>
           <h3>설정</h3>
-          <nav className="settings-nav">
+          <nav className={styles['settings-nav']}>
             <Link to="/users/me/edit">프로필 수정</Link>
             <a href="#" onClick={(e) => { e.preventDefault(); setShowPasswordModal(true); }}>비밀번호 변경</a>
             <a href="#" onClick={(e) => { e.preventDefault(); setShowLogoutModal(true); }}>로그아웃</a>
@@ -600,7 +600,7 @@ function ProfilePage(): React.ReactNode {
         </section>
 
         {/* 하단 격려 메시지 */}
-        <div className="motivation-message">
+        <div className={styles['motivation-message']}>
           <p>오늘도 열공하세요!</p>
         </div>
       </div>
