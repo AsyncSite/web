@@ -20,8 +20,7 @@ interface ReviewSectionProps {
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) => {
   const { user, isAuthenticated } = useAuth();
-  const [showForm, setShowForm] = useState(false);
-  const [editingReview, setEditingReview] = useState<ReviewResponse | null>(null);
+  // showForm과 editingReview 제거 - ReviewWritePage 사용
   const [statistics, setStatistics] = useState<ReviewStatistics | null>(null);
   const [isMember, setIsMember] = useState(false);
   const [myReviews, setMyReviews] = useState<ReviewResponse[]>([]);
@@ -52,7 +51,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
   useEffect(() => {
     if (window.location.hash === '#write-review' && isAuthenticated) {
       // 해시가 있으면 일단 폼을 열고 멤버십은 나중에 체크
-      setShowForm(true);
+      // ReviewWritePage로 이동
       // 해시 제거
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
@@ -104,43 +103,16 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
     }
   };
 
-  const handleCreateReview = async (data: CreateReviewRequest | UpdateReviewRequest) => {
-    try {
-      await reviewService.createReview(studyId, data as CreateReviewRequest);
-      setShowForm(false);
-      setRefreshKey(prev => prev + 1); // Trigger list refresh
-      loadStatistics(); // Reload statistics
-      loadMyReviews(); // Reload my reviews
-    } catch (error) {
-      console.error('Failed to create review:', error);
-      throw error;
-    }
-  };
+  // ReviewWritePage로 이동하므로 제거
 
-  const handleUpdateReview = async (data: CreateReviewRequest | UpdateReviewRequest) => {
-    if (!editingReview) return;
-    
-    try {
-      await reviewService.updateReview(editingReview.id, data as UpdateReviewRequest);
-      setEditingReview(null);
-      setShowForm(false);
-      setRefreshKey(prev => prev + 1); // Trigger list refresh
-      loadStatistics(); // Reload statistics
-    } catch (error) {
-      console.error('Failed to update review:', error);
-      throw error;
-    }
-  };
+  // 수정 기능 제거 - ReviewWritePage 사용
 
   const handleEditReview = (review: ReviewResponse) => {
-    setEditingReview(review);
-    setShowForm(true);
+    // 수정 기능은 추후 구현
+    console.log('Edit review:', review);
   };
 
-  const handleCancelForm = () => {
-    setShowForm(false);
-    setEditingReview(null);
-  };
+  // 폼 취소 기능 제거
 
   // Determine if review section should be shown
   const isStudyCompletedOrInProgress = studyStatus === 'COMPLETED' || studyStatus === 'IN_PROGRESS';
@@ -164,16 +136,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
         <ReviewStatisticsComponent statistics={statistics} />
       )}
 
-      {showForm && (
-        <div className="review-form-container">
-          <ReviewForm
-            studyId={studyId}
-            existingReview={editingReview || undefined}
-            onSubmit={editingReview ? handleUpdateReview : handleCreateReview}
-            onCancel={handleCancelForm}
-          />
-        </div>
-      )}
+      {/* ReviewForm 제거 - ReviewWritePage 사용 */}
 
       {!isAuthenticated && !hasAnyReviews && (
         <div className="review-login-prompt">
