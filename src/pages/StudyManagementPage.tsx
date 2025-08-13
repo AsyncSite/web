@@ -13,6 +13,7 @@ import SectionEditForm from '../components/studyDetailPage/editor/SectionEditFor
 import { normalizeMembersPropsForUI, serializeMembersPropsForAPI } from '../components/studyDetailPage/utils/membersAdapter';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ConfirmModal from '../components/common/ConfirmModal';
+import InputModal from '../components/common/InputModal';
 import { ToastContainer, ToastType } from '../components/common/Toast';
 import './StudyManagementPage.css';
 import '../components/studyDetailPage/StudyDetailPageRenderer.css';
@@ -63,6 +64,19 @@ const StudyManagementPage: React.FC = () => {
     onConfirm: () => {},
     confirmButtonClass: 'confirm-button'
   });
+  const [inputModal, setInputModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    placeholder?: string;
+    onSubmit: (value: string) => void;
+  }>({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    placeholder: '',
+    onSubmit: () => {}
+  });
   const [toasts, setToasts] = useState<Array<{
     id: string;
     message: string;
@@ -98,7 +112,7 @@ const StudyManagementPage: React.FC = () => {
         }
         
         if (!studyData) {
-          alert('존재하지 않는 스터디입니다.');
+          addToast('존재하지 않는 스터디입니다.', 'error');
           navigate('/study');
           return;
         }
@@ -149,7 +163,7 @@ const StudyManagementPage: React.FC = () => {
 
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
-        alert('스터디 관리 정보를 불러올 수 없습니다.');
+        addToast('스터디 관리 정보를 불러올 수 없습니다.', 'error');
         navigate('/study');
       } finally {
         setLoading(false);
@@ -450,34 +464,42 @@ const StudyManagementPage: React.FC = () => {
     const application = applications.find(app => app.id === applicationId);
     if (!application) return;
 
-    const reason = prompt(`${application.applicantId}님의 참가 신청을 거절하는 이유를 입력해주세요:`);
-    if (!reason) return;
+    setInputModal({
+      isOpen: true,
+      title: '참가 신청 거절',
+      message: `${application.applicantId}님의 참가 신청을 거절하는 이유를 입력해주세요:`,
+      placeholder: '거절 사유를 입력하세요...',
+      onSubmit: async (reason: string) => {
+        setInputModal(prev => ({ ...prev, isOpen: false }));
+        if (!reason) return;
+        
+        setActionLoading(applicationId);
+        
+        try {
+          await studyService.rejectApplication(studyId, applicationId, {
+            reviewerId: user.email,
+            reason: reason.trim()
+          });
 
-    setActionLoading(applicationId);
-    
-    try {
-      await studyService.rejectApplication(studyId, applicationId, {
-        reviewerId: user.email,
-        reason: reason.trim()
-      });
+          // Update applications state
+          setApplications(prev => 
+            prev.map(app => 
+              app.id === applicationId 
+                ? { ...app, status: ApplicationStatus.REJECTED, reviewedBy: user.email, reviewNote: reason.trim() }
+                : app
+            )
+          );
 
-      // Update applications state
-      setApplications(prev => 
-        prev.map(app => 
-          app.id === applicationId 
-            ? { ...app, status: ApplicationStatus.REJECTED, reviewedBy: user.email, reviewNote: reason.trim() }
-            : app
-        )
-      );
-
-      addToast('참가 신청이 거절되었습니다.', 'info');
-    } catch (error: any) {
-      console.error('거절 처리 실패:', error);
-      const errorMessage = error.response?.data?.message || '거절 처리 중 오류가 발생했습니다.';
-      addToast(errorMessage, 'error');
-    } finally {
-      setActionLoading(null);
-    }
+          addToast('참가 신청이 거절되었습니다.', 'info');
+        } catch (error: any) {
+          console.error('거절 처리 실패:', error);
+          const errorMessage = error.response?.data?.message || '거절 처리 중 오류가 발생했습니다.';
+          addToast(errorMessage, 'error');
+        } finally {
+          setActionLoading(null);
+        }
+      }
+    });
   };
 
   const getStatusBadge = (status: ApplicationStatus) => {
@@ -511,8 +533,7 @@ const StudyManagementPage: React.FC = () => {
     return (
       <div className="study-management-page">
         <div className="loading-state">
-          <div className="loading-spinner">⏳</div>
-          <p>스터디 관리 정보를 불러오는 중...</p>
+          <LoadingSpinner message="스터디 관리 정보를 불러오는 중..." fullScreen={false} />
         </div>
       </div>
     );
@@ -915,6 +936,17 @@ const StudyManagementPage: React.FC = () => {
         confirmButtonClass={confirmModal.confirmButtonClass}
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
+      
+      <InputModal
+        isOpen={inputModal.isOpen}
+        title={inputModal.title}
+        message={inputModal.message}
+        placeholder={inputModal.placeholder}
+        onSubmit={inputModal.onSubmit}
+        onCancel={() => setInputModal(prev => ({ ...prev, isOpen: false }))}
+        multiline={true}
+        maxLength={500}
       />
       
       <ToastContainer toasts={toasts} onClose={removeToast} />

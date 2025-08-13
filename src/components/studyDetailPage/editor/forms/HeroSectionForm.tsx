@@ -66,7 +66,8 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
       (title as RichTextData)?.content?.[0]?.content?.[0]?.text || '';
     
     if (!titleText) {
-      alert('제목은 필수 입력 항목입니다.');
+      // Validation failed - don't call onSave
+      // Parent component should handle validation errors
       return;
     }
 

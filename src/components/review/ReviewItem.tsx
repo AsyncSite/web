@@ -154,11 +154,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
             {onDelete && (
               <button
                 className="delete-button"
-                onClick={() => {
-                  if (window.confirm('리뷰를 삭제하시겠습니까?')) {
-                    onDelete(review.id);
-                  }
-                }}
+                onClick={() => onDelete(review.id)}
               >
                 삭제
               </button>

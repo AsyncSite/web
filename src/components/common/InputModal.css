@@ -1,0 +1,225 @@
+/* Study Management Input Modal - Overlay */
+.study-management-input-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: study-management-input-modal-fade-in 0.2s ease;
+}
+
+/* Study Management Input Modal - Container */
+.study-management-input-modal-container {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 12px;
+  padding: 0;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: study-management-input-modal-slide-up 0.3s ease;
+}
+
+/* Study Management Input Modal - Header */
+.study-management-input-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(195, 232, 141, 0.05);
+  border-radius: 12px 12px 0 0;
+}
+
+.study-management-input-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #C3E88D;
+}
+
+/* Study Management Input Modal - Form */
+.study-management-input-modal-form {
+  padding: 24px;
+}
+
+.study-management-input-modal-message {
+  margin: 0 0 20px 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Study Management Input Modal - Input Field */
+.study-management-input-modal-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.study-management-input-modal-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #C3E88D;
+  box-shadow: 0 0 0 2px rgba(195, 232, 141, 0.2);
+}
+
+.study-management-input-modal-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Study Management Input Modal - Textarea */
+.study-management-input-modal-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.study-management-input-modal-textarea:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #C3E88D;
+  box-shadow: 0 0 0 2px rgba(195, 232, 141, 0.2);
+}
+
+.study-management-input-modal-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Study Management Input Modal - Character Count */
+.study-management-input-modal-char-count {
+  margin-top: 8px;
+  text-align: right;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Study Management Input Modal - Error Message */
+.study-management-input-modal-error {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 82, 82, 0.1);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  border-radius: 6px;
+  color: #ff5252;
+  font-size: 0.875rem;
+}
+
+/* Study Management Input Modal - Actions */
+.study-management-input-modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: flex-end;
+}
+
+/* Study Management Input Modal - Cancel Button */
+.study-management-input-modal-cancel-button {
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.study-management-input-modal-cancel-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Study Management Input Modal - Submit Button */
+.study-management-input-modal-submit-button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.study-management-input-modal-submit-button-primary {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+}
+
+.study-management-input-modal-submit-button-primary:hover {
+  background: linear-gradient(135deg, #d4f09e 0%, #9ae6ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+.study-management-input-modal-submit-button-danger {
+  background: linear-gradient(135deg, #ff5252 0%, #ff8a80 100%);
+  color: #ffffff;
+}
+
+.study-management-input-modal-submit-button-danger:hover {
+  background: linear-gradient(135deg, #ff6363 0%, #ff9b91 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 82, 82, 0.3);
+}
+
+/* Animations */
+@keyframes study-management-input-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes study-management-input-modal-slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .study-management-input-modal-container {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .study-management-input-modal-form {
+    padding: 20px;
+  }
+  
+  .study-management-input-modal-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .study-management-input-modal-cancel-button,
+  .study-management-input-modal-submit-button {
+    width: 100%;
+  }
+}

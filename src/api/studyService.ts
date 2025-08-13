@@ -332,15 +332,23 @@ class StudyService {
   }
 
   /**
-   * Get study by ID
+   * Get study by ID or slug
    */
-  async getStudyById(id: string | number): Promise<Study | null> {
+  async getStudyById(idOrSlug: string | number): Promise<Study | null> {
+    // UUID 패턴 체크 (UUID v4 형식)
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(idOrSlug));
+    
+    // slug인 경우 slug 엔드포인트 사용
+    const endpoint = isUuid 
+      ? `${this.STUDY_API_PATH}/${idOrSlug}`
+      : `${this.STUDY_API_PATH}/slug/${idOrSlug}`;
+    
     const response = await publicApiClient.get<{
       success: boolean;
       data: StudyDTO;
       error: any;
       timestamp: number[];
-    } | StudyDTO>(`${this.STUDY_API_PATH}/${id}`);
+    } | StudyDTO>(endpoint);
     
     // API가 success/data 구조로 응답하는 경우 처리
     const study = (response.data as any)?.data || response.data;

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import reviewService, { ReviewResponse, ReviewType, ReviewSearchParams } from '../../api/reviewService';
 import ReviewItem from './ReviewItem';
+import ConfirmModal from '../common/ConfirmModal';
+import { ToastContainer, ToastType } from '../common/Toast';
+import LoadingSpinner from '../common/LoadingSpinner';
 import './Review.css';
 
 interface ReviewListProps {
@@ -19,6 +22,36 @@ const ReviewList: React.FC<ReviewListProps> = ({ studyId, onEditReview }) => {
     size: 10,
     sort: 'createdAt,desc'
   });
+  
+  // Toast 상태
+  const [toasts, setToasts] = useState<Array<{
+    id: string;
+    message: string;
+    type?: ToastType;
+  }>>([]);
+  
+  // Confirm Modal 상태
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    onConfirm: () => {}
+  });
+  
+  // Toast 헬퍼 함수
+  const addToast = (message: string, type?: ToastType) => {
+    const id = Date.now().toString();
+    setToasts(prev => [...prev, { id, message, type }]);
+  };
+  
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   useEffect(() => {
     loadReviews();
@@ -73,16 +106,25 @@ const ReviewList: React.FC<ReviewListProps> = ({ studyId, onEditReview }) => {
     }
   };
 
-  const handleDelete = async (reviewId: string) => {
-    try {
-      await reviewService.deleteReview(reviewId);
-      // Remove from local state
-      setReviews(prev => prev.filter(review => review.id !== reviewId));
-      setTotalElements(prev => prev - 1);
-    } catch (error) {
-      console.error('Failed to delete review:', error);
-      alert('리뷰 삭제에 실패했습니다.');
-    }
+  const handleDelete = (reviewId: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: '리뷰 삭제',
+      message: '리뷰를 삭제하시겠습니까?',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        try {
+          await reviewService.deleteReview(reviewId);
+          // Remove from local state
+          setReviews(prev => prev.filter(review => review.id !== reviewId));
+          setTotalElements(prev => prev - 1);
+          addToast('리뷰가 삭제되었습니다.', 'success');
+        } catch (error) {
+          console.error('Failed to delete review:', error);
+          addToast('리뷰 삭제에 실패했습니다.', 'error');
+        }
+      }
+    });
   };
 
   const handleFilterChange = (newFilters: Partial<ReviewSearchParams>) => {
@@ -115,7 +157,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ studyId, onEditReview }) => {
   if (loading && reviews.length === 0) {
     return (
       <div className="review-list-loading">
-        <div className="loading-spinner">리뷰를 불러오는 중...</div>
+        <LoadingSpinner message="리뷰를 불러오는 중..." fullScreen={false} />
       </div>
     );
   }
@@ -130,6 +172,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ studyId, onEditReview }) => {
   }
 
   return (
+    <>
     <div className="review-list">
       <div className="review-list-header">
         <h3 className="review-list-title">
@@ -223,6 +266,17 @@ const ReviewList: React.FC<ReviewListProps> = ({ studyId, onEditReview }) => {
         </>
       )}
     </div>
+    
+    <ConfirmModal
+      isOpen={confirmModal.isOpen}
+      title={confirmModal.title}
+      message={confirmModal.message}
+      onConfirm={confirmModal.onConfirm}
+      onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+    />
+    
+    <ToastContainer toasts={toasts} onClose={removeToast} />
+    </>
   );
 };
 

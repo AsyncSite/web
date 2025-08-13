@@ -442,6 +442,7 @@
   text-align: center;
 }
 
+/* LoadingSpinner 컴포넌트 사용으로 인해 더 이상 필요하지 않음
 .loading-spinner {
   font-size: 2rem;
   margin-bottom: 16px;
@@ -452,6 +453,7 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+*/
 
 /* Responsive Design */
 @media (max-width: 768px) {

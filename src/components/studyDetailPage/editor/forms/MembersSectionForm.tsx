@@ -9,6 +9,8 @@ import {
   MembersSectionData
 } from '../../types/memberTypes';
 import studyService, { MemberResponse } from '../../../../api/studyService';
+import { ToastContainer, ToastType } from '../../../common/Toast';
+import ConfirmModal from '../../../common/ConfirmModal';
 
 interface MembersSectionFormProps {
   studyId?: string;  // 실제 멤버 데이터를 불러올 스터디 ID
@@ -48,6 +50,36 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   const [showCustomLabelModal, setShowCustomLabelModal] = useState(false);
   const [customLabelInput, setCustomLabelInput] = useState('');
   const [editingMemberIndex, setEditingMemberIndex] = useState<number | null>(null);
+  
+  // Toast 상태
+  const [toasts, setToasts] = useState<Array<{
+    id: string;
+    message: string;
+    type?: ToastType;
+  }>>([]);
+  
+  // Confirm Modal 상태
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    onConfirm: () => {}
+  });
+  
+  // Toast 헬퍼 함수
+  const addToast = (message: string, type?: ToastType) => {
+    const id = Date.now().toString();
+    setToasts(prev => [...prev, { id, message, type }]);
+  };
+  
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   // 함께한 시간 계산 (가장 오래된 멤버 가입일 기준)
   const calculateTotalHours = (membersList: MemberProfile[]) => {
@@ -91,7 +123,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   // 실제 스터디 멤버 불러오기
   const loadStudyMembers = async () => {
     if (!studyId) {
-      alert('스터디 정보를 찾을 수 없습니다.');
+      addToast('스터디 정보를 찾을 수 없습니다.', 'error');
       return;
     }
     
@@ -124,10 +156,10 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
         const existingNames = members.map(m => m.name);
         const newMembers = loadedMembers.filter(m => !existingNames.includes(m.name));
         setMembers([...members, ...newMembers]);
-        alert(`${newMembers.length}명의 새로운 멤버를 추가했습니다.`);
+        addToast(`${newMembers.length}명의 새로운 멤버를 추가했습니다.`, 'success');
       } else {
         setMembers(loadedMembers);
-        alert(`${loadedMembers.length}명의 멤버를 불러왔습니다.`);
+        addToast(`${loadedMembers.length}명의 멤버를 불러왔습니다.`, 'success');
       }
       
       setHasLoadedFromAPI(true);
@@ -136,7 +168,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       updateStats(loadedMembers);
     } catch (error) {
       console.error('Failed to load members:', error);
-      alert('멤버 정보를 불러오는데 실패했습니다.');
+      addToast('멤버 정보를 불러오는데 실패했습니다.', 'error');
     } finally {
       setIsLoadingMembers(false);
     }
@@ -146,12 +178,18 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   const handleClearAllMembers = () => {
     if (members.length === 0) return;
     
-    if (confirm(`정말로 ${members.length}명의 멤버를 모두 삭제하시겠습니까?`)) {
-      setMembers([]);
-      setHasLoadedFromAPI(false);
-      updateStats([]);  // 통계 초기화
-      alert('모든 멤버가 삭제되었습니다.');
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: '멤버 전체 삭제',
+      message: `정말로 ${members.length}명의 멤버를 모두 삭제하시겠습니까?`,
+      onConfirm: () => {
+        setMembers([]);
+        setHasLoadedFromAPI(false);
+        updateStats([]);  // 통계 초기화
+        addToast('모든 멤버가 삭제되었습니다.', 'info');
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+      }
+    });
   };
 
   // 멤버 추가
@@ -470,7 +508,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
     const validMembers = members.filter(member => member.name && member.role);
     
     if (validMembers.length === 0) {
-      alert('최소 한 명의 멤버를 입력해주세요.');
+      addToast('최소 한 명의 멤버를 입력해주세요.', 'error');
       return;
     }
 
@@ -1300,6 +1338,16 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
         </div>
       </div>
     )}
+    
+    <ConfirmModal
+      isOpen={confirmModal.isOpen}
+      title={confirmModal.title}
+      message={confirmModal.message}
+      onConfirm={confirmModal.onConfirm}
+      onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+    />
+    
+    <ToastContainer toasts={toasts} onClose={removeToast} />
     </>
   );
 };
