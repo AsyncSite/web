@@ -53,16 +53,16 @@
   --review-skeleton-likes: rgba(255, 203, 107, 0.3);
 }
 
-/* Standard Review Section Styles */
+/* Standard Review Section Styles - RichText와 동일하게 */
 .studyDetailReviewsSection {
   position: relative;
   padding: 50px 30px 40px;
   margin-bottom: 25px;
-  background: linear-gradient(135deg, var(--review-section-bg-gradient-start), var(--review-section-bg-gradient-end));
-  border-radius: var(--review-card-border-radius);
-  box-shadow: 0 8px 25px var(--review-section-shadow);
+  background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
   text-align: left;
-  min-height: auto;
+  min-height: 50vh;
 }
 
 .sectionTagHeader {

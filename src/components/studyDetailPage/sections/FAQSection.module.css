@@ -8,16 +8,16 @@
   --color-text-muted: #aaa;
 }
 
-/* Standard FAQ Section */
+/* Standard FAQ Section - RichText와 동일하게 */
 .studyDetailFaqSection {
   position: relative;
   padding: 50px 30px 40px;
   margin-bottom: 25px;
-  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
   text-align: left;
-  min-height: auto;
+  min-height: 50vh;
 }
 
 .sectionTagHeader {
@@ -124,7 +124,13 @@
 
 @media (max-width: 768px) {
   .studyDetailFaqSection {
-    padding: 3rem 0;
+    padding: 40px 20px 30px;
+  }
+  
+  .sectionTagHeader {
+    top: 15px;
+    left: 20px;
+    font-size: 1rem;
   }
   
   .studyDetailFaqTitle {
@@ -318,4 +324,14 @@
   background-color: #b5d97f;
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
+}@media (max-width: 480px) {
+  .studyDetailFaqSection {
+    padding: 30px 15px 25px;
+  }
+  
+  .sectionTagHeader {
+    top: 10px;
+    left: 15px;
+    font-size: 0.9rem;
+  }
 }

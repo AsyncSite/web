@@ -3,12 +3,12 @@
    Using Design Tokens from design-tokens.css
    ======================================== */
 
-/* Base Section Styles */
+/* Base Section Styles - RichText와 동일하게 */
 .studyDetailMembersSection {
   position: relative;
-  padding: var(--spacing-5xl) var(--spacing-3xl) var(--spacing-6xl);
-  min-height: 20vh;
-  background: linear-gradient(135deg, var(--color-bg-primary), #1f1f1f);
+  padding: 50px 30px 40px;
+  min-height: 50vh;
+  background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
   border-radius: 12px;
   margin-bottom: 25px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
@@ -46,31 +46,31 @@
 
 /* Intro Text */
 .membersIntro {
-  margin-top: var(--spacing-lg);
+  margin-top: 10px;
   text-align: center;
-  font-size: var(--font-size-lg);
+  font-size: 1.1rem;
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-md);
 }
 
 .interactiveHint {
   color: var(--color-primary);
-  font-size: var(--font-size-base);
+  font-size: 0.95rem;
   font-weight: var(--font-weight-medium);
 }
 
 /* Statistics Container */
 .statsContainer {
   background: linear-gradient(135deg, rgba(26, 26, 26, 0.8), rgba(30, 30, 30, 0.6));
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-2xl);
-  margin: var(--spacing-2xl) 0;
-  border: 1px solid var(--color-primary-alpha-20);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 25px 0;
+  border: 1px solid rgba(195, 232, 141, 0.2);
 }
 
 .statsTitle {
   color: var(--color-primary);
-  font-size: var(--font-size-xl);
+  font-size: 1.3rem;
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--spacing-xl);
   text-align: center;
@@ -79,7 +79,7 @@
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: var(--spacing-xl);
+  gap: 20px;
   text-align: center;
 }
 
@@ -87,7 +87,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: 8px;
 }
 
 .statNumber {
@@ -98,9 +98,9 @@
 }
 
 .statLabel {
-  font-size: var(--font-size-base);
+  font-size: 0.9rem;
   color: var(--color-text-secondary);
-  font-weight: var(--font-weight-medium);
+  font-weight: 500;
 }
 
 .popularAlgorithms .statLabel {
@@ -110,18 +110,18 @@
 .algorithmTags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-xs);
+  gap: 6px;
   justify-content: center;
 }
 
 .algorithmTag {
-  background-color: var(--color-secondary-alpha-20);
+  background-color: rgba(130, 170, 255, 0.2);
   color: var(--color-secondary);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  border: 1px solid var(--color-secondary-alpha-30);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(130, 170, 255, 0.3);
 }
 
 /* Member Cards Scrolling Container */
@@ -266,17 +266,17 @@
 
 /* Member Info */
 .contributorName {
-  font-size: var(--font-size-base);
+  font-size: 0.9rem;
   color: #ccc;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  font-weight: var(--font-weight-semibold);
+  font-weight: 600;
 }
 
 .contributorDuration {
-  font-size: var(--font-size-sm);
+  font-size: 0.7rem;
   color: var(--color-text-muted);
   margin-top: 0.3rem;
   margin-bottom: 0.3rem;
@@ -294,17 +294,17 @@
 }
 
 .streakPreview {
-  font-size: var(--font-size-xs);
+  font-size: 0.65rem;
   color: var(--color-accent);
-  font-weight: var(--font-weight-semibold);
+  font-weight: 600;
 }
 
 .contributorContribution {
-  font-size: var(--font-size-sm);
+  font-size: 0.7rem;
   color: var(--color-text-muted);
   text-align: center;
   white-space: normal;
-  line-height: var(--line-height-tight);
+  line-height: 1.2;
   margin-top: 0.3rem;
   padding: 0 5px;
   overflow: hidden;
@@ -364,7 +364,7 @@
 }
 
 .hoverDetailRole {
-  font-size: var(--font-size-sm);
+  font-size: 0.75rem;
   color: var(--color-primary);
   font-weight: var(--font-weight-semibold);
   background-color: var(--color-primary-alpha);
@@ -373,13 +373,13 @@
 }
 
 .hoverDetailStreak {
-  font-size: var(--font-size-sm);
+  font-size: 0.75rem;
   color: var(--color-accent);
   font-weight: var(--font-weight-semibold);
 }
 
 .hoverDetailProblem {
-  font-size: var(--font-size-sm);
+  font-size: 0.75rem;
   color: var(--color-text-secondary);
   margin-bottom: var(--spacing-md);
   line-height: var(--line-height-tight);
@@ -389,11 +389,11 @@
   color: var(--color-primary);
   display: block;
   margin-bottom: var(--spacing-xs);
-  font-size: var(--font-size-sm);
+  font-size: 0.7rem;
 }
 
 .hoverDetailTestimonial {
-  font-size: var(--font-size-sm);
+  font-size: 0.75rem;
   color: var(--color-text-primary);
   font-style: italic;
   margin-bottom: var(--spacing-md);
@@ -405,7 +405,7 @@
 }
 
 .hoverDetailFooter {
-  font-size: var(--font-size-sm);
+  font-size: 0.7rem;
   color: var(--color-secondary);
   text-align: center;
   font-weight: var(--font-weight-medium);
@@ -621,6 +621,16 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .studyDetailMembersSection {
+    padding: 40px 20px 30px;
+  }
+
+  .sectionTagHeader {
+    top: 15px;
+    left: 20px;
+    font-size: 1rem;
+  }
+
   .scrollingMembersWrapper {
     padding: var(--spacing-lg) 0;
   }
@@ -667,6 +677,16 @@
 }
 
 @media (max-width: 480px) {
+  .studyDetailMembersSection {
+    padding: 30px 15px 25px;
+  }
+
+  .sectionTagHeader {
+    top: 10px;
+    left: 15px;
+    font-size: 0.9rem;
+  }
+
   .scrollingMembersWrapper {
     padding: var(--spacing-md) 0;
   }

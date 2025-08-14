@@ -124,7 +124,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
 
   // 표준 예시 데이터 로드
   const loadExampleData = () => {
-    setTitle('스터디 소개');
+    setTitle('TecoTeco 소개');
     setBackgroundColor('#0a0a0a');
     
     const exampleBlocks: RichTextBlock[] = [
@@ -137,12 +137,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       {
         id: '2',
         type: 'paragraph',
-        content: RichTextConverter.fromHTML('코딩과 지식의 가치가 흔해지는 시절입니다. AI가 순식간에 코드를 작성하고, 개발 도구들이 날마다 진화하는 지금. 개발자로서 우리가 정말 집중해야 할 것은 무엇일까요?')
+        content: RichTextConverter.fromHTML('코딩과 지식의 가치가 흔해지는 시절이에요. AI가 순식간에 코드를 작성하고, 개발 도구들이 날마다 진화하는 지금. 개발자로서 우리가 정말 집중해야 할 것은 무엇일까요?')
       },
       {
         id: '3',
         type: 'paragraph',
-        content: RichTextConverter.fromHTML('우리는 이런 질문에서 출발했습니다. 기술이 아무리 발달해도 <span style="color: #c3e88d; font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.')
+        content: RichTextConverter.fromHTML('우리는 이런 질문에서 출발했어요. 기술이 아무리 발달해도 <span style="color: #c3e88d; font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.')
       },
       {
         id: '4',
@@ -153,12 +153,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       {
         id: '5',
         type: 'paragraph',
-        content: RichTextConverter.fromHTML('우리는 \'물고기 그 자체\'가 아닌, <span style="color: #82aaff;">\'물고기를 잡는 방법\'</span>에 집중합니다. 단순히 문제를 푸는 것을 넘어서, 문제의 본질을 이해하고 <span style="color: #82aaff;">견고한 사고력과 논리력</span>을 단련하는 것이 목표입니다.')
+        content: RichTextConverter.fromHTML('우리는 \'물고기 그 자체\'가 아닌, <span style="color: #82aaff;">\'물고기를 잡는 방법\'</span>에 집중해요. 단순히 문제를 푸는 것을 넘어서, 문제의 본질을 이해하고 <span style="color: #82aaff;">견고한 사고력과 논리력</span>을 단련하는 것이 목표예요')
       },
       {
         id: '6',
         type: 'paragraph',
-        content: RichTextConverter.fromHTML('매주 함께 모여 한 문제를 깊이 파고들고, 서로 다른 관점으로 접근해보며 사고의 폭을 넓혀갑니다. 왜 이 알고리즘을 선택했는지, 다른 방법은 없었는지, 이 문제에서 배울 수 있는 더 큰 인사이트는 무엇인지 함께 고민해요.')
+        content: RichTextConverter.fromHTML('매주 함께 모여 한 문제를 깊이 파고들고, 서로 다른 관점으로 접근해보며 사고의 폭을 넓혀가요. 왜 이 알고리즘을 선택했는지, 다른 방법은 없었는지, 이 문제에서 배울 수 있는 더 큰 인사이트는 무엇인지 함께 고민해요.')
       },
       {
         id: '7',
@@ -169,7 +169,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       {
         id: '8',
         type: 'paragraph',
-        content: RichTextConverter.fromHTML('AI를 배척하지 않고 <span style="color: #82aaff;">현명하게 활용하는 방법</span>을 함께 모색합니다. AI와 페어 코딩하고, 비판적으로 분석하며 코드를 개선합니다. AI가 <span style="color: #82aaff;">우리의 통찰력을 확장시키는 강력한 파트너</span>가 될 수 있음을 증명해나가고 있어요.')
+        content: RichTextConverter.fromHTML('AI를 배척하지 않고 <span style="color: #82aaff;">현명하게 활용하는 방법</span>을 함께 모색해요. AI와 페어 코딩하고, 비판적으로 분석하며 코드를 개선해요. AI가 <span style="color: #82aaff;">우리의 통찰력을 확장시키는 강력한 파트너</span>가 될 수 있음을 증명해나가고 있어요.')
       },
       {
         id: '9',

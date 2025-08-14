@@ -25,9 +25,27 @@ const MemberCard: React.FC<{
   const [isHovered, setIsHovered] = useState(false);
   const [hoverPos, setHoverPos] = useState<{x:number; y:number}>({ x: 0, y: 0 });
   
-  // 기본 이미지 처리
+  // 랜덤 색상 생성
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  // 기본 이미지 처리 - 물음표가 있는 깔끔한 배경 생성
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = '/images/default-avatar.png';
+    const bg = getRandomColor();
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <circle cx="32" cy="32" r="32" fill="${bg}"/>
+        <text x="32" y="42" font-size="32" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif">?</text>
+      </svg>
+    `;
+    e.currentTarget.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    e.currentTarget.alt = '프로필 이미지 없음';
   };
   
   // 가입 기간 계산

@@ -88,12 +88,9 @@
   margin-bottom: 15px;
 }
 
-/* 섹션 기본 스타일 */
+/* 섹션 기본 스타일 - 각 섹션이 자체 스타일 적용하도록 제거 */
 .sectionWrapper > div {
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
+  /* 개별 섹션에서 스타일 관리 */
 }
 
 /* Override any conflicting global styles */
