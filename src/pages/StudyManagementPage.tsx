@@ -15,7 +15,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import ConfirmModal from '../components/common/ConfirmModal';
 import InputModal from '../components/common/InputModal';
 import { ToastContainer, ToastType } from '../components/common/Toast';
-import './StudyManagementPage.css';
+import styles from './StudyManagementPage.module.css';
 import '../components/studyDetailPage/StudyDetailPageRenderer.module.css';
 
 interface TabType {
@@ -148,20 +148,36 @@ const StudyManagementPage: React.FC = () => {
           setMembers([]);
         }
 
-        // Fetch page data for editor - 실제 study ID 사용
-        try {
-          const pageData = await studyDetailPageService.getDraftPage(studyData.id);
-          setPageData(pageData);
-        } catch (error) {
-          console.warn('Failed to fetch page data, trying to fetch by slug:', error);
-          // Try to fetch by slug if draft page doesn't exist
-          if (studyData.slug) {
-            try {
-              const pageData = await studyDetailPageService.getPublishedPageBySlug(studyData.slug);
-              setPageData(pageData);
-            } catch (error) {
-              console.warn('Failed to fetch page by slug:', error);
-              // Page doesn't exist yet, that's okay
+        // Fetch page data for editor - 편집 가능한 페이지 가져오기
+        // 관리 페이지에서는 DRAFT든 PUBLISHED든 편집 가능한 페이지를 가져와야 함
+        let pageLoaded = false;
+        
+        // 1. 먼저 slug로 published 페이지 확인 (대부분의 경우 published 상태)
+        if (studyData.slug) {
+          try {
+            const pageData = await studyDetailPageService.getPublishedPageBySlug(studyData.slug);
+            setPageData(pageData);
+            pageLoaded = true;
+            console.log('Loaded published page for editing');
+          } catch (error: any) {
+            if (error.response?.status !== 404) {
+              console.error('Error fetching published page:', error);
+            }
+          }
+        }
+        
+        // 2. Published가 없으면 draft 페이지 확인
+        if (!pageLoaded) {
+          try {
+            const pageData = await studyDetailPageService.getDraftPage(studyData.id);
+            setPageData(pageData);
+            console.log('Loaded draft page for editing');
+          } catch (error: any) {
+            if (error.response?.status === 404) {
+              console.log('No page exists yet for this study');
+              setPageData(null); // 페이지가 아직 없음 - 정상 상태
+            } else {
+              console.error('Failed to fetch draft page:', error);
               setPageData(null);
             }
           }
@@ -193,7 +209,7 @@ const StudyManagementPage: React.FC = () => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
         await doAcceptApplication(applicationId);
       },
-      confirmButtonClass: 'confirm-button'
+      confirmButtonClass: styles.confirmButton
     });
   };
   
@@ -298,7 +314,7 @@ const StudyManagementPage: React.FC = () => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
         await doDeleteSection(sectionId);
       },
-      confirmButtonClass: 'delete-confirm-button'
+      confirmButtonClass: styles.deleteConfirmButton
     });
   };
   
@@ -455,7 +471,7 @@ const StudyManagementPage: React.FC = () => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
         await doPublishPage();
       },
-      confirmButtonClass: 'confirm-button'
+      confirmButtonClass: styles.confirmButton
     });
   };
   
@@ -536,13 +552,13 @@ const StudyManagementPage: React.FC = () => {
   const getStatusBadge = (status: ApplicationStatus) => {
     switch (status) {
       case ApplicationStatus.PENDING:
-        return <span className="status-badge pending">대기중</span>;
+        return <span className={`${styles.statusBadge} ${styles.pending}`}>대기중</span>;
       case ApplicationStatus.ACCEPTED:
-        return <span className="status-badge accepted">승인됨</span>;
+        return <span className={`${styles.statusBadge} ${styles.accepted}`}>승인됨</span>;
       case ApplicationStatus.REJECTED:
-        return <span className="status-badge rejected">거절됨</span>;
+        return <span className={`${styles.statusBadge} ${styles.rejected}`}>거절됨</span>;
       default:
-        return <span className="status-badge">{status}</span>;
+        return <span className={styles.statusBadge}>{status}</span>;
     }
   };
 
@@ -562,8 +578,8 @@ const StudyManagementPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="study-management-page">
-        <div className="loading-state">
+      <div className={styles.studyManagementPage}>
+        <div className={styles.loadingState}>
           <LoadingSpinner message="스터디 관리 정보를 불러오는 중..." fullScreen={false} />
         </div>
       </div>
@@ -578,20 +594,20 @@ const StudyManagementPage: React.FC = () => {
   const processedApplications = applications.filter(app => app.status !== ApplicationStatus.PENDING);
 
   return (
-    <div className="study-management-page">
-      <div className="management-container">
-        <div className="management-header">
+    <div className={styles.studyManagementPage}>
+      <div className={styles.managementContainer}>
+        <div className={styles.managementHeader}>
           <button 
             onClick={() => navigate(`/study/${study.slug}`)} 
-            className="back-button"
+            className={styles.backButton}
           >
             ← 스터디로 돌아가기
           </button>
           <h1>스터디 관리</h1>
-          <div className="study-info">
+          <div className={styles.studyInfo}>
             <h2>{study.name} {study.generation > 1 && `${study.generation}기`}</h2>
-            <p className="study-tagline">{study.tagline}</p>
-            <div className="study-stats">
+            <p className={styles.studyTagline}>{study.tagline}</p>
+            <div className={styles.studyStats}>
               <span>📋 신청자 {applications.length}명</span>
               <span>👥 멤버 {members.length}명</span>
               <span>⏳ 대기 {pendingApplications.length}명</span>
@@ -613,42 +629,42 @@ const StudyManagementPage: React.FC = () => {
           )}
         </div>
 
-        <div className="tab-navigation">
+        <div className={styles.tabNavigation}>
           {tabs.map(tab => (
             <button
               key={tab.key}
-              className={`tab-button ${activeTab === tab.key ? 'active' : ''}`}
+              className={`${styles.tabButton} ${activeTab === tab.key ? styles.active : ''}`}
               onClick={() => setActiveTab(tab.key)}
             >
-              <span className="tab-icon">{tab.icon}</span>
+              <span className={styles.tabIcon}>{tab.icon}</span>
               {tab.label}
               {tab.key === 'applications' && pendingApplications.length > 0 && (
-                <span className="badge">{pendingApplications.length}</span>
+                <span className={styles.badge}>{pendingApplications.length}</span>
               )}
             </button>
           ))}
         </div>
 
         {activeTab === 'applications' && (
-          <div className="applications-section">
+          <div className={styles.applicationsSection}>
             {pendingApplications.length > 0 && (
-              <div className="pending-applications">
+              <div className={styles.pendingApplications}>
                 <h3>🔔 검토 대기 중인 신청</h3>
-                <div className="applications-grid">
+                <div className={styles.applicationsGrid}>
                   {pendingApplications.map(application => (
-                    <div key={application.id} className="application-card pending">
-                      <div className="application-header">
+                    <div key={application.id} className={`${styles.applicationCard} ${styles.pending}`}>
+                      <div className={styles.applicationHeader}>
                         <h4>{application.applicantId}</h4>
                         {getStatusBadge(application.status)}
-                        <span className="application-date">
+                        <span className={styles.applicationDate}>
                           {formatDate(application.createdAt)}
                         </span>
                       </div>
 
-                      <div className="application-content">
+                      <div className={styles.applicationContent}>
                         {Object.entries(application.answers).map(([question, answer]) => (
-                          <div key={question} className="answer-item">
-                            <strong className="question-label">
+                          <div key={question} className={styles.answerItem}>
+                            <strong className={styles.questionLabel}>
                               {question === 'motivation' && '참여 동기:'}
                               {question === 'experience' && '관련 경험:'}
                               {question === 'availability' && '참여 가능 시간:'}
@@ -656,22 +672,22 @@ const StudyManagementPage: React.FC = () => {
                               {question === 'commitment' && '각오 한마디:'}
                               {!['motivation', 'experience', 'availability', 'expectations', 'commitment'].includes(question) && `${question}:`}
                             </strong>
-                            <p className="answer-text">{answer}</p>
+                            <p className={styles.answerText}>{answer}</p>
                           </div>
                         ))}
                       </div>
 
-                      <div className="application-actions">
+                      <div className={styles.applicationActions}>
                         <button 
                           onClick={() => handleRejectApplication(application.id)}
-                          className="reject-button"
+                          className={styles.rejectButton}
                           disabled={actionLoading === application.id}
                         >
                           {actionLoading === application.id ? '처리 중...' : '거절'}
                         </button>
                         <button 
                           onClick={() => handleAcceptApplication(application.id)}
-                          className="accept-button"
+                          className={styles.acceptButton}
                           disabled={actionLoading === application.id}
                         >
                           {actionLoading === application.id ? '처리 중...' : '승인'}
@@ -684,18 +700,18 @@ const StudyManagementPage: React.FC = () => {
             )}
 
             {processedApplications.length > 0 && (
-              <div className="processed-applications">
+              <div className={styles.processedApplications}>
                 <h3>📄 처리 완료된 신청</h3>
-                <div className="applications-list">
+                <div className={styles.applicationsList}>
                   {processedApplications.map(application => (
-                    <div key={application.id} className="application-item">
-                      <div className="application-summary">
-                        <span className="applicant-name">{application.applicantId}</span>
+                    <div key={application.id} className={styles.applicationItem}>
+                      <div className={styles.applicationSummary}>
+                        <span className={styles.applicantName}>{application.applicantId}</span>
                         {getStatusBadge(application.status)}
-                        <span className="application-date">{formatDate(application.createdAt)}</span>
+                        <span className={styles.applicationDate}>{formatDate(application.createdAt)}</span>
                       </div>
                       {application.reviewNote && (
-                        <div className="review-note">
+                        <div className={styles.reviewNote}>
                           <strong>검토 메모:</strong> {application.reviewNote}
                         </div>
                       )}
@@ -706,8 +722,8 @@ const StudyManagementPage: React.FC = () => {
             )}
 
             {applications.length === 0 && (
-              <div className="empty-state">
-                <div className="empty-icon">📭</div>
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>📭</div>
                 <h3>아직 참가 신청이 없습니다</h3>
                 <p>스터디가 공개되면 참가 신청이 들어올 예정입니다.</p>
               </div>
@@ -716,24 +732,24 @@ const StudyManagementPage: React.FC = () => {
         )}
 
         {activeTab === 'members' && (
-          <div className="members-section">
+          <div className={styles.membersSection}>
             {members.length > 0 ? (
-              <div className="members-grid">
+              <div className={styles.membersGrid}>
                 {members.map(member => (
-                  <div key={member.id} className="member-card">
-                    <div className="member-info">
+                  <div key={member.id} className={styles.memberCard}>
+                    <div className={styles.memberInfo}>
                       <h4>{member.userId}</h4>
-                      <span className="member-role">{member.role}</span>
+                      <span className={styles.memberRole}>{member.role}</span>
                     </div>
-                    <div className="member-meta">
+                    <div className={styles.memberMeta}>
                       <span>가입: {formatDate(member.joinedAt)}</span>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="empty-state">
-                <div className="empty-icon">👥</div>
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>👥</div>
                 <h3>아직 멤버가 없습니다</h3>
                 <p>참가 신청을 승인하면 멤버로 추가됩니다.</p>
               </div>
@@ -742,31 +758,45 @@ const StudyManagementPage: React.FC = () => {
         )}
 
         {activeTab === 'page-editor' && (
-          <div className="page-editor-section">
-            <div className="editor-header">
+          <div className={styles.pageEditorSection}>
+            <div className={styles.editorHeader}>
               <h3>상세 페이지 편집</h3>
               {pageData && (
-                <div className="publish-status">
-                  <span className={`status-badge ${pageData.status === 'PUBLISHED' ? 'published' : 'draft'}`}>
+                <div className={styles.publishStatus}>
+                  <span className={`${styles.statusBadge} ${pageData.status === 'PUBLISHED' ? styles.published : styles.draft}`}>
                     {pageData.status === 'PUBLISHED' ? '✅ 발행됨' : '📝 초안'}
                   </span>
                   {pageData.publishedAt && (
-                    <span className="last-published">
-                      마지막 발행: {new Date(pageData.publishedAt).toLocaleDateString()}
+                    <span className={styles.lastPublished}>
+                      마지막 발행: {(() => {
+                        try {
+                          // 배열 형식 [year, month, day, hour, minute, second, nano] 처리
+                          if (Array.isArray(pageData.publishedAt)) {
+                            const [year, month, day] = pageData.publishedAt;
+                            const date = new Date(year, month - 1, day); // month는 0부터 시작
+                            return date.toLocaleDateString('ko-KR');
+                          }
+                          // 문자열 형식 처리
+                          const date = new Date(pageData.publishedAt);
+                          return isNaN(date.getTime()) ? '날짜 정보 없음' : date.toLocaleDateString('ko-KR');
+                        } catch {
+                          return '날짜 정보 없음';
+                        }
+                      })()}
                     </span>
                   )}
                 </div>
               )}
-              <div className="editor-actions">
+              <div className={styles.editorActions}>
                 <button 
-                  className="btn-preview"
+                  className={styles.btnPreview}
                   onClick={() => setPreviewMode(!previewMode)}
                 >
                   {previewMode ? '편집 모드' : '미리보기'}
                 </button>
                 {/* 초안 저장 버튼 제거: 스냅샷 미도입 상태에서 혼란 방지 */}
                 <button 
-                  className="btn-publish"
+                  className={styles.btnPublish}
                   onClick={handlePublishPage}
                   disabled={saving}
                 >
@@ -774,7 +804,7 @@ const StudyManagementPage: React.FC = () => {
                 </button>
                 {study?.slug && (
                   <button 
-                    className="btn-view"
+                    className={styles.btnView}
                     onClick={() => window.open(`/study/${study.slug}`, '_blank')}
                   >
                     페이지 보기 →
@@ -784,8 +814,14 @@ const StudyManagementPage: React.FC = () => {
             </div>
 
             {!pageData ? (
-              <div className="no-page-message">
-                <p>아직 상세 페이지가 생성되지 않았습니다.</p>
+              <div className={styles.noPageMessage}>
+                <div style={{ fontSize: '48px', marginBottom: '20px', opacity: 0.5 }}>📄</div>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '10px', color: '#C3E88D' }}>
+                  상세 페이지를 만들어보세요
+                </h3>
+                <p style={{ marginBottom: '20px', color: 'rgba(255, 255, 255, 0.7)' }}>
+                  스터디 소개 페이지를 생성하고 다양한 섹션을 추가할 수 있습니다.
+                </p>
                 <button 
                   onClick={async () => {
                     if (!studyId) return;
@@ -794,6 +830,7 @@ const StudyManagementPage: React.FC = () => {
                       // 백엔드가 study.slug를 사용해 생성한다는 전제
                       const newPage = await studyDetailPageService.createPage(study!.id, { slug: study!.slug });
                       setPageData(newPage);
+                      addToast('페이지가 생성되었습니다! 섹션을 추가해보세요.', 'success');
                     } catch (err) {
                       console.error('Failed to create page:', err);
                       addToast('페이지 생성에 실패했습니다', 'error');
@@ -802,21 +839,43 @@ const StudyManagementPage: React.FC = () => {
                     }
                   }}
                   disabled={saving}
+                  style={{
+                    background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
+                    color: '#1a1a1a',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '12px 24px',
+                    fontSize: '15px',
+                    fontWeight: '600',
+                    cursor: saving ? 'not-allowed' : 'pointer',
+                    opacity: saving ? 0.6 : 1,
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!saving) {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(195, 232, 141, 0.4)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
-                  페이지 생성하기
+                  {saving ? '생성 중...' : '🚀 페이지 생성하기'}
                 </button>
               </div>
             ) : previewMode ? (
-              <div className="preview-container">
+              <div className={styles.previewContainer}>
                 <h4>미리보기</h4>
-                <div className="preview-content study-detail-page-content">
-                  <div className="sections-container">
+                <div className={`${styles.previewContent} study-detail-page-content`}>
+                  <div className={styles.sectionsContainer}>
                     {pageData.sections.length === 0 ? (
                       <p style={{ textAlign: 'center', padding: '40px', color: '#999' }}>아직 섹션이 없습니다.</p>
                     ) : (
                       // 퍼블릭 렌더러와 동일한 정렬 적용 - order 값 기준
                       [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section) => (
-                        <div key={section.id} className="section-wrapper">
+                        <div key={section.id} className={styles.sectionWrapper}>
                           <SectionRenderer type={section.type} data={section.props} />
                         </div>
                       ))
@@ -825,32 +884,32 @@ const StudyManagementPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="editor-content" style={{ display: 'flex', gap: '24px' }}>
-                <div className="sections-manager" style={{ flex: '0 0 380px', minWidth: '380px' }}>
-                  <div className="sections-header">
+              <div className={styles.editorContent} style={{ display: 'flex', gap: '24px' }}>
+                <div className={styles.sectionsManager} style={{ flex: '0 0 380px', minWidth: '380px' }}>
+                  <div className={styles.sectionsHeader}>
                     <h4>섹션 관리</h4>
                     <button 
-                      className="btn-add-section"
+                      className={styles.btnAddSection}
                       onClick={() => setShowAddSection(true)}
                     >
                       + 섹션 추가
                     </button>
                   </div>
                   
-                  <div className="keyboard-shortcuts-hint">
-                    <span className="shortcut-icon">⌨️</span>
-                    <span className="shortcut-text">
-                      <span className="key">Alt + ↑↓</span> 이동 · 
-                      <span className="key">Enter</span> 편집 · 
-                      <span className="key">Delete</span> 삭제
+                  <div className={styles.keyboardShortcutsHint}>
+                    <span className={styles.shortcutIcon}>⌨️</span>
+                    <span className={styles.shortcutText}>
+                      <span className={styles.key}>Alt + ↑↓</span> 이동 · 
+                      <span className={styles.key}>Enter</span> 편집 · 
+                      <span className={styles.key}>Delete</span> 삭제
                     </span>
                   </div>
 
                   {showAddSection && (
-                    <div className="add-section-modal">
-                      <div className="modal-content">
+                    <div className={styles.addSectionModal}>
+                      <div className={styles.modalContent}>
                         <h5>새 섹션 추가</h5>
-                        <div className="section-types">
+                        <div className={styles.sectionTypes}>
                           {[
                             SectionType.HERO,
                             SectionType.RICH_TEXT,
@@ -863,14 +922,31 @@ const StudyManagementPage: React.FC = () => {
                           ].map((type) => (
                             <button
                               key={type}
-                              className="section-type-btn"
+                              className={styles.sectionTypeBtn}
                               onClick={() => {
-                                setSelectedSection({
-                                  id: 'new',
+                                // 임시 ID 생성 (저장 전까지 사용)
+                                const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                                const maxOrder = pageData.sections.length > 0 
+                                  ? Math.max(...pageData.sections.map(s => s.order || 0))
+                                  : 0;
+                                
+                                // 새 섹션을 즉시 목록에 추가
+                                const newSection = {
+                                  id: tempId,
                                   type: type as any,
                                   props: {},
-                                  order: pageData.sections.length
-                                });
+                                  order: maxOrder + 100,
+                                  isTemp: true  // 임시 섹션 표시
+                                };
+                                
+                                // pageData에 즉시 추가
+                                setPageData(prev => prev ? {
+                                  ...prev,
+                                  sections: [...prev.sections, newSection]
+                                } : prev);
+                                
+                                // 편집 모드로 전환
+                                setSelectedSection(newSection);
                                 setShowAddSection(false);
                               }}
                             >
@@ -879,7 +955,7 @@ const StudyManagementPage: React.FC = () => {
                           ))}
                         </div>
                         <button 
-                          className="btn-cancel"
+                          className={styles.btnCancel}
                           onClick={() => setShowAddSection(false)}
                         >
                           취소
@@ -888,18 +964,20 @@ const StudyManagementPage: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="study-mgmt-sections-list">
+                  <div className={styles.studyMgmtSectionsList}>
                     {pageData.sections.length === 0 ? (
-                      <p className="study-mgmt-empty-message">아직 섹션이 없습니다. 섹션을 추가해주세요.</p>
+                      <p className={styles.studyMgmtEmptyMessage}>아직 섹션이 없습니다. 섹션을 추가해주세요.</p>
                     ) : (
                       // 섹션 목록도 order 값 기준으로 정렬
                       [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section, index) => (
                         <div 
                           key={section.id} 
-                          className={`study-mgmt-section-item ${
-                            draggedSectionId === section.id ? 'study-mgmt-section-dragging' : ''
+                          className={`${styles.studyMgmtSectionItem} ${
+                            draggedSectionId === section.id ? styles.studyMgmtSectionDragging : ''
                           } ${
-                            dragOverIndex === index ? 'study-mgmt-section-drag-over' : ''
+                            dragOverIndex === index ? styles.studyMgmtSectionDragOver : ''
+                          } ${
+                            section.id.startsWith('temp_') ? styles.tempSection : ''
                           }`}
                           draggable
                           tabIndex={0}
@@ -912,7 +990,7 @@ const StudyManagementPage: React.FC = () => {
                           onDrop={(e) => handleDrop(e, index)}
                           onKeyDown={(e) => handleKeyDown(e, section, index)}
                         >
-                          <div className="study-mgmt-drag-handle" title="드래그하여 순서 변경">
+                          <div className={styles.studyMgmtDragHandle} title="드래그하여 순서 변경">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                               <circle cx="6" cy="4" r="1.5" fill="currentColor" opacity="0.6"/>
                               <circle cx="6" cy="10" r="1.5" fill="currentColor" opacity="0.6"/>
@@ -922,19 +1000,22 @@ const StudyManagementPage: React.FC = () => {
                               <circle cx="14" cy="16" r="1.5" fill="currentColor" opacity="0.6"/>
                             </svg>
                           </div>
-                          <div className="study-mgmt-section-info">
-                            <span className="study-mgmt-section-type">{section.type}</span>
+                          <div className={styles.studyMgmtSectionInfo}>
+                            <span className={styles.studyMgmtSectionType}>{section.type}</span>
+                            {section.id.startsWith('temp_') && (
+                              <span className={styles.tempLabel}>저장 필요</span>
+                            )}
                           </div>
-                          <div className="study-mgmt-section-actions">
+                          <div className={styles.studyMgmtSectionActions}>
                             <button 
-                              className="study-mgmt-edit-btn"
+                              className={styles.studyMgmtEditBtn}
                               onClick={() => setSelectedSection(section)}
                               title="섹션 편집"
                             >
                               ✏️
                             </button>
                             <button 
-                              className="study-mgmt-delete-btn"
+                              className={styles.studyMgmtDeleteBtn}
                               onClick={() => handleDeleteSection(section.id)}
                               title="섹션 삭제"
                             >
@@ -948,9 +1029,9 @@ const StudyManagementPage: React.FC = () => {
                 </div>
 
                 {selectedSection && (
-                  <div className="section-editor" style={{ flex: 1, minWidth: 0 }}>
+                  <div className={styles.sectionEditor} style={{ flex: 1, minWidth: 0 }}>
                     <button 
-                      className="section-editor-close"
+                      className={styles.sectionEditorClose}
                       onClick={() => setSelectedSection(null)}
                       aria-label="편집창 닫기"
                     >
@@ -962,17 +1043,53 @@ const StudyManagementPage: React.FC = () => {
                       initialData={selectedSection.type === SectionType.MEMBERS
                         ? normalizeMembersPropsForUI(selectedSection.props || {})
                         : (selectedSection.props || {})}
-                      onSave={(data) => {
+                      onSave={async (data) => {
                         const outgoing = selectedSection.type === SectionType.MEMBERS
                           ? serializeMembersPropsForAPI(data)
                           : data;
-                        if (selectedSection.id === 'new') {
-                          handleAddSection(selectedSection.type, outgoing);
+                        
+                        // 임시 섹션인 경우 (temp_로 시작하는 ID)
+                        if (selectedSection.id.startsWith('temp_')) {
+                          // API 호출로 실제 섹션 생성
+                          try {
+                            setSaving(true);
+                            const request: AddSectionRequest = { 
+                              type: selectedSection.type as SectionType, 
+                              props: {
+                                ...outgoing,
+                                order: selectedSection.order || 0
+                              }
+                            };
+                            const updatedPage = await studyDetailPageService.addSection(study!.id, request);
+                            setPageData(updatedPage);
+                            setSelectedSection(null);
+                            addToast('섹션이 추가되었습니다', 'success');
+                          } catch (err) {
+                            console.error('Failed to add section:', err);
+                            addToast('섹션 추가에 실패했습니다', 'error');
+                            // 실패시 임시 섹션 제거
+                            setPageData(prev => prev ? {
+                              ...prev,
+                              sections: prev.sections.filter(s => s.id !== selectedSection.id)
+                            } : prev);
+                          } finally {
+                            setSaving(false);
+                          }
                         } else {
+                          // 기존 섹션 업데이트
                           handleUpdateSection(selectedSection.id, selectedSection.type, outgoing);
                         }
                       }}
-                      onCancel={() => setSelectedSection(null)}
+                      onCancel={() => {
+                        // 임시 섹션인 경우 목록에서 제거
+                        if (selectedSection.id.startsWith('temp_')) {
+                          setPageData(prev => prev ? {
+                            ...prev,
+                            sections: prev.sections.filter(s => s.id !== selectedSection.id)
+                          } : prev);
+                        }
+                        setSelectedSection(null);
+                      }}
                     />
                   </div>
                 )}
@@ -980,7 +1097,7 @@ const StudyManagementPage: React.FC = () => {
             )}
 
             {saving && (
-              <div className="saving-overlay">
+              <div className={styles.savingOverlay}>
                 <LoadingSpinner />
                 <p>저장 중...</p>
               </div>

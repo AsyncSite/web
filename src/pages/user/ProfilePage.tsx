@@ -6,8 +6,8 @@ import PasswordChangeModal from '../../components/auth/PasswordChangeModalEnhanc
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
-import './ProfilePage.css';
-import studyService, { ApplicationStatus } from '../../api/studyService';
+import styles from './ProfilePage.module.css';
+import studyService from '../../api/studyService';
 import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
 
@@ -80,36 +80,41 @@ function ProfilePage(): React.ReactNode {
   const [leadingCollapsed, setLeadingCollapsed] = useState<boolean>(true);
 
   useEffect(() => {
-    // Set initial collapsed state responsively: desktop expanded, mobile collapsed
-    try {
-      const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
-      setParticipatingCollapsed(!isDesktop);
-      setLeadingCollapsed(!isDesktop);
-    } catch {}
-
     const loadMyStudies = async () => {
       try {
         setStudiesLoading(true);
+        
+        // Use grouped API to get all study relationships
         const grouped = await studyService.getMyStudiesGrouped();
+        console.log('My studies grouped:', grouped);
         setMyStudiesGrouped(grouped);
         
-        // 기존 형식과 호환을 위해 participating, leading 추출
-        const participating = grouped.participating || [];
-        const leading = grouped.leading || [];
+        // Also get memberships for backward compatibility
+        const list = await studyService.getMyMemberships();
+        console.log('My studies list:', list);
+        const participating = list.filter(item => item.role !== 'OWNER');
+        const leading = list.filter(item => item.role === 'OWNER');
         setMyStudies({ participating, leading });
         
         // 각 스터디별 리뷰 작성 여부 확인
         try {
           const myReviews = await reviewService.getMyReviews();
+          console.log('=== Review Debug ===');
+          console.log('My reviews:', myReviews);
+          console.log('Participating studies:', participating.map(s => ({ studyId: s.studyId, title: s.studyTitle })));
           const reviewedStudies: Record<string, boolean> = {};
           myReviews.forEach((review: any) => {
+            console.log(`Review type: ${review.type}, studyId: ${review.studyId}`);
             if (review.type === 'STUDY_EXPERIENCE') {
               reviewedStudies[review.studyId] = true;
             }
           });
+          console.log('Reviewed studies map:', reviewedStudies);
+          console.log('===================');
           setStudyReviews(reviewedStudies);
         } catch (error) {
           console.error('Failed to fetch reviews:', error);
+          // 리뷰 조회 실패해도 계속 진행
         }
       } catch (e: any) {
         console.error('Failed to load studies:', e);
@@ -135,7 +140,7 @@ function ProfilePage(): React.ReactNode {
   };
 
   return (
-    <div className="profile-page">
+    <div className={styles.profilePage}>
       {/* 투명 헤더 */}
       <Header transparent />
       
@@ -143,50 +148,50 @@ function ProfilePage(): React.ReactNode {
       <StarBackground />
       
       {(isLoading || !authUser) ? (
-        <div className="profile-page-loading">
-          <div className="loading-spinner">로딩 중...</div>
+        <div className={styles.profilePageLoading}>
+          <div className={styles.loadingSpinner}>로딩 중...</div>
         </div>
       ) : (
-      <div className="profile-container">
+      <div className={styles.profileContainer}>
       {/* 프로필 요약 섹션 */}
-      <section className="profile-summary">
-        <div className="profile-header">
-          <div className="profile-image">
+      <section className={styles.profileSummary}>
+        <div className={styles.profileHeader}>
+          <div className={styles.profileImage}>
             {user.profileImage ? (
               <img src={user.profileImage} alt="프로필" />
             ) : (
-              <div className="profile-placeholder">
+              <div className={styles.profilePlaceholder}>
                 {user.name?.[0] || '?'}
               </div>
             )}
             {/* Admin Badge - with unique prefix to avoid conflicts */}
             {(authUser?.systemRole === 'ROLE_ADMIN' || authUser?.roles?.includes('ROLE_ADMIN') || authUser?.roles?.includes('ADMIN')) && (
-              <div className="profile-admin-badge" title="AsyncSite Administrator">
-                <svg className="profile-admin-icon" viewBox="0 0 24 24" width="18" height="18">
+              <div className={styles.profileAdminBadge} title="AsyncSite Administrator">
+                <svg className={styles.profileAdminIcon} viewBox="0 0 24 24" width="18" height="18">
                   <path fill="white" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
                 </svg>
               </div>
             )}
           </div>
-          <div className="profile-info">
+          <div className={styles.profileInfo}>
             <h1>{greeting()}, {user.name}님!</h1>
-            <p className="join-info">AsyncSite와 함께한 지 <span className="highlight">{user.joinedDays}일째</span></p>
+            <p className={styles.joinInfo}>AsyncSite와 함께한 지 <span className={styles.highlight}>{user.joinedDays}일째</span></p>
           </div>
         </div>
       </section>
 
       {/* 탭 섹션 컨테이너 */}
-      <div className="tab-section-container">
+      <div className={styles.tabSectionContainer}>
         {/* 탭 네비게이션 */}
-        <div className="tab-navigation">
+        <div className={styles.tabNavigation}>
           <button
-            className={`tab-button ${activeTab === 'study' ? 'active' : ''}`}
+            className={`${styles.tabButton} ${activeTab === 'study' ? styles.active : ''}`}
             onClick={() => setActiveTab('study')}
           >
             스터디
           </button>
           <button
-            className={`tab-button ${activeTab === 'game' ? 'active' : ''}`}
+            className={`${styles.tabButton} ${activeTab === 'game' ? styles.active : ''}`}
             onClick={() => setActiveTab('game')}
           >
             게임 활동
@@ -194,28 +199,27 @@ function ProfilePage(): React.ReactNode {
         </div>
 
         {/* 탭 콘텐츠 영역 */}
-        <div className="tab-content">
+        <div className={styles.tabContent}>
         {/* 스터디 탭 콘텐츠 */}
         {activeTab === 'study' && (
-          <section className="study-section">
-
-            {/* 나의 스터디 섹션 */}
+          <section className={styles.studySection}>
             <h2>나의 스터디</h2>
             {studiesLoading ? (
-              <div className="study-loading-inline">스터디 불러오는 중…</div>
+              <div className={styles.studyLoadingInline}>스터디 불러오는 중…</div>
             ) : studiesError ? (
-              <div className="empty-state">
+              <div className={styles.emptyState}>
                 <p>스터디 정보를 불러오지 못했어요.</p>
-                <p className="error-detail">{studiesError}</p>
-                <button className="retry-button" onClick={() => {
+                <p className={styles.errorDetail}>{studiesError}</p>
+                <button className={styles.retryButton} onClick={() => {
                   setStudiesError(null);
                   setStudiesLoading(true);
                   (async () => {
                     try {
                       const grouped = await studyService.getMyStudiesGrouped();
                       setMyStudiesGrouped(grouped);
-                      const participating = grouped.participating || [];
-                      const leading = grouped.leading || [];
+                      const list = await studyService.getMyMemberships();
+                      const participating = list.filter(item => item.role !== 'OWNER');
+                      const leading = list.filter(item => item.role === 'OWNER');
                       setMyStudies({ participating, leading });
                     } catch (err) {
                       setStudiesError(handleApiError(err));
@@ -225,92 +229,87 @@ function ProfilePage(): React.ReactNode {
                   })();
                 }}>다시 시도</button>
               </div>
-            ) : myStudies.participating.length === 0 && myStudies.leading.length === 0 && (!myStudiesGrouped?.applications || myStudiesGrouped.applications.length === 0) && (!myStudiesGrouped?.proposed || myStudiesGrouped.proposed.length === 0) ? (
-              <div className="empty-state">
+            ) : myStudies.participating.length === 0 && myStudies.leading.length === 0 && 
+                (!myStudiesGrouped || (myStudiesGrouped.proposed.length === 0 && myStudiesGrouped.applications.length === 0)) ? (
+              <div className={styles.emptyState}>
                 <p>아직 참여 중인 스터디가 없어요</p>
                 <p>스터디를 둘러보고 관심있는 주제에 참여해보세요!</p>
-                <p className="suggestion">게임도 함께 즐기면서 공부하는 건 어떨까요?</p>
-                <Link to="/study" className="browse-button">스터디 둘러보기</Link>
+                <p className={styles.suggestion}>게임도 함께 즐기면서 공부하는 건 어떨까요?</p>
+                <Link to="/study" className={styles.browseButton}>스터디 둘러보기</Link>
               </div>
             ) : (
               <>
-                {/* 제안한 스터디 */}
+                {/* 제안한 스터디 섹션 */}
                 {myStudiesGrouped?.proposed && myStudiesGrouped.proposed.length > 0 && (
-                  <div className="study-group">
-                    <div className="myst-section-header">
-                      <h3>제안한 스터디 <span className="myst-badge">{myStudiesGrouped.proposed.length}</span></h3>
+                  <div className={styles.studyGroup}>
+                    <div className={styles.mystSectionHeader}>
+                      <h3>제안한 스터디 <span className={styles.mystBadge}>{myStudiesGrouped.proposed.length}</span></h3>
                     </div>
-                    <div className="study-cards">
+                    <div className={styles.studyCards}>
                       {myStudiesGrouped.proposed.map((study: any) => (
-                        <div key={study.studyId} className="study-card proposed">
+                        <div key={study.studyId} className={`${styles.studyCard} ${styles.proposed}`}>
                           <h4>
                             {study.studyTitle}
-                            <span className="study-status-badge pending">승인 대기</span>
+                            <span className={`${styles.studyStatusBadge} ${styles.pending}`}>
+                              대기중
+                            </span>
                           </h4>
-                          <p className="study-meta">제안일: {new Date(study.createdAt).toLocaleDateString()}</p>
-                          <p className="study-meta">상태: {study.status === 'PENDING' ? '검토중' : study.status}</p>
+                          <p className={styles.studyMeta}>상태: 검토 대기중</p>
+                          {study.createdAt && (
+                            <p className={styles.studyMeta}>제안일: {new Date(study.createdAt).toLocaleDateString()}</p>
+                          )}
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-                
-                {/* 신청 중인 스터디 */}
+
+                {/* 신청 중인 스터디 섹션 */}
                 {myStudiesGrouped?.applications && myStudiesGrouped.applications.length > 0 && (
-                  <div className="study-group">
-                    <div className="myst-section-header">
-                      <h3>신청 중인 스터디 <span className="myst-badge">{myStudiesGrouped.applications.length}</span></h3>
+                  <div className={styles.studyGroup}>
+                    <div className={styles.mystSectionHeader}>
+                      <h3>신청 중인 스터디 <span className={styles.mystBadge}>{myStudiesGrouped.applications.length}</span></h3>
                     </div>
-                    <div className="study-cards">
-                      {myStudiesGrouped.applications.map((app: any) => (
-                        <div key={app.applicationId} className="study-card pending">
+                    <div className={styles.studyCards}>
+                      {myStudiesGrouped.applications.map((study: any) => (
+                        <div key={study.applicationId || study.studyId} className={styles.studyCard}>
                           <h4>
-                            {app.studyTitle}
-                            <span className="study-status-badge pending">대기중</span>
+                            {study.studyTitle}
+                            <span className={`${styles.studyStatusBadge} ${styles.pending}`}>
+                              대기중
+                            </span>
                           </h4>
-                          <p className="study-meta">신청일: {new Date(app.appliedAt).toLocaleDateString()}</p>
-                          {app.reviewNote && <p className="study-meta">메모: {app.reviewNote}</p>}
-                          <div className="study-actions">
-                            <button 
-                              className="cancel-button"
-                              onClick={async () => {
-                                try {
-                                  await studyService.cancelApplication(app.studyId, app.applicationId, authUser?.email || authUser?.username);
-                                  // 페이지 새로고침
-                                  window.location.reload();
-                                } catch (err) {
-                                  console.error(err);
-                                  alert('신청 취소에 실패했습니다.');
-                                }
-                              }}
-                            >
-                              신청 취소
-                            </button>
-                          </div>
+                          <p className={styles.studyMeta}>상태: 승인 대기중</p>
+                          {study.appliedAt && (
+                            <p className={styles.studyMeta}>신청일: {new Date(study.appliedAt).toLocaleDateString()}</p>
+                          )}
+                          {study.message && (
+                            <p className={styles.studyMeta}>메시지: {study.message}</p>
+                          )}
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-                
-                {/* 참여 중인 스터디 */}
+
+                {/* 참여 중인 스터디 섹션 */}
                 {myStudies.participating.length > 0 && (
-                  <div className="study-group">
-                    <div className="myst-section-header">
-                      <h3>참여 중인 스터디 <span className="myst-badge">{myStudies.participating.length}</span></h3>
-                      {myStudies.participating.length > 3 && (
-                        <button className="myst-toggle" onClick={() => setParticipatingCollapsed(c => !c)}>
-                          {participatingCollapsed ? '모두 보기' : '접기'}
-                        </button>
-                      )}
-                    </div>
-                    <div className="study-cards">
-                      {(participatingCollapsed ? myStudies.participating.slice(0, 3) : myStudies.participating).map(study => (
-                      <div key={study.memberId} className="study-card">
+                <div className={styles.studyGroup}>
+                  <div className={styles.mystSectionHeader}>
+                    <h3>참여 중인 스터디 <span className={styles.mystBadge}>{myStudies.participating.length}</span></h3>
+                    {myStudies.participating.length > 3 && (
+                      <button className={styles.mystToggle} onClick={() => setParticipatingCollapsed(c => !c)}>
+                        {participatingCollapsed ? '모두 보기' : '접기'}
+                      </button>
+                    )}
+                  </div>
+                  <div className={styles.studyCards}>
+                    {(participatingCollapsed ? myStudies.participating.slice(0, 3) : myStudies.participating).map(study => (
+                      <div key={study.memberId} className={styles.studyCard}>
                         <h4>
                           {study.studyTitle}
                           {study.studyStatus && (
-                            <span className={`study-status-badge study-status-${study.studyStatus.toLowerCase()}`}>
+                            <span className={`${styles.studyStatusBadge} ${styles[`studyStatus${study.studyStatus.toLowerCase().replace('_', '').replace('-', '')}`] || ''}`}>
                               {study.studyStatus === 'IN_PROGRESS' ? '진행중' : 
                                study.studyStatus === 'COMPLETED' ? '완료' :
                                study.studyStatus === 'APPROVED' ? '모집중' :
@@ -318,13 +317,13 @@ function ProfilePage(): React.ReactNode {
                             </span>
                           )}
                         </h4>
-                        <p className="study-meta">역할: {study.role}</p>
-                        <p className="study-meta">참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
-                        <p className="study-meta">출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
+                        <p className={styles.studyMeta}>역할: {study.role}</p>
+                        <p className={styles.studyMeta}>참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
+                        <p className={styles.studyMeta}>출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
                         {study.studyStatus === 'COMPLETED' && (
-                          <div className="study-actions">
+                          <div className={styles.studyActions}>
                             <button 
-                              className="review-action-button"
+                              className={styles.reviewActionButton}
                               onClick={() => {
                                 console.log('Button clicked for study:', study.studyId);
                                 console.log('studyReviews state:', studyReviews);
@@ -342,29 +341,30 @@ function ProfilePage(): React.ReactNode {
                 </div>
                 )}
 
+                {/* 내가 리드하는 스터디 섹션 */}
                 {myStudies.leading.length > 0 && (
-                  <div className="study-group">
-                    <div className="myst-section-header">
-                      <h3>내가 리드하는 스터디 <span className="myst-badge">{myStudies.leading.length}</span></h3>
+                  <div className={styles.studyGroup}>
+                    <div className={styles.mystSectionHeader}>
+                      <h3>내가 리드하는 스터디 <span className={styles.mystBadge}>{myStudies.leading.length}</span></h3>
                       {myStudies.leading.length > 3 && (
-                        <button className="myst-toggle" onClick={() => setLeadingCollapsed(c => !c)}>
+                        <button className={styles.mystToggle} onClick={() => setLeadingCollapsed(c => !c)}>
                           {leadingCollapsed ? '모두 보기' : '접기'}
                         </button>
                       )}
                     </div>
-                    <div className="study-cards">
+                    <div className={styles.studyCards}>
                       {(leadingCollapsed ? myStudies.leading.slice(0, 3) : myStudies.leading).map(study => (
                         <div 
                           key={study.memberId} 
-                          className="study-card leading clickable"
+                          className={`${styles.studyCard} ${styles.leading} ${styles.clickable}`}
                           onClick={() => navigate(`/study/${study.studyId}/manage`)}
                           style={{ cursor: 'pointer' }}
                         >
-                          <span className="leader-badge">리더</span>
+                          <span className={styles.leaderBadge}>리더</span>
                           <h4>
                             {study.studyTitle}
                             {study.studyStatus && (
-                              <span className={`study-status-badge study-status-${study.studyStatus.toLowerCase()}`}>
+                              <span className={`${styles.studyStatusBadge} ${styles[`studyStatus${study.studyStatus.toLowerCase().replace('_', '').replace('-', '')}`] || ''}`}>
                                 {study.studyStatus === 'IN_PROGRESS' ? '진행중' : 
                                  study.studyStatus === 'COMPLETED' ? '완료' :
                                  study.studyStatus === 'APPROVED' ? '모집중' :
@@ -372,12 +372,17 @@ function ProfilePage(): React.ReactNode {
                               </span>
                             )}
                           </h4>
-                          <p className="study-meta">참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
-                          <p className="study-meta">출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
+                          <p className={styles.studyMeta}>시작일: {(() => {
+                            if (Array.isArray(study.joinedAt)) {
+                              const [year, month, day] = study.joinedAt;
+                              return new Date(year, month - 1, day).toLocaleDateString('ko-KR');
+                            }
+                            return new Date(study.joinedAt).toLocaleDateString('ko-KR');
+                          })()}</p>
                           {study.studyStatus === 'COMPLETED' ? (
-                            <p className="study-action">→ 리뷰 관리</p>
+                            <p className={styles.studyAction}>→ 리뷰 관리</p>
                           ) : (
-                            <p className="study-action">→ 관리 페이지로 이동</p>
+                            <p className={styles.studyAction}>→ 관리 페이지로 이동</p>
                           )}
                         </div>
                       ))}
@@ -385,7 +390,7 @@ function ProfilePage(): React.ReactNode {
                   </div>
                 )}
 
-                <Link to="/study" className="view-all-link">모든 스터디 보기</Link>
+                <Link to="/study" className={styles.viewAllLink}>모든 스터디 보기</Link>
               </>
             )}
           </section>
@@ -393,59 +398,59 @@ function ProfilePage(): React.ReactNode {
 
         {/* 게임 활동 탭 콘텐츠 */}
         {activeTab === 'game' && (
-        <section className="game-section">
+        <section className={styles.gameSection}>
           <h2>게임 활동</h2>
           
           {gameActivities.length > 0 ? (
             <>
               {/* 전체 요약 통계 */}
               {gameSummary.totalGames > 0 && (
-                <div className="game-summary">
-                  <div className="summary-item">
-                    <span className="summary-label">총 게임 횟수</span>
-                    <span className="summary-value">{gameSummary.totalGames}회</span>
+                <div className={styles.gameSummary}>
+                  <div className={styles.summaryItem}>
+                    <span className={styles.summaryLabel}>총 게임 횟수</span>
+                    <span className={styles.summaryValue}>{gameSummary.totalGames}회</span>
                   </div>
                   {gameSummary.totalWins > 0 && (
-                    <div className="summary-item">
-                      <span className="summary-label">총 승리</span>
-                      <span className="summary-value">{gameSummary.totalWins}회</span>
+                    <div className={styles.summaryItem}>
+                      <span className={styles.summaryLabel}>총 승리</span>
+                      <span className={styles.summaryValue}>{gameSummary.totalWins}회</span>
                     </div>
                   )}
                   {gameSummary.favoriteGame && (
-                    <div className="summary-item">
-                      <span className="summary-label">즐겨하는 게임</span>
-                      <span className="summary-value">{gameSummary.favoriteGame}</span>
+                    <div className={styles.summaryItem}>
+                      <span className={styles.summaryLabel}>즐겨하는 게임</span>
+                      <span className={styles.summaryValue}>{gameSummary.favoriteGame}</span>
                     </div>
                   )}
                 </div>
               )}
               
-              <div className="game-cards">
+              <div className={styles.gameCards}>
                 {gameActivities.map((activity, index) => (
-                  <div key={index} className="game-card">
-                    <div className="game-header">
+                  <div key={index} className={styles.gameCard}>
+                    <div className={styles.gameHeader}>
                       <h3>{activity.name}</h3>
                       {activity.lastPlayed && (
-                        <span className="last-played">마지막 플레이: {activity.lastPlayed}</span>
+                        <span className={styles.lastPlayed}>마지막 플레이: {activity.lastPlayed}</span>
                       )}
                     </div>
-                    <div className="game-stats">
-                      <div className="stat-item">
-                        <span className="stat-label">플레이 횟수</span>
-                        <span className="stat-value">{activity.totalCount}회</span>
+                    <div className={styles.gameStats}>
+                      <div className={styles.statItem}>
+                        <span className={styles.statLabel}>플레이 횟수</span>
+                        <span className={styles.statValue}>{activity.totalCount}회</span>
                       </div>
                       {activity.myRanking && activity.totalRanking && (
-                        <div className="stat-item">
-                          <span className="stat-label">랭킹</span>
-                          <span className="stat-value ranking">
+                        <div className={styles.statItem}>
+                          <span className={styles.statLabel}>랭킹</span>
+                          <span className={`${styles.statValue} ${styles.ranking}`}>
                             {activity.myRanking}위 / {activity.totalRanking}명
                           </span>
                         </div>
                       )}
                       {activity.wins !== undefined && activity.participations !== undefined && (
-                        <div className="stat-item">
-                          <span className="stat-label">승률</span>
-                          <span className="stat-value">
+                        <div className={styles.statItem}>
+                          <span className={styles.statLabel}>승률</span>
+                          <span className={styles.statValue}>
                             {activity.participations > 0 
                               ? Math.round((activity.wins / activity.participations) * 100) 
                               : 0}%
@@ -453,13 +458,13 @@ function ProfilePage(): React.ReactNode {
                         </div>
                       )}
                       {activity.myRanking && !activity.totalRanking && (
-                        <div className="stat-item">
-                          <span className="stat-label">최고 점수</span>
-                          <span className="stat-value">{activity.myRanking}점</span>
+                        <div className={styles.statItem}>
+                          <span className={styles.statLabel}>최고 점수</span>
+                          <span className={styles.statValue}>{activity.myRanking}점</span>
                         </div>
                       )}
                     </div>
-                    <Link to={activity.link} className="play-button">
+                    <Link to={activity.link} className={styles.playButton}>
                       게임하러 가기
                     </Link>
                   </div>
@@ -467,10 +472,10 @@ function ProfilePage(): React.ReactNode {
               </div>
             </>
           ) : (
-            <div className="empty-state">
+            <div className={styles.emptyState}>
               <p>아직 플레이한 게임이 없어요</p>
               <p>스터디 쉬는 시간에 재미있는 게임 한 판 어떠세요?</p>
-              <Link to="/lab" className="browse-button">게임 둘러보기</Link>
+              <Link to="/lab" className={styles.browseButton}>게임 둘러보기</Link>
             </div>
           )}
         </section>
@@ -479,9 +484,9 @@ function ProfilePage(): React.ReactNode {
       </div>
 
       {/* 설정 섹션 */}
-      <section className="settings-section">
+      <section className={styles.settingsSection}>
         <h3>설정</h3>
-        <nav className="settings-nav">
+        <nav className={styles.settingsNav}>
           <Link to="/users/me/edit">프로필 수정</Link>
           <a href="#" onClick={(e) => { e.preventDefault(); setShowPasswordModal(true); }}>비밀번호 변경</a>
           <a href="#" onClick={(e) => { e.preventDefault(); setShowLogoutModal(true); }}>로그아웃</a>
@@ -489,7 +494,7 @@ function ProfilePage(): React.ReactNode {
       </section>
 
       {/* 하단 격려 메시지 */}
-      <div className="motivation-message">
+      <div className={styles.motivationMessage}>
         <p>오늘도 열공하세요!</p>
       </div>
       </div>

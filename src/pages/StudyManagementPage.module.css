@@ -1,4 +1,4 @@
-.study-management-page {
+.studyManagementPage {
   min-height: 100vh;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   color: #ffffff;
@@ -6,16 +6,16 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
-.management-container {
+.managementContainer {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.management-header {
+.managementHeader {
   margin-bottom: 40px;
 }
 
-.back-button {
+.backButton {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
@@ -30,12 +30,12 @@
   gap: 8px;
 }
 
-.back-button:hover {
+.backButton:hover {
   background: rgba(255, 255, 255, 0.15);
   transform: translateX(-2px);
 }
 
-.management-header h1 {
+.managementHeader h1 {
   font-size: 2.5rem;
   font-weight: 700;
   background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
@@ -45,7 +45,7 @@
   margin-bottom: 20px;
 }
 
-.study-info {
+.studyInfo {
   background: rgba(195, 232, 141, 0.05);
   border: 1px solid rgba(195, 232, 141, 0.2);
   border-radius: 12px;
@@ -53,27 +53,27 @@
   margin-bottom: 20px;
 }
 
-.study-info h2 {
+.studyInfo h2 {
   font-size: 1.5rem;
   font-weight: 600;
   color: #C3E88D;
   margin-bottom: 8px;
 }
 
-.study-tagline {
+.studyTagline {
   color: rgba(255, 255, 255, 0.8);
   font-size: 1.1rem;
   margin-bottom: 16px;
   line-height: 1.5;
 }
 
-.study-stats {
+.studyStats {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.study-stats span {
+.studyStats span {
   background: rgba(255, 255, 255, 0.1);
   padding: 6px 12px;
   border-radius: 6px;
@@ -81,7 +81,7 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.study-management-page .tab-navigation {
+.tabNavigation {
   display: flex;
   gap: 4px;
   margin-bottom: 32px;
@@ -90,7 +90,7 @@
   padding: 6px;
 }
 
-.study-management-page .tab-button {
+.tabButton {
   flex: 1;
   display: flex;
   align-items: center;
@@ -108,22 +108,22 @@
   position: relative;
 }
 
-.study-management-page .tab-button:hover {
+.tabButton:hover {
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.9);
 }
 
-.study-management-page .tab-button.active {
+.tabButton.active {
   background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
   color: #1a1a1a;
   font-weight: 600;
 }
 
-.study-management-page .tab-icon {
+.tabIcon {
   font-size: 16px;
 }
 
-.study-management-page .badge {
+.badge {
   background: #ff4757;
   color: white;
   font-size: 11px;
@@ -139,15 +139,15 @@
 }
 
 /* Applications Section */
-.applications-section {
+.applicationsSection {
   space-y: 32px;
 }
 
-.pending-applications {
+.pendingApplications {
   margin-bottom: 40px;
 }
 
-.pending-applications h3 {
+.pendingApplications h3 {
   color: #C3E88D;
   font-size: 1.3rem;
   font-weight: 600;
@@ -157,13 +157,13 @@
   gap: 8px;
 }
 
-.applications-grid {
+.applicationsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
 }
 
-.application-card {
+.applicationCard {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
@@ -171,17 +171,17 @@
   transition: all 0.3s ease;
 }
 
-.application-card.pending {
+.applicationCard.pending {
   border-color: rgba(195, 232, 141, 0.3);
   background: rgba(195, 232, 141, 0.02);
 }
 
-.application-card:hover {
+.applicationCard:hover {
   border-color: rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.05);
 }
 
-.application-header {
+.applicationHeader {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -189,7 +189,7 @@
   flex-wrap: wrap;
 }
 
-.application-header h4 {
+.applicationHeader h4 {
   font-size: 1.1rem;
   font-weight: 600;
   color: #ffffff;
@@ -197,13 +197,13 @@
   flex: 1;
 }
 
-.application-date {
+.applicationDate {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   margin-left: auto;
 }
 
-.status-badge {
+.statusBadge {
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 12px;
@@ -211,33 +211,33 @@
   text-transform: uppercase;
 }
 
-.status-badge.pending {
+.statusBadge.pending {
   background: rgba(255, 193, 7, 0.2);
   color: #ffc107;
   border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
-.status-badge.accepted {
+.statusBadge.accepted {
   background: rgba(40, 167, 69, 0.2);
   color: #28a745;
   border: 1px solid rgba(40, 167, 69, 0.3);
 }
 
-.status-badge.rejected {
+.statusBadge.rejected {
   background: rgba(220, 53, 69, 0.2);
   color: #dc3545;
   border: 1px solid rgba(220, 53, 69, 0.3);
 }
 
-.application-content {
+.applicationContent {
   margin-bottom: 20px;
 }
 
-.answer-item {
+.answerItem {
   margin-bottom: 16px;
 }
 
-.question-label {
+.questionLabel {
   display: block;
   font-size: 14px;
   font-weight: 600;
@@ -245,7 +245,7 @@
   margin-bottom: 6px;
 }
 
-.answer-text {
+.answerText {
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.5;
   font-size: 14px;
@@ -256,14 +256,14 @@
   border-left: 3px solid rgba(137, 221, 255, 0.3);
 }
 
-.application-actions {
+.applicationActions {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
 }
 
-.accept-button,
-.reject-button {
+.acceptButton,
+.rejectButton {
   padding: 8px 16px;
   border-radius: 6px;
   font-size: 14px;
@@ -273,35 +273,35 @@
   border: none;
 }
 
-.accept-button {
+.acceptButton {
   background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
   color: white;
 }
 
-.accept-button:hover:not(:disabled) {
+.acceptButton:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
-.reject-button {
+.rejectButton {
   background: transparent;
   border: 1px solid rgba(220, 53, 69, 0.5);
   color: #dc3545;
 }
 
-.reject-button:hover:not(:disabled) {
+.rejectButton:hover:not(:disabled) {
   background: rgba(220, 53, 69, 0.1);
   border-color: #dc3545;
 }
 
-.accept-button:disabled,
-.reject-button:disabled {
+.acceptButton:disabled,
+.rejectButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-.processed-applications h3 {
+.processedApplications h3 {
   color: #89DDFF;
   font-size: 1.2rem;
   font-weight: 600;
@@ -311,11 +311,11 @@
   gap: 8px;
 }
 
-.applications-list {
+.applicationsList {
   space-y: 12px;
 }
 
-.application-item {
+.applicationItem {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -323,7 +323,7 @@
   margin-bottom: 12px;
 }
 
-.application-summary {
+.applicationSummary {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -331,13 +331,13 @@
   flex-wrap: wrap;
 }
 
-.applicant-name {
+.applicantName {
   font-weight: 600;
   color: #ffffff;
   flex: 1;
 }
 
-.review-note {
+.reviewNote {
   background: rgba(255, 255, 255, 0.02);
   padding: 12px;
   border-radius: 8px;
@@ -346,24 +346,24 @@
   border-left: 3px solid rgba(137, 221, 255, 0.3);
 }
 
-.review-note strong {
+.reviewNote strong {
   color: #89DDFF;
 }
 
 /* Members Section */
-.members-section {
+.membersSection {
   margin-top: 20px;
   background: transparent !important;
   color: #ffffff !important;
 }
 
-.members-grid {
+.membersGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 }
 
-.member-card {
+.memberCard {
   background: rgba(255, 255, 255, 0.03) !important;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -372,26 +372,26 @@
   color: #ffffff !important;
 }
 
-.member-card:hover {
+.memberCard:hover {
   border-color: rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.05) !important;
 }
 
-.member-info {
+.memberInfo {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
 }
 
-.member-info h4 {
+.memberInfo h4 {
   font-size: 1rem;
   font-weight: 600;
   color: #ffffff;
   margin: 0;
 }
 
-.member-role {
+.memberRole {
   background: rgba(137, 221, 255, 0.2);
   color: #89DDFF;
   padding: 4px 8px;
@@ -401,39 +401,39 @@
   text-transform: uppercase;
 }
 
-.member-meta {
+.memberMeta {
   color: rgba(255, 255, 255, 0.6);
   font-size: 13px;
 }
 
 /* Empty State */
-.empty-state {
+.emptyState {
   text-align: center;
   padding: 60px 20px;
   color: rgba(255, 255, 255, 0.6);
 }
 
-.empty-icon {
+.emptyIcon {
   font-size: 4rem;
   margin-bottom: 20px;
   opacity: 0.5;
 }
 
-.empty-state h3 {
+.emptyState h3 {
   font-size: 1.3rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.8);
   margin-bottom: 12px;
 }
 
-.empty-state p {
+.emptyState p {
   font-size: 15px;
   line-height: 1.5;
   max-width: 400px;
   margin: 0 auto;
 }
 
-.loading-state {
+.loadingState {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -457,52 +457,52 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .study-management-page {
+  .studyManagementPage {
     padding: 60px 16px 20px;
   }
 
-  .management-container {
+  .managementContainer {
     max-width: none;
   }
 
-  .management-header h1 {
+  .managementHeader h1 {
     font-size: 2rem;
   }
 
-  .applications-grid {
+  .applicationsGrid {
     grid-template-columns: 1fr;
   }
 
-  .members-grid {
+  .membersGrid {
     grid-template-columns: 1fr;
   }
 
-  .study-management-page .tab-button {
+  .tabButton {
     padding: 10px 12px;
     font-size: 14px;
   }
 
-  .application-header {
+  .applicationHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
 
-  .application-date {
+  .applicationDate {
     margin-left: 0;
   }
 
-  .application-actions {
+  .applicationActions {
     flex-direction: column;
   }
 }
 
 /* Page Editor Section */
-.page-editor-section {
+.pageEditorSection {
   animation: fadeIn 0.5s ease-in;
 }
 
-.editor-header {
+.editorHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -513,13 +513,13 @@
   gap: 15px;
 }
 
-.editor-header h3 {
+.editorHeader h3 {
   font-size: 1.5rem;
   color: #89DDFF;
   margin: 0;
 }
 
-.publish-status {
+.publishStatus {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -527,7 +527,7 @@
   justify-content: center;
 }
 
-.status-badge {
+.statusBadge {
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
@@ -537,30 +537,30 @@
   gap: 5px;
 }
 
-.status-badge.published {
+.statusBadge.published {
   background: rgba(76, 175, 80, 0.2);
   border: 1px solid #4CAF50;
   color: #4CAF50;
 }
 
-.status-badge.draft {
+.statusBadge.draft {
   background: rgba(255, 152, 0, 0.2);
   border: 1px solid #FF9800;
   color: #FF9800;
 }
 
-.last-published {
+.lastPublished {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
 }
 
-.editor-actions {
+.editorActions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-.editor-actions button {
+.editorActions button {
   padding: 10px 20px;
   border-radius: 6px;
   font-size: 14px;
@@ -570,32 +570,32 @@
   border: 1px solid transparent;
 }
 
-.btn-preview {
+.btnPreview {
   background: rgba(137, 221, 255, 0.1);
   color: #89DDFF;
   border-color: rgba(137, 221, 255, 0.3);
 }
 
-.btn-save {
+.btnSave {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.btn-publish {
+.btnPublish {
   background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
   color: #1a1a1a;
   font-weight: 600;
 }
 
-.btn-view {
+.btnView {
   background: transparent;
   color: #C3E88D;
   border-color: #C3E88D;
 }
 
 /* No Page Message */
-.no-page-message {
+.noPageMessage {
   text-align: center;
   padding: 60px 20px;
   background: rgba(255, 255, 255, 0.03);
@@ -604,14 +604,14 @@
 }
 
 /* Preview Container */
-.preview-container {
+.previewContainer {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
   padding: 30px;
   overflow: hidden;
 }
 
-.preview-content {
+.previewContent {
   background: #000;
   border-radius: 8px;
   padding: 0 !important;
@@ -622,21 +622,21 @@
 }
 
 /* 미리보기는 실제 페이지의 CSS를 그대로 상속받음 */
-.preview-content .sections-container {
+.previewContent .sectionsContainer {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.preview-content .section-wrapper {
+.previewContent .sectionWrapper {
   position: relative;
   width: 100%;
   margin-bottom: 15px;
 }
 
 /* 섹션 기본 스타일 - 실제 페이지와 동일 */
-.preview-content .section-wrapper > div[class*="study-detail-"] {
+.previewContent .sectionWrapper > div[class*="study-detail-"] {
   background-color: #1a1a1a;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -644,7 +644,7 @@
 }
 
 /* Hero 섹션은 전체 너비 - 실제 페이지와 동일 */
-.preview-content .study-detail-hero-section {
+.previewContent .study-detail-hero-section {
   background-color: #0d0d0d !important;
   box-shadow: none !important;
   border-radius: 0 !important;
@@ -653,35 +653,35 @@
 }
 
 /* Rich Text, FAQ 등 일반 섹션들 */
-.preview-content .study-detail-rich-text-section,
-.preview-content .study-detail-faq-section,
-.preview-content .study-detail-gallery-section,
-.preview-content .study-detail-members-section {
+.previewContent .study-detail-rich-text-section,
+.previewContent .study-detail-faq-section,
+.previewContent .study-detail-gallery-section,
+.previewContent .study-detail-members-section {
   padding: 30px 25px;
 }
 
 /* Editor Content */
-.editor-content {
+.editorContent {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 30px;
 }
 
 /* Sections Manager */
-.sections-manager {
+.sectionsManager {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
   padding: 20px;
 }
 
-.sections-header {
+.sectionsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.btn-add-section {
+.btnAddSection {
   background: rgba(195, 232, 141, 0.1);
   color: #C3E88D;
   border: 1px solid rgba(195, 232, 141, 0.3);
@@ -691,7 +691,7 @@
 }
 
 /* Add Section Modal */
-.add-section-modal {
+.addSectionModal {
   position: fixed;
   top: 0;
   left: 0;
@@ -704,7 +704,7 @@
   z-index: 1000;
 }
 
-.modal-content {
+.modalContent {
   background: #2d2d2d;
   border-radius: 12px;
   padding: 30px;
@@ -714,7 +714,7 @@
   overflow-y: auto;
 }
 
-.modal-content h5 {
+.modalContent h5 {
   color: #C3E88D;
   font-size: 1.3rem;
   font-weight: 600;
@@ -723,14 +723,14 @@
   letter-spacing: 0.5px;
 }
 
-.section-types {
+.sectionTypes {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.section-type-btn {
+.sectionTypeBtn {
   background: rgba(255, 255, 255, 0.05);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -741,13 +741,13 @@
   transition: all 0.2s ease;
 }
 
-.section-type-btn:hover {
+.sectionTypeBtn:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
   color: #C3E88D;
 }
 
-.btn-cancel {
+.btnCancel {
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -760,14 +760,14 @@
   width: 100%;
 }
 
-.btn-cancel:hover {
+.btnCancel:hover {
   background: rgba(255, 99, 71, 0.1);
   border-color: rgba(255, 99, 71, 0.3);
   color: rgba(255, 99, 71, 0.8);
 }
 
 /* Keyboard Shortcuts Hint */
-.keyboard-shortcuts-hint {
+.keyboardShortcutsHint {
   background: rgba(137, 221, 255, 0.05);
   border: 1px solid rgba(137, 221, 255, 0.1);
   border-radius: 6px;
@@ -781,25 +781,25 @@
   transition: all 0.3s ease;
 }
 
-.keyboard-shortcuts-hint:hover {
+.keyboardShortcutsHint:hover {
   background: rgba(137, 221, 255, 0.08);
   border-color: rgba(137, 221, 255, 0.2);
   color: rgba(255, 255, 255, 0.8);
 }
 
-.shortcut-icon {
+.shortcutIcon {
   font-size: 14px;
   opacity: 0.8;
 }
 
-.shortcut-text {
+.shortcutText {
   display: flex;
   align-items: center;
   gap: 4px;
   flex-wrap: wrap;
 }
 
-.shortcut-text .key {
+.key {
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
   border-radius: 3px;
@@ -811,14 +811,14 @@
 }
 
 /* Sections List - Drag & Drop Enhanced */
-.study-mgmt-sections-list {
+.studyMgmtSectionsList {
   max-height: calc(100vh - 350px);
   min-height: 400px;
   overflow-y: auto;
   padding: 4px;
 }
 
-.study-mgmt-section-item {
+.studyMgmtSectionItem {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -832,15 +832,39 @@
   position: relative;
 }
 
-.study-mgmt-section-item:hover {
+.studyMgmtSectionItem:hover {
   background: rgba(255, 255, 255, 0.07);
   border-color: rgba(195, 232, 141, 0.3);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* 임시 섹션 스타일 */
+.tempSection {
+  border: 1px dashed rgba(255, 193, 7, 0.5) !important;
+  background: rgba(255, 193, 7, 0.05) !important;
+}
+
+.tempLabel {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
 /* 드래그 중인 섹션 스타일 */
-.study-mgmt-section-dragging {
+.studyMgmtSectionDragging {
   opacity: 0.4;
   transform: scale(0.98);
   cursor: grabbing;
@@ -848,13 +872,13 @@
 }
 
 /* 드롭 가능 영역 하이라이트 */
-.study-mgmt-section-drag-over {
+.studyMgmtSectionDragOver {
   background: rgba(195, 232, 141, 0.1);
   border-color: rgba(195, 232, 141, 0.5);
   box-shadow: 0 0 0 2px rgba(195, 232, 141, 0.2);
 }
 
-.study-mgmt-section-drag-over::before {
+.studyMgmtSectionDragOver::before {
   content: '';
   position: absolute;
   top: -2px;
@@ -863,16 +887,16 @@
   height: 4px;
   background: linear-gradient(90deg, #C3E88D 0%, #89DDFF 100%);
   border-radius: 2px;
-  animation: study-mgmt-drop-indicator 0.5s ease infinite;
+  animation: studyMgmtDropIndicator 0.5s ease infinite;
 }
 
-@keyframes study-mgmt-drop-indicator {
+@keyframes studyMgmtDropIndicator {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
 
 /* 드래그 핸들 */
-.study-mgmt-drag-handle {
+.studyMgmtDragHandle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -884,25 +908,25 @@
   flex-shrink: 0;
 }
 
-.study-mgmt-drag-handle:hover {
+.studyMgmtDragHandle:hover {
   color: rgba(195, 232, 141, 0.6);
   transform: scale(1.1);
 }
 
-.study-mgmt-section-item:active .study-mgmt-drag-handle {
+.studyMgmtSectionItem:active .studyMgmtDragHandle {
   cursor: grabbing;
   color: rgba(195, 232, 141, 0.8);
 }
 
 /* 섹션 정보 */
-.study-mgmt-section-info {
+.studyMgmtSectionInfo {
   flex: 1;
   display: flex;
   align-items: center;
   min-width: 0;
 }
 
-.study-mgmt-section-type {
+.studyMgmtSectionType {
   background: rgba(130, 170, 255, 0.1);
   color: #82AAFF;
   padding: 4px 10px;
@@ -915,14 +939,14 @@
 }
 
 /* 섹션 액션 버튼 */
-.study-mgmt-section-actions {
+.studyMgmtSectionActions {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
 }
 
-.study-mgmt-edit-btn,
-.study-mgmt-delete-btn {
+.studyMgmtEditBtn,
+.studyMgmtDeleteBtn {
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -936,20 +960,20 @@
   transition: all 0.2s ease;
 }
 
-.study-mgmt-edit-btn:hover {
+.studyMgmtEditBtn:hover {
   background: rgba(130, 170, 255, 0.15);
   border-color: rgba(130, 170, 255, 0.3);
   transform: scale(1.05);
 }
 
-.study-mgmt-delete-btn:hover {
+.studyMgmtDeleteBtn:hover {
   background: rgba(255, 99, 71, 0.15);
   border-color: rgba(255, 99, 71, 0.3);
   transform: scale(1.05);
 }
 
 /* 빈 상태 메시지 */
-.study-mgmt-empty-message {
+.studyMgmtEmptyMessage {
   text-align: center;
   color: rgba(255, 255, 255, 0.5);
   padding: 40px 20px;
@@ -1000,14 +1024,14 @@
 }
 
 /* Section Editor */
-.section-editor {
+.sectionEditor {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
   padding: 20px;
   position: relative;
 }
 
-.section-editor-close {
+.sectionEditorClose {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -1028,14 +1052,14 @@
   z-index: 10;
 }
 
-.section-editor-close:hover {
+.sectionEditorClose:hover {
   background: rgba(255, 107, 107, 0.15);
   border-color: rgba(255, 107, 107, 0.3);
   color: #FF6B6B;
   transform: scale(1.05);
 }
 
-.section-editor-close:active {
+.sectionEditorClose:active {
   transform: scale(0.95);
 }
 
@@ -1064,7 +1088,7 @@
 }
 
 /* Saving Overlay */
-.saving-overlay {
+.savingOverlay {
   position: fixed;
   top: 0;
   left: 0;

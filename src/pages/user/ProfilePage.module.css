@@ -2,14 +2,27 @@
 @import '../auth/auth-common.css';
 
 /* Profile Page Base Styles */
-.profile-page {
+.profilePage {
   min-height: 100vh;
   background: var(--auth-bg-gradient);
   position: relative;
   overflow-x: hidden;
 }
 
-.profile-container {
+.profilePageLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--auth-text-secondary);
+}
+
+.loadingSpinner {
+  font-size: 1.25rem;
+  color: var(--auth-primary-green);
+}
+
+.profileContainer {
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
@@ -23,7 +36,7 @@
 }
 
 /* 프로필 요약 섹션 */
-.profile-summary {
+.profileSummary {
   background: var(--auth-bg-card);
   border-radius: 20px;
   padding: 2rem;
@@ -42,7 +55,7 @@
 }
 
 /* 프로필 요약 배경 효과 */
-.profile-summary::before {
+.profileSummary::before {
   content: '';
   position: absolute;
   top: -50%;
@@ -53,7 +66,7 @@
   pointer-events: none;
 }
 
-.profile-header {
+.profileHeader {
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -61,12 +74,12 @@
   z-index: 1;
 }
 
-.profile-image {
+.profileImage {
   flex-shrink: 0;
   position: relative;
 }
 
-.profile-placeholder {
+.profilePlaceholder {
   width: 64px;
   height: 64px;
   border-radius: 16px;
@@ -85,11 +98,11 @@
   transition: all var(--auth-transition-base);
 }
 
-.profile-placeholder:hover {
+.profilePlaceholder:hover {
   transform: rotate(0deg) scale(1.05);
 }
 
-.profile-info h1 {
+.profileInfo h1 {
   font-size: 1.5rem;
   font-weight: 700;
   background: linear-gradient(135deg, var(--auth-primary-green), var(--auth-primary-green-light));
@@ -101,7 +114,7 @@
   line-height: 1.3;
 }
 
-.join-info {
+.joinInfo {
   color: var(--auth-text-secondary);
   font-size: 0.875rem;
   letter-spacing: 0.5px;
@@ -115,7 +128,7 @@
 }
 
 /* 스터디 섹션 */
-.study-section {
+.studySection {
   animation: authFadeIn var(--auth-transition-slow) ease-out;
   animation-delay: 0.1s;
   animation-fill-mode: both;
@@ -125,7 +138,7 @@
   width: 100%;
 }
 
-.study-section h2 {
+.studySection h2 {
   font-size: 1.375rem;
   font-weight: 700;
   color: var(--auth-text-primary);
@@ -137,11 +150,11 @@
   border-bottom: 1px solid rgba(195, 232, 141, 0.1);
 }
 
-.study-group {
+.studyGroup {
   margin-bottom: 2rem;
 }
 
-.study-group h3 {
+.studyGroup h3 {
   font-size: 1rem;
   font-weight: 600;
   color: var(--auth-text-secondary);
@@ -151,13 +164,13 @@
   opacity: 0.8;
 }
 
-.study-cards {
+.studyCards {
   display: grid;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.study-card {
+.studyCard {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(195, 232, 141, 0.15);
   border-radius: 16px;
@@ -192,16 +205,49 @@
   transform: translateY(-4px) scale(1.02);
 }
 
-.study-card:hover::before {
+.studyCard:hover::before {
   opacity: 1;
 }
 
-.study-card.leading.clickable {
-  cursor: pointer;
-  transition: all 0.3s ease;
+.studyCard.pending {
+  border-color: rgba(255, 193, 7, 0.3);
+  background: rgba(255, 193, 7, 0.05);
 }
 
-.study-card.leading.clickable:hover {
+.studyCard.proposed {
+  border-color: rgba(130, 170, 255, 0.3);
+  background: rgba(130, 170, 255, 0.05);
+}
+
+.pending {
+  border-color: rgba(255, 193, 7, 0.3);
+  background: rgba(255, 193, 7, 0.05);
+}
+
+.proposed {
+  border-color: rgba(130, 170, 255, 0.3);
+  background: rgba(130, 170, 255, 0.05);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.leading {
+  position: relative !important;
+}
+
+.studyCard.leading {
+  position: relative;
+}
+
+.studyCard.leading.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.studyCard.leading.clickable:hover {
   background: rgba(195, 232, 141, 0.05);
   transform: translateY(-4px) scale(1.02);
   box-shadow: 
@@ -209,7 +255,7 @@
     0 15px 50px rgba(0, 0, 0, 0.6);
 }
 
-.study-action {
+.studyAction {
   margin-top: 0.75rem;
   font-size: 0.875rem;
   color: var(--auth-primary-green);
@@ -218,34 +264,34 @@
   transition: opacity 0.3s ease;
 }
 
-.study-card.leading.clickable:hover .study-action {
+.studyCard.leading.clickable:hover .studyAction {
   opacity: 1;
 }
 
-.study-card h4 {
+.studyCard h4 {
   font-size: 1rem;
   font-weight: 700;
   color: var(--auth-text-primary);
   margin: 0 0 0.5rem 0;
 }
 
-.study-meta {
+.studyMeta {
   font-size: 0.8rem;
   color: var(--auth-text-hint);
   margin: 0 0 0.25rem 0;
 }
 
-.next-meeting {
+.nextMeeting {
   font-size: 0.875rem;
   color: var(--auth-primary-green);
   margin: 0;
   font-weight: 500;
 }
 
-.leader-badge {
+.leaderBadge {
   position: absolute;
-  top: -10px;
-  left: 20px;
+  top: 1rem;
+  right: 1rem;
   background: linear-gradient(135deg, var(--auth-accent-purple), var(--auth-accent-blue));
   color: #05060A;
   padding: 0.25rem 0.75rem;
@@ -258,7 +304,7 @@
   z-index: 2;
 }
 
-.view-all-link {
+.viewAllLink {
   display: inline-block;
   color: var(--auth-primary-green);
   text-decoration: none;
@@ -282,12 +328,12 @@
   text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
 }
 
-.view-all-link:hover::before {
+.viewAllLink:hover::before {
   transform: translateX(4px);
 }
 
 /* ======= My Studies (myst-*) controls ======= */
-.myst-section-header {
+.mystSectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -295,14 +341,14 @@
   margin-bottom: 0.75rem;
 }
 
-.myst-section-header h3 {
+.mystSectionHeader h3 {
   display: flex;
   align-items: center;
   gap: 8px;
   margin: 0;
 }
 
-.myst-badge {
+.mystBadge {
   display: inline-flex;
   align-items: center;
   height: 22px;
@@ -314,7 +360,7 @@
   font-weight: 700;
 }
 
-.myst-toggle {
+.mystToggle {
   height: 30px;
   padding: 0 10px;
   border-radius: 8px;
@@ -326,14 +372,14 @@
   transition: all 0.2s ease;
 }
 
-.myst-toggle:hover {
+.mystToggle:hover {
   border-color: rgba(195, 232, 141, 0.5);
   background: rgba(195, 232, 141, 0.12);
   color: #c3e88d;
 }
 
 /* 탭 섹션 컨테이너 */
-.tab-section-container {
+.tabSectionContainer {
   background: var(--auth-bg-card);
   border-radius: 24px;
   box-shadow: 
@@ -346,7 +392,7 @@
 }
 
 /* 탭 네비게이션 */
-.profile-page .tab-navigation {
+.tabNavigation {
   display: flex;
   gap: 0;
   background: rgba(255, 255, 255, 0.02);
@@ -360,7 +406,7 @@
 }
 
 /* 탭 콘텐츠 영역 */
-.profile-page .tab-content {
+.tabContent {
   margin-bottom: 0;
   background: transparent;
   border-radius: 0;
@@ -371,18 +417,18 @@
   min-height: auto;
 }
 
-.profile-page .study-loading-inline {
+.studyLoadingInline {
   color: var(--auth-text-hint);
   font-size: 0.9rem;
   margin: 0.5rem 0 1rem;
 }
 
-.profile-page .empty-state .error-detail {
+.emptyState .errorDetail {
   color: #ef4444;
   font-size: 0.9rem;
 }
 
-.profile-page .empty-state .retry-button {
+.emptyState .retryButton {
   margin-top: 0.75rem;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
@@ -395,26 +441,30 @@
 }
 
 /* ================= My Applications (myapps-*) ================= */
-.myapps-section {
+.myappsMain {
+  flex: 1;
+}
+
+.myappsSection {
   margin-top: 28px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.myapps-header {
+.myappsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
 }
 
-.myapps-title {
+.myappsTitle {
   font-size: 18px;
   font-weight: 700;
   color: #e9f5ff;
 }
 
-.myapps-count-badge {
+.myappsCountBadge {
   display: inline-flex;
   align-items: center;
   height: 22px;
@@ -427,12 +477,12 @@
   font-weight: 700;
 }
 
-.myapps-filters {
+.myappsFilters {
   display: flex;
   gap: 8px;
 }
 
-.myapps-chip {
+.myappsChip {
   height: 30px;
   padding: 0 12px;
   border-radius: 16px;
@@ -444,10 +494,10 @@
   transition: all 0.2s ease;
 }
 
-.myapps-chip:hover { background: rgba(255, 255, 255, 0.08); }
-.myapps-chip.active { border-color: #89DDFF; background: rgba(137, 221, 255, 0.12); color: #89DDFF; }
+.myappsChip:hover { background: rgba(255, 255, 255, 0.08); }
+.myappsChip.active { border-color: #89DDFF; background: rgba(137, 221, 255, 0.12); color: #89DDFF; }
 
-.myapps-chip .myapps-chip-count {
+.myappsChip .myappsChipCount {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -462,13 +512,13 @@
   font-weight: 700;
 }
 
-.myapps-loading,
-.myapps-empty {
+.myappsLoading,
+.myappsEmpty {
   padding: 24px 0;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.myapps-list {
+.myappsList {
   list-style: none;
   padding: 0;
   margin: 12px 0 0 0;
@@ -477,7 +527,7 @@
   gap: 10px;
 }
 
-.myapps-item {
+.myappsItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -488,17 +538,17 @@
   border-radius: 10px;
 }
 
-.myapps-title-line { display: flex; align-items: center; gap: 10px; }
-.myapps-study-title { font-weight: 600; color: rgba(255, 255, 255, 0.95); }
-.myapps-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 11px; color: rgba(255, 255, 255, 0.95); background: rgba(255, 255, 255, 0.08); }
+.myappsTitleLine { display: flex; align-items: center; gap: 10px; }
+.myappsStudyTitle { font-weight: 600; color: rgba(255, 255, 255, 0.95); }
+.myappsBadge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 11px; color: rgba(255, 255, 255, 0.95); background: rgba(255, 255, 255, 0.08); }
 
-.myapps-meta { margin-top: 6px; display: flex; gap: 12px; color: rgba(255, 255, 255, 0.64); font-size: 12px; }
-.myapps-note { color: rgba(195, 232, 141, 0.9); }
+.myappsMeta { margin-top: 6px; display: flex; gap: 12px; color: rgba(255, 255, 255, 0.64); font-size: 12px; }
+.myappsNote { color: rgba(195, 232, 141, 0.9); }
 
-.myapps-actions { display: flex; gap: 8px; }
-.myapps-btn-cancel,
-.myapps-btn-reapply,
-.myapps-btn-goto {
+.myappsActions { display: flex; gap: 8px; }
+.myappsBtnCancel,
+.myappsBtnReapply,
+.myappsBtnGoto {
   height: 32px;
   padding: 0 12px;
   border-radius: 8px;
@@ -509,18 +559,18 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.myapps-btn-cancel:hover { border-color: #FF8A80; background: rgba(255, 138, 128, 0.12); }
-.myapps-btn-reapply:hover { border-color: #C3E88D; background: rgba(195, 232, 141, 0.12); }
-.myapps-btn-goto:hover { border-color: #89DDFF; background: rgba(137, 221, 255, 0.12); }
+.myappsBtnCancel:hover { border-color: #FF8A80; background: rgba(255, 138, 128, 0.12); }
+.myappsBtnReapply:hover { border-color: #C3E88D; background: rgba(195, 232, 141, 0.12); }
+.myappsBtnGoto:hover { border-color: #89DDFF; background: rgba(137, 221, 255, 0.12); }
 
 /* status accents */
-.myapps-status-pending { border-left: 3px solid #FFC107; }
-.myapps-status-accepted { border-left: 3px solid #4CAF50; }
-.myapps-status-rejected { border-left: 3px solid #F44336; }
-.myapps-status-cancelled { border-left: 3px solid #9E9E9E; }
+.myappsStatusPending { border-left: 3px solid #FFC107; }
+.myappsStatusAccepted { border-left: 3px solid #4CAF50; }
+.myappsStatusRejected { border-left: 3px solid #F44336; }
+.myappsStatusCancelled { border-left: 3px solid #9E9E9E; }
 
 /* Study Status Badges */
-.study-status-badge {
+.studyStatusBadge {
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
@@ -532,36 +582,63 @@
   margin-left: 8px;
 }
 
-.study-status-approved {
+.studyStatusapproved {
   background: rgba(195, 232, 141, 0.15);
   color: #C3E88D;
   border: 1px solid rgba(195, 232, 141, 0.3);
 }
 
-.study-status-in-progress {
+.studyStatusinprogress {
   background: rgba(130, 170, 255, 0.15);
   color: #82AAFF;
   border: 1px solid rgba(130, 170, 255, 0.3);
 }
 
-.study-status-completed {
+.studyStatuscompleted {
   background: rgba(76, 175, 80, 0.15);
   color: #4CAF50;
   border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
-.study-status-terminated {
+.studyStatusterminated {
   background: rgba(244, 67, 54, 0.15);
   color: #F44336;
   border: 1px solid rgba(244, 67, 54, 0.3);
 }
 
+.pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #FFC107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.proposed {
+  border-left: 4px solid #0dcaf0;
+}
+
 /* Review Action Button */
-.study-actions {
+.studyActions {
   margin-top: 12px;
 }
 
-.review-action-button {
+.cancelButton {
+  padding: 8px 16px;
+  background: rgba(244, 67, 54, 0.15);
+  color: #ef5350;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: rgba(244, 67, 54, 0.25);
+  transform: translateY(-1px);
+}
+
+.reviewActionButton {
   padding: 8px 16px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -573,38 +650,38 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.review-action-button:hover {
+.reviewActionButton:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
 }
 
 /* New Study Section Styles */
-.study-section-new {
+.studySectionNew {
   padding: 20px 0;
   min-height: auto !important; /* Override App.css section default */
 }
 
-.section-main-title {
+.sectionMainTitle {
   font-size: 24px;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 30px;
 }
 
-.study-categories {
+.studyCategories {
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
 
-.study-category {
+.studyCategory {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 16px;
   padding: 24px;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.category-title {
+.categoryTitle {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -614,11 +691,11 @@
   margin-bottom: 20px;
 }
 
-.category-icon {
+.categoryIcon {
   font-size: 20px;
 }
 
-.category-count {
+.categoryCount {
   margin-left: auto;
   padding: 4px 10px;
   background: rgba(255, 255, 255, 0.08);
@@ -627,13 +704,13 @@
   font-weight: 500;
 }
 
-.study-grid {
+.studyGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
 
-.study-card-new {
+.studyCardNew {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
@@ -642,25 +719,25 @@
   transition: all 0.2s ease;
 }
 
-.study-card-new:hover {
+.studyCardNew:hover {
   background: rgba(255, 255, 255, 0.07);
   border-color: rgba(255, 255, 255, 0.12);
   transform: translateY(-2px);
 }
 
-.study-card-new.leading {
+.studyCardNew.leading {
   border-left: 3px solid #ffd700;
   padding-top: 25px;
 }
 
-.study-card-header {
+.studyCardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
 }
 
-.study-name {
+.studyName {
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
@@ -668,7 +745,7 @@
   flex: 1;
 }
 
-.status-badge {
+.statusBadge {
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 11px;
@@ -677,39 +754,39 @@
   white-space: nowrap;
 }
 
-.study-status-pending {
+.studyStatusPending {
   background: rgba(255, 193, 7, 0.15);
   color: #FFC107;
   border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
-.study-status-default {
+.studyStatusDefault {
   background: rgba(158, 158, 158, 0.15);
   color: #9e9e9e;
   border: 1px solid rgba(158, 158, 158, 0.3);
 }
 
-.study-card-meta {
+.studyCardMeta {
   font-size: 13px;
   color: #aaa;
   margin-bottom: 16px;
 }
 
-.study-card-meta p {
+.studyCardMeta p {
   margin: 4px 0;
 }
 
-.review-note {
+.reviewNote {
   color: #82AAFF;
   font-style: italic;
 }
 
-.study-card-actions {
+.studyCardActions {
   display: flex;
   gap: 8px;
 }
 
-.action-button {
+.actionButton {
   flex: 1;
   padding: 8px 16px;
   border-radius: 8px;
@@ -721,66 +798,66 @@
   text-align: center;
 }
 
-.action-button.primary {
+.actionButton.primary {
   background: rgba(130, 170, 255, 0.15);
   color: #82AAFF;
   border: 1px solid rgba(130, 170, 255, 0.3);
 }
 
-.action-button.primary:hover {
+.actionButton.primary:hover {
   background: rgba(130, 170, 255, 0.25);
   transform: translateY(-1px);
 }
 
-.action-button.cancel {
+.actionButton.cancel {
   background: rgba(244, 67, 54, 0.15);
   color: #ef5350;
   border: 1px solid rgba(244, 67, 54, 0.3);
 }
 
-.action-button.cancel:hover {
+.actionButton.cancel:hover {
   background: rgba(244, 67, 54, 0.25);
 }
 
-.action-button.review {
+.actionButton.review {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
 }
 
-.action-button.review:hover {
+.actionButton.review:hover {
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
 }
 
-.action-button.secondary {
+.actionButton.secondary {
   background: rgba(255, 255, 255, 0.08);
   color: #ccc;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.action-button.secondary:hover {
+.actionButton.secondary:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
-.action-button.manage {
+.actionButton.manage {
   background: rgba(255, 215, 0, 0.15);
   color: #ffd700;
   border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-.action-button.manage:hover {
+.actionButton.manage:hover {
   background: rgba(255, 215, 0, 0.25);
   transform: translateY(-1px);
 }
 
-.loading-state, .error-state {
+.loadingState, .errorState {
   text-align: center;
   padding: 40px;
   color: #888;
 }
 
-.error-detail {
+.errorDetail {
   color: #ef5350;
   font-size: 13px;
   margin-top: 8px;
@@ -788,24 +865,24 @@
 
 /* Mobile responsiveness for new layout */
 @media (max-width: 768px) {
-  .study-grid {
+  .studyGrid {
     grid-template-columns: 1fr;
   }
   
-  .category-title {
+  .categoryTitle {
     font-size: 16px;
   }
   
-  .study-card-actions {
+  .studyCardActions {
     flex-direction: column;
   }
   
-  .action-button {
+  .actionButton {
     width: 100%;
   }
 }
 
-.profile-page .tab-button {
+.tabButton {
   flex: 1;
   padding: 1rem 1.5rem;
   background: transparent;
@@ -822,7 +899,7 @@
 }
 
 /* 탭 버튼 활성 상태 표시 라인 */
-.profile-page .tab-button::after {
+.tabButton::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -834,16 +911,16 @@
   transition: transform var(--auth-transition-base);
 }
 
-.profile-page .tab-button.active::after {
+.tabButton.active::after {
   transform: scaleX(1);
 }
 
-.profile-page .tab-button:hover {
+.tabButton:hover {
   color: var(--auth-text-primary);
   background: rgba(195, 232, 141, 0.05);
 }
 
-.profile-page .tab-button.active {
+.tabButton.active {
   color: var(--auth-primary-green);
   background: rgba(195, 232, 141, 0.08);
   box-shadow: none;
@@ -852,7 +929,7 @@
 }
 
 /* 빈 상태 */
-.profile-page .empty-state {
+.emptyState {
   text-align: center;
   padding: 3rem 2rem;
   background: rgba(255, 255, 255, 0.02);
@@ -864,7 +941,7 @@
   overflow: hidden;
 }
 
-.profile-page .empty-state::before {
+.emptyState::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -876,27 +953,27 @@
   pointer-events: none;
 }
 
-.profile-page .empty-state p {
+.emptyState p {
   color: var(--auth-text-secondary);
   margin: 0.75rem 0;
   font-size: 1rem;
   position: relative;
 }
 
-.profile-page .empty-state p:first-child {
+.emptyState p:first-child {
   font-size: 1.25rem;
   color: var(--auth-text-primary);
   font-weight: 600;
 }
 
-.profile-page .empty-state .suggestion {
+.emptyState .suggestion {
   color: var(--auth-primary-green);
   font-size: 0.95rem;
   margin-top: 1.5rem;
   font-weight: 500;
 }
 
-.profile-page .browse-button {
+.browseButton {
   display: inline-block;
   margin-top: 1.5rem;
   padding: 0.875rem 2rem;
@@ -915,7 +992,7 @@
   position: relative;
 }
 
-.profile-page .browse-button:hover {
+.browseButton:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
@@ -924,7 +1001,7 @@
 }
 
 /* 설정 섹션 */
-.settings-section {
+.settingsSection {
   padding: 2rem;
   background: var(--auth-bg-card);
   border-radius: 20px;
@@ -937,7 +1014,7 @@
   width: 100%;
 }
 
-.settings-section h3 {
+.settingsSection h3 {
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--auth-text-primary);
@@ -949,13 +1026,13 @@
   border-bottom: 1px solid rgba(195, 232, 141, 0.1);
 }
 
-.settings-nav {
+.settingsNav {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.settings-nav a {
+.settingsNav a {
   color: var(--auth-text-secondary);
   text-decoration: none;
   font-size: 1rem;
@@ -968,7 +1045,7 @@
   overflow: hidden;
 }
 
-.settings-nav a::before {
+.settingsNav a::before {
   content: '';
   position: absolute;
   top: 0;
@@ -980,18 +1057,18 @@
   transition: transform var(--auth-transition-base);
 }
 
-.settings-nav a:hover {
+.settingsNav a:hover {
   color: var(--auth-primary-green);
   border-color: rgba(195, 232, 141, 0.3);
   background: rgba(195, 232, 141, 0.05);
 }
 
-.settings-nav a:hover::before {
+.settingsNav a:hover::before {
   transform: translateX(100%);
 }
 
 /* 게임 섹션 */
-.game-section {
+.gameSection {
   animation: authFadeIn var(--auth-transition-slow) ease-out;
   animation-delay: 0.1s;
   animation-fill-mode: both;
@@ -1001,7 +1078,7 @@
   width: 100%;
 }
 
-.game-section h2 {
+.gameSection h2 {
   font-size: 1.375rem;
   font-weight: 700;
   color: var(--auth-text-primary);
@@ -1013,7 +1090,7 @@
   border-bottom: 1px solid rgba(195, 232, 141, 0.1);
 }
 
-.game-summary {
+.gameSummary {
   display: flex;
   gap: 2rem;
   margin-bottom: 2rem;
@@ -1024,33 +1101,33 @@
   backdrop-filter: blur(10px);
 }
 
-.summary-item {
+.summaryItem {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.summary-label {
+.summaryLabel {
   font-size: 0.875rem;
   color: var(--auth-text-hint);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.summary-value {
+.summaryValue {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--auth-primary-green);
   text-shadow: 0 0 20px rgba(195, 232, 141, 0.3);
 }
 
-.game-cards {
+.gameCards {
   display: grid;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
-.game-card {
+.gameCard {
   background: var(--auth-bg-card);
   border: 1px solid rgba(195, 232, 141, 0.15);
   border-radius: 16px;
@@ -1082,18 +1159,18 @@
   transform: translateY(-4px) scale(1.02);
 }
 
-.game-card:hover::before {
+.gameCard:hover::before {
   opacity: 1;
 }
 
-.game-header {
+.gameHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
 }
 
-.game-header h3 {
+.gameHeader h3 {
   font-size: 1.25rem;
   font-weight: 700;
   background: linear-gradient(135deg, var(--auth-accent-purple), var(--auth-accent-blue));
@@ -1103,46 +1180,46 @@
   margin: 0;
 }
 
-.last-played {
+.lastPlayed {
   font-size: 0.875rem;
   color: var(--auth-text-hint);
   font-style: italic;
 }
 
-.game-stats {
+.gameStats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.stat-item {
+.statItem {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.stat-label {
+.statLabel {
   font-size: 0.875rem;
   color: var(--auth-text-hint);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.stat-value {
+.statValue {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--auth-text-primary);
 }
 
-.stat-value.ranking {
+.statValue.ranking {
   background: linear-gradient(135deg, var(--auth-accent-purple), var(--auth-accent-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.play-button {
+.playButton {
   display: inline-block;
   padding: 0.75rem 1.5rem;
   background: linear-gradient(135deg, var(--auth-accent-purple), var(--auth-accent-blue));
@@ -1172,7 +1249,7 @@
 }
 
 /* 격려 메시지 */
-.motivation-message {
+.motivationMessage {
   text-align: center;
   padding: 2rem;
   color: var(--auth-text-secondary);
@@ -1187,7 +1264,7 @@
   border: 1px solid rgba(195, 232, 141, 0.15);
 }
 
-.motivation-message p {
+.motivationMessage p {
   background: linear-gradient(135deg, var(--auth-primary-green), var(--auth-accent-purple));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1199,99 +1276,99 @@
 
 /* 반응형 디자인 */
 @media (min-width: 640px) {
-  .profile-container {
+  .profileContainer {
     padding: 10rem 2rem 3rem;
     gap: 2.5rem;
   }
 
-  .study-cards {
+  .studyCards {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .game-cards {
+  .gameCards {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .settings-nav {
+  .settingsNav {
     flex-direction: row;
     gap: 1.5rem;
   }
   
-  .settings-nav a {
+  .settingsNav a {
     flex: 1;
     text-align: center;
   }
 }
 
 @media (max-width: 480px) {
-  .profile-container {
+  .profileContainer {
     padding: 7rem 1rem 2rem;
     gap: 1.5rem;
   }
   
-  .profile-summary {
+  .profileSummary {
     padding: 1.5rem;
     margin-bottom: 0;
   }
   
-  .profile-header {
+  .profileHeader {
     flex-direction: column;
     text-align: center;
     gap: 0.75rem;
   }
   
-  .profile-placeholder {
+  .profilePlaceholder {
     width: 60px;
     height: 60px;
   }
   
-  .profile-info h1 {
+  .profileInfo h1 {
     font-size: 1.25rem;
   }
   
-  .profile-page .tab-navigation {
+  .tabNavigation {
     margin-bottom: 1rem;
   }
   
-  .profile-page .tab-button {
+  .tabButton {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
   }
   
-  .tab-content {
+  .tabContent {
     margin-bottom: 0;
     padding: 1.5rem;
   }
   
-  .tab-section-container {
+  .tabSectionContainer {
     border-radius: 16px;
   }
   
-  .empty-state {
+  .emptyState {
     padding: 1.5rem 1rem;
   }
   
-  .settings-section {
+  .settingsSection {
     padding: 1.5rem;
     margin-bottom: 0;
   }
   
-  .study-section h2,
-  .game-section h2 {
+  .studySection h2,
+  .gameSection h2 {
     font-size: 1.1rem;
   }
   
-  .settings-section h3 {
+  .settingsSection h3 {
     font-size: 1rem;
   }
   
-  .game-summary {
+  .gameSummary {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
   }
   
-  .summary-value {
+  .summaryValue {
     font-size: 1.125rem;
   }
 }
@@ -1299,11 +1376,11 @@
 /* =============================================== */
 /* Admin Badge Styles - Unique prefix to avoid conflicts */
 /* =============================================== */
-.profile-image {
+.profileImage {
   position: relative;
 }
 
-.profile-admin-badge {
+.profileAdminBadge {
   position: absolute;
   bottom: -5px;
   right: -5px;
@@ -1321,12 +1398,12 @@
   transition: all 0.3s ease;
 }
 
-.profile-admin-badge:hover {
+.profileAdminBadge:hover {
   transform: scale(1.1);
   box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
 }
 
-.profile-admin-icon {
+.profileAdminIcon {
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
@@ -1343,7 +1420,7 @@
 
 /* Mobile responsiveness for admin elements */
 @media (max-width: 768px) {
-  .profile-admin-badge {
+  .profileAdminBadge {
     width: 28px;
     height: 28px;
     bottom: -3px;

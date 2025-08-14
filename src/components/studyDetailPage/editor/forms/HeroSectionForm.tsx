@@ -115,12 +115,12 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
   // 표준 예시 데이터
   const loadExampleData = () => {
     // RichText 형식으로 변환
-    setTitle(RichTextConverter.fromHTML('💯 코테 스터디<br/>함께 성장하기'));
+    setTitle(RichTextConverter.fromHTML('💯 코테 스터디<br/>테코테코'));
     setSubtitle(RichTextConverter.fromHTML('변화 속에서<br/><span class="highlight">변치 않는 ____를 찾다</span>'));
     setDescription('기술 변화 속 흔들리지 않는 개발자 사고의 뿌리를 탐구하고, 단순한 코딩 테스트를 넘어 자료구조와 알고리즘의 본질에 Deep Dive합니다.');
     setButtonText('참가 신청하기');
     setButtonLink('#apply');
-    setBackgroundImage('/images/study/profile1.svg');
+    setBackgroundImage('/images/tecoteco/profile1.svg');
     
     // InfoBox 예시 데이터
     setUseInfoBox(true);
@@ -128,15 +128,15 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
     setInfoBoxItems([
       {
         icon: '💡',
-        text: RichTextConverter.fromHTML('기술 변화 속 <span class="highlight">흔들리지 않는 개발자 사고의 뿌리</span>를 탐구해요.')
+        text: RichTextConverter.fromHTML('기술 변화 속 흔들리지 않는 <span class="subtle-highlight" style="color: rgb(130, 170, 255)">개발자 사고의 뿌리</span>를 탐구해요.')
       },
       {
         icon: '📚',
-        text: RichTextConverter.fromHTML('단순한 코딩 테스트 넘어, <span class="highlight">자료구조와 알고리즘의 본질</span>에 Deep Dive 해요.')
+        text: RichTextConverter.fromHTML('단순한 코딩 테스트 넘어, 자료구조와 알고리즘의 <span class="highlight" style="color: rgb(255, 234, 0)">본질에 Deep Dive</span> 해요.')
       },
       {
         icon: '🤝',
-        text: RichTextConverter.fromHTML('서로의 질문이 <span class="highlight">해답</span>이 되고, <span class="highlight">함께 성장</span>하는 시너지를 경험해요.')
+        text: RichTextConverter.fromHTML('서로의 질문이 해답이 되고, <span class="subtle-highlight" style="color: rgb(130, 170, 255)">함께 성장</span>하는 시너지를 경험해요.')
       }
     ]);
   };

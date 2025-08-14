@@ -428,8 +428,9 @@ class StudyService {
     memberId: string;
     studyId: string;
     studyTitle: string;
+    studyStatus?: string;
     role: string;
-    joinedAt: string;
+    joinedAt: string | number[];
     isActive: boolean;
     attendanceRate: number | null;
     warningCount: number;
@@ -445,12 +446,13 @@ class StudyService {
     if (!Array.isArray(list)) return [];
 
     return list.map(item => ({
-      memberId: item.memberId,
-      studyId: item.studyId,
-      studyTitle: item.studyTitle,
-      role: item.role,
-      joinedAt: item.joinedAt,
-      isActive: item.isActive,
+      memberId: item.memberId || item.id,
+      studyId: item.studyId || item.id,
+      studyTitle: item.studyTitle || item.title,
+      studyStatus: item.studyStatus || item.status,
+      role: item.role || 'OWNER',
+      joinedAt: item.joinedAt || item.createdAt,
+      isActive: item.isActive ?? true,
       attendanceRate: item.attendanceRate ?? null,
       warningCount: item.warningCount ?? 0,
     }));
