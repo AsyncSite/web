@@ -611,6 +611,24 @@ const StudyManagementPage: React.FC = () => {
               <span>📋 신청자 {applications.length}명</span>
               <span>👥 멤버 {members.length}명</span>
               <span>⏳ 대기 {pendingApplications.length}명</span>
+              {pageData && (
+                <span>
+                  {pageData.status === 'PUBLISHED' ? '✅ 발행됨' : '📝 초안'}
+                  {pageData.publishedAt && pageData.status === 'PUBLISHED' && ` (${(() => {
+                    try {
+                      if (Array.isArray(pageData.publishedAt)) {
+                        const [year, month, day] = pageData.publishedAt;
+                        const date = new Date(year, month - 1, day);
+                        return date.toLocaleDateString('ko-KR');
+                      }
+                      const date = new Date(pageData.publishedAt);
+                      return isNaN(date.getTime()) ? '날짜 없음' : date.toLocaleDateString('ko-KR');
+                    } catch {
+                      return '날짜 없음';
+                    }
+                  })()})`}
+                </span>
+              )}
             </div>
           </div>
           {/* 권한 안내 메시지 */}
@@ -760,33 +778,6 @@ const StudyManagementPage: React.FC = () => {
         {activeTab === 'page-editor' && (
           <div className={styles.pageEditorSection}>
             <div className={styles.editorHeader}>
-              <h3>상세 페이지 편집</h3>
-              {pageData && (
-                <div className={styles.publishStatus}>
-                  <span className={`${styles.statusBadge} ${pageData.status === 'PUBLISHED' ? styles.published : styles.draft}`}>
-                    {pageData.status === 'PUBLISHED' ? '✅ 발행됨' : '📝 초안'}
-                  </span>
-                  {pageData.publishedAt && (
-                    <span className={styles.lastPublished}>
-                      마지막 발행: {(() => {
-                        try {
-                          // 배열 형식 [year, month, day, hour, minute, second, nano] 처리
-                          if (Array.isArray(pageData.publishedAt)) {
-                            const [year, month, day] = pageData.publishedAt;
-                            const date = new Date(year, month - 1, day); // month는 0부터 시작
-                            return date.toLocaleDateString('ko-KR');
-                          }
-                          // 문자열 형식 처리
-                          const date = new Date(pageData.publishedAt);
-                          return isNaN(date.getTime()) ? '날짜 정보 없음' : date.toLocaleDateString('ko-KR');
-                        } catch {
-                          return '날짜 정보 없음';
-                        }
-                      })()}
-                    </span>
-                  )}
-                </div>
-              )}
               <div className={styles.editorActions}>
                 <button 
                   className={styles.btnPreview}
