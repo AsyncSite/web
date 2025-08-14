@@ -267,10 +267,8 @@ const StudyManagementPage: React.FC = () => {
       
       const request: AddSectionRequest = { 
         type: type as SectionType, 
-        props: {
-          ...props,
-          order: maxOrder + 100  // 명시적으로 order 값 설정
-        }
+        props: props,
+        order: maxOrder + 100  // order를 최상위 필드로 이동
       };
       const updatedPage = await studyDetailPageService.addSection(study!.id, request);
       setPageData(updatedPage);
@@ -283,14 +281,15 @@ const StudyManagementPage: React.FC = () => {
     }
   };
 
-  const handleUpdateSection = async (sectionId: string, sectionType: SectionType | string, props: any) => {
+  const handleUpdateSection = async (sectionId: string, sectionType: SectionType | string, props: any, order?: number) => {
     if (!studyId) return;
 
     try {
       setSaving(true);
       const request: AddSectionRequest = { 
         type: sectionType as SectionType, 
-        props: props 
+        props: props,
+        order: order  // order 추가
       };
       const updatedPage = await studyDetailPageService.updateSection(study!.id, sectionId, request);
       setPageData(updatedPage);
@@ -1046,10 +1045,8 @@ const StudyManagementPage: React.FC = () => {
                             setSaving(true);
                             const request: AddSectionRequest = { 
                               type: selectedSection.type as SectionType, 
-                              props: {
-                                ...outgoing,
-                                order: selectedSection.order || 0
-                              }
+                              props: outgoing,
+                              order: selectedSection.order  // order를 최상위 필드로 이동
                             };
                             const updatedPage = await studyDetailPageService.addSection(study!.id, request);
                             setPageData(updatedPage);
@@ -1068,7 +1065,7 @@ const StudyManagementPage: React.FC = () => {
                           }
                         } else {
                           // 기존 섹션 업데이트
-                          handleUpdateSection(selectedSection.id, selectedSection.type, outgoing);
+                          handleUpdateSection(selectedSection.id, selectedSection.type, outgoing, selectedSection.order);
                         }
                       }}
                       onCancel={() => {

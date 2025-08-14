@@ -67,7 +67,9 @@ export interface JourneySectionData {
 export const journeyTemplates = {
   algorithm: {
     tagHeader: '우리의 여정',
-    subtitle: '작은 시작이 모여 의미 있는 변화를 만들어가고 있어요. 각자의 속도로, 함께의 힘으로.',
+    title: '하루하루가 쌓이니 벌써 <span style="color: #c3e88d;">{days}</span>이 되었어요.',
+    subtitle: '작은 시작이 모여 <span style="color: #c3e88d;">의미 있는 변화</span>를 만들어가고 있어요.<br/>각자의 속도로, <span style="color: #82aaff;">함께의 힘</span>으로.',
+    closingMessage: '작은 걸음이지만 <span style="color: #c3e88d;">꾸준히</span>, <span style="color: #82aaff;">의미 있게</span>.',
     startDate: new Date().toISOString().split('T')[0],
     calculateDays: true,
     generations: [
@@ -100,7 +102,9 @@ export const journeyTemplates = {
   
   project: {
     tagHeader: '프로젝트 히스토리',
-    subtitle: '아이디어에서 시작해 실제 서비스로 성장하는 과정',
+    title: '아이디어에서 <span style="color: #c3e88d;">현실</span>로',
+    subtitle: '아이디어에서 시작해 <span style="color: #ffea00;">실제 서비스</span>로 성장하는 과정',
+    closingMessage: '함께 만들어가는 <span style="color: #c3e88d;">더 나은 미래</span>',
     calculateDays: false,
     generations: [
       {
@@ -133,7 +137,9 @@ export const journeyTemplates = {
   
   reading: {
     tagHeader: '독서 여정',
-    subtitle: '함께 읽고, 함께 성장하는 시간들',
+    title: '책과 함께하는 <span style="color: #82aaff;">성장의 시간</span>',
+    subtitle: '함께 읽고, <span style="color: #c3e88d;">함께 성장</span>하는 시간들',
+    closingMessage: '책 한 권이 만드는 <span style="color: #ffea00;">새로운 시야</span>',
     calculateDays: true,
     generations: [
       {

@@ -268,6 +268,7 @@ const StatsSection: React.FC<{ stats: any }> = ({ stats }) => {
 // 메인 MembersSection 컴포넌트
 const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   const { 
+    tagHeader = '함께하는 멤버들이에요',
     members: initialMembers = [], 
     title = '',
     subtitle,
@@ -318,7 +319,7 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   if (isLoadingMembers) {
     return (
       <section className={styles.studyDetailMembersSection}>
-        <div className={styles.sectionTagHeader}>함께하는 멤버들이에요</div>
+        {tagHeader && <div className={styles.sectionTagHeader}>{tagHeader}</div>}
         {title && <h2 className={styles.sectionTitle}>{title}</h2>}
         {subtitle && <p className={styles.sectionSubtitle}>{subtitle}</p>}
         <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
@@ -342,7 +343,7 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   return (
     <section className={styles.studyDetailMembersSection}>
       {/* 태그 헤더 및 타이틀 (좌측 정렬) */}
-      <div className={styles.sectionTagHeader}>함께하는 멤버들이에요</div>
+      {tagHeader && <div className={styles.sectionTagHeader}>{tagHeader}</div>}
       {title && <h2 className={styles.sectionTitle} dangerouslySetInnerHTML={{ __html: title.replace(/\n/g, '<br />') }} />}
       {subtitle && <p className={styles.sectionSubtitle} dangerouslySetInnerHTML={{ __html: subtitle.replace(/\n/g, '<br />') }} />}
 

@@ -295,19 +295,19 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
         <>
           {/* 태그 헤더 설정 */}
           <div className="study-management-review-form-group">
-            <label>태그 헤더 (선택사항)</label>
+            <label>태그 헤더</label>
             <input
               type="text"
               value={tagHeader}
               onChange={(e) => setTagHeader(e.target.value)}
-              placeholder="예: 솔직한 후기"
+              placeholder="솔직한 후기"
               className="study-management-review-input"
             />
           </div>
 
           {/* 섹션 제목 - Rich Text Editor */}
           <div className="study-management-review-form-group">
-            <label>섹션 제목 *</label>
+            <label>제목 *</label>
             <StudyDetailRichTextEditor
               value={title}
               onChange={setTitle}
@@ -319,7 +319,7 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
 
           {/* 부제목 - Rich Text Editor */}
           <div className="study-management-review-form-group">
-            <label>부제목 (선택사항)</label>
+            <label>부제목</label>
             <StudyDetailRichTextEditor
               value={subtitle}
               onChange={setSubtitle}

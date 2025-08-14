@@ -197,22 +197,6 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
     return Illustration ? <Illustration /> : null;
   };
 
-  const renderSubtitle = () => {
-    if (!subtitle) return null;
-    
-    if (highlightText && subtitle.includes(highlightText)) {
-      const parts = subtitle.split(highlightText);
-      return (
-        <p className={styles.sectionSubtitle}>
-          {parts[0]}
-          <span className={styles.highlight}>{highlightText}</span>
-          {parts[1]}
-        </p>
-      );
-    }
-    
-    return <p className={styles.sectionSubtitle}>{subtitle}</p>;
-  };
 
   // CSS Module 스타일 사용
   const sectionClassName = styles.studyDetailExperienceSection;
@@ -226,8 +210,10 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
     <section className={`${sectionClassName} ${layout === 'vertical' ? styles.verticalLayout : layout === 'grid' ? styles.gridLayout : ''}`} style={customStyles}>
       {tagHeader && <div className={styles.sectionTagHeader}>{tagHeader}</div>}
       
-      <h2 className={styles.sectionTitle}>{title}</h2>
-      {renderSubtitle()}
+      <h2 className={styles.sectionTitle} dangerouslySetInnerHTML={{ __html: title.replace(/\n/g, '<br />') }} />
+      {subtitle && (
+        <p className={styles.sectionSubtitle} dangerouslySetInnerHTML={{ __html: subtitle.replace(/\n/g, '<br />') }} />
+      )}
 
       <div className={`${styles.stepsNav} ${navigationStyle === 'dots' ? styles.navigationDots : navigationStyle === 'progress' ? styles.navigationProgress : navigationStyle === 'timeline' ? styles.navigationTimeline : ''}`}>
         {navigationStyle === 'timeline' && <div className={styles.timelineLine} />}
@@ -265,8 +251,8 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
             <div className={styles.stepDetailImageWrapper}>
               {renderIllustration(steps[activeStepIndex])}
             </div>
-            <h3 className={styles.stepDetailTitle}>{steps[activeStepIndex].title}</h3>
-            <p className={styles.stepDetailText}>{steps[activeStepIndex].description}</p>
+            <h3 className={styles.stepDetailTitle} dangerouslySetInnerHTML={{ __html: steps[activeStepIndex].title.replace(/\n/g, '<br />') }} />
+            <p className={styles.stepDetailText} dangerouslySetInnerHTML={{ __html: steps[activeStepIndex].description.replace(/\n/g, '<br />') }} />
           </div>
         </div>
       )}
@@ -285,8 +271,8 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
                   <div className={styles.accordionIllustration}>
                     {renderIllustration(step)}
                   </div>
-                  <h4>{step.title}</h4>
-                  <p>{step.description}</p>
+                  <h4 dangerouslySetInnerHTML={{ __html: step.title.replace(/\n/g, '<br />') }} />
+                  <p dangerouslySetInnerHTML={{ __html: step.description.replace(/\n/g, '<br />') }} />
                 </div>
               )}
             </div>

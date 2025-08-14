@@ -161,12 +161,12 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="study-management-richtext-form">
       <div className="study-management-richtext-form-group">
-        <label>섹션 제목 (선택)</label>
+        <label>태그 헤더</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="예: 스터디를 통해 얻을 수 있는 것들"
+          placeholder="스터디 소개"
           className="study-management-richtext-input"
         />
       </div>

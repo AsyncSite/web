@@ -5,6 +5,9 @@ import {
   ScheduleItem,
   howWeRollTemplates 
 } from '../../types/howWeRollTypes';
+import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
+import { RichTextData } from '../../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import './HowWeRollSectionForm.css';
 
 interface HowWeRollSectionFormProps {
@@ -18,12 +21,32 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
   onSave,
   onCancel,
 }) => {
-  const [title, setTitle] = useState(initialData?.title || '');
-  const [subtitle, setSubtitle] = useState(initialData?.subtitle || '');
+  const [title, setTitle] = useState<RichTextData | string>(
+    initialData?.title ? 
+      (typeof initialData.title === 'string' ? RichTextConverter.fromHTML(initialData.title) : initialData.title)
+      : ''
+  );
+  const [subtitle, setSubtitle] = useState<RichTextData | string>(
+    initialData?.subtitle ? 
+      (typeof initialData.subtitle === 'string' ? RichTextConverter.fromHTML(initialData.subtitle) : initialData.subtitle)
+      : ''
+  );
   const [tagHeader, setTagHeader] = useState(initialData?.tagHeader || '');
-  const [scheduleIntro, setScheduleIntro] = useState(initialData?.scheduleIntro || '');
-  const [subHeading, setSubHeading] = useState(initialData?.subHeading || '');
-  const [closingMessage, setClosingMessage] = useState(initialData?.closingMessage || '');
+  const [scheduleIntro, setScheduleIntro] = useState<RichTextData | string>(
+    initialData?.scheduleIntro ? 
+      (typeof initialData.scheduleIntro === 'string' ? RichTextConverter.fromHTML(initialData.scheduleIntro) : initialData.scheduleIntro)
+      : ''
+  );
+  const [subHeading, setSubHeading] = useState<RichTextData | string>(
+    initialData?.subHeading ? 
+      (typeof initialData.subHeading === 'string' ? RichTextConverter.fromHTML(initialData.subHeading) : initialData.subHeading)
+      : ''
+  );
+  const [closingMessage, setClosingMessage] = useState<RichTextData | string>(
+    initialData?.closingMessage ? 
+      (typeof initialData.closingMessage === 'string' ? RichTextConverter.fromHTML(initialData.closingMessage) : initialData.closingMessage)
+      : ''
+  );
   
   const [meetingOverview, setMeetingOverview] = useState<MeetingOverviewItem[]>(
     initialData?.meetingOverview || []
@@ -38,10 +61,12 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
 
   const loadTemplate = (templateType: 'algorithm' | 'design' | 'language') => {
     const template = howWeRollTemplates[templateType];
-    setTitle(template.title);
+    setTitle(RichTextConverter.fromHTML(template.title));
+    setSubtitle(RichTextConverter.fromHTML(template.subtitle || ''));
     setTagHeader(template.tagHeader);
-    setScheduleIntro(template.scheduleIntro);
-    setSubHeading(template.subHeading);
+    setScheduleIntro(RichTextConverter.fromHTML(template.scheduleIntro));
+    setSubHeading(RichTextConverter.fromHTML(template.subHeading));
+    setClosingMessage(RichTextConverter.fromHTML(template.closingMessage || ''));
     setMeetingOverview(template.meetingOverview);
     setSchedule(template.schedule);
   };
@@ -94,12 +119,12 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
     e.preventDefault();
     
     const data: HowWeRollData = {
-      title,
-      subtitle: subtitle || undefined,
+      title: typeof title === 'string' ? title : RichTextConverter.toHTML(title),
+      subtitle: subtitle ? (typeof subtitle === 'string' ? subtitle : RichTextConverter.toHTML(subtitle)) : undefined,
       tagHeader: tagHeader || undefined,
-      scheduleIntro: scheduleIntro || undefined,
-      subHeading: subHeading || undefined,
-      closingMessage: closingMessage || undefined,
+      scheduleIntro: scheduleIntro ? (typeof scheduleIntro === 'string' ? scheduleIntro : RichTextConverter.toHTML(scheduleIntro)) : undefined,
+      subHeading: subHeading ? (typeof subHeading === 'string' ? subHeading : RichTextConverter.toHTML(subHeading)) : undefined,
+      closingMessage: closingMessage ? (typeof closingMessage === 'string' ? closingMessage : RichTextConverter.toHTML(closingMessage)) : undefined,
       meetingOverview,
       schedule
     };
@@ -153,37 +178,35 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
       </div>
 
       <div className="study-management-hwr-form-group">
-        <label>태그 헤더 (선택)</label>
+        <label>태그 헤더</label>
         <input
           type="text"
           value={tagHeader}
           onChange={(e) => setTagHeader(e.target.value)}
-          placeholder="예: 모임 상세 안내"
+          placeholder="모임 상세 안내"
           className="study-management-hwr-input"
         />
       </div>
 
       <div className="study-management-hwr-form-group">
         <label>제목 *</label>
-        <input
-          type="text"
+        <StudyDetailRichTextEditor
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="예: 특별한 건 없어요. 그냥 계속 모일 뿐이에요."
-          required
-          className="study-management-hwr-input"
+          onChange={setTitle}
+          placeholder="특별한 건 없어요. 그냥 계속 모일 뿐이에요."
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={200}
         />
-        <small className="study-management-hwr-help-text">줄바꿈은 입력 시 자동 처리됩니다</small>
       </div>
 
       <div className="study-management-hwr-form-group">
-        <label>부제목 (선택)</label>
-        <input
-          type="text"
+        <label>부제목</label>
+        <StudyDetailRichTextEditor
           value={subtitle}
-          onChange={(e) => setSubtitle(e.target.value)}
+          onChange={setSubtitle}
           placeholder="섹션 부제목"
-          className="study-management-hwr-input"
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={200}
         />
       </div>
 
@@ -277,24 +300,24 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
       </div>
 
       <div className="study-management-hwr-form-group">
-        <label>서브 헤딩 (선택)</label>
-        <input
-          type="text"
+        <label>서브 헤딩</label>
+        <StudyDetailRichTextEditor
           value={subHeading}
-          onChange={(e) => setSubHeading(e.target.value)}
-          placeholder="예: 몰입, 해본 적 있으세요?"
-          className="study-management-hwr-input"
+          onChange={setSubHeading}
+          placeholder="몰입, 해본 적 있으세요?"
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={200}
         />
       </div>
 
       <div className="study-management-hwr-form-group">
-        <label>스케줄 소개 (선택)</label>
-        <textarea
+        <label>스케줄 소개</label>
+        <StudyDetailRichTextEditor
           value={scheduleIntro}
-          onChange={(e) => setScheduleIntro(e.target.value)}
+          onChange={setScheduleIntro}
           placeholder="스케줄 소개 문구"
-          rows={2}
-          className="study-management-hwr-textarea"
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={300}
         />
       </div>
 
@@ -362,13 +385,13 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
       </div>
 
       <div className="study-management-hwr-form-group">
-        <label>마무리 메시지 (선택)</label>
-        <textarea
+        <label>마무리 메시지</label>
+        <StudyDetailRichTextEditor
           value={closingMessage}
-          onChange={(e) => setClosingMessage(e.target.value)}
+          onChange={setClosingMessage}
           placeholder="섹션을 마무리하는 메시지"
-          rows={3}
-          className="study-management-hwr-textarea"
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={300}
         />
       </div>
 

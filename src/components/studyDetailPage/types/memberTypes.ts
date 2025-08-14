@@ -120,6 +120,7 @@ export const STUDY_TEMPLATES = {
 
 // MembersSection 데이터 구조
 export interface MembersSectionData {
+  tagHeader?: string;
   title?: string;
   subtitle?: string;
   layout?: MemberLayoutType;

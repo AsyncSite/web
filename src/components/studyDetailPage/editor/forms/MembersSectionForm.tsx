@@ -28,6 +28,9 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   onSave,
   onCancel
 }) => {
+  // TagHeader 상태 추가
+  const [tagHeader, setTagHeader] = useState<string>(initialData.tagHeader || '함께하는 멤버들이에요');
+  
   // Title과 Subtitle을 RichText로 관리 (초기값이 HTML이면 변환)
   const [title, setTitle] = useState<RichTextData | string>(
     initialData.title ? 
@@ -304,6 +307,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
 
   // 표준 예시 데이터 로드
   const loadStandardExample = () => {
+    setTagHeader('함께하는 멤버들이에요');
     setTitle(RichTextConverter.fromHTML('더 멋진 여정이 펼쳐질 거예요,<br/>함께라면.'));
     setSubtitle(RichTextConverter.fromHTML(''));
     setLayout('carousel');
@@ -525,6 +529,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
     }
 
     onSave({
+      tagHeader,
       title: typeof title === 'string' ? title : RichTextConverter.toHTML(title),
       subtitle: typeof subtitle === 'string' ? subtitle : RichTextConverter.toHTML(subtitle),
       layout,
@@ -584,7 +589,18 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
 
       {/* 섹션 헤더 */}
       <div className="study-management-members-form-group">
-        <label>섹션 제목</label>
+        <label>태그 헤더</label>
+        <input
+          type="text"
+          value={tagHeader}
+          onChange={(e) => setTagHeader(e.target.value)}
+          placeholder="함께하는 멤버들이에요"
+          className="study-management-members-input"
+        />
+      </div>
+
+      <div className="study-management-members-form-group">
+        <label>제목</label>
         <StudyDetailRichTextEditor
           value={title}
           onChange={setTitle}
@@ -595,7 +611,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       </div>
 
       <div className="study-management-members-form-group">
-        <label>섹션 부제목 (선택)</label>
+        <label>부제목</label>
         <StudyDetailRichTextEditor
           value={subtitle}
           onChange={setSubtitle}

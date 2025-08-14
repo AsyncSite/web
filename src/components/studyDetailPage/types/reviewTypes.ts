@@ -35,7 +35,7 @@ export interface ReviewSectionData {
   enabled: boolean; // 섹션 표시 여부
   tagHeader?: string; // 상단 작은 태그 텍스트 (예: "솔직한 후기")
   title: string; // 섹션 제목 (예: "수강생 후기", "참여자 리뷰")
-  subtitle?: string; // 부제목 (선택)
+  subtitle?: string; // 부제목
   showStats?: boolean; // 통계 표시 여부
   stats?: ReviewStats; // 리뷰 통계
   reviews?: Review[]; // 실제 리뷰 목록 (API에서 자동으로 가져옴)

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { ExperienceSectionData, StepContent, experienceTemplates } from '../../types/experienceTypes';
+import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
+import { RichTextData } from '../../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import './ExperienceSectionForm.css';
 
 interface ExperienceSectionFormProps {
@@ -38,6 +41,30 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
     : defaultData;
 
   const [formData, setFormData] = useState<ExperienceSectionData>(mergedData);
+  
+  // RichTextEditor states for title and subtitle
+  const [title, setTitle] = useState<RichTextData | string>(
+    mergedData.title ? 
+      (typeof mergedData.title === 'string' ? RichTextConverter.fromHTML(mergedData.title) : mergedData.title)
+      : ''
+  );
+  const [subtitle, setSubtitle] = useState<RichTextData | string>(
+    mergedData.subtitle ? 
+      (typeof mergedData.subtitle === 'string' ? RichTextConverter.fromHTML(mergedData.subtitle) : mergedData.subtitle)
+      : ''
+  );
+  
+  // RichTextEditor states for each step's title and description
+  const [stepTitles, setStepTitles] = useState<(RichTextData | string)[]>(
+    mergedData.steps.map(step => 
+      typeof step.title === 'string' ? RichTextConverter.fromHTML(step.title) : step.title || ''
+    )
+  );
+  const [stepDescriptions, setStepDescriptions] = useState<(RichTextData | string)[]>(
+    mergedData.steps.map(step => 
+      typeof step.description === 'string' ? RichTextConverter.fromHTML(step.description) : step.description || ''
+    )
+  );
 
   const handleInputChange = (field: keyof ExperienceSectionData, value: any) => {
     setFormData(prev => ({
@@ -57,6 +84,18 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
       steps: newSteps
     }));
   };
+  
+  const handleStepTitleChange = (index: number, value: RichTextData | string) => {
+    const newStepTitles = [...stepTitles];
+    newStepTitles[index] = value;
+    setStepTitles(newStepTitles);
+  };
+  
+  const handleStepDescriptionChange = (index: number, value: RichTextData | string) => {
+    const newStepDescriptions = [...stepDescriptions];
+    newStepDescriptions[index] = value;
+    setStepDescriptions(newStepDescriptions);
+  };
 
   const addStep = () => {
     const newStep: StepContent = {
@@ -69,6 +108,8 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
       ...prev,
       steps: [...prev.steps, newStep]
     }));
+    setStepTitles(prev => [...prev, RichTextConverter.fromHTML(newStep.title)]);
+    setStepDescriptions(prev => [...prev, RichTextConverter.fromHTML(newStep.description)]);
   };
 
   const removeStep = (index: number) => {
@@ -76,6 +117,8 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
       ...prev,
       steps: prev.steps.filter((_, i) => i !== index)
     }));
+    setStepTitles(prev => prev.filter((_, i) => i !== index));
+    setStepDescriptions(prev => prev.filter((_, i) => i !== index));
   };
 
   const moveStep = (index: number, direction: 'up' | 'down') => {
@@ -88,17 +131,66 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
         ...prev,
         steps: newSteps
       }));
+      
+      // Move corresponding titles and descriptions
+      const newTitles = [...stepTitles];
+      [newTitles[index], newTitles[targetIndex]] = [newTitles[targetIndex], newTitles[index]];
+      setStepTitles(newTitles);
+      
+      const newDescriptions = [...stepDescriptions];
+      [newDescriptions[index], newDescriptions[targetIndex]] = [newDescriptions[targetIndex], newDescriptions[index]];
+      setStepDescriptions(newDescriptions);
     }
   };
 
   const loadTemplate = (templateKey: keyof typeof experienceTemplates) => {
     const template = experienceTemplates[templateKey];
     setFormData(template);
+    
+    // Set RichTextEditor values
+    if (template.title) {
+      setTitle(RichTextConverter.fromHTML(template.title));
+    }
+    if (template.subtitle) {
+      setSubtitle(RichTextConverter.fromHTML(template.subtitle));
+    }
+    
+    // Set step titles and descriptions
+    setStepTitles(template.steps.map(step => 
+      RichTextConverter.fromHTML(step.title)
+    ));
+    setStepDescriptions(template.steps.map(step => 
+      RichTextConverter.fromHTML(step.description)
+    ));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    
+    // Convert RichTextData to HTML strings
+    const titleHtml = title ? (typeof title === 'string' ? title : RichTextConverter.toHTML(title)) : '';
+    const subtitleHtml = subtitle ? (typeof subtitle === 'string' ? subtitle : RichTextConverter.toHTML(subtitle)) : undefined;
+    
+    // Convert step titles and descriptions to HTML
+    const processedSteps = formData.steps.map((step, index) => ({
+      ...step,
+      title: stepTitles[index] ? 
+        (typeof stepTitles[index] === 'string' ? stepTitles[index] : RichTextConverter.toHTML(stepTitles[index] as RichTextData)) : 
+        step.title,
+      description: stepDescriptions[index] ? 
+        (typeof stepDescriptions[index] === 'string' ? stepDescriptions[index] : RichTextConverter.toHTML(stepDescriptions[index] as RichTextData)) : 
+        step.description
+    }));
+    
+    const processedData = {
+      ...formData,
+      title: titleHtml,
+      subtitle: subtitleHtml,
+      steps: processedSteps,
+      highlightText: undefined // Remove highlightText field
+    };
+    
+    onSave(processedData);
   };
 
   return (
@@ -160,38 +252,26 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
 
         <div className="study-management-experience-form-group">
           <label>제목 *</label>
-          <input
-            type="text"
-            value={formData.title}
-            onChange={(e) => handleInputChange('title', e.target.value)}
-            required
-            placeholder="섹션 제목을 입력하세요"
-            className="study-management-experience-input"
+          <StudyDetailRichTextEditor
+            value={title}
+            onChange={setTitle}
+            placeholder="알고리즘 스터디를 한다는 건"
+            toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+            maxLength={200}
           />
         </div>
 
         <div className="study-management-experience-form-group">
           <label>부제목</label>
-          <textarea
-            value={formData.subtitle || ''}
-            onChange={(e) => handleInputChange('subtitle', e.target.value)}
-            rows={2}
-            placeholder="부제목을 입력하세요"
-            className="study-management-experience-textarea"
+          <StudyDetailRichTextEditor
+            value={subtitle}
+            onChange={setSubtitle}
+            placeholder="매주 모임을 통해 함께 성장해요"
+            toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+            maxLength={300}
           />
         </div>
 
-        <div className="study-management-experience-form-group">
-          <label>하이라이트 텍스트</label>
-          <input
-            type="text"
-            value={formData.highlightText || ''}
-            onChange={(e) => handleInputChange('highlightText', e.target.value)}
-            placeholder="부제목 내에서 강조할 텍스트"
-            className="study-management-experience-input"
-          />
-          <small>부제목 내에 포함된 텍스트를 강조 표시합니다</small>
-        </div>
 
         {/* 스텝 관리 */}
         <div className="study-management-experience-form-group">
@@ -258,21 +338,21 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
                   </div>
                   
                   <label className="study-management-experience-checkbox-label">제목</label>
-                  <input
-                    type="text"
-                    value={step.title}
-                    onChange={(e) => handleStepChange(index, 'title', e.target.value)}
+                  <StudyDetailRichTextEditor
+                    value={stepTitles[index] || ''}
+                    onChange={(value) => handleStepTitleChange(index, value)}
                     placeholder="스텝 제목"
-                    className="study-management-experience-input"
+                    toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color']}
+                    maxLength={100}
                   />
                   
                   <label className="study-management-experience-checkbox-label">설명</label>
-                  <textarea
-                    value={step.description}
-                    onChange={(e) => handleStepChange(index, 'description', e.target.value)}
-                    rows={3}
+                  <StudyDetailRichTextEditor
+                    value={stepDescriptions[index] || ''}
+                    onChange={(value) => handleStepDescriptionChange(index, value)}
                     placeholder="스텝 설명"
-                    className="study-management-experience-textarea"
+                    toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+                    maxLength={300}
                   />
                   
                   {step.illustrationType === 'custom' && (

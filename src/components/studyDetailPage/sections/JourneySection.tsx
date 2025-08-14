@@ -30,16 +30,10 @@ const JourneySection: React.FC<JourneySectionProps> = ({ data }) => {
     if (data.title) {
       // 제목에 {days} 플레이스홀더가 있으면 치환
       if (daysSinceStart !== null && data.title.includes('{days}')) {
-        const parts = data.title.split('{days}');
-        return (
-          <>
-            {parts[0]}
-            <span className={styles.highlight}>{daysSinceStart}일</span>
-            {parts[1]}
-          </>
-        );
+        const processedTitle = data.title.replace('{days}', `${daysSinceStart}일`);
+        return <span dangerouslySetInnerHTML={{ __html: processedTitle.replace(/\n/g, '<br />') }} />;
       }
-      return data.title;
+      return <span dangerouslySetInnerHTML={{ __html: data.title.replace(/\n/g, '<br />') }} />;
     }
     
     // 기본 제목 (경과일 포함)
@@ -152,7 +146,7 @@ const JourneySection: React.FC<JourneySectionProps> = ({ data }) => {
       </h2>
       
       {data.subtitle && (
-        <p className={styles.sectionSubtitle}>{data.subtitle}</p>
+        <p className={styles.sectionSubtitle} dangerouslySetInnerHTML={{ __html: data.subtitle.replace(/\n/g, '<br />') }} />
       )}
       
       {/* 통계 섹션 */}
@@ -216,7 +210,7 @@ const JourneySection: React.FC<JourneySectionProps> = ({ data }) => {
       {/* 마무리 메시지 */}
       {data.closingMessage && (
         <div className={styles.journeyClosing}>
-          <p>{data.closingMessage}</p>
+          <p dangerouslySetInnerHTML={{ __html: data.closingMessage.replace(/\n/g, '<br />') }} />
         </div>
       )}
     </section>

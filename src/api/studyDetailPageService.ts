@@ -79,6 +79,7 @@ export interface UpdatePageRequest {
 export interface AddSectionRequest {
   type: SectionType;
   props: any;
+  order?: number;  // Optional: 지정하지 않으면 백엔드에서 자동으로 맨 뒤에 추가
 }
 
 const studyDetailPageService = {

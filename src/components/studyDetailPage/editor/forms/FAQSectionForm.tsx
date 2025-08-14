@@ -88,6 +88,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   // 일반 예시 데이터
   const loadExampleData = () => {
     setTitle('자주 묻는 질문');
+    setTagHeader('궁금증 해결');
     setFaqs([
       {
         question: '프로그래밍 초보자도 참여할 수 있나요?',
@@ -207,7 +208,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       </div>
       
       <div className="study-management-faq-form-group">
-        <label>태그 헤더 (선택사항)</label>
+        <label>태그 헤더</label>
         <input
           type="text"
           value={tagHeader}
@@ -218,7 +219,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       </div>
       
       <div className="study-management-faq-form-group">
-        <label>섹션 제목</label>
+        <label>제목</label>
         <input
           type="text"
           value={title}

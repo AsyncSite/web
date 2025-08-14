@@ -32,10 +32,12 @@ export interface HowWeRollData {
 // Study type specific templates
 export const howWeRollTemplates = {
   algorithm: {
-    title: '특별한 건 없어요. 그냥 계속 모일 뿐이에요.',
+    title: '특별한 건 없어요.<br/>그냥 계속 모일 뿐이에요.',
+    subtitle: '꾸준함이 만드는 <span style="color: #c3e88d;">작은 기적</span>들',
     tagHeader: '모임 상세 안내',
-    scheduleIntro: '금요일 저녁의 2시간은 몰입하기 딱 좋은 시간인 것 같아요.',
+    scheduleIntro: '금요일 저녁의 <span style="color: #c3e88d;">2시간</span>은 몰입하기 딱 좋은 시간인 것 같아요.',
     subHeading: '몰입, 해본 적 있으세요?',
+    closingMessage: '우리가 함께 만들어가는 <span style="color: #c3e88d;">성장의 여정</span>에 당신도 함께해요.',
     meetingOverview: [
       {
         icon: '🏢',
@@ -83,10 +85,12 @@ export const howWeRollTemplates = {
   },
   
   design: {
-    title: '창의성은 혼자가 아닌 함께 만들어가는 것',
+    title: '창의성은 혼자가 아닌<br/><span style="color: #82aaff;">함께 만들어가는 것</span>',
+    subtitle: '서로의 시선이 만나는 곳에서 <span style="color: #ffea00;">영감</span>이 태어납니다',
     tagHeader: '모임 진행 방식',
-    scheduleIntro: '매주 새로운 영감과 피드백을 나누는 시간입니다.',
+    scheduleIntro: '매주 새로운 <span style="color: #c3e88d;">영감</span>과 피드백을 나누는 시간입니다.',
     subHeading: '디자인, 함께 고민해본 적 있으세요?',
+    closingMessage: '당신의 <span style="color: #ffea00;">창의적인 시각</span>이 우리를 더 풍부하게 만들어요.',
     meetingOverview: [
       {
         icon: '🎨',
@@ -132,10 +136,12 @@ export const howWeRollTemplates = {
   },
   
   language: {
-    title: '말하고, 듣고, 함께 성장하는 언어 스터디',
+    title: '말하고, 듣고,<br/><span style="color: #c3e88d;">함께 성장하는</span> 언어 스터디',
+    subtitle: '실전 회화로 만드는 <span style="color: #82aaff;">진짜 실력</span>',
     tagHeader: '학습 방식',
-    scheduleIntro: '자연스러운 대화 속에서 실력이 향상됩니다.',
+    scheduleIntro: '자연스러운 대화 속에서 <span style="color: #ffea00;">실력이 향상</span>됩니다.',
     subHeading: '진짜 회화, 경험해보셨나요?',
+    closingMessage: '함께라면 <span style="color: #82aaff;">언어의 벽</span>도 넘을 수 있어요.',
     meetingOverview: [
       {
         icon: '🗣️',

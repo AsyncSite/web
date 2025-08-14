@@ -16,19 +16,12 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
         <div className={styles.sectionTagHeader}>{data.tagHeader}</div>
       )}
 
-      <h2 className={styles.sectionTitle}>
-        {data.title.split('\n').map((line, idx) => (
-          <React.Fragment key={idx}>
-            {idx > 0 && <br />}
-            {line.split('그냥 계속').map((part, i) => (
-              i === 0 ? part : <React.Fragment key={i}><span className={styles.highlight}>그냥 계속</span>{part}</React.Fragment>
-            ))}
-          </React.Fragment>
-        ))}
-      </h2>
+      {data.title && (
+        <h2 className={styles.sectionTitle} dangerouslySetInnerHTML={{ __html: data.title.replace(/\n/g, '<br />') }} />
+      )}
       
       {data.subtitle && (
-        <p className={styles.sectionSubtitle}>{data.subtitle}</p>
+        <p className={styles.sectionSubtitle} dangerouslySetInnerHTML={{ __html: data.subtitle.replace(/\n/g, '<br />') }} />
       )}
 
       <div className={styles.meetingOverview}>
@@ -75,11 +68,11 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
       </div>
 
       {data.subHeading && (
-        <h3 className={styles.introSubHeading}>{data.subHeading}</h3>
+        <h3 className={styles.introSubHeading} dangerouslySetInnerHTML={{ __html: data.subHeading.replace(/\n/g, '<br />') }} />
       )}
       
       {data.scheduleIntro && (
-        <p className={styles.scheduleIntro}>{data.scheduleIntro}</p>
+        <p className={styles.scheduleIntro} dangerouslySetInnerHTML={{ __html: data.scheduleIntro.replace(/\n/g, '<br />') }} />
       )}
 
       <div className={styles.activityTable}>
@@ -115,22 +108,7 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
 
       {data.closingMessage && (
         <div className={styles.closingMessage}>
-          <p>
-            {(() => {
-              const highlightPhrase = '서로의 성장을 응원하는 따뜻한 커뮤니티';
-              if (data.closingMessage.includes(highlightPhrase)) {
-                const parts = data.closingMessage.split(highlightPhrase);
-                return (
-                  <>
-                    {parts[0]}
-                    <span className={styles.highlight}>{highlightPhrase}</span>
-                    {parts[1]}
-                  </>
-                );
-              }
-              return data.closingMessage;
-            })()}
-          </p>
+          <p dangerouslySetInnerHTML={{ __html: data.closingMessage.replace(/\n/g, '<br />') }} />
         </div>
       )}
     </section>

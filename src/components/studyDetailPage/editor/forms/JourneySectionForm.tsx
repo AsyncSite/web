@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { JourneySectionData, Generation, journeyTemplates } from '../../types/journeyTypes';
+import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
+import { RichTextData } from '../../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import './SectionForms.css';
 import './JourneySectionForm.css';
 
@@ -38,6 +41,23 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
 
   const [data, setData] = useState<JourneySectionData>(mergedData);
   const [editingGenerationIndex, setEditingGenerationIndex] = useState<number | null>(null);
+  
+  // RichTextEditor states for title, subtitle, and closingMessage
+  const [title, setTitle] = useState<RichTextData | string>(
+    mergedData.title ? 
+      (typeof mergedData.title === 'string' ? RichTextConverter.fromHTML(mergedData.title) : mergedData.title)
+      : ''
+  );
+  const [subtitle, setSubtitle] = useState<RichTextData | string>(
+    mergedData.subtitle ? 
+      (typeof mergedData.subtitle === 'string' ? RichTextConverter.fromHTML(mergedData.subtitle) : mergedData.subtitle)
+      : ''
+  );
+  const [closingMessage, setClosingMessage] = useState<RichTextData | string>(
+    mergedData.closingMessage ? 
+      (typeof mergedData.closingMessage === 'string' ? RichTextConverter.fromHTML(mergedData.closingMessage) : mergedData.closingMessage)
+      : ''
+  );
 
   // 템플릿 로드
   const loadTemplate = (templateKey: keyof typeof journeyTemplates) => {
@@ -47,6 +67,16 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
       ...template,
       generations: [...template.generations]
     });
+    // Set RichTextEditor values
+    if (template.title) {
+      setTitle(RichTextConverter.fromHTML(template.title));
+    }
+    if (template.subtitle) {
+      setSubtitle(RichTextConverter.fromHTML(template.subtitle));
+    }
+    if (template.closingMessage) {
+      setClosingMessage(RichTextConverter.fromHTML(template.closingMessage));
+    }
   };
 
   // Generation 추가
@@ -129,12 +159,19 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
       return;
     }
 
+    // Convert RichTextData to HTML strings
+    const titleHtml = title ? (typeof title === 'string' ? title : RichTextConverter.toHTML(title)) : undefined;
+    const subtitleHtml = subtitle ? (typeof subtitle === 'string' ? subtitle : RichTextConverter.toHTML(subtitle)) : undefined;
+    const closingMessageHtml = closingMessage ? (typeof closingMessage === 'string' ? closingMessage : RichTextConverter.toHTML(closingMessage)) : undefined;
+
     // 제목 처리 - 경과일 플레이스홀더 포함 가능
     const processedData = {
       ...data,
-      title: data.calculateDays && !data.title 
+      title: data.calculateDays && !titleHtml 
         ? '하루하루가 쌓이니 벌써 {days}이 되었어요.'
-        : data.title
+        : titleHtml,
+      subtitle: subtitleHtml,
+      closingMessage: closingMessageHtml
     };
 
     onSave(processedData);
@@ -192,7 +229,7 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
           type="text"
           value={data.tagHeader || ''}
           onChange={(e) => setData({ ...data, tagHeader: e.target.value })}
-          placeholder="예: 우리의 여정"
+          placeholder="우리의 여정"
           className="form-input"
         />
       </div>
@@ -222,24 +259,25 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
       )}
 
       <div className="form-group">
-        <label>제목 (선택사항)</label>
-        <input
-          type="text"
-          value={data.title || ''}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
-          placeholder="예: 하루하루가 쌓이니 벌써 {days}이 되었어요."
-          className="form-input"
+        <label>제목</label>
+        <StudyDetailRichTextEditor
+          value={title}
+          onChange={setTitle}
+          placeholder="하루하루가 쌓이니 벌써 {days}이 되었어요."
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={200}
         />
+        {data.calculateDays && <small>제목에 {'{days}'} 사용 시 자동으로 경과일이 표시됩니다</small>}
       </div>
 
       <div className="form-group">
         <label>부제목</label>
-        <textarea
-          value={data.subtitle || ''}
-          onChange={(e) => setData({ ...data, subtitle: e.target.value })}
-          placeholder="예: 작은 시작이 모여 의미 있는 변화를 만들어가고 있어요."
-          className="form-textarea"
-          rows={2}
+        <StudyDetailRichTextEditor
+          value={subtitle}
+          onChange={setSubtitle}
+          placeholder="작은 시작이 모여 의미 있는 변화를 만들어가고 있어요."
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={300}
         />
       </div>
 
@@ -546,12 +584,12 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
       {/* 마무리 메시지 */}
       <div className="form-group">
         <label>마무리 메시지 (선택사항)</label>
-        <textarea
-          value={data.closingMessage || ''}
-          onChange={(e) => setData({ ...data, closingMessage: e.target.value })}
-          placeholder="예: 작은 걸음이지만 꾸준히, 의미 있게."
-          className="form-textarea"
-          rows={2}
+        <StudyDetailRichTextEditor
+          value={closingMessage}
+          onChange={setClosingMessage}
+          placeholder="작은 걸음이지만 꾸준히, 의미 있게."
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={300}
         />
       </div>
 
