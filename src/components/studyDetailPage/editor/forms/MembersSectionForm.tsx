@@ -11,6 +11,9 @@ import {
 import studyService, { MemberResponse } from '../../../../api/studyService';
 import { ToastContainer, ToastType } from '../../../common/Toast';
 import ConfirmModal from '../../../common/ConfirmModal';
+import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
+import { RichTextData } from '../../../common/richtext/RichTextTypes';
+import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 
 interface MembersSectionFormProps {
   studyId?: string;  // 실제 멤버 데이터를 불러올 스터디 ID
@@ -25,8 +28,17 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   onSave,
   onCancel
 }) => {
-  const [title, setTitle] = useState(initialData.title || '함께하는 사람들');
-  const [subtitle, setSubtitle] = useState(initialData.subtitle || '');
+  // Title과 Subtitle을 RichText로 관리 (초기값이 HTML이면 변환)
+  const [title, setTitle] = useState<RichTextData | string>(
+    initialData.title ? 
+      (typeof initialData.title === 'string' ? RichTextConverter.fromHTML(initialData.title) : initialData.title)
+      : ''
+  );
+  const [subtitle, setSubtitle] = useState<RichTextData | string>(
+    initialData.subtitle ?
+      (typeof initialData.subtitle === 'string' ? RichTextConverter.fromHTML(initialData.subtitle) : initialData.subtitle)
+      : ''
+  );
   const [layout, setLayout] = useState<MemberLayoutType>(initialData.layout || 'carousel');
   const [studyType, setStudyType] = useState<keyof typeof STUDY_TEMPLATES | 'custom'>(
     initialData.studyType || 'custom'
@@ -292,8 +304,8 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
 
   // 표준 예시 데이터 로드
   const loadStandardExample = () => {
-    setTitle('함께하는 사람들');
-    setSubtitle('더 멋진 여정이 펼쳐질 거예요, 함께라면.');
+    setTitle(RichTextConverter.fromHTML('더 멋진 여정이 펼쳐질 거예요,<br/>함께라면.'));
+    setSubtitle(RichTextConverter.fromHTML(''));
     setLayout('carousel');
     setStudyType('algorithm');
     setShowStats(true);
@@ -513,8 +525,8 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
     }
 
     onSave({
-      title,
-      subtitle,
+      title: typeof title === 'string' ? title : RichTextConverter.toHTML(title),
+      subtitle: typeof subtitle === 'string' ? subtitle : RichTextConverter.toHTML(subtitle),
       layout,
       studyType: studyType === 'custom' ? undefined : studyType as keyof typeof STUDY_TEMPLATES,
       members: validMembers,
@@ -573,23 +585,23 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       {/* 섹션 헤더 */}
       <div className="study-management-members-form-group">
         <label>섹션 제목</label>
-        <input
-          type="text"
+        <StudyDetailRichTextEditor
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="예: 함께하는 사람들"
-          className="study-management-members-input"
+          onChange={setTitle}
+          placeholder="예: 더 멋진 여정이 펼쳐질 거예요, 함께라면."
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={200}
         />
       </div>
 
       <div className="study-management-members-form-group">
         <label>섹션 부제목 (선택)</label>
-        <input
-          type="text"
+        <StudyDetailRichTextEditor
           value={subtitle}
-          onChange={(e) => setSubtitle(e.target.value)}
-          placeholder="예: 더 멋진 여정이 펼쳐질 거예요, 함께라면."
-          className="study-management-members-input"
+          onChange={setSubtitle}
+          placeholder="부제목을 입력하세요 (선택)"
+          toolbar={['bold', 'italic', 'highlight', 'subtle-highlight', 'color', 'break']}
+          maxLength={200}
         />
       </div>
 

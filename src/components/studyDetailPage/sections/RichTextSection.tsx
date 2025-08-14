@@ -51,7 +51,7 @@ const RichTextSection: React.FC<RichTextSectionProps> = ({ data }) => {
         
         {/* HTML Content - Standard Styles */}
         <div 
-          className={styles.studyDetailRichTextContent}
+          className={styles.richTextContent}
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </div>

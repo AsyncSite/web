@@ -1,6 +1,6 @@
 /* RichTextSection 기본 요소들 */
 .richTextContainer {
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .richTextTitle {
@@ -114,6 +114,7 @@
   text-align: left;
   position: relative;
   min-height: 50vh;
+  font-family: 'PretendardVariable', sans-serif;
 }
 
 /* 섹션 태그 헤더 */
@@ -161,6 +162,12 @@
   font-weight: 400;
 }
 
+/* strong 태그 스타일 */
+.richTextContent p strong {
+  color: #f0f0f0;
+  font-weight: 600;
+}
+
 /* 서브 헤딩 (h3) */
 .richTextContent h3 {
   font-size: 1.6rem;
@@ -194,8 +201,32 @@
   font-weight: 500 !important;
 }
 
-/* 명시적 Callout 클래스 - 사용자가 선택했을 때만 적용 */
-.callout {
+/* 하이라이트 클래스 - IntroSection과 동일 - global 처리 */
+.richTextContent :global(.highlight) {
+  color: #c3e88d;
+  font-weight: 600;
+}
+
+.richTextContent :global(.subtle-highlight) {
+  color: #82aaff;
+  font-weight: 500;
+}
+
+/* CTA 텍스트 스타일 - IntroSection과 동일 - global 처리 */
+.richTextContent :global(.section-cta-text) {
+  font-size: 1.3rem;
+  color: #f0f0f0;
+  margin-top: 35px;
+  font-weight: 600;
+  text-align: left;
+  padding: 20px;
+  background-color: rgba(195, 232, 141, 0.05);
+  border-left: 4px solid #c3e88d;
+  border-radius: 0 8px 8px 0;
+}
+
+/* 명시적 Callout 클래스 - global로 처리하여 CSS Module 변환 방지 */
+.richTextContent :global(.study-callout) {
   font-size: 1.3rem;
   color: #f0f0f0;
   margin-top: 35px;
@@ -204,29 +235,31 @@
   padding: 20px;
   border-radius: 0 8px 8px 0;
   position: relative;
-}
-
-.calloutGreen {
   background-color: rgba(195, 232, 141, 0.05);
   border-left: 4px solid #c3e88d;
 }
 
-.calloutBlue {
+.richTextContent :global(.study-callout-green) {
+  background-color: rgba(195, 232, 141, 0.05);
+  border-left: 4px solid #c3e88d;
+}
+
+.richTextContent :global(.study-callout-blue) {
   background-color: rgba(130, 170, 255, 0.05);
   border-left: 4px solid #82aaff;
 }
 
-.calloutYellow {
+.richTextContent :global(.study-callout-yellow) {
   background-color: rgba(255, 234, 0, 0.05);
   border-left: 4px solid #ffea00;
 }
 
-.calloutRed {
+.richTextContent :global(.study-callout-red) {
   background-color: rgba(255, 107, 107, 0.05);
   border-left: 4px solid #ff6b6b;
 }
 
-.callout .calloutIcon {
+.richTextContent :global(.study-callout .callout-icon) {
   margin-right: 10px;
   font-size: 1.2rem;
 }

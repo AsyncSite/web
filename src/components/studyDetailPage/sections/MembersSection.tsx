@@ -251,7 +251,7 @@ const StatsSection: React.FC<{ stats: any }> = ({ stats }) => {
 const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   const { 
     members: initialMembers = [], 
-    title = '함께하는 사람들',
+    title = '',
     subtitle,
     layout = 'carousel',
     showStats = false,
@@ -325,8 +325,8 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
     <section className={styles.studyDetailMembersSection}>
       {/* 태그 헤더 및 타이틀 (좌측 정렬) */}
       <div className={styles.sectionTagHeader}>함께하는 멤버들이에요</div>
-      {title && <h2 className={styles.sectionTitle}>{title}</h2>}
-      {subtitle && <p className={styles.sectionSubtitle}>{subtitle}</p>}
+      {title && <h2 className={styles.sectionTitle} dangerouslySetInnerHTML={{ __html: title.replace(/\n/g, '<br />') }} />}
+      {subtitle && <p className={styles.sectionSubtitle} dangerouslySetInnerHTML={{ __html: subtitle.replace(/\n/g, '<br />') }} />}
 
       {/* 멤버 카드 캐러셀: 두 번 렌더링하여 무한 스크롤 효과 */}
       <div className={styles.scrollingMembersWrapper}>
