@@ -421,10 +421,10 @@ class StudyService {
   }
 
   /**
-   * Get my studies (requires authentication)
+   * Get my study memberships (requires authentication)
    * Uses authenticated user context via gateway headers; no userId param.
    */
-  async getMyStudies(): Promise<Array<{
+  async getMyMemberships(): Promise<Array<{
     memberId: string;
     studyId: string;
     studyTitle: string;
@@ -439,7 +439,7 @@ class StudyService {
       data: any[];
       error: any;
       timestamp: any;
-    } | any[]>(`${this.MY_API_PATH}/studies`);
+    } | any[]>(`${this.MY_API_PATH}/memberships`);
 
     const list = (response.data as any)?.data || response.data || [];
     if (!Array.isArray(list)) return [];
@@ -454,6 +454,60 @@ class StudyService {
       attendanceRate: item.attendanceRate ?? null,
       warningCount: item.warningCount ?? 0,
     }));
+  }
+
+  /**
+   * Get my studies grouped by role/type
+   * @returns 제안한, 신청한, 리드하는, 참여하는, 완료된 스터디를 구분하여 반환
+   */
+  async getMyStudiesGrouped(): Promise<{
+    proposed: any[];
+    applications: any[];
+    leading: any[];
+    participating: any[];
+    completed: any[];
+  }> {
+    try {
+      console.log('Calling getMyStudiesGrouped, URL:', this.MY_API_PATH);
+      const response = await apiClient.get<{
+        success: boolean;
+        data: any;
+        error: any;
+        timestamp: any;
+      } | any>(this.MY_API_PATH, { params: { format: 'grouped' } });
+      
+      console.log('getMyStudiesGrouped response:', response.data);
+      
+      const data = (response.data as any)?.data || response.data || {};
+      return {
+        proposed: data.proposed || [],
+        applications: data.applications || [],
+        leading: data.leading || [],
+        participating: data.participating || [],
+        completed: data.completed || []
+      };
+    } catch (error) {
+      console.error('getMyStudiesGrouped error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get my studies 
+   * @param type - 필터링할 타입 (PROPOSER, OWNER, MEMBER, APPLICANT)
+   * @returns 모든 스터디를 하나의 리스트로 반환
+   */
+  async getMyStudies(type?: string): Promise<any[]> {
+    const params = type ? { type } : {};
+    const response = await apiClient.get<{
+      success: boolean;
+      data: any[];
+      error: any;
+      timestamp: any;
+    } | any[]>(this.MY_API_PATH, { params });
+    
+    const list = (response.data as any)?.data || response.data || [];
+    return Array.isArray(list) ? list : [];
   }
 
   /**

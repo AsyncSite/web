@@ -210,7 +210,7 @@ const StudyDetailPageRenderer: React.FC = () => {
       
       try {
         // 멤버십 확인
-        const myStudies = await studyService.getMyStudies();
+        const myStudies = await studyService.getMyMemberships();
         const isStudyMember = myStudies.some(study => study.studyId === studyData.id);
         setIsMember(isStudyMember);
         

@@ -74,7 +74,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({ studyId, studyStatus }) =
     try {
       setMembershipLoading(true);
       // Check if user is a member of this study
-      const myStudies = await studyService.getMyStudies();
+      const myStudies = await studyService.getMyMemberships();
       const isStudyMember = myStudies.some(study => study.studyId === studyId);
       setIsMember(isStudyMember);
     } catch (error) {

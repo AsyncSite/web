@@ -36,7 +36,7 @@ const StudyPage: React.FC = () => {
           try {
             const [applications, userStudies] = await Promise.all([
               studyService.getMyApplications(),
-              studyService.getMyStudies()
+              studyService.getMyMemberships()
             ]);
             setMyApplications(applications);
             setMyStudies(userStudies);

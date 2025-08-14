@@ -7,7 +7,7 @@ import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import './ProfilePage.css';
-import studyService, { ApplicationStatus } from '../../api/studyService';
+import studyService, { ApplicationStatus, type MyApplicationItem } from '../../api/studyService';
 import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
 
@@ -72,10 +72,13 @@ function ProfilePage(): React.ReactNode {
 
   // 나의 스터디 데이터
   const [myStudies, setMyStudies] = useState<{ participating: any[]; leading: any[] }>({ participating: [], leading: [] });
+  const [myApplications, setMyApplications] = useState<MyApplicationItem[]>([]);
   const [studiesLoading, setStudiesLoading] = useState<boolean>(true);
   const [studiesError, setStudiesError] = useState<string | null>(null);
+  const [applicationsLoading, setApplicationsLoading] = useState<boolean>(true);
+  const [applicationsError, setApplicationsError] = useState<string | null>(null);
   const [studyReviews, setStudyReviews] = useState<Record<string, boolean>>({});
-  const [myStudiesGrouped, setMyStudiesGrouped] = useState<any>(null);
+  const [applicationFilter, setApplicationFilter] = useState<'ALL' | ApplicationStatus>(ApplicationStatus.PENDING);
   const [participatingCollapsed, setParticipatingCollapsed] = useState<boolean>(true);
   const [leadingCollapsed, setLeadingCollapsed] = useState<boolean>(true);
 
@@ -90,26 +93,31 @@ function ProfilePage(): React.ReactNode {
     const loadMyStudies = async () => {
       try {
         setStudiesLoading(true);
-        const grouped = await studyService.getMyStudiesGrouped();
-        setMyStudiesGrouped(grouped);
-        
-        // 기존 형식과 호환을 위해 participating, leading 추출
-        const participating = grouped.participating || [];
-        const leading = grouped.leading || [];
+        const list = await studyService.getMyMemberships();
+        console.log('My studies list:', list);
+        const participating = list.filter(item => item.role !== 'OWNER');
+        const leading = list.filter(item => item.role === 'OWNER');
         setMyStudies({ participating, leading });
         
         // 각 스터디별 리뷰 작성 여부 확인
         try {
           const myReviews = await reviewService.getMyReviews();
+          console.log('=== Review Debug ===');
+          console.log('My reviews:', myReviews);
+          console.log('Participating studies:', participating.map(s => ({ studyId: s.studyId, title: s.studyTitle })));
           const reviewedStudies: Record<string, boolean> = {};
           myReviews.forEach((review: any) => {
+            console.log(`Review type: ${review.type}, studyId: ${review.studyId}`);
             if (review.type === 'STUDY_EXPERIENCE') {
               reviewedStudies[review.studyId] = true;
             }
           });
+          console.log('Reviewed studies map:', reviewedStudies);
+          console.log('===================');
           setStudyReviews(reviewedStudies);
         } catch (error) {
           console.error('Failed to fetch reviews:', error);
+          // 리뷰 조회 실패해도 계속 진행
         }
       } catch (e: any) {
         console.error('Failed to load studies:', e);
@@ -118,12 +126,24 @@ function ProfilePage(): React.ReactNode {
         setStudiesLoading(false);
       }
     };
+    const loadMyApplications = async () => {
+      try {
+        setApplicationsLoading(true);
+        const apps = await studyService.getMyApplications();
+        setMyApplications(apps);
+      } catch (e: any) {
+        setApplicationsError(handleApiError(e));
+      } finally {
+        setApplicationsLoading(false);
+      }
+    };
     // 인증 상태가 확정될 때까지 대기
     if (isLoading) return;
     
     // user 존재 여부만 체크 (isAuthenticated는 신뢰할 수 없음)
     if (authUser) {
       loadMyStudies();
+      loadMyApplications();
     }
   }, [authUser, isLoading]);
 
@@ -198,6 +218,109 @@ function ProfilePage(): React.ReactNode {
         {/* 스터디 탭 콘텐츠 */}
         {activeTab === 'study' && (
           <section className="study-section">
+            {/* 신청 내역 섹션 (고유 접두사: myapps-) */}
+            <div className="myapps-section">
+              <div className="myapps-header">
+                <h3 className="myapps-title">신청 내역 <span className="myapps-count-badge">대기 {myApplications.filter(a => a.status === ApplicationStatus.PENDING).length}</span></h3>
+                <div className="myapps-filters">
+                  {(() => {
+                    const counts = {
+                      PENDING: myApplications.filter(a => a.status === ApplicationStatus.PENDING).length,
+                      ACCEPTED: myApplications.filter(a => a.status === ApplicationStatus.ACCEPTED).length,
+                      REJECTED: myApplications.filter(a => a.status === ApplicationStatus.REJECTED).length,
+                      ALL: myApplications.filter(a => a.status !== ApplicationStatus.CANCELLED).length,
+                    };
+                    return ([ApplicationStatus.PENDING, ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED, 'ALL'] as const).map(key => (
+                      <button
+                        key={key}
+                        className={`myapps-chip ${applicationFilter === key ? 'active' : ''}`}
+                        onClick={() => setApplicationFilter(key)}
+                      >
+                        {key === 'ALL' ? '전체' : key === ApplicationStatus.PENDING ? '대기 중' : key === ApplicationStatus.ACCEPTED ? '승인됨' : '거절됨'}
+                        <span className="myapps-chip-count">{counts[key as keyof typeof counts]}</span>
+                      </button>
+                    ));
+                  })()}
+                </div>
+              </div>
+
+              {applicationsLoading ? (
+                <div className="myapps-loading">신청 내역을 불러오는 중…</div>
+              ) : applicationsError ? (
+                <div className="myapps-empty">
+                  <p>신청 내역을 불러오지 못했어요.</p>
+                  <p className="error-detail">{applicationsError}</p>
+                </div>
+              ) : (
+                (() => {
+                  const base = applicationFilter === 'ALL'
+                    ? myApplications.filter(a => a.status !== ApplicationStatus.CANCELLED) // ALL에도 취소는 제외해서 잡음 최소화
+                    : myApplications.filter(app => app.status === applicationFilter);
+                  const filtered = base
+                    .sort((a, b) => new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime());
+
+                  if (filtered.length === 0) {
+                    return <div className="myapps-empty">{applicationFilter === ApplicationStatus.PENDING ? '대기 중인 신청이 없습니다.' : applicationFilter === ApplicationStatus.ACCEPTED ? '승인된 신청이 없습니다.' : applicationFilter === ApplicationStatus.REJECTED ? '거절된 신청이 없습니다.' : '표시할 신청 내역이 없습니다.'}</div>;
+                  }
+
+                  return (
+                    <ul className="myapps-list">
+                      {filtered.map(app => (
+                        <li key={app.applicationId} className={`myapps-item myapps-status-${(app.status || 'PENDING').toLowerCase()}`}>
+                          <div className="myapps-main">
+                            <div className="myapps-title-line">
+                              <span className="myapps-study-title">{app.studyTitle}</span>
+                              <span className="myapps-badge">
+                                {app.status === ApplicationStatus.PENDING && '대기 중'}
+                                {app.status === ApplicationStatus.ACCEPTED && '승인됨'}
+                                {app.status === ApplicationStatus.REJECTED && '거절됨'}
+                              </span>
+                            </div>
+                            <div className="myapps-meta">
+                              <span>신청일: {new Date(app.appliedAt).toLocaleString()}</span>
+                              {app.reviewNote && <span className="myapps-note">메모: {app.reviewNote}</span>}
+                            </div>
+                          </div>
+                          <div className="myapps-actions">
+                            {app.status === ApplicationStatus.PENDING ? (
+                              <button
+                                className="myapps-btn-cancel"
+                                onClick={async () => {
+                                  try {
+                                    await studyService.cancelApplication(app.studyId, app.applicationId, authUser?.email || authUser?.username);
+                                    // 낙관적 업데이트
+                                    setMyApplications(prev => prev.map(x => x.applicationId === app.applicationId ? { ...x, status: ApplicationStatus.CANCELLED } : x));
+                                  } catch (err) {
+                                    console.error(err);
+                                    alert('신청 취소에 실패했습니다.');
+                                  }
+                                }}
+                              >
+                                신청 취소
+                              </button>
+                            ) : app.status === ApplicationStatus.REJECTED ? (
+                              <button
+                                className="myapps-btn-reapply"
+                                onClick={() => navigate(`/study/${app.studyId}/apply`)}
+                              >
+                                다시 신청
+                              </button>
+                            ) : (
+                              <button
+                                className="myapps-btn-goto"
+                                onClick={() => navigate(`/study/${app.studyId}/manage`)}
+                              >
+                                스터디로 이동
+                              </button>
+                            )}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                })()
+              )}
+            </div>
 
             {/* 나의 스터디 섹션 */}
             <h2>나의 스터디</h2>
@@ -212,10 +335,9 @@ function ProfilePage(): React.ReactNode {
                   setStudiesLoading(true);
                   (async () => {
                     try {
-                      const grouped = await studyService.getMyStudiesGrouped();
-                      setMyStudiesGrouped(grouped);
-                      const participating = grouped.participating || [];
-                      const leading = grouped.leading || [];
+                      const list = await studyService.getMyMemberships();
+                      const participating = list.filter(item => item.role !== 'OWNER');
+                      const leading = list.filter(item => item.role === 'OWNER');
                       setMyStudies({ participating, leading });
                     } catch (err) {
                       setStudiesError(handleApiError(err));
@@ -225,7 +347,7 @@ function ProfilePage(): React.ReactNode {
                   })();
                 }}>다시 시도</button>
               </div>
-            ) : myStudies.participating.length === 0 && myStudies.leading.length === 0 && (!myStudiesGrouped?.applications || myStudiesGrouped.applications.length === 0) && (!myStudiesGrouped?.proposed || myStudiesGrouped.proposed.length === 0) ? (
+            ) : myStudies.participating.length === 0 && myStudies.leading.length === 0 ? (
               <div className="empty-state">
                 <p>아직 참여 중인 스터디가 없어요</p>
                 <p>스터디를 둘러보고 관심있는 주제에 참여해보세요!</p>
@@ -234,78 +356,17 @@ function ProfilePage(): React.ReactNode {
               </div>
             ) : (
               <>
-                {/* 제안한 스터디 */}
-                {myStudiesGrouped?.proposed && myStudiesGrouped.proposed.length > 0 && (
-                  <div className="study-group">
-                    <div className="myst-section-header">
-                      <h3>제안한 스터디 <span className="myst-badge">{myStudiesGrouped.proposed.length}</span></h3>
-                    </div>
-                    <div className="study-cards">
-                      {myStudiesGrouped.proposed.map((study: any) => (
-                        <div key={study.studyId} className="study-card proposed">
-                          <h4>
-                            {study.studyTitle}
-                            <span className="study-status-badge pending">승인 대기</span>
-                          </h4>
-                          <p className="study-meta">제안일: {new Date(study.createdAt).toLocaleDateString()}</p>
-                          <p className="study-meta">상태: {study.status === 'PENDING' ? '검토중' : study.status}</p>
-                        </div>
-                      ))}
-                    </div>
+                <div className="study-group">
+                  <div className="myst-section-header">
+                    <h3>참여 중인 스터디 <span className="myst-badge">{myStudies.participating.length}</span></h3>
+                    {myStudies.participating.length > 3 && (
+                      <button className="myst-toggle" onClick={() => setParticipatingCollapsed(c => !c)}>
+                        {participatingCollapsed ? '모두 보기' : '접기'}
+                      </button>
+                    )}
                   </div>
-                )}
-                
-                {/* 신청 중인 스터디 */}
-                {myStudiesGrouped?.applications && myStudiesGrouped.applications.length > 0 && (
-                  <div className="study-group">
-                    <div className="myst-section-header">
-                      <h3>신청 중인 스터디 <span className="myst-badge">{myStudiesGrouped.applications.length}</span></h3>
-                    </div>
-                    <div className="study-cards">
-                      {myStudiesGrouped.applications.map((app: any) => (
-                        <div key={app.applicationId} className="study-card pending">
-                          <h4>
-                            {app.studyTitle}
-                            <span className="study-status-badge pending">대기중</span>
-                          </h4>
-                          <p className="study-meta">신청일: {new Date(app.appliedAt).toLocaleDateString()}</p>
-                          {app.reviewNote && <p className="study-meta">메모: {app.reviewNote}</p>}
-                          <div className="study-actions">
-                            <button 
-                              className="cancel-button"
-                              onClick={async () => {
-                                try {
-                                  await studyService.cancelApplication(app.studyId, app.applicationId, authUser?.email || authUser?.username);
-                                  // 페이지 새로고침
-                                  window.location.reload();
-                                } catch (err) {
-                                  console.error(err);
-                                  alert('신청 취소에 실패했습니다.');
-                                }
-                              }}
-                            >
-                              신청 취소
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* 참여 중인 스터디 */}
-                {myStudies.participating.length > 0 && (
-                  <div className="study-group">
-                    <div className="myst-section-header">
-                      <h3>참여 중인 스터디 <span className="myst-badge">{myStudies.participating.length}</span></h3>
-                      {myStudies.participating.length > 3 && (
-                        <button className="myst-toggle" onClick={() => setParticipatingCollapsed(c => !c)}>
-                          {participatingCollapsed ? '모두 보기' : '접기'}
-                        </button>
-                      )}
-                    </div>
-                    <div className="study-cards">
-                      {(participatingCollapsed ? myStudies.participating.slice(0, 3) : myStudies.participating).map(study => (
+                  <div className="study-cards">
+                    {(participatingCollapsed ? myStudies.participating.slice(0, 3) : myStudies.participating).map(study => (
                       <div key={study.memberId} className="study-card">
                         <h4>
                           {study.studyTitle}
@@ -340,7 +401,6 @@ function ProfilePage(): React.ReactNode {
                     ))}
                   </div>
                 </div>
-                )}
 
                 {myStudies.leading.length > 0 && (
                   <div className="study-group">
