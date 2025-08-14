@@ -1,0 +1,440 @@
+/* Journey Section Styles */
+
+/* Standard Journey Section 스타일 */
+.studyDetailJourneySection {
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  border-radius: 12px;
+  padding: 50px 30px 40px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  position: relative;
+  min-height: 50vh;
+}
+
+
+/* Tag Header */
+.sectionTagHeader {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sectionTagHeader {
+  color: #82aaff;
+}
+
+/* Section Title */
+.sectionTitle {
+  font-size: 2.5rem;
+  margin-top: 30px;
+  margin-bottom: 25px;
+  text-align: left;
+  display: block;
+  color: #e0e0e0;
+}
+
+.highlight {
+  font-weight: 700;
+}
+
+.highlight {
+  color: #c3e88d;
+}
+
+/* Section Subtitle */
+.sectionSubtitle {
+  margin-bottom: 35px;
+  text-align: left;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #a0a0a0;
+}
+
+/* 통계 카드 */
+
+.journeyStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin: 30px 0 40px 0;
+  padding: 20px;
+  border-radius: 8px;
+  background: rgba(26, 26, 26, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 15px 10px;
+}
+
+
+.statNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #c3e88d;
+  text-shadow: 0 0 8px rgba(195, 232, 141, 0.3);
+}
+
+
+.statLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #808080;
+}
+
+.statIcon {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+/* List Layout (기본) */
+.journeyList {
+  list-style: none;
+  padding: 0;
+  margin-top: 25px;
+  text-align: left;
+}
+
+.journeyItem {
+  margin-bottom: 25px;
+  padding: 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.journeyItem {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 4px solid #c3e88d;
+}
+
+.journeyItem:hover {
+  transform: translateX(5px);
+}
+
+.journeyItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(5px);
+}
+
+.journeyItem.highlighted {
+  position: relative;
+}
+
+.journeyItem.highlighted {
+  border-left-color: #ffea00;
+  background: rgba(255, 234, 0, 0.05);
+  position: relative;
+}
+
+.journeyItem.ongoing {
+  position: relative;
+}
+
+.journeyItem.ongoing::after {
+  content: '진행중';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(195, 232, 141, 0.2);
+  color: #c3e88d;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.seasonHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.seasonIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+
+.seasonHeader strong {
+  color: #c3e88d;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+
+.journeyDescription {
+  color: #a0a0a0;
+  font-size: 1rem;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 15px;
+}
+
+/* Achievements */
+.achievements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+
+.achievementBadge {
+  color: #82aaff;
+  background: rgba(130, 170, 255, 0.15);
+  border: 1px solid rgba(130, 170, 255, 0.3);
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Timeline Layout */
+.journeyTimeline {
+  position: relative;
+  padding-left: 40px;
+  margin-top: 40px;
+}
+
+.journeyTimeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #c3e88d 0%, #82aaff 100%);
+}
+
+.timelineItem {
+  position: relative;
+  margin-bottom: 40px;
+  padding-left: 20px;
+}
+
+.timelineMarker {
+  position: absolute;
+  left: -25px;
+  top: 5px;
+  width: 30px;
+  height: 30px;
+  background: #1a1a1a;
+  border: 2px solid #c3e88d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timelineIcon {
+  font-size: 1rem;
+}
+
+.timelineContent {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timelineItem.ongoing .timelineMarker {
+  background: #c3e88d;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(195, 232, 141, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(195, 232, 141, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(195, 232, 141, 0);
+  }
+}
+
+.generationTitle {
+  font-size: 1.1rem;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  color: #c3e88d;
+}
+
+.generationDescription {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #a0a0a0;
+  margin-bottom: 15px;
+}
+
+/* Cards Layout */
+.journeyCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.journeyCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.journeyCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.journeyCard.ongoing {
+  border-color: #c3e88d;
+  background: rgba(195, 232, 141, 0.05);
+}
+
+.journeyCard.planned {
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.journeyCard .cardIcon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.journeyCard .generationTitle {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.journeyCard .generationDescription {
+  margin-bottom: 20px;
+}
+
+/* 이미지 섹션 */
+.journeyImageWrapper {
+  text-align: left;
+  margin-top: 40px;
+}
+
+.imageHeader {
+  margin-bottom: 20px;
+}
+
+
+.imageHeader h4 {
+  color: #c3e88d;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+
+.imageHeader p {
+  color: #808080;
+  font-size: 1rem;
+  margin: 0;
+}
+
+
+.journeyImageWrapper img {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+}
+
+
+.journeyImageWrapper img:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  transform: translateY(-5px) scale(1.01);
+}
+
+/* 마무리 메시지 */
+
+.journeyClosing {
+  background: rgba(195, 232, 141, 0.08);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  margin-top: 40px;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+
+.journeyClosing p {
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .studyDetailJourneySection {
+    padding: 40px 20px 30px;
+  }
+  
+  .sectionTagHeader {
+    top: 15px;
+    left: 20px;
+    font-size: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 2.2rem !important;
+    margin-top: 25px;
+    margin-bottom: 20px;
+  }
+  
+  .sectionSubtitle {
+    font-size: 1rem !important;
+    margin-bottom: 25px;
+  }
+  
+  .journeyStats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 15px;
+    margin: 25px 0 30px 0;
+  }
+  
+  .journeyCards {
+    grid-template-columns: 1fr;
+  }
+  
+  .journeyTimeline {
+    padding-left: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .studyDetailJourneySection {
+    padding: 30px 15px 25px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.8rem !important;
+  }
+  
+  .journeyStats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

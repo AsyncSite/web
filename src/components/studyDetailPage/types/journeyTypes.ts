@@ -92,7 +92,7 @@ export const journeyTemplates = {
       studyHours: '50+',
       memberGrowth: '평균 30% 향상'
     },
-    theme: 'tecoteco' as const,
+    theme: 'standard' as const,
     layout: 'list' as const,
     showAchievements: true,
     showIcons: true

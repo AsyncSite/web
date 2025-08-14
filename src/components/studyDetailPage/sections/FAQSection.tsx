@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import RichTextDisplay from '../../common/RichTextDisplay';
-import './FAQSection.css';
+import styles from './FAQSection.module.css';
 
 interface FAQSectionProps {
   data: {
@@ -11,9 +11,9 @@ interface FAQSectionProps {
     }>;
     title?: string;
     tagHeader?: string;
-    theme?: 'default' | 'tecoteco' | 'modern';
+    // theme removed - using standard styles
     showIcons?: boolean; // Q/A 아이콘 표시 여부
-    // Join CTA 블록 (TecoTeco 테마용)
+    // Join CTA 블록 (표준 스타일)
     showJoinCTA?: boolean;
     joinTitle?: string;
     joinDescription?: string;
@@ -27,10 +27,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
     items = [], 
     title = '자주 묻는 질문',
     tagHeader,
-    theme = 'tecoteco',
     showIcons = false,
     showJoinCTA = false,
-    joinTitle = 'TecoTeco, 당신의 합류를 기다려요!',
+    joinTitle = '당신의 합류를 기다려요!',
     joinDescription = '',
     joinButtonText = '@renechoi에게 커피챗 요청하기 ☕',
     joinButtonAction = '@renechoi에게 커피챗 요청!'
@@ -46,32 +45,30 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
     return null;
   }
   
-  // 테마 분기 제거: 테코테코 스타일을 기본으로 사용
-  if (true) {
-    return (
-      <section className="tecoteco-faq-join-section">
-        {tagHeader && <div className="section-tag-header">{tagHeader}</div>}
-        {title && <h2 className="section-title">{title}</h2>}
+  return (
+    <section className={styles.studyDetailFaqSection}>
+        {tagHeader && <div className={styles.sectionTagHeader}>{tagHeader}</div>}
+        {title && <h2 className={styles.sectionTitle}>{title}</h2>}
         
-        <div className="tecoteco-faq-items">
+        <div className={styles.faqItems}>
           {items.map((item, index) => (
             <div 
               key={item.id || index}
-              className={`tecoteco-faq-item ${openIndex === index ? 'open' : ''}`}
+              className={`${styles.faqItem} ${openIndex === index ? styles.open : ''}`}
             >
               <div
-                className="tecoteco-faq-question"
+                className={styles.faqQuestion}
                 onClick={() => handleToggle(index)}
                 role="button"
                 aria-expanded={openIndex === index}
               >
-                {showIcons && <span className="tecoteco-faq-icon">Q.</span>}
-                <span className="tecoteco-faq-question-text">{item.question}</span>
-                <span className="tecoteco-faq-toggle-icon">{openIndex === index ? '▲' : '▼'}</span>
+                {showIcons && <span className={styles.faqIcon}>Q.</span>}
+                <span className={styles.faqQuestionText}>{item.question}</span>
+                <span className={styles.faqToggleIcon}>{openIndex === index ? '▲' : '▼'}</span>
               </div>
               {openIndex === index && (
-                <div className="tecoteco-faq-answer">
-                  {showIcons && <span className="tecoteco-faq-icon">A.</span>}
+                <div className={styles.faqAnswer}>
+                  {showIcons && <span className={styles.faqIcon}>A.</span>}
                   <p>{item.answer}</p>
                 </div>
               )}
@@ -80,23 +77,19 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
         </div>
         
         {showJoinCTA && (
-          <div className="join-cta-block">
-            <h3 className="join-cta-title">{joinTitle}</h3>
-            {joinDescription && <p className="join-description">{joinDescription}</p>}
+          <div className={styles.joinCtaBlock}>
+            <h3 className={styles.joinCtaTitle}>{joinTitle}</h3>
+            {joinDescription && <p className={styles.joinDescription}>{joinDescription}</p>}
             <button 
-              className="join-contact-button" 
+              className={styles.joinContactButton} 
               onClick={() => alert(joinButtonAction)}
             >
               {joinButtonText}
             </button>
           </div>
         )}
-      </section>
-    );
-  }
-  
-  // dead branch (kept for reference) - unreachable due to defaulting to tecoteco
-  return null;
+    </section>
+  );
 };
 
 export default FAQSection;

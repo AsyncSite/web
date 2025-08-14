@@ -1,6 +1,6 @@
 import React from 'react';
 import RichTextDisplay from '../../common/RichTextDisplay';
-import './RichTextSection.css';
+import styles from './RichTextSection.module.css';
 
 interface RichTextSectionProps {
   data: {
@@ -10,7 +10,7 @@ interface RichTextSectionProps {
     padding?: string;
     maxWidth?: string;
     backgroundColor?: string;
-    theme?: 'default' | 'tecoteco';
+    // theme removed - using standard styles
   };
 }
 
@@ -24,35 +24,34 @@ const RichTextSection: React.FC<RichTextSectionProps> = ({ data }) => {
     backgroundColor
   } = data;
   
-  // 테마 제거: 항상 tecoteco 스타일 적용
-  const isTecoteco = true;
+  // Using standard styles
   
   return (
     <div 
-      className={`study-detail-rich-text-section ${isTecoteco ? 'tecoteco-theme' : ''}`}
+      className={styles.studyDetailRichTextSection}
       style={{ 
-        padding: padding || (isTecoteco ? '50px 30px 40px' : '3rem 0'),
-        backgroundColor: backgroundColor || (isTecoteco ? undefined : 'white')
+        padding: padding || '50px 30px 40px',
+        backgroundColor: backgroundColor
       }}
     >
-      {/* TecoTeco 스타일 태그 헤더 */}
-      {isTecoteco && title && (
-        <div className="section-tag-header">{title}</div>
+      {/* Section Tag Header */}
+      {title && (
+        <div className={styles.sectionTagHeader}>{title}</div>
       )}
       
       <div 
-        className="rich-text-container"
+        className={styles.richTextContainer}
         style={{ 
           textAlign: alignment as any,
-          maxWidth: maxWidth || (isTecoteco ? '100%' : '900px'),
+          maxWidth: maxWidth || '100%',
           margin: '0 auto'
         }}
       >
-        {/* 제목은 테코테코 스타일에서는 태그 헤더로만 노출 */}
+        {/* Title is shown as tag header */}
         
-        {/* HTML 컨텐츠 - TecoTeco 스타일 적용 */}
+        {/* HTML Content - Standard Styles */}
         <div 
-          className={`study-detail-rich-text-content ${isTecoteco ? 'tecoteco-content' : ''}`}
+          className={styles.studyDetailRichTextContent}
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </div>

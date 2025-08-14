@@ -16,7 +16,7 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
   // 기본값 설정
   const defaultData: ExperienceSectionData = {
     tagHeader: '성장을 위한 스텝',
-    title: '테코테코 모임을 한다는 건',
+    title: '스터디 모임을 한다는 건',
     subtitle: '매주 금요일 저녁, 이런 루틴으로 함께 성장해요.',
     highlightText: '이런 루틴',
     steps: [],

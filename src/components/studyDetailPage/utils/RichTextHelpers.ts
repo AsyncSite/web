@@ -184,8 +184,8 @@ export const blocksToHTML = (blocks: RichTextBlock[]): string => {
         return `<p${alignStyle}>${contentToHTML(block.content)}</p>`;
 
       case 'callout':
-        // TecoTeco 스타일 callout - 명시적 클래스 사용
-        return `<div class="tecoteco-callout tecoteco-callout-${block.style || 'green'}">
+        // 표준 스타일 callout - 명시적 클래스 사용
+        return `<div class="study-callout study-callout-${block.style || 'green'}">
           ${block.icon ? `<span class="callout-icon">${block.icon}</span>` : ''}
           <p>${contentToHTML(block.content)}</p>
         </div>`;
@@ -268,7 +268,7 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
       const parent = element.parentElement;
       
       // Skip if inside a callout div
-      if (parent && parent.classList.contains('tecoteco-callout')) {
+      if (parent && parent.classList.contains('study-callout')) {
         return;
       }
       
@@ -286,15 +286,15 @@ export const htmlToBlocks = (html: string): RichTextBlock[] => {
     }
     
     // Callout div
-    else if (tagName === 'div' && element.classList.contains('tecoteco-callout')) {
+    else if (tagName === 'div' && element.classList.contains('study-callout')) {
       const icon = element.querySelector('.callout-icon')?.textContent || '';
       const pElement = element.querySelector('p');
       const content = pElement ? htmlToContent(pElement.innerHTML) : htmlToContent(element.innerHTML);
       let style: 'green' | 'blue' | 'yellow' | 'red' = 'green';
       
-      if (element.classList.contains('tecoteco-callout-blue')) style = 'blue';
-      else if (element.classList.contains('tecoteco-callout-yellow')) style = 'yellow';
-      else if (element.classList.contains('tecoteco-callout-red')) style = 'red';
+      if (element.classList.contains('study-callout-blue')) style = 'blue';
+      else if (element.classList.contains('study-callout-yellow')) style = 'yellow';
+      else if (element.classList.contains('study-callout-red')) style = 'red';
       
       blocks.push({
         id: generateId(),

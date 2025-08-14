@@ -1,0 +1,276 @@
+/* ================================
+   Design Tokens & CSS Variables
+   Standard Design System for AsyncSite
+   ================================ */
+
+:root {
+  /* ======================
+     Color Palette
+     ====================== */
+  
+  /* Primary Colors */
+  --color-primary: #c3e88d;           /* 연두색 - 주요 강조색 */
+  --color-primary-light: #d5f0a1;     /* 밝은 연두색 */
+  --color-primary-dark: #a8d378;      /* 어두운 연두색 */
+  --color-primary-alpha: rgba(195, 232, 141, 0.1);
+  --color-primary-alpha-20: rgba(195, 232, 141, 0.2);
+  --color-primary-alpha-30: rgba(195, 232, 141, 0.3);
+  
+  /* Secondary Colors */
+  --color-secondary: #82aaff;         /* 파란색 - 보조 강조색 */
+  --color-secondary-alpha: rgba(130, 170, 255, 0.1);
+  --color-secondary-alpha-20: rgba(130, 170, 255, 0.2);
+  --color-secondary-alpha-30: rgba(130, 170, 255, 0.3);
+  
+  /* Accent Colors */
+  --color-accent: #ffea00;            /* 노란색 - 하이라이트 */
+  --color-accent-alpha: rgba(255, 234, 0, 0.1);
+  --color-accent-alpha-20: rgba(255, 234, 0, 0.2);
+  --color-accent-alpha-40: rgba(255, 234, 0, 0.4);
+  
+  /* Text Colors */
+  --color-text-primary: #f0f0f0;      /* 주요 텍스트 */
+  --color-text-secondary: #ddd;       /* 보조 텍스트 */
+  --color-text-muted: #aaa;          /* 희미한 텍스트 */
+  --color-text-dark: #000;           /* 어두운 텍스트 (버튼 등) */
+  
+  /* Background Colors */
+  --color-bg-primary: #0d0d0d;        /* 주요 배경 */
+  --color-bg-secondary: #1a1a1a;      /* 섹션 배경 */
+  --color-bg-tertiary: #2a2a2a;       /* 카드 배경 */
+  --color-bg-elevated: #3a3a3a;       /* 상승된 요소 배경 */
+  --color-bg-hover: #4a4a4a;          /* 호버 상태 배경 */
+  
+  /* Border Colors */
+  --color-border-default: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  --color-border-primary: var(--color-primary);
+  --color-border-secondary: var(--color-secondary);
+  
+  /* Status Colors */
+  --color-success: #4caf50;
+  --color-warning: #ff9800;
+  --color-error: #f44336;
+  --color-info: #2196f3;
+  
+  /* ======================
+     Typography
+     ====================== */
+  
+  /* Font Families */
+  --font-primary: 'PretendardVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Source Code Pro', 'SF Mono', Monaco, monospace;
+  
+  /* Font Sizes */
+  --font-size-xs: 0.65rem;
+  --font-size-sm: 0.75rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.1rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+  --font-size-5xl: 3rem;
+  --font-size-hero: 3.5rem;
+  
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 1.8;
+  
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+  
+  /* ======================
+     Spacing
+     ====================== */
+  
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 30px;
+  --spacing-4xl: 40px;
+  --spacing-5xl: 50px;
+  --spacing-6xl: 60px;
+  --spacing-7xl: 80px;
+  --spacing-8xl: 100px;
+  
+  /* ======================
+     Layout
+     ====================== */
+  
+  /* Container */
+  --container-max-width: 1200px;
+  --container-padding: 20px;
+  
+  /* Section Spacing */
+  --section-padding-y: 80px;
+  --section-padding-x: 30px;
+  --section-padding: var(--section-padding-y) var(--section-padding-x);
+  --section-gap: 60px;
+  
+  /* Card Spacing */
+  --card-padding: 24px;
+  --card-gap: 20px;
+  
+  /* Grid */
+  --grid-columns-default: repeat(auto-fit, minmax(280px, 1fr));
+  --grid-columns-reviews: repeat(auto-fit, minmax(300px, 1fr));
+  --grid-gap-default: 20px;
+  --grid-gap-lg: 30px;
+  
+  /* ======================
+     Border Radius
+     ====================== */
+  
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 50%;
+  --radius-pill: 9999px;
+  
+  /* ======================
+     Shadows
+     ====================== */
+  
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 12px 30px rgba(0, 0, 0, 0.3);
+  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.4);
+  --shadow-section: 0 8px 25px rgba(0, 0, 0, 0.5);
+  
+  /* Glow Effects */
+  --shadow-glow-primary: 0 0 20px var(--color-primary-alpha-30);
+  --shadow-glow-secondary: 0 0 20px var(--color-secondary-alpha-30);
+  --shadow-glow-accent: 0 0 20px var(--color-accent-alpha-40);
+  
+  /* ======================
+     Transitions
+     ====================== */
+  
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  --transition-slower: 0.5s ease;
+  
+  /* Easing Functions */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  
+  /* ======================
+     Z-index Layers
+     ====================== */
+  
+  --z-base: 1;
+  --z-elevated: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 500;
+  --z-modal: 700;
+  --z-popover: 800;
+  --z-tooltip: 900;
+  --z-notification: 1000;
+  
+  /* ======================
+     Animations
+     ====================== */
+  
+  --animation-duration-fast: 200ms;
+  --animation-duration-base: 300ms;
+  --animation-duration-slow: 500ms;
+  --animation-duration-slower: 1000ms;
+  
+  /* ======================
+     Component Specific
+     ====================== */
+  
+  /* Member Cards */
+  --member-card-width: 110px;
+  --member-card-min-width: 110px;
+  --member-card-padding: 0.8rem;
+  --member-profile-size: 65px;
+  --member-profile-size-modal: 80px;
+  
+  /* Review Cards */
+  --review-card-min-width: 300px;
+  --review-card-padding: 25px;
+  
+  /* Buttons */
+  --button-padding-x: 20px;
+  --button-padding-y: 10px;
+  --button-font-size: 1rem;
+  --button-font-weight: var(--font-weight-semibold);
+  
+  /* Tags */
+  --tag-padding-x: 15px;
+  --tag-padding-y: 8px;
+  --tag-font-size: 0.9rem;
+  --tag-border-radius: var(--radius-2xl);
+  
+  /* ======================
+     Responsive Breakpoints
+     ====================== */
+  
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ======================
+   Dark Mode Variables (future use)
+   ====================== */
+[data-theme="dark"] {
+  /* Dark mode overrides can be added here */
+}
+
+/* ======================
+   Utility Classes
+   ====================== */
+
+/* Text colors */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-muted); }
+.text-accent { color: var(--color-accent); }
+
+/* Background colors */
+.bg-primary { background-color: var(--color-bg-primary); }
+.bg-secondary { background-color: var(--color-bg-secondary); }
+.bg-tertiary { background-color: var(--color-bg-tertiary); }
+
+/* Spacing utilities */
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+/* Margin utilities */
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }

@@ -14,7 +14,7 @@ import { normalizeMembersPropsForUI } from './utils/membersAdapter';
 import { blocksToHTML } from './utils/RichTextHelpers';
 import { getStudyDisplayInfo } from '../../utils/studyStatusUtils';
 import Modal from '../common/Modal/Modal';
-import './StudyDetailPageRenderer.css';
+import styles from './StudyDetailPageRenderer.module.css';
 
 /**
  * Maps API section props to component expected props structure
@@ -46,8 +46,8 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
     
     case SectionType.FAQ:
       // API returns 'questions' but component expects 'items'
-      // Pass all props including theme, tagHeader, showIcons for TecoTeco style
-      // Also pass Join CTA props for TecoTeco theme
+      // Pass all props including tagHeader, showIcons for standard style
+      // Also pass Join CTA props for standard theme
       return {
         items: section.props.questions || section.props.items || [],
         title: section.props.title,
@@ -255,10 +255,10 @@ const StudyDetailPageRenderer: React.FC = () => {
   
   if (loading) {
     return (
-      <div className="study-detail-page-renderer">
+      <div className={styles.studyDetailPageRenderer}>
         <TemplateHeader />
-        <main className="study-detail-page-content">
-          <div className="loading-container">
+        <main className={styles.studyDetailPageContent}>
+          <div className={styles.loadingContainer}>
             <LoadingSpinner />
             <p>페이지를 불러오는 중...</p>
           </div>
@@ -271,10 +271,10 @@ const StudyDetailPageRenderer: React.FC = () => {
   // pageData가 없지만 studyData가 있으면 기본 스터디 페이지 표시
   if (!pageData && studyData) {
     return (
-      <div className="study-detail-page-renderer">
+      <div className={styles.studyDetailPageRenderer}>
         <TemplateHeader />
-        <main className="study-detail-page-content">
-          <div className="container" style={{ paddingTop: '100px', paddingBottom: '100px' }}>
+        <main className={styles.studyDetailPageContent}>
+          <div className={styles.container} style={{ paddingTop: '100px', paddingBottom: '100px' }}>
             <h1>{studyData.name} {studyData.generation > 1 ? `${studyData.generation}기` : ''}</h1>
             <p>{studyData.tagline}</p>
             {studyData.description && <p>{studyData.description}</p>}
@@ -302,16 +302,16 @@ const StudyDetailPageRenderer: React.FC = () => {
   
   if (error || !pageData) {
     return (
-      <div className="study-detail-page-renderer">
+      <div className={styles.studyDetailPageRenderer}>
         <TemplateHeader />
-        <main className="study-detail-page-content">
-          <div className="error-container">
-            <div className="error-icon">⚠️</div>
+        <main className={styles.studyDetailPageContent}>
+          <div className={styles.errorContainer}>
+            <div className={styles.errorIcon}>⚠️</div>
             <h2>페이지를 불러올 수 없습니다</h2>
             <p>{error || '알 수 없는 오류가 발생했습니다'}</p>
             <button 
               onClick={() => window.location.href = '/study'}
-              className="back-button"
+              className={styles.backButton}
             >
               스터디 목록으로 돌아가기
             </button>
@@ -323,31 +323,35 @@ const StudyDetailPageRenderer: React.FC = () => {
   }
   
   return (
-    <div className="study-detail-page-renderer">
+    <div className={styles.studyDetailPageRenderer}>
       <TemplateHeader />
-      <main className="study-detail-page-content">
+      <main className={styles.studyDetailPageContent}>
         {sortedSections.length === 0 ? (
-          <div className="empty-page-container">
-            <div className="empty-icon">📄</div>
+          <div className={styles.emptyPageContainer}>
+            <div className={styles.emptyIcon}>📄</div>
             <h2>아직 콘텐츠가 없습니다</h2>
             <p>이 페이지는 준비 중입니다</p>
           </div>
         ) : (
-          <div className="sections-container">
+          <div className={styles.sectionsContainer}>
             {/* Study Status Banner */}
             {studyData && (
-              <div className={`study-status-banner status-${studyData.status?.toLowerCase()}`}>
+              <div className={`${styles.studyStatusBanner} ${
+                studyData.status === 'APPROVED' ? styles.statusApproved :
+                studyData.status === 'IN_PROGRESS' ? styles.statusInProgress :
+                studyData.status === 'COMPLETED' ? styles.statusCompleted : ''
+              }`}>
                 {studyData.status === 'APPROVED' && (
                   <>
-                    <span className="status-icon">🚀</span>
-                    <div className="status-info">
+                    <span className={styles.statusIcon}>🚀</span>
+                    <div className={styles.statusInfo}>
                       <h3>모집 중인 스터디입니다</h3>
                       <p>마감일: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}</p>
                     </div>
                     {/* 상태별 버튼 표시 */}
                     {applicationStatus === 'none' && (
                       <button 
-                        className="apply-button" 
+                        className={styles.applyButton} 
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -367,12 +371,12 @@ const StudyDetailPageRenderer: React.FC = () => {
                       </button>
                     )}
                     {applicationStatus === 'pending' && (
-                      <div className="application-status-container">
-                        <button className="apply-button disabled" disabled>
+                      <div className={styles.applicationStatusContainer}>
+                        <button className={`${styles.applyButton} ${styles.disabled}`} disabled>
                           심사 대기중
                         </button>
                         <button 
-                          className="cancel-button"
+                          className={styles.cancelButton}
                           onClick={async () => {
                             if (window.confirm('신청을 취소하시겠습니까?')) {
                               if (!applicationId) {
@@ -397,13 +401,13 @@ const StudyDetailPageRenderer: React.FC = () => {
                       </div>
                     )}
                     {applicationStatus === 'approved' && isMember && (
-                      <button className="apply-button approved" disabled>
+                      <button className={`${styles.applyButton} ${styles.approved}`} disabled>
                         ✅ 참여 중
                       </button>
                     )}
                     {applicationStatus === 'rejected' && (
                       <button 
-                        className="apply-button rejected" 
+                        className={`${styles.applyButton} ${styles.rejected}`} 
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -423,8 +427,8 @@ const StudyDetailPageRenderer: React.FC = () => {
                 )}
                 {studyData.status === 'IN_PROGRESS' && (
                   <>
-                    <span className="status-icon">📚</span>
-                    <div className="status-info">
+                    <span className={styles.statusIcon}>📚</span>
+                    <div className={styles.statusInfo}>
                       <h3>진행 중인 스터디입니다</h3>
                       <p>현재 활발히 진행되고 있습니다</p>
                     </div>
@@ -432,8 +436,8 @@ const StudyDetailPageRenderer: React.FC = () => {
                 )}
                 {studyData.status === 'COMPLETED' && (
                   <>
-                    <span className="status-icon">✅</span>
-                    <div className="status-info">
+                    <span className={styles.statusIcon}>✅</span>
+                    <div className={styles.statusInfo}>
                       <h3>완료된 스터디입니다</h3>
                       <p>스터디가 성공적으로 종료되었습니다</p>
                     </div>
@@ -443,7 +447,7 @@ const StudyDetailPageRenderer: React.FC = () => {
             )}
 
             {sortedSections.map((section) => (
-              <div key={section.id} className="section-wrapper">
+              <div key={section.id} className={styles.sectionWrapper}>
                 <SectionRenderer 
                   type={section.type} 
                   data={mapSectionPropsToComponentData(section, pageData)}

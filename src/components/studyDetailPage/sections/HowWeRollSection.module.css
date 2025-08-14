@@ -1,0 +1,331 @@
+/* HowWeRoll Section Styles */
+
+/* Standard HowWeRoll Section 스타일 */
+.studyDetailHowWeRollSection {
+  background: linear-gradient(135deg, #1f1f1f, #0d0d0d);
+  border-radius: 12px;
+  padding: 50px 30px 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  text-align: left;
+  position: relative;
+  min-height: 50vh;
+}
+
+
+/* Tag Header */
+.sectionTagHeader {
+  color: #82aaff;
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+
+/* Section Title */
+.sectionTitle {
+  font-size: 2.5rem;
+  margin-top: 30px;
+  margin-bottom: 25px;
+  text-align: left;
+  display: block;
+  color: #e0e0e0;
+}
+
+.highlight {
+  font-weight: 700;
+  color: #c3e88d;
+}
+
+/* Subtitle */
+.sectionSubtitle {
+  margin-bottom: 35px;
+  text-align: left;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #a0a0a0;
+}
+
+/* Meeting Overview Cards */
+.meetingOverview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 40px 0;
+}
+
+.overviewCard {
+  border-radius: 12px;
+  padding: 25px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.overviewCard:hover {
+  transform: translateY(-3px);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Type Specific Borders */
+.overviewCard.mainMeeting {
+  border-color: rgba(195, 232, 141, 0.3);
+}
+
+.overviewCard.studyMaterial {
+  border-color: rgba(130, 170, 255, 0.3);
+}
+
+.overviewCard.costInfo {
+  border-color: rgba(255, 234, 0, 0.3);
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.cardContent {
+  flex: 1;
+}
+
+.cardContent h3 {
+  font-size: 1.3rem;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.cardContent p {
+  margin: 8px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #a0a0a0;
+}
+
+.cardContent p:last-child {
+  margin-bottom: 0;
+}
+
+.subNote {
+  font-size: 0.9rem !important;
+  font-style: italic;
+  color: #808080 !important;
+}
+
+.cardContent a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+  color: #82aaff;
+}
+
+.cardContent a:hover {
+  text-decoration: underline;
+  color: #6a95e7;
+}
+
+/* Sub Heading */
+.introSubHeading {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-top: 50px;
+  margin-bottom: 15px;
+  text-align: left;
+  color: #c3e88d;
+}
+
+/* Schedule Intro */
+.scheduleIntro {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  text-align: left;
+  color: #a0a0a0;
+}
+
+/* Activity Table */
+.activityTable {
+  overflow-x: auto;
+  margin: 30px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.activityTable table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 700px;
+  background-color: #2a2a2a;
+}
+
+.activityTable th,
+.activityTable td {
+  padding: 20px 18px;
+  text-align: left;
+  vertical-align: top;
+  color: #e0e0e0;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.activityTable th {
+  font-weight: 700;
+  font-size: 1.1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #3a3a3a;
+  color: #c3e88d;
+}
+
+.activityTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.activityTable tbody tr:nth-child(even) {
+  background-color: #2e2e2e;
+}
+
+.activityTable tbody tr:hover {
+  transition: background-color 0.2s ease;
+  background-color: #383838;
+}
+
+.activityTable td strong {
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.activityDetail {
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 5px;
+  font-style: italic;
+  color: #808080;
+}
+
+.colorPrimaryText {
+  color: #c3e88d;
+  font-weight: 500;
+}
+
+.colorSecondaryText {
+  color: #82aaff;
+  font-weight: 500;
+}
+
+/* Closing Message */
+.closingMessage {
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 40px;
+  text-align: center;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+}
+
+.closingMessage p {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin: 0;
+  color: #e0e0e0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .studyDetailHowWeRollSection {
+    padding: 40px 20px 30px;
+  }
+
+  .sectionTagHeader {
+    top: 15px;
+    left: 20px;
+    font-size: 1rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.2rem;
+    margin-top: 25px;
+    margin-bottom: 20px;
+  }
+
+  .sectionSubtitle {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+
+  .meetingOverview {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin: 30px 0;
+  }
+
+  .overviewCard {
+    padding: 20px;
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .cardIcon {
+    font-size: 2rem;
+    margin-top: 0;
+  }
+
+  .cardContent h3 {
+    font-size: 1.2rem;
+  }
+
+  .cardContent p {
+    font-size: 0.95rem;
+  }
+
+  .introSubHeading {
+    font-size: 1.5rem;
+    margin-top: 35px;
+    margin-bottom: 12px;
+  }
+
+  .scheduleIntro {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .activityTable table {
+    min-width: unset;
+    font-size: 0.875rem;
+  }
+
+  .activityTable th,
+  .activityTable td {
+    padding: 15px 12px;
+  }
+
+  .activityTable th {
+    font-size: 1rem;
+  }
+
+  .activityDetail {
+    font-size: 0.85rem;
+  }
+
+  .closingMessage {
+    padding: 20px;
+    margin-top: 30px;
+  }
+
+  .closingMessage p {
+    font-size: 1rem;
+  }
+}

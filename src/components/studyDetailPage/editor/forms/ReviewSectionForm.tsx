@@ -8,8 +8,8 @@ import {
   ReviewStats,
   sampleReviews,
   sampleReviewStats,
-  sampleTecotecoReviewData,
-  sampleTecotecoReviews
+  sampleStandardReviewData,
+  sampleStandardReviews
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
 import './ReviewSectionForm.css';
@@ -169,25 +169,25 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
   };
 
 
-  // 예시 데이터 로드 (TecoTeco 데이터 사용)
+  // 예시 데이터 로드 (표준 데이터 사용)
   const loadExampleData = () => {
-    setTagHeader(sampleTecotecoReviewData.tagHeader || '솔직한 후기');
-    setTitle(RichTextConverter.fromHTML(sampleTecotecoReviewData.title));
-    setSubtitle(RichTextConverter.fromHTML(sampleTecotecoReviewData.subtitle || ''));
-    setShowKeywords(sampleTecotecoReviewData.showKeywords ?? true);
-    setDisplayCount(sampleTecotecoReviewData.displayCount || 3);
-    setSortBy(sampleTecotecoReviewData.sortBy || 'latest');
-    setShowStats(false); // TecoTeco는 통계를 표시하지 않음
+    setTagHeader(sampleStandardReviewData.tagHeader || '솔직한 후기');
+    setTitle(RichTextConverter.fromHTML(sampleStandardReviewData.title));
+    setSubtitle(RichTextConverter.fromHTML(sampleStandardReviewData.subtitle || ''));
+    setShowKeywords(sampleStandardReviewData.showKeywords ?? true);
+    setDisplayCount(sampleStandardReviewData.displayCount || 3);
+    setSortBy(sampleStandardReviewData.sortBy || 'latest');
+    setShowStats(false); // 표준 형식은 통계를 표시하지 않음
     
-    // TecoTeco 리뷰 샘플 데이터 로드
-    setReviews(sampleTecotecoReviews);
+    // 표준 리뷰 샘플 데이터 로드
+    setReviews(sampleStandardReviews);
     
-    // TecoTeco 리뷰에서 키워드 자동 추출
-    extractKeywordsFromReviews(sampleTecotecoReviews);
+    // 표준 리뷰에서 키워드 자동 추출
+    extractKeywordsFromReviews(sampleStandardReviews);
     
-    // TecoTeco는 기본 키워드도 사용 (자동 추출 + 하드코딩된 키워드)
-    if (sampleTecotecoReviewData.keywords) {
-      setKeywords(sampleTecotecoReviewData.keywords);
+    // 표준 형식은 기본 키워드도 사용 (자동 추출 + 하드코딩된 키워드)
+    if (sampleStandardReviewData.keywords) {
+      setKeywords(sampleStandardReviewData.keywords);
     }
   };
 
@@ -311,7 +311,7 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
             <StudyDetailRichTextEditor
               value={title}
               onChange={setTitle}
-              placeholder="예: 가장 진솔한 이야기, TecoTeco 멤버들의 목소리 🗣️"
+              placeholder="예: 가장 진솔한 이야기, 멤버들의 목소리 🗣️"
               toolbar={['break', 'bold', 'italic', 'highlight', 'color']}
               singleLine={false}
             />

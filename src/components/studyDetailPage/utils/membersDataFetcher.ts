@@ -24,8 +24,8 @@ export async function fetchAndMergeMembersData(
         joinDate: member.joinedAt,
         isActive: member.status === 'ACTIVE',
         badges: mapBadges(member),
-        // TecoTeco specific
-        tecotecoContribution: undefined,
+        // Study specific fields
+        studyContribution: undefined,
         socialLinks: undefined,
         stats: undefined
       }));

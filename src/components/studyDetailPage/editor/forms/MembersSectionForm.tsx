@@ -290,8 +290,8 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
     setMembers(updatedMembers);
   };
 
-  // TecoTeco 예시 데이터 로드
-  const loadTecoTecoExample = () => {
+  // 표준 예시 데이터 로드
+  const loadStandardExample = () => {
     setTitle('함께하는 사람들');
     setSubtitle('더 멋진 여정이 펼쳐질 거예요, 함께라면.');
     setLayout('carousel');
@@ -535,7 +535,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       }}>
         <button
           type="button"
-          onClick={loadTecoTecoExample}
+          onClick={loadStandardExample}
           className="study-management-members-example-btn"
           style={{
             padding: '8px 16px',
@@ -1027,7 +1027,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
                 </div>
               </div>
 
-              {/* 커스텀 필드 - tecoteco는 항상 표시 */}
+              {/* 커스텀 필드 - 표준 형식 */}
               <div className="study-management-members-field">
                 <label>커스텀 필드 (최대 3개)</label>
                 {member.customFields?.map((field, fieldIndex) => (
@@ -1073,7 +1073,7 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
                 )}
               </div>
 
-              {/* 배지 - tecoteco는 항상 표시 */}
+              {/* 배지 - 표준 형식 */}
               <div className="study-management-members-field">
                 <label>배지</label>
                 <div className="study-management-members-badge-selector">

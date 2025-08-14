@@ -72,7 +72,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       content,
       blocks, // 블록 데이터도 함께 저장
       backgroundColor,
-      theme: 'tecoteco'
+      theme: 'standard'
     });
   };
 
@@ -122,9 +122,9 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
     }
   };
 
-  // TecoTeco 예시 데이터 로드
+  // 표준 예시 데이터 로드
   const loadExampleData = () => {
-    setTitle('TecoTeco 소개');
+    setTitle('스터디 소개');
     setBackgroundColor('#0a0a0a');
     
     const exampleBlocks: RichTextBlock[] = [
@@ -142,7 +142,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       {
         id: '3',
         type: 'paragraph',
-        content: RichTextConverter.fromHTML('TecoTeco는 이런 질문에서 출발했습니다. 기술이 아무리 발달해도 <span style="color: #c3e88d; font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.')
+        content: RichTextConverter.fromHTML('우리는 이런 질문에서 출발했습니다. 기술이 아무리 발달해도 <span style="color: #c3e88d; font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.')
       },
       {
         id: '4',

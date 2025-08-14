@@ -1,4 +1,4 @@
-/* CSS Variables for TecoTeco theme */
+/* CSS Variables for Standard FAQ Section */
 :root {
   --color-primary: #c3e88d; /* 연한 연두색 */
   --color-secondary: #82aaff; /* 밝은 파란색 */
@@ -8,17 +8,8 @@
   --color-text-muted: #aaa;
 }
 
-/* 기본 스타일 */
-.study-detail-faq-section {
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  padding: 30px 25px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* TecoTeco FAQ Join Section - Exactly matching hardcoded page */
-.tecoteco-faq-join-section {
+/* Standard FAQ Section */
+.studyDetailFaqSection {
   position: relative;
   padding: 50px 30px 40px;
   margin-bottom: 25px;
@@ -29,7 +20,7 @@
   min-height: auto;
 }
 
-.tecoteco-faq-join-section .section-tag-header {
+.sectionTagHeader {
   position: absolute;
   top: 20px;
   left: 30px;
@@ -40,7 +31,7 @@
   text-transform: uppercase;
 }
 
-.tecoteco-faq-join-section .section-title {
+.sectionTitle {
   color: var(--color-text-primary);
   font-size: 2.5rem;
   margin-top: 30px;
@@ -49,13 +40,13 @@
   display: block;
 }
 
-.study-detail-faq-container {
+.studyDetailFaqContainer {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-.study-detail-faq-title {
+.studyDetailFaqTitle {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
@@ -63,13 +54,13 @@
   color: #2d3748;
 }
 
-.study-detail-faq-list {
+.studyDetailFaqList {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.study-detail-faq-item {
+.studyDetailFaqItem {
   background: white;
   border-radius: 8px;
   overflow: hidden;
@@ -77,11 +68,11 @@
   transition: all 0.3s ease;
 }
 
-.study-detail-faq-item-open {
+.studyDetailFaqItem-open {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-.study-detail-faq-question {
+.studyDetailFaqQuestion {
   width: 100%;
   padding: 1.25rem 1.5rem;
   background: white;
@@ -97,11 +88,11 @@
   transition: background-color 0.2s ease;
 }
 
-.study-detail-faq-question:hover {
+.studyDetailFaqQuestion:hover {
   background-color: #f7fafc;
 }
 
-.study-detail-faq-icon {
+.studyDetailFaqIcon {
   font-size: 1.5rem;
   color: #667eea;
   transition: transform 0.3s ease;
@@ -109,11 +100,11 @@
   margin-left: 1rem;
 }
 
-.study-detail-faq-item-open .study-detail-faq-icon {
+.studyDetailFaqItem-open .studyDetailFaqIcon {
   transform: rotate(45deg);
 }
 
-.study-detail-faq-answer {
+.studyDetailFaqAnswer {
   padding: 0 1.5rem 1.5rem;
   color: #4a5568;
   line-height: 1.7;
@@ -132,34 +123,34 @@
 }
 
 @media (max-width: 768px) {
-  .study-detail-faq-section {
+  .studyDetailFaqSection {
     padding: 3rem 0;
   }
   
-  .study-detail-faq-title {
+  .studyDetailFaqTitle {
     font-size: 1.75rem;
     margin-bottom: 2rem;
   }
   
-  .study-detail-faq-question {
+  .studyDetailFaqQuestion {
     font-size: 1rem;
     padding: 1rem 1.25rem;
   }
   
-  .study-detail-faq-answer {
+  .studyDetailFaqAnswer {
     padding: 0 1.25rem 1.25rem;
   }
 }
 
-/* TecoTeco FAQ 아이템 스타일 */
-.tecoteco-faq-items {
+/* Standard FAQ Items */
+.faqItems {
   margin-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.tecoteco-faq-item {
+.faqItem {
   background-color: #2a2a2a;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -167,12 +158,12 @@
   transition: all 0.3s ease;
 }
 
-.tecoteco-faq-item.open {
+.faqItem.open {
   border-color: var(--color-primary);
   box-shadow: 0 0 15px rgba(195, 232, 141, 0.3);
 }
 
-.tecoteco-faq-question {
+.faqQuestion {
   display: flex;
   align-items: center;
   padding: 18px 20px;
@@ -183,11 +174,11 @@
   transition: background-color 0.2s ease;
 }
 
-.tecoteco-faq-question:hover {
+.faqQuestion:hover {
   background-color: #2b3a58;
 }
 
-.tecoteco-faq-icon {
+.faqIcon {
   font-size: 1.2rem;
   color: #ffcb6b;
   margin-right: 12px;
@@ -195,23 +186,23 @@
   font-weight: 700;
 }
 
-.tecoteco-faq-question-text {
+.faqQuestion-text {
   flex-grow: 1;
   font-size: 1.05rem;
 }
 
-.tecoteco-faq-toggle-icon {
+.faqToggleIcon {
   font-size: 0.9rem;
   color: var(--color-text-muted);
   margin-left: 15px;
   transition: transform 0.2s ease;
 }
 
-.tecoteco-faq-item.open .tecoteco-faq-toggle-icon {
+.faqItem.open .faqToggleIcon {
   transform: rotate(180deg);
 }
 
-.tecoteco-faq-answer {
+.faqAnswer {
   padding: 15px 20px 15px 50px;
   background-color: #2a2a2a;
   color: var(--color-text-secondary);
@@ -222,7 +213,7 @@
   align-items: flex-start;
 }
 
-.tecoteco-faq-answer p {
+.faqAnswer p {
   margin: 0;
   flex-grow: 1;
   color: rgba(255, 255, 255, 0.8);
@@ -240,37 +231,37 @@
 }
 
 /* Q/A 아이콘 스타일 (기본 테마용) */
-.study-detail-faq-q-icon, .study-detail-faq-a-icon {
+.studyDetailFaqQIcon, .studyDetailFaqAIcon {
   font-weight: 700;
   margin-right: 10px;
   font-family: 'Source Code Pro', monospace;
 }
 
-.study-detail-faq-q-icon {
+.studyDetailFaqQIcon {
   color: #3182ce;
 }
 
-.study-detail-faq-a-icon {
+.studyDetailFaqAIcon {
   color: #38a169;
 }
 
-.study-detail-faq-question-text {
+.studyDetailFaqQuestion-text {
   flex-grow: 1;
 }
 
-.study-detail-faq-toggle-icon {
+.studyDetailFaqToggleIcon {
   font-size: 1.2rem;
   color: #718096;
 }
 
-.study-detail-faq-answer-text {
+.studyDetailFaqAnswer-text {
   flex-grow: 1;
   display: flex;
   align-items: flex-start;
 }
 
 /* Tag header 스타일 */
-.study-detail-faq-tag-header {
+.studyDetailFaqTagHeader {
   font-size: 1rem;
   font-weight: 600;
   color: #667eea;
@@ -279,8 +270,8 @@
   margin-bottom: 10px;
 }
 
-/* Join CTA Block - TecoTeco FAQ 섹션 하단 */
-.join-cta-block {
+/* Join CTA Block - FAQ Section Footer */
+.joinCtaBlock {
   text-align: center;
   margin-top: 50px;
   padding: 30px;
@@ -293,21 +284,21 @@
   align-items: center;
 }
 
-.join-cta-title {
+.joinCtaTitle {
   font-size: 1.8rem;
   color: var(--color-secondary);
   margin-bottom: 15px;
   font-weight: 700;
 }
 
-.join-cta-block .join-description {
+.joinCtaBlock .joinDescription {
   font-size: 1.15rem;
   margin-bottom: 25px;
   line-height: 1.6;
   color: var(--color-text-primary);
 }
 
-.join-cta-block .join-contact-button {
+.joinCtaBlock .joinContactButton {
   background-color: var(--color-primary);
   color: #000;
   border: none;
@@ -323,7 +314,7 @@
   gap: 8px;
 }
 
-.join-cta-block .join-contact-button:hover {
+.joinCtaBlock .joinContactButton:hover {
   background-color: #b5d97f;
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);

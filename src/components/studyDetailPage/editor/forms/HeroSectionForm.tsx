@@ -112,19 +112,19 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
     setInfoBoxItems(updatedItems);
   };
 
-  // TecoTeco 예시 데이터
+  // 표준 예시 데이터
   const loadExampleData = () => {
     // RichText 형식으로 변환
-    setTitle(RichTextConverter.fromHTML('💯 코테 스터디<br/>테코테코'));
+    setTitle(RichTextConverter.fromHTML('💯 코테 스터디<br/>함께 성장하기'));
     setSubtitle(RichTextConverter.fromHTML('변화 속에서<br/><span class="highlight">변치 않는 ____를 찾다</span>'));
     setDescription('기술 변화 속 흔들리지 않는 개발자 사고의 뿌리를 탐구하고, 단순한 코딩 테스트를 넘어 자료구조와 알고리즘의 본질에 Deep Dive합니다.');
     setButtonText('참가 신청하기');
     setButtonLink('#apply');
-    setBackgroundImage('/images/tecoteco/profile1.svg');
+    setBackgroundImage('/images/study/profile1.svg');
     
     // InfoBox 예시 데이터
     setUseInfoBox(true);
-    setInfoBoxHeader('TecoTeco: 함께 성장할 용기');
+    setInfoBoxHeader('함께 성장할 용기');
     setInfoBoxItems([
       {
         icon: '💡',
@@ -205,7 +205,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
         <StudyDetailRichTextEditor
           value={title}
           onChange={setTitle}
-          placeholder="예: 💯 코테 스터디 [줄바꿈] 테코테코"
+          placeholder="예: 💯 코테 스터디 [줄바꿈] 함께 성장하기"
           toolbar={['break', 'emoji', 'bold', 'color']}
           singleLine={false}
         />
@@ -309,7 +309,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
           type="text"
           value={backgroundImage}
           onChange={(e) => setBackgroundImage(e.target.value)}
-          placeholder="예: /images/tecoteco/profile1.svg"
+          placeholder="예: /images/study/profile1.svg"
           className="study-management-hero-input"
         />
         {backgroundImage && (
@@ -328,7 +328,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
               checked={useInfoBox}
               onChange={(e) => setUseInfoBox(e.target.checked)}
             />
-            {' '}정보 박스 사용 (TecoTeco 스타일)
+            {' '}정보 박스 사용 (표준 스타일)
           </label>
         </div>
 
@@ -340,7 +340,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
                 type="text"
                 value={infoBoxHeader}
                 onChange={(e) => setInfoBoxHeader(e.target.value)}
-                placeholder="예: TecoTeco: 함께 성장할 용기"
+                placeholder="예: 함께 성장할 용기"
                 className="study-management-hero-input"
               />
             </div>

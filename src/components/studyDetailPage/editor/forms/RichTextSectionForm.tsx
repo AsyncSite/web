@@ -21,8 +21,8 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
   const [content, setContent] = useState(initialData.content || '');
   const [alignment, setAlignment] = useState(initialData.alignment || 'left');
   const [backgroundColor, setBackgroundColor] = useState(initialData.backgroundColor || '#0a0a0a');
-  // tecoteco 테마로 고정
-  const theme = 'tecoteco';
+  // 표준 테마로 고정
+  const theme = 'standard';
   const [editorMode, setEditorMode] = useState<'visual' | 'html'>('visual');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -39,19 +39,19 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       content,
       alignment,
       backgroundColor,
-      theme: 'tecoteco'
+      theme: 'standard'
     });
   };
 
-  // TecoTeco 예시 데이터 - IntroSection 실제 내용
+  // 표준 예시 데이터 - IntroSection 실제 내용
   const loadExampleData = () => {
-    setTitle('TecoTeco 소개');
+    setTitle('스터디 소개');
     setEditorMode('visual'); // 비주얼 모드로 전환
     setContent(`<h2 style="margin-bottom: 2rem;">변화하는 세상에서<br/>흔들리지 않을 '나'를 위한 스터디</h2>
 
 <p>코딩과 지식의 가치가 흔해지는 시절입니다. AI가 순식간에 코드를 작성하고, 개발 도구들이 날마다 진화하는 지금. 개발자로서 우리가 정말 집중해야 할 것은 무엇일까요?</p>
 
-<p>TecoTeco는 이런 질문에서 출발했습니다. 기술이 아무리 발달해도 <span style="color: rgb(195, 232, 141); font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.</p>
+<p>우리는 이런 질문에서 출발했습니다. 기술이 아무리 발달해도 <span style="color: rgb(195, 232, 141); font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.</p>
 
 <h3 style="margin-top: 2.5rem; margin-bottom: 1rem; color: rgb(195, 232, 141);">물고기를 잡는 방법을 익히는 것</h3>
 
@@ -84,7 +84,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
 <p style="margin-top: 3rem; text-align: center; font-size: 1.1rem;">우리가 찾는 건 변화 속에서도 <span style="color: rgb(195, 232, 141); font-weight: 600;">흔들리지 않을 '나'</span><br/>생각하는 힘이에요.</p>`);
     setAlignment('left');
     setBackgroundColor('transparent');
-    // tecoteco 테마 고정됨
+    // 표준 테마 고정됨
     
     // Example loaded successfully
     // Parent component can show a success message if needed
@@ -209,7 +209,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
             onClick={loadExampleData}
             className="study-management-richtext-template-btn study-management-richtext-example"
           >
-            TecoTeco 예시
+            표준 예시
           </button>
         </div>
       </div>
@@ -414,7 +414,7 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
         </div>
       </div>
 
-      {/* tecoteco 테마로 고정됨 */}
+      {/* 표준 테마로 고정됨 */}
 
       <div className="study-management-richtext-form-row">
         <div className="study-management-richtext-form-group">

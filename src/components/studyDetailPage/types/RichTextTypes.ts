@@ -51,7 +51,7 @@ export interface ListBlock extends BaseBlock {
   items: BlockContent[];  // Changed to support rich text in list items
 }
 
-// Info Box Block (TecoTeco 스타일 정보 박스)
+// Info Box Block (표준 스타일 정보 박스)
 export interface InfoBoxBlock extends BaseBlock {
   type: 'infoBox';
   header?: string;
@@ -107,7 +107,7 @@ export interface RichTextSectionData {
   blocks: RichTextBlock[];
   alignment?: BlockAlign;
   backgroundColor?: string;
-  theme?: 'default' | 'tecoteco';
+  theme?: 'default' | 'standard';
 }
 
 // Helper Functions Type Definitions

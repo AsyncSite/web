@@ -48,11 +48,11 @@ export interface ReviewSectionData {
 // 샘플 리뷰 데이터 (편집 모드에서 미리보기용)
 import { REVIEW_TAGS } from '../../../types/reviewTags';
 
-// TecoTeco 스타일 샘플 데이터
-export const sampleTecotecoReviewData: ReviewSectionData = {
+// 표준 스타일 샘플 데이터
+export const sampleStandardReviewData: ReviewSectionData = {
   enabled: true,
   tagHeader: '솔직한 후기',
-  title: '가장 진솔한 이야기, <br /> TecoTeco 멤버들의 목소리 🗣️',
+  title: '가장 진솔한 이야기, <br /> 멤버들의 목소리 🗣️',
   subtitle: '숫자와 코드만으로는 설명할 수 없는 <span class="highlight">우리 모임의 진짜 가치</span>를 들어보세요.',
   showStats: false,
   displayCount: 3,
@@ -72,10 +72,10 @@ export const sampleTecotecoReviewData: ReviewSectionData = {
   ]
 };
 
-// TecoTeco 샘플 리뷰들
-export const sampleTecotecoReviews: Review[] = [
+// 표준 샘플 리뷰들
+export const sampleStandardReviews: Review[] = [
   {
-    id: 'tecoteco-1',
+    id: 'standard-1',
     userId: 'user1',
     userName: '익명1',
     rating: 5,
@@ -92,12 +92,12 @@ export const sampleTecotecoReviews: Review[] = [
     timeAgo: '6달 전'
   },
   {
-    id: 'tecoteco-2',
+    id: 'standard-2',
     userId: 'user2',
     userName: '익명2',
     rating: 5,
     title: 'Better together !',
-    content: '혼자서는 엄두도 못 냈던 어려운 알고리즘 문제들! 테코테코 모임에서 함께 고민하고 해결하며 완독하는 뿌듯함을 느꼈습니다. 함께라면 우린 해낼 수 있어요!',
+    content: '혼자서는 엄두도 못 냈던 어려운 알고리즘 문제들! 스터디 모임에서 함께 고민하고 해결하며 완독하는 뿌듯함을 느꼈습니다. 함께라면 우린 해낼 수 있어요!',
     createdAt: '2023-08-10',
     attendCount: 10,
     helpfulCount: 1,
@@ -109,7 +109,7 @@ export const sampleTecotecoReviews: Review[] = [
     timeAgo: '2년 전'
   },
   {
-    id: 'tecoteco-3',
+    id: 'standard-3',
     userId: 'user3',
     userName: '김코딩',
     rating: 5,
@@ -126,12 +126,12 @@ export const sampleTecotecoReviews: Review[] = [
     timeAgo: '1달 전'
   },
   {
-    id: 'tecoteco-4',
+    id: 'standard-4',
     userId: 'user4',
     userName: '박개발',
     rating: 5,
     title: '코딩테스트 합격했습니다!',
-    content: '테코테코에서 배운 문제 해결 접근법과 시간 복잡도 최적화 덕분에 드디어 코딩테스트를 통과했어요. 함께 고민해주신 모든 분들께 감사드립니다.',
+    content: '스터디에서 배운 문제 해결 접근법과 시간 복잡도 최적화 덕분에 드디어 코딩테스트를 통과했어요. 함께 고민해주신 모든 분들께 감사드립니다.',
     createdAt: '2024-11-20',
     attendCount: 12,
     helpfulCount: 8,

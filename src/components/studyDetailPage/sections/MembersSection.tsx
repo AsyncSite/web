@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './MembersSection.css';
-import './MembersSection-tecoteco.css';
+import styles from './MembersSection.module.css';
+/* MembersSection using standard styles */
 import {
   MemberProfile, 
   MemberLayoutType,
@@ -44,7 +44,7 @@ const MemberCard: React.FC<{
 
   return (
     <div 
-      className={`tecoteco-contributor-card ${isHovered ? 'hovered' : ''} ${isBlurred ? 'blurred' : ''} ${isMvpHint ? 'mvp-card' : ''}`}
+      className={`${styles.contributorCard} ${isHovered ? styles.hovered : ''} ${isBlurred ? styles.blurred : ''} ${isMvpHint ? styles.mvpCard : ''}`}
       onClick={onClick}
       onMouseEnter={(e) => { setIsHovered(true); onHoverChange?.(true); setHoverPos({ x: e.clientX, y: e.clientY }); }}
       onMouseMove={(e) => { if (isHovered) setHoverPos({ x: e.clientX, y: e.clientY }); }}
@@ -52,31 +52,31 @@ const MemberCard: React.FC<{
     >
       {/* MVP 배지 */}
       {(isMvpHint || (member.badges && member.badges.some(b => b.type === 'mvp'))) && (
-        <div className="mvp-badge">👑 이주의 MVP</div>
+        <div className={styles.mvpBadge}>👑 이주의 MVP</div>
       )}
       
       {/* 프로필 이미지 */}
-      <div className="tecoteco-profile-wrapper">
+      <div className={styles.profileWrapper}>
         <img 
           src={member.imageUrl || '/images/default-avatar.png'} 
           alt={member.name}
           onError={handleImageError}
-          className="tecoteco-profile-img"
+          className={styles.profileImg}
         />
-        {member.isActive && <div className="activity-indicator" />}
+        {member.isActive && <div className={styles.activityIndicator} />}
       </div>
       
       {/* 기본 정보 */}
-      <h3 className="tecoteco-contributor-name">{member.name}</h3>
+      <h3 className={styles.contributorName}>{member.name}</h3>
       
       {/* 가입 기간 */}
       {member.joinDate && (
-        <p className="tecoteco-contributor-duration">{getMemberDuration(member.joinDate)}</p>
+        <p className={styles.contributorDuration}>{getMemberDuration(member.joinDate)}</p>
       )}
       
       {/* 한 줄 소개 */}
       {member.tagline && (
-        <p className="tecoteco-contributor-contribution">
+        <p className={styles.contributorContribution}>
           {member.tagline}
         </p>
       )}
@@ -84,38 +84,38 @@ const MemberCard: React.FC<{
 
       {/* 미니 통계 프리뷰 (streak) */}
       {typeof member.streak === 'number' && (
-        <div className="member-stats-preview">
-          <span className="streak-preview">🔥 {member.streak}</span>
+        <div className={styles.memberStatsPreview}>
+          <span className={styles.streakPreview}>🔥 {member.streak}</span>
         </div>
       )}
       
       {/* 호버 디테일(화면 중앙 고정) */}
       {isHovered && (
-        <div className="hover-detail-overlay">
-          <div className="hover-detail-popup">
-            <div className="hover-detail-header">
-              <span className="hover-detail-role">{member.role}</span>
-              <span className="hover-detail-streak">🔥 {(() => {
+        <div className={styles.hoverDetailOverlay}>
+          <div className={styles.hoverDetailPopup}>
+            <div className={styles.hoverDetailHeader}>
+              <span className={styles.hoverDetailRole}>{member.role}</span>
+              <span className={styles.hoverDetailStreak}>🔥 {(() => {
                 return typeof member.streak === 'number' ? member.streak : '';
               })()}일 연속</span>
             </div>
             {member.memorableProblem && (
-              <div className="hover-detail-problem">
+              <div className={styles.hoverDetailProblem}>
                 <strong>최근 도전한 문제</strong>
                 {member.memorableProblem.split(' - ')[1] || member.memorableProblem}
               </div>
             )}
             {member.testimonial && (
-              <div className="hover-detail-testimonial">"{member.testimonial}"</div>
+              <div className={styles.hoverDetailTestimonial}>"{member.testimonial}"</div>
             )}
-            <div className="hover-detail-footer">클릭해서 더 자세한 이야기 보기 →</div>
+            <div className={styles.hoverDetailFooter}>클릭해서 더 자세한 이야기 보기 →</div>
           </div>
         </div>
       )}
       
       {/* 레거시 bio 지원 */}
       {!member.tagline && member.bio && (
-        <p className="member-bio">{member.bio}</p>
+        <p className={styles.memberBio}>{member.bio}</p>
       )}
     </div>
   );
@@ -149,57 +149,57 @@ const MemberDetailModal: React.FC<{
   if (!isOpen) return null;
   
   return (
-    <div className="member-modal-overlay" onClick={onClose}>
-      <div className="member-modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={onClose}>×</button>
+    <div className={styles.memberModalOverlay} onClick={onClose}>
+      <div className={styles.memberModalContent} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.modalCloseBtn} onClick={onClose}>×</button>
         
-        <div className="modal-header">
+        <div className={styles.modalHeader}>
           <img 
             src={member.imageUrl || '/images/default-avatar.png'} 
             alt={member.name}
-            className="modal-profile-img"
+            className={styles.modalProfileImg}
           />
-          <div className="modal-member-info">
+          <div className={styles.modalMemberInfo}>
             <h3>{member.name}</h3>
-            <span className="modal-role">{member.role}</span>
+            <span className={styles.modalRole}>{member.role}</span>
             {member.recentActivity && (
-              <span className="modal-recent-activity">{member.recentActivity}</span>
+              <span className={styles.modalRecentActivity}>{member.recentActivity}</span>
             )}
             {member.currentFocus && (
-              <span className="modal-current-focus">📚 {member.currentFocus}</span>
+              <span className={styles.modalCurrentFocus}>📚 {member.currentFocus}</span>
             )}
-            <div className="modal-stats">
+            <div className={styles.modalStats}>
               {typeof member.streak === 'number' && member.streak > 0 && (
-                <span className="modal-streak">🔥 {member.streak}일 연속</span>
+                <span className={styles.modalStreak}>🔥 {member.streak}일 연속</span>
               )}
               {typeof member.solvedProblems === 'number' && member.solvedProblems > 0 && (
-                <span className="modal-solved">✅ {member.solvedProblems}문제</span>
+                <span className={styles.modalSolved}>✅ {member.solvedProblems}문제</span>
               )}
             </div>
           </div>
         </div>
         
-        <div className="modal-content-sections">
+        <div className={styles.modalContentSections}>
           {member.memorableProblem && (
-            <div className="modal-section">
+            <div className={styles.modalSection}>
               <h4>🏆 가장 기억에 남는 문제</h4>
-              <p className="modal-problem">{member.memorableProblem}</p>
+              <p className={styles.modalProblem}>{member.memorableProblem}</p>
             </div>
           )}
           
           {member.whatIGained && (
-            <div className="modal-section">
-              <h4>💡 테코테코에서 얻은 것</h4>
-              <p className="modal-gained">{member.whatIGained}</p>
+            <div className={styles.modalSection}>
+              <h4>💡 스터디에서 얻은 것</h4>
+              <p className={styles.modalGained}>{member.whatIGained}</p>
             </div>
           )}
           
           {member.testimonial && (
-            <div className="modal-section">
+            <div className={styles.modalSection}>
               <h4>💬 동료의 한마디</h4>
-              <p className="modal-testimonial">"{member.testimonial}"</p>
+              <p className={styles.modalTestimonial}>"{member.testimonial}"</p>
               {member.from && (
-                <span className="testimonial-author">- {member.from}</span>
+                <span className={styles.testimonialAuthor}>- {member.from}</span>
               )}
             </div>
           )}
@@ -214,32 +214,32 @@ const StatsSection: React.FC<{ stats: any }> = ({ stats }) => {
   if (!stats) return null;
   
   return (
-    <div className="members-stats-container">
-      <h3 className="stats-title">우리의 여정</h3>
-      <div className="stats-grid">
+    <div className={styles.membersStatsContainer}>
+      <h3 className={styles.statsTitle}>우리의 여정</h3>
+      <div className={styles.statsGrid}>
         {stats.totalMembers && (
-          <div className="stat-item">
-            <span className="stat-number">{stats.totalMembers}</span>
-            <span className="stat-label">전체 멤버</span>
+          <div className={styles.statItem}>
+            <span className={styles.statNumber}>{stats.totalMembers}</span>
+            <span className={styles.statLabel}>전체 멤버</span>
           </div>
         )}
         {stats.activeMembers && (
-          <div className="stat-item">
-            <span className="stat-number">{stats.activeMembers}</span>
-            <span className="stat-label">활동 멤버</span>
+          <div className={styles.statItem}>
+            <span className={styles.statNumber}>{stats.activeMembers}</span>
+            <span className={styles.statLabel}>활동 멤버</span>
           </div>
         )}
         {stats.totalHours && (
-          <div className="stat-item">
-            <span className="stat-number">{stats.totalHours}시간</span>
-            <span className="stat-label">함께한 시간</span>
+          <div className={styles.statItem}>
+            <span className={styles.statNumber}>{stats.totalHours}시간</span>
+            <span className={styles.statLabel}>함께한 시간</span>
           </div>
         )}
         {stats.customStats && stats.customStats.map((stat: any, idx: number) => (
-          <div key={idx} className="stat-item">
-            {stat.icon && <span className="stat-icon">{stat.icon}</span>}
-            <span className="stat-number">{stat.value}</span>
-            <span className="stat-label">{stat.label}</span>
+          <div key={idx} className={styles.statItem}>
+            {stat.icon && <span className={styles.statIcon}>{stat.icon}</span>}
+            <span className={styles.statNumber}>{stat.value}</span>
+            <span className={styles.statLabel}>{stat.label}</span>
           </div>
         ))}
       </div>
@@ -263,7 +263,7 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   const [selectedMember, setSelectedMember] = useState<MemberProfile | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoadingMembers, setIsLoadingMembers] = useState(false);
-  // tecoteco 상호작용 상태
+  // 표준 상호작용 상태
   const [hoveredName, setHoveredName] = useState<string | null>(null);
   const [hoveredMember, setHoveredMember] = useState<MemberProfile | null>(null);
   
@@ -299,10 +299,10 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   // Show loading state while fetching real member data
   if (isLoadingMembers) {
     return (
-      <section className="study-detail-members-section tecoteco-members-section">
-        <div className="section-tag-header">함께하는 멤버들이에요</div>
-        {title && <h2 className="section-title">{title}</h2>}
-        {subtitle && <p className="section-subtitle">{subtitle}</p>}
+      <section className={styles.studyDetailMembersSection}>
+        <div className={styles.sectionTagHeader}>함께하는 멤버들이에요</div>
+        {title && <h2 className={styles.sectionTitle}>{title}</h2>}
+        {subtitle && <p className={styles.sectionSubtitle}>{subtitle}</p>}
         <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
           멤버 정보를 불러오는 중...
         </div>
@@ -322,16 +322,16 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
   
   
   return (
-    <section className="study-detail-members-section tecoteco-members-section">
+    <section className={styles.studyDetailMembersSection}>
       {/* 태그 헤더 및 타이틀 (좌측 정렬) */}
-      <div className="section-tag-header">함께하는 멤버들이에요</div>
-      {title && <h2 className="section-title">{title}</h2>}
-      {subtitle && <p className="section-subtitle">{subtitle}</p>}
+      <div className={styles.sectionTagHeader}>함께하는 멤버들이에요</div>
+      {title && <h2 className={styles.sectionTitle}>{title}</h2>}
+      {subtitle && <p className={styles.sectionSubtitle}>{subtitle}</p>}
 
       {/* 멤버 카드 캐러셀: 두 번 렌더링하여 무한 스크롤 효과 */}
-      <div className="scrolling-members-wrapper">
-        <div className="scrolling-members-inner">
-          <div className="tecoteco-contributors-list">
+      <div className={styles.scrollingMembersWrapper}>
+        <div className={styles.scrollingMembersInner}>
+          <div className={styles.contributorsList}>
             {members.map((member, index) => (
               <MemberCard
                 key={index}
@@ -346,7 +346,7 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
               />
             ))}
           </div>
-          <div className="tecoteco-contributors-list" aria-hidden="true">
+          <div className={styles.contributorsList} aria-hidden="true">
             {members.map((member, index) => (
               <MemberCard
                 key={`duplicate-${index}`}
@@ -365,55 +365,55 @@ const MembersSection: React.FC<MembersSectionProps> = ({ data, studyId }) => {
       </div>
 
       {/* 인터랙션 힌트 */}
-      <p className="members-intro">
+      <p className={styles.membersIntro}>
         각자의 성장 스토리가 모여 더 큰 시너지를 만들어가고 있어요.
         <br />
-        <span className="interactive-hint">💡 멤버 카드를 클릭해서 더 자세한 이야기를 확인해보세요!</span>
+        <span className={styles.interactiveHint}>💡 멤버 카드를 클릭해서 더 자세한 이야기를 확인해보세요!</span>
       </p>
 
       {/* 연결성 장식 라인 */}
-      <div className="connection-lines">
-        <svg className="connections-svg" viewBox="0 0 100 20">
+      <div className={styles.connectionLines}>
+        <svg className={styles.connectionsSvg} viewBox="0 0 100 20">
           <path
             d="M 10 10 Q 30 5 50 10 T 90 10"
-            className="connection-path"
+            className={styles.connectionPath}
             stroke="rgba(195, 232, 141, 0.3)"
             strokeWidth="1"
             fill="none"
           />
         </svg>
-        <span className="connection-text">서로 영감을 주고받으며</span>
+        <span className={styles.connectionText}>서로 영감을 주고받으며</span>
       </div>
 
-      {/* 통계 섹션 (테코테코 스타일) */}
+      {/* 통계 섹션 (표준 스타일) */}
       {showStats && stats && (
-        <div className="stats-container">
-          <h3 className="stats-title">한땀 한땀 쌓인 작지만 확실한 성취들</h3>
-          <div className="stats-grid">
+        <div className={styles.statsContainer}>
+          <h3 className={styles.statsTitle}>한땀 한땀 쌓인 작지만 확실한 성취들</h3>
+          <div className={styles.statsGrid}>
             {stats.totalProblems && (
-              <div className="stat-item">
-                <span className="stat-number">{stats.totalProblems.toLocaleString()}</span>
-                <span className="stat-label">총 해결한 문제</span>
+              <div className={styles.statItem}>
+                <span className={styles.statNumber}>{stats.totalProblems.toLocaleString()}</span>
+                <span className={styles.statLabel}>총 해결한 문제</span>
               </div>
             )}
             {stats.totalHours && (
-              <div className="stat-item">
-                <span className="stat-number">{stats.totalHours}시간+</span>
-                <span className="stat-label">함께한 시간</span>
+              <div className={styles.statItem}>
+                <span className={styles.statNumber}>{stats.totalHours}시간+</span>
+                <span className={styles.statLabel}>함께한 시간</span>
               </div>
             )}
             {stats.participationRate && (
-              <div className="stat-item">
-                <span className="stat-number">{stats.participationRate}%</span>
-                <span className="stat-label">평균 참여율</span>
+              <div className={styles.statItem}>
+                <span className={styles.statNumber}>{stats.participationRate}%</span>
+                <span className={styles.statLabel}>평균 참여율</span>
               </div>
             )}
             {Array.isArray(stats.popularAlgorithms) && (
-              <div className="stat-item popular-algorithms">
-                <span className="stat-label">인기 알고리즘</span>
-                <div className="algorithm-tags">
+              <div className={`${styles.statItem} ${styles.popularAlgorithms}`}>
+                <span className={styles.statLabel}>인기 알고리즘</span>
+                <div className={styles.algorithmTags}>
                   {stats.popularAlgorithms.map((algo, index) => (
-                    <span key={index} className="algorithm-tag">{algo}</span>
+                    <span key={index} className={styles.algorithmTag}>{algo}</span>
                   ))}
                 </div>
               </div>

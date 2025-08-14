@@ -5,7 +5,7 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 // Lazy load all section components
 const RichTextSection = lazy(() => import('./RichTextSection'));
 const HeroSection = lazy(() => import('./HeroSection'));
-const GallerySection = lazy(() => import('./GallerySection'));
+// GallerySection removed - not in use
 const MembersSection = lazy(() => import('./MembersSection'));
 const FAQSection = lazy(() => import('./FAQSection'));
 const ReviewsSection = lazy(() => import('./ReviewsSection'));
@@ -24,7 +24,7 @@ const ExperienceSection = lazy(() => import('./ExperienceSection'));
 export const sectionRegistry: Record<SectionType | string, React.LazyExoticComponent<React.FC<any>>> = {
   [SectionType.RICH_TEXT]: RichTextSection,
   [SectionType.HERO]: HeroSection,
-  [SectionType.GALLERY]: GallerySection,
+  // [SectionType.GALLERY]: GallerySection, // Removed - not in use
   [SectionType.MEMBERS]: MembersSection,
   [SectionType.FAQ]: FAQSection,
   [SectionType.REVIEWS]: ReviewsSection,

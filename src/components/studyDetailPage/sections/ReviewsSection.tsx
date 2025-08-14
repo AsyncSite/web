@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ReviewSectionData, Review } from '../types/reviewTypes';
 import { CATEGORY_LABELS, REVIEW_TAGS } from '../../../types/reviewTags';
 import reviewService from '../../../api/reviewService';
-import './ReviewsSection.css';
+import styles from './ReviewsSection.module.css';
 
 interface ReviewsSectionProps {
   data: ReviewSectionData;
@@ -10,17 +10,17 @@ interface ReviewsSectionProps {
 }
 
 const ReviewCard: React.FC<{ review: Review }> = ({ review }) => (
-  <div className="tecoteco-review-card">
-    <div className="tecoteco-review-header">
-      <span className="tecoteco-reviewer-name">{review.userName}</span>
-      <span className="tecoteco-review-meta">
+  <div className={styles.reviewCard}>
+    <div className={styles.reviewHeader}>
+      <span className={styles.reviewerName}>{review.userName}</span>
+      <span className={styles.reviewMeta}>
         모임에 {review.attendCount || 0}회 참석하고 작성한 후기예요. {review.timeAgo || new Date(review.createdAt).toLocaleDateString()}
       </span>
     </div>
-    <h4 className="tecoteco-review-title">{review.title}</h4>
-    <p className="tecoteco-review-content">{review.content}</p>
-    <div className="tecoteco-review-footer">
-      <div className="tecoteco-review-emojis">
+    <h4 className={styles.reviewTitle}>{review.title}</h4>
+    <p className={styles.reviewContent}>{review.content}</p>
+    <div className={styles.reviewFooter}>
+      <div className={styles.reviewEmojis}>
         {review.tags && review.tags.length > 0 ? (
           review.tags.slice(0, 3).map((tag, idx) => {
             // tag.label에서 이모지만 추출 (첫 번째 공백 전까지)
@@ -33,7 +33,7 @@ const ReviewCard: React.FC<{ review: Review }> = ({ review }) => (
           ))
         )}
       </div>
-      <span className="tecoteco-review-likes">🧡 {review.helpfulCount || 0}</span>
+      <span className={styles.reviewLikes}>🧡 {review.helpfulCount || 0}</span>
     </div>
   </div>
 );
@@ -44,44 +44,44 @@ const ReviewStats: React.FC<{ stats: ReviewSectionData['stats'] }> = ({ stats })
   const maxCount = Math.max(...Object.values(stats.ratingDistribution));
   
   return (
-    <div className="study-detail-review-stats">
-      <div className="study-detail-stats-summary">
-        <div className="study-detail-average-rating">
-          <span className="study-detail-rating-number">{stats.averageRating.toFixed(1)}</span>
-          <div className="study-detail-rating-stars">
+    <div className={styles.studyDetailReviewStats}>
+      <div className={styles.studyDetailStatsSummary}>
+        <div className={styles.studyDetailAverageRating}>
+          <span className={styles.studyDetailRatingNumber}>{stats.averageRating.toFixed(1)}</span>
+          <div className={styles.studyDetailRatingStars}>
             {[1, 2, 3, 4, 5].map((star) => (
               <span 
                 key={star} 
-                className={`study-detail-star ${star <= Math.round(stats.averageRating) ? 'filled' : ''}`}
+                className={`${styles.studyDetailStar} ${star <= Math.round(stats.averageRating) ? styles.filled : ''}`}
               >
                 ★
               </span>
             ))}
           </div>
         </div>
-        <div className="study-detail-total-reviews">
+        <div className={styles.studyDetailTotalReviews}>
           총 {stats.totalReviews}개의 리뷰
         </div>
         {stats.recommendationRate && (
-          <div className="study-detail-recommendation-rate">
+          <div className={styles.studyDetailRecommendationRate}>
             <strong>{stats.recommendationRate}%</strong>가 추천
           </div>
         )}
       </div>
       
-      <div className="study-detail-rating-distribution">
+      <div className={styles.studyDetailRatingDistribution}>
         {[5, 4, 3, 2, 1].map((rating) => (
-          <div key={rating} className="study-detail-rating-bar">
-            <span className="study-detail-rating-label">{rating}점</span>
-            <div className="study-detail-bar-container">
+          <div key={rating} className={styles.studyDetailRatingBar}>
+            <span className={styles.studyDetailRatingLabel}>{rating}점</span>
+            <div className={styles.studyDetailBarContainer}>
               <div 
-                className="study-detail-bar-fill"
+                className={styles.studyDetailBarFill}
                 style={{ 
                   width: `${maxCount > 0 ? (stats.ratingDistribution[rating as keyof typeof stats.ratingDistribution] / maxCount) * 100 : 0}%` 
                 }}
               />
             </div>
-            <span className="study-detail-rating-count">
+            <span className={styles.studyDetailRatingCount}>
               {stats.ratingDistribution[rating as keyof typeof stats.ratingDistribution]}
             </span>
           </div>
@@ -300,50 +300,50 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data, studyId }) => {
   const displayKeywords = extractedKeywords;
 
   return (
-    <section className="study-detail-reviews-section tecoteco-reviews-section" ref={sectionRef}>
+    <section className={styles.studyDetailReviewsSection} ref={sectionRef}>
       {data.tagHeader && (
-        <div className="section-tag-header">{data.tagHeader}</div>
+        <div className={styles.sectionTagHeader}>{data.tagHeader}</div>
       )}
       
-      <h2 className="section-title" dangerouslySetInnerHTML={{ 
+      <h2 className={styles.sectionTitle} dangerouslySetInnerHTML={{ 
         __html: data.title || '리뷰' 
       }} />
       
       {data.subtitle && (
-        <p className="section-subtitle" dangerouslySetInnerHTML={{ __html: data.subtitle }} />
+        <p className={styles.sectionSubtitle} dangerouslySetInnerHTML={{ __html: data.subtitle }} />
       )}
       
       {data.showKeywords !== false && displayKeywords.length > 0 && (
-        <div className="tecoteco-keywords-list">
+        <div className={styles.keywordsList}>
           {displayKeywords.map((keyword, index) => (
-            <span key={index} className="tecoteco-keyword-tag">
+            <span key={index} className={styles.keywordTag}>
               {keyword}
             </span>
           ))}
         </div>
       )}
       
-      <div className={`tecoteco-reviews-grid ${isLoading ? 'loading' : ''}`}>
+      <div className={`${styles.reviewsGrid} ${isLoading ? styles.loading : ''}`}>
         {reviews.slice(0, visibleReviewsCount).map((review, index) => (
           <ReviewCard key={index} review={review} />
         ))}
         
         {isLoading && 
           Array.from({ length: Math.min(5, remainingReviews) }).map((_, index) => (
-            <div key={`skeleton-${index}`} className="tecoteco-review-card skeleton-card">
-              <div className="skeleton-header">
-                <div className="skeleton-name"></div>
-                <div className="skeleton-meta"></div>
+            <div key={`skeleton-${index}`} className={`${styles.reviewCard} ${styles.skeletonCard}`}>
+              <div className={styles.skeletonHeader}>
+                <div className={styles.skeletonName}></div>
+                <div className={styles.skeletonMeta}></div>
               </div>
-              <div className="skeleton-title"></div>
-              <div className="skeleton-content">
-                <div className="skeleton-line"></div>
-                <div className="skeleton-line"></div>
-                <div className="skeleton-line short"></div>
+              <div className={styles.skeletonTitle}></div>
+              <div className={styles.skeletonContent}>
+                <div className={styles.skeletonLine}></div>
+                <div className={styles.skeletonLine}></div>
+                <div className={`${styles.skeletonLine} ${styles.short}`}></div>
               </div>
-              <div className="skeleton-footer">
-                <div className="skeleton-emojis"></div>
-                <div className="skeleton-likes"></div>
+              <div className={styles.skeletonFooter}>
+                <div className={styles.skeletonEmojis}></div>
+                <div className={styles.skeletonLikes}></div>
               </div>
             </div>
           ))
@@ -351,32 +351,32 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({ data, studyId }) => {
       </div>
       
       {hasMoreReviews && !isLoading && (
-        <div className="tecoteco-view-all-reviews-wrapper">
+        <div className={styles.viewAllReviewsWrapper}>
           <button
-            className="tecoteco-view-all-reviews-button"
+            className={styles.viewAllReviewsButton}
             onClick={handleViewMore}
             disabled={isLoading}
           >
-            <span className="button-text">
+            <span className={styles.buttonText}>
               후기 더 보기
-              <span className="remaining-count">({remainingReviews}개 남음)</span>
+              <span className={styles.remainingCount}>({remainingReviews}개 남음)</span>
             </span>
-            <span className="button-icon">📝</span>
+            <span className={styles.buttonIcon}>📝</span>
           </button>
         </div>
       )}
       
       {isLoading && (
-        <div className="loading-indicator">
-          <div className="loading-spinner"></div>
+        <div className={styles.loadingIndicator}>
+          <div className={styles.loadingSpinner}></div>
           <span>더 많은 후기를 불러오는 중...</span>
         </div>
       )}
       
       {!hasMoreReviews && visibleReviewsCount > 3 && (
-        <div className="all-reviews-loaded">
-          <span className="completion-message">✨ 모든 후기를 확인했어요!</span>
-          <p className="thank-you-message">소중한 후기를 남겨주신 모든 멤버분들께 감사드려요 💝</p>
+        <div className={styles.allReviewsLoaded}>
+          <span className={styles.completionMessage}>✨ 모든 후기를 확인했어요!</span>
+          <p className={styles.thankYouMessage}>소중한 후기를 남겨주신 모든 멤버분들께 감사드려요 💝</p>
         </div>
       )}
     </section>

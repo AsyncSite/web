@@ -2,7 +2,7 @@ import React from 'react';
 import RichTextRenderer from '../../common/richtext/RichTextRenderer';
 import { RichTextData } from '../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../common/richtext/RichTextConverter';
-import './HeroSection.css';
+import styles from './HeroSection.module.css';
 
 interface HeroSectionProps {
   data: {
@@ -31,16 +31,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
   } = data;
   
   return (
-    <div className="study-detail-hero-section">
-      <div className="hero-content">
+    <div className={styles.studyDetailHeroSection}>
+      <div className={styles.heroContent}>
         {/* 제목 (이모지 포함 가능) */}
-        <h1 className="hero-title">
+        <h1 className={styles.heroTitle}>
           <RichTextRenderer data={title} />
         </h1>
         
         {/* 부제목 */}
         {subtitle && (
-          <div className="hero-subtitle">
+          <div className={styles.heroSubtitle}>
             <RichTextRenderer 
               data={subtitle} 
               theme={{
@@ -58,23 +58,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {
         
         {/* 이미지 (옵션) */}
         {image && (
-          <div className="hero-image-wrapper">
+          <div className={styles.heroImageWrapper}>
             <img src={image} alt="Study Hero Image" />
           </div>
         )}
       </div>
 
-      {/* 정보 박스 섹션 (TecoTeco 스타일) */}
+      {/* 정보 박스 섹션 (표준 스타일) */}
       {infoBox && infoBox.items && infoBox.items.length > 0 && (
-        <div className="hero-info-box">
+        <div className={styles.heroInfoBox}>
           {infoBox.header && (
-            <div className="info-section-header">{infoBox.header}</div>
+            <div className={styles.infoSectionHeader}>{infoBox.header}</div>
           )}
-          <div className="info-content-area">
+          <div className={styles.infoContentArea}>
             {infoBox.items.map((item, index) => (
-              <div key={index} className="info-line-item">
-                {item.icon && <span className="line-icon">{item.icon}</span>}
-                <div className="line-text">
+              <div key={index} className={styles.infoLineItem}>
+                {item.icon && <span className={styles.lineIcon}>{item.icon}</span>}
+                <div className={styles.lineText}>
                   <RichTextRenderer 
                     data={item.text} 
                     theme={{

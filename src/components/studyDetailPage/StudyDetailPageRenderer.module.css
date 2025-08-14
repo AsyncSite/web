@@ -1,6 +1,6 @@
 /* StudyDetailPageRenderer - Async Site 톤앤매너 적용 */
 
-.study-detail-page-renderer {
+.studyDetailPageRenderer {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -10,16 +10,16 @@
   line-height: 1.6;
 }
 
-.study-detail-page-content {
+.studyDetailPageContent {
   flex: 1;
   padding-top: 80px; /* Header height */
   min-height: calc(100vh - 80px);
   background-color: #000;
 }
 
-.loading-container,
-.error-container,
-.empty-page-container {
+.loadingContainer,
+.errorContainer,
+.emptyPageContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,35 +29,35 @@
   text-align: center;
 }
 
-.loading-container p {
+.loadingContainer p {
   margin-top: 1rem;
   font-size: 1.125rem;
   color: var(--muted-text, #aaa);
 }
 
-.error-icon,
-.empty-icon {
+.errorIcon,
+.emptyIcon {
   font-size: 4rem;
   margin-bottom: 1rem;
   color: var(--primary-green, #C3E88D);
 }
 
-.error-container h2,
-.empty-page-container h2 {
+.errorContainer h2,
+.emptyPageContainer h2 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
   color: var(--white-text, #f0f0f0);
   font-family: 'Source Code Pro', monospace;
 }
 
-.error-container p,
-.empty-page-container p {
+.errorContainer p,
+.emptyPageContainer p {
   font-size: 1.125rem;
   color: var(--secondary-text, #ddd);
   margin-bottom: 2rem;
 }
 
-.back-button {
+.backButton {
   padding: 0.75rem 2rem;
   background: linear-gradient(135deg, var(--primary-green, #C3E88D) 0%, var(--secondary-green, #82aaff) 100%);
   color: #000;
@@ -70,93 +70,71 @@
   box-shadow: 0 4px 15px rgba(195, 232, 141, 0.3);
 }
 
-.back-button:hover {
+.backButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(195, 232, 141, 0.4);
 }
 
-.sections-container {
+.sectionsContainer {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.section-wrapper {
+.sectionWrapper {
   position: relative;
   width: 100%;
   margin-bottom: 15px;
 }
 
-/* 섹션 기본 스타일 - TecoTecoPage와 일치 */
-.section-wrapper > div[class*="study-detail-"] {
+/* 섹션 기본 스타일 */
+.sectionWrapper > div {
   background-color: #1a1a1a;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
 
-/* Hero 섹션은 전체 너비 */
-.study-detail-hero-section {
-  background-color: #0d0d0d !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  margin: 0 -20px;
-  width: calc(100% + 40px);
-}
-
-/* Rich Text, FAQ 등 일반 섹션들 */
-.study-detail-rich-text-section,
-.study-detail-faq-section,
-.study-detail-gallery-section,
-.study-detail-members-section {
-  padding: 30px 25px;
-}
-
 /* Override any conflicting global styles */
-.study-detail-page-renderer section,
-.study-detail-page-renderer > .study-detail-page-content > .sections-container > .section-wrapper > div {
+.studyDetailPageRenderer section,
+.studyDetailPageRenderer > .studyDetailPageContent > .sectionsContainer > .sectionWrapper > div {
   min-height: auto !important;
   width: 100%;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .study-detail-page-content {
+  .studyDetailPageContent {
     padding-top: 60px;
     min-height: calc(100vh - 60px);
   }
   
-  .sections-container {
+  .sectionsContainer {
     padding: 0 15px;
   }
   
-  .section-wrapper > div[class*="study-detail-"] {
+  .sectionWrapper > div {
     padding: 20px 15px;
   }
   
-  .study-detail-hero-section {
-    margin: 0 -15px;
-    width: calc(100% + 30px);
-  }
-  
-  .error-icon,
-  .empty-icon {
+  .errorIcon,
+  .emptyIcon {
     font-size: 3rem;
   }
   
-  .error-container h2,
-  .empty-page-container h2 {
+  .errorContainer h2,
+  .emptyPageContainer h2 {
     font-size: 1.5rem;
   }
   
-  .error-container p,
-  .empty-page-container p {
+  .errorContainer p,
+  .emptyPageContainer p {
     font-size: 1rem;
   }
 }
 /* Study Status Banner */
-.study-status-banner {
+.studyStatusBanner {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -167,44 +145,43 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.study-status-banner.status-approved {
+.statusApproved {
   background: linear-gradient(135deg, rgba(195, 232, 141, 0.1) 0%, rgba(195, 232, 141, 0.05) 100%);
   border-color: rgba(195, 232, 141, 0.2);
 }
 
-.study-status-banner.status-in-progress,
-.study-status-banner.status-in_progress {
+.statusInProgress {
   background: linear-gradient(135deg, rgba(130, 170, 255, 0.1) 0%, rgba(130, 170, 255, 0.05) 100%);
   border-color: rgba(130, 170, 255, 0.2);
 }
 
-.study-status-banner.status-completed {
+.statusCompleted {
   background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
   border-color: rgba(76, 175, 80, 0.2);
 }
 
-.status-icon {
+.statusIcon {
   font-size: 32px;
 }
 
-.status-info {
+.statusInfo {
   flex: 1;
 }
 
-.status-info h3 {
+.statusInfo h3 {
   font-size: 20px;
   font-weight: 600;
   color: #ffffff;
   margin: 0 0 4px 0;
 }
 
-.status-info p {
+.statusInfo p {
   font-size: 14px;
   color: #aaa;
   margin: 0;
 }
 
-.apply-button {
+.applyButton {
   padding: 12px 24px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -216,33 +193,33 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.apply-button:hover:not(:disabled) {
+.applyButton:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-.apply-button.disabled {
+.disabled {
   background: #888;
   cursor: not-allowed;
   opacity: 0.7;
 }
 
-.apply-button.approved {
+.approved {
   background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   cursor: default;
 }
 
-.apply-button.rejected {
+.rejected {
   background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
 }
 
-.application-status-container {
+.applicationStatusContainer {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-.cancel-button {
+.cancelButton {
   padding: 12px 20px;
   background: transparent;
   color: #ff6b6b;
@@ -254,31 +231,31 @@
   transition: all 0.2s;
 }
 
-.cancel-button:hover {
+.cancelButton:hover {
   background: #ff6b6b;
   color: white;
 }
 
-.member-section-wrapper {
+.memberSectionWrapper {
   margin: 60px 0;
 }
 
 @media (max-width: 768px) {
-  .study-status-banner {
+  .studyStatusBanner {
     flex-direction: column;
     text-align: center;
   }
   
-  .apply-button {
+  .applyButton {
     width: 100%;
   }
   
-  .application-status-container {
+  .applicationStatusContainer {
     flex-direction: column;
     width: 100%;
   }
   
-  .cancel-button {
+  .cancelButton {
     width: 100%;
   }
 }

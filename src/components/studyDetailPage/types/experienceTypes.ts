@@ -85,7 +85,7 @@ export const experienceTemplates = {
         illustrationType: 'grow' as const
       }
     ],
-    theme: 'tecoteco' as const,
+    theme: 'standard' as const,
     layout: 'horizontal' as const,
     enableAnimation: true,
     animationType: 'fadeIn' as const,

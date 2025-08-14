@@ -1,7 +1,7 @@
 /* Experience Section 스타일 */
 
-/* 테코테코 테마 - 하드코딩 페이지와 동일한 스타일 */
-.tecoteco-experience-section {
+/* Standard Experience Section 스타일 */
+.studyDetailExperienceSection {
   background: linear-gradient(135deg, #1f1f1f, #0d0d0d);
   border-radius: 12px;
   padding: 50px 30px 40px;
@@ -12,7 +12,7 @@
   min-height: 50vh;
 }
 
-.tecoteco-experience-section .section-tag-header {
+.sectionTagHeader {
   position: absolute;
   top: 20px;
   left: 30px;
@@ -23,7 +23,7 @@
   text-transform: uppercase;
 }
 
-.tecoteco-experience-section .section-title {
+.sectionTitle {
   color: #ffffff;
   font-size: 2.5rem;
   margin-top: 30px;
@@ -32,7 +32,7 @@
   display: block;
 }
 
-.tecoteco-experience-section .section-subtitle {
+.sectionSubtitle {
   margin-bottom: 25px;
   text-align: left;
   color: rgba(255, 255, 255, 0.8);
@@ -40,13 +40,13 @@
   line-height: 1.6;
 }
 
-.tecoteco-experience-section .highlight {
+.highlight {
   color: #C3E88D;
   font-weight: 600;
 }
 
-/* 스텝 네비게이션 - 숫자 스타일 (테코테코 기본) */
-.tecoteco-experience-section .steps-nav {
+/* 스텝 네비게이션 - 숫자 스타일 (기본) */
+.stepsNav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,7 +58,7 @@
   gap: 20px;
 }
 
-.tecoteco-experience-section .steps-nav::before {
+.stepsNav::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -70,7 +70,7 @@
   transform: translateY(-50%);
 }
 
-.tecoteco-experience-section .step-item {
+.stepItem {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,18 +83,18 @@
   z-index: 1;
 }
 
-.tecoteco-experience-section .step-item:hover {
+.stepItem:hover {
   transform: translateY(-2px);
 }
 
-.tecoteco-experience-section .step-item.active .step-button {
+.stepItem.active .stepButton {
   background-color: #C3E88D;
   color: #000;
   border-color: #C3E88D;
   box-shadow: 0 0 15px rgba(195, 232, 141, 0.6);
 }
 
-.tecoteco-experience-section .step-button {
+.stepButton {
   width: 60px;
   height: 60px;
   background-color: #3a3a3a;
@@ -110,7 +110,7 @@
   flex-shrink: 0;
 }
 
-.tecoteco-experience-section .step-label {
+.stepLabel {
   font-size: 0.9rem;
   color: #ccc;
   margin-top: 8px;
@@ -119,7 +119,7 @@
 }
 
 /* 스텝 상세 컨테이너 */
-.tecoteco-experience-section .step-detail-container {
+.stepDetailContainer {
   text-align: center;
   margin-top: 40px;
   padding: 30px;
@@ -128,7 +128,7 @@
   border: 1px solid rgba(195, 232, 141, 0.2);
 }
 
-.tecoteco-experience-section .step-detail-content {
+.stepDetailContent {
   max-width: 600px;
   margin: 0 auto;
   display: flex;
@@ -137,25 +137,25 @@
   gap: 25px;
 }
 
-.tecoteco-experience-section .step-detail-image-wrapper {
+.stepDetailImageWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.tecoteco-experience-section .step-illustration {
+.stepIllustration {
   width: 200px;
   height: 200px;
   transition: transform 0.3s ease;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
-.tecoteco-experience-section .step-illustration:hover {
+.stepIllustration:hover {
   transform: scale(1.05);
 }
 
-.tecoteco-experience-section .step-detail-title {
+.stepDetailTitle {
   color: #C3E88D;
   font-size: 2rem;
   margin: 0;
@@ -163,7 +163,7 @@
   text-align: center;
 }
 
-.tecoteco-experience-section .step-detail-text {
+.stepDetailText {
   color: rgba(255, 255, 255, 0.8);
   font-size: 1.1rem;
   line-height: 1.7;
@@ -172,92 +172,16 @@
   max-width: 500px;
 }
 
-/* 기본 스타일 (다른 테마용) */
-.study-detail-experience-section {
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  padding: 40px 30px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
 
-.study-detail-experience-section .section-tag-header {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #89DDFF;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-bottom: 15px;
-}
-
-.study-detail-experience-section .section-title {
-  color: #ffffff;
-  font-size: 2.2rem;
-  margin-bottom: 20px;
-}
-
-.study-detail-experience-section .section-subtitle {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  line-height: 1.6;
-}
-
-.study-detail-experience-section .highlight {
-  color: #89DDFF;
-  font-weight: 600;
-}
-
-/* Modern 테마 */
-.study-detail-experience-section.modern-theme {
-  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-  border: 1px solid rgba(137, 221, 255, 0.2);
-}
-
-.study-detail-experience-section.modern-theme .section-tag-header {
-  color: #89DDFF;
-}
-
-.study-detail-experience-section.modern-theme .step-button {
-  background: linear-gradient(135deg, #89DDFF, #C3E88D);
-  color: #1a1a1a;
-  border: none;
-}
-
-/* Classic 테마 */
-.study-detail-experience-section.classic-theme {
-  background-color: #222;
-  border: 2px solid #444;
-}
-
-.study-detail-experience-section.classic-theme .section-title {
-  color: #f5f5f5;
-  font-family: 'Georgia', serif;
-}
-
-/* Minimal 테마 */
-.study-detail-experience-section.minimal-theme {
-  background-color: #fff;
-  color: #333;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.study-detail-experience-section.minimal-theme .section-title {
-  color: #333;
-}
-
-.study-detail-experience-section.minimal-theme .section-subtitle {
-  color: #666;
-}
 
 /* 네비게이션 스타일 변형 */
 
 /* Dots 스타일 */
-.steps-nav.navigation-dots .step-item {
+.stepsNav.navigationDots .stepItem {
   min-width: auto;
 }
 
-.steps-nav.navigation-dots .step-dot {
+.stepsNav.navigationDots .stepDot {
   width: 12px;
   height: 12px;
   background-color: #666;
@@ -265,7 +189,7 @@
   transition: all 0.3s ease;
 }
 
-.steps-nav.navigation-dots .step-item.active .step-dot {
+.stepsNav.navigationDots .stepItem.active .stepDot {
   width: 16px;
   height: 16px;
   background-color: #C3E88D;
@@ -273,12 +197,12 @@
 }
 
 /* Progress 스타일 */
-.steps-nav.navigation-progress {
+.stepsNav.navigationProgress {
   flex-direction: column;
   gap: 10px;
 }
 
-.steps-nav.navigation-progress .step-progress {
+.stepsNav.navigationProgress .stepProgress {
   width: 100%;
   max-width: 600px;
   height: 8px;
@@ -287,19 +211,19 @@
   overflow: hidden;
 }
 
-.steps-nav.navigation-progress .progress-fill {
+.stepsNav.navigationProgress .progressFill {
   height: 100%;
   background: linear-gradient(90deg, #C3E88D, #89DDFF);
   transition: width 0.5s ease;
 }
 
 /* Timeline 스타일 */
-.steps-nav.navigation-timeline {
+.stepsNav.navigationTimeline {
   position: relative;
   padding: 20px 0;
 }
 
-.steps-nav.navigation-timeline .timeline-line {
+.stepsNav.navigationTimeline .timelineLine {
   position: absolute;
   top: 50%;
   left: 0;
@@ -309,7 +233,7 @@
   transform: translateY(-50%);
 }
 
-.steps-nav.navigation-timeline .timeline-node {
+.stepsNav.navigationTimeline .timelineNode {
   width: 40px;
   height: 40px;
   background-color: #2a2a2a;
@@ -322,7 +246,7 @@
   z-index: 2;
 }
 
-.steps-nav.navigation-timeline .node-number {
+.stepsNav.navigationTimeline .nodeNumber {
   color: #C3E88D;
   font-weight: bold;
 }
@@ -330,13 +254,13 @@
 /* 레이아웃 변형 */
 
 /* Vertical 레이아웃 */
-.study-detail-experience-section.vertical-layout .steps-nav {
+.verticalLayout .stepsNav {
   flex-direction: column;
   max-width: 200px;
   margin: 30px 0;
 }
 
-.study-detail-experience-section.vertical-layout .steps-nav::before {
+.verticalLayout .stepsNav::before {
   width: 2px;
   height: 100%;
   top: 0;
@@ -345,27 +269,27 @@
 }
 
 /* Grid 레이아웃 */
-.study-detail-experience-section.grid-layout .steps-nav {
+.gridLayout .stepsNav {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
   max-width: 100%;
 }
 
-.study-detail-experience-section.grid-layout .steps-nav::before {
+.gridLayout .stepsNav::before {
   display: none;
 }
 
 /* 애니메이션 */
-.step-detail-container.animate-fadeIn {
+.stepDetailContainer.animateFadeIn {
   animation: fadeInUp 0.5s ease-out;
 }
 
-.step-detail-container.animate-slideUp {
+.stepDetailContainer.animateSlideUp {
   animation: slideUp 0.5s ease-out;
 }
 
-.step-detail-container.animate-scale {
+.stepDetailContainer.animateScale {
   animation: scaleIn 0.5s ease-out;
 }
 
@@ -403,12 +327,12 @@
 }
 
 /* 모바일 아코디언 */
-.mobile-accordion {
+.mobileAccordion {
   display: none;
   margin-top: 30px;
 }
 
-.accordion-item {
+.accordionItem {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   margin-bottom: 10px;
@@ -416,7 +340,7 @@
   transition: all 0.3s ease;
 }
 
-.accordion-header {
+.accordionHeader {
   display: flex;
   align-items: center;
   padding: 15px;
@@ -424,7 +348,7 @@
   user-select: none;
 }
 
-.accordion-number {
+.accordionNumber {
   width: 30px;
   height: 30px;
   background-color: #3a3a3a;
@@ -437,136 +361,131 @@
   margin-right: 15px;
 }
 
-.accordion-item.expanded .accordion-number {
+.accordionItem.expanded .accordionNumber {
   background-color: #C3E88D;
   color: #000;
 }
 
-.accordion-label {
+.accordionLabel {
   flex: 1;
   color: #fff;
   font-size: 1rem;
 }
 
-.accordion-icon {
+.accordionIcon {
   color: #C3E88D;
   font-size: 1.5rem;
   font-weight: bold;
 }
 
-.accordion-content {
+.accordionContent {
   padding: 0 15px 15px;
   animation: fadeInUp 0.3s ease;
 }
 
-.accordion-illustration {
+.accordionIllustration {
   display: flex;
   justify-content: center;
   margin-bottom: 15px;
 }
 
-.accordion-illustration svg {
+.accordionIllustration svg {
   width: 150px;
   height: 150px;
 }
 
-.accordion-content h4 {
+.accordionContent h4 {
   color: #C3E88D;
   font-size: 1.2rem;
   margin-bottom: 10px;
 }
 
-.accordion-content p {
+.accordionContent p {
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.6;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .tecoteco-experience-section,
-  .study-detail-experience-section {
+  .studyDetailExperienceSection {
     padding: 40px 20px 30px;
   }
   
-  .tecoteco-experience-section .section-tag-header {
+  .sectionTagHeader {
     top: 15px;
     left: 20px;
     font-size: 1rem;
   }
   
-  .tecoteco-experience-section .section-title,
-  .study-detail-experience-section .section-title {
+  .sectionTitle {
     font-size: 2rem;
   }
   
-  .tecoteco-experience-section .section-subtitle,
-  .study-detail-experience-section .section-subtitle {
+  .sectionSubtitle {
     font-size: 1rem;
   }
   
-  .steps-nav {
+  .stepsNav {
     padding: 0 10px;
   }
   
-  .step-button {
+  .stepButton {
     width: 50px;
     height: 50px;
     font-size: 1.5rem;
   }
   
-  .step-label {
+  .stepLabel {
     font-size: 0.8rem;
   }
   
-  .step-detail-container {
+  .stepDetailContainer {
     padding: 25px 20px;
   }
   
-  .step-illustration {
+  .stepIllustration {
     width: 160px;
     height: 160px;
   }
   
-  .step-detail-title {
+  .stepDetailTitle {
     font-size: 1.6rem;
   }
   
-  .step-detail-text {
+  .stepDetailText {
     font-size: 1rem;
   }
   
   /* 모바일에서 아코디언 표시 */
-  .mobile-accordion {
+  .mobileAccordion {
     display: block;
   }
   
-  .steps-nav {
+  .stepsNav {
     display: none;
   }
   
-  .step-detail-container {
+  .stepDetailContainer {
     display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .tecoteco-experience-section,
-  .study-detail-experience-section {
+  .studyDetailExperienceSection {
     padding: 30px 15px 25px;
   }
   
-  .tecoteco-experience-section .section-title,
-  .study-detail-experience-section .section-title {
+  .sectionTitle {
     font-size: 1.8rem;
   }
   
-  .step-button {
+  .stepButton {
     width: 40px;
     height: 40px;
     font-size: 1.2rem;
   }
   
-  .step-illustration {
+  .stepIllustration {
     width: 140px;
     height: 140px;
   }

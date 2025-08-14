@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ExperienceSectionData, StepContent } from '../types/experienceTypes';
-import './ExperienceSection.css';
+import styles from './ExperienceSection.module.css';
 
 interface ExperienceSectionProps {
   data: ExperienceSectionData;
@@ -9,7 +9,7 @@ interface ExperienceSectionProps {
 // SVG 일러스트레이션 컴포넌트
 const StepIllustrations: Record<string, React.FC> = {
   problem: () => (
-    <svg width="200" height="200" viewBox="0 0 200 200" className="step-illustration">
+    <svg width="200" height="200" viewBox="0 0 200 200" className={styles.stepIllustration}>
       <defs>
         <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#FFB5BA', stopOpacity: 1 }} />
@@ -34,7 +34,7 @@ const StepIllustrations: Record<string, React.FC> = {
   ),
   
   question: () => (
-    <svg width="200" height="200" viewBox="0 0 200 200" className="step-illustration">
+    <svg width="200" height="200" viewBox="0 0 200 200" className={styles.stepIllustration}>
       <defs>
         <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#DDA0DD', stopOpacity: 1 }} />
@@ -57,7 +57,7 @@ const StepIllustrations: Record<string, React.FC> = {
   ),
   
   explore: () => (
-    <svg width="200" height="200" viewBox="0 0 200 200" className="step-illustration">
+    <svg width="200" height="200" viewBox="0 0 200 200" className={styles.stepIllustration}>
       <defs>
         <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#FFB6C1', stopOpacity: 1 }} />
@@ -81,7 +81,7 @@ const StepIllustrations: Record<string, React.FC> = {
   ),
   
   review: () => (
-    <svg width="200" height="200" viewBox="0 0 200 200" className="step-illustration">
+    <svg width="200" height="200" viewBox="0 0 200 200" className={styles.stepIllustration}>
       <defs>
         <linearGradient id="gradient5" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#E6E6FA', stopOpacity: 1 }} />
@@ -108,7 +108,7 @@ const StepIllustrations: Record<string, React.FC> = {
   ),
   
   grow: () => (
-    <svg width="200" height="200" viewBox="0 0 200 200" className="step-illustration">
+    <svg width="200" height="200" viewBox="0 0 200 200" className={styles.stepIllustration}>
       <defs>
         <linearGradient id="gradient6" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#FFE4E1', stopOpacity: 1 }} />
@@ -203,19 +203,19 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
     if (highlightText && subtitle.includes(highlightText)) {
       const parts = subtitle.split(highlightText);
       return (
-        <p className="section-subtitle">
+        <p className={styles.sectionSubtitle}>
           {parts[0]}
-          <span className="highlight">{highlightText}</span>
+          <span className={styles.highlight}>{highlightText}</span>
           {parts[1]}
         </p>
       );
     }
     
-    return <p className="section-subtitle">{subtitle}</p>;
+    return <p className={styles.sectionSubtitle}>{subtitle}</p>;
   };
 
-  // 항상 tecoteco 스타일 사용
-  const sectionClassName = 'tecoteco-experience-section';
+  // CSS Module 스타일 사용
+  const sectionClassName = styles.studyDetailExperienceSection;
 
   const customStyles = {
     ...(primaryColor && { '--primary-color': primaryColor }),
@@ -223,66 +223,66 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
   } as React.CSSProperties;
 
   return (
-    <section className={`${sectionClassName} ${layout}-layout`} style={customStyles}>
-      {tagHeader && <div className="section-tag-header">{tagHeader}</div>}
+    <section className={`${sectionClassName} ${layout === 'vertical' ? styles.verticalLayout : layout === 'grid' ? styles.gridLayout : ''}`} style={customStyles}>
+      {tagHeader && <div className={styles.sectionTagHeader}>{tagHeader}</div>}
       
-      <h2 className="section-title">{title}</h2>
+      <h2 className={styles.sectionTitle}>{title}</h2>
       {renderSubtitle()}
 
-      <div className={`steps-nav navigation-${navigationStyle}`}>
-        {navigationStyle === 'timeline' && <div className="timeline-line" />}
+      <div className={`${styles.stepsNav} ${navigationStyle === 'dots' ? styles.navigationDots : navigationStyle === 'progress' ? styles.navigationProgress : navigationStyle === 'timeline' ? styles.navigationTimeline : ''}`}>
+        {navigationStyle === 'timeline' && <div className={styles.timelineLine} />}
         
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`step-item ${activeStepIndex === index ? 'active' : ''}`}
+            className={`${styles.stepItem} ${activeStepIndex === index ? styles.active : ''}`}
             onClick={() => handleStepClick(index)}
           >
             {navigationStyle === 'numbers' && (
-              <div className="step-button">{index + 1}</div>
+              <div className={styles.stepButton}>{index + 1}</div>
             )}
             {navigationStyle === 'dots' && (
-              <div className="step-dot" />
+              <div className={styles.stepDot} />
             )}
             {navigationStyle === 'progress' && (
-              <div className="step-progress">
-                <div className="progress-fill" style={{ width: `${((index + 1) / steps.length) * 100}%` }} />
+              <div className={styles.stepProgress}>
+                <div className={styles.progressFill} style={{ width: `${((index + 1) / steps.length) * 100}%` }} />
               </div>
             )}
             {navigationStyle === 'timeline' && (
-              <div className="timeline-node">
-                <span className="node-number">{index + 1}</span>
+              <div className={styles.timelineNode}>
+                <span className={styles.nodeNumber}>{index + 1}</span>
               </div>
             )}
-            <p className="step-label">{step.label}</p>
+            <p className={styles.stepLabel}>{step.label}</p>
           </div>
         ))}
       </div>
 
       {activeStepIndex !== null && steps[activeStepIndex] && (
-        <div className={`step-detail-container ${enableAnimation ? `animate-${animationType}` : ''}`}>
-          <div className="step-detail-content">
-            <div className="step-detail-image-wrapper">
+        <div className={`${styles.stepDetailContainer} ${enableAnimation ? (animationType === 'fadeIn' ? styles.animateFadeIn : animationType === 'slideUp' ? styles.animateSlideUp : animationType === 'scale' ? styles.animateScale : '') : ''}`}>
+          <div className={styles.stepDetailContent}>
+            <div className={styles.stepDetailImageWrapper}>
               {renderIllustration(steps[activeStepIndex])}
             </div>
-            <h3 className="step-detail-title">{steps[activeStepIndex].title}</h3>
-            <p className="step-detail-text">{steps[activeStepIndex].description}</p>
+            <h3 className={styles.stepDetailTitle}>{steps[activeStepIndex].title}</h3>
+            <p className={styles.stepDetailText}>{steps[activeStepIndex].description}</p>
           </div>
         </div>
       )}
 
       {isMobile && mobileCollapse && (
-        <div className="mobile-accordion">
+        <div className={styles.mobileAccordion}>
           {steps.map((step, index) => (
-            <div key={index} className={`accordion-item ${activeStepIndex === index ? 'expanded' : ''}`}>
-              <div className="accordion-header" onClick={() => handleStepClick(index)}>
-                <span className="accordion-number">{index + 1}</span>
-                <span className="accordion-label">{step.label}</span>
-                <span className="accordion-icon">{activeStepIndex === index ? '−' : '+'}</span>
+            <div key={index} className={`${styles.accordionItem} ${activeStepIndex === index ? styles.expanded : ''}`}>
+              <div className={styles.accordionHeader} onClick={() => handleStepClick(index)}>
+                <span className={styles.accordionNumber}>{index + 1}</span>
+                <span className={styles.accordionLabel}>{step.label}</span>
+                <span className={styles.accordionIcon}>{activeStepIndex === index ? '−' : '+'}</span>
               </div>
               {activeStepIndex === index && (
-                <div className="accordion-content">
-                  <div className="accordion-illustration">
+                <div className={styles.accordionContent}>
+                  <div className={styles.accordionIllustration}>
                     {renderIllustration(step)}
                   </div>
                   <h4>{step.title}</h4>

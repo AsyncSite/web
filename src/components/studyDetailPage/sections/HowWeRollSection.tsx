@@ -1,51 +1,51 @@
 import React from 'react';
 import { HowWeRollData } from '../types/howWeRollTypes';
-import './HowWeRollSection.css';
+import styles from './HowWeRollSection.module.css';
 
 interface HowWeRollSectionProps {
   data: HowWeRollData;
 }
 
 const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
-  // 항상 tecoteco 스타일 사용
-  const sectionClassName = 'tecoteco-how-we-roll-section';
+  // CSS Module 스타일 사용
+  const sectionClassName = styles.studyDetailHowWeRollSection;
   
   return (
     <section className={sectionClassName}>
       {data.tagHeader && (
-        <div className="section-tag-header">{data.tagHeader}</div>
+        <div className={styles.sectionTagHeader}>{data.tagHeader}</div>
       )}
 
-      <h2 className="section-title">
+      <h2 className={styles.sectionTitle}>
         {data.title.split('\n').map((line, idx) => (
           <React.Fragment key={idx}>
             {idx > 0 && <br />}
             {line.split('그냥 계속').map((part, i) => (
-              i === 0 ? part : <React.Fragment key={i}><span className="highlight">그냥 계속</span>{part}</React.Fragment>
+              i === 0 ? part : <React.Fragment key={i}><span className={styles.highlight}>그냥 계속</span>{part}</React.Fragment>
             ))}
           </React.Fragment>
         ))}
       </h2>
       
       {data.subtitle && (
-        <p className="section-subtitle">{data.subtitle}</p>
+        <p className={styles.sectionSubtitle}>{data.subtitle}</p>
       )}
 
-      <div className="meeting-overview">
+      <div className={styles.meetingOverview}>
         {data.meetingOverview.map((item, index) => (
-          <div key={index} className={`overview-card ${item.type}`}>
-            <div className="card-icon">{item.icon}</div>
-            <div className="card-content">
+          <div key={index} className={`${styles.overviewCard} ${item.type === 'main-meeting' ? styles.mainMeeting : item.type === 'study-material' ? styles.studyMaterial : item.type === 'cost-info' ? styles.costInfo : ''}`}>
+            <div className={styles.cardIcon}>{item.icon}</div>
+            <div className={styles.cardContent}>
               <h3>{item.title}</h3>
               {item.link ? (
                 <p>
                   <a href={item.link} target="_blank" rel="noopener noreferrer">
-                    <span className="highlight">{item.highlight}</span>
+                    <span className={styles.highlight}>{item.highlight}</span>
                   </a>
                 </p>
               ) : (
                 <p>
-                  <span className="highlight">{item.highlight}</span>
+                  <span className={styles.highlight}>{item.highlight}</span>
                 </p>
               )}
               {item.description && (
@@ -68,21 +68,21 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
                   })}
                 </p>
               )}
-              {item.subNote && <p className="sub-note">{item.subNote}</p>}
+              {item.subNote && <p className={styles.subNote}>{item.subNote}</p>}
             </div>
           </div>
         ))}
       </div>
 
       {data.subHeading && (
-        <h3 className="intro-sub-heading">{data.subHeading}</h3>
+        <h3 className={styles.introSubHeading}>{data.subHeading}</h3>
       )}
       
       {data.scheduleIntro && (
-        <p className="schedule-intro">{data.scheduleIntro}</p>
+        <p className={styles.scheduleIntro}>{data.scheduleIntro}</p>
       )}
 
-      <div className="activity-table">
+      <div className={styles.activityTable}>
         <table>
           <thead>
             <tr>
@@ -105,7 +105,7 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
                     <strong>{item.activity}</strong>
                   </span>
                   <br />
-                  <span className="activity-detail">{item.detail}</span>
+                  <span className={styles.activityDetail}>{item.detail}</span>
                 </td>
               </tr>
             ))}
@@ -114,7 +114,7 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
       </div>
 
       {data.closingMessage && (
-        <div className="closing-message">
+        <div className={styles.closingMessage}>
           <p>
             {(() => {
               const highlightPhrase = '서로의 성장을 응원하는 따뜻한 커뮤니티';
@@ -123,7 +123,7 @@ const HowWeRollSection: React.FC<HowWeRollSectionProps> = ({ data }) => {
                 return (
                   <>
                     {parts[0]}
-                    <span className="highlight">{highlightPhrase}</span>
+                    <span className={styles.highlight}>{highlightPhrase}</span>
                     {parts[1]}
                   </>
                 );

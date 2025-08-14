@@ -16,7 +16,7 @@ import ConfirmModal from '../components/common/ConfirmModal';
 import InputModal from '../components/common/InputModal';
 import { ToastContainer, ToastType } from '../components/common/Toast';
 import './StudyManagementPage.css';
-import '../components/studyDetailPage/StudyDetailPageRenderer.css';
+import '../components/studyDetailPage/StudyDetailPageRenderer.module.css';
 
 interface TabType {
   key: 'applications' | 'members' | 'page-editor';

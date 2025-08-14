@@ -33,7 +33,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   const [tagHeader, setTagHeader] = useState(initialData.tagHeader || '');
   const [showIcons, setShowIcons] = useState(initialData.showIcons || false);
   const [showJoinCTA, setShowJoinCTA] = useState(initialData.showJoinCTA || false);
-  const [joinTitle, setJoinTitle] = useState(initialData.joinTitle || 'TecoTeco, 당신의 합류를 기다려요!');
+  const [joinTitle, setJoinTitle] = useState(initialData.joinTitle || '당신의 합류를 기다려요!');
   const [joinDescription, setJoinDescription] = useState(initialData.joinDescription || '');
   const [joinButtonText, setJoinButtonText] = useState(initialData.joinButtonText || '@renechoi에게 커피챗 요청하기 ☕');
   const [joinButtonAction, setJoinButtonAction] = useState(initialData.joinButtonAction || '@renechoi에게 커피챗 요청!');
@@ -122,20 +122,20 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
     ]);
   };
   
-  // TecoTeco FAQ 템플릿
-  const loadTecotecoData = () => {
+  // 표준 FAQ 템플릿
+  const loadStandardData = () => {
     setTitle('FAQ');
     setTagHeader('궁금증 해결');
     setShowIcons(true);
     setShowJoinCTA(true);
-    setJoinTitle('TecoTeco, 당신의 합류를 기다려요!');
+    setJoinTitle('당신의 합류를 기다려요!');
     setJoinDescription('');
     setJoinButtonText('@renechoi에게 커피챗 요청하기 ☕');
     setJoinButtonAction('@renechoi에게 커피챗 요청!');
     setFaqs([
       {
-        question: '테코테코는 어떤 스터디인가요?',
-        answer: '테코테코는 코딩 테스트 완전 정복을 목표로 하는 알고리즘 스터디입니다. 단순히 문제를 푸는 것을 넘어, 논리적 사고력과 커뮤니케이션 역량 강화를 지향합니다.',
+        question: '이 스터디는 어떤 스터디인가요?',
+        answer: '코딩 테스트 완전 정복을 목표로 하는 알고리즘 스터디입니다. 단순히 문제를 푸는 것을 넘어, 논리적 사고력과 커뮤니케이션 역량 강화를 지향합니다.',
         category: ''
       },
       {
@@ -244,11 +244,11 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
           <label>FAQ 목록</label>
           <button 
             type="button" 
-            onClick={loadTecotecoData}
+            onClick={loadStandardData}
             className="study-management-faq-example-btn"
             style={{ background: '#C3E88D', color: '#000' }}
           >
-            TecoTeco FAQ
+            표준 FAQ
           </button>
         </div>
         
@@ -336,7 +336,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
               type="text"
               value={joinTitle}
               onChange={(e) => setJoinTitle(e.target.value)}
-              placeholder="예: TecoTeco, 당신의 합류를 기다려요!"
+              placeholder="예: 당신의 합류를 기다려요!"
               className="study-management-faq-input"
             />
           </div>
