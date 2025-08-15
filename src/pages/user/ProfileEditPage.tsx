@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
 import StarBackground from '../../components/common/StarBackground';
 import RichTextEditor from '../../components/common/RichTextEditor';
+import ProfileImageUpload from '../../components/common/ProfileImageUpload';
 import './ProfileEditPage.css';
 import notiService from "../../api/notiService";
 
@@ -57,6 +58,7 @@ function ProfileEditPage(): React.ReactNode {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [fromOnboarding, setFromOnboarding] = useState(false);
+  const [imageUploadMode, setImageUploadMode] = useState<'upload' | 'url'>('upload');
   
 
   // Check if coming from onboarding
@@ -305,19 +307,83 @@ function ProfileEditPage(): React.ReactNode {
           </div>
 
           <div className="form-group auth-form-group">
-            <label htmlFor="profileImage" className="auth-label">
-              프로필 이미지 URL <span className="optional">(선택)</span>
+            <label className="auth-label">
+              프로필 이미지 <span className="optional">(선택)</span>
             </label>
-            <input
-              type="url"
-              id="profileImage"
-              name="profileImage"
-              value={formData.profileImage}
-              onChange={handleChange}
-              className={`auth-input ${errors.profileImage ? 'error' : ''}`}
-              placeholder="https://example.com/image.jpg"
-              disabled={isSubmitting}
-            />
+            
+            {/* Image Upload Mode Selector */}
+            <div className="image-mode-selector">
+              <button
+                type="button"
+                className={`mode-tab ${imageUploadMode === 'upload' ? 'active' : ''}`}
+                onClick={() => setImageUploadMode('upload')}
+                disabled={isSubmitting}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                파일 업로드
+              </button>
+              <button
+                type="button"
+                className={`mode-tab ${imageUploadMode === 'url' ? 'active' : ''}`}
+                onClick={() => setImageUploadMode('url')}
+                disabled={isSubmitting}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+                URL 입력
+              </button>
+            </div>
+            
+            {/* Image Upload/URL Input */}
+            {imageUploadMode === 'upload' ? (
+              <ProfileImageUpload
+                currentImageUrl={formData.profileImage}
+                onImageUploaded={(url) => {
+                  setFormData(prev => ({ ...prev, profileImage: url }));
+                  if (errors.profileImage) {
+                    setErrors(prev => ({ ...prev, profileImage: undefined }));
+                  }
+                }}
+                disabled={isSubmitting}
+              />
+            ) : (
+              <div className="url-input-container">
+                <input
+                  type="url"
+                  id="profileImage"
+                  name="profileImage"
+                  value={formData.profileImage}
+                  onChange={handleChange}
+                  className={`auth-input ${errors.profileImage ? 'error' : ''}`}
+                  placeholder="https://example.com/image.jpg"
+                  disabled={isSubmitting}
+                />
+                {formData.profileImage && (
+                  <div className="url-preview">
+                    <img 
+                      src={formData.profileImage} 
+                      alt="프로필 미리보기" 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        setErrors(prev => ({ ...prev, profileImage: 'Invalid image URL' }));
+                      }}
+                      onLoad={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'block';
+                        if (errors.profileImage === 'Invalid image URL') {
+                          setErrors(prev => ({ ...prev, profileImage: undefined }));
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
             
             {errors.profileImage && (
               <span className="error-message auth-error-message">
@@ -327,21 +393,15 @@ function ProfileEditPage(): React.ReactNode {
           </div>
 
           <div className="profile-preview">
-            <p className="preview-label">프로필 미리보기</p>
+            <p className="preview-label">프로필 정보 미리보기</p>
             <div className="preview-content">
-              <div className="preview-image">
-                {formData.profileImage ? (
-                  <img src={formData.profileImage} alt="프로필 미리보기" />
-                ) : (
-                  <div className="preview-placeholder">
-                    {formData.name ? formData.name[0] : user?.name?.[0] || 'U'}
-                  </div>
-                )}
-              </div>
-              <div className="preview-info">
+              <div className="preview-info-full">
                 <p className="preview-name">{formData.name || user?.name || '이름'}</p>
-                <p className="preview-role">{formData.role || user?.role || ''}</p>
+                <p className="preview-role">{formData.role || '역할/직책'}</p>
                 <p className="preview-email">{user?.email}</p>
+                {formData.quote && (
+                  <p className="preview-quote">"{formData.quote}"</p>
+                )}
               </div>
             </div>
           </div>

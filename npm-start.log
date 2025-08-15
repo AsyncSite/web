@@ -1,0 +1,177 @@
+
+> asyncsite-frontend@0.1.0 start
+> DISABLE_ESLINT_PLUGIN=true react-scripts start
+
+(node:82184) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:82184) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:82184) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view asyncsite-frontend in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://172.30.1.85:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+No issues found.
+[0;33mOne of your dependencies, babel-preset-react-app, is importing the
+"@babel/plugin-proposal-private-property-in-object" package without
+declaring it in its dependencies. This is currently working because
+"@babel/plugin-proposal-private-property-in-object" is already in your
+node_modules folder for unrelated reasons, but it [1mmay break at any time[0;33m.
+
+babel-preset-react-app is part of the create-react-app project, [1mwhich
+is not maintianed anymore[0;33m. It is thus unlikely that this bug will
+ever be fixed. Add "@babel/plugin-proposal-private-property-in-object" to
+your devDependencies to work around this error. This will make this message
+go away.[0m
+  
+(node:82184) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiled successfully!
+webpack compiled successfully
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiling...
+Failed to compile.
+
+Attempted import error: 'getAuthToken' is not exported from './authService' (imported as 'getAuthToken').
+ERROR in ./src/api/assetService.ts 13:16-28
+export 'getAuthToken' (imported as 'getAuthToken') was not found in './authService' (possible exports: default)
+
+ERROR in ./src/api/assetService.ts 113:16-28
+export 'getAuthToken' (imported as 'getAuthToken') was not found in './authService' (possible exports: default)
+
+ERROR in ./src/api/assetService.ts 135:16-28
+export 'getAuthToken' (imported as 'getAuthToken') was not found in './authService' (possible exports: default)
+
+webpack compiled with 3 errors
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiling...
+Failed to compile.
+
+Attempted import error: 'getAuthToken' is not exported from './authService' (imported as 'getAuthToken').
+ERROR in ./src/api/assetService.ts 13:16-28
+export 'getAuthToken' (imported as 'getAuthToken') was not found in './authService' (possible exports: default)
+
+ERROR in ./src/api/assetService.ts 113:16-28
+export 'getAuthToken' (imported as 'getAuthToken') was not found in './authService' (possible exports: default)
+
+ERROR in ./src/api/assetService.ts 135:16-28
+export 'getAuthToken' (imported as 'getAuthToken') was not found in './authService' (possible exports: default)
+
+webpack compiled with 3 errors
+ERROR in src/api/assetService.ts:1:10
+TS2614: Module '"./authService"' has no exported member 'getAuthToken'. Did you mean to use 'import getAuthToken from "./authService"' instead?
+  > 1 | import { getAuthToken } from './authService';
+      |          ^^^^^^^^^^^^
+    2 |
+    3 | const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+    4 |
+
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+No issues found.

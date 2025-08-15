@@ -119,4 +119,8 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+const authService = new AuthService();
+export default authService;
+
+// Helper function exports for convenient access
+export const getAuthToken = () => authService.getStoredToken();

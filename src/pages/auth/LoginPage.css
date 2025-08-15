@@ -194,6 +194,8 @@
   position: relative;
   transform: rotate(-10deg);
   animation: authFloat 4s ease-in-out infinite;
+  text-decoration: none;
+  cursor: pointer; /* 로고 클릭 가능 affordance */
 }
 
 @keyframes authFloat {

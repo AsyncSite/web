@@ -7,6 +7,8 @@ import { ToastContainer, useToast } from '../components/ui/Toast';
 import TimePickerCustom from '../components/study/TimePickerCustom';
 import DatePickerCustom from '../components/study/DatePickerCustom';
 import DurationSelector from '../components/study/DurationSelector';
+import GenerationSelector from '../components/study/GenerationSelector';
+import PreviewModal from '../components/study/PreviewModal';
 import { useDebouncedCallback } from '../hooks/useDebounce';
 import './StudyProposalPageV2.css';
 
@@ -16,6 +18,7 @@ const StudyProposalPageV2: React.FC = () => {
   const { messages, success, error, warning, removeToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   
   // Helper function to format date to YYYY-MM-DD in local timezone
   const getLocalDateString = (date: Date = new Date()): string => {
@@ -71,6 +74,30 @@ const StudyProposalPageV2: React.FC = () => {
     }
     if (endMinutes - startMinutes < 30) {
       return '최소 30분 이상의 시간을 설정해주세요.';
+    }
+    return null;
+  };
+
+  const validateStartTimeForToday = (date: string, time: string): string | null => {
+    if (!date || !time) return null;
+    
+    const today = new Date();
+    const selectedDate = new Date(date);
+    
+    // 날짜가 오늘인지 확인 (시간 제외하고 비교)
+    selectedDate.setHours(0, 0, 0, 0);
+    const todayDate = new Date(today);
+    todayDate.setHours(0, 0, 0, 0);
+    
+    if (selectedDate.getTime() === todayDate.getTime()) {
+      const [h, m] = time.split(':').map(Number);
+      const currentHour = today.getHours();
+      const currentMin = today.getMinutes();
+      
+      // 선택한 시간이 현재 시간보다 이전인지 확인
+      if (h < currentHour || (h === currentHour && m <= currentMin)) {
+        return `현재 시간(${currentHour}:${String(currentMin).padStart(2, '0')}) 이후로 설정해주세요`;
+      }
     }
     return null;
   };
@@ -367,6 +394,29 @@ const StudyProposalPageV2: React.FC = () => {
         error('스터디 날짜는 오늘 이후여야 합니다.');
         return;
       }
+      
+      // 오늘 날짜인 경우 시작 시간 검증
+      if (selectedDate.getTime() === today.getTime() && formData.startTime) {
+        const todayError = validateStartTimeForToday(formData.selectedDate, formData.startTime);
+        if (todayError) {
+          error(todayError.replace('설정해주세요', '설정해야 합니다'));
+          return;
+        }
+      }
+    }
+    
+    // 반복 스터디의 경우 startDate가 오늘인 경우 시간 검증
+    if (formData.recurrenceType !== 'ONE_TIME' && formData.startDate) {
+      const startDate = new Date(formData.startDate);
+      startDate.setHours(0, 0, 0, 0);
+      
+      if (startDate.getTime() === today.getTime() && formData.startTime) {
+        const todayError = validateStartTimeForToday(formData.startDate, formData.startTime);
+        if (todayError) {
+          error(todayError.replace('설정해주세요', '설정해야 합니다'));
+          return;
+        }
+      }
     }
 
     setIsSubmitting(true);
@@ -470,6 +520,51 @@ const StudyProposalPageV2: React.FC = () => {
 
   const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
 
+  // 페이지 진입 시 로그인 체크
+  useEffect(() => {
+    // 로딩 중이면 대기
+    if (authLoading) return;
+    
+    // 로그인이 안 되어 있으면 로그인 페이지로 리다이렉트
+    if (!user) {
+      error('스터디 제안을 위해서는 로그인이 필요합니다.');
+      setTimeout(() => {
+        navigate('/login', { state: { from: '/study/propose' } });
+      }, 1500);
+    }
+  }, [user, authLoading, navigate, error]);
+
+  // 로딩 중이거나 로그인 안 된 경우 로딩 표시
+  if (authLoading) {
+    return (
+      <div className="study-proposal-v2">
+        <div className="proposal-container-v2">
+          <div style={{ textAlign: 'center', padding: '100px 20px', color: 'rgba(255, 255, 255, 0.6)' }}>
+            <div style={{ fontSize: '20px', marginBottom: '20px' }}>로딩 중...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 로그인 안 된 경우 (리다이렉트 전 잠시 표시)
+  if (!user) {
+    return (
+      <div className="study-proposal-v2">
+        <div className="proposal-container-v2">
+          <div style={{ textAlign: 'center', padding: '100px 20px' }}>
+            <div style={{ fontSize: '20px', color: '#C3E88D', marginBottom: '20px' }}>
+              로그인이 필요합니다
+            </div>
+            <div style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              로그인 페이지로 이동 중...
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="study-proposal-v2">
       <ToastContainer messages={messages} onClose={removeToast} />
@@ -557,23 +652,14 @@ const StudyProposalPageV2: React.FC = () => {
                 </span>
               </div>
 
-              <div className="form-row-v2">
-                <div className="form-group-v2">
-                  <label>기수</label>
-                  <input
-                    type="number"
-                    value={formData.generation}
-                    onChange={(e) => {
-                      const value = parseInt(e.target.value);
-                      if (!isNaN(value) && value >= 1 && value <= 100) {
-                        handleInputChange('generation', value);
-                      }
-                    }}
-                    className="modern-input"
-                    min="1"
-                    max="100"
-                  />
-                </div>
+              <div className="form-group-v2">
+                <label>기수</label>
+                <GenerationSelector
+                  value={formData.generation}
+                  onChange={(value) => handleInputChange('generation', value)}
+                  min={1}
+                  max={100}
+                />
               </div>
             </div>
           )}
@@ -613,6 +699,16 @@ const StudyProposalPageV2: React.FC = () => {
                         value={formData.startTime}
                         onChange={(value) => {
                           handleInputChange('startTime', value);
+                          
+                          // 오늘 날짜인 경우 현재 시간 이후인지 검증
+                          if (formData.selectedDate) {
+                            const todayError = validateStartTimeForToday(formData.selectedDate, value);
+                            if (todayError) {
+                              warning(todayError);
+                            }
+                          }
+                          
+                          // 기존 종료 시간과의 검증
                           if (formData.endTime) {
                             const timeError = validateTime(value, formData.endTime);
                             if (timeError) warning(timeError);
@@ -686,6 +782,16 @@ const StudyProposalPageV2: React.FC = () => {
                         value={formData.startTime}
                         onChange={(value) => {
                           handleInputChange('startTime', value);
+                          
+                          // 시작일이 오늘인 경우 현재 시간 이후인지 검증
+                          if (formData.startDate) {
+                            const todayError = validateStartTimeForToday(formData.startDate, value);
+                            if (todayError) {
+                              warning(todayError);
+                            }
+                          }
+                          
+                          // 기존 종료 시간과의 검증
                           if (formData.endTime) {
                             const timeError = validateTime(value, formData.endTime);
                             if (timeError) warning(timeError);
@@ -863,6 +969,12 @@ const StudyProposalPageV2: React.FC = () => {
                           value={formData.recruitDeadline}
                           onChange={(value) => {
                             handleInputChange('recruitDeadline', value);
+                            
+                            // 날짜가 처음 선택되었을 때 시간 자동 설정
+                            if (value && !formData.recruitDeadlineTime) {
+                              handleInputChange('recruitDeadlineTime', '23:59');
+                            }
+                            
                             // 실시간 검증 - 시간을 고려한 검증
                             if (value && effectiveStartDate) {
                               const deadline = new Date(value);
@@ -975,7 +1087,14 @@ const StudyProposalPageV2: React.FC = () => {
             ) : (
               <button 
                 type="button"
-                onClick={handleSubmit}
+                onClick={() => {
+                  // validation을 통과해야 모달 표시
+                  if (validateStep(currentStep)) {
+                    setShowPreviewModal(true);
+                  } else {
+                    warning('필수 항목을 모두 입력해주세요.');
+                  }
+                }}
                 className="btn-primary"
                 disabled={isSubmitting}
               >
@@ -985,6 +1104,18 @@ const StudyProposalPageV2: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 미리보기 모달 */}
+      <PreviewModal
+        isOpen={showPreviewModal}
+        onClose={() => setShowPreviewModal(false)}
+        onSubmit={() => {
+          setShowPreviewModal(false);
+          handleSubmit();
+        }}
+        formData={formData}
+        isSubmitting={isSubmitting}
+      />
     </div>
   );
 };

@@ -1,0 +1,98 @@
+.guidePage {
+  min-height: calc(100vh - 80px);
+  padding: 4rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.guideHero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.guideTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #C3E88D 0%, #82aaff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.guideSubtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.guideContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.guideCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.guideCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #C3E88D 0%, #82aaff 100%);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.guideCard:hover::before {
+  transform: translateX(0);
+}
+
+.guideCardIcon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.guideCardTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.guideCardDescription {
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.guideBadge {
+  display: inline-block;
+  background: rgba(130, 170, 255, 0.1);
+  color: #82aaff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.comingSoon {
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .guidePage {
+    padding: 2rem 1rem;
+  }
+  .guideTitle {
+    font-size: 2rem;
+  }
+}

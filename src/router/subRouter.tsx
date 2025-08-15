@@ -23,6 +23,7 @@ const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPa
 
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
+const StudyLeaderGuidePage = lazy(() => import('../pages/guide/StudyLeaderGuidePage'));
 const StudyPlanPage = lazy(() => import('../pages/StudyPlanPage'));
 const WhoWeArePage = lazy(() => import('../pages/WhoWeArePage'));
 const WhoWeAreOriginalPage = lazy(() => import('../pages/WhoWeAreOriginalPage'));
@@ -96,6 +97,16 @@ const subRouter = [
   {
     path: 'calendar',
     element: <CalendarPage />,
+  },
+  // Guide
+  {
+    path: 'guide',
+    children: [
+      {
+        path: 'study-leader',
+        element: <StudyLeaderGuidePage />,
+      },
+    ],
   },
   {
     path: 'study-plan',

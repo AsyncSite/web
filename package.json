@@ -39,6 +39,8 @@
   "homepage": "/",
   "scripts": {
     "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
+    "start:bg": "bash scripts/start-dev.sh",
+    "stop:bg": "bash scripts/stop-dev.sh",
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
     "eject": "react-scripts eject",
