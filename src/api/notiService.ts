@@ -1,24 +1,26 @@
-import apiClient from './client';
-import {NotiSetting, UpdateNotificationSettingsRequest} from "../types/noti";
+import apiClient, {handleApiError} from './client';
+import {NotiSetting, UpdateNotificationSettingsRequest,} from "../types/noti";
+import {ApiResponse} from "../types/auth";
 
 class NotiService {
-  private readonly baseUrl = "/api/noti/settings/";
-  
-  /**
-   * Update notification settings
-   */
-  updateNotiSetting = async (userId: string, data: UpdateNotificationSettingsRequest): Promise<NotiSetting> => {
-    const response = await apiClient.post<NotiSetting>(`${this.baseUrl}${userId}`, data);
-    return response.data;
-  }
+    private readonly baseUrl = "/api/noti";
 
-  /**
-   * Get notification settings
-   */
-  getNotiSetting = async (userId: string): Promise<NotiSetting> => {
-    const response = await apiClient.get<NotiSetting>(`${this.baseUrl}${userId}`);
-    return response.data;
-  }
+    getNotiSetting = async (userId: string): Promise<NotiSetting> => {
+        return apiClient.get<ApiResponse<NotiSetting>>(`${this.baseUrl}/settings/${userId}`)
+            .then(response => response.data.data)
+            .catch(error => {
+                throw new Error(handleApiError(error))
+            })
+    }
+
+    // Approve a study (admin only)
+    updateNotiSetting = async (userId: string, data: UpdateNotificationSettingsRequest): Promise<ApiResponse<NotiSetting>> => {
+        return apiClient.put(`${this.baseUrl}/settings/${userId}`, data)
+            .then(response => response.data.data)
+            .catch(error => {
+                throw new Error(handleApiError(error))
+            })
+    }
 }
 
 export default new NotiService();
