@@ -79,6 +79,14 @@
   position: relative;
 }
 
+.profileImage img {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .profilePlaceholder {
   width: 64px;
   height: 64px;
@@ -1376,10 +1384,6 @@
 /* =============================================== */
 /* Admin Badge Styles - Unique prefix to avoid conflicts */
 /* =============================================== */
-.profileImage {
-  position: relative;
-}
-
 .profileAdminBadge {
   position: absolute;
   bottom: -5px;
