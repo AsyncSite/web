@@ -12,15 +12,24 @@ interface DatePickerCustomProps {
 const DatePickerCustom: React.FC<DatePickerCustomProps> = ({ 
   value, 
   onChange, 
-  min = new Date().toISOString().split('T')[0],
+  min = (() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  })(),
   max,
   placeholder = '날짜 선택' 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [viewDate, setViewDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    value ? new Date(value + 'T00:00:00') : null
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
+    if (!value || value.trim() === '') return null;
+    // YYYY-MM-DD 형식의 날짜를 로컬 시간으로 파싱
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,10 +44,15 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
   }, []);
 
   useEffect(() => {
-    if (value) {
-      const date = new Date(value + 'T00:00:00');
+    if (value && value.trim() !== '') {
+      // YYYY-MM-DD 형식의 날짜를 로컬 시간으로 파싱
+      const [year, month, day] = value.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
       setSelectedDate(date);
       setViewDate(date);
+    } else {
+      setSelectedDate(null);
+      setViewDate(new Date());
     }
   }, [value]);
 
@@ -98,7 +112,11 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
-    const dateString = date.toISOString().split('T')[0];
+    // toISOString()은 UTC로 변환하므로 로컬 날짜를 직접 포맷팅
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
     onChange(dateString);
     setIsOpen(false);
   };
@@ -116,12 +134,25 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
   };
 
   const isDateDisabled = (date: Date) => {
-    const minDate = new Date(min + 'T00:00:00');
-    if (date < minDate) return true;
+    if (min && min.trim() !== '') {
+      // YYYY-MM-DD 형식의 날짜를 로컬 시간으로 파싱
+      const [year, month, day] = min.split('-').map(Number);
+      const minDate = new Date(year, month - 1, day);
+      // 시간 부분을 0으로 설정하여 날짜만 비교
+      minDate.setHours(0, 0, 0, 0);
+      const compareDate = new Date(date);
+      compareDate.setHours(0, 0, 0, 0);
+      if (compareDate < minDate) return true;
+    }
     
-    if (max) {
-      const maxDate = new Date(max + 'T00:00:00');
-      if (date > maxDate) return true;
+    if (max && max.trim() !== '') {
+      // YYYY-MM-DD 형식의 날짜를 로컬 시간으로 파싱
+      const [year, month, day] = max.split('-').map(Number);
+      const maxDate = new Date(year, month - 1, day);
+      maxDate.setHours(0, 0, 0, 0);
+      const compareDate = new Date(date);
+      compareDate.setHours(0, 0, 0, 0);
+      if (compareDate > maxDate) return true;
     }
     
     return false;

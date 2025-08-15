@@ -59,15 +59,32 @@ function OAuthCallbackPage(): React.ReactNode {
         authService.storeAuthData(loginResponse);
         
         // Fetch full user profile (including name and other details)
+        let isNewUser = false;
         try {
-          await userService.getProfile();
+          const profile = await userService.getProfile();
+          // Check if this is a new user (profile not fully filled)
+          if (!profile.role && !profile.quote && !profile.bio) {
+            isNewUser = true;
+          }
         } catch (error) {
           // If profile fetch fails, continue anyway
           console.error('Failed to fetch user profile:', error);
         }
 
+        // Check if this is first time OAuth login
+        const oauthLoginCount = localStorage.getItem(`oauth_login_count_${userInfo.email}`);
+        if (!oauthLoginCount) {
+          localStorage.setItem(`oauth_login_count_${userInfo.email}`, '1');
+          isNewUser = true;
+        }
+
         // Force a page reload to ensure AuthContext picks up the new auth state
-        window.location.href = '/users/me';
+        // If new user, add showOnboarding query parameter
+        if (isNewUser) {
+          window.location.href = '/users/me?showOnboarding=true';
+        } else {
+          window.location.href = '/users/me';
+        }
       } catch (err) {
         setError('OAuth 로그인 처리 중 오류가 발생했습니다.');
         setIsProcessing(false);

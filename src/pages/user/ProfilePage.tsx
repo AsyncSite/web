@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
 import PasswordChangeModal from '../../components/auth/PasswordChangeModalEnhanced';
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
+import ProfileOnboardingModal from '../../components/auth/ProfileOnboardingModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import styles from './ProfilePage.module.css';
 import studyService from '../../api/studyService';
 import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
+import { calculateUserProfileCompleteness, getProfileCompletenessColorClass } from '../../utils/profileCompleteness';
 
 function ProfilePage(): React.ReactNode {
   // Auth context에서 실제 사용자 정보 가져오기
   const { user: authUser, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Debug: Check user roles
   useEffect(() => {
@@ -39,6 +42,7 @@ function ProfilePage(): React.ReactNode {
   const [activeTab, setActiveTab] = useState<'study' | 'game'>('study');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [gameActivities, setGameActivities] = useState<GameActivity[]>([]);
   const [gameSummary, setGameSummary] = useState<{
     totalGames: number;
@@ -55,6 +59,25 @@ function ProfilePage(): React.ReactNode {
       ? Math.floor((Date.now() - new Date(authUser.createdAt).getTime()) / (1000 * 60 * 60 * 24))
       : 0,
   };
+
+  // OAuth 가입 후 온보딩 모달 표시 체크
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('showOnboarding') === 'true' && authUser) {
+      // Check if this is first time showing onboarding
+      const completedEmails = localStorage.getItem('asyncsite_profile_onboarding_completed_v1');
+      const dismissedTime = localStorage.getItem('asyncsite_profile_onboarding_dismissed_v1');
+      
+      if (!completedEmails || !JSON.parse(completedEmails).includes(authUser.email)) {
+        if (!dismissedTime || Date.now() - parseInt(dismissedTime) > 30 * 24 * 60 * 60 * 1000) {
+          setShowOnboardingModal(true);
+        }
+      }
+      
+      // Clean up URL
+      navigate('/users/me', { replace: true });
+    }
+  }, [location, authUser, navigate]);
 
   // 게임 활동 데이터 로드
   useEffect(() => {
@@ -179,6 +202,73 @@ function ProfilePage(): React.ReactNode {
           </div>
         </div>
       </section>
+
+      {/* 프로필 완성도 카드 */}
+      {(() => {
+        const completeness = calculateUserProfileCompleteness(authUser);
+        const colorClass = getProfileCompletenessColorClass(completeness.percentage);
+        
+        return completeness.percentage < 100 ? (
+          <div className={styles.profileCompleteness__card__container}>
+            <div className={styles.profileCompleteness__card__header}>
+              <h3 className={styles.profileCompleteness__card__title}>프로필 완성도</h3>
+              <span className={styles.profileCompleteness__card__percentage}>
+                {completeness.percentage}%
+              </span>
+            </div>
+            
+            <div className={styles.profileCompleteness__progress__container}>
+              <div 
+                className={`${styles.profileCompleteness__progress__bar} ${styles[colorClass]}`}
+                style={{ width: `${completeness.percentage}%` }}
+              />
+            </div>
+            
+            <div className={styles.profileCompleteness__message__container}>
+              <div className={styles.profileCompleteness__message__step}>
+                {completeness.nextStep}
+              </div>
+              <p className={styles.profileCompleteness__message__detail}>
+                {completeness.message}
+              </p>
+            </div>
+            
+            <Link 
+              to="/users/me/edit" 
+              className={styles.profileCompleteness__action__button}
+            >
+              <span>프로필 완성하기</span>
+              <span>→</span>
+            </Link>
+            
+            <div className={styles.profileCompleteness__checklist}>
+              {['profileImage', 'role', 'quote', 'bio'].map(field => {
+                const isCompleted = completeness.completedFields.includes(field);
+                const fieldLabels: Record<string, string> = {
+                  profileImage: '프로필 이미지',
+                  role: '역할/직책',
+                  quote: '인용구',
+                  bio: '스토리'
+                };
+                
+                return (
+                  <div 
+                    key={field}
+                    className={`${styles.profileCompleteness__checklist__item} ${
+                      isCompleted ? styles.profileCompleteness__checklist__completed : ''
+                    }`}
+                  >
+                    <span className={styles.profileCompleteness__checklist__icon}>
+                      {isCompleted ? '✓' : '○'}
+                    </span>
+                    <span>{fieldLabels[field]}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : null;
+      })()}
 
       {/* 탭 섹션 컨테이너 */}
       <div className={styles.tabSectionContainer}>
@@ -508,6 +598,12 @@ function ProfilePage(): React.ReactNode {
       <LogoutConfirmModal 
         isOpen={showLogoutModal} 
         onClose={() => setShowLogoutModal(false)} 
+      />
+      <ProfileOnboardingModal
+        isOpen={showOnboardingModal}
+        onClose={() => setShowOnboardingModal(false)}
+        userName={authUser?.name || authUser?.username || ''}
+        userEmail={authUser?.email || ''}
       />
     </div>
   );

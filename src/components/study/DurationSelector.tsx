@@ -125,7 +125,7 @@ const DurationSelector: React.FC<DurationSelectorProps> = ({
         <div className="preview-icon">📅</div>
         <div className="preview-text">
           총 <strong>{getDisplayText()}</strong> 동안 진행됩니다
-          {startDate && endDate && (
+          {startDate && endDate && startDate.trim() !== '' && endDate.trim() !== '' && (
             <div className="date-range-preview">
               {new Date(startDate + 'T00:00:00').toLocaleDateString('ko-KR', { 
                 month: 'long', 

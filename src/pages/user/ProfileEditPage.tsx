@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Header from '../../components/layout/Header';
 import StarBackground from '../../components/common/StarBackground';
@@ -32,6 +32,7 @@ interface ProfileFormErrors {
 function ProfileEditPage(): React.ReactNode {
   const { user, updateProfile, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // 인증되지 않은 경우 로그인 페이지로 리디렉션
   useEffect(() => {
@@ -55,7 +56,15 @@ function ProfileEditPage(): React.ReactNode {
   const [errors, setErrors] = useState<ProfileFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [fromOnboarding, setFromOnboarding] = useState(false);
   
+
+  // Check if coming from onboarding
+  useEffect(() => {
+    if (location.state?.fromOnboarding) {
+      setFromOnboarding(true);
+    }
+  }, [location]);
 
   useEffect(() => {
     if (user) {
@@ -195,8 +204,8 @@ function ProfileEditPage(): React.ReactNode {
       
       <div className="profile-edit-container auth-container auth-fade-in">
         <div className="profile-edit-header">
-          <h1>프로필 수정</h1>
-          <p>나의 정보를 수정해보세요</p>
+          <h1>{fromOnboarding ? '프로필 완성하기' : '프로필 수정'}</h1>
+          <p>{fromOnboarding ? '프로필을 완성하고 AsyncSite 커뮤니티에 참여해보세요!' : '나의 정보를 수정해보세요'}</p>
         </div>
 
         {errors.general && (

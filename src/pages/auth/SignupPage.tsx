@@ -10,6 +10,7 @@ import { env } from '../../config/environment';
 import { createPasskey, getPasskey } from '../../utils/webauthn/helpers';
 import apiClient from '../../api/client';
 import PasskeyPromptModal from '../../components/auth/PasskeyPromptModal';
+import ProfileOnboardingModal from '../../components/auth/ProfileOnboardingModal';
 import authService from '../../api/authService';
 import { AUTH_EVENTS, dispatchAuthEvent } from '../../utils/authEvents';
 import './auth-common.css';
@@ -54,6 +55,7 @@ function SignupPage(): React.ReactNode {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [webauthnSupported, setWebauthnSupported] = useState<boolean>(false);
   const [showPasskeyPrompt, setShowPasskeyPrompt] = useState(false);
+  const [showProfileOnboarding, setShowProfileOnboarding] = useState(false);
   const [registrationCompleted, setRegistrationCompleted] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   // Minimal password UX flags
@@ -327,8 +329,9 @@ function SignupPage(): React.ReactNode {
         setShowPasskeyPrompt(true);
         setIsSubmitting(false);
       } else {
-        // WebAuthn 미지원 시 바로 리다이렉트
-        setShouldRedirect(true);
+        // WebAuthn 미지원 시 프로필 온보딩 모달 표시
+        setShowProfileOnboarding(true);
+        setIsSubmitting(false);
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : '회원가입에 실패했습니다';
@@ -404,7 +407,10 @@ function SignupPage(): React.ReactNode {
       const loginResponse = verifyRes.data.data;
       authService.storeAuthData(loginResponse);
       dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
-      navigate('/users/me', { replace: true });
+      
+      // 패스키 가입 완료 후 프로필 온보딩 모달 표시
+      setRegistrationCompleted(true);
+      setShowProfileOnboarding(true);
     } catch (err: any) {
       console.error('Passkey signup failed', err);
       if (err?.name === 'NotAllowedError') {
@@ -786,10 +792,24 @@ function SignupPage(): React.ReactNode {
           isOpen={showPasskeyPrompt}
           onClose={() => {
             setShowPasskeyPrompt(false);
-            setShouldRedirect(true);
+            // 패스키 모달 닫힌 후 프로필 온보딩 모달 표시
+            setShowProfileOnboarding(true);
           }}
           userEmail={formData.email}
           userName={formData.name}
+        />
+      )}
+      
+      {/* 프로필 온보딩 모달 */}
+      {showProfileOnboarding && isAuthenticated && !showPasskeyPrompt && (
+        <ProfileOnboardingModal
+          isOpen={showProfileOnboarding}
+          onClose={() => {
+            setShowProfileOnboarding(false);
+            setShouldRedirect(true);
+          }}
+          userName={formData.name}
+          userEmail={formData.email}
         />
       )}
     </div>

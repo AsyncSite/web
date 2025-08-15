@@ -200,7 +200,7 @@ const StudyApplicationPage: React.FC = () => {
       <div className="application-container">
         <div className="application-header">
           <button 
-            onClick={() => navigate(`/study/${study.slug}`)} 
+            onClick={() => navigate('/study')} 
             className="back-button"
           >
             ← 돌아가기
@@ -303,7 +303,7 @@ const StudyApplicationPage: React.FC = () => {
           <div className="form-actions">
             <button 
               type="button" 
-              onClick={() => navigate(`/study/${study.slug}`)}
+              onClick={() => navigate('/study')}
               className="cancel-button"
             >
               취소
