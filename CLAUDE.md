@@ -64,9 +64,35 @@ src/
    - Local storage for game history and statistics
 
 ### Styling Approach
-- Component-specific CSS files (e.g., `Component.css`)
-- GSAP for animations
-- React Intersection Observer for scroll-triggered effects
+
+#### CSS Module Usage (중요)
+**IMPORTANT: Always use CSS Modules for component styling to prevent style conflicts**
+
+1. **CSS Module 사용 원칙**:
+   - 모든 컴포넌트 스타일은 반드시 CSS Module (`.module.css`) 파일로 작성
+   - 인라인 스타일 사용 금지 (동적 스타일이 필요한 경우도 클래스 조합으로 해결)
+   - 예: `Component.module.css` → `styles['class-name']` 또는 `styles.className`
+
+2. **안전한 CSS 작업 방법**:
+   - 전역 스타일 충돌 방지를 위해 항상 module 방식 사용
+   - 클래스명은 구체적이고 의미있게 작성 (예: `button` → `submit-button`)
+   - 스타일 마이그레이션 시 모든 인라인 스타일을 CSS Module로 이동
+   - 호버, 액티브 등 상태 스타일도 CSS로 처리 (`:hover`, `.active` 클래스 활용)
+
+3. **CSS Module 작업 예시**:
+   ```typescript
+   // BAD - 인라인 스타일
+   <button style={{ background: 'linear-gradient(...)' }}>클릭</button>
+   
+   // GOOD - CSS Module
+   import styles from './Component.module.css';
+   <button className={styles['primary-button']}>클릭</button>
+   ```
+
+4. **기존 방식 (일반 CSS)**:
+   - 레거시 컴포넌트만 사용 (점진적으로 module로 마이그레이션)
+   - GSAP for animations
+   - React Intersection Observer for scroll-triggered effects
 
 ### TypeScript Configuration
 - Strict mode enabled (`strict: true`)
@@ -128,6 +154,25 @@ src/
    - `refactor:` for code restructuring
    - `test:` for test additions/changes
    - `chore:` for maintenance tasks
+
+#### 🔄 Incremental Commit Practice (작업 중 커밋 습관)
+**CRITICAL: Commit frequently during work to prevent code loss**
+
+1. **One Sentence, One Commit 원칙**:
+   - 작은 단위로 자주 커밋 (기능 하나, 버그 하나, 리팩토링 하나)
+   - 완료된 작업이 아니어도 의미있는 변경 단위로 커밋
+   - 예: "fix: scroll position bug in modal", "refactor: extract filter logic"
+
+2. **커밋 타이밍**:
+   - TypeScript 컴파일 에러 해결 후
+   - 하나의 컴포넌트 수정 완료 후
+   - CSS Module 마이그레이션 완료 후
+   - 중요한 로직 변경 후
+
+3. **주의사항**:
+   - Push는 신중하게 (완전히 테스트된 후에만)
+   - WIP(Work In Progress) 커밋도 괜찮음 (나중에 squash 가능)
+   - 커밋 메시지는 구체적으로 ("update files" ❌ → "fix: update StudyPage filter logic" ✅)
 
 ### ⚠️ Console.log Usage Guidelines
 
