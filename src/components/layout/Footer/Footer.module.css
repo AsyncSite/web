@@ -8,7 +8,7 @@
   z-index: 1;
 }
 
-.container {
+.footerContainer {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -16,29 +16,18 @@
   z-index: 1;
 }
 
-.footer-logo {
-  margin-bottom: 10px;
-}
-
-.logo-text {
-  font-size: 10px;
-  font-weight: 700;
-  color: #ffffff;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-.footer-copyright {
+.footerCopyright {
   opacity: 0.6;
   color: #ffffff;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
 }
 
-.footer-copyright p {
+.footerCopyright p {
   margin: 0;
 }
 
-.footer-links {
+.footerLinks {
   margin-top: 10px;
   display: flex;
   gap: 10px;
@@ -46,12 +35,12 @@
   align-items: center;
 }
 
-.footer-copyright p {
+.footerCopyright p {
   margin: 5px 0;
   font-size: 14px;
 }
 
-.footer-copyright p:first-child {
+.footerCopyright p:first-child {
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -62,18 +51,6 @@
     padding: 40px 0;
     margin-bottom: 70px;
   }
-  
-
-  
-  .social-links {
-    gap: 15px;
-  }
-  
-  .social-link {
-    width: 35px;
-    height: 35px;
-    font-size: 14px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -82,21 +59,7 @@
     margin-bottom: 60px;
   }
   
-  .footer-copyright p {
+  .footerCopyright p {
     font-size: 12px;
-  }
-  
-  .social-links {
-    gap: 12px;
-  }
-  
-  .social-link {
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
-  }
-  
-  .logo-text {
-    font-size: 18px;
   }
 }

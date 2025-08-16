@@ -1,4 +1,9 @@
-# TODO: 스터디 디테일 페이지의 `.section-title` 글로우 누수 차단
+# [COMPLETED] 스터디 디테일 페이지의 `.section-title` 글로우 누수 차단
+
+## ✅ 해결 완료 (2024-08-14)
+- **해결 방법**: CSS Module 마이그레이션으로 자동 해결됨
+- **커밋**: 9c613bb "Complete CSS Module migration and remove legacy global styles"
+- **검증**: 모든 섹션이 CSS Module 사용으로 전역 스타일 영향 받지 않음
 
 ## 배경
 - 랜딩 전용 글로벌 스타일(`web/src/styles/common-landing.css`)에 `.section-title { text-shadow: 0 0 20px rgba(195, 232, 141, 0.5) }`가 정의되어 있음.

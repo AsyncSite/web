@@ -1,8 +1,28 @@
 # CSS 모듈 마이그레이션 체크리스트
 
-> 작업 시작일: ____년 __월 __일  
-> 작업자: _______________  
-> 진행 상태: [ ] 시작 전 [ ] 진행 중 [ ] 완료
+> 작업 시작일: 2025년 08월 16일  
+> 작업자: AsyncSite Team  
+> 진행 상태: [ ] 시작 전 [X] 진행 중 [ ] 완료  
+> 전략: 페이지 단위 마이그레이션 (Unit 5 Layout부터 시작)
+
+---
+
+## 🚀 현재 진행 중: Unit 5 - Layout 컴포넌트 (2025-08-16)
+
+### 작업 순서 및 진행 상황
+| Step | 컴포넌트 | 상태 | 예상 시간 | 실제 시간 | 담당자 |
+|------|---------|------|----------|----------|--------|
+| 1 | Footer.css | ✅ 완료 | 2시간 | 30분 | 미사용 클래스 제거 완료 |
+| 2 | SubContentsTemplate.css | ⏳ 대기 | 30분 | - | - |
+| 3 | TemplateHeader.css | ⏳ 대기 | 1시간 | - | - |
+| 4 | ScrollNavigation 세트 | ⏳ 대기 | 1.5시간 | - | - |
+| 5 | Header.css | ⏳ 대기 | 3시간 | - | - |
+
+### Unit 5 선택 이유
+- Layout은 모든 페이지에 영향을 주는 핵심 컴포넌트
+- 독립적이고 테스트가 쉬움
+- .container, .logo, .nav 등 충돌 위험 클래스 해결 필요
+- 완료 시 모든 페이지가 안정화됨
 
 ---
 
@@ -50,7 +70,7 @@
 - [ ] Auth 페이지 2개 추가 확인
 
 ### Layout 컴포넌트 (6개)
-- [ ] `Footer/Footer.css` → `.module.css`
+- [X] `Footer/Footer.css` → `.module.css` ✅ 2025-08-16 완료
 - [ ] `Header.css` → `.module.css`
 - [ ] `ScrollNavigation/NavigationLayout.css` → `.module.css`
 - [ ] `ScrollNavigation/ScrollNavigation.css` → `.module.css`
@@ -197,11 +217,15 @@
 
 ## 📝 작업 로그
 
-### 날짜: ____/__/__
-- 작업자: 
-- 완료 항목:
-- 이슈/블로커:
-- 다음 작업:
+### 날짜: 2025/08/16
+- 작업자: AsyncSite Team
+- 완료 항목: Footer.css → Footer.module.css 마이그레이션
+- 이슈/블로커: 
+  - .container 클래스 충돌 → .footerContainer로 변경
+  - React.FC 패턴 → 함수형 컴포넌트로 변경
+  - 미사용 클래스 4개 제거 (footerLogo, logoText, socialLinks, socialLink)
+  - 파일 크기 36% 감소 (102줄 → 65줄)
+- 다음 작업: SubContentsTemplate.css (예상 30분)
 
 ### 날짜: ____/__/__
 - 작업자:
@@ -230,4 +254,4 @@
 ---
 
 *이 체크리스트는 작업 진행에 따라 지속적으로 업데이트됩니다.*  
-*최종 업데이트: ____년 __월 __일*
+*최종 업데이트: 2025년 08월 16일*

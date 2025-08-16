@@ -65,16 +65,29 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
   
+  // 스크롤 위치 저장을 위한 ref
+  const scrollPositionRef = useRef(0);
+  
   // 모바일 메뉴가 열렸을 때 body 스크롤 방지
   useEffect(() => {
     if (isMobileMenuOpen && isMobile) {
+      // 현재 스크롤 위치 저장
+      scrollPositionRef.current = window.scrollY;
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      // 모바일 메뉴가 닫힐 때만 스크롤 위치 복원
+      if (!isMobileMenuOpen && isMobile && scrollPositionRef.current > 0) {
+        window.scrollTo(0, scrollPositionRef.current);
+      }
     }
     
     return () => {
       document.body.style.overflow = '';
+      // cleanup시에도 스크롤 위치 복원
+      if (scrollPositionRef.current > 0) {
+        window.scrollTo(0, scrollPositionRef.current);
+      }
     };
   }, [isMobileMenuOpen, isMobile]);
 

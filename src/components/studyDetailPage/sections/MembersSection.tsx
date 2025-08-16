@@ -145,6 +145,8 @@ const MemberDetailModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = ({ member, isOpen, onClose }) => {
+  // 스크롤 위치 저장을 위한 ref
+  const scrollPositionRef = React.useRef(0);
   
   React.useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
@@ -154,13 +156,19 @@ const MemberDetailModal: React.FC<{
     };
     
     if (isOpen) {
+      // 현재 스크롤 위치 저장
+      scrollPositionRef.current = window.scrollY;
       document.addEventListener('keydown', handleEscKey);
       document.body.style.overflow = 'hidden';
     }
     
     return () => {
       document.removeEventListener('keydown', handleEscKey);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      // 저장된 스크롤 위치로 복원
+      if (!isOpen && scrollPositionRef.current > 0) {
+        window.scrollTo(0, scrollPositionRef.current);
+      }
     };
   }, [isOpen, onClose]);
   

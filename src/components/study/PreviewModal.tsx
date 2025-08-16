@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './PreviewModal.module.css';
 
 interface PreviewModalProps {
@@ -33,6 +33,9 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   formData,
   isSubmitting
 }) => {
+  // 스크롤 위치 저장을 위한 ref
+  const scrollPositionRef = useRef(0);
+  
   // ESC 키로 모달 닫기
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -42,6 +45,8 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
     };
 
     if (isOpen) {
+      // 현재 스크롤 위치 저장
+      scrollPositionRef.current = window.scrollY;
       document.addEventListener('keydown', handleEscape);
       // 배경 스크롤 방지
       document.body.style.overflow = 'hidden';
@@ -50,6 +55,10 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
+      // 저장된 스크롤 위치로 복원
+      if (!isOpen && scrollPositionRef.current > 0) {
+        window.scrollTo(0, scrollPositionRef.current);
+      }
     };
   }, [isOpen, onClose]);
 

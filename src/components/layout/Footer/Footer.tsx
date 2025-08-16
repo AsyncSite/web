@@ -1,14 +1,14 @@
 import React from 'react';
-import './Footer.css';
-import { Link } from 'react-router-dom'; // Link 컴포넌트 import
+import styles from './Footer.module.css';
+import { Link } from 'react-router-dom';
 
-const Footer: React.FC = () => {
+function Footer(): React.ReactNode {
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="footer-copyright">
+    <footer className={styles.footer}>
+      <div className={styles.footerContainer}>
+        <div className={styles.footerCopyright}>
           <p>&copy; 2024 AsyncSite. All rights reserved.</p>
-          <div className="footer-links">
+          <div className={styles.footerLinks}>
             <Link to="/terms">이용약관</Link>
             <span>&nbsp;·&nbsp;</span>
             <Link to="/privacy">개인정보처리방침</Link>
@@ -17,6 +17,6 @@ const Footer: React.FC = () => {
       </div>
     </footer>
   );
-};
+}
 
 export default Footer;

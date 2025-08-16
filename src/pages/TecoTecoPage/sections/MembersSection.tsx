@@ -1,5 +1,5 @@
 // src/pages/TecoTecoPage/sections/MembersSection.tsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { tecotecoMembers, MEMBER_DETAILS } from '../utils/constants';
 import { handleImgError } from '../utils/helpers';
 import { Contributor } from '../utils/types';
@@ -22,6 +22,8 @@ interface MemberDetailModalProps {
 
 const MemberDetailModal: React.FC<MemberDetailModalProps> = ({ member, isOpen, onClose }) => {
   const details = MEMBER_DETAILS[member.name as keyof typeof MEMBER_DETAILS];
+  // 스크롤 위치 저장을 위한 ref
+  const scrollPositionRef = useRef(0);
 
   // ESC 키로 모달 닫기
   useEffect(() => {
@@ -32,6 +34,8 @@ const MemberDetailModal: React.FC<MemberDetailModalProps> = ({ member, isOpen, o
     };
 
     if (isOpen) {
+      // 현재 스크롤 위치 저장
+      scrollPositionRef.current = window.scrollY;
       document.addEventListener('keydown', handleEscKey);
       // 모달이 열릴 때 body 스크롤 방지
       document.body.style.overflow = 'hidden';
@@ -39,7 +43,11 @@ const MemberDetailModal: React.FC<MemberDetailModalProps> = ({ member, isOpen, o
 
     return () => {
       document.removeEventListener('keydown', handleEscKey);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      // 저장된 스크롤 위치로 복원
+      if (!isOpen && scrollPositionRef.current > 0) {
+        window.scrollTo(0, scrollPositionRef.current);
+      }
     };
   }, [isOpen, onClose]);
 
