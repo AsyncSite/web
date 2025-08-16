@@ -14,9 +14,13 @@ const StudyPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState<'list' | 'calendar'>(
+  
+  // 필터와 뷰 상태 분리
+  const [statusFilter, setStatusFilter] = useState<'all' | 'recruiting' | 'upcoming' | 'ongoing' | 'completed'>('all');
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>(
     location.pathname.includes('/calendar') ? 'calendar' : 'list'
   );
+  
   const [studies, setStudies] = useState<Study[]>([]);
   const [myApplications, setMyApplications] = useState<any[]>([]);
   const [myStudies, setMyStudies] = useState<any[]>([]);
@@ -79,17 +83,104 @@ const StudyPage: React.FC = () => {
     return { status: 'none', applicationId: null };
   };
 
+  // 날짜 파싱 헬퍼 함수
+  const parseDate = (date: Date | string | number[] | null | undefined): Date | null => {
+    if (!date) return null;
+    if (date instanceof Date) return date;
+    if (Array.isArray(date)) {
+      const [year, month, day, hour = 0, minute = 0, second = 0] = date;
+      return new Date(year, month - 1, day, hour, minute, second);
+    }
+    return new Date(date as string);
+  };
+
+  const now = new Date();
+  
+  // 각 카테고리별 스터디 필터링
   const recruitingStudies = studies.filter(study => {
-    const displayInfo = getStudyDisplayInfo(study.status, study.deadline?.toISOString());
+    const displayInfo = getStudyDisplayInfo(
+      study.status, 
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+    );
     return displayInfo.canApply;
   });
+  
+  const upcomingStudies = studies.filter(study => {
+    const displayInfo = getStudyDisplayInfo(
+      study.status,
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+    );
+    const startDate = parseDate(study.startDate);
+    return study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now;
+  });
+  
   const ongoingStudies = studies.filter(study => study.status === 'IN_PROGRESS');
-  const closedStudies = studies.filter(study => study.status === 'COMPLETED' || study.status === 'TERMINATED');
+  const completedStudies = studies.filter(study => study.status === 'COMPLETED' || study.status === 'TERMINATED');
+  
+  // 필터에 따른 스터디 목록 결정
+  const getFilteredStudies = () => {
+    switch (statusFilter) {
+      case 'recruiting':
+        return recruitingStudies;
+      case 'upcoming':
+        return upcomingStudies;
+      case 'ongoing':
+        return ongoingStudies;
+      case 'completed':
+        return completedStudies;
+      case 'all':
+      default:
+        return studies.filter(study => study.status === 'APPROVED' || study.status === 'IN_PROGRESS' || study.status === 'COMPLETED');
+    }
+  };
+  
+  const filteredStudies = getFilteredStudies();
+  
+  // 스터디 상태에 따른 배지 클래스 결정
+  const getStatusBadgeClass = (study: Study): string => {
+    const displayInfo = getStudyDisplayInfo(
+      study.status,
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+    );
+    
+    if (displayInfo.canApply) return 'recruiting';
+    if (study.status === 'IN_PROGRESS') return 'ongoing';
+    if (study.status === 'COMPLETED' || study.status === 'TERMINATED') return 'closed';
+    
+    // Upcoming 체크
+    const startDate = parseDate(study.startDate);
+    if (study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now) {
+      return 'upcoming';
+    }
+    
+    return 'closed';
+  };
+  
+  // 스터디 상태 라벨 결정
+  const getStatusLabel = (study: Study): string => {
+    const displayInfo = getStudyDisplayInfo(
+      study.status,
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+    );
+    
+    if (displayInfo.canApply) return '모집중';
+    if (study.status === 'IN_PROGRESS') return '진행중';
+    if (study.status === 'COMPLETED') return '완료';
+    if (study.status === 'TERMINATED') return '종료';
+    
+    // Upcoming 체크
+    const startDate = parseDate(study.startDate);
+    if (study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now) {
+      return '시작예정';
+    }
+    
+    return '마감';
+  };
 
 
-  const handleTabChange = (tab: 'list' | 'calendar') => {
-    setActiveTab(tab);
-    navigate(tab === 'calendar' ? '/study/calendar' : '/study');
+  const handleViewChange = (mode: 'list' | 'calendar') => {
+    setViewMode(mode);
+    navigate(mode === 'calendar' ? '/study/calendar' : '/study');
   };
 
   // 결제 성공 핸들러
@@ -142,69 +233,82 @@ const StudyPage: React.FC = () => {
             <p className={styles['page-description']}>함께 성장하는 개발자들의 커뮤니티</p>
           
             {/* Study Actions */}
-            <div className={styles['study-actions']} style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '20px',
-              marginBottom: '30px'
-            }}>
+            <div className={styles['study-actions']}>
               <button 
                 onClick={() => navigate('/study/propose')} 
                 className={styles['propose-study-btn']}
-                style={{
-                  padding: '12px 24px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  color: '#1a1a1a',
-                  background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 15px rgba(195, 232, 141, 0.3)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(195, 232, 141, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(195, 232, 141, 0.3)';
-                }}
               >
                 💡 스터디 제안하기
               </button>
             </div>
           
-            {/* Tab Navigation */}
-            <div className={styles['tab-navigation']}>
-              <button
-                className={`${styles['tab-button']} ${activeTab === 'list' ? styles.active : ''}`}
-                onClick={() => handleTabChange('list')}
-              >
-                <span className={styles['tab-icon']}>📚</span>
-                스터디 목록
-              </button>
-              <button
-                className={`${styles['tab-button']} ${activeTab === 'calendar' ? styles.active : ''}`}
-                onClick={() => handleTabChange('calendar')}
-              >
-                <span className={styles['tab-icon']}>📅</span>
-                일정 캘린더
-              </button>
+            {/* Filter and View Bar */}
+            <div className={styles['filter-view-bar']}>
+              {/* Status Filters */}
+              <div className={styles['filter-group']}>
+                <button
+                  className={`${styles['filter-button']} ${statusFilter === 'all' ? styles.active : ''}`}
+                  onClick={() => setStatusFilter('all')}
+                >
+                  전체
+                </button>
+                <button
+                  className={`${styles['filter-button']} ${statusFilter === 'recruiting' ? styles.active : ''}`}
+                  onClick={() => setStatusFilter('recruiting')}
+                >
+                  <span className={styles['filter-icon']}>📢</span>
+                  모집중
+                </button>
+                <button
+                  className={`${styles['filter-button']} ${statusFilter === 'upcoming' ? styles.active : ''}`}
+                  onClick={() => setStatusFilter('upcoming')}
+                >
+                  <span className={styles['filter-icon']}>⏳</span>
+                  시작예정
+                </button>
+                <button
+                  className={`${styles['filter-button']} ${statusFilter === 'ongoing' ? styles.active : ''}`}
+                  onClick={() => setStatusFilter('ongoing')}
+                >
+                  <span className={styles['filter-icon']}>🚀</span>
+                  진행중
+                </button>
+                <button
+                  className={`${styles['filter-button']} ${statusFilter === 'completed' ? styles.active : ''}`}
+                  onClick={() => setStatusFilter('completed')}
+                >
+                  <span className={styles['filter-icon']}>🏁</span>
+                  완료
+                </button>
+              </div>
+              
+              {/* View Mode Toggle */}
+              <div className={styles['view-toggle']}>
+                <button
+                  className={`${styles['view-button']} ${viewMode === 'list' ? styles.active : ''}`}
+                  onClick={() => handleViewChange('list')}
+                >
+                  <span className={styles['view-icon']}>📚</span>
+                  목록
+                </button>
+                <button
+                  className={`${styles['view-button']} ${viewMode === 'calendar' ? styles.active : ''}`}
+                  onClick={() => handleViewChange('calendar')}
+                >
+                  <span className={styles['view-icon']}>📅</span>
+                  캘린더
+                </button>
+              </div>
             </div>
           
-          {/* Tab Content */}
-          {activeTab === 'list' ? (
+          {/* View Content */}
+          {viewMode === 'list' ? (
             loading ? (
               <div className={styles['loading-state']}>
                 <div className={styles['loading-spinner']}>⏳</div>
                 <p>스터디를 불러오는 중...</p>
               </div>
-            ) : (recruitingStudies.length === 0 && ongoingStudies.length === 0 && closedStudies.length === 0) ? (
+            ) : filteredStudies.length === 0 ? (
               <EmptyState
                 icon="📚"
                 title="아직 등록된 스터디가 없어요"
@@ -216,11 +320,16 @@ const StudyPage: React.FC = () => {
               />
             ) :
             <>
-              {recruitingStudies.length > 0 && (
-                <section className={styles['study-section']}>
-                  <h2>📢 모집 중인 스터디</h2>
-                  <div className={styles['study-grid']}>
-                    {recruitingStudies.map(study => (
+              {/* 필터에 따른 동적 렌더링 */}
+              <section className={styles['study-section']}>
+                {statusFilter === 'all' && <h2>전체 스터디</h2>}
+                {statusFilter === 'recruiting' && <h2>📢 모집 중인 스터디</h2>}
+                {statusFilter === 'upcoming' && <h2>⏳ 시작 예정 스터디</h2>}
+                {statusFilter === 'ongoing' && <h2>🚀 진행 중인 스터디</h2>}
+                {statusFilter === 'completed' && <h2>🏁 완료된 스터디</h2>}
+                
+                <div className={styles['study-grid']}>
+                  {filteredStudies.map(study => (
                       <div key={study.id} className={styles['study-card-wrapper']}>
                         <Link to={`/study/${study.slug}`} className={styles['study-card-link']}>
                           <div className={styles['study-card']}>
@@ -229,7 +338,9 @@ const StudyPage: React.FC = () => {
                                 {study.name}
                                 {study.generation > 1 && <span className={styles.generation}>{study.generation}기</span>}
                               </h3>
-                              <span className={`${styles['status-badge']} ${styles.recruiting}`}>모집중</span>
+                              <span className={`${styles['status-badge']} ${styles[getStatusBadgeClass(study)]}`}>
+                                {getStatusLabel(study)}
+                              </span>
                             </div>
                             <p className={styles['study-tagline']}>{study.tagline}</p>
                             <div className={styles['study-meta']}>
@@ -253,27 +364,6 @@ const StudyPage: React.FC = () => {
                                     navigate(`/study/${study.slug}/manage`);
                                   }}
                                   className={styles['manage-button']}
-                                  style={{
-                                    background: 'linear-gradient(135deg, #89DDFF 0%, #C3E88D 100%)',
-                                    border: 'none',
-                                    color: '#1a1a1a',
-                                    padding: '8px 16px',
-                                    borderRadius: '6px',
-                                    cursor: 'pointer',
-                                    fontSize: '14px',
-                                    fontWeight: '600',
-                                    transition: 'all 0.3s ease',
-                                    marginTop: '12px',
-                                    width: '100%'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(-1px)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(137, 221, 255, 0.3)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = 'none';
-                                  }}
                                 >
                                   🎛️ 스터디 관리
                                 </button>
@@ -288,20 +378,7 @@ const StudyPage: React.FC = () => {
                               return (
                                 <button 
                                   disabled
-                                  className={styles['apply-button']}
-                                  style={{
-                                    background: 'linear-gradient(135deg, #4caf50 0%, #45a049 100%)',
-                                    border: 'none',
-                                    color: 'white',
-                                    padding: '8px 16px',
-                                    borderRadius: '6px',
-                                    cursor: 'default',
-                                    fontSize: '14px',
-                                    fontWeight: '600',
-                                    marginTop: '12px',
-                                    width: '100%',
-                                    opacity: 0.9
-                                  }}
+                                  className={`${styles['apply-button']} ${styles['apply-button-member']}`}
                                 >
                                   ✅ 참여 중
                                 </button>
@@ -311,22 +388,10 @@ const StudyPage: React.FC = () => {
                             // 신청 대기 중인 경우
                             if (userStatus.status === 'pending') {
                               return (
-                                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                                <div className={styles['application-actions']}>
                                   <button 
                                     disabled
-                                    className={styles['apply-button']}
-                                    style={{
-                                      background: '#888',
-                                      border: 'none',
-                                      color: 'white',
-                                      padding: '8px 16px',
-                                      borderRadius: '6px',
-                                      cursor: 'not-allowed',
-                                      fontSize: '14px',
-                                      fontWeight: '600',
-                                      flex: 1,
-                                      opacity: 0.7
-                                    }}
+                                    className={`${styles['apply-button']} ${styles['apply-button-pending']}`}
                                   >
                                     ⏳ 심사 대기중
                                   </button>
@@ -346,25 +411,6 @@ const StudyPage: React.FC = () => {
                                       }
                                     }}
                                     className={styles['cancel-button']}
-                                    style={{
-                                      background: 'transparent',
-                                      border: '1px solid #ff6b6b',
-                                      color: '#ff6b6b',
-                                      padding: '8px 12px',
-                                      borderRadius: '6px',
-                                      cursor: 'pointer',
-                                      fontSize: '14px',
-                                      fontWeight: '600',
-                                      transition: 'all 0.2s'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                      e.currentTarget.style.background = '#ff6b6b';
-                                      e.currentTarget.style.color = 'white';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      e.currentTarget.style.background = 'transparent';
-                                      e.currentTarget.style.color = '#ff6b6b';
-                                    }}
                                   >
                                     취소
                                   </button>
@@ -380,28 +426,7 @@ const StudyPage: React.FC = () => {
                                     e.preventDefault();
                                     navigate(`/study/${study.slug}/apply`);
                                   }}
-                                  className={styles['apply-button']}
-                                  style={{
-                                    background: 'linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%)',
-                                    border: 'none',
-                                    color: 'white',
-                                    padding: '8px 16px',
-                                    borderRadius: '6px',
-                                    cursor: 'pointer',
-                                    fontSize: '14px',
-                                    fontWeight: '600',
-                                    transition: 'all 0.3s ease',
-                                    marginTop: '12px',
-                                    width: '100%'
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(-1px)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 107, 107, 0.3)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = 'none';
-                                  }}
+                                  className={`${styles['apply-button']} ${styles['apply-button-rejected']}`}
                                 >
                                   🔄 재신청하기
                                 </button>
@@ -415,28 +440,7 @@ const StudyPage: React.FC = () => {
                                   e.preventDefault();
                                   navigate(`/study/${study.slug}/apply`);
                                 }}
-                                className="apply-button"
-                                style={{
-                                  background: 'linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%)',
-                                  border: 'none',
-                                  color: '#1a1a1a',
-                                  padding: '8px 16px',
-                                  borderRadius: '6px',
-                                  cursor: 'pointer',
-                                  fontSize: '14px',
-                                  fontWeight: '600',
-                                  transition: 'all 0.3s ease',
-                                  marginTop: '12px',
-                                  width: '100%'
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.transform = 'translateY(-1px)';
-                                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(195, 232, 141, 0.3)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.transform = 'translateY(0)';
-                                  e.currentTarget.style.boxShadow = 'none';
-                                }}
+                                className={styles['apply-button']}
                               >
                                 📝 참가 신청하기
                               </button>
@@ -447,74 +451,15 @@ const StudyPage: React.FC = () => {
                     ))}
                   </div>
                 </section>
-              )}
-
-              {ongoingStudies.length > 0 && (
-                <section className={styles['study-section']}>
-                  <h2>🚀 진행 중인 스터디</h2>
-                  <div className={styles['study-grid']}>
-                    {ongoingStudies.map(study => (
-                      <Link to={`/study/${study.slug}`} key={study.id} className={styles['study-card-link']}>
-                        <div className={styles['study-card']}>
-                          <div className="study-header">
-                            <h3>
-                              {study.name}
-                              {study.generation > 1 && <span className="generation">{study.generation}기</span>}
-                            </h3>
-                            <span className={`${styles['status-badge']} ${styles.ongoing}`}>진행중</span>
-                          </div>
-                          <p className="study-tagline">{study.tagline}</p>
-                          <div className="study-meta">
-                            {study.schedule && study.schedule !== '매주 수요일' && (
-                              <span>📅 {study.schedule} {study.duration && study.duration !== '19:00-21:00' && study.duration}</span>
-                            )}
-                            {study.enrolled > 0 && (
-                              <span>👥 {study.enrolled}명 참여중</span>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {closedStudies.length > 0 && (
-                <section className={styles['study-section']}>
-                  <h2>🏁 종료된 스터디</h2>
-                  <div className={styles['study-grid']}>
-                    {closedStudies.map(study => (
-                      <div key={study.id} className={`${styles['study-card']} ${styles.disabled}`}>
-                        <div className="study-header">
-                          <h3>
-                            {study.name}
-                            {study.generation > 1 && <span className="generation">{study.generation}기</span>}
-                          </h3>
-                          <span className={`${styles['status-badge']} ${styles.closed}`}>종료</span>
-                        </div>
-                        <p className="study-tagline">{study.tagline}</p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
 
               {/* 결제 시스템 테스트 섹션 (임시) */}
-              <div className={styles['payment-test-section']} style={{
-                marginTop: '40px',
-                padding: '24px',
-                background: 'rgba(195, 232, 141, 0.05)',
-                border: '1px solid rgba(195, 232, 141, 0.2)',
-                borderRadius: '16px',
-                minHeight: 'auto',
-                width: '100%'
-              }}>
-                <h2 style={{ color: '#c3e88d', marginBottom: '16px' }}>💳 결제 시스템 테스트</h2>
-                <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '24px' }}>
+              <div className={styles['payment-test-section']}>
+                <h2>💳 결제 시스템 테스트</h2>
+                <p className={styles['payment-test-description']}>
                   통합 결제 UI를 테스트해보세요. 실제 결제는 이루어지지 않습니다.
                 </p>
 
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <div className={styles['payment-buttons']}>
                   {/* 다양한 스타일의 결제 버튼 */}
                   <PaymentButton
                     variant="primary"
@@ -555,7 +500,7 @@ const StudyPage: React.FC = () => {
                   />
                 </div>
 
-                <div style={{ marginTop: '24px', fontSize: '13px', color: 'rgba(255, 255, 255, 0.5)' }}>
+                <div className={styles['payment-test-notes']}>
                   <p>💡 이 버튼들은 나중에 스터디 상세 페이지나 AI 이력서 서비스에서 사용됩니다.</p>
                   <p>💡 토스페이먼츠 테스트 모드로 동작하며, 실제 결제는 이루어지지 않습니다.</p>
                 </div>
