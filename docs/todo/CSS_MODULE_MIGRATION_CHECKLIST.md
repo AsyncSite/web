@@ -7,22 +7,28 @@
 
 ---
 
-## 🚀 현재 진행 중: Unit 5 - Layout 컴포넌트 (2025-08-16)
+## 🚀 현재 상황: 스터디 제안 플로우 분석 완료 (2025-08-16)
 
-### 작업 순서 및 진행 상황
-| Step | 컴포넌트 | 상태 | 예상 시간 | 실제 시간 | 담당자 |
-|------|---------|------|----------|----------|--------|
-| 1 | Footer.css | ✅ 완료 | 2시간 | 30분 | 미사용 클래스 제거 완료 |
-| 2 | LoadingSpinner.css | ✅ 완료 | 20분 | 20분 | Common 컴포넌트 |
-| 3 | TemplateHeader.css | ⏳ 대기 | 1시간 | - | - |
-| 4 | ScrollNavigation 세트 | ⏳ 대기 | 1.5시간 | - | - |
-| 5 | Header.css | ⏳ 대기 | 3시간 | - | - |
+### 완료된 작업
+| 컴포넌트 | 상태 | 실제 시간 | 주요 이슈 |
+|---------|------|----------|----------|
+| Footer.css | ✅ 완료 | 30분 | 미사용 클래스 4개 제거, 36% 크기 감소 |
+| LoadingSpinner.css | ✅ 완료 | 40분 | fullscreen 클래스 수정, 6곳 사용 확인 |
+| ErrorMessage | ❌ 삭제 | 10분 | 완전 미사용 컴포넌트 (145줄 제거) |
 
-### Unit 5 선택 이유
-- Layout은 모든 페이지에 영향을 주는 핵심 컴포넌트
-- 독립적이고 테스트가 쉬움
-- .container, .logo, .nav 등 충돌 위험 클래스 해결 필요
-- 완료 시 모든 페이지가 안정화됨
+### 다음 우선순위: 스터디 제안 플로우 (총 1,455줄)
+| 컴포넌트 | CSS 크기 | 우선순위 | 사용처 |
+|---------|---------|---------|--------|
+| GenerationSelector | 94줄 | 1 | Step 1 |
+| TimePickerCustom | 174줄 | 2 | Step 2 |
+| DatePickerCustom | 231줄 | 3 | Step 2 |
+| DurationSelector | 302줄 | 4 | Step 2 |
+| StudyProposalPageV2 | 654줄 | 5 | 메인 페이지 |
+
+### 전략 변경 사유
+- 스터디 제안 플로우가 더 독립적이고 영향 범위가 명확함
+- 1,455줄의 대규모 작업이지만 기능이 명확히 구분됨
+- 하위 컴포넌트부터 작업하면 점진적 마이그레이션 가능
 
 ---
 
@@ -211,7 +217,7 @@
 | Phase 5 (Lab) | 50+ | 0 | 0% | | |
 | Phase 6 (Cleanup) | 10 | 0 | 0% | | |
 | Phase 7 (QA) | 12 | 0 | 0% | | |
-| **총계** | **121+** | **2** | **1.7%** | | TecoTeco 제외 |
+| **총계** | **167** | **2** | **1.2%** | | 실제 CSS 파일 수 확인됨 |
 
 ---
 
@@ -231,12 +237,25 @@
 - 작업자: AsyncSite Team
 - 완료 항목: 
   - LoadingSpinner.css → LoadingSpinner.module.css
-  - ErrorMessage 컴포넌트 삭제 (미사용)
-  - 미사용 LoadingSpinner import 3개 제거
+  - ErrorMessage 컴포넌트 삭제 (미사용 - 145줄 제거)
+  - LoadingSpinner import 실수 복구 (6곳 실제 사용 확인)
 - 이슈/블로커: 
   - .fullscreen 클래스에 display 속성 추가 필요 (해결됨)
-  - PrivateRoute에서만 실제 사용 중
-- 다음 작업: Toast.css 또는 ConfirmModal.css
+  - 미사용 import 제거 시 실제 사용처 확인 필수
+- 실제 사용처: PrivateRoute, ReviewList, StudyManagementPage(2곳), StudyDetailPageRenderer, sections/index
+- 다음 작업: 스터디 제안 플로우 관련 컴포넌트
+
+### 날짜: 2025/08/16 (저녁)
+- 작업자: AsyncSite Team
+- 분석 항목:
+  - 스터디 제안 플로우 CSS 현황 파악
+  - StudyProposalPageV2.css (654줄) + 하위 컴포넌트 (801줄) = 총 1,455줄
+  - Study 관련 컴포넌트 8개 중 7개가 일반 CSS
+- 발견 사항:
+  - StudyPage, StudyManagementPage는 이미 CSS Module
+  - StudyProposalPageV2, StudyApplicationPage, ReviewWritePage는 일반 CSS
+  - DatePicker, TimePicker, DurationSelector 등 하위 컴포넌트도 마이그레이션 필요
+- 권장 순서: 하위 컴포넌트 먼저 → 메인 페이지 나중
 
 ### 날짜: ____/__/__
 - 작업자:
