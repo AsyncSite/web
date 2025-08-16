@@ -13,7 +13,7 @@
 | Step | 컴포넌트 | 상태 | 예상 시간 | 실제 시간 | 담당자 |
 |------|---------|------|----------|----------|--------|
 | 1 | Footer.css | ✅ 완료 | 2시간 | 30분 | 미사용 클래스 제거 완료 |
-| 2 | SubContentsTemplate.css | ⏳ 대기 | 30분 | - | - |
+| 2 | LoadingSpinner.css | ✅ 완료 | 20분 | 20분 | Common 컴포넌트 |
 | 3 | TemplateHeader.css | ⏳ 대기 | 1시간 | - | - |
 | 4 | ScrollNavigation 세트 | ⏳ 대기 | 1.5시간 | - | - |
 | 5 | Header.css | ⏳ 대기 | 3시간 | - | - |
@@ -46,9 +46,9 @@
 
 ### Common 컴포넌트 (11개) - **즉시 작업 필요**
 - [ ] `ConfirmModal.css` → `.module.css`
-- [ ] `ErrorMessage.css` → `.module.css`
+- ~[ ] `ErrorMessage.css` → `.module.css`~ ❌ 삭제됨 (2025-08-16)
 - [ ] `InputModal.css` → `.module.css`
-- [ ] `LoadingSpinner.css` → `.module.css`
+- [X] `LoadingSpinner.css` → `.module.css` ✅ 2025-08-16 완료
 - [ ] `Modal/Modal.css` → `.module.css`
 - [ ] `RichTextDisplay.css` → `.module.css`
 - [ ] `RichTextEditor.css` → `.module.css`
@@ -205,13 +205,13 @@
 | Phase | 전체 | 완료 | 진행률 | 담당자 | 메모 |
 |-------|------|------|--------|--------|------|
 | Phase 1 (준비) | 5 | 0 | 0% | | |
-| Phase 2 (Common) | 11 | 0 | 0% | | Critical |
-| Phase 3 (Auth/Layout) | 13 | 0 | 0% | | Critical/High |
+| Phase 2 (Common) | 10 | 1 | 10% | | Critical |
+| Phase 3 (Auth/Layout) | 13 | 1 | 7.7% | | Critical/High |
 | Phase 4 (Pages) | 22+ | 0 | 0% | | |
 | Phase 5 (Lab) | 50+ | 0 | 0% | | |
 | Phase 6 (Cleanup) | 10 | 0 | 0% | | |
 | Phase 7 (QA) | 12 | 0 | 0% | | |
-| **총계** | **123+** | **0** | **0%** | | TecoTeco 제외 |
+| **총계** | **121+** | **2** | **1.7%** | | TecoTeco 제외 |
 
 ---
 
@@ -226,6 +226,17 @@
   - 미사용 클래스 4개 제거 (footerLogo, logoText, socialLinks, socialLink)
   - 파일 크기 36% 감소 (102줄 → 65줄)
 - 다음 작업: SubContentsTemplate.css (예상 30분)
+
+### 날짜: 2025/08/16 (오후)
+- 작업자: AsyncSite Team
+- 완료 항목: 
+  - LoadingSpinner.css → LoadingSpinner.module.css
+  - ErrorMessage 컴포넌트 삭제 (미사용)
+  - 미사용 LoadingSpinner import 3개 제거
+- 이슈/블로커: 
+  - .fullscreen 클래스에 display 속성 추가 필요 (해결됨)
+  - PrivateRoute에서만 실제 사용 중
+- 다음 작업: Toast.css 또는 ConfirmModal.css
 
 ### 날짜: ____/__/__
 - 작업자:

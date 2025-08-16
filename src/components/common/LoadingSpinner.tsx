@@ -1,5 +1,5 @@
 import React from 'react';
-import './LoadingSpinner.css';
+import styles from './LoadingSpinner.module.css';
 
 interface LoadingSpinnerProps {
   message?: string;
@@ -8,22 +8,22 @@ interface LoadingSpinnerProps {
 
 function LoadingSpinner({ message = '로딩 중...', fullScreen = true }: LoadingSpinnerProps): React.ReactNode {
   const content = (
-    <div className="loading-spinner-content">
-      <div className="loading-spinner-circle" />
-      <p className="loading-spinner-message">{message}</p>
+    <div className={styles['loading-spinner-content']}>
+      <div className={styles['loading-spinner-circle']} />
+      <p className={styles['loading-spinner-message']}>{message}</p>
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div className="loading-spinner-container fullscreen">
+      <div className={`${styles['loading-spinner-container']} ${styles.fullscreen}`}>
         {content}
       </div>
     );
   }
 
   return (
-    <div className="loading-spinner-container">
+    <div className={styles['loading-spinner-container']}>
       {content}
     </div>
   );
