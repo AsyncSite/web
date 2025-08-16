@@ -36,11 +36,40 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     const fetchStudies = async () => {
       try {
         const allStudies = await studyService.getAllStudies();
-        // 모집 중이거나 진행 중인 스터디만 필터링하고 최대 3개까지
+        const now = new Date();
+        
+        // 날짜 파싱 헬퍼 함수
+        const parseDate = (date: Date | string | number[] | null | undefined): Date | null => {
+          if (!date) return null;
+          if (date instanceof Date) return date;
+          if (Array.isArray(date)) {
+            const [year, month, day, hour = 0, minute = 0, second = 0] = date;
+            return new Date(year, month - 1, day, hour, minute, second);
+          }
+          return new Date(date as string);
+        };
+        
+        // 모집 중, 시작 예정, 진행 중인 스터디 필터링하고 최대 3개까지
         const activeStudies = allStudies
           .filter(study => {
-            const displayInfo = getStudyDisplayInfo(study.status, study.deadline?.toISOString());
-            return displayInfo.canApply || study.status === 'IN_PROGRESS';
+            const displayInfo = getStudyDisplayInfo(
+              study.status, 
+              study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+            );
+            
+            // 모집중
+            if (displayInfo.canApply) return true;
+            
+            // 진행중
+            if (study.status === 'IN_PROGRESS') return true;
+            
+            // 시작예정 (모집 마감됐지만 아직 시작 안함)
+            const startDate = parseDate(study.startDate);
+            if (study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now) {
+              return true;
+            }
+            
+            return false;
           })
           .slice(0, 3);
         setStudies(activeStudies);
