@@ -27,19 +27,43 @@ const Studies: React.FC = () => {
         setError(null);
         
         const allStudies = await studyService.getAllStudies();
-        // 활성 스터디: 모집 중이거나 진행 중인 스터디
+        const now = new Date();
+        
+        // 날짜 파싱 헬퍼 함수
+        const parseDate = (date: Date | string | number[] | null | undefined): Date | null => {
+          if (!date) return null;
+          if (date instanceof Date) return date;
+          if (Array.isArray(date)) {
+            const [year, month, day, hour = 0, minute = 0, second = 0] = date;
+            return new Date(year, month - 1, day, hour, minute, second);
+          }
+          return new Date(date as string);
+        };
+        
+        // 활성 스터디: 모집 중, 시작 예정, 진행 중인 스터디
         const activeStudies = allStudies.filter(study => {
           const displayInfo = getStudyDisplayInfo(
             study.status,
-            study.deadline?.toISOString()
+            study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
           );
-          return displayInfo.canApply || displayInfo.isActive;
+          
+          // 모집중 또는 진행중
+          if (displayInfo.canApply || displayInfo.isActive) return true;
+          
+          // 시작예정 (모집 마감됐지만 아직 시작 안함)
+          const startDate = parseDate(study.startDate);
+          if (study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now) {
+            return true;
+          }
+          
+          return false;
         });
+        
         // 모집 중인 스터디만
         const recruitingOnly = allStudies.filter(study => {
           const displayInfo = getStudyDisplayInfo(
             study.status,
-            study.deadline?.toISOString()
+            study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
           );
           return displayInfo.canApply;
         });
