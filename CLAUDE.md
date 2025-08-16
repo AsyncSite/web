@@ -125,16 +125,109 @@ src/
 * Use proper type assertions
 * Test edge cases and error scenarios
 
+### Verification Workflow
+
+**MANDATORY: Run before every commit**
+
+```bash
+# 1. TypeScript compilation check
+npx tsc --noEmit
+
+# 2. Run tests
+npm test -- --watchAll=false
+
+# 3. Check for console errors (manual)
+# Open browser console and verify no errors
+
+# 4. Verify affected features (manual)
+# Test the specific user flows you modified
+```
+
+### Cross-Component Impact Testing
+
+When modifying shared components or utilities:
+
+1. **Identify Consumers**:
+   ```bash
+   # Find all files using the component
+   grep -r "ComponentName" src/ --include="*.tsx" --include="*.ts"
+   ```
+
+2. **Test Each Consumer**:
+   - Navigate to each page using the component
+   - Verify functionality still works
+   - Check for console errors
+   - Test on mobile viewport
+
+3. **Regression Prevention**:
+   - If same bug appears in multiple places, create shared test
+   - Document the testing steps in PR description
+
 ---
 
 ## Code Quality Standards
 
 ### Pre-commit Checklist
-1. All TypeScript errors resolved
-2. Tests passing
+1. All TypeScript errors resolved (`npx tsc --noEmit`)
+2. Tests passing (`npm test`)
 3. No console.log statements in production code
 4. All imports are used
 5. No any types unless absolutely necessary
+6. **Impact Analysis**: Search for all usages before modifying shared components (`grep -r "ComponentName"`)
+7. **Related Components Check**: Verify all dependent components still work
+8. **Console Errors**: Check browser console for runtime errors
+9. **Mobile Responsiveness**: Test on mobile viewport (< 768px)
+10. **Network Requests**: Verify API calls are working correctly
+
+### 🔄 Work Continuity & Collaboration
+
+**CRITICAL: Maintain work continuity across sessions and collaborators**
+
+#### Task Management
+1. **Use TodoWrite for Complex Tasks**: Any multi-step work MUST be tracked
+2. **Document Breakpoints**: When stopping work, document:
+   - Current state
+   - Next steps needed
+   - Any blockers or decisions pending
+3. **Git Stash for WIP**: Use `git stash save "WIP: description"` for incomplete work
+
+#### Knowledge Sharing
+1. **Decision Documentation**: Record WHY decisions were made, not just WHAT
+   ```typescript
+   // ❌ Bad
+   const TIMEOUT = 5000;
+   
+   // ✅ Good  
+   // Using 5s timeout based on P95 response time from monitoring
+   const TIMEOUT = 5000;
+   ```
+
+2. **Trap Documentation**: Document discovered issues immediately
+   ```typescript
+   // ⚠️ TRAP: Don't use study.deadline directly - it might be an array
+   // Always use: deadline instanceof Date ? deadline.toISOString() : deadline
+   ```
+
+#### Collaboration Protocol
+1. **Before Major Changes**:
+   - Search for all usages of the component/function
+   - Check if similar logic exists elsewhere
+   - Consider creating a shared utility
+
+2. **After Completing Work**:
+   - Update related components for consistency
+   - Run full TypeScript check
+   - Test affected user flows
+
+### 🚨 Code Health Indicators
+
+**Red Flags requiring immediate action:**
+- Same code duplicated in 3+ places → Extract to utility
+- Component managing 5+ state variables → Split into smaller components
+- Inline styles exceeding 10 lines → Migrate to CSS Module
+- File exceeding 500 lines → Consider refactoring
+- Any `any` type usage → Define proper types
+- Console.log in committed code → Remove immediately
 
 ### 📝 Git Commit Message Guidelines
 
@@ -210,10 +303,35 @@ The code in this repository aims for the highest standards of readability, maint
 * **기존 코드의 점진적 개선 (Incremental Improvement of Existing Code)**: 기능을 개선하거나 리팩토링할 때, 기존 클래스를 복사하여 `MyClass-enhanced` 와 같이 `-enhanced` 접미사를 붙인 새 클래스를 만드는 방식을 **엄격히 금지합니다.** 개선 작업은 기존 코드베이스 위에서 직접 이루어져야 합니다. 이는 코드의 중복을 막고, 히스토리 추적을 용이하게 하며, 시스템의 복잡성을 낮추기 위함입니다.
 * **Single Responsibility Principle (SRP)**: Keep functions and components concise and focused on a single responsibility. If a component or function handles multiple tasks, actively consider refactoring it into smaller, more specialized units.
 * **File Length and Refactoring** 📏: As a practical extension of SRP, pay close attention to file length.
+  * If a file exceeds **500 lines**, review for potential splitting opportunities
   * If a file exceeds **1,000 lines**, it should be reviewed as a strong indicator that it has multiple responsibilities and should be considered for refactoring.
   * If a file exceeds **1,500 lines**, its refactoring **must be treated as a top-priority task**.
 * **Consistent Style**: Maintain a consistent coding style and formatting across the entire project. This helps other developers read and understand the code more easily.
 * **Purposeful Comments**: Code should be as self-documenting as possible. However, add clear comments to explain complex business logic or the reasoning behind specific implementation choices (the "why," not just the "what").
+
+### DRY (Don't Repeat Yourself) 원칙
+
+**CRITICAL: 같은 로직은 한 곳에서만 관리**
+
+1. **Utility Functions 중앙화**:
+   ```typescript
+   // ❌ Bad: Header.tsx와 StudyPage.tsx에 각각 parseDate 함수 중복
+   
+   // ✅ Good: utils/dateUtils.ts
+   export const parseDate = (date: Date | string | number[] | null): Date | null => {
+     // 공통 구현
+   };
+   ```
+
+2. **Business Logic 분리**:
+   - 필터링 로직, 상태 판단 로직은 utils로 분리
+   - 예: `getStudyDisplayInfo`, `parseDate` → utils 폴더
+   - UI 컴포넌트는 로직을 import해서 사용
+
+3. **검증 방법**:
+   - 새 기능 구현 전: 유사 기능 검색 (`grep -r "similar_function"`)
+   - 복사-붙여넣기 전: 공통 함수로 추출 고려
+   - 3회 이상 반복: 즉시 리팩토링
 
 
 ### Object-Oriented and Component-Based Design
@@ -269,6 +387,32 @@ Frontend development **must follow a scalable, feature-based architecture** to e
     return <button onClick={onClick}>{label}</button>;
   }
   ```
+
+#### Component Scalability Guidelines
+
+1. **Component Size Limits**:
+   - **Soft limit**: 200 lines → Consider splitting
+   - **Hard limit**: 500 lines → Must split
+   - Extract sub-components, custom hooks, or utilities
+
+2. **State Management Scalability**:
+   - 1-3 state variables: useState is fine
+   - 4-6 state variables: Consider useReducer
+   - 7+ state variables: Split component or use state management library
+
+3. **Props Drilling Prevention**:
+   - Max 2 levels of prop passing
+   - Use Context or composition for deeper needs
+   - Consider state management library for complex cases
+
+4. **Performance Monitoring**:
+   ```typescript
+   // Add performance marks for critical components
+   useEffect(() => {
+     performance.mark('StudyPage-mount');
+     return () => performance.mark('StudyPage-unmount');
+   }, []);
+   ```
 
 #### Custom Hooks Best Practices
 
