@@ -16,14 +16,14 @@
 | LoadingSpinner.css | ✅ 완료 | 40분 | fullscreen 클래스 수정, 6곳 사용 확인 |
 | ErrorMessage | ❌ 삭제 | 10분 | 완전 미사용 컴포넌트 (145줄 제거) |
 
-### 다음 우선순위: 스터디 제안 플로우 (총 1,455줄)
+### ~~다음 우선순위: 스터디 제안 플로우 (총 1,455줄)~~ ✅ 완료 (2025-08-17)
 | 컴포넌트 | CSS 크기 | 우선순위 | 사용처 |
 |---------|---------|---------|--------|
 | GenerationSelector | 94줄 | 1 | Step 1 |
 | TimePickerCustom | 174줄 | 2 | Step 2 |
 | DatePickerCustom | 231줄 | 3 | Step 2 |
 | DurationSelector | 302줄 | 4 | Step 2 |
-| StudyProposalPageV2 | 654줄 | 5 | 메인 페이지 |
+| StudyProposalPageV2 | 654줄 | 5 | ✅ 완료 |
 
 ### 전략 변경 사유
 - 스터디 제안 플로우가 더 독립적이고 영향 범위가 명확함
@@ -100,7 +100,7 @@
 
 ### 기타 페이지 (15개+)
 - [ ] `StudyApplicationPage.css` → `.module.css`
-- [ ] `StudyProposalPageV2.css` → `.module.css`
+- [X] `StudyProposalPageV2.css` → `.module.css` ✅ 2025-08-17 완료
 - [ ] `ReviewWritePage.css` → `.module.css`
 - [ ] `PolicyPage.css` → `.module.css`
 - [ ] `LabPage.css` → `.module.css`
@@ -213,11 +213,11 @@
 | Phase 1 (준비) | 5 | 0 | 0% | | |
 | Phase 2 (Common) | 10 | 1 | 10% | | Critical |
 | Phase 3 (Auth/Layout) | 13 | 1 | 7.7% | | Critical/High |
-| Phase 4 (Pages) | 22+ | 0 | 0% | | |
+| Phase 4 (Pages) | 22+ | 1 | 4.5% | | StudyProposalPageV2 완료 |
 | Phase 5 (Lab) | 50+ | 0 | 0% | | |
 | Phase 6 (Cleanup) | 10 | 0 | 0% | | |
 | Phase 7 (QA) | 12 | 0 | 0% | | |
-| **총계** | **167** | **2** | **1.2%** | | 실제 CSS 파일 수 확인됨 |
+| **총계** | **167** | **3** | **1.8%** | | 실제 CSS 파일 수 확인됨 |
 
 ---
 
@@ -256,6 +256,24 @@
   - StudyProposalPageV2, StudyApplicationPage, ReviewWritePage는 일반 CSS
   - DatePicker, TimePicker, DurationSelector 등 하위 컴포넌트도 마이그레이션 필요
 - 권장 순서: 하위 컴포넌트 먼저 → 메인 페이지 나중
+
+### 날짜: 2025/08/17
+- 작업자: AsyncSite Team
+- 완료 항목: StudyProposalPageV2.css → StudyProposalPageV2.module.css 완전 마이그레이션
+- 작업 내용:
+  - Step 1: 전역 CSS 충돌 클래스명 리네이밍 (btn-primary → proposal-primary-btn 등)
+  - Step 2: CSS Module 변환 (71개 className, 동적 클래스 2개 처리)
+  - 누락된 독립 클래스 추가 (active, completed, selected, placeholder-*, notice-*, disabled-text)
+  - 중첩 선택자 처리 및 CSS Module 규칙 준수
+- 이슈/해결:
+  - 전역 CSS(common.css, App.css)와 충돌하던 btn-primary, btn-secondary 해결
+  - 동적 클래스(active, completed, selected) 독립 정의 추가
+  - 모든 케밥케이스 클래스명 bracket notation 사용
+- 검증 완료:
+  - TypeScript 컴파일 에러 없음
+  - 모든 사용 클래스가 CSS에 정의됨
+  - Build 성공
+- 다음 작업: 하위 컴포넌트들 (DatePickerCustom, TimePickerCustom 등) Module 전환 고려
 
 ### 날짜: ____/__/__
 - 작업자:

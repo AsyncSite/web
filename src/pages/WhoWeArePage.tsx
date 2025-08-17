@@ -74,13 +74,19 @@ const WhoWeArePage: React.FC = () => {
     quote?: string;
     bio?: string;
     profileImage?: string;
-  }, index: number): WhoWeAreMemberData => {
+  }, index: number, totalMembers: number): WhoWeAreMemberData => {
     const colorIndex = index % adminColors.length;
     const imageIndex = index % profileImages.length;
     const quoteIndex = index % adminQuotes.length;
-    // Position members in a wider circle to avoid overlap with hardcoded members
-    const angle = (Math.PI * 2 * index) / 8 + Math.PI / 4; // Offset angle to avoid collision
-    const radius = 8; // Larger radius than hardcoded members
+    
+    // Distribute members evenly in a circle
+    const angle = (Math.PI * 2 * index) / totalMembers;
+    const radius = 4.5; // Similar radius to hardcoded members
+    
+    // Add some variation to make it more organic
+    const radiusVariation = Math.random() * 1.5 - 0.75; // Random between -0.75 and 0.75
+    const adjustedRadius = radius + radiusVariation;
+    const yVariation = Math.random() * 1 - 0.5; // Random height variation
     
     return {
       id: `backend-member-${index}`,
@@ -92,9 +98,9 @@ const WhoWeArePage: React.FC = () => {
       color: adminColors[colorIndex].color,
       darkColor: adminColors[colorIndex].darkColor,
       position: { 
-        x: Math.cos(angle) * radius, 
-        y: Math.sin(angle / 2) * 2, // Add more vertical variation
-        z: Math.sin(angle) * radius 
+        x: Math.cos(angle) * adjustedRadius, 
+        y: yVariation,
+        z: Math.sin(angle) * adjustedRadius 
       },
       profileImage: member.profileImage || profileImages[imageIndex]
     };
@@ -106,16 +112,19 @@ const WhoWeArePage: React.FC = () => {
       try {
         const backendMembers = await userService.getWhoWeAreMembers();
         
+        // TEST: Simulate empty backend response
+        // const backendMembers: any[] = [];
+        
         if (backendMembers && backendMembers.length > 0) {
           // Map backend members to WhoWeAre format
           const mappedBackendMembers = backendMembers.map((member, index) => 
-            mapBackendMemberToWhoWeAre(member, index)
+            mapBackendMemberToWhoWeAre(member, index, backendMembers.length)
           );
           
-          // Combine hardcoded members with backend members
-          const combined = [...whoweareTeamMembers, ...mappedBackendMembers];
-          setCombinedTeamMembers(combined);
+          // Use only backend members when available
+          setCombinedTeamMembers(mappedBackendMembers);
         }
+        // If no backend members, keep the hardcoded members (initial state)
       } catch (error) {
         // If fetching fails, just use hardcoded members
         // Error is silently handled to prevent UI issues
