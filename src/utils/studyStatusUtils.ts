@@ -6,6 +6,7 @@
  */
 
 import { StudyStatus } from '../api/studyService';
+import { parseDate } from './studyScheduleUtils';
 
 // 사용자에게 표시할 상태 정보
 export interface StudyDisplayInfo {
@@ -29,16 +30,6 @@ export function getStudyDisplayInfo(
 ): StudyDisplayInfo {
   const now = new Date();
   
-  // 날짜 파싱 헬퍼
-  const parseDate = (date: string | number[] | null | undefined): Date | null => {
-    if (!date) return null;
-    if (Array.isArray(date)) {
-      // [year, month, day, hour?, minute?, second?] 형식
-      return new Date(date[0], date[1] - 1, date[2], date[3] || 0, date[4] || 0, date[5] || 0);
-    }
-    return new Date(date);
-  };
-
   const deadlineDate = parseDate(recruitDeadline);
   const startDateParsed = parseDate(startDate);
   const endDateParsed = parseDate(endDate);

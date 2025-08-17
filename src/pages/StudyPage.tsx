@@ -8,6 +8,7 @@ import EmptyState from '../components/ui/EmptyState';
 import studyService, { Study } from '../api/studyService';
 import { useAuth } from '../contexts/AuthContext';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
+import { parseDate } from '../utils/studyScheduleUtils';
 import styles from './StudyPage.module.css';
 
 const StudyPage: React.FC = () => {
@@ -81,17 +82,6 @@ const StudyPage: React.FC = () => {
     }
     
     return { status: 'none', applicationId: null };
-  };
-
-  // 날짜 파싱 헬퍼 함수
-  const parseDate = (date: Date | string | number[] | null | undefined): Date | null => {
-    if (!date) return null;
-    if (date instanceof Date) return date;
-    if (Array.isArray(date)) {
-      const [year, month, day, hour = 0, minute = 0, second = 0] = date;
-      return new Date(year, month - 1, day, hour, minute, second);
-    }
-    return new Date(date as string);
   };
 
   const now = new Date();

@@ -1,5 +1,6 @@
 import publicApiClient, { handlePublicApiError } from './publicClient';
 import apiClient from './client';
+import { parseDate } from '../utils/studyScheduleUtils';
 
 // Constants
 export const StudyStatus = {
@@ -105,21 +106,6 @@ export interface Study {
     glow: string;
   };
 }
-
-// Helper: Parse date from various formats
-const parseDate = (dateValue: string | number[] | undefined): Date | null => {
-  if (!dateValue) {
-    return null;
-  }
-  
-  if (Array.isArray(dateValue)) {
-    // Handle array format [year, month, day, hour, minute, second]
-    const [year, month, day, hour = 0, minute = 0, second = 0] = dateValue;
-    return new Date(year, month - 1, day, hour, minute, second);
-  }
-  
-  return new Date(dateValue);
-};
 
 // 이 함수는 더 이상 사용되지 않습니다.
 // utils/studyStatusUtils.ts의 getStudyDisplayInfo를 사용하세요.

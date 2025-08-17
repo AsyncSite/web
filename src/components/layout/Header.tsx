@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import studyService, { Study } from '../../api/studyService';
 import { getStudyDisplayInfo } from '../../utils/studyStatusUtils';
+import { parseDate } from '../../utils/studyScheduleUtils';
 import './Header.css';
 
 interface HeaderProps {
@@ -37,17 +38,6 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
       try {
         const allStudies = await studyService.getAllStudies();
         const now = new Date();
-        
-        // 날짜 파싱 헬퍼 함수
-        const parseDate = (date: Date | string | number[] | null | undefined): Date | null => {
-          if (!date) return null;
-          if (date instanceof Date) return date;
-          if (Array.isArray(date)) {
-            const [year, month, day, hour = 0, minute = 0, second = 0] = date;
-            return new Date(year, month - 1, day, hour, minute, second);
-          }
-          return new Date(date as string);
-        };
         
         // 모집 중, 시작 예정, 진행 중인 스터디 필터링하고 최대 3개까지
         const activeStudies = allStudies
