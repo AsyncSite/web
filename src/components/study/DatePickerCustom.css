@@ -3,8 +3,15 @@
   width: 100%;
 }
 
+.date-picker-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .date-picker-trigger {
-  width: 100%;
+  flex: 1;
   padding: 12px 16px;
   background: rgba(255, 255, 255, 0.05);
   border: 2px solid rgba(255, 255, 255, 0.1);
@@ -17,6 +24,33 @@
   align-items: center;
   justify-content: space-between;
   text-align: left;
+}
+
+.date-picker-clear {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: rgba(255, 87, 87, 0.1);
+  border: 2px solid rgba(255, 87, 87, 0.3);
+  border-radius: 8px;
+  color: #ff5757;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.date-picker-clear:hover {
+  background: rgba(255, 87, 87, 0.2);
+  border-color: #ff5757;
+  transform: scale(1.05);
+}
+
+.date-picker-clear svg {
+  width: 16px;
+  height: 16px;
 }
 
 .date-picker-trigger:hover {
