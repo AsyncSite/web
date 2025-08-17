@@ -111,7 +111,6 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
     // Check if we need to reinitialize due to members change
     if (hasInitialized.current) {
       if ((window as any).threeSceneMembersCount && (window as any).threeSceneMembersCount !== members.length) {
-        console.log('[ThreeScene] Members count changed from', (window as any).threeSceneMembersCount, 'to', members.length, '- reinitializing');
         hasInitialized.current = false;  // Allow reinitialization
         // Clean up existing scene
         if (sceneRef.current) {
@@ -120,14 +119,11 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
           }
         }
       } else {
-        console.log('[ThreeScene] Skipping re-initialization, members:', members.length);
         return;
       }
     }
     hasInitialized.current = true;
     (window as any).threeSceneMembersCount = members.length;
-    
-    console.log('[ThreeScene] useEffect triggered with', members.length, 'members');
     let mounted = true;
 
     const initThree = async () => {
@@ -645,7 +641,6 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
           [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
         }
 
-        console.log('[ThreeScene] Creating planets for', members.length, 'members');
         members.forEach((member, originalIndex) => {
           const group = new THREE.Group();
           group.userData = member;
