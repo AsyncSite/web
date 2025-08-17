@@ -108,12 +108,24 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
   });
 
   useEffect(() => {
-    // Only initialize Three.js scene once
+    // Check if we need to reinitialize due to members change
     if (hasInitialized.current) {
-      console.log('[ThreeScene] Skipping re-initialization');
-      return;
+      if ((window as any).threeSceneMembersCount && (window as any).threeSceneMembersCount !== members.length) {
+        console.log('[ThreeScene] Members count changed from', (window as any).threeSceneMembersCount, 'to', members.length, '- reinitializing');
+        hasInitialized.current = false;  // Allow reinitialization
+        // Clean up existing scene
+        if (sceneRef.current) {
+          while(sceneRef.current.children.length > 0) {
+            sceneRef.current.remove(sceneRef.current.children[0]);
+          }
+        }
+      } else {
+        console.log('[ThreeScene] Skipping re-initialization, members:', members.length);
+        return;
+      }
     }
     hasInitialized.current = true;
+    (window as any).threeSceneMembersCount = members.length;
     
     console.log('[ThreeScene] useEffect triggered with', members.length, 'members');
     let mounted = true;
@@ -1752,7 +1764,7 @@ const ThreeSceneAIGuide: React.FC<ThreeSceneAIGuideProps> = ({
         }
       }
     };
-  }, []); // Empty dependency array - only run once on mount
+  }, [members.length]); // Re-run when members count changes
 
   // Manage AI Guide Character based on showAIGuide prop
   useEffect(() => {

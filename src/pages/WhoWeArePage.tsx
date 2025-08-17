@@ -24,6 +24,12 @@ const WhoWeArePage: React.FC = () => {
   const [isClosingCard, setIsClosingCard] = useState(false);
   const [isClosingMember, setIsClosingMember] = useState(false);
   const [combinedTeamMembers, setCombinedTeamMembers] = useState<WhoWeAreMemberData[]>(whoweareTeamMembers);
+  
+  // Debug: Log whenever combinedTeamMembers changes
+  useEffect(() => {
+    console.log('[WhoWeArePage] combinedTeamMembers updated:', combinedTeamMembers.length, 'members');
+    console.log('[WhoWeArePage] combinedTeamMembers details:', combinedTeamMembers);
+  }, [combinedTeamMembers]);
   // New state for quality settings - doesn't affect existing desktop behavior
   const [renderQuality, setRenderQuality] = useState<'high' | 'medium' | 'low'>('high');
   const [deviceType, setDeviceType] = useState<'desktop' | 'mobile' | 'tablet'>('desktop');
@@ -104,19 +110,29 @@ const WhoWeArePage: React.FC = () => {
   useEffect(() => {
     const fetchWhoWeAreMembers = async () => {
       try {
+        console.log('[WhoWeArePage] Fetching backend members...');
         const backendMembers = await userService.getWhoWeAreMembers();
+        console.log('[WhoWeArePage] Backend members received:', backendMembers);
         
         if (backendMembers && backendMembers.length > 0) {
+          console.log('[WhoWeArePage] Backend members count:', backendMembers.length);
           // Map backend members to WhoWeAre format
           const mappedBackendMembers = backendMembers.map((member, index) => 
             mapBackendMemberToWhoWeAre(member, index)
           );
+          console.log('[WhoWeArePage] Mapped backend members:', mappedBackendMembers);
           
           // Combine hardcoded members with backend members
           const combined = [...whoweareTeamMembers, ...mappedBackendMembers];
+          console.log('[WhoWeArePage] Combined members total:', combined.length);
+          console.log('[WhoWeArePage] Combined members:', combined);
           setCombinedTeamMembers(combined);
+          console.log('[WhoWeArePage] State updated with combined members');
+        } else {
+          console.log('[WhoWeArePage] No backend members or empty array');
         }
       } catch (error) {
+        console.error('[WhoWeArePage] Error fetching members:', error);
         // If fetching fails, just use hardcoded members
         // Error is silently handled to prevent UI issues
       }

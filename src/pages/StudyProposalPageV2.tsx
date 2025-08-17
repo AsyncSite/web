@@ -10,7 +10,7 @@ import DurationSelector from '../components/study/DurationSelector';
 import GenerationSelector from '../components/study/GenerationSelector';
 import PreviewModal from '../components/study/PreviewModal';
 import { useDebouncedCallback } from '../hooks/useDebounce';
-import './StudyProposalPageV2.css';
+import styles from './StudyProposalPageV2.module.css';
 
 const StudyProposalPageV2: React.FC = () => {
   const navigate = useNavigate();
@@ -537,8 +537,8 @@ const StudyProposalPageV2: React.FC = () => {
   // 로딩 중이거나 로그인 안 된 경우 로딩 표시
   if (authLoading) {
     return (
-      <div className="study-proposal-v2">
-        <div className="proposal-container-v2">
+      <div className={styles['study-proposal-v2']}>
+        <div className={styles['proposal-container-v2']}>
           <div style={{ textAlign: 'center', padding: '100px 20px', color: 'rgba(255, 255, 255, 0.6)' }}>
             <div style={{ fontSize: '20px', marginBottom: '20px' }}>로딩 중...</div>
           </div>
@@ -550,8 +550,8 @@ const StudyProposalPageV2: React.FC = () => {
   // 로그인 안 된 경우 (리다이렉트 전 잠시 표시)
   if (!user) {
     return (
-      <div className="study-proposal-v2">
-        <div className="proposal-container-v2">
+      <div className={styles['study-proposal-v2']}>
+        <div className={styles['proposal-container-v2']}>
           <div style={{ textAlign: 'center', padding: '100px 20px' }}>
             <div style={{ fontSize: '20px', color: '#C3E88D', marginBottom: '20px' }}>
               로그인이 필요합니다
@@ -566,67 +566,67 @@ const StudyProposalPageV2: React.FC = () => {
   }
 
   return (
-    <div className="study-proposal-v2">
+    <div className={styles['study-proposal-v2']}>
       <ToastContainer messages={messages} onClose={removeToast} />
-      <div className="proposal-container-v2">
+      <div className={styles['proposal-container-v2']}>
         <button 
           onClick={() => navigate('/study')} 
-          className="back-button-v2"
+          className={styles['back-button-v2']}
         >
           ← 돌아가기
         </button>
         
-        <div className="proposal-header-v2">
+        <div className={styles['proposal-header-v2']}>
           <h1>스터디 제안하기</h1>
           <p>원하는 스터디가 없나요? 직접 제안해보세요!</p>
         </div>
 
-        <div className="steps-container">
+        <div className={styles['steps-container']}>
           {steps.map((step, index) => (
             <div 
               key={index}
-              className={`step-item ${currentStep === index ? 'active' : ''} ${currentStep > index ? 'completed' : ''}`}
+              className={`${styles['step-item']} ${currentStep === index ? styles['active'] : ''} ${currentStep > index ? styles['completed'] : ''}`}
             >
-              <div className="step-icon">{step.icon}</div>
-              <div className="step-title">{step.title}</div>
+              <div className={styles['step-icon']}>{step.icon}</div>
+              <div className={styles['step-title']}>{step.title}</div>
             </div>
           ))}
         </div>
 
-        <div className="form-container-v2">
+        <div className={styles['form-container-v2']}>
           {currentStep === 0 && (
-            <div className="form-step">
-              <div className="form-group-v2">
+            <div className={styles['form-step']}>
+              <div className={styles['form-group-v2']}>
                 <label>스터디 이름 *</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="예: React 심화 스터디"
-                  className="modern-input"
+                  className={styles['proposal-input']}
                   maxLength={255}
                 />
               </div>
 
-              <div className="form-row-v2">
-                <div className="form-group-v2">
+              <div className={styles['form-row-v2']}>
+                <div className={styles['form-group-v2']}>
                   <label>스터디 유형 *</label>
                   <select
                     value={formData.type}
                     onChange={(e) => handleInputChange('type', e.target.value)}
-                    className="modern-select"
+                    className={styles['proposal-select']}
                   >
                     <option value="PARTICIPATORY">참여형 (함께 학습하고 성장)</option>
                     <option value="EDUCATIONAL">교육형 (강의 중심 학습)</option>
                   </select>
                 </div>
 
-                <div className="form-group-v2">
+                <div className={styles['form-group-v2']}>
                   <label>반복 유형 *</label>
                   <select
                     value={formData.recurrenceType}
                     onChange={(e) => handleInputChange('recurrenceType', e.target.value)}
-                    className="modern-select"
+                    className={styles['proposal-select']}
                   >
                     <option value="ONE_TIME">1회성 (한 번만 진행)</option>
                     <option value="DAILY">매일</option>
@@ -637,22 +637,22 @@ const StudyProposalPageV2: React.FC = () => {
                 </div>
               </div>
 
-              <div className="form-group-v2">
+              <div className={styles['form-group-v2']}>
                 <label>한 줄 소개</label>
                 <input
                   type="text"
                   value={formData.tagline}
                   onChange={(e) => handleInputChange('tagline', e.target.value)}
                   placeholder="스터디를 한 문장으로 표현해주세요"
-                  className="modern-input"
+                  className={styles['proposal-input']}
                   maxLength={500}
                 />
-                <span className="form-hint">
+                <span className={styles['form-hint']}>
                   상세 소개와 콘텐츠는 스터디 생성 후 관리 페이지에서 편집할 수 있습니다
                 </span>
               </div>
 
-              <div className="form-group-v2">
+              <div className={styles['form-group-v2']}>
                 <label>기수</label>
                 <GenerationSelector
                   value={formData.generation}
@@ -665,10 +665,10 @@ const StudyProposalPageV2: React.FC = () => {
           )}
 
           {currentStep === 1 && (
-            <div className="form-step">
+            <div className={styles['form-step']}>
               {formData.recurrenceType === 'ONE_TIME' ? (
                 <>
-                  <div className="form-group-v2">
+                  <div className={styles['form-group-v2']}>
                     <label>스터디 날짜 *</label>
                     <DatePickerCustom
                       value={formData.selectedDate}
@@ -687,13 +687,13 @@ const StudyProposalPageV2: React.FC = () => {
                       placeholder="날짜를 선택해주세요"
                       min={getLocalDateString()}
                     />
-                    <span className="form-hint">
+                    <span className={styles['form-hint']}>
                       오늘 이후 날짜를 선택해주세요
                     </span>
                   </div>
 
-                  <div className="form-row-v2">
-                    <div className="form-group-v2">
+                  <div className={styles['form-row-v2']}>
+                    <div className={styles['form-group-v2']}>
                       <label>시작 시간 *</label>
                       <TimePickerCustom
                         value={formData.startTime}
@@ -718,7 +718,7 @@ const StudyProposalPageV2: React.FC = () => {
                       />
                     </div>
 
-                    <div className="form-group-v2">
+                    <div className={styles['form-group-v2']}>
                       <label>종료 시간 *</label>
                       <TimePickerCustom
                         value={formData.endTime}
@@ -735,14 +735,14 @@ const StudyProposalPageV2: React.FC = () => {
                   </div>
                   
                   {formData.startTime && (
-                    <div className="quick-duration-section">
+                    <div className={styles['quick-duration-section']}>
                       <label>빠른 시간 설정</label>
-                      <div className="quick-duration-buttons">
+                      <div className={styles['quick-duration-buttons']}>
                         {[1, 1.5, 2, 2.5, 3].map(hours => (
                           <button
                             key={hours}
                             type="button"
-                            className="quick-duration-btn"
+                            className={styles['quick-duration-btn']}
                             onClick={() => handleQuickDuration(hours)}
                           >
                             {hours % 1 === 0 ? `${hours}시간` : `${Math.floor(hours)}시간 30분`}
@@ -754,14 +754,14 @@ const StudyProposalPageV2: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <div className="form-group-v2">
+                  <div className={styles['form-group-v2']}>
                     <label>요일 선택 *</label>
-                    <div className="days-selector">
+                    <div className={styles['days-selector']}>
                       {dayNames.map((day, index) => (
                         <button
                           key={index}
                           type="button"
-                          className={`day-button-v2 ${formData.daysOfWeek.includes(index) ? 'selected' : ''}`}
+                          className={`${styles['day-button-v2']} ${formData.daysOfWeek.includes(index) ? styles['selected'] : ''}`}
                           onClick={() => {
                             const newDays = formData.daysOfWeek.includes(index)
                               ? formData.daysOfWeek.filter(d => d !== index)
@@ -775,8 +775,8 @@ const StudyProposalPageV2: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="form-row-v2">
-                    <div className="form-group-v2">
+                  <div className={styles['form-row-v2']}>
+                    <div className={styles['form-group-v2']}>
                       <label>시작 시간 *</label>
                       <TimePickerCustom
                         value={formData.startTime}
@@ -801,7 +801,7 @@ const StudyProposalPageV2: React.FC = () => {
                       />
                     </div>
 
-                    <div className="form-group-v2">
+                    <div className={styles['form-group-v2']}>
                       <label>종료 시간 *</label>
                       <TimePickerCustom
                         value={formData.endTime}
@@ -818,14 +818,14 @@ const StudyProposalPageV2: React.FC = () => {
                   </div>
                   
                   {formData.startTime && (
-                    <div className="quick-duration-section">
+                    <div className={styles['quick-duration-section']}>
                       <label>빠른 시간 설정</label>
-                      <div className="quick-duration-buttons">
+                      <div className={styles['quick-duration-buttons']}>
                         {[1, 1.5, 2, 2.5, 3].map(hours => (
                           <button
                             key={hours}
                             type="button"
-                            className="quick-duration-btn"
+                            className={styles['quick-duration-btn']}
                             onClick={() => handleQuickDuration(hours)}
                           >
                             {hours % 1 === 0 ? `${hours}시간` : `${Math.floor(hours)}시간 30분`}
@@ -835,7 +835,7 @@ const StudyProposalPageV2: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="form-group-v2">
+                  <div className={styles['form-group-v2']}>
                     <label>진행 기간</label>
                     <DurationSelector
                       value={formData.duration}
@@ -853,8 +853,8 @@ const StudyProposalPageV2: React.FC = () => {
                     />
                   </div>
 
-                  <div className="form-row-v2">
-                    <div className="form-group-v2">
+                  <div className={styles['form-row-v2']}>
+                    <div className={styles['form-group-v2']}>
                       <label>시작일</label>
                       <DatePickerCustom
                         value={formData.startDate}
@@ -872,12 +872,12 @@ const StudyProposalPageV2: React.FC = () => {
                         placeholder="시작일 선택"
                         min={getLocalDateString()}
                       />
-                      <span className="form-hint">
+                      <span className={styles['form-hint']}>
                         오늘 이후 날짜를 선택해주세요
                       </span>
                     </div>
 
-                    <div className="form-group-v2">
+                    <div className={styles['form-group-v2']}>
                       <label>종료일</label>
                       <DatePickerCustom
                         value={formData.endDate}
@@ -912,8 +912,8 @@ const StudyProposalPageV2: React.FC = () => {
           )}
 
           {currentStep === 2 && (
-            <div className="form-step">
-              <div className="form-group-v2">
+            <div className={styles['form-step']}>
+              <div className={styles['form-group-v2']}>
                 <label>모집 인원</label>
                 <input
                   type="number"
@@ -924,22 +924,22 @@ const StudyProposalPageV2: React.FC = () => {
                       handleInputChange('capacity', value);
                     }
                   }}
-                  className="modern-input"
+                  className={styles['proposal-input']}
                   min="1"
                   max="100"
                 />
               </div>
 
-              <div className="form-row-v2">
-                <div className="form-group-v2">
-                  <label>모집 마감일 <span className="optional-badge">(선택)</span></label>
+              <div className={styles['form-row-v2']}>
+                <div className={styles['form-group-v2']}>
+                  <label>모집 마감일 <span className={styles['optional-badge']}>(선택)</span></label>
                   {(() => {
                     // 시작일이 없는 경우
                     if (!formData.startDate && formData.recurrenceType !== 'ONE_TIME') {
                       return (
-                        <div className="deadline-placeholder-v2">
-                          <span className="placeholder-icon">📅</span>
-                          <span className="placeholder-text">먼저 스터디 시작일을 설정해주세요</span>
+                        <div className={styles['deadline-placeholder-v2']}>
+                          <span className={styles['placeholder-icon']}>📅</span>
+                          <span className={styles['placeholder-text']}>먼저 스터디 시작일을 설정해주세요</span>
                         </div>
                       );
                     }
@@ -952,11 +952,11 @@ const StudyProposalPageV2: React.FC = () => {
                     // 시작일이 오늘인 경우
                     if (effectiveStartDate === getLocalDateString()) {
                       return (
-                        <div className="deadline-today-notice-v2">
-                          <span className="notice-icon">💡</span>
-                          <div className="notice-content">
-                            <span className="notice-title">즉시 시작 스터디</span>
-                            <span className="notice-desc">오늘 시작하는 스터디는 별도 모집 기간이 없습니다</span>
+                        <div className={styles['deadline-today-notice-v2']}>
+                          <span className={styles['notice-icon']}>💡</span>
+                          <div className={styles['notice-content']}>
+                            <span className={styles['notice-title']}>즉시 시작 스터디</span>
+                            <span className={styles['notice-desc']}>오늘 시작하는 스터디는 별도 모집 기간이 없습니다</span>
                           </div>
                         </div>
                       );
@@ -997,7 +997,7 @@ const StudyProposalPageV2: React.FC = () => {
                           max={effectiveStartDate || undefined}
                         />
                         {effectiveStartDate && (
-                          <span className="form-hint">
+                          <span className={styles['form-hint']}>
                             📅 스터디 시작: {effectiveStartDate} {formData.startTime || '(시간 미정)'}
                           </span>
                         )}
@@ -1006,7 +1006,7 @@ const StudyProposalPageV2: React.FC = () => {
                   })()}
                 </div>
 
-                <div className="form-group-v2">
+                <div className={styles['form-group-v2']}>
                   <label>마감 시간</label>
                   {formData.recruitDeadline ? (
                     <TimePickerCustom
@@ -1034,14 +1034,14 @@ const StudyProposalPageV2: React.FC = () => {
                       placeholder="23:59"
                     />
                   ) : (
-                    <div className="time-picker-disabled-v2">
-                      <span className="disabled-text">날짜를 먼저 선택해주세요</span>
+                    <div className={styles['time-picker-disabled-v2']}>
+                      <span className={styles['disabled-text']}>날짜를 먼저 선택해주세요</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="info-box">
+              <div className={styles['info-box']}>
                 <h4>💡 제안 프로세스</h4>
                 <ol>
                   <li>제안서를 작성하여 제출합니다.</li>
@@ -1051,20 +1051,20 @@ const StudyProposalPageV2: React.FC = () => {
                 </ol>
               </div>
 
-              <div className="page-edit-notice">
-                <span className="notice-text">
+              <div className={styles['page-edit-notice']}>
+                <span className={styles['notice-text']}>
                   💡 스터디 생성 후 관리 페이지에서 상세 페이지를 자유롭게 편집할 수 있어요
                 </span>
               </div>
             </div>
           )}
 
-          <div className="form-actions-v2">
+          <div className={styles['form-actions-v2']}>
             {currentStep > 0 && (
               <button 
                 type="button"
                 onClick={() => setCurrentStep(currentStep - 1)}
-                className="btn-secondary"
+                className={styles['proposal-secondary-btn']}
               >
                 이전
               </button>
@@ -1080,7 +1080,7 @@ const StudyProposalPageV2: React.FC = () => {
                     warning('필수 항목을 모두 입력해주세요.');
                   }
                 }}
-                className="btn-primary"
+                className={styles['proposal-primary-btn']}
               >
                 다음
               </button>
@@ -1095,7 +1095,7 @@ const StudyProposalPageV2: React.FC = () => {
                     warning('필수 항목을 모두 입력해주세요.');
                   }
                 }}
-                className="btn-primary"
+                className={styles['proposal-primary-btn']}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? '제출 중...' : '제안하기'}
