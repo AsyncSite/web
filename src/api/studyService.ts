@@ -566,14 +566,23 @@ class StudyService {
 
   /**
    * Apply to study (requires authentication)
+   * @param studyIdOrSlug - Can be either a UUID or a slug
+   * @param application - Application request (applicantId will be ignored on backend)
    */
-  async applyToStudy(studyId: string, application: ApplicationRequest): Promise<ApplicationResponse> {
+  async applyToStudy(studyIdOrSlug: string, application: ApplicationRequest): Promise<ApplicationResponse> {
+    // Check if it's a UUID (contains hyphens in UUID pattern) or slug
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(studyIdOrSlug);
+    
+    const endpoint = isUuid 
+      ? `${this.STUDY_API_PATH}/${studyIdOrSlug}/applications`
+      : `${this.STUDY_API_PATH}/slug/${studyIdOrSlug}/applications`;
+    
     const response = await apiClient.post<{
       success: boolean;
       data: ApplicationResponse;
       error: any;
       timestamp: number[];
-    }>(`${this.STUDY_API_PATH}/${studyId}/applications`, application);
+    }>(endpoint, application);
     
     return response.data?.data || response.data;
   }
