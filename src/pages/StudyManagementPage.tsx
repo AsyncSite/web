@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { parseDate } from '../utils/studyScheduleUtils';
 import studyService, { Study, ApplicationResponse, MemberResponse, ApplicationStatus } from '../api/studyService';
 import studyDetailPageService, { 
   StudyDetailPageData, 
@@ -561,9 +562,12 @@ const StudyManagementPage: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateValue: string | number[] | undefined) => {
     try {
-      return new Date(dateString).toLocaleDateString('ko-KR', {
+      const date = parseDate(dateValue);
+      if (!date) return 'Invalid Date';
+      
+      return date.toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -571,7 +575,7 @@ const StudyManagementPage: React.FC = () => {
         minute: '2-digit'
       });
     } catch {
-      return dateString;
+      return 'Invalid Date';
     }
   };
 
