@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { parseDate } from '../../utils/studyScheduleUtils';
 import Header from '../../components/layout/Header';
 import PasswordChangeModal from '../../components/auth/PasswordChangeModalEnhanced';
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
@@ -346,7 +347,7 @@ function ProfilePage(): React.ReactNode {
                           </h4>
                           <p className={styles.studyMeta}>상태: 검토 대기중</p>
                           {study.createdAt && (
-                            <p className={styles.studyMeta}>제안일: {new Date(study.createdAt).toLocaleDateString()}</p>
+                            <p className={styles.studyMeta}>제안일: {parseDate(study.createdAt)?.toLocaleDateString() || 'Invalid Date'}</p>
                           )}
                         </div>
                       ))}
@@ -371,7 +372,7 @@ function ProfilePage(): React.ReactNode {
                           </h4>
                           <p className={styles.studyMeta}>상태: 승인 대기중</p>
                           {study.appliedAt && (
-                            <p className={styles.studyMeta}>신청일: {new Date(study.appliedAt).toLocaleDateString()}</p>
+                            <p className={styles.studyMeta}>신청일: {parseDate(study.appliedAt)?.toLocaleDateString() || 'Invalid Date'}</p>
                           )}
                           {study.message && (
                             <p className={styles.studyMeta}>메시지: {study.message}</p>
@@ -408,7 +409,7 @@ function ProfilePage(): React.ReactNode {
                           )}
                         </h4>
                         <p className={styles.studyMeta}>역할: {study.role}</p>
-                        <p className={styles.studyMeta}>참여일: {new Date(study.joinedAt).toLocaleDateString()}</p>
+                        <p className={styles.studyMeta}>참여일: {parseDate(study.joinedAt)?.toLocaleDateString() || 'Invalid Date'}</p>
                         <p className={styles.studyMeta}>출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
                         {study.studyStatus === 'COMPLETED' && (
                           <div className={styles.studyActions}>

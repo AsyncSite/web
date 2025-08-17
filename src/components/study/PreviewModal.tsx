@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { parseDate } from '../../utils/studyScheduleUtils';
 import styles from './PreviewModal.module.css';
 
 interface PreviewModalProps {
@@ -102,17 +103,24 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   };
 
   // 날짜 포맷팅
-  const formatDate = (dateString: string) => {
-    if (!dateString) return '-';
+  const formatDate = (dateValue: string | number[] | undefined) => {
+    if (!dateValue) return '-';
     try {
-      const date = new Date(dateString + 'T00:00:00');
+      // string인 경우 T00:00:00 추가가 필요할 수 있음
+      const dateString = typeof dateValue === 'string' && !dateValue.includes('T') 
+        ? dateValue + 'T00:00:00' 
+        : dateValue;
+      
+      const date = parseDate(dateString);
+      if (!date) return '-';
+      
       return date.toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       });
     } catch {
-      return dateString;
+      return '-';
     }
   };
 

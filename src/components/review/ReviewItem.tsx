@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ReviewResponse, ReviewType } from '../../api/reviewService';
 import { useAuth } from '../../contexts/AuthContext';
+import { parseDate } from '../../utils/studyScheduleUtils';
 import { REVIEW_TAGS } from '../../types/reviewTags';
 import './Review.css';
 
@@ -130,8 +131,10 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (dateValue: string | number[] | undefined) => {
+    const date = parseDate(dateValue);
+    if (!date) return 'Invalid Date';
+    
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
