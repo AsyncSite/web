@@ -8,6 +8,9 @@ export interface User {
   quote?: string;
   bio?: string;
   profileImage?: string;
+  githubUrl?: string;
+  blogUrl?: string;
+  linkedinUrl?: string;
   roles: string[];
   isActive: boolean;
   systemRole?: string;
@@ -64,6 +67,9 @@ export interface UpdateProfileRequest {
   quote?: string;
   bio?: string;
   profileImage?: string;
+  githubUrl?: string;
+  blogUrl?: string;
+  linkedinUrl?: string;
 }
 
 export interface ChangePasswordRequest {

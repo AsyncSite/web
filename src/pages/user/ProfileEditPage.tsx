@@ -7,6 +7,7 @@ import RichTextEditor from '../../components/common/RichTextEditor';
 import ProfileImageUpload from '../../components/common/ProfileImageUpload';
 import './ProfileEditPage.css';
 import notiService from "../../api/notiService";
+import { uploadProfileImage } from '../../api/assetService';
 
 interface ProfileFormData {
   name: string;
@@ -65,6 +66,7 @@ function ProfileEditPage(): React.ReactNode {
   const [isSuccess, setIsSuccess] = useState(false);
   const [fromOnboarding, setFromOnboarding] = useState(false);
   const [imageUploadMode, setImageUploadMode] = useState<'upload' | 'url'>('upload');
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   
 
   // Check if coming from onboarding
@@ -83,7 +85,10 @@ function ProfileEditPage(): React.ReactNode {
         role: user.role || '',
         quote: user.quote || '',
         bio: user.bio || '',
-        profileImage: user.profileImage || ''
+        profileImage: user.profileImage || '',
+        githubUrl: user.githubUrl || '',
+        blogUrl: user.blogUrl || '',
+        linkedinUrl: user.linkedinUrl || ''
       }));
       
       // Load notification settings separately
@@ -159,12 +164,31 @@ function ProfileEditPage(): React.ReactNode {
     setErrors({});
 
     try {
+      let finalProfileImageUrl = formData.profileImage;
+      
+      // Upload profile image if a new file was selected
+      if (selectedImageFile && user?.email) {
+        try {
+          const uploadResult = await uploadProfileImage(selectedImageFile, user.email);
+          finalProfileImageUrl = uploadResult.publicUrl;
+        } catch (uploadError) {
+          setErrors({
+            profileImage: uploadError instanceof Error ? uploadError.message : '이미지 업로드 실패'
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       await updateProfile({
         name: formData.name,
-        role: formData.role || undefined,
-        quote: formData.quote || undefined,
-        bio: formData.bio || undefined,
-        profileImage: formData.profileImage // 빈 문자열도 유효한 값으로 처리
+        role: formData.role,
+        quote: formData.quote,
+        bio: formData.bio,
+        profileImage: finalProfileImageUrl, // Use the uploaded URL or existing URL
+        githubUrl: formData.githubUrl,
+        blogUrl: formData.blogUrl,
+        linkedinUrl: formData.linkedinUrl
       });
 
       // 알림 설정 업데이트
@@ -322,7 +346,13 @@ function ProfileEditPage(): React.ReactNode {
               <button
                 type="button"
                 className={`mode-tab ${imageUploadMode === 'upload' ? 'active' : ''}`}
-                onClick={() => setImageUploadMode('upload')}
+                onClick={() => {
+                  setImageUploadMode('upload');
+                  // Clear file when switching modes
+                  if (imageUploadMode !== 'upload') {
+                    setSelectedImageFile(null);
+                  }
+                }}
                 disabled={isSubmitting}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -335,7 +365,11 @@ function ProfileEditPage(): React.ReactNode {
               <button
                 type="button"
                 className={`mode-tab ${imageUploadMode === 'url' ? 'active' : ''}`}
-                onClick={() => setImageUploadMode('url')}
+                onClick={() => {
+                  setImageUploadMode('url');
+                  // Clear file when switching modes
+                  setSelectedImageFile(null);
+                }}
                 disabled={isSubmitting}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -355,6 +389,9 @@ function ProfileEditPage(): React.ReactNode {
                   if (errors.profileImage) {
                     setErrors(prev => ({ ...prev, profileImage: undefined }));
                   }
+                }}
+                onFileSelected={(file) => {
+                  setSelectedImageFile(file);
                 }}
                 disabled={isSubmitting}
               />

@@ -119,13 +119,15 @@ export async function uploadAsset(
 }
 
 /**
- * Upload a profile image for the current user
+ * Upload a profile image for the current user using Upload ID pattern
  * @param file The image file to upload
+ * @param userEmail The email of the current user
  * @param onProgress Progress callback (0-100)
  * @returns Upload result with public URL
  */
 export async function uploadProfileImage(
   file: File,
+  userEmail: string,
   onProgress?: (progress: number) => void
 ): Promise<AssetUploadResult> {
   // Validate file type
@@ -140,64 +142,94 @@ export async function uploadProfileImage(
     throw new Error('File too large. Maximum size is 10MB');
   }
 
-  // Upload through User Service instead of directly to Asset Service
   const token = getAuthToken();
   
   if (!token) {
     throw new Error('Authentication required');
   }
 
-  const formData = new FormData();
-  formData.append('file', file);
-
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-
-    // Track upload progress
-    if (onProgress) {
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const percentComplete = Math.round((event.loaded / event.total) * 100);
-          onProgress(percentComplete);
+  try {
+    // Step 1: Initiate upload session with Asset Service
+    const initiateResponse = await fetch(`${API_BASE_URL}/api/assets/uploads/initiate`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type,
+        userId: userEmail, // Pass user email as userId
+        metadata: {
+          type: 'profile',
+          category: 'PROFILE_IMAGE'
         }
-      });
+      })
+    });
+
+    if (!initiateResponse.ok) {
+      const error = await initiateResponse.json().catch(() => ({}));
+      throw new Error(error.message || 'Failed to initiate upload');
     }
 
-    // Handle response
-    xhr.addEventListener('load', () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const response = JSON.parse(xhr.responseText);
-          resolve(response);
-        } catch (error) {
-          reject(new Error('Invalid response format'));
-        }
-      } else {
-        try {
-          const errorResponse = JSON.parse(xhr.responseText);
-          reject(new Error(errorResponse.message || `Upload failed: ${xhr.statusText}`));
-        } catch {
-          reject(new Error(`Upload failed: ${xhr.statusText}`));
-        }
+    const { uploadId, uploadUrl } = await initiateResponse.json();
+
+    // Step 2: Upload the actual file with the upload ID
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      // Track upload progress
+      if (onProgress) {
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = Math.round((event.loaded / event.total) * 100);
+            onProgress(percentComplete);
+          }
+        });
       }
+
+      // Handle response
+      xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const response = JSON.parse(xhr.responseText);
+            resolve(response);
+          } catch (error) {
+            reject(new Error('Invalid response format'));
+          }
+        } else {
+          try {
+            const errorResponse = JSON.parse(xhr.responseText);
+            reject(new Error(errorResponse.message || `Upload failed: ${xhr.statusText}`));
+          } catch {
+            reject(new Error(`Upload failed: ${xhr.statusText}`));
+          }
+        }
+      });
+
+      // Handle errors
+      xhr.addEventListener('error', () => {
+        reject(new Error('Network error during upload'));
+      });
+
+      xhr.addEventListener('abort', () => {
+        reject(new Error('Upload cancelled'));
+      });
+
+      // Open connection to Asset Service upload endpoint
+      xhr.open('PUT', `${API_BASE_URL}/api/assets/uploads/${uploadId}`);
+      xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+      // Send the request
+      xhr.send(formData);
     });
-
-    // Handle errors
-    xhr.addEventListener('error', () => {
-      reject(new Error('Network error during upload'));
-    });
-
-    xhr.addEventListener('abort', () => {
-      reject(new Error('Upload cancelled'));
-    });
-
-    // Open connection to User Service endpoint
-    xhr.open('POST', `${API_BASE_URL}/api/users/me/profile-image`);
-    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-
-    // Send the request
-    xhr.send(formData);
-  });
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Upload failed');
+  }
 }
 
 /**

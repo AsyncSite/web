@@ -1,16 +1,18 @@
 import React, { useState, useRef } from 'react';
-import { uploadProfileImage, validateImageFile } from '../../api/assetService';
+import { validateImageFile } from '../../api/assetService';
 import './ProfileImageUpload.css';
 
 interface ProfileImageUploadProps {
   currentImageUrl?: string;
   onImageUploaded: (imageUrl: string) => void;
+  onFileSelected?: (file: File | null) => void;  // New: Pass File object to parent
   disabled?: boolean;
 }
 
 function ProfileImageUpload({
   currentImageUrl,
   onImageUploaded,
+  onFileSelected,
   disabled = false
 }: ProfileImageUploadProps): React.ReactNode {
   const [isUploading, setIsUploading] = useState(false);
@@ -34,42 +36,18 @@ function ProfileImageUpload({
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewUrl(reader.result as string);
+      // Pass the File object to parent component
+      if (onFileSelected) {
+        onFileSelected(file);
+      }
     };
     reader.readAsDataURL(file);
 
-    // Upload file
-    uploadFile(file);
+    // Remove automatic upload - now handled by parent on save
+    // uploadFile(file);
   };
 
-  const uploadFile = async (file: File) => {
-    setIsUploading(true);
-    setUploadProgress(0);
-    setError(null);
-
-    try {
-      const result = await uploadProfileImage(file, (progress) => {
-        setUploadProgress(progress);
-      });
-
-      // Success - use the public URL
-      onImageUploaded(result.publicUrl);
-      setUploadProgress(100);
-      
-      // Keep the preview
-      // Don't reset previewUrl here to keep showing the uploaded image
-      
-      setTimeout(() => {
-        setIsUploading(false);
-        setUploadProgress(0);
-      }, 500);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '업로드 중 오류가 발생했습니다');
-      setIsUploading(false);
-      setUploadProgress(0);
-      // Reset preview on error
-      setPreviewUrl(currentImageUrl || null);
-    }
-  };
+  // uploadFile function removed - upload is now handled by parent component on save
 
   const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -111,6 +89,9 @@ function ProfileImageUpload({
   const handleRemoveImage = () => {
     setPreviewUrl(null);
     onImageUploaded('');
+    if (onFileSelected) {
+      onFileSelected(null);  // Clear the File object in parent
+    }
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
