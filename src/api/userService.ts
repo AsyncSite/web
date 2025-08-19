@@ -35,6 +35,50 @@ class UserService {
   }
 
   /**
+   * Update user profile with image file
+   * Converts image to base64 and includes it in the profile data
+   */
+  async updateProfileWithImage(
+    profileData: UpdateProfileRequest,
+    imageFile?: File
+  ): Promise<User> {
+    let profileDataWithImage = { ...profileData };
+    
+    // Convert image to base64 if provided
+    if (imageFile) {
+      const base64Image = await this.fileToBase64(imageFile);
+      profileDataWithImage = {
+        ...profileData,
+        profileImageData: {
+          fileName: imageFile.name,
+          mimeType: imageFile.type,
+          base64Data: base64Image
+        }
+      };
+    }
+    
+    // Use regular updateProfile endpoint with image data included
+    const response = await apiClient.put<User>('/api/users/me', profileDataWithImage);
+    return response.data;
+  }
+
+  /**
+   * Convert file to base64 string
+   */
+  private fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        // Remove data URL prefix (e.g., "data:image/png;base64,")
+        const base64 = (reader.result as string).split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  /**
    * Change user password
    */
   async changePassword(data: ChangePasswordRequest): Promise<void> {

@@ -70,6 +70,11 @@ export interface UpdateProfileRequest {
   githubUrl?: string;
   blogUrl?: string;
   linkedinUrl?: string;
+  profileImageData?: {
+    fileName: string;
+    mimeType: string;
+    base64Data: string;
+  };
 }
 
 export interface ChangePasswordRequest {
@@ -88,6 +93,7 @@ export interface AuthContextType {
   updateProfile: (data: UpdateProfileRequest) => Promise<void>;
   changePassword: (data: ChangePasswordRequest) => Promise<void>;
   refreshToken: () => Promise<void>;
+  setUserState: (user: User | null) => void;
 }
 
 // API Response wrapper

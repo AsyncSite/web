@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import authService from '../api/authService';
 import userService from '../api/userService';
@@ -302,14 +302,121 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
     }
   }, [login]);
 
+  // Ref for polling interval
+  const profileImagePollingRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Helper function to poll for final image URL
+  const pollForFinalImageUrl = useCallback((pendingUrl: string, userId: string) => {
+    let attempts = 0;
+    const maxAttempts = 30;
+    const pollInterval = 2000;
+
+    // Clear any existing polling
+    if (profileImagePollingRef.current) {
+      clearInterval(profileImagePollingRef.current);
+    }
+
+    profileImagePollingRef.current = setInterval(async () => {
+      attempts++;
+
+      try {
+        // Build full URL for polling
+        const fullUrl = pendingUrl.startsWith('http') 
+          ? pendingUrl 
+          : `${window.location.origin}${pendingUrl}`;
+
+        const response = await fetch(fullUrl, {
+          method: 'HEAD', // Use HEAD to check status without downloading
+          redirect: 'manual'
+        });
+
+        // If redirected or status changed, reload profile
+        if (response.type === 'opaqueredirect' || response.status === 302 || response.status === 301) {
+          // Clear interval
+          if (profileImagePollingRef.current) {
+            clearInterval(profileImagePollingRef.current);
+            profileImagePollingRef.current = null;
+          }
+
+          // Reload full profile to get final URL
+          try {
+            const updatedProfile = await userService.getProfile();
+            setUser(updatedProfile);
+          } catch (error) {
+            console.error('Failed to reload profile after image upload:', error);
+          }
+          return;
+        }
+
+        // Also try fetching with GET to check content type
+        const getResponse = await fetch(fullUrl, { method: 'GET' });
+        const contentType = getResponse.headers.get('content-type');
+        
+        // If we get an image back, upload is complete
+        if (contentType?.startsWith('image/')) {
+          if (profileImagePollingRef.current) {
+            clearInterval(profileImagePollingRef.current);
+            profileImagePollingRef.current = null;
+          }
+
+          // Reload profile
+          try {
+            const updatedProfile = await userService.getProfile();
+            setUser(updatedProfile);
+          } catch (error) {
+            console.error('Failed to reload profile after image upload:', error);
+          }
+          return;
+        }
+
+        // Check for JSON response with status
+        if (contentType?.includes('application/json')) {
+          const data = await getResponse.json();
+          if (data.status === 'COMPLETED' || data.uploadStatus === 'COMPLETED') {
+            if (profileImagePollingRef.current) {
+              clearInterval(profileImagePollingRef.current);
+              profileImagePollingRef.current = null;
+            }
+
+            // Reload profile
+            try {
+              const updatedProfile = await userService.getProfile();
+              setUser(updatedProfile);
+            } catch (error) {
+              console.error('Failed to reload profile after image upload:', error);
+            }
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Polling error:', error);
+      }
+
+      // Stop after max attempts
+      if (attempts >= maxAttempts) {
+        if (profileImagePollingRef.current) {
+          clearInterval(profileImagePollingRef.current);
+          profileImagePollingRef.current = null;
+        }
+        console.warn('Profile image upload polling timeout');
+      }
+    }, pollInterval);
+  }, []);
+
   const updateProfile = useCallback(async (data: UpdateProfileRequest) => {
     try {
       const updatedUser = await userService.updateProfile(data);
       setUser(updatedUser);
+
+      // Check if profile image is a pending URL
+      if (updatedUser.profileImage && updatedUser.profileImage.includes('/pending/')) {
+        // Start polling for final URL
+        pollForFinalImageUrl(updatedUser.profileImage, updatedUser.id);
+      }
     } catch (error) {
       throw new Error(handleApiError(error));
     }
-  }, []);
+  }, [pollForFinalImageUrl]);
 
   const changePassword = useCallback(async (data: ChangePasswordRequest) => {
     try {
@@ -333,6 +440,11 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
     }
   }, [logout]);
 
+  // Add a method to manually update user state
+  const setUserState = useCallback((newUser: User | null) => {
+    setUser(newUser);
+  }, []);
+
   const value: AuthContextType = {
     user,
     // Progressive authentication check:
@@ -346,7 +458,8 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
     register,
     updateProfile,
     changePassword,
-    refreshToken
+    refreshToken,
+    setUserState
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -5,9 +5,11 @@ import Header from '../../components/layout/Header';
 import StarBackground from '../../components/common/StarBackground';
 import RichTextEditor from '../../components/common/RichTextEditor';
 import ProfileImageUpload from '../../components/common/ProfileImageUpload';
+import ProfileImageUploadProgress from '../../components/common/ProfileImageUploadProgress';
+import { useImageUploadPolling } from '../../hooks/useImageUploadPolling';
 import './ProfileEditPage.css';
 import notiService from "../../api/notiService";
-import { uploadProfileImage } from '../../api/assetService';
+import userService from '../../api/userService';
 
 interface ProfileFormData {
   name: string;
@@ -35,9 +37,10 @@ interface ProfileFormErrors {
 }
 
 function ProfileEditPage(): React.ReactNode {
-  const { user, updateProfile, isAuthenticated, isLoading } = useAuth();
+  const { user, updateProfile, isAuthenticated, isLoading, setUserState } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [pollingComplete, setPollingComplete] = useState(false);
   
   // 인증되지 않은 경우 로그인 페이지로 리디렉션
   useEffect(() => {
@@ -67,6 +70,8 @@ function ProfileEditPage(): React.ReactNode {
   const [fromOnboarding, setFromOnboarding] = useState(false);
   const [imageUploadMode, setImageUploadMode] = useState<'upload' | 'url'>('upload');
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'processing' | 'success' | 'error'>('idle');
   
 
   // Check if coming from onboarding
@@ -164,32 +169,67 @@ function ProfileEditPage(): React.ReactNode {
     setErrors({});
 
     try {
-      let finalProfileImageUrl = formData.profileImage;
-      
-      // Upload profile image if a new file was selected
-      if (selectedImageFile && user?.email) {
-        try {
-          const uploadResult = await uploadProfileImage(selectedImageFile, user.email);
-          finalProfileImageUrl = uploadResult.publicUrl;
-        } catch (uploadError) {
-          setErrors({
-            profileImage: uploadError instanceof Error ? uploadError.message : '이미지 업로드 실패'
-          });
-          setIsSubmitting(false);
-          return;
-        }
+      // Set upload status if there's an image
+      if (selectedImageFile) {
+        setUploadStatus('uploading');
+        setUploadProgress(20);
       }
 
-      await updateProfile({
+      // Prepare profile data
+      const profileData = {
         name: formData.name,
         role: formData.role,
         quote: formData.quote,
         bio: formData.bio,
-        profileImage: finalProfileImageUrl, // Use the uploaded URL or existing URL
+        profileImage: formData.profileImage,
         githubUrl: formData.githubUrl,
         blogUrl: formData.blogUrl,
         linkedinUrl: formData.linkedinUrl
-      });
+      };
+
+      // Add image data if there's a selected file
+      let hasImageUpload = false;
+      if (selectedImageFile) {
+        hasImageUpload = true;
+        // Convert image to base64
+        const base64Image = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(selectedImageFile);
+          reader.onload = () => {
+            const base64 = (reader.result as string).split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = error => reject(error);
+        });
+
+        // Add image data to profile data
+        const profileDataWithImage = {
+          ...profileData,
+          profileImageData: {
+            fileName: selectedImageFile.name,
+            mimeType: selectedImageFile.type,
+            base64Data: base64Image
+          }
+        };
+
+        // Use AuthContext's updateProfile which handles polling
+        await updateProfile(profileDataWithImage);
+        
+        // Show success animation
+        setUploadStatus('processing');
+        setUploadProgress(50);
+        
+        setTimeout(() => {
+          setUploadStatus('success');
+          setUploadProgress(100);
+          setTimeout(() => {
+            setUploadStatus('idle');
+          }, 2000);
+        }, 1000);
+      } else {
+        // No image change, use regular update
+        await updateProfile(profileData);
+      }
 
       // 알림 설정 업데이트
       if (user) {
@@ -208,13 +248,70 @@ function ProfileEditPage(): React.ReactNode {
       }
 
       setIsSuccess(true);
-      setTimeout(() => {
-        navigate('/users/me');
-      }, 1500);
+      
+      // If image was uploaded, wait for polling to complete (max 5 seconds)
+      if (hasImageUpload && user) {
+        console.log('=== Waiting for image upload to complete ===');
+        console.log('hasImageUpload:', hasImageUpload);
+        console.log('Current user:', user);
+        
+        const startTime = Date.now();
+        const maxWaitTime = 5000; // 5 seconds
+        const checkInterval = 500; // Check every 500ms
+        
+        // Wait for polling to complete or timeout
+        await new Promise<void>((resolve) => {
+          const checkPollingStatus = setInterval(async () => {
+            const elapsedTime = Date.now() - startTime;
+            console.log(`Checking... elapsed: ${elapsedTime}ms`);
+            
+            // Try to get fresh profile data to check if upload is complete
+            try {
+              const freshProfile = await userService.getProfile();
+              console.log('Fresh profile image:', freshProfile.profileImage);
+              
+              if (freshProfile.profileImage && !freshProfile.profileImage.includes('/pending/')) {
+                // Upload complete!
+                console.log('Upload complete! Final URL:', freshProfile.profileImage);
+                
+                // Update AuthContext with the fresh profile
+                setUserState(freshProfile);
+                
+                clearInterval(checkPollingStatus);
+                setPollingComplete(true);
+                resolve();
+              }
+            } catch (error) {
+              console.error('Failed to fetch profile:', error);
+              // If profile fetch fails, just continue checking
+            }
+            
+            // Max wait time reached, proceed anyway
+            if (elapsedTime >= maxWaitTime) {
+              console.log('Max wait time reached, proceeding...');
+              clearInterval(checkPollingStatus);
+              resolve();
+            }
+          }, checkInterval);
+        });
+        
+        console.log('Wait completed, navigating...');
+      } else {
+        console.log('No image upload or no user, skipping wait');
+        console.log('hasImageUpload:', hasImageUpload);
+        console.log('user:', user);
+      }
+      
+      // Navigate to profile page
+      navigate('/users/me');
     } catch (error) {
+      setUploadStatus('error');
       setErrors({
         general: error instanceof Error ? error.message : '프로필 수정에 실패했습니다'
       });
+      setTimeout(() => {
+        setUploadStatus('idle');
+      }, 3000);
     } finally {
       setIsSubmitting(false);
     }
@@ -623,6 +720,14 @@ function ProfileEditPage(): React.ReactNode {
           </div>
         </form>
       </div>
+      
+      {/* Profile Image Upload Progress Indicator */}
+      <ProfileImageUploadProgress
+        isVisible={uploadStatus !== 'idle'}
+        progress={uploadProgress}
+        status={uploadStatus === 'idle' ? 'uploading' : uploadStatus}
+        onClose={() => setUploadStatus('idle')}
+      />
     </div>
   );
 }
