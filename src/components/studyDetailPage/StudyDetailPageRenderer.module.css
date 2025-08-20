@@ -157,6 +157,11 @@
   border-color: rgba(76, 175, 80, 0.2);
 }
 
+.statusPending {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border-color: rgba(255, 193, 7, 0.2);
+}
+
 .statusIcon {
   font-size: 32px;
 }
@@ -208,6 +213,26 @@
 
 .rejected {
   background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+}
+
+.manageButton {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.manageButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
 }
 
 .applicationStatusContainer {

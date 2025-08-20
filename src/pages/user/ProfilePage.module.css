@@ -227,6 +227,21 @@
   background: rgba(130, 170, 255, 0.05);
 }
 
+.studyCard.proposed.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.studyCard.proposed.clickable:hover {
+  background: rgba(130, 170, 255, 0.1);
+  border-color: rgba(130, 170, 255, 0.5);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 0 30px rgba(130, 170, 255, 0.2),
+    0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
 .pending {
   border-color: rgba(255, 193, 7, 0.3);
   background: rgba(255, 193, 7, 0.05);
@@ -273,6 +288,20 @@
 }
 
 .studyCard.leading.clickable:hover .studyAction {
+  opacity: 1;
+}
+
+.manageHint {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #82AAFF;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: center;
+}
+
+.studyCard.proposed.clickable:hover .manageHint {
   opacity: 1;
 }
 

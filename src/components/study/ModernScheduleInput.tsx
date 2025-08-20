@@ -8,6 +8,7 @@ import {
 } from '../../types/schedule';
 import type { ScheduleData } from '../../types/schedule';
 import type { RecurrenceType } from '../../api/studyService';
+import TimePickerCustom from './TimePickerCustom';
 import './ModernScheduleInput.css';
 
 interface ModernScheduleInputProps {
@@ -27,8 +28,6 @@ const ModernScheduleInput: React.FC<ModernScheduleInputProps> = ({
   onDateChange,
   error 
 }) => {
-  const [showTimeDropdown, setShowTimeDropdown] = useState<'start' | 'end' | null>(null);
-  
   const handleDayToggle = (day: DayOfWeek) => {
     const newDays = value.daysOfWeek.includes(day)
       ? value.daysOfWeek.filter(d => d !== day)
@@ -37,14 +36,12 @@ const ModernScheduleInput: React.FC<ModernScheduleInputProps> = ({
     onChange({ ...value, daysOfWeek: newDays });
   };
 
-  const handleTimeSelect = (type: 'start' | 'end', hour: number, minute: number) => {
-    const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-    if (type === 'start') {
-      onChange({ ...value, startTime: timeStr });
-    } else {
-      onChange({ ...value, endTime: timeStr });
-    }
-    setShowTimeDropdown(null);
+  const handleStartTimeChange = (timeStr: string) => {
+    onChange({ ...value, startTime: timeStr });
+  };
+
+  const handleEndTimeChange = (timeStr: string) => {
+    onChange({ ...value, endTime: timeStr });
   };
 
   const handleQuickDuration = (hours: number) => {
@@ -80,12 +77,6 @@ const ModernScheduleInput: React.FC<ModernScheduleInputProps> = ({
     DayOfWeek.SATURDAY,
     DayOfWeek.SUNDAY
   ];
-
-  const formatTime = (time: string | undefined) => {
-    if (!time) return '시간 선택';
-    const [hour, minute] = time.split(':');
-    return `${hour}:${minute}`;
-  };
 
   return (
     <div className="modern-schedule-input">
@@ -137,70 +128,22 @@ const ModernScheduleInput: React.FC<ModernScheduleInputProps> = ({
         <div className="time-selector">
           <div className="time-input-group">
             <label>시작 시간</label>
-            <div className="time-picker-wrapper">
-              <button
-                type="button"
-                className="time-picker-button"
-                onClick={() => setShowTimeDropdown(showTimeDropdown === 'start' ? null : 'start')}
-              >
-                {formatTime(value.startTime)}
-                <span className="dropdown-arrow">▼</span>
-              </button>
-              
-              {showTimeDropdown === 'start' && (
-                <div className="time-dropdown">
-                  <div className="time-grid">
-                    {Array.from({ length: 24 }, (_, h) => 
-                      [0, 15, 30, 45].map(m => (
-                        <button
-                          key={`${h}-${m}`}
-                          type="button"
-                          className="time-option"
-                          onClick={() => handleTimeSelect('start', h, m)}
-                        >
-                          {String(h).padStart(2, '0')}:{String(m).padStart(2, '0')}
-                        </button>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+            <TimePickerCustom
+              value={value.startTime}
+              onChange={handleStartTimeChange}
+              placeholder="시작 시간 선택"
+            />
           </div>
 
           <span className="time-separator">~</span>
 
           <div className="time-input-group">
             <label>종료 시간</label>
-            <div className="time-picker-wrapper">
-              <button
-                type="button"
-                className="time-picker-button"
-                onClick={() => setShowTimeDropdown(showTimeDropdown === 'end' ? null : 'end')}
-              >
-                {formatTime(value.endTime)}
-                <span className="dropdown-arrow">▼</span>
-              </button>
-              
-              {showTimeDropdown === 'end' && (
-                <div className="time-dropdown">
-                  <div className="time-grid">
-                    {Array.from({ length: 24 }, (_, h) => 
-                      [0, 15, 30, 45].map(m => (
-                        <button
-                          key={`${h}-${m}`}
-                          type="button"
-                          className="time-option"
-                          onClick={() => handleTimeSelect('end', h, m)}
-                        >
-                          {String(h).padStart(2, '0')}:{String(m).padStart(2, '0')}
-                        </button>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+            <TimePickerCustom
+              value={value.endTime}
+              onChange={handleEndTimeChange}
+              placeholder="종료 시간 선택"
+            />
           </div>
         </div>
         

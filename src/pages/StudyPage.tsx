@@ -321,7 +321,7 @@ const StudyPage: React.FC = () => {
                 <div className={styles['study-grid']}>
                   {filteredStudies.map(study => (
                       <div key={study.id} className={styles['study-card-wrapper']}>
-                        <Link to={`/study/${study.slug}`} className={styles['study-card-link']}>
+                        <Link to={`/study/${study.id}`} className={styles['study-card-link']}>
                           <div className={styles['study-card']}>
                             <div className={styles['study-header']}>
                               <h3>
@@ -351,7 +351,7 @@ const StudyPage: React.FC = () => {
                                 <button 
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    navigate(`/study/${study.slug}/manage`);
+                                    navigate(`/study/${study.id}/manage`);
                                   }}
                                   className={styles['manage-button']}
                                 >
@@ -414,7 +414,7 @@ const StudyPage: React.FC = () => {
                                 <button 
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    navigate(`/study/${study.slug}/apply`);
+                                    navigate(`/study/${study.id}/apply`);
                                   }}
                                   className={`${styles['apply-button']} ${styles['apply-button-rejected']}`}
                                 >
@@ -428,7 +428,7 @@ const StudyPage: React.FC = () => {
                               <button 
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  navigate(`/study/${study.slug}/apply`);
+                                  navigate(`/study/${study.id}/apply`);
                                 }}
                                 className={styles['apply-button']}
                               >

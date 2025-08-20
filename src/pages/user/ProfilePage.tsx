@@ -9,10 +9,11 @@ import ProfileOnboardingModal from '../../components/auth/ProfileOnboardingModal
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import styles from './ProfilePage.module.css';
-import studyService from '../../api/studyService';
+import studyService, { Study, StudyUpdateRequest } from '../../api/studyService';
 import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
 import { calculateUserProfileCompleteness, getProfileCompletenessColorClass } from '../../utils/profileCompleteness';
+import StudyUpdateModal from '../../components/ui/StudyUpdateModal';
 
 function ProfilePage(): React.ReactNode {
   // Auth context에서 실제 사용자 정보 가져오기
@@ -98,10 +99,46 @@ function ProfilePage(): React.ReactNode {
   const [myStudies, setMyStudies] = useState<{ participating: any[]; leading: any[] }>({ participating: [], leading: [] });
   const [studiesLoading, setStudiesLoading] = useState<boolean>(true);
   const [studiesError, setStudiesError] = useState<string | null>(null);
+  
+  // 스터디 수정 모달 관련 상태
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedStudyForEdit, setSelectedStudyForEdit] = useState<Study | null>(null);
   const [studyReviews, setStudyReviews] = useState<Record<string, boolean>>({});
   const [myStudiesGrouped, setMyStudiesGrouped] = useState<any>(null);
   const [participatingCollapsed, setParticipatingCollapsed] = useState<boolean>(true);
   const [leadingCollapsed, setLeadingCollapsed] = useState<boolean>(true);
+
+  // 스터디 수정 핸들러
+  const handleUpdateStudy = async (updateData: StudyUpdateRequest) => {
+    if (!selectedStudyForEdit) return;
+
+    try {
+      console.log('Update study with ID:', selectedStudyForEdit.id);
+      console.log('Study data:', selectedStudyForEdit);
+      
+      // UUID 형태인지 확인
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(selectedStudyForEdit.id);
+      console.log('Is UUID:', isUuid, selectedStudyForEdit.id);
+      
+      if (!isUuid) {
+        alert('올바르지 않은 스터디 ID 형식입니다. UUID 형태의 ID가 필요합니다.');
+        return;
+      }
+      
+      await studyService.updateStudy(selectedStudyForEdit.id, updateData);
+      
+      // 성공 후 스터디 목록 새로고침
+      const grouped = await studyService.getMyStudiesGrouped();
+      setMyStudiesGrouped(grouped);
+      
+      alert('스터디 정보가 성공적으로 수정되었습니다.');
+      setShowUpdateModal(false);
+      setSelectedStudyForEdit(null);
+    } catch (error: any) {
+      console.error('스터디 수정 실패:', error);
+      throw error; // Re-throw to let modal handle the error
+    }
+  };
 
   useEffect(() => {
     const loadMyStudies = async () => {
@@ -338,7 +375,52 @@ function ProfilePage(): React.ReactNode {
                     </div>
                     <div className={styles.studyCards}>
                       {myStudiesGrouped.proposed.map((study: any) => (
-                        <div key={study.studyId} className={`${styles.studyCard} ${styles.proposed}`}>
+                        <div 
+                          key={study.studyId} 
+                          className={`${styles.studyCard} ${styles.proposed} ${styles.clickable}`}
+                          onClick={async () => {
+                            try {
+                              console.log('Proposed study data:', study);
+                              
+                              // studyId로 전체 스터디 정보 가져오기
+                              let fullStudyData: Study | null = null;
+                              
+                              if (study.studySlug) {
+                                console.log('Getting study by slug:', study.studySlug);
+                                fullStudyData = await studyService.getStudyBySlug(study.studySlug);
+                              } else if (study.studyId) {
+                                console.log('Getting study by ID:', study.studyId);
+                                fullStudyData = await studyService.getStudyById(study.studyId);
+                              }
+                              
+                              // API 응답이 { success: true, data: {...} } 구조인 경우 처리
+                              const actualStudyData = (fullStudyData as any)?.data || fullStudyData;
+                              console.log('Retrieved study data:', actualStudyData);
+                              
+                              if (actualStudyData && actualStudyData.id) {
+                                // UUID 형태인지 확인
+                                const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actualStudyData.id);
+                                console.log('Retrieved study ID is UUID:', isUuid, actualStudyData.id);
+                                
+                                if (!isUuid) {
+                                  alert('스터디 ID가 올바른 UUID 형식이 아닙니다.');
+                                  return;
+                                }
+                                
+                                // transformStudy를 통해 이미 변환된 데이터이므로 추가 변환 불필요
+                                // actualStudyData는 이미 Study 타입으로 변환됨 (name, deadline 등 포함)
+                                setSelectedStudyForEdit(actualStudyData);
+                                setShowUpdateModal(true);
+                              } else {
+                                alert('스터디 정보를 불러올 수 없습니다.');
+                              }
+                            } catch (error) {
+                              console.error('Error getting study data:', error);
+                              alert('스터디 정보를 불러오는 중 오류가 발생했습니다.');
+                            }
+                          }}
+                          title="클릭하여 스터디 수정"
+                        >
                           <h4>
                             {study.studyTitle}
                             <span className={`${styles.studyStatusBadge} ${styles.pending}`}>
@@ -349,6 +431,9 @@ function ProfilePage(): React.ReactNode {
                           {study.createdAt && (
                             <p className={styles.studyMeta}>제안일: {parseDate(study.createdAt)?.toLocaleDateString() || 'Invalid Date'}</p>
                           )}
+                          <div className={styles.manageHint}>
+                            <span>✏️ 클릭하여 수정</span>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -448,7 +533,39 @@ function ProfilePage(): React.ReactNode {
                         <div 
                           key={study.memberId} 
                           className={`${styles.studyCard} ${styles.leading} ${styles.clickable}`}
-                          onClick={() => navigate(`/study/${study.studyId}/manage`)}
+                          onClick={async () => {
+                            try {
+                              console.log('Leading study clicked:', study);
+                              
+                              // UUID 검증
+                              const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(study.studyId);
+                              console.log('Study ID is UUID:', isUuid, study.studyId);
+                              
+                              if (!isUuid) {
+                                alert('올바르지 않은 스터디 ID 형식입니다.');
+                                return;
+                              }
+                              
+                              // studyId로 전체 스터디 정보 가져오기
+                              const fullStudyData = await studyService.getStudyById(study.studyId);
+                              console.log('Retrieved leading study data:', fullStudyData);
+                              
+                              // API 응답이 { success: true, data: {...} } 구조인 경우 처리
+                              const actualStudyData = (fullStudyData as any)?.data || fullStudyData;
+                              
+                              if (actualStudyData && actualStudyData.id) {
+                                console.log('Opening edit modal for leading study:', actualStudyData.id);
+                                setSelectedStudyForEdit(actualStudyData);
+                                setShowUpdateModal(true);
+                              } else {
+                                alert('스터디 정보를 불러올 수 없습니다.');
+                              }
+                            } catch (error) {
+                              console.error('Error getting leading study data:', error);
+                              alert('스터디 정보를 불러오는 중 오류가 발생했습니다.');
+                            }
+                          }}
+                          title="클릭하여 스터디 수정"
                           style={{ cursor: 'pointer' }}
                         >
                           <span className={styles.leaderBadge}>리더</span>
@@ -470,11 +587,9 @@ function ProfilePage(): React.ReactNode {
                             }
                             return new Date(study.joinedAt).toLocaleDateString('ko-KR');
                           })()}</p>
-                          {study.studyStatus === 'COMPLETED' ? (
-                            <p className={styles.studyAction}>→ 리뷰 관리</p>
-                          ) : (
-                            <p className={styles.studyAction}>→ 관리 페이지로 이동</p>
-                          )}
+                          <div className={styles.manageHint}>
+                            <span>✏️ 클릭하여 수정</span>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -606,6 +721,19 @@ function ProfilePage(): React.ReactNode {
         userName={authUser?.name || authUser?.username || ''}
         userEmail={authUser?.email || ''}
       />
+      
+      {/* Study Update Modal */}
+      {selectedStudyForEdit && (
+        <StudyUpdateModal
+          study={selectedStudyForEdit}
+          isOpen={showUpdateModal}
+          onClose={() => {
+            setShowUpdateModal(false);
+            setSelectedStudyForEdit(null);
+          }}
+          onUpdate={handleUpdateStudy}
+        />
+      )}
     </div>
   );
 }

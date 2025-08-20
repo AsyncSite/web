@@ -163,31 +163,50 @@ const StudyDetailPageRenderer: React.FC = () => {
         setLoading(true);
         setError(null);
         
-        // Fetch both page data and study data in parallel
-        const [pageDataResult, studyDataResult] = await Promise.allSettled([
-          studyDetailPageService.getPublishedPageBySlug(studyIdentifier),
-          studyService.getStudyBySlug(studyIdentifier)
-        ]);
-        
-        // Handle page data
-        if (pageDataResult.status === 'fulfilled') {
-          const data = pageDataResult.value;
-          setPageData(data);
-        } else {
-          console.error('Failed to fetch study detail page:', pageDataResult.reason);
-          if (pageDataResult.reason?.response?.status === 404) {
-            setError('페이지를 찾을 수 없습니다');
-          } else {
-            setError('페이지를 불러오는 중 오류가 발생했습니다');
-          }
+        // First, get study data to check if user is the proposer
+        let currentStudyData = null;
+        try {
+          currentStudyData = await studyService.getStudyBySlug(studyIdentifier);
+          setStudyData(currentStudyData);
+        } catch (err) {
+          console.error('Failed to fetch study data:', err);
         }
         
-        // Handle study data
-        if (studyDataResult.status === 'fulfilled') {
-          setStudyData(studyDataResult.value);
-        } else {
-          console.error('Failed to fetch study data:', studyDataResult.reason);
-          // Study data is optional, so we don't set error
+        // Try to fetch published page first
+        try {
+          const data = await studyDetailPageService.getPublishedPageBySlug(studyIdentifier);
+          setPageData(data);
+        } catch (publishedError: any) {
+          console.error('Failed to fetch published page:', publishedError);
+          
+          // If published page not found and user is the study proposer, try draft page
+          if (publishedError?.response?.status === 404 && 
+              currentStudyData && 
+              user && 
+              currentStudyData.proposerId === user.email) {
+            try {
+              console.log('Trying to fetch draft page for study proposer...');
+              const draftData = await studyDetailPageService.getDraftPage(currentStudyData.id);
+              setPageData(draftData);
+              console.log('Successfully loaded draft page for proposer');
+            } catch (draftError: any) {
+              console.error('Failed to fetch draft page:', draftError);
+              if (draftError?.response?.status === 404) {
+                // No page exists yet - this is normal for new studies
+                console.log('No page exists yet for this study');
+                setPageData(null);
+              } else {
+                setError('페이지를 불러오는 중 오류가 발생했습니다');
+              }
+            }
+          } else {
+            // For non-proposers or other errors, show standard error
+            if (publishedError?.response?.status === 404) {
+              setError('페이지를 찾을 수 없습니다');
+            } else {
+              setError('페이지를 불러오는 중 오류가 발생했습니다');
+            }
+          }
         }
       } catch (err: any) {
         console.error('Failed to fetch data:', err);
@@ -337,10 +356,33 @@ const StudyDetailPageRenderer: React.FC = () => {
             {/* Study Status Banner */}
             {studyData && (
               <div className={`${styles.studyStatusBanner} ${
+                studyData.status === 'PENDING' ? styles.statusPending :
                 studyData.status === 'APPROVED' ? styles.statusApproved :
                 studyData.status === 'IN_PROGRESS' ? styles.statusInProgress :
                 studyData.status === 'COMPLETED' ? styles.statusCompleted : ''
               }`}>
+                {studyData.status === 'PENDING' && (
+                  <>
+                    <span className={styles.statusIcon}>⏳</span>
+                    <div className={styles.statusInfo}>
+                      <h3>검토 대기 중인 스터디입니다</h3>
+                      <p>관리자 승인을 기다리고 있습니다</p>
+                    </div>
+                    {/* 스터디 제안자를 위한 관리 버튼 */}
+                    {user && studyData.proposerId === user.email && (
+                      <button 
+                        className={styles.manageButton} 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          navigate(`/study/${studyData.id}/manage`);
+                        }}
+                      >
+                        🎛️ 스터디 관리
+                      </button>
+                    )}
+                  </>
+                )}
                 {studyData.status === 'APPROVED' && (
                   <>
                     <span className={styles.statusIcon}>🚀</span>
@@ -348,8 +390,21 @@ const StudyDetailPageRenderer: React.FC = () => {
                       <h3>모집 중인 스터디입니다</h3>
                       <p>마감일: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}</p>
                     </div>
-                    {/* 상태별 버튼 표시 */}
-                    {applicationStatus === 'none' && (
+                    {/* 스터디 제안자를 위한 관리 버튼 */}
+                    {user && studyData.proposerId === user.email && (
+                      <button 
+                        className={styles.manageButton} 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          navigate(`/study/${studyData.id}/manage`);
+                        }}
+                      >
+                        🎛️ 스터디 관리
+                      </button>
+                    )}
+                    {/* 상태별 버튼 표시 (제안자가 아닌 경우만) */}
+                    {(!user || studyData.proposerId !== user.email) && applicationStatus === 'none' && (
                       <button 
                         className={styles.applyButton} 
                         onClick={(e) => {
@@ -370,7 +425,7 @@ const StudyDetailPageRenderer: React.FC = () => {
                         참가 신청하기
                       </button>
                     )}
-                    {applicationStatus === 'pending' && (
+                    {(!user || studyData.proposerId !== user.email) && applicationStatus === 'pending' && (
                       <div className={styles.applicationStatusContainer}>
                         <button className={`${styles.applyButton} ${styles.disabled}`} disabled>
                           심사 대기중
@@ -400,12 +455,12 @@ const StudyDetailPageRenderer: React.FC = () => {
                         </button>
                       </div>
                     )}
-                    {applicationStatus === 'approved' && isMember && (
+                    {(!user || studyData.proposerId !== user.email) && applicationStatus === 'approved' && isMember && (
                       <button className={`${styles.applyButton} ${styles.approved}`} disabled>
                         ✅ 참여 중
                       </button>
                     )}
-                    {applicationStatus === 'rejected' && (
+                    {(!user || studyData.proposerId !== user.email) && applicationStatus === 'rejected' && (
                       <button 
                         className={`${styles.applyButton} ${styles.rejected}`} 
                         onClick={(e) => {
