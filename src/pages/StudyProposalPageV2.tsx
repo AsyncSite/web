@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import studyService, { StudyProposalRequest, StudyType, RecurrenceType } from '../api/studyService';
+import studyService, { StudyProposalRequest, StudyType, RecurrenceType, CostType } from '../api/studyService';
 import { ScheduleFrequency, DurationUnit } from '../types/schedule';
 import { ToastContainer, useToast } from '../components/ui/Toast';
 import TimePickerCustom from '../components/study/TimePickerCustom';
@@ -47,6 +47,8 @@ const StudyProposalPageV2: React.FC = () => {
     recruitDeadlineTime: '',
     startDate: '',
     endDate: '',
+    costType: 'FREE' as CostType,
+    costDescription: '',
   });
 
   // Validation functions
@@ -426,6 +428,12 @@ const StudyProposalPageV2: React.FC = () => {
       let finalStartDate = formData.startDate;
       let finalEndDate = formData.endDate;
 
+      // 시간 정보를 duration 필드에 저장
+      let durationString: string | undefined;
+      if (formData.startTime && formData.endTime) {
+        durationString = `${formData.startTime}-${formData.endTime}`;
+      }
+
       if (formData.recurrenceType === 'ONE_TIME') {
         if (formData.selectedDate) {
           finalStartDate = formData.selectedDate;
@@ -437,13 +445,13 @@ const StudyProposalPageV2: React.FC = () => {
             month: 'long', 
             day: 'numeric', 
             weekday: 'long' 
-          })} ${formData.startTime}-${formData.endTime}`;
+          })}`;
         }
       } else {
-        if (formData.daysOfWeek.length > 0 && formData.startTime && formData.endTime) {
+        if (formData.daysOfWeek.length > 0) {
           const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
           const selectedDays = formData.daysOfWeek.map(day => dayNames[day]).join(', ');
-          scheduleString = `매주 ${selectedDays} ${formData.startTime}-${formData.endTime}`;
+          scheduleString = `매주 ${selectedDays}`;
         }
       }
 
@@ -460,14 +468,14 @@ const StudyProposalPageV2: React.FC = () => {
         generation: formData.generation,
         tagline: formData.tagline || undefined,
         schedule: scheduleString,
-        duration: formData.recurrenceType !== 'ONE_TIME' && formData.duration > 0 
-          ? `${formData.duration}${formData.durationUnit === 'WEEKS' ? '주' : '개월'}` 
-          : undefined,
+        duration: durationString,
         capacity: formData.capacity || undefined,
         recruitDeadline: recruitDeadlineDateTime,
         startDate: finalStartDate || undefined,
         endDate: finalEndDate || undefined,
         recurrenceType: formData.recurrenceType,
+        costType: formData.costType,
+        costDescription: formData.costDescription || undefined,
         // detailPage는 제안 단계에서는 보내지 않음 - 승인 후 관리 페이지에서 생성
         // detailPage: undefined
       };
@@ -929,6 +937,52 @@ const StudyProposalPageV2: React.FC = () => {
                   max="100"
                 />
               </div>
+
+              <div className={styles['form-group-v2']}>
+                <label>스터디 비용 정보</label>
+                <div className={styles['cost-type-selector']}>
+                  {[
+                    { value: 'FREE', label: '완전 무료', desc: '모든 비용이 무료입니다' },
+                    { value: 'FREE_WITH_VENUE', label: '무료/대관비 유료', desc: '스터디는 무료이지만 장소 대관비 등이 발생할 수 있습니다' },
+                    { value: 'PAID', label: '유료', desc: '스터디 참여에 비용이 발생합니다' }
+                  ].map((option) => (
+                    <div
+                      key={option.value}
+                      className={`${styles['cost-type-option']} ${formData.costType === option.value ? styles['selected'] : ''}`}
+                      onClick={() => handleInputChange('costType', option.value as CostType)}
+                    >
+                      <div className={styles['cost-type-header']}>
+                        <div className={styles['cost-type-radio']}>
+                          <div className={styles['radio-dot']}></div>
+                        </div>
+                        <span className={styles['cost-type-label']}>{option.label}</span>
+                      </div>
+                      <div className={styles['cost-type-desc']}>{option.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {formData.costType !== 'FREE' && (
+                <div className={styles['form-group-v2']}>
+                  <label>비용 상세 설명</label>
+                  <textarea
+                    value={formData.costDescription}
+                    onChange={(e) => handleInputChange('costDescription', e.target.value)}
+                    placeholder={
+                      formData.costType === 'FREE_WITH_VENUE' 
+                        ? '예: 카페 대관비 인당 5,000원, 교재비 별도' 
+                        : '예: 월 30,000원, 교재비 포함'
+                    }
+                    className={styles['modern-textarea']}
+                    rows={3}
+                    maxLength={500}
+                  />
+                  <span className={styles['form-hint']}>
+                    참가자가 이해하기 쉽게 구체적으로 작성해주세요 (최대 500자)
+                  </span>
+                </div>
+              )}
 
               <div className={styles['form-row-v2']}>
                 <div className={styles['form-group-v2']}>

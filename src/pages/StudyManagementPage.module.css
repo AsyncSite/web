@@ -138,6 +138,7 @@
   margin-left: 4px;
 }
 
+
 /* Applications Section */
 .applicationsSection {
   space-y: 32px;
@@ -480,6 +481,12 @@
   .tabButton {
     padding: 10px 12px;
     font-size: 14px;
+  }
+
+  .tabNavigation {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
   }
 
   .applicationHeader {

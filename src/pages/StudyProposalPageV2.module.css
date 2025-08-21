@@ -705,4 +705,95 @@
     font-size: 11px;
     padding: 1px 6px;
   }
+  
+  .cost-type-selector {
+    gap: 8px;
+  }
+  
+  .cost-type-option {
+    padding: 12px;
+  }
+  
+  .cost-type-header {
+    gap: 8px;
+  }
+  
+  .cost-type-desc {
+    font-size: 12px;
+    margin-left: 20px;
+  }
+}
+
+/* Cost Type Selector */
+.cost-type-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cost-type-option {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cost-type-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(195, 232, 141, 0.3);
+}
+
+.cost-type-option.selected {
+  background: rgba(195, 232, 141, 0.1);
+  border-color: #C3E88D;
+}
+
+.cost-type-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.cost-type-radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.cost-type-option.selected .cost-type-radio {
+  border-color: #C3E88D;
+}
+
+.radio-dot {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.cost-type-option.selected .radio-dot {
+  background: #C3E88D;
+}
+
+.cost-type-label {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+}
+
+.cost-type-desc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 32px;
+  line-height: 1.4;
 }

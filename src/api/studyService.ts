@@ -33,6 +33,15 @@ export const RecurrenceType = {
 
 export type RecurrenceType = typeof RecurrenceType[keyof typeof RecurrenceType];
 
+// Backend Cost Type
+export const CostType = {
+  FREE: 'FREE',                    // 완전 무료
+  FREE_WITH_VENUE: 'FREE_WITH_VENUE', // 무료지만 대관비 등 발생
+  PAID: 'PAID'                     // 유료
+} as const;
+
+export type CostType = typeof CostType[keyof typeof CostType];
+
 // Backend Study DTO
 export interface StudyDTO {
   id: string;
@@ -57,6 +66,8 @@ export interface StudyDTO {
   deleted?: boolean;
   deletedAt?: string | number[];
   recurrenceType?: RecurrenceType;
+  costType?: CostType;
+  costDescription?: string; // 비용 관련 상세 설명
 }
 
 // Paginated response
@@ -97,6 +108,8 @@ export interface Study {
   recurrenceType?: RecurrenceType;
   startDate?: Date | string | number[] | null;
   endDate?: Date | string | number[] | null;
+  costType?: CostType;
+  costDescription?: string;
   recentTestimonial?: {
     content: string;
     author: string;
@@ -166,6 +179,8 @@ const transformStudy = (dto: StudyDTO): Study => {
     recurrenceType: dto.recurrenceType,
     startDate: dto.startDate,
     endDate: dto.endDate,
+    costType: dto.costType,
+    costDescription: dto.costDescription,
     recentTestimonial: undefined, // TODO: Fetch from testimonial service
     color: getStudyTheme(dto.id)
   };
@@ -195,6 +210,8 @@ export interface StudyProposalRequest {
   startDate?: string;
   endDate?: string;
   recurrenceType?: RecurrenceType;
+  costType?: CostType;
+  costDescription?: string;
   detailPage?: {
     sections: Array<{
       type: string;
@@ -248,6 +265,21 @@ export interface AcceptApplicationRequest {
 export interface RejectApplicationRequest {
   reviewerId: string;
   reason: string;
+}
+
+// Study Update Request Type
+export interface StudyUpdateRequest {
+  title?: string;
+  description?: string;
+  tagline?: string;
+  schedule?: string;
+  duration?: string;
+  capacity?: number;
+  recruitDeadline?: string;
+  startDate?: string;
+  endDate?: string;
+  costType?: CostType;
+  costDescription?: string;
 }
 
 // Member related types
@@ -371,15 +403,14 @@ class StudyService {
         return null;
       }
       
-      // APPROVED, IN_PROGRESS, COMPLETED 상태의 스터디는 모두 표시
-      const allowedStatuses = ['APPROVED', 'IN_PROGRESS', 'COMPLETED'];
+      // PENDING 상태도 허용하도록 수정 (ProfilePage에서 제안한 스터디 접근용)
+      const allowedStatuses = ['APPROVED', 'IN_PROGRESS', 'COMPLETED', 'PENDING'];
       if (!allowedStatuses.includes(study.status)) {
         return null;
       }
-      
       return transformStudy(study);
     } catch (error) {
-      console.log('Slug endpoint not available, falling back to getAllStudies');
+      console.log('Slug endpoint error, falling back to getAllStudies:', error);
       // 백엔드에 slug 엔드포인트가 없으면 fallback으로 전체 조회 후 필터링
       const studies = await this.getAllStudies();
       return studies.find(study => study.slug === slug) || null;
@@ -688,6 +719,20 @@ class StudyService {
     await apiClient.post(`${this.STUDY_API_PATH}/${studyId}/members/leave`, null, {
       params: { userId }
     });
+  }
+
+  /**
+   * Update study (requires authentication, host/admin only)
+   */
+  async updateStudy(studyId: string, updateRequest: StudyUpdateRequest): Promise<StudyDTO> {
+    const response = await apiClient.patch<{
+      success: boolean;
+      data: StudyDTO;
+      error: any;
+      timestamp: number[];
+    }>(`${this.STUDY_API_PATH}/${studyId}`, updateRequest);
+    
+    return response.data?.data || response.data;
   }
 }
 
