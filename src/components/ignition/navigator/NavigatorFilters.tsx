@@ -13,11 +13,15 @@ interface NavigatorFiltersProps {
     companies: string[];
     skills: string[];
     experience: string[];
+    locations?: string[];
+    jobTypes?: string[];
   };
   onFilterChange: (filters: {
-    companies: string[];
-    skills: string[];
-    experience: string[];
+    companies?: string[];
+    skills?: string[];
+    experience?: string[];
+    locations?: string[];
+    jobTypes?: string[];
   }) => void;
   companies: CompanyResponse[];
   techStacks: TechStackResponse[];
@@ -82,18 +86,51 @@ const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({
         { name: '기술 스택을 불러오는 중...', count: 0 }
       ],
       experience: experienceLevels,
+      locations: [
+        { name: '서울', value: '서울', count: 0 },
+        { name: '경기', value: '경기', count: 0 },
+        { name: '인천', value: '인천', count: 0 },
+        { name: '부산', value: '부산', count: 0 },
+        { name: '대구', value: '대구', count: 0 },
+        { name: '대전', value: '대전', count: 0 },
+        { name: '광주', value: '광주', count: 0 },
+        { name: '울산', value: '울산', count: 0 },
+        { name: '세종', value: '세종', count: 0 },
+        { name: '제주', value: '제주', count: 0 },
+      ],
+      jobTypes: [
+        { name: '백엔드', value: 'BACKEND', count: 0 },
+        { name: '프론트엔드', value: 'FRONTEND', count: 0 },
+        { name: '풀스택', value: 'FULLSTACK', count: 0 },
+        { name: '모바일', value: 'MOBILE', count: 0 },
+        { name: 'AI/ML', value: 'AI_ML', count: 0 },
+        { name: '데이터', value: 'DATA', count: 0 },
+        { name: 'DevOps', value: 'DEVOPS', count: 0 },
+        { name: '보안', value: 'SECURITY', count: 0 },
+        { name: '게임', value: 'GAME', count: 0 },
+      ],
     };
   }, [companies, techStacks, companiesWithCount, techStacksWithCount]);
 
   const handleFilterToggle = (category: keyof typeof filters, value: string, enumValue?: string) => {
     const currentFilters = { ...filters };
-    const filterValue = enumValue || value; // Use enum value if provided, otherwise use display value
-    const index = currentFilters[category].indexOf(filterValue);
+    const filterValue = enumValue || value;
+    
+    // Initialize arrays if they don't exist
+    if (category === 'locations' && !currentFilters.locations) {
+      currentFilters.locations = [];
+    }
+    if (category === 'jobTypes' && !currentFilters.jobTypes) {
+      currentFilters.jobTypes = [];
+    }
+    
+    const categoryArray = currentFilters[category] || [];
+    const index = categoryArray.indexOf(filterValue);
     
     if (index > -1) {
-      currentFilters[category] = currentFilters[category].filter(item => item !== filterValue);
+      currentFilters[category] = categoryArray.filter(item => item !== filterValue);
     } else {
-      currentFilters[category] = [...currentFilters[category], filterValue];
+      currentFilters[category] = [...categoryArray, filterValue];
     }
     
     onFilterChange(currentFilters);
@@ -152,6 +189,38 @@ const NavigatorFilters: React.FC<NavigatorFiltersProps> = ({
             <div className={`ignition-nav-filter-checkbox ${filters.experience.includes(exp.value) ? 'checked' : ''}`}></div>
             <span className="filter-name">{exp.name}</span>
             <span className="filter-count">{exp.count}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Location Filter */}
+      <div className="ignition-nav-filter-section">
+        <h3 className="ignition-nav-filter-title">위치</h3>
+        {availableFilters.locations.map((location) => (
+          <div
+            key={location.value}
+            className="ignition-nav-filter-option"
+            onClick={() => handleFilterToggle('locations', location.value)}
+          >
+            <div className={`ignition-nav-filter-checkbox ${filters.locations?.includes(location.value) ? 'checked' : ''}`}></div>
+            <span className="ignition-nav-filter-name">{location.name}</span>
+            <span className="ignition-nav-filter-count">{location.count}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Job Type Filter */}
+      <div className="ignition-nav-filter-section">
+        <h3 className="ignition-nav-filter-title">직무 유형</h3>
+        {availableFilters.jobTypes.map((jobType) => (
+          <div
+            key={jobType.value}
+            className="ignition-nav-filter-option"
+            onClick={() => handleFilterToggle('jobTypes', jobType.value)}
+          >
+            <div className={`ignition-nav-filter-checkbox ${filters.jobTypes?.includes(jobType.value) ? 'checked' : ''}`}></div>
+            <span className="ignition-nav-filter-name">{jobType.name}</span>
+            <span className="ignition-nav-filter-count">{jobType.count}</span>
           </div>
         ))}
       </div>

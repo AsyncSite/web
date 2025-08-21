@@ -86,6 +86,28 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
                 <p className="ignition-nav-job-modal-description">{job.description}</p>
               </div>
 
+              {job.requirements && (
+                <div className="ignition-nav-modal-section">
+                  <h3>자격 요건</h3>
+                  <div className="ignition-nav-job-modal-requirements">
+                    {job.requirements.split('\n').map((line, index) => (
+                      <p key={index}>{line}</p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {job.preferred && (
+                <div className="ignition-nav-modal-section">
+                  <h3>우대 사항</h3>
+                  <div className="ignition-nav-job-modal-preferred">
+                    {job.preferred.split('\n').map((line, index) => (
+                      <p key={index}>{line}</p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="ignition-nav-modal-section">
                 <h3>요구 기술</h3>
                 <div className="ignition-nav-modal-skills">

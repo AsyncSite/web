@@ -19,7 +19,8 @@ const ReviewWritePage = lazy(() => import('../pages/ReviewWritePage'));
 
 // Ignition 관련 페이지들
 const IgnitionPage = lazy(() => import('../pages/ignition/IgnitionPage'));
-const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPage'));
+const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPage'));  // V2 is now main
+const NavigatorPageV1Deprecated = lazy(() => import('../pages/ignition/navigator/NavigatorPageV1Deprecated'));
 
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
@@ -123,7 +124,11 @@ const subRouter = [
       },
       {
         path: 'navigator',
-        element: <NavigatorPage />,
+        element: <NavigatorPage />,  // V2 is now the main version
+      },
+      {
+        path: 'navigator-v1-deprecated',
+        element: <NavigatorPageV1Deprecated />,  // V1 deprecated - kept for reference
       },
     ],
   },

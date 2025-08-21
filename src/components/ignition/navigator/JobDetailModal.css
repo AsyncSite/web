@@ -119,6 +119,28 @@
   white-space: pre-wrap;
 }
 
+/* Requirements and Preferred Sections */
+.ignition-nav-job-modal-requirements,
+.ignition-nav-job-modal-preferred {
+  color: #555;
+  line-height: 1.8;
+}
+
+.ignition-nav-job-modal-requirements p,
+.ignition-nav-job-modal-preferred p {
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.ignition-nav-job-modal-requirements p:before,
+.ignition-nav-job-modal-preferred p:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #C3E88D;
+}
+
 .ignition-nav-modal-skills {
   display: flex;
   flex-wrap: wrap;

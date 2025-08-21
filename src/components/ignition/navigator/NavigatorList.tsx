@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { JobItemResponse } from '../../../api/jobNavigatorService';
 import { highlightText } from '../../../utils/highlightText';
 import './NavigatorList.css';
@@ -18,6 +18,8 @@ interface NavigatorListProps {
   totalElements: number;
   onPageChange: (page: number) => void;
   onJobClick?: (jobId: number) => void;
+  showOnlyActive?: boolean;
+  onShowOnlyActiveChange?: (value: boolean) => void;
 }
 
 const NavigatorList: React.FC<NavigatorListProps> = ({ 
@@ -30,8 +32,21 @@ const NavigatorList: React.FC<NavigatorListProps> = ({
   totalPages, 
   totalElements,
   onPageChange,
-  onJobClick 
+  onJobClick,
+  showOnlyActive = true,
+  onShowOnlyActiveChange 
 }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState('matchScore');
+  
+  const sortOptions = [
+    { value: 'matchScore', label: '매칭률 높은순', icon: '🎯' },
+    { value: 'latest', label: '최신순', icon: '🆕' },
+    { value: 'deadline', label: '마감임박순', icon: '⏰' },
+    { value: 'popular', label: '인기순', icon: '🔥' }
+  ];
+  
+  const currentSortOption = sortOptions.find(opt => opt.value === selectedSort) || sortOptions[0];
   // Show loading state
   if (loading) {
     return (
@@ -61,12 +76,53 @@ const NavigatorList: React.FC<NavigatorListProps> = ({
       <div className="ignition-nav-list-controls">
         <span className="ignition-nav-results-count">총 {totalElements}개의 채용공고</span>
         <div className="ignition-nav-view-options">
-          <select className="ignition-nav-sort-dropdown">
-            <option>매칭률 높은순</option>
-            <option>최신순</option>
-            <option>마감임박순</option>
-            <option>인기순</option>
-          </select>
+          {/* Custom Sort Dropdown */}
+          <div className="ignition-nav-sort-group">
+            <button 
+              className="ignition-nav-sort-button"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <span className="ignition-nav-sort-icon">{currentSortOption.icon}</span>
+              <span className="ignition-nav-sort-label">{currentSortOption.label}</span>
+              <span className={`ignition-nav-sort-arrow ${isDropdownOpen ? 'open' : ''}`}>▼</span>
+            </button>
+            
+            {isDropdownOpen && (
+              <div className="ignition-nav-sort-dropdown">
+                {sortOptions.map(option => (
+                  <button
+                    key={option.value}
+                    className={`ignition-nav-sort-option ${selectedSort === option.value ? 'active' : ''}`}
+                    onClick={() => {
+                      setSelectedSort(option.value);
+                      setIsDropdownOpen(false);
+                      // TODO: Add actual sort logic here
+                    }}
+                  >
+                    <span className="ignition-nav-sort-option-icon">{option.icon}</span>
+                    <span className="ignition-nav-sort-option-label">{option.label}</span>
+                    {selectedSort === option.value && (
+                      <span className="ignition-nav-sort-check">✓</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          {/* Active Jobs Toggle */}
+          <div className="ignition-nav-active-toggle">
+            <label className="ignition-nav-toggle-label">
+              <input 
+                type="checkbox"
+                className="ignition-nav-toggle-checkbox"
+                checked={showOnlyActive}
+                onChange={(e) => onShowOnlyActiveChange && onShowOnlyActiveChange(e.target.checked)}
+              />
+              <span className="ignition-nav-toggle-slider"></span>
+              <span className="ignition-nav-toggle-text">활성 공고만</span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -74,7 +130,9 @@ const NavigatorList: React.FC<NavigatorListProps> = ({
       <div className="ignition-nav-job-items">
         {jobs.map((job) => (
           <article key={job.id} className="ignition-nav-job-item">
-            {job.hasWarRoom && <div className="ignition-nav-war-room-indicator"></div>}
+            {job.hasWarRoom && (
+              <div className="ignition-nav-war-room-indicator"></div>
+            )}
             
             <div className="ignition-nav-job-item-header">
               <div className="ignition-nav-job-info">

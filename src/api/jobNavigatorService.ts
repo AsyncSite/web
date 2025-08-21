@@ -31,6 +31,9 @@ export interface JobItemResponse {
   sourceUrl?: string;
   postedAt?: string;
   experienceCategory?: string;
+  requirements?: string;
+  preferred?: string;
+  summary?: string;  // KoBART로 생성된 요약
 }
 
 export interface JobSearchResponse {
@@ -103,10 +106,10 @@ export interface SuggestionResponse {
 // Service
 class JobNavigatorService {
   /**
-   * Search jobs with filters
+   * Search jobs with filters (Public API - no auth required)
    */
   async searchJobs(params: SearchJobsParams = {}): Promise<JobSearchResponse> {
-    const response = await apiClient.get<JobSearchResponse>('/api/job-navigator/jobs', {
+    const response = await apiClient.get<JobSearchResponse>('/api/public/jobs', {
       params: {
         ...params,
         page: params.page || 0,
@@ -118,54 +121,54 @@ class JobNavigatorService {
   }
 
   /**
-   * Get job detail by ID
+   * Get job detail by ID (Public API - no auth required)
    */
   async getJobDetail(id: number): Promise<JobItemResponse> {
-    const response = await apiClient.get<JobItemResponse>(`/api/job-navigator/jobs/${id}`);
+    const response = await apiClient.get<JobItemResponse>(`/api/public/jobs/${id}`);
     return response.data;
   }
 
   /**
-   * Get all companies
+   * Get all companies (Public API - no auth required)
    */
   async getCompanies(query?: string): Promise<CompanyResponse[]> {
-    const response = await apiClient.get<CompanyResponse[]>('/api/job-navigator/companies', {
+    const response = await apiClient.get<CompanyResponse[]>('/api/public/jobs/companies', {
       params: query ? { q: query } : undefined
     });
     return response.data;
   }
 
   /**
-   * Get all tech stacks
+   * Get all tech stacks (Public API - no auth required)
    */
   async getTechStacks(category?: string): Promise<TechStackResponse[]> {
-    const response = await apiClient.get<TechStackResponse[]>('/api/job-navigator/tech-stacks', {
+    const response = await apiClient.get<TechStackResponse[]>('/api/public/jobs/tech-stacks', {
       params: category ? { category } : undefined
     });
     return response.data;
   }
 
   /**
-   * Get companies with job count
+   * Get companies with job count (Public API - no auth required)
    */
   async getCompaniesWithCount(): Promise<CompanyWithCountResponse[]> {
-    const response = await apiClient.get<CompanyWithCountResponse[]>('/api/job-navigator/companies/with-count');
+    const response = await apiClient.get<CompanyWithCountResponse[]>('/api/public/jobs/companies/with-count');
     return response.data;
   }
 
   /**
-   * Get tech stacks with job count
+   * Get tech stacks with job count (Public API - no auth required)
    */
   async getTechStacksWithCount(): Promise<TechStackWithCountResponse[]> {
-    const response = await apiClient.get<TechStackWithCountResponse[]>('/api/job-navigator/tech-stacks/with-count');
+    const response = await apiClient.get<TechStackWithCountResponse[]>('/api/public/jobs/tech-stacks/with-count');
     return response.data;
   }
 
   /**
-   * Get experience categories with job count
+   * Get experience categories with job count (Public API - no auth required)
    */
   async getExperienceCategoriesWithCount(): Promise<ExperienceCategoryWithCountResponse[]> {
-    const response = await apiClient.get<ExperienceCategoryWithCountResponse[]>('/api/job-navigator/experience/categories/with-count');
+    const response = await apiClient.get<ExperienceCategoryWithCountResponse[]>('/api/public/jobs/experience/categories/with-count');
     return response.data;
   }
 
@@ -186,7 +189,7 @@ class JobNavigatorService {
   }
 
   /**
-   * Create a new suggestion
+   * Create a new suggestion (Internal API - auth required)
    */
   async createSuggestion(request: CreateSuggestionRequest): Promise<SuggestionResponse> {
     const response = await apiClient.post<SuggestionResponse>('/api/job-navigator/suggestions', request);
