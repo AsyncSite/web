@@ -178,7 +178,7 @@ const NavigatorPage: React.FC = () => {
     <div className={styles['ignition-nav-page']}>
       <section className={styles['ignition-nav-hero']}>
         <div className={styles['ignition-nav-container']}>
-          <h1 className={styles['ignition-nav-title']}>커리어 네비게이터 V2</h1>
+          <h1 className={styles['ignition-nav-title']}>커리어 네비게이터</h1>
           <p className={styles['ignition-nav-subtitle']}>
             검색바 아래 통합 필터로 더 빠르게 찾아보세요.
           </p>
