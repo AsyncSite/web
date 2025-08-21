@@ -430,6 +430,7 @@
     display: flex;
   }
   
+  /* 기본: 상단 고정 헤더일 때 메뉴 위치 */
   .nav-right {
     position: fixed;
     top: 70px;
@@ -446,8 +447,52 @@
     z-index: 999;
   }
   
+  /* 하단 GNB일 때 메뉴 위치 (첫 페이지 Hero 섹션) */
+  .header:not(.fixed-top) .nav-right {
+    top: auto;
+    bottom: 70px; /* 헤더 높이만큼 위로 */
+    height: calc(100vh - 70px);
+    transform: translateX(100%);
+  }
+  
+  /* 메뉴 열림 상태 */
   .nav-right.mobile-open {
     transform: translateX(0);
+  }
+  
+  /* 하단 GNB에서 메뉴 열림 (아래에서 위로 슬라이드) */
+  .header:not(.fixed-top) .nav-right.mobile-open {
+    transform: translateX(0);
+    animation: slideUpFromBottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* 상단 고정 GNB에서 메뉴 열림 (위에서 아래로 슬라이드) */
+  .header.fixed-top .nav-right.mobile-open {
+    animation: slideDownFromTop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* 아래에서 위로 슬라이드 애니메이션 */
+  @keyframes slideUpFromBottom {
+    from {
+      transform: translateX(100%);
+      opacity: 0.8;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  /* 위에서 아래로 슬라이드 애니메이션 */
+  @keyframes slideDownFromTop {
+    from {
+      transform: translateX(100%);
+      opacity: 0.8;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
   
   .nav-menu {
