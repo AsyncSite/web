@@ -107,7 +107,7 @@ const NavigatorPage: React.FC = () => {
         experienceLevel: filters.experience[0],
         location: filters.locations[0] || undefined,
         jobType: filters.jobTypes[0] || undefined,
-        isActive: showOnlyActive,
+        isActive: showOnlyActive ? true : undefined,
         page,
         size: 20,
         sortBy: 'matchScore',
