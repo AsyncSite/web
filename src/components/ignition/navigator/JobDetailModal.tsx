@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import jobNavigatorService, { JobItemResponse } from '../../../api/jobNavigatorService';
 import ShareButton from './ShareButton';
 import SuggestionModal from './SuggestionModal';
+import { formatJobRequirements } from '../../../utils/jobTextNormalizer';
 import './JobDetailModal.css';
 
 interface JobDetailModalProps {
@@ -90,7 +91,7 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
                 <div className="ignition-nav-modal-section">
                   <h3>자격 요건</h3>
                   <div className="ignition-nav-job-modal-requirements">
-                    {job.requirements.split('\n').map((line, index) => (
+                    {formatJobRequirements(job.requirements).map((line, index) => (
                       <p key={index}>{line}</p>
                     ))}
                   </div>
@@ -101,7 +102,7 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ jobId, onClose }) => {
                 <div className="ignition-nav-modal-section">
                   <h3>우대 사항</h3>
                   <div className="ignition-nav-job-modal-preferred">
-                    {job.preferred.split('\n').map((line, index) => (
+                    {formatJobRequirements(job.preferred).map((line, index) => (
                       <p key={index}>{line}</p>
                     ))}
                   </div>
