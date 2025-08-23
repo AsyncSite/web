@@ -319,7 +319,7 @@ class StudyService {
     }
     
     return studies
-      .filter(study => study.status === 'APPROVED' && !study.deleted)
+      .filter(study => !study.deleted)
       .map(transformStudy);
   }
 

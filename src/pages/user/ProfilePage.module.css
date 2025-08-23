@@ -301,7 +301,8 @@
   text-align: center;
 }
 
-.studyCard.proposed.clickable:hover .manageHint {
+.studyCard.proposed.clickable:hover .manageHint,
+.studyCard.leading.clickable:hover .manageHint {
   opacity: 1;
 }
 

@@ -120,7 +120,8 @@ const StudyPage: React.FC = () => {
         return completedStudies;
       case 'all':
       default:
-        return studies.filter(study => study.status === 'APPROVED' || study.status === 'IN_PROGRESS' || study.status === 'COMPLETED');
+        // PENDING 상태는 제외 (아직 승인 대기중인 제안)
+        return studies.filter(study => study.status !== 'PENDING');
     }
   };
   
