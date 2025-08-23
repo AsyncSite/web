@@ -113,18 +113,29 @@ const StudyManagementPage: React.FC = () => {
         // UUID 패턴 체크 (숫자나 slug가 아닌 경우)
         const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(studyId);
 
+        console.log('=== StudyManagementPage Debug ===');
+        console.log('studyId:', studyId);
+        console.log('isUUID:', isUUID);
+        
         if (isUUID) {
+          console.log('Fetching study by ID...');
           studyData = await studyService.getStudyById(studyId);
         } else {
+          console.log('Fetching study by slug...');
           // slug로 먼저 시도
           studyData = await studyService.getStudyBySlug(studyId);
         }
 
+        console.log('Study data received:', studyData);
+
         if (!studyData) {
+          console.log('No study data - redirecting to /study');
           addToast('존재하지 않는 스터디입니다.', 'error');
           navigate('/study');
           return;
         }
+        
+        console.log('Study management page loaded successfully');
 
         setStudy(studyData);
 
