@@ -170,6 +170,8 @@
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 30px;
+  position: relative;
+  z-index: 10;
 }
 
 .propose-study-btn {
@@ -325,6 +327,7 @@
 /* 카드 콘텐츠 영역 */
 .card-content {
   padding: 24px;
+  padding-bottom: 60px; /* 자세히 보기 공간 확보 */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -436,26 +439,20 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* 카드 호버 오버레이 */
+/* 카드 하단 자세히 보기 */
 .card-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
-  padding: 20px;
+  height: 50px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%);
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.3s ease;
   pointer-events: none;
-}
-
-.study-card:hover .card-overlay {
-  opacity: 1;
-  transform: translateY(0);
+  z-index: 2;
 }
 
 .card-overlay span {
@@ -464,6 +461,12 @@
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.study-card:hover .card-overlay span {
+  transform: translateX(5px);
+  color: #89ddff;
 }
 
 /* Legacy 스타일 (호환성 유지) */
@@ -646,11 +649,10 @@
   border: 1px solid rgba(195, 232, 141, 0.2);
 }
 
-/* 신청 버튼 스타일 */
+/* 버튼 스타일 */
+.manage-button,
 .apply-button {
-  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
   border: none;
-  color: #1a1a1a;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
@@ -660,6 +662,25 @@
   margin-top: 12px;
   width: 100%;
   text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* 관리 버튼 스타일 */
+.manage-button {
+  background: linear-gradient(135deg, #82AAFF 0%, #6366F1 100%);
+  color: white;
+}
+
+.manage-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(130, 170, 255, 0.3);
+}
+
+/* 신청 버튼 스타일 */
+.apply-button {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  color: #1a1a1a;
 }
 
 .apply-button:hover {
