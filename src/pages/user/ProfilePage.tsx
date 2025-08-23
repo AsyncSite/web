@@ -378,48 +378,17 @@ function ProfilePage(): React.ReactNode {
                         <div 
                           key={study.studyId} 
                           className={`${styles.studyCard} ${styles.proposed} ${styles.clickable}`}
-                          onClick={async () => {
-                            try {
-                              console.log('Proposed study data:', study);
-                              
-                              // studyId로 전체 스터디 정보 가져오기
-                              let fullStudyData: Study | null = null;
-                              
-                              if (study.studySlug) {
-                                console.log('Getting study by slug:', study.studySlug);
-                                fullStudyData = await studyService.getStudyBySlug(study.studySlug);
-                              } else if (study.studyId) {
-                                console.log('Getting study by ID:', study.studyId);
-                                fullStudyData = await studyService.getStudyById(study.studyId);
-                              }
-                              
-                              // API 응답이 { success: true, data: {...} } 구조인 경우 처리
-                              const actualStudyData = (fullStudyData as any)?.data || fullStudyData;
-                              console.log('Retrieved study data:', actualStudyData);
-                              
-                              if (actualStudyData && actualStudyData.id) {
-                                // UUID 형태인지 확인
-                                const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actualStudyData.id);
-                                console.log('Retrieved study ID is UUID:', isUuid, actualStudyData.id);
-                                
-                                if (!isUuid) {
-                                  alert('스터디 ID가 올바른 UUID 형식이 아닙니다.');
-                                  return;
-                                }
-                                
-                                // transformStudy를 통해 이미 변환된 데이터이므로 추가 변환 불필요
-                                // actualStudyData는 이미 Study 타입으로 변환됨 (name, deadline 등 포함)
-                                setSelectedStudyForEdit(actualStudyData);
-                                setShowUpdateModal(true);
-                              } else {
-                                alert('스터디 정보를 불러올 수 없습니다.');
-                              }
-                            } catch (error) {
-                              console.error('Error getting study data:', error);
-                              alert('스터디 정보를 불러오는 중 오류가 발생했습니다.');
-                            }
+                          onClick={() => {
+                            console.log('=== Study Card Clicked ===');
+                            console.log('Study data:', study);
+                            console.log('Study ID:', study.studyId);
+                            console.log('Navigate to:', `/study/${study.studyId}/manage`);
+                            console.log('==========================');
+                            
+                            // 스터디 관리 페이지로 이동 (승인 대기중도 관리 페이지 사용)
+                            navigate(`/study/${study.studyId}/manage`);
                           }}
-                          title="클릭하여 스터디 수정"
+                          title="클릭하여 스터디 관리"
                         >
                           <h4>
                             {study.studyTitle}
@@ -432,7 +401,7 @@ function ProfilePage(): React.ReactNode {
                             <p className={styles.studyMeta}>제안일: {parseDate(study.createdAt)?.toLocaleDateString() || 'Invalid Date'}</p>
                           )}
                           <div className={styles.manageHint}>
-                            <span>✏️ 클릭하여 수정</span>
+                            <span>⚙️ 클릭하여 관리</span>
                           </div>
                         </div>
                       ))}
@@ -533,39 +502,17 @@ function ProfilePage(): React.ReactNode {
                         <div 
                           key={study.memberId} 
                           className={`${styles.studyCard} ${styles.leading} ${styles.clickable}`}
-                          onClick={async () => {
-                            try {
-                              console.log('Leading study clicked:', study);
-                              
-                              // UUID 검증
-                              const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(study.studyId);
-                              console.log('Study ID is UUID:', isUuid, study.studyId);
-                              
-                              if (!isUuid) {
-                                alert('올바르지 않은 스터디 ID 형식입니다.');
-                                return;
-                              }
-                              
-                              // studyId로 전체 스터디 정보 가져오기
-                              const fullStudyData = await studyService.getStudyById(study.studyId);
-                              console.log('Retrieved leading study data:', fullStudyData);
-                              
-                              // API 응답이 { success: true, data: {...} } 구조인 경우 처리
-                              const actualStudyData = (fullStudyData as any)?.data || fullStudyData;
-                              
-                              if (actualStudyData && actualStudyData.id) {
-                                console.log('Opening edit modal for leading study:', actualStudyData.id);
-                                setSelectedStudyForEdit(actualStudyData);
-                                setShowUpdateModal(true);
-                              } else {
-                                alert('스터디 정보를 불러올 수 없습니다.');
-                              }
-                            } catch (error) {
-                              console.error('Error getting leading study data:', error);
-                              alert('스터디 정보를 불러오는 중 오류가 발생했습니다.');
-                            }
+                          onClick={() => {
+                            console.log('=== Leading Study Card Clicked ===');
+                            console.log('Study data:', study);
+                            console.log('Study ID:', study.studyId);
+                            console.log('Navigate to:', `/study/${study.studyId}/manage`);
+                            console.log('===================================');
+                            
+                            // 스터디 관리 페이지로 이동
+                            navigate(`/study/${study.studyId}/manage`);
                           }}
-                          title="클릭하여 스터디 수정"
+                          title="클릭하여 스터디 관리"
                           style={{ cursor: 'pointer' }}
                         >
                           <span className={styles.leaderBadge}>리더</span>
@@ -588,7 +535,7 @@ function ProfilePage(): React.ReactNode {
                             return new Date(study.joinedAt).toLocaleDateString('ko-KR');
                           })()}</p>
                           <div className={styles.manageHint}>
-                            <span>✏️ 클릭하여 수정</span>
+                            <span>⚙️ 클릭하여 관리</span>
                           </div>
                         </div>
                       ))}

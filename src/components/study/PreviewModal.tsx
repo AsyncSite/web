@@ -23,6 +23,8 @@ interface PreviewModalProps {
     recruitDeadlineTime: string;
     startDate: string;
     endDate: string;
+    costType: string;
+    costDescription: string;
   };
   isSubmitting: boolean;
 }
@@ -132,6 +134,16 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
       return `${dateStr} ${formData.recruitDeadlineTime}`;
     }
     return dateStr;
+  };
+
+  // 가격 정보 표시
+  const getCostTypeLabel = (costType: string) => {
+    switch (costType) {
+      case 'FREE': return '완전 무료';
+      case 'FREE_WITH_VENUE': return '무료 (대관비 별도)';
+      case 'PAID': return '유료';
+      default: return costType;
+    }
   };
 
   return (
@@ -253,6 +265,30 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
                 <span className={styles.previewLabel}>모집 마감</span>
                 <span className={styles.previewValue}>{formatRecruitDeadline()}</span>
               </div>
+            </div>
+          </div>
+
+          {/* 가격 정보 섹션 */}
+          <div className={styles.previewSection}>
+            <div className={styles.sectionTitle}>
+              <span className={styles.sectionIcon}>💰</span>
+              <span>가격 정보</span>
+            </div>
+            <div className={styles.sectionContent}>
+              <div className={styles.previewItem}>
+                <span className={styles.previewLabel}>참가 비용</span>
+                <span className={styles.previewValue}>
+                  {getCostTypeLabel(formData.costType)}
+                </span>
+              </div>
+              {formData.costDescription && (
+                <div className={styles.previewItem}>
+                  <span className={styles.previewLabel}>비용 상세</span>
+                  <span className={styles.previewValue}>
+                    {formData.costDescription}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

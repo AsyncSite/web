@@ -278,9 +278,22 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
         .filter(Boolean)
         .join(', ');
       
-      const newSchedule = selectedDays ? `매주 ${selectedDays}` : '';
+      // 주기에 따라 올바른 한글 텍스트 생성
+      let frequencyText = '매주';
+      if (scheduleData.frequency === 'BIWEEKLY') {
+        frequencyText = '격주';
+      } else if (scheduleData.frequency === 'MONTHLY') {
+        frequencyText = '매월';
+      }
+      
+      const newSchedule = selectedDays ? `${frequencyText} ${selectedDays}` : '';
       if (newSchedule && newSchedule !== study.schedule) {
         updateData.schedule = newSchedule;
+      }
+      
+      // recurrenceType도 업데이트 (백엔드 필드명과 매칭)
+      if (scheduleData.frequency && study.recurrenceType !== scheduleData.frequency) {
+        updateData.recurrenceType = scheduleData.frequency as RecurrenceType;
       }
       
       const newDuration = scheduleData.startTime && scheduleData.endTime 
