@@ -105,7 +105,7 @@ const StudyPage: React.FC = () => {
   });
   
   const ongoingStudies = studies.filter(study => study.status === 'IN_PROGRESS');
-  const completedStudies = studies.filter(study => study.status === 'COMPLETED' || study.status === 'TERMINATED');
+  const completedStudies = studies.filter(study => study.status === 'COMPLETED');
   
   // 필터에 따른 스터디 목록 결정
   const getFilteredStudies = () => {
@@ -120,8 +120,10 @@ const StudyPage: React.FC = () => {
         return completedStudies;
       case 'all':
       default:
-        // PENDING 상태는 제외 (아직 승인 대기중인 제안)
-        return studies.filter(study => study.status !== 'PENDING');
+        // PENDING(승인 대기), TERMINATED(중도 종료) 제외
+        return studies.filter(study => 
+          study.status !== 'PENDING' && study.status !== 'TERMINATED'
+        );
     }
   };
   
@@ -157,7 +159,6 @@ const StudyPage: React.FC = () => {
     if (displayInfo.canApply) return '모집중';
     if (study.status === 'IN_PROGRESS') return '진행중';
     if (study.status === 'COMPLETED') return '완료';
-    if (study.status === 'TERMINATED') return '종료';
     
     // Upcoming 체크
     const startDate = parseDate(study.startDate);
