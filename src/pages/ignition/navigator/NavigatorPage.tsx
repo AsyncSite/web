@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import NavigatorDashboard from '../../../components/ignition/navigator/NavigatorDashboard';
 import NavigatorList from '../../../components/ignition/navigator/NavigatorList';
 import NavigatorFilters from '../../../components/ignition/navigator/NavigatorFilters';
@@ -18,6 +19,7 @@ import styles from './NavigatorPage.module.css';
 type ViewMode = 'dashboard' | 'list';
 
 const NavigatorPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
@@ -129,6 +131,17 @@ const NavigatorPage: React.FC = () => {
   useEffect(() => {
     loadJobs(0);
   }, [loadJobs]);
+
+  // Handle jobId query parameter to auto-open modal
+  useEffect(() => {
+    const jobIdParam = searchParams.get('jobId');
+    if (jobIdParam) {
+      const jobId = parseInt(jobIdParam, 10);
+      if (!isNaN(jobId)) {
+        setSelectedJobId(jobId);
+      }
+    }
+  }, [searchParams]);
 
   const handlePageChange = (page: number) => {
     loadJobs(page);
