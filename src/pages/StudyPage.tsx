@@ -321,27 +321,81 @@ const StudyPage: React.FC = () => {
                 {statusFilter === 'completed' && <h2>🏁 완료된 스터디</h2>}
                 
                 <div className={styles['study-grid']}>
-                  {filteredStudies.map(study => (
+                  {filteredStudies.map(study => {
+                    const statusClass = getStatusBadgeClass(study);
+                    const enrollmentRate = study.capacity ? (study.enrolled / study.capacity) * 100 : 0;
+                    const daysLeft = study.deadline ? Math.ceil((study.deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+                    
+                    return (
                       <div key={study.id} className={styles['study-card-wrapper']}>
                         <Link to={`/study/${study.slug}`} className={styles['study-card-link']}>
-                          <div className={styles['study-card']}>
-                            <div className={styles['study-header']}>
-                              <h3>
-                                {study.name}
-                                {study.generation > 1 && <span className={styles.generation}>{study.generation}기</span>}
-                              </h3>
-                              <span className={`${styles['status-badge']} ${styles[getStatusBadgeClass(study)]}`}>
+                          <div className={`${styles['study-card']} ${styles[`card-${statusClass}`]}`}>
+                            {/* 상단 헤더 영역 */}
+                            <div className={styles['card-header']}>
+                              <span className={`${styles['status-indicator']} ${styles[statusClass]}`}>
+                                {statusClass === 'recruiting' && '🔥 '}
+                                {statusClass === 'ongoing' && '🚀 '}
+                                {statusClass === 'upcoming' && '⏳ '}
+                                {statusClass === 'closed' && '✅ '}
                                 {getStatusLabel(study)}
                               </span>
+                              {daysLeft !== null && daysLeft >= 0 && statusClass === 'recruiting' && (
+                                <span className={styles['deadline-badge']}>
+                                  D-{daysLeft}
+                                </span>
+                              )}
                             </div>
-                            <p className={styles['study-tagline']}>{study.tagline}</p>
-                            <div className={styles['study-meta']}>
-                              {study.schedule && study.schedule !== '매주 수요일' && (
-                                <span>📅 {study.schedule} {study.duration && study.duration !== '19:00-21:00' && study.duration}</span>
+                            
+                            {/* 메인 콘텐츠 영역 */}
+                            <div className={styles['card-content']}>
+                              <h3 className={styles['study-title']}>
+                                {study.name}
+                                {study.generation > 1 && <span className={styles['generation-badge']}> {study.generation}기</span>}
+                              </h3>
+                              <p className={styles['study-tagline']}>{study.tagline}</p>
+                              
+                              {/* 정원 진행률 바 */}
+                              {study.capacity > 0 && (
+                                <div className={styles['enrollment-section']}>
+                                  <div className={styles['enrollment-bar']}>
+                                    <div 
+                                      className={styles['enrollment-fill']} 
+                                      style={{ width: `${Math.min(enrollmentRate, 100)}%` }}
+                                    />
+                                  </div>
+                                  <span className={styles['enrollment-text']}>
+                                    👥 {study.enrolled}/{study.capacity}명 ({Math.round(enrollmentRate)}%)
+                                  </span>
+                                </div>
                               )}
-                              {(study.capacity && study.capacity > 0) && (
-                                <span>👥 {study.enrolled}/{study.capacity}명</span>
-                              )}
+                              
+                              {/* 메타 정보 */}
+                              <div className={styles['card-meta']}>
+                                {study.schedule && (
+                                  <div className={styles['meta-item']}>
+                                    <span className={styles['meta-icon']}>📅</span>
+                                    <span>{study.schedule} {study.duration && ` ${study.duration}`}</span>
+                                  </div>
+                                )}
+                                {study.recurrenceType && (
+                                  <div className={styles['meta-tag']}>
+                                    {study.recurrenceType === 'WEEKLY' && '매주'}
+                                    {study.recurrenceType === 'BIWEEKLY' && '격주'}
+                                    {study.recurrenceType === 'ONE_TIME' && '단기'}
+                                  </div>
+                                )}
+                                {study.costType && study.costType !== 'FREE' && (
+                                  <div className={styles['meta-tag']}>
+                                    {study.costType === 'PAID' && '💰 유료'}
+                                    {study.costType === 'FREE_WITH_VENUE' && '📍 장소비'}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {/* 호버 오버레이 */}
+                            <div className={styles['card-overlay']}>
+                              <span>자세히 보기 →</span>
                             </div>
                           </div>
                         </Link>
@@ -440,8 +494,9 @@ const StudyPage: React.FC = () => {
                           })()}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
+                </div>
                 </section>
 
               {/* 결제 시스템 테스트 섹션 (임시) */}
