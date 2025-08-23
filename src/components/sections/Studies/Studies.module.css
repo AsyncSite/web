@@ -6,7 +6,7 @@
   background: transparent;
 }
 
-.studies .section-header {
+.studies .sectionHeader {
   text-align: center;
   margin-bottom: 80px;
   animation: fadeInDown 0.8s ease;
@@ -15,16 +15,17 @@
 /* section-title, section-subtitle는 common-landing.css에서 관리 */
 
 /* 스터디 그리드 */
-.studies-grid {
+.studiesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(380px, 420px));
   gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
+  justify-content: center;
 }
 
 /* 스터디 카드 - 초대장 컨셉 */
-.study-card {
+.studyCard {
   position: relative;
   background: rgba(10, 14, 39, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -36,7 +37,7 @@
   overflow: hidden;
 }
 
-.study-card::before {
+.studyCard::before {
   content: '';
   position: absolute;
   top: -50%;
@@ -49,34 +50,39 @@
   pointer-events: none;
 }
 
-.study-card:hover {
+.studyCard:hover {
   transform: translateY(-8px);
   border-color: var(--study-primary);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3),
               0 0 60px var(--study-glow);
 }
 
-.study-card:hover::before {
+.studyCard:hover::before {
   opacity: 0.3;
 }
 
 /* 스터디 헤더 */
-.study-header {
+.studyHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 32px;
 }
 
+.studyInfo {
+  flex: 1;
+  min-width: 0;
+}
+
 /* 뱃지 컨테이너 */
-.study-badges {
+.studyBadges {
   display: flex;
   gap: 8px;
   align-items: center;
   flex-shrink: 0;
 }
 
-.study-name {
+.studyName {
   font-size: 32px;
   font-weight: 900;
   color: var(--study-primary);
@@ -84,13 +90,13 @@
   letter-spacing: -0.5px;
 }
 
-.study-generation {
+.studyGeneration {
   font-size: 24px;
   font-weight: 400;
   opacity: 0.8;
 }
 
-.study-tagline {
+.studyTagline {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 300;
@@ -98,7 +104,7 @@
 }
 
 /* 마감일 뱃지 */
-.deadline-badge {
+.deadlineBadge {
   background: rgba(255, 77, 77, 0.2);
   border: 1px solid rgba(255, 77, 77, 0.5);
   color: #ff6b6b;
@@ -121,7 +127,7 @@
 }
 
 /* 리더 섹션 */
-.leader-section {
+.leaderSection {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -131,7 +137,7 @@
   border-radius: 16px;
 }
 
-.leader-avatar {
+.leaderAvatar {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -139,18 +145,18 @@
   object-fit: cover;
 }
 
-.leader-message {
+.leaderMessage {
   flex: 1;
 }
 
-.leader-name {
+.leaderName {
   font-size: 14px;
   color: var(--study-primary);
   font-weight: 600;
   margin-bottom: 8px;
 }
 
-.welcome-message {
+.welcomeMessage {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.5;
@@ -158,11 +164,11 @@
 }
 
 /* 스터디 상세 정보 */
-.study-details {
+.studyDetails {
   margin-bottom: 24px;
 }
 
-.detail-item {
+.detailItem {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -170,16 +176,16 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.detail-icon {
+.detailIcon {
   font-size: 18px;
 }
 
 /* 참여 현황 */
-.participation-status {
+.participationStatus {
   margin-bottom: 28px;
 }
 
-.status-text {
+.statusText {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -188,7 +194,7 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.almost-full {
+.almostFull {
   background: rgba(255, 184, 77, 0.2);
   color: #ffb84d;
   padding: 4px 12px;
@@ -197,7 +203,7 @@
   font-weight: 600;
 }
 
-.progress-bar {
+.progressBar {
   width: 100%;
   height: 8px;
   background: rgba(255, 255, 255, 0.1);
@@ -205,7 +211,7 @@
   overflow: hidden;
 }
 
-.progress-fill {
+.progressFill {
   height: 100%;
   background: linear-gradient(90deg, var(--study-primary) 0%, var(--study-primary) 100%);
   border-radius: 4px;
@@ -214,7 +220,7 @@
 }
 
 /* 최근 후기 */
-.recent-testimonial {
+.recentTestimonial {
   background: rgba(255, 255, 255, 0.03);
   border-left: 3px solid var(--study-primary);
   padding: 16px 20px;
@@ -222,7 +228,7 @@
   border-radius: 0 8px 8px 0;
 }
 
-.recent-testimonial p {
+.recentTestimonial p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.6;
@@ -230,7 +236,7 @@
   font-style: italic;
 }
 
-.recent-testimonial span {
+.recentTestimonial span {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   display: block;
@@ -238,7 +244,7 @@
 }
 
 /* CTA 버튼 */
-.study-cta {
+.studyCta {
   display: block;
   width: 100%;
   text-align: center;
@@ -253,14 +259,14 @@
   box-shadow: 0 8px 24px var(--study-glow);
 }
 
-.study-cta:hover {
+.studyCta:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 32px var(--study-glow);
   filter: brightness(1.1);
 }
 
 /* 유형 뱃지 */
-.study-type-badge {
+.studyTypeBadge {
   position: relative;
   display: flex;
   align-items: center;
@@ -277,40 +283,40 @@
   cursor: default;
 }
 
-.study-type-badge.participatory {
+.studyTypeBadge.participatory {
   border-color: rgba(195, 232, 141, 0.3);
   background: rgba(195, 232, 141, 0.05);
 }
 
-.study-type-badge.educational {
+.studyTypeBadge.educational {
   border-color: rgba(130, 170, 255, 0.3);
   background: rgba(130, 170, 255, 0.05);
 }
 
-.study-type-badge .type-icon {
+.studyTypeBadge .typeIcon {
   font-size: 16px;
   display: flex;
   align-items: center;
 }
 
-.study-type-badge .type-label {
+.studyTypeBadge .typeLabel {
   letter-spacing: -0.2px;
 }
 
 /* 뱃지 호버 효과 */
-.study-type-badge:hover {
+.studyTypeBadge:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.study-type-badge.participatory:hover {
+.studyTypeBadge.participatory:hover {
   border-color: rgba(195, 232, 141, 0.5);
   background: rgba(195, 232, 141, 0.1);
   color: #C3E88D;
   box-shadow: 0 4px 12px rgba(195, 232, 141, 0.2);
 }
 
-.study-type-badge.educational:hover {
+.studyTypeBadge.educational:hover {
   border-color: rgba(130, 170, 255, 0.5);
   background: rgba(130, 170, 255, 0.1);
   color: #82AAFF;
@@ -318,7 +324,7 @@
 }
 
 /* 뱃지 툴팁 효과 */
-.study-type-badge::after {
+.studyTypeBadge::after {
   content: attr(data-tooltip);
   position: absolute;
   top: calc(100% + 8px);
@@ -338,34 +344,34 @@
   z-index: 100;
 }
 
-.study-type-badge.participatory::after {
+.studyTypeBadge.participatory::after {
   content: '함께 만들어가는 스터디';
 }
 
-.study-type-badge.educational::after {
+.studyTypeBadge.educational::after {
   content: '체계적으로 배우는 스터디';
 }
 
-.study-type-badge:hover::after {
+.studyTypeBadge:hover::after {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
 
 /* 더 많은 스터디 안내 */
-.more-studies {
+.moreStudies {
   text-align: center;
   margin-top: 80px;
   animation: fadeInUp 0.8s ease 0.5s both;
 }
 
-.more-text {
+.moreText {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 24px;
   font-weight: 300;
 }
 
-.more-link {
+.moreLink {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -378,13 +384,13 @@
   border-radius: 8px;
 }
 
-.more-link:hover {
+.moreLink:hover {
   background: rgba(195, 232, 141, 0.1);
   transform: translateX(4px);
 }
 
 /* JOIN US 버튼 스타일 */
-.more-link.join-us-btn {
+.moreLink.joinUsBtn {
   background: #C3E88D;
   color: #1A1D29;
   font-weight: 700;
@@ -394,7 +400,7 @@
   letter-spacing: 0.5px;
 }
 
-.more-link.join-us-btn:hover {
+.moreLink.joinUsBtn:hover {
   background: #A8D66F;
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(195, 232, 141, 0.3);
@@ -424,20 +430,20 @@
 }
 
 /* 스터디 카드 진입 애니메이션 */
-.study-card {
+.studyCard {
   opacity: 0;
   animation: cardFadeIn 0.6s ease forwards;
 }
 
-.study-card:nth-child(1) {
+.studyCard:nth-child(1) {
   animation-delay: 0.1s;
 }
 
-.study-card:nth-child(2) {
+.studyCard:nth-child(2) {
   animation-delay: 0.2s;
 }
 
-.study-card:nth-child(3) {
+.studyCard:nth-child(3) {
   animation-delay: 0.3s;
 }
 
@@ -454,10 +460,11 @@
 
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
-  .studies-grid {
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  .studiesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 380px));
     gap: 32px;
     padding: 0 20px;
+    justify-content: center;
   }
 }
 
@@ -468,52 +475,52 @@
   
   /* section-title, section-subtitle는 common-landing.css에서 관리 */
   
-  .studies-grid {
+  .studiesGrid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
   
-  .study-card {
+  .studyCard {
     padding: 32px 24px;
   }
   
-  .study-name {
+  .studyName {
     font-size: 28px;
   }
   
-  .study-generation {
+  .studyGeneration {
     font-size: 20px;
   }
   
-  .leader-section {
+  .leaderSection {
     padding: 16px;
   }
   
-  .leader-avatar {
+  .leaderAvatar {
     width: 50px;
     height: 50px;
   }
   
-  .welcome-message {
+  .welcomeMessage {
     font-size: 15px;
   }
   
   /* 모바일에서 뱃지 조정 */
-  .study-type-badge {
+  .studyTypeBadge {
     padding: 5px 12px;
     font-size: 12px;
   }
   
-  .study-badges {
+  .studyBadges {
     gap: 6px;
   }
   
-  .study-type-badge .type-icon {
+  .studyTypeBadge .typeIcon {
     font-size: 14px;
   }
   
   /* 모바일에서는 툴팁 숨김 */
-  .study-type-badge::after {
+  .studyTypeBadge::after {
     display: none;
   }
 }
@@ -521,25 +528,25 @@
 @media (max-width: 480px) {
   /* section-title, section-subtitle는 common-landing.css에서 관리 */
   
-  .study-header {
+  .studyHeader {
     flex-direction: column;
     gap: 16px;
   }
   
-  .study-badges {
+  .studyBadges {
     align-self: flex-start;
     gap: 8px;
   }
   
-  .deadline-badge {
+  .deadlineBadge {
     order: 2;
   }
   
-  .study-type-badge {
+  .studyTypeBadge {
     order: 1;
   }
   
-  .study-cta {
+  .studyCta {
     font-size: 16px;
     padding: 14px 28px;
   }
@@ -547,33 +554,33 @@
 
 /* 접근성 개선 */
 @media (prefers-reduced-motion: reduce) {
-  .study-card,
-  .deadline-badge,
-  .study-type-badge {
+  .studyCard,
+  .deadlineBadge,
+  .studyTypeBadge {
     animation: none;
   }
   
-  .study-card {
+  .studyCard {
     opacity: 1;
   }
   
-  .study-card:hover {
+  .studyCard:hover {
     transform: translateY(-4px);
   }
   
-  .study-type-badge:hover {
+  .studyTypeBadge:hover {
     transform: none;
   }
   
-  .study-type-badge::after {
+  .studyTypeBadge::after {
     transition: none;
   }
 }
 
 /* Loading, Error, Empty States */
-.studies-loading,
-.studies-error,
-.studies-empty {
+.studiesLoading,
+.studiesError,
+.studiesEmpty {
   text-align: center;
   padding: 4rem 2rem;
   min-height: 400px;
@@ -584,7 +591,7 @@
   gap: 1.5rem;
 }
 
-.studies-loading p {
+.studiesLoading p {
   font-size: 1.2rem;
   color: #64748b;
   animation: pulse 1.5s ease-in-out infinite;
@@ -599,13 +606,13 @@
   }
 }
 
-.studies-error p {
+.studiesError p {
   font-size: 1.1rem;
   color: #ef4444;
   margin-bottom: 1rem;
 }
 
-.retry-btn {
+.retryBtn {
   padding: 0.75rem 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -617,23 +624,23 @@
   transition: all 0.3s ease;
 }
 
-.retry-btn:hover {
+.retryBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
 }
 
-.studies-empty p {
+.studiesEmpty p {
   font-size: 1.1rem;
   color: #64748b;
   margin: 0.5rem 0;
 }
 
-.studies-empty p:first-child {
+.studiesEmpty p:first-child {
   font-size: 1.3rem;
   font-weight: 600;
   color: #334155;
 }
 
-.studies-empty .join-us-btn {
+.studiesEmpty .joinUsBtn {
   margin-top: 1rem;
 }

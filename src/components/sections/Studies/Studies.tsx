@@ -4,7 +4,7 @@ import studyService, { type Study } from '../../../api/studyService';
 import { handlePublicApiError } from '../../../api/publicClient';
 import { getStudyDisplayInfo } from '../../../utils/studyStatusUtils';
 import { parseDate } from '../../../utils/studyScheduleUtils';
-import './Studies.css';
+import styles from './Studies.module.css';
 
 const Studies: React.FC = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -83,12 +83,12 @@ const Studies: React.FC = () => {
   // Loading state
   if (isLoading) {
     return (
-      <section className="studies section-background" id="studies">
+      <section className={`${styles.studies} section-background`} id="studies">
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">지금 Async Site에서는</h2>
           </div>
-          <div className="studies-loading">
+          <div className={styles.studiesLoading}>
             <p>스터디 목록을 불러오고 있습니다...</p>
           </div>
         </div>
@@ -99,14 +99,14 @@ const Studies: React.FC = () => {
   // Error state
   if (error) {
     return (
-      <section className="studies section-background" id="studies">
+      <section className={`${styles.studies} section-background`} id="studies">
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">지금 Async Site에서는</h2>
           </div>
-          <div className="studies-error">
+          <div className={styles.studiesError}>
             <p>{error}</p>
-            <button onClick={() => window.location.reload()} className="retry-btn">
+            <button onClick={() => window.location.reload()} className={styles.retryBtn}>
               다시 시도
             </button>
           </div>
@@ -118,15 +118,15 @@ const Studies: React.FC = () => {
   // Empty state
   if (studies.length === 0) {
     return (
-      <section className="studies section-background" id="studies">
+      <section className={`${styles.studies} section-background`} id="studies">
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">지금 Async Site에서는</h2>
           </div>
-          <div className="studies-empty">
+          <div className={styles.studiesEmpty}>
             <p>현재 진행 중인 스터디가 없습니다.</p>
             <p>곧 새로운 스터디가 열릴 예정이니 기대해주세요!</p>
-            <Link to="/login" className="more-link join-us-btn">
+            <Link to="/login" className={`${styles.moreLink} ${styles.joinUsBtn}`}>
               JOIN US
             </Link>
           </div>
@@ -136,7 +136,7 @@ const Studies: React.FC = () => {
   }
   
   return (
-    <section className="studies section-background" id="studies">
+    <section className={`${styles.studies} section-background`} id="studies">
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">지금 Async Site에서는</h2>
@@ -147,7 +147,7 @@ const Studies: React.FC = () => {
           )}
         </div>
         
-        <div className="studies-grid">
+        <div className={styles.studiesGrid}>
           {studies.map((study) => {
             const daysLeft = calculateDaysLeft(study.deadline);
             const spotsLeft = study.capacity > 0 ? study.capacity - study.enrolled : 0;
@@ -157,30 +157,30 @@ const Studies: React.FC = () => {
             return (
               <div 
                 key={study.id} 
-                className="study-card"
+                className={styles.studyCard}
                 style={{
                   '--study-primary': study.color?.primary || '#82AAFF',
                   '--study-glow': study.color?.glow || 'rgba(130, 170, 255, 0.3)'
                 } as React.CSSProperties}
               >
                 {/* 스터디 헤더 */}
-                <div className="study-header">
-                  <div className="study-info">
-                    <h3 className="study-name">
+                <div className={styles.studyHeader}>
+                  <div className={styles.studyInfo}>
+                    <h3 className={styles.studyName}>
                       {study.name} 
-                      {study.generation > 1 && <span className="study-generation">{study.generation}기</span>}
+                      {study.generation > 1 && <span className={styles.studyGeneration}>{study.generation}기</span>}
                     </h3>
-                    <p className="study-tagline">{study.tagline}</p>
+                    <p className={styles.studyTagline}>{study.tagline}</p>
                   </div>
-                  <div className="study-badges">
-                    <div className={`study-type-badge ${study.type}`}>
-                      <span className="type-icon">
+                  <div className={styles.studyBadges}>
+                    <div className={`${styles.studyTypeBadge} ${styles[study.type]}`}>
+                      <span className={styles.typeIcon}>
                         {study.type === 'participatory' ? '👥' : '📚'}
                       </span>
-                      <span className="type-label">{study.typeLabel}</span>
+                      <span className={styles.typeLabel}>{study.typeLabel}</span>
                     </div>
                     {daysLeft !== null && daysLeft <= 7 && daysLeft > 0 && (
-                      <div className="deadline-badge">
+                      <div className={styles.deadlineBadge}>
                         D-{daysLeft}
                       </div>
                     )}
@@ -188,15 +188,15 @@ const Studies: React.FC = () => {
                 </div>
                 
                 {/* 리더 소개 */}
-                <div className="leader-section">
+                <div className={styles.leaderSection}>
                   <img 
                     src={study.leader.profileImage} 
                     alt={study.leader.name}
-                    className="leader-avatar"
+                    className={styles.leaderAvatar}
                   />
-                  <div className="leader-message">
-                    <p className="leader-name">{study.leader.name} 리더</p>
-                    <p className="welcome-message">"{study.leader.welcomeMessage}"</p>
+                  <div className={styles.leaderMessage}>
+                    <p className={styles.leaderName}>{study.leader.name} 리더</p>
+                    <p className={styles.welcomeMessage}>"{study.leader.welcomeMessage}"</p>
                   </div>
                 </div>
                 
@@ -215,14 +215,14 @@ const Studies: React.FC = () => {
                 
                 {/* 참여 현황 */}
                 {study.capacity && study.capacity > 0 ? (
-                  <div className="participation-status">
-                    <div className="status-text">
+                  <div className={styles.participationStatus}>
+                    <div className={styles.statusText}>
                       <span>{spotsLeft}분의 자리가 남았어요</span>
-                      {isAlmostFull && <span className="almost-full">곧 마감</span>}
+                      {isAlmostFull && <span className={styles.almostFull}>곧 마감</span>}
                     </div>
-                    <div className="progress-bar">
+                    <div className={styles.progressBar}>
                       <div 
-                        className="progress-fill"
+                        className={styles.progressFill}
                         style={{ width: `${progressPercentage}%` }}
                       />
                     </div>
@@ -231,14 +231,14 @@ const Studies: React.FC = () => {
                 
                 {/* 최근 후기 */}
                 {study.recentTestimonial && (
-                  <div className="recent-testimonial">
+                  <div className={styles.recentTestimonial}>
                     <p>"{study.recentTestimonial.content}"</p>
                     <span>- {study.recentTestimonial.author}</span>
                   </div>
                 )}
                 
                 {/* CTA 버튼 */}
-                <Link to={`/study/${study.slug}`} className="study-cta">
+                <Link to={`/study/${study.slug}`} className={styles.studyCta}>
                   함께하기
                 </Link>
               </div>
@@ -247,18 +247,18 @@ const Studies: React.FC = () => {
         </div>
         
         {/* 더 많은 스터디 안내 */}
-        <div className="more-studies">
-          <p className="more-text">
+        <div className={styles.moreStudies}>
+          <p className={styles.moreText}>
             {studies.length > 0 
               ? "더 많은 스터디를 확인해보세요" 
               : "아쉽지만 지금은 진행중인 스터디가 없어요! 알림을 보내드릴게요!"}
           </p>
           {studies.length > 0 ? (
-            <Link to="/study" className="more-link">
+            <Link to="/study" className={styles.moreLink}>
               모든 스터디 보기 →
             </Link>
           ) : (
-            <Link to="/login" className="more-link join-us-btn">
+            <Link to="/login" className={`${styles.moreLink} ${styles.joinUsBtn}`}>
               JOIN US
             </Link>
           )}
