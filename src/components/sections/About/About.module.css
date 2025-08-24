@@ -5,19 +5,19 @@
 }
 
 /* About 전용 섹션 헤더 */
-.about .section-header {
+.sectionHeader {
   margin-bottom: 80px;
   text-align: center;
 }
 
 /* About Container - 카드 스타일 */
-.about-container {
+.aboutContainer {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 40px;
 }
 
-.about-subsection {
+.aboutSubsection {
   margin-bottom: 20px;
   height: auto !important;
   min-height: 0 !important;
@@ -25,7 +25,7 @@
   flex-shrink: 0;
 }
 
-.section-inner {
+.sectionInner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
@@ -37,7 +37,7 @@
 }
 
 /* Question Block */
-.question-block {
+.questionBlock {
   text-align: center;
   position: relative;
   transform: translateX(-50px);
@@ -45,12 +45,12 @@
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.question-block.animate-in {
+.questionBlock.animateIn {
   transform: translateX(0);
   opacity: 1;
 }
 
-.question-number {
+.questionNumber {
   width: 60px;
   height: 60px;
   background: linear-gradient(135deg, #C3E88D 0%, #A8D66F 100%);
@@ -65,7 +65,7 @@
   box-shadow: 0 8px 32px rgba(195, 232, 141, 0.3);
 }
 
-.question-title {
+.questionTitle {
   font-size: clamp(24px, 4vw, 36px);
   font-weight: 700;
   color: #ffffff;
@@ -74,19 +74,19 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.question-visual {
+.questionVisual {
   position: relative;
   display: inline-block;
 }
 
-.visual-icon {
+.visualIcon {
   font-size: 80px;
   position: relative;
   z-index: 2;
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
 }
 
-.visual-decoration {
+.visualDecoration {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -111,7 +111,7 @@
 }
 
 /* Answer Block */
-.answer-block {
+.answerBlock {
   padding: 40px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
@@ -125,12 +125,12 @@
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.answer-block.animate-in {
+.answerBlock.animateIn {
   transform: translateX(0);
   opacity: 1;
 }
 
-.answer-block::before {
+.answerBlock::before {
   content: '';
   position: absolute;
   top: 0;
@@ -140,7 +140,7 @@
   background: linear-gradient(135deg, #C3E88D 0%, #A8D66F 100%);
 }
 
-.answer-title {
+.answerTitle {
   font-size: 24px;
   font-weight: 700;
   color: #C3E88D;
@@ -148,7 +148,7 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.answer-text {
+.answerText {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.8;
@@ -157,13 +157,13 @@
   white-space: pre-line;
 }
 
-.answer-features {
+.answerFeatures {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.feature-item {
+.featureItem {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -176,24 +176,24 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.feature-item:hover {
+.featureItem:hover {
   background: rgba(195, 232, 141, 0.15);
   transform: translateX(8px);
 }
 
-.feature-icon {
+.featureIcon {
   font-size: 20px;
 }
 
 /* Culture Highlights */
-.culture-highlights {
+.cultureHighlights {
   margin-top: 24px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.highlight-item {
+.highlightItem {
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -204,18 +204,18 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.highlight-item:hover {
+.highlightItem:hover {
   background: rgba(195, 232, 141, 0.12);
   transform: translateY(-4px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
-.highlight-icon {
+.highlightIcon {
   font-size: 32px;
   margin-top: 4px;
 }
 
-.highlight-text h4 {
+.highlightText h4 {
   font-size: 16px;
   font-weight: 700;
   color: #C3E88D;
@@ -223,7 +223,7 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.highlight-text p {
+.highlightText p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -231,40 +231,40 @@
 
 /* Layout Variations - 데스크탑에서만 적용 */
 @media (min-width: 769px) {
-  .about-subsection[data-layout="answer-left"] .section-inner {
+  .aboutSubsection[data-layout="answer-left"] .sectionInner {
     grid-template-columns: 1fr 1fr;
   }
 
-  .about-subsection[data-layout="answer-left"] .question-block {
+  .aboutSubsection[data-layout="answer-left"] .questionBlock {
     transform: translateX(50px);
     order: 2;
   }
 
-  .about-subsection[data-layout="answer-left"] .answer-block {
+  .aboutSubsection[data-layout="answer-left"] .answerBlock {
     transform: translateX(-50px);
     order: 1;
   }
 
-  .about-subsection[data-layout="answer-left"] .question-block.animate-in {
+  .aboutSubsection[data-layout="answer-left"] .questionBlock.animateIn {
     transform: translateX(0);
   }
 
-  .about-subsection[data-layout="answer-left"] .answer-block.animate-in {
+  .aboutSubsection[data-layout="answer-left"] .answerBlock.animateIn {
     transform: translateX(0);
   }
 }
 
 /* 반응형 */
 @media (max-width: 1024px) {
-  .about-container {
+  .aboutContainer {
     padding: 0 20px;
   }
   
-  .section-inner {
+  .sectionInner {
     gap: 40px;
   }
   
-  .about-subsection {
+  .aboutSubsection {
     margin-bottom: 30px;
   }
 }
@@ -274,39 +274,39 @@
     padding: 120px 0 80px 0;
   }
   
-  .about-container {
+  .aboutContainer {
     padding: 0 20px;
   }
   
-  .section-inner {
+  .sectionInner {
     grid-template-columns: 1fr;
     gap: 40px;
   }
   
   /* 모바일에서는 모든 블록이 기본 세로 배치 */
-  .question-block {
+  .questionBlock {
     transform: translateY(30px);
     order: 1;
   }
   
-  .answer-block {
+  .answerBlock {
     transform: translateY(30px);
     order: 2;
   }
   
-  .question-block.animate-in {
+  .questionBlock.animateIn {
     transform: translateY(0);
   }
   
-  .answer-block.animate-in {
+  .answerBlock.animateIn {
     transform: translateY(0);
   }
   
-  .answer-block {
+  .answerBlock {
     padding: 24px;
   }
   
-  .question-number {
+  .questionNumber {
     width: 50px;
     height: 50px;
     font-size: 16px;
@@ -324,18 +324,18 @@
   
   /* section-title, section-subtitle는 common-landing.css에서 관리 */
   
-  .visual-icon {
+  .visualIcon {
     font-size: 60px;
   }
   
-  .visual-decoration {
+  .visualDecoration {
     width: 100px;
     height: 100px;
   }
 }
 
 /* Flip 애니메이션 스타일 - 달력 넘기기 효과 */
-.flip-text-container {
+.flipTextContainer {
   display: inline-block;
   position: relative;
   perspective: 1200px;
@@ -346,14 +346,14 @@
   transform-style: preserve-3d;
 }
 
-.flip-card {
+.flipCard {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
 }
 
-.flip-card-face {
+.flipCardFace {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -365,7 +365,7 @@
   will-change: transform, opacity;
 }
 
-.flip-text {
+.flipText {
   display: inline-block;
   white-space: nowrap;
   color: #FFFFFF;
@@ -373,22 +373,22 @@
 }
 
 /* 기본 상태 */
-.flip-card-current {
+.flipCardCurrent {
   transform: rotateX(0deg);
   z-index: 2;
 }
 
-.flip-card-next {
+.flipCardNext {
   transform: rotateX(-90deg);
   z-index: 1;
 }
 
 /* Flip 애니메이션 상태 */
-.flip-text-container.flipping .flip-card-current {
+.flipping .flipCardCurrent {
   animation: flipOut 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
 }
 
-.flip-text-container.flipping .flip-card-next {
+.flipping .flipCardNext {
   animation: flipIn 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
 }
 
@@ -427,12 +427,12 @@
 
 /* 모바일 반응형 */
 @media (max-width: 768px) {
-  .flip-text-container {
+  .flipTextContainer {
     min-width: auto;
     width: 100%;
   }
   
-  .flip-text {
+  .flipText {
     font-size: 0.9em;
   }
 }

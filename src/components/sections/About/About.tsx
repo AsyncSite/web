@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import './About.css';
+import styles from './About.module.css';
 import {useScrollAnimation} from '../../../hooks/useScrollAnimation';
 
 interface AboutSection {
@@ -138,17 +138,17 @@ const About: React.FC = () => {
     ];
 
     return (
-        <section className="about section-background" id="about">
+        <section className={`${styles.about} section-background`} id="about">
             <div className="container">
-                <div className="section-header">
+                <div className={styles.sectionHeader}>
                     <h2 className="section-title">
-                        <div className={`flip-text-container ${isFlipping ? 'flipping' : ''}`}>
-                            <div className="flip-card">
-                                <div className="flip-card-face flip-card-current">
-                                    <span className="flip-text">{flipTexts[currentTextIndex]}</span>
+                        <div className={`${styles.flipTextContainer} ${isFlipping ? styles.flipping : ''}`}>
+                            <div className={styles.flipCard}>
+                                <div className={`${styles.flipCardFace} ${styles.flipCardCurrent}`}>
+                                    <span className={styles.flipText}>{flipTexts[currentTextIndex]}</span>
                                 </div>
-                                <div className="flip-card-face flip-card-next">
-                                    <span className="flip-text">{flipTexts[nextTextIndex]}</span>
+                                <div className={`${styles.flipCardFace} ${styles.flipCardNext}`}>
+                                    <span className={styles.flipText}>{flipTexts[nextTextIndex]}</span>
                                 </div>
                             </div>
                         </div>
@@ -159,15 +159,15 @@ const About: React.FC = () => {
                         우리는 무엇을 추구해야 할까요?</p>
                 </div>
 
-                <main className="about-container">
+                <main className={styles.aboutContainer}>
                     {aboutSections.map((section) => {
-                        const questionBlockRef = useScrollAnimation('animate-in', {
+                        const questionBlockRef = useScrollAnimation(styles.animateIn, {
                             threshold: 0.4,
                             rootMargin: '0px 0px -50px 0px',
                             triggerOnce: false
                         });
 
-                        const answerBlockRef = useScrollAnimation('animate-in', {
+                        const answerBlockRef = useScrollAnimation(styles.animateIn, {
                             threshold: 0.4,
                             rootMargin: '0px 0px -50px 0px',
                             delay: 200,
@@ -175,25 +175,25 @@ const About: React.FC = () => {
                         });
 
                         return (
-                            <section key={section.id} className="about-subsection" data-layout={section.layout}>
-                                <div className="section-inner">
-                                    <div className="question-block" ref={questionBlockRef}>
-                                        <div className="question-number">{section.questionNumber}</div>
-                                        <h2 className="question-title">{section.questionTitle}</h2>
-                                        <div className="question-visual">
-                                            <div className="visual-icon">{section.questionIcon}</div>
-                                            <div className="visual-decoration"></div>
+                            <section key={section.id} className={styles.aboutSubsection} data-layout={section.layout}>
+                                <div className={styles.sectionInner}>
+                                    <div className={styles.questionBlock} ref={questionBlockRef}>
+                                        <div className={styles.questionNumber}>{section.questionNumber}</div>
+                                        <h2 className={styles.questionTitle}>{section.questionTitle}</h2>
+                                        <div className={styles.questionVisual}>
+                                            <div className={styles.visualIcon}>{section.questionIcon}</div>
+                                            <div className={styles.visualDecoration}></div>
                                         </div>
                                     </div>
-                                    <div className="answer-block" ref={answerBlockRef}>
-                                        <h3 className="answer-title">{section.answerTitle}</h3>
-                                        <div className="answer-text">{section.answerText}</div>
+                                    <div className={styles.answerBlock} ref={answerBlockRef}>
+                                        <h3 className={styles.answerTitle}>{section.answerTitle}</h3>
+                                        <div className={styles.answerText}>{section.answerText}</div>
 
                                         {section.features && (
-                                            <div className="answer-features">
+                                            <div className={styles.answerFeatures}>
                                                 {section.features.map((feature, index) => (
-                                                    <div key={index} className="feature-item">
-                                                        <span className="feature-icon">{feature.icon}</span>
+                                                    <div key={index} className={styles.featureItem}>
+                                                        <span className={styles.featureIcon}>{feature.icon}</span>
                                                         <span>{feature.text}</span>
                                                     </div>
                                                 ))}
@@ -201,11 +201,11 @@ const About: React.FC = () => {
                                         )}
 
                                         {section.highlights && (
-                                            <div className="culture-highlights">
+                                            <div className={styles.cultureHighlights}>
                                                 {section.highlights.map((highlight, index) => (
-                                                    <div key={index} className="highlight-item">
-                                                        <div className="highlight-icon">{highlight.icon}</div>
-                                                        <div className="highlight-text">
+                                                    <div key={index} className={styles.highlightItem}>
+                                                        <div className={styles.highlightIcon}>{highlight.icon}</div>
+                                                        <div className={styles.highlightText}>
                                                             <h4>{highlight.title}</h4>
                                                             <p>{highlight.description}</p>
                                                         </div>
