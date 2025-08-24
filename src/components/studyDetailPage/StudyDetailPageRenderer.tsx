@@ -132,6 +132,10 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
 
       return membersProps;
     
+    case SectionType.LEADER_INTRO:
+      // LEADER_INTRO 섹션은 props를 그대로 전달
+      return section.props;
+    
     default:
       // For other section types, pass props as is
       return section.props;

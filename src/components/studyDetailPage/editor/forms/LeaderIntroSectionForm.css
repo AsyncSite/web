@@ -1,0 +1,294 @@
+/* 리더 소개 섹션 폼 스타일 */
+.leader-intro-form {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.leader-intro-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leader-intro-form-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #C3E88D;
+  margin: 0;
+}
+
+.leader-intro-example-btn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1));
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 6px;
+  color: #C3E88D;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.leader-intro-example-btn:hover {
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2));
+  border-color: rgba(195, 232, 141, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(195, 232, 141, 0.2);
+}
+
+/* 폼 섹션 */
+.leader-intro-form-section {
+  margin-bottom: 40px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.leader-intro-form-section h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #82AAFF;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 폼 그룹 */
+.leader-intro-form-group {
+  margin-bottom: 20px;
+}
+
+.leader-intro-form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(240, 240, 240, 0.8);
+  margin-bottom: 8px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.leader-intro-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* 입력 필드 */
+.leader-intro-input,
+.leader-intro-select {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #f0f0f0;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.leader-intro-input:focus,
+.leader-intro-select:focus {
+  outline: none;
+  border-color: rgba(195, 232, 141, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 2px rgba(195, 232, 141, 0.1);
+}
+
+.leader-intro-input::placeholder {
+  color: rgba(240, 240, 240, 0.3);
+}
+
+/* 체크박스 */
+.leader-intro-checkbox {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* 배열 항목 관리 */
+.leader-intro-array-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.leader-intro-array-item .leader-intro-input {
+  flex: 1;
+}
+
+.leader-intro-remove-btn {
+  padding: 8px 12px;
+  background: rgba(247, 140, 108, 0.1);
+  border: 1px solid rgba(247, 140, 108, 0.3);
+  border-radius: 6px;
+  color: #F78C6C;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.leader-intro-remove-btn:hover {
+  background: rgba(247, 140, 108, 0.2);
+  border-color: rgba(247, 140, 108, 0.5);
+}
+
+.leader-intro-add-btn {
+  padding: 8px 16px;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid rgba(130, 170, 255, 0.3);
+  border-radius: 6px;
+  color: #82AAFF;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.leader-intro-add-btn:hover {
+  background: rgba(130, 170, 255, 0.2);
+  border-color: rgba(130, 170, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+/* 전문 분야 태그 */
+.leader-intro-expertise-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.leader-intro-expertise-item {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid rgba(130, 170, 255, 0.2);
+  border-radius: 20px;
+  padding: 4px 8px 4px 12px;
+}
+
+.leader-intro-expertise-input {
+  background: transparent;
+  border: none;
+  color: #f0f0f0;
+  font-size: 0.875rem;
+  width: 100px;
+  outline: none;
+}
+
+.leader-intro-expertise-remove {
+  background: transparent;
+  border: none;
+  color: rgba(247, 140, 108, 0.8);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  margin-left: 4px;
+  line-height: 1;
+}
+
+.leader-intro-expertise-remove:hover {
+  color: #F78C6C;
+}
+
+.leader-intro-add-expertise-btn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px dashed rgba(130, 170, 255, 0.3);
+  border-radius: 20px;
+  color: rgba(130, 170, 255, 0.8);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.leader-intro-add-expertise-btn:hover {
+  border-color: rgba(130, 170, 255, 0.5);
+  background: rgba(130, 170, 255, 0.05);
+}
+
+/* 액션 버튼 */
+.leader-intro-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leader-intro-cancel-btn {
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(240, 240, 240, 0.7);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.leader-intro-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #f0f0f0;
+}
+
+.leader-intro-save-btn {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #C3E88D, #82AAFF);
+  border: none;
+  border-radius: 8px;
+  color: #1a1a1a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(195, 232, 141, 0.2);
+}
+
+.leader-intro-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+.leader-intro-save-btn:active {
+  transform: translateY(0);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .leader-intro-form {
+    padding: 16px;
+  }
+  
+  .leader-intro-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .leader-intro-form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .leader-intro-example-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

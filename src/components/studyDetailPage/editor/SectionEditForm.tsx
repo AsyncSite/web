@@ -8,6 +8,7 @@ import RichTextSectionForm from './forms/RichTextSectionFormV2';
 import HowWeRollSectionForm from './forms/HowWeRollSectionForm';
 import JourneySectionForm from './forms/JourneySectionForm';
 import ExperienceSectionForm from './forms/ExperienceSectionForm';
+import LeaderIntroSectionForm from './forms/LeaderIntroSectionForm';
 import './SectionEditForm.css';
 
 interface SectionEditFormProps {
@@ -30,6 +31,16 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
       case SectionType.HERO:
         return (
           <HeroSectionForm
+            initialData={initialData}
+            onSave={onSave}
+            onCancel={onCancel}
+          />
+        );
+      
+      case SectionType.LEADER_INTRO:
+        return (
+          <LeaderIntroSectionForm
+            studyId={studyId}
             initialData={initialData}
             onSave={onSave}
             onCancel={onCancel}

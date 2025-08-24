@@ -1,0 +1,414 @@
+/* ========================================
+   Leader Intro Section - Compact Minimal Style
+   컴팩트하고 밀도있는 리더 소개
+   ======================================== */
+
+/* CSS Variables */
+:root {
+  --color-primary: #c3e88d;
+  --color-secondary: #82aaff;
+  --color-accent: #ffea00;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #ddd;
+  --color-text-muted: #aaa;
+}
+
+/* Base Section Styles - 다른 섹션과 동일 */
+.studyDetailLeaderIntroSection {
+  position: relative;
+  padding: 50px 30px 40px;
+  min-height: auto; /* 높이 자동 조절 */
+  background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Section Header - 표준 스타일 */
+.sectionTagHeader {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Section Title - 표준 */
+.sectionTitle {
+  margin-top: 30px;
+  text-align: left;
+  display: block;
+  color: var(--color-text-primary);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 15px;
+}
+
+.sectionSubtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+/* Content Container */
+.contentWrapper {
+  max-width: 700px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ===== 컴팩트 프로필 레이아웃 ===== */
+.compactProfile {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* 프로필 헤더 (이미지 + 정보 가로 배치) */
+.profileHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 25px;
+}
+
+/* 컴팩트 프로필 이미지 */
+.profileImageCompact {
+  position: relative;
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}
+
+.profileImageCompact img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(195, 232, 141, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.profileImageCompact img:hover {
+  transform: scale(1.05);
+}
+
+/* 경력 뱃지 (컴팩트) */
+.experienceBadgeCompact {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: #1a1a1a;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(195, 232, 141, 0.3);
+}
+
+/* 프로필 정보 */
+.profileInfo {
+  flex: 1;
+  padding-top: 5px;
+}
+
+.leaderNameCompact {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  margin-bottom: 5px;
+  line-height: 1.2;
+  text-shadow: 0 0 15px rgba(195, 232, 141, 0.2);
+}
+
+.taglineCompact {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  font-weight: 300;
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+
+/* 키워드 섹션 (컴팩트) */
+.keywordSectionCompact {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.keywordBadgeCompact {
+  display: inline-block;
+  padding: 5px 12px;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.12), rgba(130, 170, 255, 0.12));
+  border: 1px solid rgba(195, 232, 141, 0.25);
+  border-radius: 18px;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+.keywordBadgeCompact:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2));
+  box-shadow: 0 3px 12px rgba(195, 232, 141, 0.15);
+}
+
+/* Q&A 컨테이너 (컴팩트 그리드) */
+.qaContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.qaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qaQuestion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.qIconCompact {
+  color: var(--color-secondary);
+  font-weight: 800;
+  font-family: 'Source Code Pro', monospace;
+}
+
+.questionTextCompact {
+  line-height: 1.3;
+}
+
+.qaAnswer {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  padding-left: 24px;
+  /* max-height 제거 - 전체 내용 표시 */
+  position: relative;
+}
+
+.qaAnswer p {
+  margin: 0;
+}
+
+.qaAnswer strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* 환영 메시지 (한 줄 컴팩트) */
+.welcomeCompact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  background: radial-gradient(circle at left, rgba(195, 232, 141, 0.05), transparent);
+  border-radius: 12px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  font-style: italic;
+}
+
+.welcomeIconCompact {
+  font-size: 1.5rem;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  10%, 30% { transform: scale(1.1); }
+  20% { transform: scale(1.05); }
+}
+
+.welcomeTextCompact {
+  flex: 1;
+}
+
+.welcomeTextCompact p {
+  margin: 0;
+}
+
+/* 액션 영역 */
+.actionArea {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* 연락 버튼 (컴팩트) */
+.contactButtonCompact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: #1a1a1a;
+  text-decoration: none;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(195, 232, 141, 0.25);
+}
+
+.contactButtonCompact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(195, 232, 141, 0.35);
+}
+
+.coffeeIconCompact {
+  font-size: 1.1rem;
+}
+
+/* 소셜 아이콘 (컴팩트) */
+.socialIconsCompact {
+  display: flex;
+  gap: 15px;
+}
+
+.socialIconLink {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.socialIconLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.socialIconLink:hover {
+  color: var(--color-primary);
+}
+
+.socialIconLink:hover::after {
+  width: 100%;
+}
+
+/* 경험 라인 (매우 미니멀) */
+.experienceLineCompact {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.expItemCompact {
+  position: relative;
+  margin: 0 8px;
+}
+
+.expDivider {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .studyDetailLeaderIntroSection {
+    padding: 40px 20px 30px;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .profileHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profileInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .keywordSectionCompact {
+    justify-content: center;
+  }
+
+  .qaContainer {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .welcomeCompact {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .actionArea {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .contactButtonCompact {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileImageCompact {
+    width: 100px;
+    height: 100px;
+  }
+
+  .leaderNameCompact {
+    font-size: 1.5rem;
+  }
+
+  .taglineCompact {
+    font-size: 1rem;
+  }
+
+  .keywordBadgeCompact {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+
+  .qaQuestion {
+    font-size: 0.9rem;
+  }
+
+  .qaAnswer {
+    font-size: 0.9rem;
+    padding-left: 20px;
+  }
+}

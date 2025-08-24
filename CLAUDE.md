@@ -229,6 +229,37 @@ When modifying shared components or utilities:
 - Any `any` type usage → Define proper types
 - Console.log in committed code → Remove immediately
 
+### 🛑 Problem Resolution Guidelines
+
+**CRITICAL: 절대 임시 해결책(temporary fix)을 사용하지 마세요**
+
+1. **문제 해결 원칙**:
+   - ❌ **금지**: 임시 해결책, 핫픽스, 워크어라운드
+   - ✅ **필수**: 본질적인 문제 파악 및 근본적인 해결
+   - ✅ **필수**: 모든 관련 시스템 일관성 유지
+
+2. **문제 발생 시 접근 방법**:
+   - 문제의 근본 원인 파악
+   - 영향 받는 모든 시스템 확인 (프론트엔드, 백엔드, DB 등)
+   - 일관성 있는 해결책 적용
+   - 불확실한 경우 반드시 사용자에게 문의
+
+3. **예시**:
+   ```typescript
+   // ❌ BAD - 임시 해결책
+   // 백엔드가 지원하지 않으니 임시로 다른 타입 사용
+   const type = backendSupports ? 'LEADER_INTRO' : 'CUSTOM_HTML';
+   
+   // ✅ GOOD - 본질적 해결
+   // 백엔드에도 LEADER_INTRO 타입 추가하여 일관성 유지
+   // 프론트엔드와 백엔드 모두 동일한 타입 사용
+   ```
+
+4. **의사결정 프로세스**:
+   - 해결책이 확실한가? → 본질적 해결 진행
+   - 불확실한가? → 사용자에게 옵션 제시 및 문의
+   - 임시 해결이 유일한 방법인가? → 절대 진행하지 말고 사용자와 상의
+
 ### 📝 Git Commit Message Guidelines
 
 **IMPORTANT: Do not mention AI agents in commit messages**

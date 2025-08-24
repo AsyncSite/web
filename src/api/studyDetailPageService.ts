@@ -40,7 +40,8 @@ export enum SectionType {
   CODE_BLOCK = 'CODE_BLOCK',
   HOW_WE_ROLL = 'HOW_WE_ROLL',
   JOURNEY = 'JOURNEY',
-  EXPERIENCE = 'EXPERIENCE'
+  EXPERIENCE = 'EXPERIENCE',
+  LEADER_INTRO = 'LEADER_INTRO'
 }
 
 export enum PageStatus {

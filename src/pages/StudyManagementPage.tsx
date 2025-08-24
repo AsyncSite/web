@@ -952,6 +952,7 @@ const StudyManagementPage: React.FC = () => {
                         <div className={styles.sectionTypes}>
                           {[
                             SectionType.HERO,
+                            SectionType.LEADER_INTRO,
                             SectionType.RICH_TEXT,
                             SectionType.MEMBERS,
                             SectionType.FAQ,
