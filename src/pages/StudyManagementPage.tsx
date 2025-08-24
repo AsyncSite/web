@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useApiError } from '../hooks/useApiError';
 import { parseDate } from '../utils/studyScheduleUtils';
 import studyService, { Study, ApplicationResponse, MemberResponse, ApplicationStatus, StudyUpdateRequest } from '../api/studyService';
 import StudyUpdateModal from '../components/ui/StudyUpdateModal';
@@ -36,6 +37,7 @@ const StudyManagementPage: React.FC = () => {
   const navigate = useNavigate();
   const { studyId } = useParams<{ studyId: string }>();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { handleApiError } = useApiError();
   const [activeTab, setActiveTab] = useState<'applications' | 'members' | 'page-editor'>('applications');
   const [study, setStudy] = useState<Study | null>(null);
   const [applications, setApplications] = useState<ApplicationResponse[]>([]);
@@ -197,8 +199,16 @@ const StudyManagementPage: React.FC = () => {
           }
         }
 
-      } catch (error) {
+      } catch (error: any) {
         console.error('데이터 로딩 실패:', error);
+        
+        // 401 에러는 handleApiError가 처리
+        if (error.response?.status === 401) {
+          handleApiError(error);
+          return;
+        }
+        
+        // 기타 에러
         addToast('스터디 관리 정보를 불러올 수 없습니다.', 'error');
         navigate('/study');
       } finally {
@@ -261,6 +271,13 @@ const StudyManagementPage: React.FC = () => {
       }
     } catch (error: any) {
       console.error('승인 처리 실패:', error);
+      
+      // 401 에러는 handleApiError가 처리
+      if (error.response?.status === 401) {
+        handleApiError(error);
+        return;
+      }
+      
       const errorMessage = error.response?.data?.message || '승인 처리 중 오류가 발생했습니다.';
       addToast(errorMessage, 'error');
     } finally {

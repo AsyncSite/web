@@ -10,12 +10,14 @@ import DurationSelector from '../components/study/DurationSelector';
 import GenerationSelector from '../components/study/GenerationSelector';
 import PreviewModal from '../components/study/PreviewModal';
 import { useDebouncedCallback } from '../hooks/useDebounce';
+import { useApiError } from '../hooks/useApiError';
 import styles from './StudyProposalPageV2.module.css';
 
 const StudyProposalPageV2: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { messages, success, error, warning, removeToast } = useToast();
+  const { handleApiError } = useApiError();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
@@ -507,36 +509,25 @@ const StudyProposalPageV2: React.FC = () => {
       success('스터디 제안이 성공적으로 제출되었습니다! 관리자 검토 후 연락드리겠습니다.');
       setTimeout(() => navigate('/study'), 2000);
     } catch (err: any) {
-      // Parse API error messages for better user feedback
-      let errorMessage = '스터디 제안 제출 중 오류가 발생했습니다.';
-      
-      if (err.response?.data) {
-        const { data, message, errors } = err.response.data;
-        
-        // Handle different error response formats
-        if (message) {
-          errorMessage = message;
-        } else if (errors && Array.isArray(errors)) {
-          // Handle field-specific errors
-          errorMessage = errors.map((e: any) => e.message || e).join(', ');
-        } else if (errors && typeof errors === 'object') {
-          // Handle field-mapped errors
-          errorMessage = Object.values(errors).flat().join(', ');
-        } else if (typeof data === 'string') {
-          errorMessage = data;
-        }
-        
-        // Handle specific error codes
-        if (err.response.status === 400) {
-          errorMessage = `입력값 오류: ${errorMessage}`;
-        } else if (err.response.status === 409) {
-          errorMessage = '이미 동일한 제목의 스터디를 제안하셨습니다.';
-        } else if (err.response.status === 422) {
-          errorMessage = `검증 실패: ${errorMessage}`;
-        }
+      // 401 에러는 handleApiError가 자동으로 처리 (세션 만료 메시지 + 로그인 리다이렉트)
+      if (err.response?.status === 401) {
+        handleApiError(err);
+        return;
       }
       
-      error(errorMessage);
+      // 특정 상태 코드는 커스텀 메시지로 처리
+      if (err.response?.status === 409) {
+        error('이미 동일한 제목의 스터디를 제안하셨습니다.');
+      } else if (err.response?.status === 422) {
+        const message = err.response?.data?.message || '입력값을 확인해주세요.';
+        error(`검증 실패: ${message}`);
+      } else if (err.response?.status === 400) {
+        const message = err.response?.data?.message || '잘못된 요청입니다.';
+        error(`입력값 오류: ${message}`);
+      } else {
+        // 기타 에러는 handleApiError로 처리
+        handleApiError(err);
+      }
     } finally {
       setIsSubmitting(false);
     }
