@@ -1,7 +1,7 @@
 /* body 스타일은 App.css에서 전역으로 설정됨 */
 
 /* Intro Wrapper */
-.intro-wrapper {
+.introWrapper {
     position: relative;
     width: 100%;
     min-height: 100vh;
@@ -10,7 +10,7 @@
 }
 
 /* 우주 배경 */
-.space-background {
+.spaceBackground {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -67,7 +67,7 @@
 }
 
 /* 궤도 애니메이션 */
-.orbit-container {
+.orbitContainer {
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
@@ -90,14 +90,14 @@
     backface-visibility: hidden;
 }
 
-.orbit-1 {
+.orbit1 {
     width: 700px;
     height: 700px;
     top: -350px;
     left: -350px;
 }
 
-.orbit-2 {
+.orbit2 {
     width: 900px;
     height: 900px;
     top: -450px;
@@ -106,7 +106,7 @@
     animation-direction: reverse;
 }
 
-.orbit-3 {
+.orbit3 {
     width: 500px;
     height: 500px;
     top: -250px;
@@ -127,19 +127,19 @@
 }
 
 /* 각 궤도의 행성들을 다른 위치에서 시작 */
-.orbit-1 .planet {
+.orbit1 .planet {
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.orbit-2 .planet {
+.orbit2 .planet {
     top: 50%;
     left: -10px;
     transform: translateY(-50%);
 }
 
-.orbit-3 .planet {
+.orbit3 .planet {
     top: 50%;
     right: -10px;
     transform: translateY(-50%);
@@ -176,7 +176,7 @@
     width: 100% !important;
 }
 
-.hero-content {
+.heroContent {
     text-align: center !important;
     z-index: 1;
     position: relative;
@@ -190,7 +190,7 @@
 }
 
 
-.hero-title {
+.heroTitle {
     font-size: 72px !important;
     font-weight: 900 !important;
     line-height: 1.15 !important;
@@ -205,14 +205,14 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.hero-title span {
+.heroTitle span {
     background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 30px rgba(195, 232, 141, 0.3);
 }
 
-.hero-subtitle {
+.heroSubtitle {
     font-size: var(--font-2xl) !important;
     opacity: 0;
     margin-bottom: var(--spacing-4xl);
@@ -224,7 +224,7 @@
     display: block;
 }
 
-.hero-cta {
+.heroCta {
     display: flex !important;
     gap: var(--spacing-lg);
     justify-content: center !important;
@@ -305,30 +305,30 @@
         box-shadow: 0 0 2px rgba(255, 255, 255, 0.3) !important;
     }
     
-    .hero-title {
+    .heroTitle {
         font-size: 48px !important;
     }
     
     /* 모바일에서는 입체 효과 간소화 */
-    .hero-title-wrapper .hero-title::before {
+    .heroTitleWrapper .heroTitle::before {
         transform: translate(-2px, -2px) skew(-5deg) scale(1, 1.02);
     }
     
-    .hero-title-wrapper .hero-title::after {
+    .heroTitleWrapper .heroTitle::after {
         transform: translate(2px, 2px) skew(5deg) scale(1, 0.98);
     }
     
-    .hero-subtitle {
+    .heroSubtitle {
         font-size: 18px;
     }
     
-    .hero-cta {
+    .heroCta {
         flex-direction: column;
         align-items: center;
     }
     
-    .hero-cta .btn-primary,
-    .hero-cta .btn-secondary {
+    .heroCta .btn-primary,
+    .heroCta .btn-secondary {
         width: 100%;
         max-width: 280px;
         text-align: center;
@@ -336,13 +336,13 @@
 }
 
 /* 11MenZ 스타일 낙하 애니메이션 */
-.hero-title-wrapper {
+.heroTitleWrapper {
     position: relative;
     width: 100%;
     overflow: visible;
 }
 
-.hero-title-wrapper.drop-bounce .hero-title {
+.heroTitleWrapper.dropBounce .heroTitle {
     animation: dropBounce 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
     transform-origin: center center;
 }
@@ -372,12 +372,12 @@
 }
 
 /* 11MenZ 스타일 입체적 텍스트 효과 - 개선된 버전 */
-.hero-title-wrapper .hero-title {
+.heroTitleWrapper .heroTitle {
     position: relative;
     z-index: 3;
 }
 
-.hero-title-wrapper .hero-title::before {
+.heroTitleWrapper .heroTitle::before {
     content: attr(data-heading);
     position: absolute;
     left: 0;
@@ -393,7 +393,7 @@
     animation: dropBounceBefore 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
-.hero-title-wrapper .hero-title::after {
+.heroTitleWrapper .heroTitle::after {
     content: attr(data-heading);
     position: absolute;
     left: 0;
