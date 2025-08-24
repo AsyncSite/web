@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Stats.css';
+import styles from './Stats.module.css';
 
 interface TimeElapsed {
   days: number;
@@ -702,7 +702,7 @@ const Stats: React.FC = () => {
           entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
               setTimeout(() => {
-                entry.target.classList.add('active');
+                entry.target.classList.add(styles.active);
               }, index * 200);
             }
           });
@@ -723,60 +723,60 @@ const Stats: React.FC = () => {
 
   return (
       <>
-        <section className="stats section-background">
+        <section className={`${styles.stats} section-background`}>
           <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">
-                <div className="title-layout">
-                  <div className="title-main">
-                    <span className="title-part first">꾸준히 연결되는</span>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                <div className={styles.titleLayout}>
+                  <div className={styles.titleMain}>
+                    <span className={`${styles.titlePart} ${styles.first}`}>꾸준히 연결되는</span>
                   </div>
-                  <div className="title-sub">
-                    <span className="title-part accent">가장 치열한 사생활</span>
+                  <div className={styles.titleSub}>
+                    <span className={`${styles.titlePart} ${styles.accent}`}>가장 치열한 사생활</span>
                   </div>
                 </div>
               </h2>
             </div>
 
             {/* 전체 화면을 차지하는 캔버스 */}
-            <canvas ref={weavingCanvasRef} className="weaving-canvas" />
-            <canvas ref={glowCanvasRef} className="glow-canvas" />
+            <canvas ref={weavingCanvasRef} className={styles.weavingCanvas} />
+            <canvas ref={glowCanvasRef} className={styles.glowCanvas} />
 
-            <div className="weaving-container">
+            <div className={styles.weavingContainer}>
               {/* 중앙 시간 표시 */}
-              <div className="time-display-weaving">
-                <div className="time-flow">
-                  <div className="time-segment">
-                    <span className="time-number">{formatNumber(timeElapsed.days)}</span>
-                    <span className="time-label">일</span>
+              <div className={styles.timeDisplayWeaving}>
+                <div className={styles.timeFlow}>
+                  <div className={styles.timeSegment}>
+                    <span className={styles.timeNumber}>{formatNumber(timeElapsed.days)}</span>
+                    <span className={styles.timeLabel}>일</span>
                   </div>
-                  <div className="time-connector">·</div>
-                  <div className="time-segment">
-                    <span className="time-number">{formatNumber(timeElapsed.hours)}</span>
-                    <span className="time-label">시간</span>
+                  <div className={styles.timeConnector}>·</div>
+                  <div className={styles.timeSegment}>
+                    <span className={styles.timeNumber}>{formatNumber(timeElapsed.hours)}</span>
+                    <span className={styles.timeLabel}>시간</span>
                   </div>
-                  <div className="time-connector">·</div>
-                  <div className="time-segment">
-                    <span className="time-number">{formatNumber(timeElapsed.minutes)}</span>
-                    <span className="time-label">분</span>
+                  <div className={styles.timeConnector}>·</div>
+                  <div className={styles.timeSegment}>
+                    <span className={styles.timeNumber}>{formatNumber(timeElapsed.minutes)}</span>
+                    <span className={styles.timeLabel}>분</span>
                   </div>
-                  <div className="time-connector">·</div>
-                  <div className="time-segment">
-                    <span className="time-number">{formatNumber(timeElapsed.seconds)}</span>
-                    <span className="time-label">초</span>
+                  <div className={styles.timeConnector}>·</div>
+                  <div className={styles.timeSegment}>
+                    <span className={styles.timeNumber}>{formatNumber(timeElapsed.seconds)}</span>
+                    <span className={styles.timeLabel}>초</span>
                   </div>
                 </div>
                 {/* 은은한 서브 텍스트 */}
-                <div className="time-origin">
-                  <span className="origin-date">Since 2024.06.11</span>
-                  <span className="origin-divider">·</span>
-                  <span className="origin-text">첫 모임</span>
+                <div className={styles.timeOrigin}>
+                  <span className={styles.originDate}>Since 2024.06.11</span>
+                  <span className={styles.originDivider}>·</span>
+                  <span className={styles.originText}>첫 모임</span>
                 </div>
               </div>
             </div>
 
             {/* 하단 설명 */}
-            <div className="weaving-legend">
+            <div className={styles.weavingLegend}>
               <p>각각의 실은 하나의 스터디를 나타내요.</p>
               <p>서로 엮이며 성취하고 성장합니다.</p>
             </div>

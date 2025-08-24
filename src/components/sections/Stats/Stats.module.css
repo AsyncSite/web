@@ -8,7 +8,9 @@
   overflow: visible;
 }
 
-.stats .section-header {
+/* Note: section-background and container are global classes from common-landing.css */
+
+.sectionHeader {
   text-align: center;
   margin-bottom: 80px;
   animation: fadeInDown 0.8s ease;
@@ -20,18 +22,25 @@
 }
 
 /* section-title은 common-landing.css에서 관리, 필요시 추가 스타일만 */
-.stats .section-title {
+.sectionTitle {
   margin-bottom: 0;
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
 }
 
-.title-layout {
+.titleLayout {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.title-main {
+.titleMain {
   display: flex;
   align-items: baseline;
   justify-content: center;
@@ -40,20 +49,20 @@
   margin-bottom: -10px;
 }
 
-.title-part {
+.titlePart {
   display: inline-block;
   transition: all 0.3s ease;
   position: relative;
 }
 
-.title-part.first {
+.first {
   font-size: 64px;
   font-weight: 700;
   color: rgba(255, 255, 255, 1);
   letter-spacing: -1px;
 }
 
-.title-part.second {
+.second {
   font-size: 64px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.95);
@@ -61,7 +70,7 @@
   margin-right: 5px;
 }
 
-.title-comma {
+.titleComma {
   font-size: 96px;
   font-weight: 900;
   color: #C3E88D;
@@ -85,13 +94,13 @@
   }
 }
 
-.title-sub {
+.titleSub {
   display: flex;
   justify-content: center;
   margin-top: 40px;
 }
 
-.title-part.accent {
+.accent {
   font-size: 56px;
   background: linear-gradient(135deg, #C3E88D, #A8D66F);
   -webkit-background-clip: text;
@@ -115,7 +124,7 @@
 
 
 /* 실타래 컨테이너 */
-.weaving-container {
+.weavingContainer {
   position: relative;
   width: 100%;
   max-width: 900px;
@@ -128,8 +137,8 @@
 }
 
 /* 캔버스 스타일 */
-.weaving-canvas,
-.glow-canvas {
+.weavingCanvas,
+.glowCanvas {
   position: absolute;
   top: 50px;
   left: 0;
@@ -139,18 +148,18 @@
   margin-left: calc(-50vw + 50%);
 }
 
-.glow-canvas {
+.glowCanvas {
   z-index: 2;
   pointer-events: none;
   mix-blend-mode: screen;
 }
 
-.weaving-canvas {
+.weavingCanvas {
   cursor: pointer;
 }
 
 /* 중앙 시간 표시 - 미니멀하고 고급스럽게 */
-.time-display-weaving {
+.timeDisplayWeaving {
   position: relative;
   z-index: 3;
   padding: 60px 70px;
@@ -178,20 +187,20 @@
   }
 }
 
-.time-flow {
+.timeFlow {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.time-segment {
+.timeSegment {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
 }
 
-.time-number {
+.timeNumber {
   font-family: 'PFStardust', 'DungGeunMo', 'Consolas', 'Monaco', 'Lucida Console', monospace !important;
   font-size: 64px;
   font-weight: 800;
@@ -219,7 +228,7 @@
   }
 }
 
-.time-label {
+.timeLabel {
   font-size: 13px;
   color: rgba(195, 232, 141, 0.6);
   text-transform: uppercase;
@@ -229,7 +238,7 @@
   text-shadow: 0 0 10px rgba(195, 232, 141, 0.2);
 }
 
-.time-connector {
+.timeConnector {
   font-size: 26px;
   color: rgba(195, 232, 141, 0.4);
   margin: 0 -5px;
@@ -238,7 +247,7 @@
 }
 
 /* 은은한 시작 날짜 표시 */
-.time-origin {
+.timeOrigin {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -253,26 +262,26 @@
   transition: all 0.3s ease;
 }
 
-.time-origin:hover {
+.timeOrigin:hover {
   color: rgba(195, 232, 141, 0.5);
 }
 
-.origin-date {
+.originDate {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
 }
 
-.origin-divider {
+.originDivider {
   opacity: 0.5;
 }
 
-.origin-text {
+.originText {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   opacity: 0.8;
 }
 
 /* 하단 설명 */
-.weaving-legend {
+.weavingLegend {
   position: relative;
   margin-top: -100px;
   text-align: center;
@@ -280,7 +289,7 @@
   z-index: 4;
 }
 
-.weaving-legend p {
+.weavingLegend p {
   font-size: 16px;
   color: rgba(195, 232, 141, 0.7);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -289,7 +298,7 @@
   margin: -20px 0 8px 0;
 }
 
-.weaving-legend p:last-child {
+.weavingLegend p:last-child {
   margin-bottom: 0;
 }
 
@@ -324,61 +333,61 @@
 
   /* section-title은 common-landing.css에서 관리 */
 
-  .title-main {
+  .titleMain {
     flex-wrap: wrap;
   }
 
-  .title-part.first,
-  .title-part.second {
+  .first,
+  .second {
     font-size: 42px;
   }
 
-  .title-comma {
+  .titleComma {
     font-size: 64px;
   }
 
-  .title-part.accent {
+  .accent {
     font-size: 38px;
   }
 
-  .title-sub {
+  .titleSub {
     padding-right: 5%;
     margin-top: 30px;
   }
 
-  .weaving-container {
+  .weavingContainer {
     height: 400px;
     padding: 0 20px;
   }
 
-  .time-display-weaving {
+  .timeDisplayWeaving {
     padding: 35px 40px;
   }
 
-  .time-flow {
+  .timeFlow {
     gap: 16px;
   }
 
-  .time-number {
+  .timeNumber {
     font-size: clamp(36px, 7vw, 42px);
     width: clamp(75px, 15vw, 90px);
   }
 
-  .time-label {
+  .timeLabel {
     font-size: 12px;
   }
 
-  .time-connector {
+  .timeConnector {
     font-size: 22px;
     margin-bottom: 22px;
   }
 
-  .weaving-legend {
+  .weavingLegend {
     bottom: -40px;
     padding: 0 20px;
   }
 
-  .weaving-legend p {
+  .weavingLegend p {
     font-size: 15px;
   }
 }
@@ -386,96 +395,96 @@
 @media (max-width: 480px) {
   /* section-title은 common-landing.css에서 관리 */
 
-  .title-main {
+  .titleMain {
     justify-content: center;
     text-align: center;
   }
 
-  .title-part.first,
-  .title-part.second {
+  .first,
+  .second {
     font-size: 28px;
     margin-right: 10px;
   }
 
-  .title-comma {
+  .titleComma {
     font-size: 42px;
     margin-right: 10px;
   }
 
-  .title-part.accent {
+  .accent {
     font-size: 26px;
   }
 
-  .title-sub {
+  .titleSub {
     justify-content: center;
     padding-right: 0;
     margin-top: 25px;
   }
 
-  .stats .section-header {
+  .sectionHeader {
     text-align: center;
   }
 
-  .weaving-container {
+  .weavingContainer {
     height: 350px;
   }
 
-  .time-display-weaving {
+  .timeDisplayWeaving {
     padding: 30px 35px;
   }
 
-  .time-flow {
+  .timeFlow {
     gap: 14px;
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  .time-number {
+  .timeNumber {
     font-size: 34px;
     letter-spacing: 1px;
     width: 70px;
   }
 
-  .time-label {
+  .timeLabel {
     font-size: 11px;
     letter-spacing: 1.5px;
   }
 
-  .time-connector {
+  .timeConnector {
     display: none;
   }
 
-  .time-segment {
+  .timeSegment {
     margin: 0 8px;
     gap: 10px;
   }
 
-  .time-origin {
+  .timeOrigin {
     font-size: 11px;
     padding: 5px 10px;
     gap: 8px;
   }
 
-  .weaving-legend p {
+  .weavingLegend p {
     font-size: 14px;
   }
 }
 
 /* 접근성 개선 */
 @media (prefers-reduced-motion: reduce) {
-  .title-part.accent,
-  .time-number,
-  .time-origin {
+  .accent,
+  .timeNumber,
+  .timeOrigin {
     animation: none;
   }
 
-  .time-display-weaving {
+  .timeDisplayWeaving {
     animation: none;
     opacity: 1;
     transform: scale(1);
   }
 
-  .weaving-legend {
+  .weavingLegend {
     animation: none;
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -496,21 +505,21 @@
   min-height: auto;
 }
 
-.journey .section-header {
+.journeySectionHeader {
   display: none;
   text-align: center;
   margin-bottom: 80px;
   animation: fadeInDown 0.8s ease;
 }
 
-.journey .section-title {
+.journeySectionTitle {
   font-size: 56px;
   margin-bottom: 24px;
   font-weight: 900;
   letter-spacing: -1px;
 }
 
-.journey .section-subtitle {
+.journeySectionSubtitle {
   font-size: 20px;
   color: rgba(255, 255, 255, 0.6);
   font-weight: 300;
@@ -518,7 +527,7 @@
 }
 
 /* 별자리 컨테이너 */
-.journey-constellation {
+.journeyConstellation {
   position: relative;
   max-width: 1400px;
   margin: 0 auto;
@@ -526,7 +535,7 @@
 }
 
 /* SVG 배경 */
-.constellation-svg {
+.constellationSvg {
   position: absolute;
   top: 0;
   left: 0;
@@ -537,7 +546,7 @@
   animation: fadeIn 1s ease 0.5s forwards;
 }
 
-.constellation-path {
+.constellationPath {
   opacity: 0;
   animation: drawPath 2s ease 1s forwards;
 }
@@ -554,7 +563,7 @@
 }
 
 /* 여정 단계들 */
-.journey-steps {
+.journeySteps {
   position: relative;
   z-index: 2;
   display: grid;
@@ -564,7 +573,7 @@
   padding: 0 40px;
 }
 
-.journey-step {
+.journeyStep {
   position: relative;
   text-align: center;
   opacity: 0;
@@ -573,20 +582,20 @@
   padding-bottom: 60px; /* 후기 공간 확보 */
 }
 
-.journey-step.active {
+.journeyStep.active {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* 별 디자인 */
-.star-container {
+.starContainer {
   position: relative;
   width: 200px;
   height: 200px;
   margin: 0 auto 30px;
 }
 
-.journey .star {
+.star {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -605,14 +614,14 @@
   box-shadow: 0 0 40px rgba(195, 232, 141, 0.2);
 }
 
-.journey .star:hover {
+.star:hover {
   transform: translate(-50%, -50%) scale(1.15);
   border-color: #A8D66F;
   box-shadow: 0 0 60px rgba(195, 232, 141, 0.4);
   background: radial-gradient(circle at 30% 30%, rgba(195, 232, 141, 0.25), transparent 60%);
 }
 
-.star-number {
+.starNumber {
   font-size: 42px;
   font-weight: 900;
   color: #C3E88D;
@@ -621,7 +630,7 @@
 }
 
 /* 별 빛나는 효과 */
-.star-glow {
+.starGlow {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -634,7 +643,7 @@
   animation: starGlow 3s ease-in-out infinite;
 }
 
-.journey-step.active .star-glow {
+.journeyStep.active .starGlow {
   opacity: 1;
 }
 
@@ -650,7 +659,7 @@
 }
 
 /* 별 펄스 효과 */
-.star-pulse {
+.starPulse {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -663,7 +672,7 @@
   animation: starPulse 3s ease-in-out infinite;
 }
 
-.journey-step.active .star-pulse {
+.journeyStep.active .starPulse {
   opacity: 1;
 }
 
@@ -679,12 +688,12 @@
 }
 
 /* 컨텐츠 스타일 */
-.step-content {
+.stepContent {
   max-width: 300px;
   margin: 0 auto;
 }
 
-.step-title {
+.stepTitle {
   font-size: 36px;
   font-weight: 900;
   margin-bottom: 16px;
@@ -693,7 +702,7 @@
   line-height: 1;
 }
 
-.step-subtitle {
+.stepSubtitle {
   font-size: 18px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.85);
@@ -702,7 +711,7 @@
   letter-spacing: 0.2px;
 }
 
-.step-description {
+.stepDescription {
   font-size: 15px;
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.7;
@@ -710,12 +719,12 @@
   display: none; /* 기본적으로 숨김 */
 }
 
-.journey-step:hover .step-description {
+.journeyStep:hover .stepDescription {
   display: block;
 }
 
 /* 후기 스타일 */
-.step-testimonial {
+.stepTestimonial {
   position: absolute;
   bottom: -60px;
   left: 50%;
@@ -732,13 +741,13 @@
   pointer-events: none;
 }
 
-.journey-step:hover .step-testimonial {
+.journeyStep:hover .stepTestimonial {
   opacity: 1;
   bottom: -80px;
   pointer-events: auto;
 }
 
-.testimonial-content {
+.testimonialContent {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.9);
   font-style: normal;
@@ -746,7 +755,7 @@
   margin-bottom: 12px;
 }
 
-.testimonial-author {
+.testimonialAuthor {
   font-size: 12px;
   color: rgba(195, 232, 141, 0.8);
   text-align: right;
@@ -754,13 +763,13 @@
 }
 
 /* CTA 섹션 */
-.journey-cta {
+.journeyCta {
   text-align: center;
   margin-top: 80px;
   animation: fadeInUp 0.8s ease 1.5s both;
 }
 
-.cta-text {
+.ctaText {
   font-size: 24px;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 300;
@@ -770,17 +779,17 @@
 }
 
 /* 각 단계별 위치 조정 */
-.step-1 { margin-top: 80px; }
-.step-2 { margin-top: 0; }
-.step-3 { margin-top: 100px; }
-.step-4 { margin-top: 30px; }
+.step1 { margin-top: 80px; }
+.step2 { margin-top: 0; }
+.step3 { margin-top: 100px; }
+.step4 { margin-top: 30px; }
 
 /* 호버 시 확대 효과 */
-.journey-step {
+.journeyStep {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.journey-step:hover {
+.journeyStep:hover {
   transform: translateY(-5px);
 }
 
@@ -818,16 +827,16 @@
 
 /* 반응형 디자인 */
 @media (max-width: 1024px) {
-  .journey-steps {
+  .journeySteps {
     grid-template-columns: repeat(2, 1fr);
     gap: 60px;
   }
 
-  .constellation-svg {
+  .constellationSvg {
     display: none;
   }
 
-  .step-1, .step-2, .step-3, .step-4 {
+  .step1, .step2, .step3, .step4 {
     margin-top: 0;
   }
 }
@@ -837,24 +846,24 @@
     padding: 30px 0 60px 0;
   }
 
-  .journey .section-header {
+  .journeySectionHeader {
     margin-bottom: 60px;
   }
 
-  .journey .section-title {
+  .journeySectionTitle {
     font-size: 36px;
   }
 
-  .journey .section-subtitle {
+  .journeySectionSubtitle {
     font-size: 16px;
   }
 
-  .journey-steps {
+  .journeySteps {
     grid-template-columns: 1fr;
     gap: 30px;
   }
 
-  .star-container {
+  .starContainer {
     width: 100px;
     height: 100px;
   }
@@ -864,23 +873,23 @@
     height: 70px;
   }
 
-  .star-number {
+  .starNumber {
     font-size: 24px;
   }
 
-  .step-title {
+  .stepTitle {
     font-size: 24px;
   }
 
-  .step-subtitle {
+  .stepSubtitle {
     font-size: 15px;
   }
 
-  .step-description {
+  .stepDescription {
     font-size: 13px;
   }
 
-  .cta-text {
+  .ctaText {
     font-size: 18px;
   }
 }
@@ -890,19 +899,19 @@
     padding: 25px 0 50px 0;
   }
 
-  .journey .section-header {
+  .journeySectionHeader {
     margin-bottom: 50px;
   }
 
-  .journey .section-title {
+  .journeySectionTitle {
     font-size: 28px;
   }
 
-  .journey-cta {
+  .journeyCta {
     margin-top: 40px;
   }
 
-  .cta-text {
+  .ctaText {
     font-size: 16px;
     padding: 0 20px;
   }
@@ -910,13 +919,13 @@
 
 /* 접근성 개선 */
 @media (prefers-reduced-motion: reduce) {
-  .star-glow,
-  .star-pulse,
-  .constellation-path {
+  .starGlow,
+  .starPulse,
+  .constellationPath {
     animation: none;
   }
 
-  .journey-step {
+  .journeyStep {
     transition: none;
   }
 }
