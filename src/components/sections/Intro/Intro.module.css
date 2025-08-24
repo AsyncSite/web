@@ -327,8 +327,8 @@
         align-items: center;
     }
     
-    .heroCta .btn-primary,
-    .heroCta .btn-secondary {
+    .heroCta :global(.btn-primary),
+    .heroCta :global(.btn-secondary) {
         width: 100%;
         max-width: 280px;
         text-align: center;
