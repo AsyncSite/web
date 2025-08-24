@@ -52,7 +52,7 @@ const Intro: React.FC = () => {
         <div className="container">
           <div className={styles.heroContent}>
             <div className={`${styles.heroTitleWrapper} ${styles.dropBounce}`}>
-              <h1 className={styles.heroTitle}>
+              <h1 className={styles.heroTitle} data-heading="AsyncSite">
                 AsyncSite
               </h1>
             </div>
