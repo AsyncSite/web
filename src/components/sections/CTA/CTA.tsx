@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import './CTA.css';
+import styles from './CTA.module.css';
 
 const CTA: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -145,39 +145,39 @@ const CTA: React.FC = () => {
   }, []);
   
   return (
-    <section className="cta section-background" id="cta">
-      <div className="container cta-container" ref={containerRef}>
-        <canvas className="cta-canvas" ref={canvasRef} />
+    <section className={`${styles.cta} section-background`} id="cta">
+      <div className={styles.ctaContainer} ref={containerRef}>
+        <canvas className={styles.ctaCanvas} ref={canvasRef} />
         
-        <div className="cta-content">
-          <h2 className="cta-title">함께 시작할 준비가 되셨나요?</h2>
-          <p className="cta-subtitle">
+        <div className={styles.ctaContent}>
+          <h2 className={styles.ctaTitle}>함께 시작할 준비가 되셨나요?</h2>
+          <p className={styles.ctaSubtitle}>
             당신의 별이 우리의 별자리와 만나<br />
             더 큰 빛을 만들어갈 시간입니다
           </p>
           
-          <div className="cta-stats">
-            <div className="cta-stat">
-              <span className="cta-stat-number">152</span>
-              <span className="cta-stat-label">명의 동료가 함께하고 있어요</span>
+          <div className={styles.ctaStats}>
+            <div className={styles.ctaStat}>
+              <span className={styles.ctaStatNumber}>152</span>
+              <span className={styles.ctaStatLabel}>명의 동료가 함께하고 있어요</span>
             </div>
-            <div className="cta-stat-divider">•</div>
-            <div className="cta-stat">
-              <span className="cta-stat-number">8</span>
-              <span className="cta-stat-label">개의 스터디가 진행 중이에요</span>
+            <div className={styles.ctaStatDivider}>•</div>
+            <div className={styles.ctaStat}>
+              <span className={styles.ctaStatNumber}>8</span>
+              <span className={styles.ctaStatLabel}>개의 스터디가 진행 중이에요</span>
             </div>
           </div>
           
-          <div className="cta-buttons">
-            <a href="/study" className="btn-primary">
+          <div className={styles.ctaButtons}>
+            <a href="/study" className={styles.btnPrimary}>
               지금 참여하기
             </a>
-            <a href="/signup" className="btn-secondary">
+            <a href="/signup" className={styles.btnSecondary}>
               회원가입하고 시작하기
             </a>
           </div>
           
-          <p className="cta-note">
+          <p className={styles.ctaNote}>
             지금 가입하면 모든 스터디의 알림을 받을 수 있어요
           </p>
         </div>

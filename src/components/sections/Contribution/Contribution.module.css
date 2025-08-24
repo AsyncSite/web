@@ -1,5 +1,5 @@
 /* Members Section - 단순한 프로필 슬라이더 */
-.members-section {
+.membersSection {
   padding: var(--spacing-3xl) 0;
   margin-top: -100px; /* CTA와 자연스럽게 오버랩 */
   overflow: visible; /* 애니메이션이 잘리지 않도록 */
@@ -18,25 +18,52 @@
   );
 }
 
-/* 공통 스타일은 common.css에서 import */
-.members-section .section-header {
+/* 섹션 헤더 스타일 */
+.sectionHeader {
+  text-align: center;
   margin-bottom: var(--spacing-4xl);
 }
 
-.members-slider {
+.sectionTitle {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.membersSlider {
   width: 100%;
   overflow: hidden;
   padding: var(--spacing-lg) 0; /* 호버 시 확대를 위한 여백 */
 }
 
-.members-track {
+.membersTrack {
   display: flex;
   gap: var(--spacing-3xl);
   animation: slideLeft 30s linear infinite;
   width: fit-content;
 }
 
-.members-track:hover {
+.membersTrack:hover {
   animation-play-state: paused;
 }
 
@@ -49,18 +76,18 @@
   }
 }
 
-.member-item {
+.memberItem {
   flex-shrink: 0;
   text-decoration: none;
   transition: var(--transition-normal);
 }
 
-.member-item:hover {
+.memberItem:hover {
   transform: scale(1.1);
   z-index: 10;
 }
 
-.member-avatar {
+.memberAvatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -69,47 +96,47 @@
   display: block;
 }
 
-.member-item:hover .member-avatar {
+.memberItem:hover .memberAvatar {
   border-color: var(--white-transparent-heavy);
   box-shadow: var(--shadow-green);
 }
 
 /* 반응형 */
 @media (max-width: 768px) {
-  .members-section {
+  .membersSection {
     padding: var(--spacing-5xl) 0;
   }
 
-  .members-slider {
+  .membersSlider {
     padding: var(--spacing-md) 0;
   }
 
-  .members-track {
+  .membersTrack {
     gap: var(--spacing-2xl);
     animation-duration: 25s;
   }
 
-  .member-avatar {
+  .memberAvatar {
     width: 70px;
     height: 70px;
   }
 }
 
 @media (max-width: 480px) {
-  .members-section {
+  .membersSection {
     padding: var(--spacing-3xl) 0;
   }
 
-  .members-slider {
+  .membersSlider {
     padding: var(--spacing-xs) 0;
   }
 
-  .members-track {
+  .membersTrack {
     gap: var(--spacing-xl);
     animation-duration: 20s;
   }
 
-  .member-avatar {
+  .memberAvatar {
     width: 60px;
     height: 60px;
   }

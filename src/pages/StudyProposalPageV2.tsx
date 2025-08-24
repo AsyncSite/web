@@ -34,6 +34,7 @@ const StudyProposalPageV2: React.FC = () => {
     type: 'PARTICIPATORY' as StudyType,
     recurrenceType: 'WEEKLY' as RecurrenceType,
     tagline: '',
+    welcomeMessage: '',  // 스터디 리더 환영 메시지 추가
     // description 제거: 상세 콘텐츠는 DetailPage 섹션으로 대체
     generation: 1,
     selectedDate: '',
@@ -61,6 +62,13 @@ const StudyProposalPageV2: React.FC = () => {
 
   const validateTagline = (tagline: string): string | null => {
     if (tagline && tagline.length > 500) return '한 줄 소개는 500자 이내로 입력해주세요.';
+    return null;
+  };
+
+  const validateWelcomeMessage = (welcomeMessage: string): string | null => {
+    if (!welcomeMessage.trim()) return '환영 메시지는 필수입니다.';
+    if (welcomeMessage.length > 100) return '환영 메시지는 100자 이내로 입력해주세요.';
+    if (welcomeMessage.length < 5) return '환영 메시지는 5자 이상 입력해주세요.';
     return null;
   };
 
@@ -133,6 +141,11 @@ const StudyProposalPageV2: React.FC = () => {
     if (error) warning(error);
   }, 500);
 
+  const debouncedWelcomeMessageValidation = useDebouncedCallback((value: string) => {
+    const error = validateWelcomeMessage(value);
+    if (error) warning(error);
+  }, 500);
+
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => {
       const newData = { ...prev, [field]: value };
@@ -190,6 +203,8 @@ const StudyProposalPageV2: React.FC = () => {
       debouncedTitleValidation(value);
     } else if (field === 'tagline') {
       debouncedTaglineValidation(value);
+    } else if (field === 'welcomeMessage') {
+      debouncedWelcomeMessageValidation(value);
     }
   };
 
@@ -268,6 +283,12 @@ const StudyProposalPageV2: React.FC = () => {
     const taglineError = validateTagline(formData.tagline);
     if (taglineError) {
       error(taglineError);
+      return;
+    }
+
+    const welcomeMessageError = validateWelcomeMessage(formData.welcomeMessage);
+    if (welcomeMessageError) {
+      error(welcomeMessageError);
       return;
     }
 
@@ -467,6 +488,7 @@ const StudyProposalPageV2: React.FC = () => {
         type: formData.type as StudyType,
         generation: formData.generation,
         tagline: formData.tagline || undefined,
+        welcomeMessage: formData.welcomeMessage.trim(),
         schedule: scheduleString,
         duration: durationString,
         capacity: formData.capacity || undefined,
@@ -657,6 +679,22 @@ const StudyProposalPageV2: React.FC = () => {
                 />
                 <span className={styles['form-hint']}>
                   상세 소개와 콘텐츠는 스터디 생성 후 관리 페이지에서 편집할 수 있습니다
+                </span>
+              </div>
+
+              <div className={styles['form-group-v2']}>
+                <label>환영 메시지 <span className={styles['required']}>*</span></label>
+                <textarea
+                  value={formData.welcomeMessage}
+                  onChange={(e) => handleInputChange('welcomeMessage', e.target.value)}
+                  placeholder="스터디 참여자들을 위한 환영 메시지를 작성해주세요"
+                  className={styles['proposal-input']}
+                  maxLength={100}
+                  rows={2}
+                  required
+                />
+                <span className={styles['form-hint']}>
+                  스터디 리더로서 참여자들에게 전하고 싶은 메시지를 작성해주세요 (5-100자)
                 </span>
               </div>
 

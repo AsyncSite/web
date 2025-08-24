@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './FAQ.css';
+import styles from './FAQ.module.css';
 
 interface FAQItem {
   id: number;
@@ -57,59 +57,59 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="main-page-faq section-background" id="faq">
-      <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">FAQ</h2>
-          <p className="section-subtitle">궁금한 점들을 확인해보세요</p>
+    <section className={`${styles.mainPageFaq} section-background`} id="faq">
+      <div className={styles.container}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>FAQ</h2>
+          <p className={styles.sectionSubtitle}>궁금한 점들을 확인해보세요</p>
         </div>
 
-        <div className="main-page-faq-list">
+        <div className={styles.mainPageFaqList}>
           {faqData.map((faq) => (
-            <div key={faq.id} className={`main-page-faq-item card ${openFAQId === faq.id ? 'open' : ''}`}>
+            <div key={faq.id} className={`${styles.mainPageFaqItem} ${styles.card} ${openFAQId === faq.id ? styles.open : ''}`}>
               <div
-                className="main-page-faq-question"
+                className={styles.mainPageFaqQuestion}
                 onClick={() => toggleFAQ(faq.id)}
               >
                 <h3>{faq.question}</h3>
-                <span className="main-page-faq-icon">
+                <span className={styles.mainPageFaqIcon}>
                   {openFAQId === faq.id ? '−' : '+'}
                 </span>
               </div>
 
-              <div className="main-page-faq-answer">
+              <div className={styles.mainPageFaqAnswer}>
                 {typeof faq.answer === 'string' ? <p>{faq.answer}</p> : faq.answer}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="main-page-faq-contact">
+        <div className={styles.mainPageFaqContact}>
           <h3>더 궁금한 점이 있으신가요?</h3>
-          <div className="contact-options">
-            <div className="contact-main">
+          <div className={styles.contactOptions}>
+            <div className={styles.contactMain}>
               <a
                 href="https://discord.gg/asyncsite"
-                className="contact-item"
+                className={styles.contactItem}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="contact-icon">💬</span>
-                <span className="contact-label">빠른 답변</span>
-                <span className="contact-desc">1:1 Discord 채널</span>
+                <span className={styles.contactIcon}>💬</span>
+                <span className={styles.contactLabel}>빠른 답변</span>
+                <span className={styles.contactDesc}>1:1 Discord 채널</span>
               </a>
               <a
                 href="https://calendly.com/asyncsite/coffee-chat"
-                className="contact-item"
+                className={styles.contactItem}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="contact-icon">☕</span>
-                <span className="contact-label">커피챗</span>
-                <span className="contact-desc">30분 온라인 미팅</span>
+                <span className={styles.contactIcon}>☕</span>
+                <span className={styles.contactLabel}>커피챗</span>
+                <span className={styles.contactDesc}>30분 온라인 미팅</span>
               </a>
             </div>
-            <div className="contact-partnership">
+            <div className={styles.contactPartnership}>
               <span>파트너십 문의</span>
               <a href="mailto:partnership@asyncsite.com">partnership@asyncsite.com</a>
             </div>

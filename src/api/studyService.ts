@@ -68,6 +68,11 @@ export interface StudyDTO {
   recurrenceType?: RecurrenceType;
   costType?: CostType;
   costDescription?: string; // 비용 관련 상세 설명
+  leader?: {
+    name: string;
+    profileImage: string;
+    welcomeMessage: string;
+  };
 }
 
 // Paginated response
@@ -81,6 +86,13 @@ export interface PagedResponse<T> {
   last: boolean;
   numberOfElements: number;
   empty: boolean;
+}
+
+// LeaderInfo from backend
+export interface LeaderInfo {
+  name: string;
+  profileImage: string;
+  welcomeMessage: string;
 }
 
 // Frontend Study model (for UI display)
@@ -164,8 +176,8 @@ const transformStudy = (dto: StudyDTO): Study => {
     proposerId: dto.proposerId, // 스터디 제안자 ID 포함
     type: typeMap[dto.type || 'PARTICIPATORY'],
     typeLabel: typeLabelMap[dto.type || 'PARTICIPATORY'],
-    leader: {
-      // TODO: Fetch from user service - 실제 사용자 정보가 없으면 임시 데이터
+    leader: dto.leader || {
+      // Fallback for backwards compatibility
       name: '스터디 리더',
       profileImage: `https://i.pravatar.cc/150?img=${parseInt(dto.id) % 10}`,
       welcomeMessage: '함께 성장해요!'
@@ -203,6 +215,7 @@ export interface StudyProposalRequest {
   generation?: number;
   type?: StudyType;
   tagline?: string;
+  welcomeMessage?: string;  // 스터디 리더 환영 메시지
   schedule?: string;
   duration?: string;
   capacity?: number;

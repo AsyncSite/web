@@ -10,7 +10,7 @@
   overflow: hidden;
 }
 
-.cta-container {
+.ctaContainer {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -19,7 +19,7 @@
 }
 
 /* 별들이 모이는 캔버스 */
-.cta-canvas {
+.ctaCanvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -30,13 +30,13 @@
 }
 
 /* 콘텐츠 영역 */
-.cta-content {
+.ctaContent {
   position: relative;
   z-index: 2;
   animation: fadeInUp 0.8s ease;
 }
 
-.cta-title {
+.ctaTitle {
   font-size: 64px;
   font-weight: 900;
   margin-bottom: 32px;
@@ -47,7 +47,7 @@
   line-height: 1.1;
 }
 
-.cta-subtitle {
+.ctaSubtitle {
   font-size: 22px;
   color: rgba(255, 255, 255, 0.8);
   margin-bottom: 60px;
@@ -57,7 +57,7 @@
 }
 
 /* 통계 정보 */
-.cta-stats {
+.ctaStats {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,33 +66,33 @@
   animation: fadeIn 0.8s ease 0.3s both;
 }
 
-.cta-stat {
+.ctaStat {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
 }
 
-.cta-stat-number {
+.ctaStatNumber {
   font-size: 48px;
   font-weight: 900;
   color: #C3E88D;
   text-shadow: 0 0 30px rgba(195, 232, 141, 0.5);
 }
 
-.cta-stat-label {
+.ctaStatLabel {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 300;
 }
 
-.cta-stat-divider {
+.ctaStatDivider {
   color: rgba(255, 255, 255, 0.3);
   font-size: 24px;
 }
 
 /* 버튼 그룹 */
-.cta-buttons {
+.ctaButtons {
   display: flex;
   justify-content: center;
   gap: 24px;
@@ -100,16 +100,55 @@
   flex-wrap: wrap;
 }
 
-/* 공통 CSS btn-primary, btn-secondary 사용 - CTA 전용 커스터마이징 */
-.cta-buttons .btn-primary,
-.cta-buttons .btn-secondary {
+/* 버튼 스타일 */
+.btnPrimary {
   padding: 20px 48px;
   font-size: 18px;
   border-radius: 12px;
+  background: linear-gradient(135deg, #C3E88D, #A8D66F);
+  color: #05060A;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(195, 232, 141, 0.3);
+}
+
+.btnSecondary {
+  padding: 20px 48px;
+  font-size: 18px;
+  border-radius: 12px;
+  background: transparent;
+  color: #C3E88D;
+  border: 2px solid #C3E88D;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.btnSecondary:hover {
+  background: rgba(195, 232, 141, 0.1);
+  transform: translateY(-2px);
 }
 
 /* 하단 안내 문구 */
-.cta-note {
+.ctaNote {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 300;
@@ -144,41 +183,41 @@
     padding: 120px 0;
   }
   
-  .cta-title {
+  .ctaTitle {
     font-size: 48px;
   }
   
-  .cta-subtitle {
+  .ctaSubtitle {
     font-size: 18px;
     margin-bottom: 40px;
     padding: 0 20px;
   }
   
-  .cta-stats {
+  .ctaStats {
     flex-direction: column;
     gap: 32px;
   }
   
-  .cta-stat-divider {
+  .ctaStatDivider {
     display: none;
   }
   
-  .cta-stat-number {
+  .ctaStatNumber {
     font-size: 36px;
   }
   
-  .cta-stat-label {
+  .ctaStatLabel {
     font-size: 14px;
   }
   
-  .cta-buttons {
+  .ctaButtons {
     flex-direction: column;
     align-items: center;
     gap: 16px;
   }
   
-  .cta-buttons .btn-primary,
-  .cta-buttons .btn-secondary {
+  .btnPrimary,
+  .btnSecondary {
     width: 280px;
     padding: 18px 40px;
     font-size: 16px;
@@ -191,29 +230,29 @@
     min-height: auto;
   }
   
-  .cta-title {
+  .ctaTitle {
     font-size: 36px;
     margin-bottom: 24px;
   }
   
-  .cta-subtitle {
+  .ctaSubtitle {
     font-size: 16px;
     margin-bottom: 32px;
   }
   
-  .cta-stat-number {
+  .ctaStatNumber {
     font-size: 32px;
   }
   
-  .cta-buttons .btn-primary,
-  .cta-buttons .btn-secondary {
+  .btnPrimary,
+  .btnSecondary {
     width: 100%;
     max-width: 280px;
     padding: 16px 32px;
     font-size: 15px;
   }
   
-  .cta-note {
+  .ctaNote {
     font-size: 13px;
     padding: 0 20px;
   }
@@ -221,20 +260,20 @@
 
 /* 접근성 개선 */
 @media (prefers-reduced-motion: reduce) {
-  .cta-content,
-  .cta-stats,
-  .cta-note {
+  .ctaContent,
+  .ctaStats,
+  .ctaNote {
     animation: none;
     opacity: 1;
   }
   
-  .cta-buttons .btn-primary,
-  .cta-buttons .btn-secondary {
+  .btnPrimary,
+  .btnSecondary {
     transition: none;
   }
   
-  .cta-buttons .btn-primary:hover,
-  .cta-buttons .btn-secondary:hover {
+  .btnPrimary:hover,
+  .btnSecondary:hover {
     transform: none;
   }
 }

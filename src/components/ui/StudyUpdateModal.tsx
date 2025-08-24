@@ -228,8 +228,8 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
       const startDate = new Date(formData.startDate);
       const endDate = new Date(formData.endDate);
       
-      if (startDate >= endDate) {
-        newErrors.endDate = '종료일은 시작일보다 이후여야 합니다.';
+      if (startDate > endDate) {
+        newErrors.endDate = '종료일은 시작일 이후여야 합니다.';
       }
     }
 

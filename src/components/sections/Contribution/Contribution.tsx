@@ -1,6 +1,6 @@
 // src/sections/Contribution/Contribution.tsx
 import React from 'react';
-import './Contribution.css';
+import styles from './Contribution.module.css';
 
 interface Member {
   id: string;
@@ -69,15 +69,15 @@ const Contribution: React.FC = () => {
 
 
   return (
-    <section className="members-section section-background">
-      <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">Our Members</h2>
-          <p className="section-subtitle">함께 성장하는 AsyncSite 멤버들</p>
+    <section className={`${styles.membersSection} section-background`}>
+      <div className={styles.container}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Our Members</h2>
+          <p className={styles.sectionSubtitle}>함께 성장하는 AsyncSite 멤버들</p>
         </div>
 
-        <div className="members-slider">
-          <div className="members-track">
+        <div className={styles.membersSlider}>
+          <div className={styles.membersTrack}>
             {/* 연속 표시를 위해 3번 반복 */}
             {Array.from({ length: 3 }).map((_, setIndex) =>
               members.map((member) => (
@@ -86,13 +86,13 @@ const Contribution: React.FC = () => {
                   href={`https://github.com/${member.githubId}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="member-item"
+                  className={styles.memberItem}
                   title={`${member.name} (@${member.githubId})`}
                 >
                   <img
                     src={`https://github.com/${member.githubId}.png?size=120`}
                     alt={`${member.name} 프로필`}
-                    className="member-avatar"
+                    className={styles.memberAvatar}
                     onError={handleImgError}
                   />
                 </a>

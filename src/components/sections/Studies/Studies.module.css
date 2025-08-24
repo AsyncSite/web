@@ -83,17 +83,33 @@
 }
 
 .studyName {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 900;
   color: var(--study-primary);
   margin-bottom: 8px;
   letter-spacing: -0.5px;
+  line-height: 1.2;
+  min-height: 34px;
+  word-break: keep-all;
 }
 
 .studyGeneration {
   font-size: 24px;
   font-weight: 400;
   opacity: 0.8;
+}
+
+.generationBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--study-primary);
+  margin-bottom: 12px;
 }
 
 .studyTagline {

@@ -163,13 +163,15 @@ const Studies: React.FC = () => {
                   '--study-glow': study.color?.glow || 'rgba(130, 170, 255, 0.3)'
                 } as React.CSSProperties}
               >
+                {/* 기수 뱃지 */}
+                {study.generation > 1 && (
+                  <span className={styles.generationBadge}>{study.generation}기</span>
+                )}
+                
                 {/* 스터디 헤더 */}
                 <div className={styles.studyHeader}>
                   <div className={styles.studyInfo}>
-                    <h3 className={styles.studyName}>
-                      {study.name} 
-                      {study.generation > 1 && <span className={styles.studyGeneration}>{study.generation}기</span>}
-                    </h3>
+                    <h3 className={styles.studyName}>{study.name}</h3>
                     <p className={styles.studyTagline}>{study.tagline}</p>
                   </div>
                   <div className={styles.studyBadges}>
