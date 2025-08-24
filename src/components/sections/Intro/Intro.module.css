@@ -371,89 +371,17 @@
     }
 }
 
-/* 11MenZ 스타일 입체적 텍스트 효과 - 개선된 버전 */
+/* 깔끔한 그라디언트 + 그림자 효과 */
 .heroTitleWrapper .heroTitle {
     position: relative;
     z-index: 3;
+    background: linear-gradient(135deg, #ffffff 0%, #C3E88D 50%, #82aaff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 10px rgba(195, 232, 141, 0.5))
+            drop-shadow(0 4px 20px rgba(130, 170, 255, 0.3))
+            drop-shadow(0 6px 30px rgba(0, 0, 0, 0.2));
 }
 
-.heroTitleWrapper .heroTitle::before {
-    content: attr(data-heading);
-    position: absolute;
-    left: 0;
-    top: -8%;
-    overflow: hidden;
-    width: 100%;
-    height: 65%;
-    color: rgba(255, 255, 255, 0.9);
-    transform: translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
-    z-index: -1;
-    text-shadow: 0 0 10px rgba(195, 232, 141, 0.3);
-    pointer-events: none;
-    animation: dropBounceBefore 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-}
-
-.heroTitleWrapper .heroTitle::after {
-    content: attr(data-heading);
-    position: absolute;
-    left: 0;
-    top: 8%;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    color: rgba(195, 232, 141, 0.6);
-    transform: translate(3px, 3px) skew(8deg) scale(1, 0.95);
-    clip-path: polygon(0 35%, 100% 35%, 100% 100%, 0% 100%);
-    text-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    pointer-events: none;
-    animation: dropBounceAfter 3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-}
-
-@keyframes dropBounceBefore {
-    0% {
-        transform: translateY(-500%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
-        opacity: 0;
-    }
-    10% {
-        transform: translateY(-200%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
-        opacity: 0;
-    }
-    30% {
-        transform: translateY(-5%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
-        opacity: 1;
-    }
-    50% {
-        transform: translateY(10%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
-    }
-    70% {
-        transform: translateY(0%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
-    }
-    100% {
-        transform: translateY(0%) translate(-3px, -3px) skew(-8deg) scale(1, 1.05);
-    }
-}
-
-@keyframes dropBounceAfter {
-    0% {
-        transform: translateY(-500%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
-        opacity: 0;
-    }
-    10% {
-        transform: translateY(-200%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
-        opacity: 0;
-    }
-    30% {
-        transform: translateY(-5%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
-        opacity: 1;
-    }
-    50% {
-        transform: translateY(10%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
-    }
-    70% {
-        transform: translateY(0%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
-    }
-    100% {
-        transform: translateY(0%) translate(3px, 3px) skew(8deg) scale(1, 0.95);
-    }
-}
+/* dropBounceBefore, dropBounceAfter keyframes 제거 - 더 이상 사용하지 않음 */
