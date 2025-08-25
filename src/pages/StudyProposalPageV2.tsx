@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import studyService, { StudyProposalRequest, StudyType, RecurrenceType, CostType } from '../api/studyService';
+import studyService, { StudyProposalRequest, StudyType, RecurrenceType, CostType, Study } from '../api/studyService';
 import { ScheduleFrequency, DurationUnit } from '../types/schedule';
 import { ToastContainer, useToast } from '../components/ui/Toast';
 import TimePickerCustom from '../components/study/TimePickerCustom';
@@ -21,6 +21,10 @@ const StudyProposalPageV2: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [similarStudies, setSimilarStudies] = useState<Study[]>([]);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [isSearchingStudies, setIsSearchingStudies] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Helper function to format date to YYYY-MM-DD in local timezone
   const getLocalDateString = (date: Date = new Date()): string => {
@@ -72,6 +76,145 @@ const StudyProposalPageV2: React.FC = () => {
     if (welcomeMessage.length > 100) return '환영 메시지는 100자 이내로 입력해주세요.';
     if (welcomeMessage.length < 5) return '환영 메시지는 5자 이상 입력해주세요.';
     return null;
+  };
+
+  // 스터디 이름에서 기수 정보 제거하여 기본 이름 추출
+  const getBaseStudyName = (title: string): string => {
+    // "테코테코 3기" → "테코테코"
+    // "TecoTeco 2nd" → "TecoTeco"
+    return title
+      .replace(/\s*\d+기\s*$/, '')
+      .replace(/\s*\d+(st|nd|rd|th)\s*$/i, '')
+      .trim();
+  };
+
+  // 이전 기수 가져오기 다이얼로그 열기
+  const openImportDialog = async () => {
+    setShowImportDialog(true);
+    setSearchQuery('');
+    setSimilarStudies([]);
+    
+    // 모든 스터디 미리 로드
+    setIsSearchingStudies(true);
+    try {
+      const allStudies = await studyService.getAllStudies();
+      // 기수 역순 정렬 (최신 기수가 먼저)
+      allStudies.sort((a, b) => b.generation - a.generation);
+      setSimilarStudies(allStudies);
+    } catch (err) {
+      console.error('Failed to load studies:', err);
+      error('스터디 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setIsSearchingStudies(false);
+    }
+  };
+
+  // 스터디 검색 (다이얼로그 내부)
+  const handleSearchInDialog = useDebouncedCallback(async (query: string) => {
+    setSearchQuery(query);
+    
+    if (query.length === 0) {
+      // 검색어가 없으면 모든 스터디 표시
+      setIsSearchingStudies(true);
+      try {
+        const allStudies = await studyService.getAllStudies();
+        allStudies.sort((a, b) => b.generation - a.generation);
+        setSimilarStudies(allStudies);
+      } catch (err) {
+        console.error('Failed to load studies:', err);
+      } finally {
+        setIsSearchingStudies(false);
+      }
+      return;
+    }
+
+    setIsSearchingStudies(true);
+    try {
+      const allStudies = await studyService.getAllStudies();
+      
+      // 제목 기반으로 유사 스터디 필터링
+      const searchTerm = query.toLowerCase();
+      
+      const filtered = allStudies.filter(study => {
+        const studyName = study.name.toLowerCase();
+        const studyBaseName = getBaseStudyName(study.name).toLowerCase();
+        // 이름이나 태그라인에서 검색
+        return studyName.includes(searchTerm) || 
+               studyBaseName.includes(searchTerm) ||
+               (study.tagline && study.tagline.toLowerCase().includes(searchTerm));
+      });
+
+      // 기수 역순 정렬 (최신 기수가 먼저)
+      filtered.sort((a, b) => b.generation - a.generation);
+      
+      setSimilarStudies(filtered);
+    } catch (err) {
+      console.error('Failed to search studies:', err);
+    } finally {
+      setIsSearchingStudies(false);
+    }
+  }, 500);
+
+  // 선택한 스터디에서 데이터 가져오기
+  const importFromStudy = async (study: Study) => {
+    // 스터디 상세 정보 가져오기
+    try {
+      const detailedStudy = await studyService.getStudyById(study.id);
+      if (!detailedStudy) {
+        warning('스터디 정보를 가져올 수 없습니다.');
+        return;
+      }
+
+      // 기본 정보 복사 (날짜 관련 필드는 제외)
+      setFormData(prev => ({
+        ...prev,
+        // 제목은 유지 (사용자가 입력한 대로)
+        title: prev.title,
+        // 기수는 다음 기수로 자동 설정
+        generation: detailedStudy.generation + 1,
+        // 나머지 정보는 그대로 복사
+        type: detailedStudy.type === 'participatory' ? 'PARTICIPATORY' : 
+              detailedStudy.type === 'educational' ? 'EDUCATIONAL' : 'PARTICIPATORY',
+        recurrenceType: detailedStudy.recurrenceType || 'WEEKLY',
+        tagline: detailedStudy.tagline || '',
+        welcomeMessage: detailedStudy.leader?.welcomeMessage || '',
+        capacity: detailedStudy.capacity || 20,
+        costType: detailedStudy.costType || 'FREE',
+        costDescription: detailedStudy.costDescription || '',
+        // 기간 정보는 기본값 유지 (number 타입)
+        duration: prev.duration,
+        durationUnit: prev.durationUnit,
+        // 날짜는 비워둠 (새로 설정해야 함)
+        selectedDate: '',
+        startDate: '',
+        endDate: '',
+        recruitDeadline: '',
+        recruitDeadlineTime: '',
+        // 시간 정보 파싱 (duration 필드에서 추출)
+        startTime: detailedStudy.duration?.includes('-') ? 
+                   detailedStudy.duration.split('-')[0] : '',
+        endTime: detailedStudy.duration?.includes('-') ? 
+                 detailedStudy.duration.split('-')[1] : '',
+      }));
+
+      // 요일 정보 파싱 (schedule에서 추출)
+      if (detailedStudy.schedule && detailedStudy.schedule.includes('매주')) {
+        const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
+        const daysOfWeek: number[] = [];
+        dayNames.forEach((day, index) => {
+          if (detailedStudy.schedule.includes(day)) {
+            daysOfWeek.push(index);
+          }
+        });
+        setFormData(prev => ({ ...prev, daysOfWeek }));
+      }
+
+      success(`${detailedStudy.name}의 정보를 가져왔습니다. 날짜는 새로 설정해주세요.`);
+      setShowImportDialog(false);
+    } catch (err) {
+      console.error('Failed to import study data:', err);
+      error('스터디 정보를 가져오는데 실패했습니다.');
+    }
   };
 
   const validateTime = (startTime: string, endTime: string): string | null => {
@@ -203,6 +346,7 @@ const StudyProposalPageV2: React.FC = () => {
     // Real-time validation with debouncing
     if (field === 'title') {
       debouncedTitleValidation(value);
+      // 자동 검색 제거 - 버튼으로 명시적 호출
     } else if (field === 'tagline') {
       debouncedTaglineValidation(value);
     } else if (field === 'welcomeMessage') {
@@ -619,14 +763,25 @@ const StudyProposalPageV2: React.FC = () => {
             <div className={styles['form-step']}>
               <div className={styles['form-group-v2']}>
                 <label>스터디 이름 *</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  placeholder="예: React 심화 스터디"
-                  className={styles['proposal-input']}
-                  maxLength={255}
-                />
+                <div className={styles['input-with-button']}>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    placeholder="예: React 심화 스터디"
+                    className={styles['proposal-input']}
+                    maxLength={255}
+                  />
+                  <button
+                    type="button"
+                    className={styles['import-button']}
+                    onClick={openImportDialog}
+                    disabled={false}
+                    title="이전 기수 데이터 가져오기"
+                  >
+                    📋 이전 기수 가져오기
+                  </button>
+                </div>
               </div>
 
               <div className={styles['form-row-v2']}>
@@ -1199,6 +1354,87 @@ const StudyProposalPageV2: React.FC = () => {
         formData={formData}
         isSubmitting={isSubmitting}
       />
+
+      {/* 이전 기수 데이터 가져오기 다이얼로그 */}
+      {showImportDialog && (
+        <div className={styles['import-dialog-overlay']} onClick={() => setShowImportDialog(false)}>
+          <div className={styles['import-dialog']} onClick={(e) => e.stopPropagation()}>
+            <div className={styles['import-dialog-header']}>
+              <h3>이전 스터디에서 데이터 가져오기</h3>
+              <button 
+                className={styles['import-dialog-close']}
+                onClick={() => setShowImportDialog(false)}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className={styles['import-dialog-content']}>
+              <p className={styles['import-dialog-description']}>
+                기존 스터디의 정보를 가져와서 빠르게 시작할 수 있어요.
+              </p>
+              
+              {/* 검색 입력창 */}
+              <div className={styles['import-search-container']}>
+                <input
+                  type="text"
+                  className={styles['import-search-input']}
+                  placeholder="스터디 이름으로 검색..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearchInDialog(e.target.value)}
+                  autoFocus
+                />
+                {isSearchingStudies && (
+                  <span className={styles['search-loading']}>검색 중...</span>
+                )}
+              </div>
+              
+              <div className={styles['similar-studies-list']}>
+                {similarStudies.length === 0 ? (
+                  <div className={styles['no-studies-message']}>
+                    {isSearchingStudies ? '로딩 중...' : 
+                     searchQuery ? '검색 결과가 없습니다.' : '등록된 스터디가 없습니다.'}
+                  </div>
+                ) : (
+                  similarStudies.map(study => (
+                    <div 
+                      key={study.id}
+                      className={styles['similar-study-item']}
+                      onClick={() => importFromStudy(study)}
+                    >
+                      <div className={styles['similar-study-info']}>
+                        <div className={styles['similar-study-title']}>
+                          {study.name} {study.generation > 1 && `(${study.generation}기)`}
+                        </div>
+                        <div className={styles['similar-study-meta']}>
+                          {study.schedule && <span>{study.schedule}</span>}
+                          {study.capacity > 0 && <span>정원 {study.capacity}명</span>}
+                          {study.costType && <span>{study.costType === 'FREE' ? '무료' : '유료'}</span>}
+                        </div>
+                        {study.tagline && (
+                          <div className={styles['similar-study-tagline']}>
+                            {study.tagline}
+                          </div>
+                        )}
+                      </div>
+                      <div className={styles['similar-study-action']}>
+                        <span className={styles['import-arrow']}>→</span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              
+              <button 
+                className={styles['import-dialog-skip']}
+                onClick={() => setShowImportDialog(false)}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
