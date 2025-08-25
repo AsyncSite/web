@@ -53,6 +53,10 @@ const StudyManagementPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [draggedSectionId, setDraggedSectionId] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [similarStudies, setSimilarStudies] = useState<Study[]>([]);
+  const [isSearchingStudies, setIsSearchingStudies] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Modal and Toast states
   const [confirmModal, setConfirmModal] = useState<{
@@ -164,39 +168,14 @@ const StudyManagementPage: React.FC = () => {
           setMembers([]);
         }
 
-        // Fetch page data for editor - 편집 가능한 페이지 가져오기
-        // 관리 페이지에서는 DRAFT든 PUBLISHED든 편집 가능한 페이지를 가져와야 함
-        let pageLoaded = false;
-
-        // 1. 먼저 slug로 published 페이지 확인 (대부분의 경우 published 상태)
-        if (studyData.slug) {
-          try {
-            const pageData = await studyDetailPageService.getPublishedPageBySlug(studyData.slug);
-            setPageData(pageData);
-            pageLoaded = true;
-            console.log('Loaded published page for editing');
-          } catch (error: any) {
-            if (error.response?.status !== 404) {
-              console.error('Error fetching published page:', error);
-            }
-          }
-        }
-
-        // 2. Published가 없으면 draft 페이지 확인
-        if (!pageLoaded) {
-          try {
-            const pageData = await studyDetailPageService.getDraftPage(studyData.id);
-            setPageData(pageData);
-            console.log('Loaded draft page for editing');
-          } catch (error: any) {
-            if (error.response?.status === 404) {
-              console.log('No page exists yet for this study');
-              setPageData(null); // 페이지가 아직 없음 - 정상 상태
-            } else {
-              console.error('Failed to fetch draft page:', error);
-              setPageData(null);
-            }
-          }
+        // Fetch page data for editor - 상태와 무관하게 편집 가능한 페이지 가져오기
+        const page = await studyDetailPageService.getPageForEditing(studyData.id, studyData.slug);
+        setPageData(page);
+        
+        if (page) {
+          console.log(`Loaded ${page.status} page for editing`);
+        } else {
+          console.log('No page exists yet for this study');
         }
 
       } catch (error: any) {
@@ -472,19 +451,160 @@ const StudyManagementPage: React.FC = () => {
     await handleReorderSection(draggedSectionId, dropIndex);
   };
 
+  // 스터디 이름에서 기수 정보 제거하여 기본 이름 추출
+  const getBaseStudyName = (title: string): string => {
+    return title
+      .replace(/\s*\d+기\s*$/, '')
+      .replace(/\s*\d+(st|nd|rd|th)\s*$/i, '')
+      .trim();
+  };
+
+  // 유사한 스터디 찾기
+  const searchSimilarStudies = async () => {
+    if (!study) return;
+
+    setIsSearchingStudies(true);
+    try {
+      const allStudies = await studyService.getAllStudies();
+      const baseName = getBaseStudyName(study.name).toLowerCase();
+      
+      const similar = allStudies.filter(s => {
+        // 현재 스터디는 제외
+        if (s.id === study.id) return false;
+        
+        const studyBaseName = getBaseStudyName(s.name).toLowerCase();
+        return studyBaseName === baseName || 
+               studyBaseName.includes(baseName) || 
+               baseName.includes(studyBaseName);
+      });
+
+      // 기수 역순 정렬 (최신 기수가 먼저)
+      similar.sort((a, b) => b.generation - a.generation);
+      
+      setSimilarStudies(similar);
+      
+      if (similar.length > 0) {
+        setShowImportDialog(true);
+      } else {
+        addToast('이전 기수 스터디를 찾을 수 없습니다.', 'info');
+      }
+    } catch (err) {
+      console.error('Failed to search similar studies:', err);
+      addToast('스터디 검색에 실패했습니다.', 'error');
+    } finally {
+      setIsSearchingStudies(false);
+    }
+  };
+
+  // 선택한 스터디에서 페이지 복사
+  const importFromStudy = async (selectedStudy: Study) => {
+    if (!study) return;
+
+    console.log('Importing from study:', selectedStudy);
+
+    try {
+      setSaving(true);
+      
+      // 선택한 스터디의 상세 페이지 가져오기 (상태와 무관하게)
+      const sourcePage = await studyDetailPageService.getPageForEditing(selectedStudy.id, selectedStudy.slug);
+      console.log('Source page loaded:', sourcePage);
+      
+      if (!sourcePage || !sourcePage.sections || sourcePage.sections.length === 0) {
+        addToast('가져올 페이지 데이터가 없습니다. 해당 스터디의 상세 페이지가 작성되지 않았습니다.', 'warning');
+        setShowImportDialog(false);
+        return;
+      }
+
+      // 현재 페이지가 없으면 먼저 생성
+      let currentPage = pageData;
+      if (!currentPage) {
+        console.log('Creating new page first...');
+        currentPage = await studyDetailPageService.createPage(study.id, { slug: study.slug });
+        setPageData(currentPage);
+      }
+
+      // 섹션들을 메모리에만 복사 (즉시 저장하지 않음!)
+      const sectionsToAdd = sourcePage.sections.filter(section => section.type !== 'REVIEWS');
+      
+      if (sectionsToAdd.length === 0) {
+        addToast('가져올 수 있는 섹션이 없습니다.', 'warning');
+        setShowImportDialog(false);
+        return;
+      }
+
+      // 현재 페이지 데이터에 섹션들 추가 (메모리상에서만)
+      const updatedSections = [...(currentPage.sections || [])];
+      
+      // 최대 order 값 찾기
+      const maxOrder = updatedSections.length > 0 
+        ? Math.max(...updatedSections.map(s => s.order || 0))
+        : 0;
+      
+      // 새 섹션들 추가 (임시 ID 부여)
+      sectionsToAdd.forEach((section, index) => {
+        updatedSections.push({
+          ...section,
+          id: `imported_${Date.now()}_${index}`, // 임시 ID
+          order: maxOrder + (index + 1) * 100
+        });
+      });
+
+      // State만 업데이트 (저장하지 않음!)
+      setPageData({
+        ...currentPage,
+        sections: updatedSections
+      });
+      
+      addToast(`${selectedStudy.name}에서 ${sectionsToAdd.length}개 섹션을 가져왔습니다. 저장 버튼을 눌러 변경사항을 저장하세요.`, 'info');
+      setShowImportDialog(false);
+      setHasUnsavedChanges(true); // 저장되지 않은 변경사항 표시
+    } catch (err) {
+      console.error('Failed to import page:', err);
+      addToast('페이지 가져오기에 실패했습니다. 콘솔에서 에러를 확인해주세요.', 'error');
+      // 모달은 닫지 않음 - 다른 스터디 선택 가능
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSaveDraft = async () => {
     if (!studyId || !pageData) return;
 
     try {
       setSaving(true);
-      const updatedPage = await studyDetailPageService.saveDraft(study!.id, {
-        sections: pageData.sections
-      });
-      setPageData(updatedPage);
-      addToast('초안이 저장되었습니다', 'success');
+      
+      // imported_ 또는 temp_ ID를 가진 섹션들은 새로 추가해야 함
+      const importedSections = pageData.sections.filter(s => 
+        s.id.startsWith('imported_') || s.id.startsWith('temp_')
+      );
+      const existingSections = pageData.sections.filter(s => 
+        !s.id.startsWith('imported_') && !s.id.startsWith('temp_')
+      );
+
+      // 새로운 섹션들 추가
+      for (const section of importedSections) {
+        try {
+          const request: AddSectionRequest = {
+            type: section.type as SectionType,
+            props: section.props,
+            order: section.order
+          };
+          await studyDetailPageService.addSection(study!.id, request);
+        } catch (err) {
+          console.error(`Failed to add section ${section.type}:`, err);
+        }
+      }
+
+      // 전체 페이지 다시 로드
+      const updatedPage = await studyDetailPageService.getPageForEditing(study!.id, study!.slug);
+      if (updatedPage) {
+        setPageData(updatedPage);
+        setHasUnsavedChanges(false);
+        addToast('모든 변경사항이 저장되었습니다', 'success');
+      }
     } catch (err) {
       console.error('Failed to save draft:', err);
-      addToast('초안 저장에 실패했습니다', 'error');
+      addToast('저장에 실패했습니다', 'error');
     } finally {
       setSaving(false);
     }
@@ -851,7 +971,16 @@ const StudyManagementPage: React.FC = () => {
                 >
                   {previewMode ? '편집 모드' : '미리보기'}
                 </button>
-                {/* 초안 저장 버튼 제거: 스냅샷 미도입 상태에서 혼란 방지 */}
+                {/* 저장되지 않은 변경사항이 있을 때만 저장 버튼 표시 */}
+                {hasUnsavedChanges && (
+                  <button
+                    className={styles.btnSave}
+                    onClick={handleSaveDraft}
+                    disabled={saving}
+                  >
+                    💾 변경사항 저장
+                  </button>
+                )}
                 <button
                   className={styles.btnPublish}
                   onClick={handlePublishPage}
@@ -859,6 +988,15 @@ const StudyManagementPage: React.FC = () => {
                 >
                   발행하기
                 </button>
+                {pageData && (
+                  <button
+                    className={styles.btnImport}
+                    onClick={searchSimilarStudies}
+                    disabled={isSearchingStudies || saving}
+                  >
+                    {isSearchingStudies ? '검색 중...' : '📋 이전 기수 복사'}
+                  </button>
+                )}
                 {study?.slug && (
                   <button
                     className={styles.btnView}
@@ -1035,7 +1173,7 @@ const StudyManagementPage: React.FC = () => {
                           } ${
                             dragOverIndex === index ? styles.studyMgmtSectionDragOver : ''
                           } ${
-                            section.id.startsWith('temp_') ? styles.tempSection : ''
+                            section.id.startsWith('temp_') || section.id.startsWith('imported_') ? styles.tempSection : ''
                           }`}
                           draggable
                           tabIndex={0}
@@ -1060,7 +1198,7 @@ const StudyManagementPage: React.FC = () => {
                           </div>
                           <div className={styles.studyMgmtSectionInfo}>
                             <span className={styles.studyMgmtSectionType}>{section.type}</span>
-                            {section.id.startsWith('temp_') && (
+                            {(section.id.startsWith('temp_') || section.id.startsWith('imported_')) && (
                               <span className={styles.tempLabel}>저장 필요</span>
                             )}
                           </div>
@@ -1106,8 +1244,8 @@ const StudyManagementPage: React.FC = () => {
                           ? serializeMembersPropsForAPI(data)
                           : data;
 
-                        // 임시 섹션인 경우 (temp_로 시작하는 ID)
-                        if (selectedSection.id.startsWith('temp_')) {
+                        // 임시 섹션인 경우 (temp_ 또는 imported_로 시작하는 ID)
+                        if (selectedSection.id.startsWith('temp_') || selectedSection.id.startsWith('imported_')) {
                           // API 호출로 실제 섹션 생성
                           try {
                             setSaving(true);
@@ -1138,7 +1276,7 @@ const StudyManagementPage: React.FC = () => {
                       }}
                       onCancel={() => {
                         // 임시 섹션인 경우 목록에서 제거
-                        if (selectedSection.id.startsWith('temp_')) {
+                        if (selectedSection.id.startsWith('temp_') || selectedSection.id.startsWith('imported_')) {
                           setPageData(prev => prev ? {
                             ...prev,
                             sections: prev.sections.filter(s => s.id !== selectedSection.id)
@@ -1192,6 +1330,60 @@ const StudyManagementPage: React.FC = () => {
           onClose={() => setShowUpdateModal(false)}
           onUpdate={handleUpdateStudy}
         />
+      )}
+
+      {/* 이전 기수 페이지 가져오기 다이얼로그 */}
+      {showImportDialog && similarStudies.length > 0 && (
+        <div className={styles.importDialogOverlay} onClick={() => setShowImportDialog(false)}>
+          <div className={styles.importDialog} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.importDialogHeader}>
+              <h3>이전 기수 페이지를 가져올까요?</h3>
+              <button 
+                className={styles.importDialogClose}
+                onClick={() => setShowImportDialog(false)}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className={styles.importDialogContent}>
+              <p className={styles.importDialogDescription}>
+                유사한 스터디의 상세 페이지를 발견했습니다. 모든 섹션을 복사해서 빠르게 시작할 수 있어요.
+              </p>
+              
+              <div className={styles.similarStudiesList}>
+                {similarStudies.map(s => (
+                  <div 
+                    key={s.id}
+                    className={styles.similarStudyItem}
+                    onClick={() => importFromStudy(s)}
+                  >
+                    <div className={styles.similarStudyInfo}>
+                      <div className={styles.similarStudyTitle}>
+                        {s.name} ({s.generation}기)
+                      </div>
+                      {s.tagline && (
+                        <div className={styles.similarStudyTagline}>
+                          {s.tagline}
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.similarStudyAction}>
+                      <span className={styles.importArrow}>→</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <button 
+                className={styles.importDialogSkip}
+                onClick={() => setShowImportDialog(false)}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
