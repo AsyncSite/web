@@ -112,6 +112,37 @@ src/
 
 ---
 
+## Problem Solving Approach
+
+⚠️ **MANDATORY**: Follow these 5 steps for every problem-solving task.
+
+1. **Think hard and deeply about the root cause**
+   - Focus on the actual source of the problem, not just surface symptoms
+   - Apply the "5 Whys" technique to analyze deeply
+   - Thoroughly examine logs, browser dev tools, component state, and React error boundaries
+
+2. **Do a global inspection to understand the full context**
+   - Review all services and components that might be affected by your changes
+   - Check dependencies with backend services (user-service, game-service, payment-core, etc.)
+   - Understand existing codebase patterns and React/TypeScript architecture
+
+3. **Find a stable, best-practice solution**
+   - Use proven design patterns and React/TypeScript best practices
+   - Implement sustainable and scalable solutions, not quick fixes
+   - Always consider performance, security, and maintainability
+
+4. **Ensure consistency with other services**
+   - Reference implementation patterns from other microservices
+   - Apply common patterns and coding standards consistently
+   - Extract duplicate code into shared utilities or hooks
+
+5. **Read CLAUDE.md if needed**
+   - Always re-check these guidelines when uncertain
+   - Review service-specific rules and constraints
+   - Check the Architecture and Component Organization sections
+
+**Failing to follow this approach may result in incomplete or inconsistent solutions.**
+
 ## Testing Guidelines
 
 ### Component Testing
@@ -538,3 +569,72 @@ Frontend development **must follow a scalable, feature-based architecture** to e
 ## 문서 관리 가이드라인 (Documentation Management Guidelines)
 
 * **기존 문서에 통합 (Consolidate into Existing Documents)**: 새로운 가이드라인이나 개발 규칙이 필요할 때, 무분별하게 새 문서를 만들기보다 **기존에 있는 관련 문서에 내용을 추가하고 통합하는 것을 원칙으로 합니다.** 예를 들어, 코딩 스타일에 관한 내용은 이 `CLAUDE.md` 파일에 추가하고, 배포 관련 내용은 `DOCKER_DEPLOYMENT_GUIDE.md` 에 추가하는 방식입니다. 문서를 중앙에서 관리하여 정보가 분산되는 것을 막고, 모든 팀원이 최신 정보를 쉽게 찾을 수 있도록 하기 위함입니다. 새 문서는 기존 문서들과 주제가 명확히 구분될 때만 생성해야 합니다.
+
+## 🚨 CRITICAL: AGENTS.md - Essential Development Rules
+
+Problem definition → small, safe change → change review → refactor — repeat the loop.
+
+### Mandatory Rules
+
+- Before changing anything, read the relevant files end to end, including all call/reference paths.
+- Keep tasks, commits, and PRs small.
+- If you make assumptions, record them in the Issue/PR/ADR.
+- Never commit or log secrets; validate all inputs and encode/normalize outputs.
+- Avoid premature abstraction and use intention-revealing names.
+- Compare at least two options before deciding.
+
+### Mindset
+
+- Think like a senior engineer.
+- Don't jump in on guesses or rush to conclusions.
+- Always evaluate multiple approaches; write one line each for pros/cons/risks, then choose the simplest solution.
+
+### Code & File Reference Rules
+
+- Read files thoroughly from start to finish (no partial reads).
+- Before changing code, locate and read definitions, references, call sites, related tests, docs/config/flags.
+- Do not change code without having read the entire file.
+- Before modifying a symbol, run a global search to understand pre/postconditions and leave a 1–3 line impact note.
+
+### Required Coding Rules
+
+- Before coding, write a Problem 1-Pager: Context / Problem / Goal / Non-Goals / Constraints.
+- Enforce limits: file ≤ 300 LOC, function ≤ 50 LOC, parameters ≤ 5, cyclomatic complexity ≤ 10. If exceeded, split/refactor.
+- Prefer explicit code; no hidden "magic."
+- Follow DRY, but avoid premature abstraction.
+- Isolate side effects (I/O, network, global state) at the boundary layer.
+- Catch only specific exceptions and present clear user-facing messages.
+- Use structured logging and do not log sensitive data (propagate request/correlation IDs when possible).
+- Account for time zones and DST.
+
+### Testing Rules
+
+- New code requires new tests; bug fixes must include a regression test (write it to fail first).
+- Tests must be deterministic and independent; replace external systems with fakes/contract tests.
+- Include ≥1 happy path and ≥1 failure path in e2e tests.
+- Proactively assess risks from concurrency/locks/retries (duplication, deadlocks, etc.).
+
+### Security Rules
+
+- Never leave secrets in code/logs/tickets.
+- Validate, normalize, and encode inputs; use parameterized operations.
+- Apply the Principle of Least Privilege.
+
+### Clean Code Rules
+
+- Use intention-revealing names.
+- Each function should do one thing.
+- Keep side effects at the boundary.
+- Prefer guard clauses first.
+- Symbolize constants (no hardcoding).
+- Structure code as Input → Process → Return.
+- Report failures with specific errors/messages.
+- Make tests serve as usage examples; include boundary and failure cases.
+
+### Anti-Pattern Rules
+
+- Don't modify code without reading the whole context.
+- Don't expose secrets.
+- Don't ignore failures or warnings.
+- Don't introduce unjustified optimization or abstraction.
+- Don't overuse broad exceptions.

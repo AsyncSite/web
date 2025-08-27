@@ -9,7 +9,8 @@ import studyDetailPageService, {
   StudyDetailPageData,
   PageSection,
   SectionType,
-  AddSectionRequest
+  AddSectionRequest,
+  UpdatePageRequest
 } from '../api/studyDetailPageService';
 import { SectionRenderer } from '../components/studyDetailPage/sections';
 import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
@@ -57,6 +58,7 @@ const StudyManagementPage: React.FC = () => {
   const [similarStudies, setSimilarStudies] = useState<Study[]>([]);
   const [isSearchingStudies, setIsSearchingStudies] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
   // Modal and Toast states
   const [confirmModal, setConfirmModal] = useState<{
@@ -92,6 +94,22 @@ const StudyManagementPage: React.FC = () => {
   }>>([]);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
+  // Cmd+S / Ctrl+S 단축키 지원
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd+S (Mac) or Ctrl+S (Windows/Linux)
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        if (hasUnsavedChanges && !saving && activeTab === 'page-editor') {
+          handleSaveDraft();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasUnsavedChanges, saving, activeTab]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!studyId) {
@@ -119,29 +137,20 @@ const StudyManagementPage: React.FC = () => {
         // UUID 패턴 체크 (숫자나 slug가 아닌 경우)
         const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(studyId);
 
-        console.log('=== StudyManagementPage Debug ===');
-        console.log('studyId:', studyId);
-        console.log('isUUID:', isUUID);
-        
         if (isUUID) {
-          console.log('Fetching study by ID...');
           studyData = await studyService.getStudyById(studyId);
         } else {
-          console.log('Fetching study by slug...');
           // slug로 먼저 시도
           studyData = await studyService.getStudyBySlug(studyId);
         }
 
-        console.log('Study data received:', studyData);
-
         if (!studyData) {
-          console.log('No study data - redirecting to /study');
           addToast('존재하지 않는 스터디입니다.', 'error');
           navigate('/study');
           return;
         }
         
-        console.log('Study management page loaded successfully');
+        // Study management page loaded successfully
 
         setStudy(studyData);
 
@@ -170,12 +179,19 @@ const StudyManagementPage: React.FC = () => {
 
         // Fetch page data for editor - 상태와 무관하게 편집 가능한 페이지 가져오기
         const page = await studyDetailPageService.getPageForEditing(studyData.id, studyData.slug);
-        setPageData(page);
         
+        // Ensure sections array is always initialized
         if (page) {
-          console.log(`Loaded ${page.status} page for editing`);
+          if (!page.sections) {
+            page.sections = [];
+          }
+          // Filter out any null or invalid sections
+          page.sections = page.sections.filter(s => s && s.id);
+          setPageData(page);
+          // Page loaded successfully
         } else {
-          console.log('No page exists yet for this study');
+          // No page exists yet for this study
+          setPageData(null);
         }
 
       } catch (error: any) {
@@ -272,7 +288,7 @@ const StudyManagementPage: React.FC = () => {
       setSaving(true);
       // 새 섹션의 order 값 계산 - 기존 최대값 + 100
       const maxOrder = pageData.sections.length > 0
-        ? Math.max(...pageData.sections.map(s => s.order || 0))
+        ? Math.max(...pageData.sections.filter(s => s).map(s => s.order || 0))
         : 0;
 
       const request: AddSectionRequest = {
@@ -292,24 +308,25 @@ const StudyManagementPage: React.FC = () => {
   };
 
   const handleUpdateSection = async (sectionId: string, sectionType: SectionType | string, props: any, order?: number) => {
-    if (!studyId) return;
+    if (!studyId || !pageData) return;
 
-    try {
-      setSaving(true);
-      const request: AddSectionRequest = {
-        type: sectionType as SectionType,
-        props: props,
-        order: order  // order 추가
+    // 로컬 상태에서만 섹션 업데이트 (서버 호출 없음)
+    setPageData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sections: prev.sections.map(s => 
+          s.id === sectionId 
+            ? { ...s, type: sectionType as SectionType, props, order: order ?? s.order }
+            : s
+        )
       };
-      const updatedPage = await studyDetailPageService.updateSection(study!.id, sectionId, request);
-      setPageData(updatedPage);
-      setSelectedSection(null);
-    } catch (err) {
-      console.error('Failed to update section:', err);
-      addToast('섹션 업데이트에 실패했습니다', 'error');
-    } finally {
-      setSaving(false);
-    }
+    });
+    
+    // 저장되지 않은 변경사항 표시
+    setHasUnsavedChanges(true);
+    setSelectedSection(null);
+    addToast('섹션이 수정되었습니다. 저장 버튼을 눌러 변경사항을 저장하세요.', 'info');
   };
 
   const handleDeleteSection = async (sectionId: string) => {
@@ -328,58 +345,51 @@ const StudyManagementPage: React.FC = () => {
   };
 
   const doDeleteSection = async (sectionId: string) => {
-    if (!studyId) return;
+    if (!studyId || !pageData) return;
 
-    try {
-      setSaving(true);
-      const updatedPage = await studyDetailPageService.removeSection(study!.id, sectionId);
-      setPageData(updatedPage);
-    } catch (err) {
-      console.error('Failed to delete section:', err);
-      addToast('섹션 삭제에 실패했습니다', 'error');
-    } finally {
-      setSaving(false);
-    }
+    // 로컬 상태에서만 섹션 제거 (서버 호출 없음)
+    setPageData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sections: prev.sections.filter(s => s.id !== sectionId)
+      };
+    });
+    
+    // 저장되지 않은 변경사항 표시
+    setHasUnsavedChanges(true);
+    addToast('섹션이 삭제되었습니다. 저장 버튼을 눌러 변경사항을 저장하세요.', 'info');
   };
 
   const handleReorderSection = async (sectionId: string, newIndex: number) => {
     if (!studyId || !pageData) return;
 
-    try {
-      setSaving(true);
-      // 섹션을 order 기준으로 정렬한 후 재정렬
-      const sortedSections = [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-      const currentIndex = sortedSections.findIndex(s => s.id === sectionId);
-      if (currentIndex === -1) return;
+    // 로컬 상태에서만 순서 변경 (서버 호출 없음)
+    // 섹션을 order 기준으로 정렬한 후 재정렬
+    const sortedSections = [...pageData.sections].filter(s => s && s.id).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const currentIndex = sortedSections.findIndex(s => s.id === sectionId);
+    if (currentIndex === -1) return;
 
-      const [removed] = sortedSections.splice(currentIndex, 1);
-      sortedSections.splice(newIndex, 0, removed);
+    const [removed] = sortedSections.splice(currentIndex, 1);
+    sortedSections.splice(newIndex, 0, removed);
 
-      // order 값 재계산 - 100씩 간격을 두어 추후 중간 삽입 가능
-      const reorderedSections = sortedSections.map((section, index) => ({
-        ...section,
-        order: (index + 1) * 100
-      }));
+    // order 값 재계산 - 100씩 간격을 두어 추후 중간 삽입 가능
+    const reorderedSections = sortedSections.map((section, index) => ({
+      ...section,
+      order: (index + 1) * 100
+    }));
 
-      const sectionIds = reorderedSections.map(s => s.id);
-      const updatedPage = await studyDetailPageService.reorderSections(study!.id, sectionIds);
-
-      // 로컬 상태도 order 값 업데이트
-      if (updatedPage) {
-        setPageData({
-          ...updatedPage,
-          sections: updatedPage.sections.map(s => {
-            const reordered = reorderedSections.find(rs => rs.id === s.id);
-            return reordered ? { ...s, order: reordered.order } : s;
-          })
-        });
-      }
-    } catch (err) {
-      console.error('Failed to reorder section:', err);
-      addToast('섹션 순서 변경에 실패했습니다', 'error');
-    } finally {
-      setSaving(false);
-    }
+    setPageData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sections: reorderedSections
+      };
+    });
+    
+    // 저장되지 않은 변경사항 표시
+    setHasUnsavedChanges(true);
+    addToast('순서가 변경되었습니다. 저장 버튼을 눌러 변경사항을 저장하세요.', 'info');
   };
 
   // 드래그 앤 드롭 핸들러
@@ -401,7 +411,7 @@ const StudyManagementPage: React.FC = () => {
       if (e.key === 'ArrowUp' && index > 0) {
         e.preventDefault();
         handleReorderSection(section.id, index - 1);
-      } else if (e.key === 'ArrowDown' && index < pageData.sections.length - 1) {
+      } else if (e.key === 'ArrowDown' && index < pageData.sections.filter(s => s && s.id).length - 1) {
         e.preventDefault();
         handleReorderSection(section.id, index + 1);
       }
@@ -444,7 +454,7 @@ const StudyManagementPage: React.FC = () => {
     if (!draggedSectionId || !pageData) return;
 
     // 정렬된 섹션 배열에서 인덱스 찾기
-    const sortedSections = [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const sortedSections = [...pageData.sections].filter(s => s && s.id).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     const draggedIndex = sortedSections.findIndex(s => s.id === draggedSectionId);
     if (draggedIndex === -1 || draggedIndex === dropIndex) return;
 
@@ -500,14 +510,14 @@ const StudyManagementPage: React.FC = () => {
   const importFromStudy = async (selectedStudy: Study) => {
     if (!study) return;
 
-    console.log('Importing from study:', selectedStudy);
+    // Importing from selected study
 
     try {
       setSaving(true);
       
       // 선택한 스터디의 상세 페이지 가져오기 (상태와 무관하게)
       const sourcePage = await studyDetailPageService.getPageForEditing(selectedStudy.id, selectedStudy.slug);
-      console.log('Source page loaded:', sourcePage);
+      // Source page loaded successfully
       
       if (!sourcePage || !sourcePage.sections || sourcePage.sections.length === 0) {
         addToast('가져올 페이지 데이터가 없습니다. 해당 스터디의 상세 페이지가 작성되지 않았습니다.', 'warning');
@@ -518,7 +528,7 @@ const StudyManagementPage: React.FC = () => {
       // 현재 페이지가 없으면 먼저 생성
       let currentPage = pageData;
       if (!currentPage) {
-        console.log('Creating new page first...');
+        // Creating new page first
         currentPage = await studyDetailPageService.createPage(study.id, { slug: study.slug });
         setPageData(currentPage);
       }
@@ -573,33 +583,35 @@ const StudyManagementPage: React.FC = () => {
     try {
       setSaving(true);
       
-      // imported_ 또는 temp_ ID를 가진 섹션들은 새로 추가해야 함
-      const importedSections = pageData.sections.filter(s => 
-        s.id.startsWith('imported_') || s.id.startsWith('temp_')
-      );
-      const existingSections = pageData.sections.filter(s => 
-        !s.id.startsWith('imported_') && !s.id.startsWith('temp_')
-      );
+      // 섹션 배열 확인 - 빈 배열도 명시적으로 전송
+      const sectionsToSave = pageData.sections && pageData.sections.length > 0 
+        ? pageData.sections.map(section => ({
+            id: section.id,
+            type: section.type,
+            props: section.props || {},
+            order: section.order || 0
+          }))
+        : []; // 빈 배열 명시적 전송
 
-      // 새로운 섹션들 추가
-      for (const section of importedSections) {
-        try {
-          const request: AddSectionRequest = {
-            type: section.type as SectionType,
-            props: section.props,
-            order: section.order
-          };
-          await studyDetailPageService.addSection(study!.id, request);
-        } catch (err) {
-          console.error(`Failed to add section ${section.type}:`, err);
-        }
-      }
+      console.log('Saving sections:', sectionsToSave.length, 'items');
+      
+      // 전체 페이지 상태를 저장
+      const request: UpdatePageRequest = {
+        theme: pageData.theme,
+        sections: sectionsToSave
+      };
 
-      // 전체 페이지 다시 로드
-      const updatedPage = await studyDetailPageService.getPageForEditing(study!.id, study!.slug);
+      // 전체 페이지 저장 API 호출
+      const updatedPage = await studyDetailPageService.saveDraft(study!.id, request);
+      
       if (updatedPage) {
+        console.log('Saved page sections:', updatedPage.sections?.length || 0, 'items');
+        
+        // 백엔드에서 정리된 데이터로 상태 업데이트
+        // imported_/temp_ ID가 실제 UUID로 변환되어 옴
         setPageData(updatedPage);
         setHasUnsavedChanges(false);
+        setLastSavedAt(new Date());
         addToast('모든 변경사항이 저장되었습니다', 'success');
       }
     } catch (err) {
@@ -616,7 +628,7 @@ const StudyManagementPage: React.FC = () => {
     setConfirmModal({
       isOpen: true,
       title: '페이지 발행',
-      message: '페이지를 발행하시겠습니까?',
+      message: '현재 초안을 발행하시겠습니까? 발행하면 모든 사용자가 변경사항을 볼 수 있습니다.',
       onConfirm: async () => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
         await doPublishPage();
@@ -630,13 +642,26 @@ const StudyManagementPage: React.FC = () => {
 
     try {
       setSaving(true);
-      const updatedPage = await studyDetailPageService.publish(study!.id);
-      setPageData(updatedPage);
-
-      // 발행 후 선택된 섹션을 해제하여 최신 데이터로 다시 로드하도록 유도
-      setSelectedSection(null);
-
-      addToast('페이지가 발행되었습니다', 'success');
+      
+      // 초안을 먼저 저장 (저장되지 않은 변경사항이 있는 경우)
+      if (hasUnsavedChanges) {
+        await handleSaveDraft();
+      }
+      
+      // 초안 발행
+      const publishedPage = await studyDetailPageService.publish(study!.id);
+      
+      if (publishedPage) {
+        setPageData(publishedPage);
+        setHasUnsavedChanges(false);
+        setSelectedSection(null);
+        
+        addToast('페이지가 성공적으로 발행되었습니다', 'success');
+        
+        // 발행 후 공개 페이지 URL 안내
+        const publicUrl = `/study/${study!.slug}`;
+        addToast(`공개 페이지: ${window.location.origin}${publicUrl}`, 'info');
+      }
     } catch (err) {
       console.error('Failed to publish page:', err);
       addToast('페이지 발행에 실패했습니다', 'error');
@@ -963,50 +988,90 @@ const StudyManagementPage: React.FC = () => {
 
         {activeTab === 'page-editor' && (
           <div className={styles.pageEditorSection}>
-            <div className={styles.editorHeader}>
-              <div className={styles.editorActions}>
-                <button
-                  className={styles.btnPreview}
-                  onClick={() => setPreviewMode(!previewMode)}
-                >
-                  {previewMode ? '편집 모드' : '미리보기'}
-                </button>
-                {/* 저장되지 않은 변경사항이 있을 때만 저장 버튼 표시 */}
-                {hasUnsavedChanges && (
+            {/* 상단 고정 툴바 */}
+            {pageData && (
+              <div className={styles.editorToolbar}>
+                <div className={styles.toolbarStatus}>
+                  {/* 저장 상태 표시 */}
+                  {hasUnsavedChanges && (
+                    <span className={styles.unsavedIndicator}>
+                      저장되지 않은 변경사항
+                    </span>
+                  )}
+                  {!saving && lastSavedAt && !hasUnsavedChanges && (
+                    <span className={styles.lastSaved}>
+                      마지막 저장: {lastSavedAt.toLocaleTimeString('ko-KR', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                    </span>
+                  )}
+                </div>
+
+                <div className={styles.toolbarActions}>
+                  {/* 미리보기 토글 */}
                   <button
-                    className={styles.btnSave}
-                    onClick={handleSaveDraft}
-                    disabled={saving}
+                    className={styles.btnPreview}
+                    onClick={() => setPreviewMode(!previewMode)}
                   >
-                    💾 변경사항 저장
+                    {previewMode ? '✏️ 편집 모드' : '👁️ 미리보기'}
                   </button>
-                )}
-                <button
-                  className={styles.btnPublish}
-                  onClick={handlePublishPage}
-                  disabled={saving}
-                >
-                  발행하기
-                </button>
-                {pageData && (
+
+                  {/* 저장 버튼 - 항상 보임 */}
+                  <button
+                    className={`${styles.btnSave} ${!hasUnsavedChanges ? styles.saved : ''}`}
+                    onClick={handleSaveDraft}
+                    disabled={saving || !hasUnsavedChanges}
+                    title={hasUnsavedChanges ? 'Cmd+S로 저장' : '모든 변경사항이 저장됨'}
+                  >
+                    {saving ? (
+                      <>
+                        <span className={styles.savingSpinner}>⟳</span>
+                        저장 중...
+                      </>
+                    ) : (
+                      <>
+                        💾 {hasUnsavedChanges ? '저장' : '저장됨'}
+                        {hasUnsavedChanges && <span className={styles.shortcut}>⌘S</span>}
+                      </>
+                    )}
+                  </button>
+
+                  {/* 발행하기 버튼 */}
+                  <button
+                    className={styles.btnPublish}
+                    onClick={handlePublishPage}
+                    disabled={saving || hasUnsavedChanges}
+                    title={hasUnsavedChanges ? '저장 후 발행 가능' : '페이지 발행'}
+                  >
+                    📤 발행하기
+                  </button>
+
+                  {/* 구분선 */}
+                  <div className={styles.divider}></div>
+
+                  {/* 보조 기능들 */}
                   <button
                     className={styles.btnImport}
                     onClick={searchSimilarStudies}
                     disabled={isSearchingStudies || saving}
+                    title="이전 기수에서 섹션 복사"
                   >
-                    {isSearchingStudies ? '검색 중...' : '📋 이전 기수 복사'}
+                    {isSearchingStudies ? '⟳' : '📋'}
                   </button>
-                )}
-                {study?.slug && (
-                  <button
-                    className={styles.btnView}
-                    onClick={() => window.open(`/study/${study.slug}`, '_blank')}
-                  >
-                    페이지 보기 →
-                  </button>
-                )}
+
+                  {study?.slug && (
+                    <button
+                      className={styles.btnView}
+                      onClick={() => window.open(`/study/${study.slug}`, '_blank')}
+                      title="공개 페이지 보기"
+                    >
+                      🔗
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {!pageData ? (
               <div className={styles.noPageMessage}>
@@ -1069,7 +1134,7 @@ const StudyManagementPage: React.FC = () => {
                       <p style={{ textAlign: 'center', padding: '40px', color: '#999' }}>아직 섹션이 없습니다.</p>
                     ) : (
                       // 퍼블릭 렌더러와 동일한 정렬 적용 - order 값 기준
-                      [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section) => (
+                      [...pageData.sections].filter(s => s && s.id).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section) => (
                         <div key={section.id} className={styles.sectionWrapper}>
                           <SectionRenderer type={section.type} data={section.props} />
                         </div>
@@ -1079,8 +1144,8 @@ const StudyManagementPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className={styles.editorContent} style={{ display: 'flex', gap: '24px' }}>
-                <div className={styles.sectionsManager} style={{ flex: '0 0 380px', minWidth: '380px' }}>
+              <div className={styles.editorContent}>
+                <div className={styles.sectionsManager}>
                   <div className={styles.sectionsHeader}>
                     <h4>섹션 관리</h4>
                     <button
@@ -1123,7 +1188,7 @@ const StudyManagementPage: React.FC = () => {
                                 // 임시 ID 생성 (저장 전까지 사용)
                                 const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                                 const maxOrder = pageData.sections.length > 0
-                                  ? Math.max(...pageData.sections.map(s => s.order || 0))
+                                  ? Math.max(...pageData.sections.filter(s => s).map(s => s.order || 0))
                                   : 0;
 
                                 // 새 섹션을 즉시 목록에 추가
@@ -1140,6 +1205,9 @@ const StudyManagementPage: React.FC = () => {
                                   ...prev,
                                   sections: [...prev.sections, newSection]
                                 } : prev);
+
+                                // 저장되지 않은 변경사항 표시
+                                setHasUnsavedChanges(true);
 
                                 // 편집 모드로 전환
                                 setSelectedSection(newSection);
@@ -1165,7 +1233,7 @@ const StudyManagementPage: React.FC = () => {
                       <p className={styles.studyMgmtEmptyMessage}>아직 섹션이 없습니다. 섹션을 추가해주세요.</p>
                     ) : (
                       // 섹션 목록도 order 값 기준으로 정렬
-                      [...pageData.sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section, index) => (
+                      [...pageData.sections].filter(s => s && s.id).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((section, index) => (
                         <div
                           key={section.id}
                           className={`${styles.studyMgmtSectionItem} ${
@@ -1173,7 +1241,7 @@ const StudyManagementPage: React.FC = () => {
                           } ${
                             dragOverIndex === index ? styles.studyMgmtSectionDragOver : ''
                           } ${
-                            section.id.startsWith('temp_') || section.id.startsWith('imported_') ? styles.tempSection : ''
+                            (section.id && (section.id.startsWith('temp_') || section.id.startsWith('imported_'))) ? styles.tempSection : ''
                           }`}
                           draggable
                           tabIndex={0}
@@ -1198,7 +1266,7 @@ const StudyManagementPage: React.FC = () => {
                           </div>
                           <div className={styles.studyMgmtSectionInfo}>
                             <span className={styles.studyMgmtSectionType}>{section.type}</span>
-                            {(section.id.startsWith('temp_') || section.id.startsWith('imported_')) && (
+                            {section.id && (section.id.startsWith('temp_') || section.id.startsWith('imported_')) && (
                               <span className={styles.tempLabel}>저장 필요</span>
                             )}
                           </div>
@@ -1225,7 +1293,7 @@ const StudyManagementPage: React.FC = () => {
                 </div>
 
                 {selectedSection && (
-                  <div className={styles.sectionEditor} style={{ flex: 1, minWidth: 0 }}>
+                  <div className={styles.sectionEditor}>
                     <button
                       className={styles.sectionEditorClose}
                       onClick={() => setSelectedSection(null)}
@@ -1244,31 +1312,25 @@ const StudyManagementPage: React.FC = () => {
                           ? serializeMembersPropsForAPI(data)
                           : data;
 
-                        // 임시 섹션인 경우 (temp_ 또는 imported_로 시작하는 ID)
+                        // 임시 섹션인 경우도 로컬에서만 처리
                         if (selectedSection.id.startsWith('temp_') || selectedSection.id.startsWith('imported_')) {
-                          // API 호출로 실제 섹션 생성
-                          try {
-                            setSaving(true);
-                            const request: AddSectionRequest = {
-                              type: selectedSection.type as SectionType,
-                              props: outgoing,
-                              order: selectedSection.order  // order를 최상위 필드로 이동
-                            };
-                            const updatedPage = await studyDetailPageService.addSection(study!.id, request);
-                            setPageData(updatedPage);
-                            setSelectedSection(null);
-                            addToast('섹션이 추가되었습니다', 'success');
-                          } catch (err) {
-                            console.error('Failed to add section:', err);
-                            addToast('섹션 추가에 실패했습니다', 'error');
-                            // 실패시 임시 섹션 제거
-                            setPageData(prev => prev ? {
+                          // 로컬 상태에서만 업데이트
+                          setPageData(prev => {
+                            if (!prev) return prev;
+                            return {
                               ...prev,
-                              sections: prev.sections.filter(s => s.id !== selectedSection.id)
-                            } : prev);
-                          } finally {
-                            setSaving(false);
-                          }
+                              sections: prev.sections.map(s => 
+                                s.id === selectedSection.id 
+                                  ? { ...s, props: outgoing }
+                                  : s
+                              )
+                            };
+                          });
+                          
+                          // 저장되지 않은 변경사항 표시
+                          setHasUnsavedChanges(true);
+                          setSelectedSection(null);
+                          addToast('섹션이 수정되었습니다. 저장 버튼을 눌러 변경사항을 저장하세요.', 'info');
                         } else {
                           // 기존 섹션 업데이트
                           handleUpdateSection(selectedSection.id, selectedSection.type, outgoing, selectedSection.order);
