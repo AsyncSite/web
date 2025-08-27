@@ -638,3 +638,4 @@ Problem definition → small, safe change → change review → refactor — rep
 - Don't ignore failures or warnings.
 - Don't introduce unjustified optimization or abstraction.
 - Don't overuse broad exceptions.
+ 
