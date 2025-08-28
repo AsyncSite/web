@@ -171,23 +171,29 @@ const studyDetailPageService = {
 
   // 상태와 무관하게 페이지 조회 (편집 페이지용)
   async getPageForEditing(studyId: string, studySlug: string): Promise<StudyDetailPageData | null> {
-    // 1. 먼저 published 페이지 시도 (대부분의 경우)
+    // 편집 페이지는 항상 draft를 우선으로 표시해야 함!
+    // 1. draft 페이지 먼저 시도 (편집 중인 내용)
+    try {
+      const draftPage = await this.getDraftPage(studyId);
+      if (draftPage) {
+        return draftPage;
+      }
+    } catch (error) {
+      // draft가 없음 - published를 시도
+    }
+    
+    // 2. draft가 없으면 published 페이지 시도
     try {
       const publishedPage = await this.getPublishedPageBySlug(studySlug);
       if (publishedPage && publishedPage.studyId === studyId) {
         return publishedPage;
       }
     } catch (error) {
-      // published 페이지가 없음 - 정상적인 경우
+      // published도 없음
     }
     
-    // 2. draft 페이지 시도 (신규 또는 미발행 스터디)
-    try {
-      return await this.getDraftPage(studyId);
-    } catch (error) {
-      // draft도 없음 - 페이지가 아예 없는 상태
-      return null;
-    }
+    // 3. 둘 다 없으면 null
+    return null;
   },
 
   async createPage(studyId: string, request: CreatePageRequest): Promise<StudyDetailPageData> {
