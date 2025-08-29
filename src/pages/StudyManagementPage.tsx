@@ -284,27 +284,33 @@ const StudyManagementPage: React.FC = () => {
   const handleAddSection = async (type: SectionType | string, props: any) => {
     if (!study || !pageData) return;
 
-    try {
-      setSaving(true);
-      // 새 섹션의 order 값 계산 - 기존 최대값 + 100
-      const maxOrder = pageData.sections.length > 0
-        ? Math.max(...pageData.sections.filter(s => s).map(s => s.order || 0))
-        : 0;
+    // 새 섹션의 order 값 계산 - 기존 최대값 + 100
+    const maxOrder = pageData.sections.length > 0
+      ? Math.max(...pageData.sections.filter(s => s).map(s => s.order || 0))
+      : 0;
 
-      const request: AddSectionRequest = {
-        type: type as SectionType,
-        props: props,
-        order: maxOrder + 100  // order를 최상위 필드로 이동
+    // 임시 ID 생성 (저장 시 서버에서 실제 ID로 변경됨)
+    const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const newSection = {
+      id: tempId,
+      type: type as SectionType,
+      props: props || {},
+      order: maxOrder + 100
+    };
+
+    // 로컬 상태에 섹션 추가
+    setPageData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sections: [...prev.sections, newSection]
       };
-      const updatedPage = await studyDetailPageService.addSection(study!.id, request);
-      setPageData(updatedPage);
-      setShowAddSection(false);
-    } catch (err) {
-      console.error('Failed to add section:', err);
-      addToast('섹션 추가에 실패했습니다', 'error');
-    } finally {
-      setSaving(false);
-    }
+    });
+    
+    setHasUnsavedChanges(true);
+    setShowAddSection(false);
+    addToast('섹션이 추가되었습니다. 저장 버튼을 눌러 변경사항을 저장하세요.', 'info');
   };
 
   const handleUpdateSection = async (sectionId: string, sectionType: SectionType | string, props: any, order?: number) => {
