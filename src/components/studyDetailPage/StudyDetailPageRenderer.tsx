@@ -408,7 +408,16 @@ const StudyDetailPageRenderer: React.FC = () => {
                       </button>
                     )}
                     {/* 상태별 버튼 표시 (제안자가 아닌 경우만) */}
-                    {(!user || studyData.proposerId !== user.email) && applicationStatus === 'none' && (
+                    {(!user || studyData.proposerId !== user.email) && 
+                     applicationStatus === 'none' && 
+                     getStudyDisplayInfo(
+                       studyData.status,
+                       studyData.recruitDeadline,
+                       studyData.startDate,
+                       studyData.endDate,
+                       studyData.capacity,
+                       studyData.enrolled
+                     ).canApply && (
                       <button 
                         className={styles.applyButton} 
                         onClick={(e) => {
@@ -464,7 +473,16 @@ const StudyDetailPageRenderer: React.FC = () => {
                         ✅ 참여 중
                       </button>
                     )}
-                    {(!user || studyData.proposerId !== user.email) && applicationStatus === 'rejected' && (
+                    {(!user || studyData.proposerId !== user.email) && 
+                     applicationStatus === 'rejected' && 
+                     getStudyDisplayInfo(
+                       studyData.status,
+                       studyData.recruitDeadline,
+                       studyData.startDate,
+                       studyData.endDate,
+                       studyData.capacity,
+                       studyData.enrolled
+                     ).canApply && (
                       <button 
                         className={`${styles.applyButton} ${styles.rejected}`} 
                         onClick={(e) => {
