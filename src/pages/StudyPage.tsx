@@ -129,6 +129,51 @@ const StudyPage: React.FC = () => {
   
   const filteredStudies = getFilteredStudies();
   
+  // 스터디 정렬: 시작예정 → 모집중 → 진행중 → 완료 순서로 정렬
+  const sortedStudies = [...filteredStudies].sort((a, b) => {
+    // 각 스터디의 상태 우선순위 계산
+    const getPriority = (study: Study): number => {
+      const displayInfo = getStudyDisplayInfo(
+        study.status,
+        study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+      );
+      
+      // 시작예정 (가장 높은 우선순위)
+      const startDate = parseDate(study.startDate);
+      if (study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now) {
+        return 0;
+      }
+      
+      // 모집중
+      if (displayInfo.canApply) {
+        return 1;
+      }
+      
+      // 진행중
+      if (study.status === 'IN_PROGRESS') {
+        return 2;
+      }
+      
+      // 완료
+      if (study.status === 'COMPLETED') {
+        return 3;
+      }
+      
+      // 기타 (마감 등)
+      return 4;
+    };
+    
+    const priorityA = getPriority(a);
+    const priorityB = getPriority(b);
+    
+    // 우선순위가 같으면 generation(기수) 내림차순으로 정렬
+    if (priorityA === priorityB) {
+      return (b.generation || 0) - (a.generation || 0);
+    }
+    
+    return priorityA - priorityB;
+  });
+  
   // 스터디 상태에 따른 배지 클래스 결정
   const getStatusBadgeClass = (study: Study): string => {
     const displayInfo = getStudyDisplayInfo(
@@ -300,7 +345,7 @@ const StudyPage: React.FC = () => {
                 <div className={styles['loading-spinner']}>⏳</div>
                 <p>스터디를 불러오는 중...</p>
               </div>
-            ) : filteredStudies.length === 0 ? (
+            ) : sortedStudies.length === 0 ? (
               <EmptyState
                 icon="📚"
                 title="아직 등록된 스터디가 없어요"
@@ -321,7 +366,7 @@ const StudyPage: React.FC = () => {
                 {statusFilter === 'completed' && <h2>🏁 완료된 스터디</h2>}
                 
                 <div className={styles['study-grid']}>
-                  {filteredStudies.map(study => {
+                  {sortedStudies.map(study => {
                     const statusClass = getStatusBadgeClass(study);
                     const enrollmentRate = study.capacity ? (study.enrolled / study.capacity) * 100 : 0;
                     const daysLeft = study.deadline ? Math.ceil((study.deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
