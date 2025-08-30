@@ -483,8 +483,8 @@ const StudyPage: React.FC = () => {
                             const displayInfo = getStudyDisplayInfo(
                               study.status,
                               study.deadline?.toISOString(),
-                              study.startDate?.toISOString(),
-                              study.endDate?.toISOString(),
+                              study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+                              study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
                               study.capacity,
                               study.enrolled
                             );
