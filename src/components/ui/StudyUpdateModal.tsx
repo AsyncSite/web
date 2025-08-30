@@ -51,7 +51,7 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
     }
     
     // PENDING, APPROVED 상태에서 수정 가능한 필드
-    const pendingApprovedFields = ['tagline', 'capacity', 'description'];
+    const pendingApprovedFields = ['tagline', 'capacity'];
     if (pendingApprovedFields.includes(fieldName)) {
       return status === StudyStatus.PENDING || status === StudyStatus.APPROVED;
     }
@@ -78,7 +78,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
       // Initialize form with current study data
       setFormData({
         title: study.name,
-        description: study.description || '',
         tagline: study.tagline,
         schedule: study.schedule,
         duration: study.duration,
@@ -253,9 +252,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
         updateData.title = formData.title;
       }
       
-      if (formData.description !== (study.description || '')) {
-        updateData.description = formData.description;
-      }
       
       if (formData.tagline !== study.tagline) {
         updateData.tagline = formData.tagline || '';
@@ -427,22 +423,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
               title={!isFieldEditable('tagline') ? 'PENDING 또는 APPROVED 상태에서만 수정 가능합니다' : ''}
             />
             {errors.tagline && <span className="error-message">{errors.tagline}</span>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="description">
-              상세 설명
-              {!isFieldEditable('description') && <span className="field-status"> (수정 불가)</span>}
-            </label>
-            <textarea
-              id="description"
-              value={formData.description || ''}
-              onChange={handleChange('description')}
-              placeholder="스터디에 대한 자세한 설명을 입력하세요"
-              rows={4}
-              disabled={loading || !isFieldEditable('description')}
-              title={!isFieldEditable('description') ? 'PENDING 또는 APPROVED 상태에서만 수정 가능합니다' : ''}
-            />
           </div>
 
           {/* 일정 및 시간 섹션 */}

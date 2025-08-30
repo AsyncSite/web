@@ -184,8 +184,8 @@ export function getStudyColor(studySlug: string) {
 }
 
 // 위치 정보 추출 (온라인/오프라인)
-export function parseLocation(schedule: string | undefined, description?: string): 'online' | 'offline' | undefined {
-  const text = `${schedule || ''} ${description || ''}`.toLowerCase();
+export function parseLocation(schedule: string | undefined): 'online' | 'offline' | undefined {
+  const text = (schedule || '').toLowerCase();
   
   if (text.includes('온라인') || text.includes('online') || text.includes('zoom') || text.includes('meet')) {
     return 'online';
@@ -227,7 +227,7 @@ export function generateEventsFromStudy(
   const { start: startTime, end: endTime } = parseDuration(study.duration);
   
   // 위치 파싱
-  const location = parseLocation(study.schedule, study.description);
+  const location = parseLocation(study.schedule);
   
   // RecurrenceType에 따른 이벤트 생성
   if (study.recurrenceType === RecurrenceType.WEEKLY) {

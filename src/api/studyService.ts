@@ -46,7 +46,6 @@ export type CostType = typeof CostType[keyof typeof CostType];
 export interface StudyDTO {
   id: string;
   title: string;
-  description?: string;
   proposerId: string;
   status: StudyStatus;
   createdAt: string | number[];
@@ -102,7 +101,6 @@ export interface Study {
   name: string;
   generation: number;
   tagline: string;
-  description?: string;
   proposerId: string; // 스터디 제안자 ID
   type: 'participatory' | 'educational' | 'one-time';
   typeLabel: string;
@@ -171,8 +169,7 @@ const transformStudy = (dto: StudyDTO): Study => {
     slug: dto.slug || '',
     name: dto.title,
     generation: dto.generation || 1,
-    tagline: dto.tagline || (dto.description ? dto.description.substring(0, 50) + (dto.description.length > 50 ? '...' : '') : ''),
-    description: dto.description,
+    tagline: dto.tagline || '',
     proposerId: dto.proposerId, // 스터디 제안자 ID 포함
     type: typeMap[dto.type || 'PARTICIPATORY'],
     typeLabel: typeLabelMap[dto.type || 'PARTICIPATORY'],
@@ -283,7 +280,6 @@ export interface RejectApplicationRequest {
 // Study Update Request Type
 export interface StudyUpdateRequest {
   title?: string;
-  description?: string;
   tagline?: string;
   schedule?: string;
   duration?: string;
@@ -616,8 +612,7 @@ class StudyService {
     
     return studies.filter(study => 
       study.name.toLowerCase().includes(lowerKeyword) ||
-      study.tagline.toLowerCase().includes(lowerKeyword) ||
-      (study.description?.toLowerCase().includes(lowerKeyword) ?? false)
+      study.tagline.toLowerCase().includes(lowerKeyword)
     );
   }
 

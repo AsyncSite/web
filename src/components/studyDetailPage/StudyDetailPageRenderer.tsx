@@ -300,7 +300,6 @@ const StudyDetailPageRenderer: React.FC = () => {
           <div className={styles.container} style={{ paddingTop: '100px', paddingBottom: '100px' }}>
             <h1>{studyData.name} {studyData.generation > 1 ? `${studyData.generation}기` : ''}</h1>
             <p>{studyData.tagline}</p>
-            {studyData.description && <p>{studyData.description}</p>}
             
             <div style={{ marginTop: '40px' }}>
               <h2>스터디 정보</h2>

@@ -71,7 +71,6 @@ const StudyDetailPage: React.FC = () => {
         <div className="container" style={{ paddingTop: '100px', paddingBottom: '100px' }}>
           <h1>{study.name} {study.generation > 1 ? `${study.generation}기` : ''}</h1>
           <p>{study.tagline}</p>
-          {study.description && <p>{study.description}</p>}
           
           <div style={{ marginTop: '40px' }}>
             <h2>스터디 정보</h2>
