@@ -72,7 +72,7 @@
 .studyInfo {
   flex: 1;
   min-width: 0;
-  height: 100px; /* 제목 + 태그라인 통합 높이 */
+  min-height: 120px; /* 제목 2줄(72px) + margin(8px) + 태그라인 2줄(40px) */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -522,7 +522,7 @@
   }
   
   .studyInfo {
-    height: 85px; /* 모바일 제목 + 태그라인 통합 높이 */
+    min-height: 100px; /* 모바일 제목 + 태그라인 통합 높이 */
   }
   
   .studyName {
