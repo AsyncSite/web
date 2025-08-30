@@ -479,18 +479,32 @@ const StudyPage: React.FC = () => {
                               );
                             }
                             
-                            // 기본: 신청 가능
-                            return (
-                              <button 
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  navigate(`/study/${study.slug}/apply`);
-                                }}
-                                className={styles['apply-button']}
-                              >
-                                📝 참가 신청하기
-                              </button>
+                            // 기본: 신청 가능 여부 체크
+                            const displayInfo = getStudyDisplayInfo(
+                              study.status,
+                              study.deadline?.toISOString(),
+                              study.startDate?.toISOString(),
+                              study.endDate?.toISOString(),
+                              study.capacity,
+                              study.enrolled
                             );
+                            
+                            if (displayInfo.canApply) {
+                              return (
+                                <button 
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate(`/study/${study.slug}/apply`);
+                                  }}
+                                  className={styles['apply-button']}
+                                >
+                                  📝 참가 신청하기
+                                </button>
+                              );
+                            }
+                            
+                            // 신청 불가능한 경우 null 반환
+                            return null;
                           })()}
                         </div>
                       </div>
