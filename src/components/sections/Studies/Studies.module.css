@@ -72,6 +72,10 @@
 .studyInfo {
   flex: 1;
   min-width: 0;
+  height: 100px; /* 제목 + 태그라인 통합 높이 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /* 뱃지 컨테이너 */
@@ -89,7 +93,6 @@
   margin-bottom: 8px;
   letter-spacing: -0.5px;
   line-height: 1.3;
-  height: 72px; /* 2줄 고정 높이 (28px * 1.3 * 2) */
   word-break: keep-all;
   overflow: hidden;
   display: -webkit-box;
@@ -130,6 +133,11 @@
   color: rgba(255, 255, 255, 0.7);
   font-weight: 300;
   line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
 }
 
 /* 마감일 뱃지 */
@@ -513,9 +521,12 @@
     padding: 32px 24px;
   }
   
+  .studyInfo {
+    height: 85px; /* 모바일 제목 + 태그라인 통합 높이 */
+  }
+  
   .studyName {
     font-size: 24px;
-    height: 62px; /* 2줄 고정 높이 (24px * 1.3 * 2) */
   }
   
   .studyGeneration {
