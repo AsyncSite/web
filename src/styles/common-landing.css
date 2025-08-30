@@ -56,7 +56,8 @@ body {
   z-index: 1;
 }
 
-/* 섹션 헤더 */
+/* 섹션 헤더 - MainPage 섹션들은 이제 CSS 모듈 사용 */
+/* TecoTecoPage와 기타 페이지들이 아직 사용 중이므로 유지 필요 */
 .section-header {
   text-align: center;
   margin-bottom: 60px;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Activities.css';
+import styles from './Activities.module.css';
 
 interface ActivityItem {
   id: number;
@@ -43,24 +43,24 @@ const Activities: React.FC = () => {
   ];
 
   return (
-    <section className="activities section-background" id="activities">
+    <section className={`${styles.activities} section-background`} id="activities">
       <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">정기 활동</h2>
-          <p className="section-subtitle">다양한 활동을 통해 꾸준히 성장합니다</p>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>정기 활동</h2>
+          <p className={styles.sectionSubtitle}>다양한 활동을 통해 꾸준히 성장합니다</p>
         </div>
 
-        <div className="activity-grid">
+        <div className={styles.activityGrid}>
           {activities.map((activity) => (
-            <div key={activity.id} className="activity-card">
-              <div className="activity-icon">{activity.icon}</div>
-              <h3 className="activity-title">{activity.title}</h3>
-              <p className="activity-schedule">{activity.schedule}</p>
-              <p className="activity-description">{activity.description}</p>
-              <div className="activity-participants">
-                <div className="participant-avatars">
+            <div key={activity.id} className={styles.activityCard}>
+              <div className={styles.activityIcon}>{activity.icon}</div>
+              <h3 className={styles.activityTitle}>{activity.title}</h3>
+              <p className={styles.activitySchedule}>{activity.schedule}</p>
+              <p className={styles.activityDescription}>{activity.description}</p>
+              <div className={styles.activityParticipants}>
+                <div className={styles.participantAvatars}>
                   {activity.participants.map((participant, index) => (
-                    <div key={index} className="avatar">{participant}</div>
+                    <div key={index} className={styles.avatar}>{participant}</div>
                   ))}
                 </div>
                 <span>+{activity.totalParticipants}명 참여중</span>

@@ -1,4 +1,29 @@
 /* Flow Section - prototype_mashup_style.html process 기반 + Stats 크기 참고 */
+
+/* 섹션 헤더 스타일 */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sectionTitle {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+}
+
 .flow {
   min-height: 50vh;
   
@@ -12,13 +37,13 @@
   width: 100%;
 }
 
-.flow-timeline {
+.flowTimeline {
   position: relative;
   max-width: 1000px;
   margin: 0 auto;
 }
 
-.flow-line {
+.flowLine {
   position: absolute;
   top: var(--spacing-2xl);
   left: 0;
@@ -29,7 +54,7 @@
   z-index: 0;
 }
 
-.flow-grid {
+.flowGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-3xl);
@@ -37,11 +62,11 @@
   z-index: 1;
 }
 
-.flow-step {
+.flowStep {
   text-align: center;
 }
 
-.flow-icon {
+.flowIcon {
   width: var(--spacing-5xl);
   height: var(--spacing-5xl);
   background: var(--dark-bg);
@@ -56,13 +81,13 @@
   transition: var(--transition-normal);
 }
 
-.flow-step:hover .flow-icon {
+.flowStep:hover .flowIcon {
   background: var(--primary-green);
   transform: scale(1.2);
   border-color: var(--darker-green);
 }
 
-.flow-title {
+.flowTitle {
   font-size: var(--font-lg);
   margin-bottom: var(--spacing-xs);
   color: var(--white-text);
@@ -70,7 +95,7 @@
   font-weight: 600;
 }
 
-.flow-desc {
+.flowDesc {
   font-size: var(--font-sm);
   opacity: 0.7;
   color: var(--white-text);
@@ -83,34 +108,34 @@
     min-height: 40vh;
   }
   
-  .section-title {
-    font-size: var(--font-4xl);
+  .sectionTitle {
+    font-size: 36px;
   }
   
-  .section-subtitle {
-    font-size: var(--font-lg);
+  .sectionSubtitle {
+    font-size: 18px;
   }
   
-  .flow-grid {
+  .flowGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-2xl);
   }
   
-  .flow-line {
+  .flowLine {
     display: none;
   }
   
-  .flow-icon {
+  .flowIcon {
     width: var(--spacing-4xl);
     height: var(--spacing-4xl);
     font-size: var(--font-lg);
   }
   
-  .flow-title {
+  .flowTitle {
     font-size: var(--font-md);
   }
   
-  .flow-desc {
+  .flowDesc {
     font-size: var(--font-xs);
   }
 }
@@ -120,35 +145,35 @@
     min-height: 35vh;
   }
   
-  .section-header {
+  .sectionHeader {
     margin-bottom: 40px;
   }
   
-  .section-title {
+  .sectionTitle {
     font-size: 28px;
   }
   
-  .section-subtitle {
+  .sectionSubtitle {
     font-size: 16px;
   }
   
-  .flow-grid {
+  .flowGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
   
-  .flow-icon {
+  .flowIcon {
     width: 45px;
     height: 45px;
     font-size: 18px;
     margin-bottom: 15px;
   }
   
-  .flow-title {
+  .flowTitle {
     font-size: 14px;
   }
   
-  .flow-desc {
+  .flowDesc {
     font-size: 11px;
   }
 }

@@ -10,6 +10,24 @@
   text-align: center;
 }
 
+.sectionTitle {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+}
+
 /* About Container - 카드 스타일 */
 .aboutContainer {
   max-width: 1200px;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Flow.css';
+import styles from './Flow.module.css';
 
 interface FlowStep {
   id: number;
@@ -37,21 +37,21 @@ const Flow: React.FC = () => {
   ];
 
   return (
-    <section className="flow section-background" id="flow">
+    <section className={`${styles.flow} section-background`} id="flow">
       <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">스터디 플로우</h2>
-          <p className="section-subtitle">함께 성장하는 단계별 여정</p>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>스터디 플로우</h2>
+          <p className={styles.sectionSubtitle}>함께 성장하는 단계별 여정</p>
         </div>
 
-        <div className="flow-timeline">
-          <div className="flow-line"></div>
-          <div className="flow-grid">
+        <div className={styles.flowTimeline}>
+          <div className={styles.flowLine}></div>
+          <div className={styles.flowGrid}>
             {flowSteps.map((step) => (
-              <div key={step.id} className="flow-step">
-                <div className="flow-icon">{step.icon}</div>
-                <h3 className="flow-title">{step.title}</h3>
-                <p className="flow-desc">{step.description}</p>
+              <div key={step.id} className={styles.flowStep}>
+                <div className={styles.flowIcon}>{step.icon}</div>
+                <h3 className={styles.flowTitle}>{step.title}</h3>
+                <p className={styles.flowDesc}>{step.description}</p>
               </div>
             ))}
           </div>

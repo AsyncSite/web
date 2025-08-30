@@ -1,5 +1,5 @@
 import React from 'react';
-import './Roadmap.css';
+import styles from './Roadmap.module.css';
 
 interface RoadmapItem {
   id: number;
@@ -42,22 +42,22 @@ const Roadmap: React.FC = () => {
   ];
 
   return (
-    <section className="roadmap section-background" id="roadmap">
+    <section className={`${styles.roadmap} section-background`} id="roadmap">
       <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">성장 로드맵</h2>
-          <p className="section-subtitle">단계별 로드맵을 따라 체계적으로 성장해나갑니다</p>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>성장 로드맵</h2>
+          <p className={styles.sectionSubtitle}>단계별 로드맵을 따라 체계적으로 성장해나갑니다</p>
         </div>
 
-        <div className="roadmap-timeline">
-          <div className="timeline-line"></div>
+        <div className={styles.roadmapTimeline}>
+          <div className={styles.timelineLine}></div>
           
           {roadmapItems.map((item) => (
-            <div key={item.id} className="roadmap-item">
-              <div className="roadmap-number">{item.number}</div>
-              <h3 className="roadmap-title">{item.title}</h3>
-              <p className="roadmap-description">{item.description}</p>
-              <span className="roadmap-reward">{item.reward}</span>
+            <div key={item.id} className={styles.roadmapItem}>
+              <div className={styles.roadmapNumber}>{item.number}</div>
+              <h3 className={styles.roadmapTitle}>{item.title}</h3>
+              <p className={styles.roadmapDescription}>{item.description}</p>
+              <span className={styles.roadmapReward}>{item.reward}</span>
             </div>
           ))}
         </div>

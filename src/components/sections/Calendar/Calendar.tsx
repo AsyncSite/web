@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Calendar.css';
+import styles from './Calendar.module.css';
 
 interface CalendarEvent {
   date: string;
@@ -95,23 +95,23 @@ const Calendar: React.FC = () => {
   };
 
   return (
-    <section className="calendar-section section-background" id="calendar">
+    <section className={`${styles.calendarSection} section-background`} id="calendar">
       <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">스터디 일정</h2>
-          <p className="section-subtitle">함께하는 정기 활동과 일정을 확인하세요</p>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>스터디 일정</h2>
+          <p className={styles.sectionSubtitle}>함께하는 정기 활동과 일정을 확인하세요</p>
         </div>
 
         {/* 뷰 모드 토글 */}
-        <div className="view-toggle">
+        <div className={styles.viewToggle}>
           <button 
-            className={`toggle-btn ${viewMode === 'modern' ? 'active' : ''}`}
+            className={`${styles.toggleBtn} ${viewMode === 'modern' ? styles.active : ''}`}
             onClick={() => handleViewTransition('modern')}
           >
             캘린더 뷰
           </button>
           <button 
-            className={`toggle-btn ${viewMode === 'timeline' ? 'active' : ''}`}
+            className={`${styles.toggleBtn} ${viewMode === 'timeline' ? styles.active : ''}`}
             onClick={() => handleViewTransition('timeline')}
           >
             타임라인 뷰
@@ -119,27 +119,27 @@ const Calendar: React.FC = () => {
         </div>
 
         {/* 필터 버튼 */}
-        <div className="calendar-filters">
+        <div className={styles.calendarFilters}>
           <button 
-            className={`filter-btn all ${selectedFilter === 'all' ? 'active' : ''}`}
+            className={`${styles.filterBtn} ${styles.all} ${selectedFilter === 'all' ? styles.active : ''}`}
             onClick={() => setSelectedFilter('all')}
           >
             전체
           </button>
           <button 
-            className={`filter-btn tecoteco ${selectedFilter === 'tecoteco' ? 'active' : ''}`}
+            className={`${styles.filterBtn} ${styles.tecoteco} ${selectedFilter === 'tecoteco' ? styles.active : ''}`}
             onClick={() => setSelectedFilter('tecoteco')}
           >
             테코테코
           </button>
           <button 
-            className={`filter-btn devlog ${selectedFilter === 'devlog' ? 'active' : ''}`}
+            className={`${styles.filterBtn} ${styles.devlog} ${selectedFilter === 'devlog' ? styles.active : ''}`}
             onClick={() => setSelectedFilter('devlog')}
           >
             모각코 & 블로그
           </button>
           <button 
-            className={`filter-btn retrospective ${selectedFilter === 'retrospective' ? 'active' : ''}`}
+            className={`${styles.filterBtn} ${styles.retrospective} ${selectedFilter === 'retrospective' ? styles.active : ''}`}
             onClick={() => setSelectedFilter('retrospective')}
           >
             회고
@@ -147,26 +147,26 @@ const Calendar: React.FC = () => {
         </div>
 
         {/* 달력 컨텐츠 */}
-        <div className={`calendar-content ${isTransitioning ? 'transitioning' : ''}`}>
+        <div className={`${styles.calendarContent} ${isTransitioning ? styles.transitioning : ''}`}>
           {viewMode === 'modern' ? (
             // 모던 캘린더 뷰
-            <div className="modern-calendar">
-              <div className="calendar-header">
-                <button className="nav-btn" onClick={() => changeMonth(-1)}>‹</button>
-                <h3 className="calendar-title">
+            <div className={styles.modernCalendar}>
+              <div className={styles.calendarHeader}>
+                <button className={styles.navBtn} onClick={() => changeMonth(-1)}>‹</button>
+                <h3 className={styles.calendarTitle}>
                   {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
                 </h3>
-                <button className="nav-btn" onClick={() => changeMonth(1)}>›</button>
+                <button className={styles.navBtn} onClick={() => changeMonth(1)}>›</button>
               </div>
 
-              <div className="calendar-grid">
-                <div className="weekdays">
+              <div className={styles.calendarGrid}>
+                <div className={styles.weekdays}>
                   {['일', '월', '화', '수', '목', '금', '토'].map(day => (
-                    <div key={day} className="weekday">{day}</div>
+                    <div key={day} className={styles.weekday}>{day}</div>
                   ))}
                 </div>
                 
-                <div className="days-grid">
+                <div className={styles.daysGrid}>
                   {calendarDays.map((day, index) => {
                     const isToday = day.toDateString() === today.toDateString();
                     const isOtherMonth = day.getMonth() !== currentDate.getMonth();
@@ -175,12 +175,12 @@ const Calendar: React.FC = () => {
                     return (
                       <div 
                         key={index}
-                        className={`day-cell ${isToday ? 'today' : ''} ${isOtherMonth ? 'other-month' : ''}`}
+                        className={`${styles.dayCell} ${isToday ? styles.today : ''} ${isOtherMonth ? styles.otherMonth : ''}`}
                       >
-                        <div className="day-number">{day.getDate()}</div>
-                        <div className="day-events">
+                        <div className={styles.dayNumber}>{day.getDate()}</div>
+                        <div className={styles.dayEvents}>
                           {dayEvents.map((event, eventIndex) => (
-                            <div key={eventIndex} className={`event ${event.type}`}>
+                            <div key={eventIndex} className={`${styles.event} ${styles[event.type]}`}>
                               {event.title}
                             </div>
                           ))}
@@ -193,24 +193,24 @@ const Calendar: React.FC = () => {
             </div>
           ) : (
             // 타임라인 뷰
-            <div className="timeline-calendar">
-              <div className="timeline-sidebar">
-                <div className="mini-calendar-container">
-                  <div className="mini-calendar-header">
-                    <button className="mini-nav-btn" onClick={() => changeMonth(-1)}>‹</button>
-                    <div className="mini-month-display">
+            <div className={styles.timelineCalendar}>
+              <div className={styles.timelineSidebar}>
+                <div className={styles.miniCalendarContainer}>
+                  <div className={styles.miniCalendarHeader}>
+                    <button className={styles.miniNavBtn} onClick={() => changeMonth(-1)}>‹</button>
+                    <div className={styles.miniMonthDisplay}>
                       {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
                     </div>
-                    <button className="mini-nav-btn" onClick={() => changeMonth(1)}>›</button>
+                    <button className={styles.miniNavBtn} onClick={() => changeMonth(1)}>›</button>
                   </div>
                   
-                  <div className="mini-calendar" onClick={handleMiniCalendarClick}>
-                    <div className="mini-weekdays">
+                  <div className={styles.miniCalendar} onClick={handleMiniCalendarClick}>
+                    <div className={styles.miniWeekdays}>
                       {['일', '월', '화', '수', '목', '금', '토'].map(day => (
-                        <div key={day} className="mini-weekday">{day}</div>
+                        <div key={day} className={styles.miniWeekday}>{day}</div>
                       ))}
                     </div>
-                    <div className="mini-days-grid">
+                    <div className={styles.miniDaysGrid}>
                       {calendarDays.map((day, index) => {
                         const isToday = day.toDateString() === today.toDateString();
                         const isOtherMonth = day.getMonth() !== currentDate.getMonth();
@@ -219,7 +219,7 @@ const Calendar: React.FC = () => {
                         return (
                           <div 
                             key={index}
-                            className={`mini-day ${isToday ? 'today' : ''} ${isOtherMonth ? 'other-month' : ''} ${hasEvent ? 'has-event' : ''}`}
+                            className={`${styles.miniDay} ${isToday ? styles.today : ''} ${isOtherMonth ? styles.otherMonth : ''} ${hasEvent ? styles.hasEvent : ''}`}
                           >
                             {day.getDate()}
                           </div>
@@ -230,28 +230,28 @@ const Calendar: React.FC = () => {
                 </div>
 
                 {/* 이벤트 통계 */}
-                <div className="event-stats">
+                <div className={styles.eventStats}>
                   <h4>이벤트 현황</h4>
-                  <div className="stat-item">
-                    <div className="stat-color tecoteco"></div>
+                  <div className={styles.statItem}>
+                    <div className={`${styles.statColor} ${styles.tecoteco}`}></div>
                     <span>테코테코</span>
-                    <span className="stat-count">{events.filter(e => e.type === 'tecoteco').length}</span>
+                    <span className={styles.statCount}>{events.filter(e => e.type === 'tecoteco').length}</span>
                   </div>
-                  <div className="stat-item">
-                    <div className="stat-color devlog"></div>
+                  <div className={styles.statItem}>
+                    <div className={`${styles.statColor} ${styles.devlog}`}></div>
                     <span>모각코 & 블로그</span>
-                    <span className="stat-count">{events.filter(e => e.type === 'devlog').length}</span>
+                    <span className={styles.statCount}>{events.filter(e => e.type === 'devlog').length}</span>
                   </div>
-                  <div className="stat-item">
-                    <div className="stat-color retrospective"></div>
+                  <div className={styles.statItem}>
+                    <div className={`${styles.statColor} ${styles.retrospective}`}></div>
                     <span>회고</span>
-                    <span className="stat-count">{events.filter(e => e.type === 'retrospective').length}</span>
+                    <span className={styles.statCount}>{events.filter(e => e.type === 'retrospective').length}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="timeline-main">
-                <div className="timeline">
+              <div className={styles.timelineMain}>
+                <div className={styles.timeline}>
                   {filteredEvents.map((event, index) => {
                     const eventDate = new Date(event.date);
                     const formattedDate = eventDate.toLocaleDateString('ko-KR', {
@@ -262,10 +262,10 @@ const Calendar: React.FC = () => {
                     });
 
                     return (
-                      <div key={index} className={`timeline-item ${event.type}`}>
-                        <div className="event-date">{formattedDate}</div>
-                        <div className="event-title">{event.title}</div>
-                        <div className="event-description">{event.description}</div>
+                      <div key={index} className={`${styles.timelineItem} ${styles[event.type]}`}>
+                        <div className={styles.eventDate}>{formattedDate}</div>
+                        <div className={styles.eventTitle}>{event.title}</div>
+                        <div className={styles.eventDescription}>{event.description}</div>
                       </div>
                     );
                   })}

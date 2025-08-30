@@ -1,17 +1,41 @@
 /* Calendar Section */
-.calendar-section {
+.calendarSection {
   padding: 120px 0;
 }
 
+/* Calendar 전용 섹션 헤더 */
+.sectionHeader {
+  margin-bottom: var(--spacing-6xl);
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+}
+
 /* 뷰 토글 */
-.view-toggle {
+.viewToggle {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-bottom: var(--spacing-2xl);
 }
 
-.toggle-btn {
+.toggleBtn {
   padding: 12px 24px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-light);
@@ -23,20 +47,20 @@
   font-weight: 500;
 }
 
-.toggle-btn.active {
+.toggleBtn.active {
   background: var(--primary-green);
   border-color: var(--primary-green);
   color: var(--dark-bg);
   font-weight: 600;
 }
 
-.toggle-btn:hover:not(.active) {
+.toggleBtn:hover:not(.active) {
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--border-medium);
 }
 
 /* 필터 버튼 */
-.calendar-filters {
+.calendarFilters {
   display: flex;
   justify-content: center;
   gap: 15px;
@@ -44,7 +68,7 @@
   flex-wrap: wrap;
 }
 
-.filter-btn {
+.filterBtn {
   padding: 10px 20px;
   border-radius: 20px;
   border: 2px solid transparent;
@@ -55,31 +79,31 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.filter-btn.all {
+.filterBtn.all {
   background: rgba(195, 232, 141, 0.1);
   color: var(--primary-green);
   border-color: rgba(195, 232, 141, 0.3);
 }
 
-.filter-btn.tecoteco {
+.filterBtn.tecoteco {
   background: rgba(255, 107, 107, 0.1);
   color: #FF6B6B;
   border-color: rgba(255, 107, 107, 0.3);
 }
 
-.filter-btn.devlog {
+.filterBtn.devlog {
   background: rgba(74, 144, 226, 0.1);
   color: #4A90E2;
   border-color: rgba(74, 144, 226, 0.3);
 }
 
-.filter-btn.retrospective {
+.filterBtn.retrospective {
   background: rgba(255, 193, 7, 0.1);
   color: #FFC107;
   border-color: rgba(255, 193, 7, 0.3);
 }
 
-.filter-btn.active {
+.filterBtn.active {
   background: rgba(195, 232, 141, 0.2);
   border-color: var(--primary-green);
   color: var(--primary-green);
@@ -87,19 +111,19 @@
 }
 
 /* 캘린더 컨텐츠 */
-.calendar-content {
+.calendarContent {
   max-width: 1000px;
   margin: 0 auto;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.calendar-content.transitioning {
+.calendarContent.transitioning {
   opacity: 0;
   transform: scale(0.95);
 }
 
 /* 모던 캘린더 뷰 */
-.modern-calendar {
+.modernCalendar {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-light);
   border-radius: 20px;
@@ -107,21 +131,21 @@
   backdrop-filter: blur(10px);
 }
 
-.calendar-header {
+.calendarHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--spacing-3xl);
 }
 
-.calendar-title {
+.calendarTitle {
   font-size: var(--font-2xl);
   font-weight: 700;
   color: var(--primary-green);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.nav-btn {
+.navBtn {
   padding: 10px 15px;
   background: rgba(195, 232, 141, 0.1);
   border: 1px solid var(--border-medium);
@@ -132,12 +156,12 @@
   font-size: var(--font-lg);
 }
 
-.nav-btn:hover {
+.navBtn:hover {
   background: rgba(195, 232, 141, 0.2);
   transform: translateY(-2px);
 }
 
-.calendar-grid {
+.calendarGrid {
   width: 100%;
 }
 
@@ -157,7 +181,7 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.days-grid {
+.daysGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
@@ -166,7 +190,7 @@
   overflow: hidden;
 }
 
-.day-cell {
+.dayCell {
   background: rgba(5, 6, 10, 0.8);
   min-height: 100px;
   padding: 10px;
@@ -177,32 +201,32 @@
   flex-direction: column;
 }
 
-.day-cell:hover {
+.dayCell:hover {
   background: rgba(195, 232, 141, 0.05);
 }
 
-.day-cell.today {
+.dayCell.today {
   background: rgba(195, 232, 141, 0.1);
   border: 2px solid var(--primary-green);
 }
 
-.day-cell.other-month .day-number {
+.dayCell.otherMonth .dayNumber {
   color: var(--white-transparent-light);
 }
 
-.day-number {
+.dayNumber {
   font-weight: 600;
   margin-bottom: 8px;
   color: var(--white-text);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.day-cell.today .day-number {
+.dayCell.today .dayNumber {
   color: var(--primary-green);
   font-weight: 700;
 }
 
-.day-events {
+.dayEvents {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -243,7 +267,7 @@
 }
 
 /* 타임라인 뷰 */
-.timeline-calendar {
+.timelineCalendar {
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: var(--spacing-4xl);
@@ -251,7 +275,7 @@
   margin: 0 auto;
 }
 
-.timeline-sidebar {
+.timelineSidebar {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-light);
   border-radius: 20px;
@@ -260,7 +284,7 @@
   backdrop-filter: blur(10px);
 }
 
-.timeline-main {
+.timelineMain {
   min-height: 400px;
 }
 
@@ -280,7 +304,7 @@
   border-radius: 1px;
 }
 
-.timeline-item {
+.timelineItem {
   position: relative;
   margin-bottom: 30px;
   padding: 25px;
@@ -290,24 +314,24 @@
   transition: var(--transition-normal);
 }
 
-.timeline-item:hover {
+.timelineItem:hover {
   background: rgba(255, 255, 255, 0.05);
   transform: translateX(5px);
 }
 
-.timeline-item.tecoteco {
+.timelineItem.tecoteco {
   border-left-color: #FF6B6B;
 }
 
-.timeline-item.devlog {
+.timelineItem.devlog {
   border-left-color: #4A90E2;
 }
 
-.timeline-item.retrospective {
+.timelineItem.retrospective {
   border-left-color: #FFC107;
 }
 
-.timeline-item::before {
+.timelineItem::before {
   content: '';
   position: absolute;
   left: -34px;
@@ -319,22 +343,22 @@
   border: 3px solid var(--dark-bg);
 }
 
-.timeline-item.devlog::before {
+.timelineItem.devlog::before {
   background: #4A90E2;
 }
 
-.timeline-item.retrospective::before {
+.timelineItem.retrospective::before {
   background: #FFC107;
 }
 
-.timeline-item .event-date {
+.timelineItem .eventDate {
   font-size: var(--font-sm);
   color: var(--white-transparent-medium);
   margin-bottom: 8px;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.timeline-item .event-title {
+.timelineItem .eventTitle {
   font-size: var(--font-xl);
   font-weight: 600;
   margin-bottom: 8px;
@@ -342,7 +366,7 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.timeline-item .event-description {
+.timelineItem .eventDescription {
   font-size: var(--font-md);
   color: var(--white-transparent-medium);
   line-height: 1.5;
@@ -350,11 +374,11 @@
 }
 
 /* 미니 달력 */
-.mini-calendar-container {
+.miniCalendarContainer {
   margin-bottom: var(--spacing-3xl);
 }
 
-.mini-calendar-header {
+.miniCalendarHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -364,14 +388,14 @@
   border-radius: 10px;
 }
 
-.mini-month-display {
+.miniMonthDisplay {
   font-weight: 600;
   color: var(--white-text);
   font-size: var(--font-md);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.mini-nav-btn {
+.miniNavBtn {
   background: none;
   border: none;
   color: var(--white-transparent-medium);
@@ -382,12 +406,12 @@
   transition: var(--transition-normal);
 }
 
-.mini-nav-btn:hover {
+.miniNavBtn:hover {
   color: var(--primary-green);
   background: rgba(195, 232, 141, 0.1);
 }
 
-.mini-calendar {
+.miniCalendar {
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 5px;
@@ -397,23 +421,23 @@
   border-radius: 10px;
 }
 
-.mini-calendar:hover {
+.miniCalendar:hover {
   background: rgba(195, 232, 141, 0.05);
   transform: scale(1.02);
 }
 
-.mini-calendar:active {
+.miniCalendar:active {
   transform: scale(0.98);
 }
 
-.mini-weekdays {
+.miniWeekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
   margin-bottom: 5px;
 }
 
-.mini-weekday {
+.miniWeekday {
   text-align: center;
   font-size: var(--font-xs);
   font-weight: 600;
@@ -422,13 +446,13 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.mini-days-grid {
+.miniDaysGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
 }
 
-.mini-day {
+.miniDay {
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -441,31 +465,31 @@
   color: var(--white-text);
 }
 
-.mini-day.other-month {
+.miniDay.otherMonth {
   color: var(--white-transparent-light);
 }
 
-.mini-day.today {
+.miniDay.today {
   background: var(--primary-green);
   color: var(--dark-bg);
   font-weight: 600;
 }
 
-.mini-day.has-event {
+.miniDay.hasEvent {
   background: rgba(195, 232, 141, 0.2);
   color: var(--primary-green);
 }
 
-.mini-day:hover:not(.today) {
+.miniDay:hover:not(.today) {
   background: rgba(195, 232, 141, 0.1);
 }
 
 /* 이벤트 통계 */
-.event-stats {
+.eventStats {
   margin-top: var(--spacing-2xl);
 }
 
-.event-stats h4 {
+.eventStats h4 {
   color: var(--primary-green);
   margin-bottom: var(--spacing-lg);
   font-size: var(--font-lg);
@@ -473,7 +497,7 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.stat-item {
+.statItem {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -484,35 +508,35 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.stat-item:hover {
+.statItem:hover {
   background: rgba(255, 255, 255, 0.05);
 }
 
-.stat-color {
+.statColor {
   width: 12px;
   height: 12px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.stat-color.tecoteco {
+.statColor.tecoteco {
   background: #FF6B6B;
 }
 
-.stat-color.devlog {
+.statColor.devlog {
   background: #4A90E2;
 }
 
-.stat-color.retrospective {
+.statColor.retrospective {
   background: #FFC107;
 }
 
-.stat-item span {
+.statItem span {
   font-size: var(--font-sm);
   color: var(--white-text);
 }
 
-.stat-count {
+.statCount {
   margin-left: auto !important;
   background: rgba(195, 232, 141, 0.2);
   color: var(--primary-green) !important;
@@ -524,40 +548,40 @@
 
 /* 반응형 */
 @media (max-width: 768px) {
-  .calendar-section {
+  .calendarSection {
     padding: 80px 0;
   }
 
-  .view-toggle {
+  .viewToggle {
     gap: 8px;
     margin-bottom: var(--spacing-xl);
   }
 
-  .toggle-btn {
+  .toggleBtn {
     padding: 10px 20px;
     font-size: var(--font-sm);
   }
 
-  .calendar-filters {
+  .calendarFilters {
     gap: 10px;
     margin-bottom: var(--spacing-3xl);
   }
 
-  .filter-btn {
+  .filterBtn {
     padding: 8px 16px;
     font-size: var(--font-xs);
   }
 
-  .modern-calendar {
+  .modernCalendar {
     padding: var(--spacing-2xl);
   }
 
-  .day-cell {
+  .dayCell {
     min-height: 80px;
     padding: 8px;
   }
 
-  .calendar-title {
+  .calendarTitle {
     font-size: var(--font-lg);
   }
 
@@ -569,58 +593,58 @@
     left: 10px;
   }
 
-  .timeline-item::before {
+  .timelineItem::before {
     left: 4px;
   }
 
-  .timeline-item {
+  .timelineItem {
     padding: 20px;
   }
 
-  .timeline-calendar {
+  .timelineCalendar {
     grid-template-columns: 1fr;
     gap: var(--spacing-2xl);
   }
 
-  .timeline-sidebar {
+  .timelineSidebar {
     order: 2;
   }
 
-  .timeline-main {
+  .timelineMain {
     order: 1;
   }
 }
 
 @media (max-width: 480px) {
-  .calendar-section {
+  .calendarSection {
     padding: 60px 0;
   }
 
-  .view-toggle {
+  .viewToggle {
     flex-direction: column;
     align-items: center;
   }
 
-  .toggle-btn {
+  .toggleBtn {
     width: 200px;
   }
 
-  .calendar-filters {
+  .calendarFilters {
     flex-direction: column;
     align-items: center;
     gap: 8px;
   }
 
-  .filter-btn {
+  .filterBtn {
     width: 150px;
     text-align: center;
   }
 
-  .modern-calendar {
+  .modernCalendar {
     padding: var(--spacing-xl);
   }
 
-  .day-cell {
+  .dayCell {
     min-height: 70px;
     padding: 6px;
   }
@@ -630,7 +654,7 @@
     padding: 2px 4px;
   }
 
-  .timeline-item .event-title {
+  .timelineItem .eventTitle {
     font-size: var(--font-lg);
   }
 }

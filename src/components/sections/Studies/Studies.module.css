@@ -6,13 +6,30 @@
   background: transparent;
 }
 
-.studies .sectionHeader {
+.sectionHeader {
   text-align: center;
   margin-bottom: 80px;
   animation: fadeInDown 0.8s ease;
 }
 
-/* section-title, section-subtitle는 common-landing.css에서 관리 */
+/* 섹션 타이틀 스타일 - CSS 모듈로 관리 */
+.sectionTitle {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+}
 
 /* 스터디 그리드 */
 .studiesGrid {
@@ -510,7 +527,14 @@
     padding: 120px 0;
   }
   
-  /* section-title, section-subtitle는 common-landing.css에서 관리 */
+  /* 모바일 섹션 타이틀 조정 */
+  .sectionTitle {
+    font-size: 36px;
+  }
+  
+  .sectionSubtitle {
+    font-size: 18px;
+  }
   
   .studiesGrid {
     grid-template-columns: 1fr;
@@ -578,7 +602,14 @@
 }
 
 @media (max-width: 480px) {
-  /* section-title, section-subtitle는 common-landing.css에서 관리 */
+  /* 모바일 섹션 타이틀 추가 조정 */
+  .sectionTitle {
+    font-size: 32px;
+  }
+  
+  .sectionSubtitle {
+    font-size: 16px;
+  }
   
   .studyHeader {
     flex-direction: column;

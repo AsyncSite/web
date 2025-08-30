@@ -85,8 +85,8 @@ const Studies: React.FC = () => {
     return (
       <section className={`${styles.studies} section-background`} id="studies">
         <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">지금 Async Site에서는</h2>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>지금 Async Site에서는</h2>
           </div>
           <div className={styles.studiesLoading}>
             <p>스터디 목록을 불러오고 있습니다...</p>
@@ -101,8 +101,8 @@ const Studies: React.FC = () => {
     return (
       <section className={`${styles.studies} section-background`} id="studies">
         <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">지금 Async Site에서는</h2>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>지금 Async Site에서는</h2>
           </div>
           <div className={styles.studiesError}>
             <p>{error}</p>
@@ -120,8 +120,8 @@ const Studies: React.FC = () => {
     return (
       <section className={`${styles.studies} section-background`} id="studies">
         <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">지금 Async Site에서는</h2>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>지금 Async Site에서는</h2>
           </div>
           <div className={styles.studiesEmpty}>
             <p>현재 진행 중인 스터디가 없습니다.</p>
@@ -138,10 +138,10 @@ const Studies: React.FC = () => {
   return (
     <section className={`${styles.studies} section-background`} id="studies">
       <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">지금 Async Site에서는</h2>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>지금 Async Site에서는</h2>
           {hasRecruitingStudies && (
-            <p className="section-subtitle">
+            <p className={styles.sectionSubtitle}>
               모집 중인 스터디를 확인해보세요!
             </p>
           )}

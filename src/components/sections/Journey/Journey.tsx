@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import './Journey.css';
+import styles from './Journey.module.css';
 
 interface JourneyStep {
   id: number;
@@ -87,16 +87,16 @@ const Journey: React.FC = () => {
   }, []);
 
   return (
-    <section className="journey" id="journey">
+    <section className={styles.journey} id="journey">
       <div className="container" ref={containerRef}>
-        <div className="section-header">
-          <h2 className="section-title">당신의 Async 여정</h2>
-          <p className="section-subtitle">함께 성장하는 여정의 네 가지 별</p>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>당신의 Async 여정</h2>
+          <p className={styles.sectionSubtitle}>함께 성장하는 여정의 네 가지 별</p>
         </div>
 
-        <div className="journey-constellation">
+        <div className={styles.journeyConstellation}>
           {/* SVG 별자리 연결선 */}
-          <svg className="constellation-svg" viewBox="0 0 1200 600">
+          <svg className={styles.constellationSvg} viewBox="0 0 1200 600">
             <defs>
               <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#C3E88D" stopOpacity="0.3" />
@@ -106,7 +106,7 @@ const Journey: React.FC = () => {
             </defs>
             <path
               ref={pathRef}
-              className="constellation-path"
+              className={styles.constellationPath}
               d="M150,150 Q300,50 450,150 T750,150 Q900,250 1050,150"
               fill="none"
               stroke="url(#pathGradient)"
@@ -116,29 +116,29 @@ const Journey: React.FC = () => {
           </svg>
 
           {/* 별들과 내용 */}
-          <div className="journey-steps">
+          <div className={styles.journeySteps}>
             {journeySteps.map((step, index) => (
               <div
                 key={step.id}
-                className={`journey-step step-${step.id}`}
+                className={`${styles.journeyStep} ${styles[`step${step.id}`]}`}
                 ref={(el) => (starsRef.current[index] = el)}
               >
-                <div className="star-container">
-                  <div className="star-glow"></div>
-                  <div className="star">
-                    <span className="star-number">{step.id}</span>
+                <div className={styles.starContainer}>
+                  <div className={styles.starGlow}></div>
+                  <div className={styles.star}>
+                    <span className={styles.starNumber}>{step.id}</span>
                   </div>
-                  <div className="star-pulse"></div>
+                  <div className={styles.starPulse}></div>
                 </div>
                 
-                <div className="step-content">
-                  <h3 className="step-title">{step.title}</h3>
-                  <p className="step-subtitle">{step.subtitle}</p>
-                  <p className="step-description">{step.description}</p>
+                <div className={styles.stepContent}>
+                  <h3 className={styles.stepTitle}>{step.title}</h3>
+                  <p className={styles.stepSubtitle}>{step.subtitle}</p>
+                  <p className={styles.stepDescription}>{step.description}</p>
                   
-                  <div className="step-testimonial">
-                    <p className="testimonial-content">"{step.testimonial.content}"</p>
-                    <p className="testimonial-author">
+                  <div className={styles.stepTestimonial}>
+                    <p className={styles.testimonialContent}>"{step.testimonial.content}"</p>
+                    <p className={styles.testimonialAuthor}>
                       - {step.testimonial.author}, {step.testimonial.studyName}
                     </p>
                   </div>

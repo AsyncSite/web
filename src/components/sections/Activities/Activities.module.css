@@ -4,17 +4,36 @@
 }
 
 /* Activities 전용 섹션 헤더 */
-.activities .section-header {
+.sectionHeader {
   margin-bottom: var(--spacing-6xl);
+  text-align: center;
 }
 
-.activity-grid {
+.sectionTitle {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #C3E88D;
+  text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
+  font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 900;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+}
+
+.activityGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: var(--spacing-2xl);
 }
 
-.activity-card {
+.activityCard {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 20px;
   padding: var(--spacing-3xl);
@@ -24,7 +43,7 @@
   overflow: hidden;
 }
 
-.activity-card::before {
+.activityCard::before {
   content: '';
   position: absolute;
   top: 0;
@@ -37,24 +56,24 @@
   pointer-events: none;
 }
 
-.activity-card:hover {
+.activityCard:hover {
   transform: translateY(-5px);
   border-color: var(--border-heavy);
   box-shadow: var(--shadow-lg);
 }
 
-.activity-card:hover::before {
+.activityCard:hover::before {
   opacity: 1;
 }
 
-.activity-icon {
+.activityIcon {
   font-size: var(--font-5xl);
   margin-bottom: var(--spacing-lg);
   display: block;
   filter: drop-shadow(0 0 10px rgba(195, 232, 141, 0.3));
 }
 
-.activity-title {
+.activityTitle {
   font-size: var(--font-xl);
   margin-bottom: var(--spacing-md);
   color: var(--white-text);
@@ -62,7 +81,7 @@
   font-weight: 700;
 }
 
-.activity-schedule {
+.activitySchedule {
   font-size: var(--font-md);
   color: var(--primary-green);
   margin-bottom: var(--spacing-lg);
@@ -70,7 +89,7 @@
   font-weight: 600;
 }
 
-.activity-description {
+.activityDescription {
   opacity: 0.8;
   line-height: 1.7;
   margin-bottom: var(--spacing-2xl);
@@ -78,13 +97,13 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.activity-participants {
+.activityParticipants {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
 }
 
-.participant-avatars {
+.participantAvatars {
   display: flex;
   gap: -5px;
 }
@@ -108,7 +127,7 @@
   margin-left: 0;
 }
 
-.activity-participants span {
+.activityParticipants span {
   font-size: var(--font-sm);
   color: var(--white-transparent-medium);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -122,28 +141,28 @@
 
   /* 공통 스타일에서 처리 */
 
-  .activity-grid {
+  .activityGrid {
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
   }
 
-  .activity-card {
+  .activityCard {
     padding: var(--spacing-2xl);
   }
 
-  .activity-icon {
+  .activityIcon {
     font-size: var(--font-3xl);
   }
 
-  .activity-title {
+  .activityTitle {
     font-size: var(--font-lg);
   }
 
-  .activity-schedule {
+  .activitySchedule {
     font-size: var(--font-sm);
   }
 
-  .activity-description {
+  .activityDescription {
     font-size: var(--font-sm);
   }
 
@@ -159,27 +178,27 @@
     padding: 60px 0;
   }
 
-  .section-header {
+  .sectionHeader {
     margin-bottom: 60px;
   }
 
-  .section-title {
+  .sectionTitle {
     font-size: 28px;
   }
 
-  .section-subtitle {
+  .sectionSubtitle {
     font-size: 16px;
   }
 
-  .activity-card {
+  .activityCard {
     padding: 25px;
   }
 
-  .activity-icon {
+  .activityIcon {
     font-size: 36px;
   }
 
-  .activity-title {
+  .activityTitle {
     font-size: 18px;
   }
 
@@ -189,7 +208,7 @@
     font-size: 11px;
   }
 
-  .activity-participants {
+  .activityParticipants {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-xs);

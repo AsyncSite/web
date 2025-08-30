@@ -141,7 +141,7 @@ const About: React.FC = () => {
         <section className={`${styles.about} section-background`} id="about">
             <div className="container">
                 <div className={styles.sectionHeader}>
-                    <h2 className="section-title">
+                    <h2 className={styles.sectionTitle}>
                         <div className={`${styles.flipTextContainer} ${isFlipping ? styles.flipping : ''}`}>
                             <div className={styles.flipCard}>
                                 <div className={`${styles.flipCardFace} ${styles.flipCardCurrent}`}>
@@ -155,7 +155,7 @@ const About: React.FC = () => {
                         <br/>
                         특별해지는 이유
                     </h2>
-                    <p className="section-subtitle">끝없이 쏟아지는 새로운 기술들, AI가 코드를 대신 짜주는 시대.<br/>
+                    <p className={styles.sectionSubtitle}>끝없이 쏟아지는 새로운 기술들, AI가 코드를 대신 짜주는 시대.<br/>
                         우리는 무엇을 추구해야 할까요?</p>
                 </div>
 

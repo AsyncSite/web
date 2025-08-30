@@ -21,7 +21,7 @@
   margin-right: auto;
 }
 
-/* section-title은 common-landing.css에서 관리, 필요시 추가 스타일만 */
+/* 섹션 타이틀 스타일 - CSS 모듈로 관리 */
 .sectionTitle {
   margin-bottom: 0;
   font-size: 48px;
@@ -30,6 +30,14 @@
   text-shadow: 0 0 20px rgba(195, 232, 141, 0.5);
   font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 900;
+  text-align: center;
+}
+
+.sectionSubtitle {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #ffffff;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   text-align: center;
 }
 
