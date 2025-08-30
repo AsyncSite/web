@@ -163,29 +163,29 @@ const Studies: React.FC = () => {
                   '--study-glow': study.color?.glow || 'rgba(130, 170, 255, 0.3)'
                 } as React.CSSProperties}
               >
+                {/* 뱃지 영역 - 모든 카드에 동일한 높이 확보 */}
+                <div className={styles.badgeArea}>
+                  {study.generation > 1 && (
+                    <span className={styles.generationBadge}>{study.generation}기</span>
+                  )}
+                  <div className={`${styles.studyTypeBadge} ${styles[study.type]}`}>
+                    <span className={styles.typeIcon}>
+                      {study.type === 'participatory' ? '👥' : '📚'}
+                    </span>
+                    <span className={styles.typeLabel}>{study.typeLabel}</span>
+                  </div>
+                  {daysLeft !== null && daysLeft <= 7 && daysLeft > 0 && (
+                    <div className={styles.deadlineBadge}>
+                      D-{daysLeft}
+                    </div>
+                  )}
+                </div>
+                
                 {/* 스터디 헤더 */}
                 <div className={styles.studyHeader}>
                   <div className={styles.studyInfo}>
-                    <h3 className={styles.studyName}>
-                      {study.name}
-                      {study.generation > 1 && (
-                        <span className={styles.generationBadge}>{study.generation}기</span>
-                      )}
-                    </h3>
+                    <h3 className={styles.studyName}>{study.name}</h3>
                     <p className={styles.studyTagline}>{study.tagline}</p>
-                  </div>
-                  <div className={styles.studyBadges}>
-                    <div className={`${styles.studyTypeBadge} ${styles[study.type]}`}>
-                      <span className={styles.typeIcon}>
-                        {study.type === 'participatory' ? '👥' : '📚'}
-                      </span>
-                      <span className={styles.typeLabel}>{study.typeLabel}</span>
-                    </div>
-                    {daysLeft !== null && daysLeft <= 7 && daysLeft > 0 && (
-                      <div className={styles.deadlineBadge}>
-                        D-{daysLeft}
-                      </div>
-                    )}
                   </div>
                 </div>
                 

@@ -47,7 +47,16 @@ export function getStudyDisplayInfo(
     case 'APPROVED':
       // APPROVED 상태일 때는 모집 마감일과 정원을 체크
       // 백엔드와 일치: 마감일이 없으면 계속 모집, 있으면 미래 날짜인지 체크
-      const isRecruiting = !deadlineDate || deadlineDate > now;
+      // 마감일이 오늘이면 오늘 끝까지 모집 가능
+      let isRecruiting = false;
+      if (!deadlineDate) {
+        isRecruiting = true; // 마감일 없으면 계속 모집
+      } else {
+        // 마감일을 그 날의 끝 시간(23:59:59)으로 설정
+        const deadlineEndOfDay = new Date(deadlineDate);
+        deadlineEndOfDay.setHours(23, 59, 59, 999);
+        isRecruiting = deadlineEndOfDay >= now;
+      }
       const isFull = capacity && enrolled && enrolled >= capacity;
       
       if (isFull) {

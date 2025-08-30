@@ -99,18 +99,25 @@
   opacity: 0.8;
 }
 
+/* 뱃지 영역 - 모든 카드에 동일한 높이 */
+.badgeArea {
+  height: 36px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .generationBadge {
   display: inline-flex;
   align-items: center;
-  margin-left: 12px;
   padding: 4px 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--study-primary);
-  vertical-align: middle;
 }
 
 .studyTagline {
@@ -502,7 +509,7 @@
   }
   
   .studyName {
-    font-size: 28px;
+    font-size: 24px;
   }
   
   .studyGeneration {
@@ -522,11 +529,16 @@
     font-size: 15px;
   }
   
-  /* 모바일에서 뱃지 조정 */
+  /* 모바일에서 뱃지 영역 조정 */
+  .badgeArea {
+    height: 32px;
+    margin-bottom: 16px;
+    gap: 6px;
+  }
+  
   .generationBadge {
-    margin-left: 8px;
-    padding: 2px 8px;
-    font-size: 14px;
+    padding: 3px 10px;
+    font-size: 13px;
   }
   
   .studyTypeBadge {
