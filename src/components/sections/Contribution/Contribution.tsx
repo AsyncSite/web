@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Contribution.module.css';
 import userService from '../../../api/userService';
+import publicApiClient from '../../../api/publicClient';
 
 interface Member {
   id: string;
@@ -20,8 +21,8 @@ const Contribution: React.FC = () => {
     const fetchMembers = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:8080/api/public/users?size=50');
-        const data = await response.json();
+        const response = await publicApiClient.get('/api/public/users', { params: { size: 50 } });
+        const data = response.data;
         
         if (data.content && data.content.length > 0) {
           const transformedMembers = data.content

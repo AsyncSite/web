@@ -14,21 +14,13 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
   const isDevelopment = nodeEnv === 'development';
   const isProduction = nodeEnv === 'production';
   
-  // Check if running on localhost
+  // Check if running on localhost (runtime check, not build-time)
   const isLocal = window.location.hostname === 'localhost' || 
                   window.location.hostname === '127.0.0.1';
   
   // Determine API base URL based on environment
-  let apiBaseUrl: string;
-  
-  // Force production URL for Vercel deployments
-  if (isProduction && !isLocal) {
-    // Always use production API for Vercel deployments
-    apiBaseUrl = 'https://api.asyncsite.com';
-  } else {
-    // Use gateway for local development by default
-    apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
-  }
+  // Build-time decision: use environment variable, no fallback to localhost
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'https://api.asyncsite.com';
   
   return {
     apiBaseUrl,

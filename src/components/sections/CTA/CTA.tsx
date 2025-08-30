@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './CTA.module.css';
+import publicApiClient from '../../../api/publicClient';
 
 const CTA: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -11,12 +12,12 @@ const CTA: React.FC = () => {
     const fetchStatistics = async () => {
       try {
         const [userResponse, studyResponse] = await Promise.all([
-          fetch('http://localhost:8080/api/public/users/statistics'),
-          fetch('http://localhost:8080/api/studies')
+          publicApiClient.get('/api/public/users/statistics'),
+          publicApiClient.get('/api/studies')
         ]);
         
-        const userData = await userResponse.json();
-        const studyData = await studyResponse.json();
+        const userData = userResponse.data;
+        const studyData = studyResponse.data;
         
         if (userData.totalUsers) {
           setUserCount(userData.totalUsers);
