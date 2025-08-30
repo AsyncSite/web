@@ -100,20 +100,17 @@
 }
 
 .generationBadge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
   display: inline-flex;
   align-items: center;
+  margin-left: 12px;
   padding: 4px 12px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--study-primary);
-  z-index: 1;
-  backdrop-filter: blur(10px);
+  vertical-align: middle;
 }
 
 .studyTagline {
@@ -527,10 +524,9 @@
   
   /* 모바일에서 뱃지 조정 */
   .generationBadge {
-    top: 12px;
-    left: 12px;
-    padding: 3px 10px;
-    font-size: 13px;
+    margin-left: 8px;
+    padding: 2px 8px;
+    font-size: 14px;
   }
   
   .studyTypeBadge {
