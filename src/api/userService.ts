@@ -126,6 +126,9 @@ class UserService {
     quote?: string;
     bio?: string;
     profileImage?: string;
+    githubUrl?: string;
+    blogUrl?: string;
+    linkedinUrl?: string;
   }>> {
     try {
       const response = await apiClient.get('/api/public/users/whoweare-members');

@@ -1,72 +1,80 @@
 // src/sections/Contribution/Contribution.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Contribution.module.css';
+import userService from '../../../api/userService';
 
 interface Member {
   id: string;
   name: string;
-  githubId: string;
+  email: string;
+  profileImage?: string;
+  githubUrl?: string;
 }
 
-/**
- * AsyncSite 멤버 정보
- */
-const members: Member[] = [
-  {
-    id: 'chadongmin',
-    name: 'Dongmin Cha',
-    githubId: 'chadongmin'
-  },
-  {
-    id: 'jo94kr',
-    name: 'Jo Jin Woo',
-    githubId: 'jo94kr'
-  },
-  {
-    id: 'kdelay',
-    name: '김지연',
-    githubId: 'kdelay'
-  },
-  {
-    id: 'KrongDev',
-    name: 'KrongDev',
-    githubId: 'KrongDev'
-  },
-  {
-    id: 'mihioon',
-    name: 'mihioon',
-    githubId: 'mihioon'
-  },
-  {
-    id: 'renechoi',
-    name: 'renechoi',
-    githubId: 'renechoi'
-  }
-];
-
 const Contribution: React.FC = () => {
-  const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
+  const [members, setMembers] = useState<Member[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('http://localhost:8080/api/public/users?size=50');
+        const data = await response.json();
+        
+        if (data.content && data.content.length > 0) {
+          const transformedMembers = data.content
+            .map((user: any) => ({
+              id: user.email,
+              name: user.name,
+              email: user.email,
+              profileImage: user.profileImage,
+              githubUrl: user.githubUrl
+            }))
+            .filter((user: Member) => {
+              // profileImage가 실제로 유효한 값인지 체크
+              const hasValidProfileImage = user.profileImage && 
+                                          user.profileImage !== '' && 
+                                          user.profileImage !== 'null' &&
+                                          user.profileImage !== null;
+              const hasValidGithubUrl = user.githubUrl && 
+                                       user.githubUrl !== '' && 
+                                       user.githubUrl !== 'null' &&
+                                       user.githubUrl !== null;
+              return hasValidProfileImage || hasValidGithubUrl;
+            });
+          
+          setMembers(transformedMembers);
+        } else {
+          setMembers([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch members:', err);
+        setError('멤버 정보를 불러오는데 실패했습니다.');
+        setMembers([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, []);
 
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const bg = getRandomColor();
-    const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-                <circle cx="32" cy="32" r="32" fill="${bg}"/>
-                <text x="32" y="42" font-size="32" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif">?</text>
-            </svg>
-        `;
-    e.currentTarget.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
-    e.currentTarget.alt = '프로필 이미지 없음';
+    // 이미지 로드 실패 시 해당 요소의 부모를 숨김
+    const parentElement = e.currentTarget.parentElement;
+    if (parentElement) {
+      parentElement.style.display = 'none';
+    }
   };
 
 
+
+  // 로딩 중이거나 멤버가 없을 때는 섹션을 렌더링하지 않음
+  if (isLoading || members.length === 0) {
+    return null;
+  }
 
   return (
     <section className={`${styles.membersSection} section-background`}>
@@ -80,23 +88,25 @@ const Contribution: React.FC = () => {
           <div className={styles.membersTrack}>
             {/* 연속 표시를 위해 3번 반복 */}
             {Array.from({ length: 3 }).map((_, setIndex) =>
-              members.map((member) => (
-                <a
-                  key={`${member.id}-${setIndex}`}
-                  href={`https://github.com/${member.githubId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.memberItem}
-                  title={`${member.name} (@${member.githubId})`}
-                >
-                  <img
-                    src={`https://github.com/${member.githubId}.png?size=120`}
-                    alt={`${member.name} 프로필`}
-                    className={styles.memberAvatar}
-                    onError={handleImgError}
-                  />
-                </a>
-              ))
+              members.map((member) => {
+                // 프로필 이미지가 있는 경우에만 렌더링
+                if (!member.profileImage) return null;
+                
+                return (
+                  <div
+                    key={`${member.id}-${setIndex}`}
+                    className={styles.memberItem}
+                    title={member.name}
+                  >
+                    <img
+                      src={member.profileImage}
+                      alt={`${member.name} 프로필`}
+                      className={styles.memberAvatar}
+                      onError={handleImgError}
+                    />
+                  </div>
+                );
+              })
             )}
           </div>
         </div>

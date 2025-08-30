@@ -1,9 +1,37 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './CTA.module.css';
 
 const CTA: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [userCount, setUserCount] = useState<number>(0);
+  const [studyCount, setStudyCount] = useState<number>(0);
+  
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        const [userResponse, studyResponse] = await Promise.all([
+          fetch('http://localhost:8080/api/public/users/statistics'),
+          fetch('http://localhost:8080/api/studies')
+        ]);
+        
+        const userData = await userResponse.json();
+        const studyData = await studyResponse.json();
+        
+        if (userData.totalUsers) {
+          setUserCount(userData.totalUsers);
+        }
+        
+        if (studyData.data && Array.isArray(studyData.data)) {
+          setStudyCount(studyData.data.length);
+        }
+      } catch (error) {
+        console.error('Failed to fetch statistics:', error);
+      }
+    };
+    
+    fetchStatistics();
+  }, []);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -152,18 +180,18 @@ const CTA: React.FC = () => {
         <div className={styles.ctaContent}>
           <h2 className={styles.ctaTitle}>함께 시작할 준비가 되셨나요?</h2>
           <p className={styles.ctaSubtitle}>
-            당신의 별이 우리의 별자리와 만나<br />
-            더 큰 빛을 만들어갈 시간입니다
+            별과 별이 만나 별자리를 만들어요.<br />
+            더 큰 빛을 만들어갈 시간이에요.
           </p>
           
           <div className={styles.ctaStats}>
             <div className={styles.ctaStat}>
-              <span className={styles.ctaStatNumber}>152</span>
+              <span className={styles.ctaStatNumber}>{userCount}</span>
               <span className={styles.ctaStatLabel}>명의 동료가 함께하고 있어요</span>
             </div>
             <div className={styles.ctaStatDivider}>•</div>
             <div className={styles.ctaStat}>
-              <span className={styles.ctaStatNumber}>8</span>
+              <span className={styles.ctaStatNumber}>{studyCount}</span>
               <span className={styles.ctaStatLabel}>개의 스터디가 진행 중이에요</span>
             </div>
           </div>
