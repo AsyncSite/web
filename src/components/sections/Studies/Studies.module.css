@@ -526,6 +526,13 @@
   }
   
   /* 모바일에서 뱃지 조정 */
+  .generationBadge {
+    top: 12px;
+    left: 12px;
+    padding: 3px 10px;
+    font-size: 13px;
+  }
+  
   .studyTypeBadge {
     padding: 5px 12px;
     font-size: 12px;
