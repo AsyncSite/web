@@ -24,6 +24,33 @@ function ExampleCard(): React.ReactNode {
           </p>
         </div>
 
+        {/* Detailed Review */}
+        <div className={styles.detailedReview}>
+          <h4 className={styles.detailedReviewTitle}>
+            <span>🔍</span> 상세 리뷰
+          </h4>
+          <div className={styles.detailedReviewContent}>
+            <div className={styles.reviewParagraph}>
+              <strong>첫 문단</strong>의 "요즘 날씨가 정말 좋네요"라는 도입부가 자연스럽고 친근해서 좋았어요. 
+              독자와의 거리를 좁히는 훌륭한 시작입니다. 다만 본문으로 넘어가는 전환이 조금 급작스러운 느낌이 있어요.
+            </div>
+            <div className={styles.reviewParagraph}>
+              <strong>중간 부분</strong>에서 개인적인 경험을 예시로 든 것이 설득력을 높여줬어요. 
+              "제가 작년에 겪었던 일인데..."로 시작하는 부분이 특히 인상적이었습니다. 
+              하지만 이 부분이 300자가 넘어서 호흡이 길어요. 2-3개 문단으로 나누면 더 읽기 편할 거예요.
+            </div>
+            <div className={styles.reviewParagraph}>
+              <strong>마무리</strong>가 조금 아쉬워요. "그래서 결론은..." 같은 직접적인 표현보다는 
+              자연스럽게 정리하면서 독자에게 생각할 거리를 던져주면 어떨까요? 
+              예를 들어 "여러분은 어떻게 생각하시나요?" 같은 질문으로 끝내면 댓글 참여도 유도할 수 있을 거예요.
+            </div>
+            <div className={styles.reviewHighlight}>
+              💡 <strong>핵심 조언:</strong> 전체적으로 좋은 글이지만, 문단 분리와 소제목 활용으로 가독성을 높이면 
+              독자들이 끝까지 집중해서 읽을 수 있을 거예요!
+            </div>
+          </div>
+        </div>
+
         {/* Category Ratings */}
         <div className={styles.ratingsContainer}>
           {ratings.map((item, index) => (
