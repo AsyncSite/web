@@ -11,16 +11,18 @@ export interface DocuMentorContent {
   updatedAt: string;
 }
 
+export interface CategoryRating {
+  category: string;
+  rating: number; // 1-5 stars
+  comment: string;
+}
+
 export interface DocuMentorAnalysis {
   id: string;
-  overallScore: number;
+  overallAssessment: string; // e.g., "전반적으로 잘 쓰셨어요!"
+  categoryRatings: CategoryRating[];
   strengths: string[];
-  improvements: string[];
-  suggestions: string[];
-  titleScore: number;
-  structureScore: number;
-  readabilityScore: number;
-  toneScore: number;
+  growthPoints: string[];
   summary?: string;
   keywords?: string[];
   category?: string;
@@ -44,27 +46,45 @@ export interface ReviewSection {
 
 export const MOCK_REVIEW: DocuMentorAnalysis = {
   id: 'mock-1',
-  overallScore: 78,
+  overallAssessment: '전반적으로 잘 쓰셨어요! 👏',
+  categoryRatings: [
+    {
+      category: '제목 매력도',
+      rating: 4,
+      comment: '클릭하고 싶은 제목이에요! 조금만 더 구체적이면 완벽할 거예요'
+    },
+    {
+      category: '첫인상',
+      rating: 5,
+      comment: '도입부가 재밌어서 계속 읽고 싶어져요!'
+    },
+    {
+      category: '가독성',
+      rating: 3,
+      comment: '문단이 조금 길어요. 나누면 더 술술 읽힐 거예요'
+    },
+    {
+      category: '구조/흐름',
+      rating: 4,
+      comment: '전체적인 흐름은 좋아요! 소제목을 추가하면 더 좋겠어요'
+    },
+    {
+      category: '감정 전달',
+      rating: 4,
+      comment: '진정성이 느껴져요. 마무리를 조금 더 강화하면 어떨까요?'
+    }
+  ],
   strengths: [
-    '도입부가 재밌어서 계속 읽고 싶어져요!',
+    '도입부가 매력적이고 흥미로워요',
     '예시가 구체적이라 이해가 쉬워요',
     '친근한 어투로 거리감이 없어요',
   ],
-  improvements: [
-    '3번째 문단이 너무 길어요. 나누면 읽기 편할 것 같아요',
-    '전문용어를 쉽게 풀어서 설명해주세요',
-    '마무리가 조금 허전해요. 정리를 추가하면 어떨까요?',
+  growthPoints: [
+    '긴 문단을 2-3개로 나누어보세요',
+    '중간에 소제목을 추가해보세요',
+    '마무리에 독자 참여 유도 문구를 넣어보세요',
   ],
-  suggestions: [
-    '중간에 소제목 2-3개를 넣어보세요',
-    '마지막에 "이 글이 도움이 되셨나요?" 같은 질문을 추가해보세요',
-    '핵심 내용을 박스나 인용구로 강조해보세요',
-  ],
-  titleScore: 85,
-  structureScore: 72,
-  readabilityScore: 80,
-  toneScore: 90,
-  summary: '전체적으로 친근하고 읽기 쉬운 글이에요. 구조를 조금 더 명확히 하면 완벽할 것 같아요!',
+  summary: '몇 가지만 보완하면 정말 완벽한 글이 될 거예요!',
   keywords: ['블로그', '글쓰기', '피드백', 'AI'],
   category: '블로그/에세이',
 };

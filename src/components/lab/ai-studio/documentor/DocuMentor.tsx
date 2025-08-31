@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import DocuMentorForm from './DocuMentorForm';
-import DocuMentorResults from './DocuMentorResults';
 import HeroSection from './HeroSection';
 import ChatBubbles from './ChatBubbles';
 import ExampleCard from './ExampleCard';
+import FeaturesSection from './FeaturesSection';
 import { DocuMentorContent, DocuMentorAnalysis, DocuMentorStats, MOCK_REVIEW } from './types';
 import documentorService from '../../../../services/documentorService';
 import styles from './DocuMentor.module.css';
@@ -15,9 +15,8 @@ function DocuMentor(): React.ReactNode {
   const navigate = useNavigate();
   
   // States
-  const [currentView, setCurrentView] = useState<'form' | 'processing' | 'results'>('form');
+  const [currentView, setCurrentView] = useState<'form' | 'processing'>('form');
   const [submittedContent, setSubmittedContent] = useState<DocuMentorContent | null>(null);
-  const [analysis, setAnalysis] = useState<DocuMentorAnalysis | null>(null);
   const [stats, setStats] = useState<DocuMentorStats>({
     dailyLimit: 5,
     usedToday: 2,
@@ -98,9 +97,9 @@ function DocuMentor(): React.ReactNode {
       setProcessingStep('complete');
       mockContent.status = 'COMPLETED';
       
-      // Set mock analysis result
-      setAnalysis(MOCK_REVIEW);
-      setCurrentView('results');
+      // After processing, go back to form
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setCurrentView('form');
       
       // Update stats
       setStats(prev => ({
@@ -121,7 +120,6 @@ function DocuMentor(): React.ReactNode {
   const handleReset = () => {
     setCurrentView('form');
     setSubmittedContent(null);
-    setAnalysis(null);
     setError(null);
     setProcessingStep('submitting');
   };
@@ -146,9 +144,6 @@ function DocuMentor(): React.ReactNode {
             
             {/* Chat Bubbles - Moved Down */}
             <ChatBubbles />
-            
-            {/* Example Review Card */}
-            <ExampleCard />
           </>
         )}
 
@@ -209,58 +204,13 @@ function DocuMentor(): React.ReactNode {
           </div>
         )}
 
-        {currentView === 'results' && analysis && (
-          <DocuMentorResults
-            content={submittedContent!}
-            analysis={analysis}
-            onReset={handleReset}
-          />
-        )}
-
-        {/* Features Section */}
+        {/* Features and Example Sections */}
         {currentView === 'form' && (
-          <div className={styles.features}>
-          <h2 className={styles.featuresTitle}>뭘 봐주는데요? 🤔</h2>
-          
-          <div className={styles.featureCards}>
-            <div className={styles.featureCard}>
-              <div className={styles.featureEmoji}>🎯</div>
-              <h3 className={styles.featureName}>제목 어필력</h3>
-              <p className={styles.featureDesc}>클릭하고 싶은 제목인지 체크해요</p>
-            </div>
-            
-            <div className={styles.featureCard}>
-              <div className={styles.featureEmoji}>🎨</div>
-              <h3 className={styles.featureName}>첫인상 분석</h3>
-              <p className={styles.featureDesc}>도입부가 흥미로운지 평가해요</p>
-            </div>
-            
-            <div className={styles.featureCard}>
-              <div className={styles.featureEmoji}>📚</div>
-              <h3 className={styles.featureName}>가독성 점수</h3>
-              <p className={styles.featureDesc}>술술 읽히는 글인지 확인해요</p>
-            </div>
-            
-            <div className={styles.featureCard}>
-              <div className={styles.featureEmoji}>🎭</div>
-              <h3 className={styles.featureName}>감정 톤</h3>
-              <p className={styles.featureDesc}>글의 분위기가 적절한지 봐요</p>
-            </div>
-            
-            <div className={styles.featureCard}>
-              <div className={styles.featureEmoji}>🏗️</div>
-              <h3 className={styles.featureName}>구조 체크</h3>
-              <p className={styles.featureDesc}>논리적 흐름을 점검해요</p>
-            </div>
-            
-            <div className={styles.featureCard}>
-              <div className={styles.featureEmoji}>💡</div>
-              <h3 className={styles.featureName}>개선 제안</h3>
-              <p className={styles.featureDesc}>구체적인 수정 방법을 알려드려요</p>
-            </div>
-          </div>
-        </div>
-      )}
+          <>
+            <FeaturesSection />
+            <ExampleCard />
+          </>
+        )}
       </div>
     </div>
   );

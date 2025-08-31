@@ -529,18 +529,79 @@
   border: 2px solid rgba(253, 121, 168, 0.1);
 }
 
-.scoreCircle {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 50%;
+/* Overall Rating Section */
+.overallRating {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border-radius: 15px;
+  margin-bottom: 25px;
+}
+
+.overallTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2d3436;
+  margin-bottom: 8px;
+}
+
+.overallDesc {
+  font-size: 15px;
+  color: #636e72;
+  margin: 0;
+}
+
+/* Ratings Container */
+.ratingsContainer {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f5f6fa;
+  border-radius: 12px;
+}
+
+/* Individual Rating Item */
+.ratingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ratingHeader {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-  font-size: 24px;
-  font-weight: 800;
-  color: white;
+}
+
+.ratingLabel {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.starFilled {
+  color: #fdcb6e;
+  font-size: 18px;
+}
+
+.starEmpty {
+  color: #dfe6e9;
+  font-size: 18px;
+}
+
+.ratingComment {
+  font-size: 13px;
+  color: #636e72;
+  margin: 0;
+  padding-left: 4px;
+  line-height: 1.4;
 }
 
 .feedbackSection {
@@ -1175,5 +1236,31 @@
   
   .featureCards {
     grid-template-columns: 1fr;
+  }
+  
+  /* Star Ratings Mobile Styles */
+  .ratingsContainer {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  .ratingLabel {
+    font-size: 14px;
+  }
+  
+  .starFilled, .starEmpty {
+    font-size: 16px;
+  }
+  
+  .ratingComment {
+    font-size: 12px;
+  }
+  
+  .overallTitle {
+    font-size: 20px;
+  }
+  
+  .overallDesc {
+    font-size: 14px;
   }
 }
