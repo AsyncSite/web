@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도큐멘토 - 당신의 글쓰기 친구 🤖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            line-height: 1.6;
+            color: #2d3436;
+            background: linear-gradient(180deg, #fff5f5 0%, #ffeaa7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        .tagline {
+            margin-top: 10px;
+            color: #636e72;
+            font-size: 14px;
+        }
+        
+        /* Chat Hero */
+        .chat-hero {
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .chat-bubble {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chat-bubble.ai {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: 100px;
+        }
+        
+        .chat-bubble.user {
+            margin-right: 100px;
+            background: #f5f6fa;
+        }
+        
+        .emoji-large {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .chat-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .chat-subtext {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+        
+        /* Input Section */
+        .input-section {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .input-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .url-field {
+            width: 100%;
+            padding: 20px;
+            font-size: 16px;
+            border: 3px solid #f5f6fa;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .url-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .platforms {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .platform-chip {
+            padding: 8px 16px;
+            background: #f5f6fa;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #636e72;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .platform-chip:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .btn-fun {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-fun:hover {
+            transform: scale(1.02);
+        }
+        
+        .btn-fun:active {
+            transform: scale(0.98);
+        }
+        
+        .counter {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #636e72;
+        }
+        
+        .counter .number {
+            font-weight: 700;
+            color: #fd79a8;
+        }
+        
+        /* Features Cards */
+        .features {
+            padding: 80px 0;
+        }
+        
+        .features-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 50px;
+        }
+        
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px) rotate(-1deg);
+        }
+        
+        .feature-emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .feature-desc {
+            color: #636e72;
+            font-size: 14px;
+        }
+        
+        /* Example Section */
+        .example {
+            padding: 80px 0;
+            background: white;
+            border-radius: 40px 40px 0 0;
+        }
+        
+        .example-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 50px;
+        }
+        
+        .review-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f5f6fa 0%, #ffffff 100%);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+        }
+        
+        .feedback-section {
+            margin-bottom: 30px;
+        }
+        
+        .feedback-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feedback-item {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #fd79a8;
+        }
+        
+        /* Bottom CTA */
+        .bottom-cta {
+            padding: 80px 0;
+            text-align: center;
+            background: white;
+        }
+        
+        .cta-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta-subtitle {
+            font-size: 18px;
+            color: #636e72;
+            margin-bottom: 40px;
+        }
+        
+        .speech-bubble {
+            background: #f5f6fa;
+            padding: 20px 30px;
+            border-radius: 30px;
+            display: inline-block;
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 15px solid #f5f6fa;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: #636e72;
+            background: white;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .chat-bubble.ai {
+                margin-left: 20px;
+            }
+            
+            .chat-bubble.user {
+                margin-right: 20px;
+            }
+            
+            .chat-text {
+                font-size: 18px;
+            }
+            
+            .feature-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1 class="logo">도큐멘토 ✏️</h1>
+            <p class="tagline">AI가 당신의 글쓰기 친구가 되어드려요!</p>
+        </div>
+    </header>
+
+    <!-- Chat Hero -->
+    <section class="chat-hero">
+        <div class="container">
+            <div class="chat-bubble user">
+                <span class="emoji-large">😰</span>
+                <div class="chat-text">내가 쓴 글이 괜찮은지 모르겠어...</div>
+                <div class="chat-subtext">블로그 발행 전 늘 고민되시죠?</div>
+            </div>
+            
+            <div class="chat-bubble ai">
+                <span class="emoji-large">🤖</span>
+                <div class="chat-text">제가 읽고 피드백 드릴게요!</div>
+                <div class="chat-subtext">3분이면 10가지 개선점을 찾아드려요</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Input Section -->
+    <section class="input-section-wrapper">
+        <div class="container">
+            <div class="input-section">
+                <h2 class="input-title">🔗 리뷰 받고 싶은 글 링크를 알려주세요</h2>
+                
+                <input type="url" class="url-field" placeholder="https://blog.naver.com/mypost...">
+                
+                <div class="platforms">
+                    <span class="platform-chip">📗 네이버 블로그</span>
+                    <span class="platform-chip">📘 티스토리</span>
+                    <span class="platform-chip">📙 브런치</span>
+                    <span class="platform-chip">📸 인스타그램</span>
+                    <span class="platform-chip">🧵 스레드</span>
+                    <span class="platform-chip">📝 벨로그</span>
+                </div>
+                
+                <button class="btn-fun">
+                    🚀 AI 리뷰 받기
+                </button>
+                
+                <div class="counter">
+                    오늘 <span class="number">3/5</span> 회 사용 가능 | 🕐 자정에 리셋돼요!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <h2 class="features-title">뭘 봐주는데요? 🤔</h2>
+            
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-emoji">🎯</div>
+                    <h3 class="feature-name">제목 어필력</h3>
+                    <p class="feature-desc">클릭하고 싶은 제목인지 체크해요</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-emoji">🎨</div>
+                    <h3 class="feature-name">첫인상 분석</h3>
+                    <p class="feature-desc">도입부가 흥미로운지 평가해요</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-emoji">📚</div>
+                    <h3 class="feature-name">가독성 점수</h3>
+                    <p class="feature-desc">술술 읽히는 글인지 확인해요</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-emoji">🎭</div>
+                    <h3 class="feature-name">감정 톤</h3>
+                    <p class="feature-desc">글의 분위기가 적절한지 봐요</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-emoji">🏗️</div>
+                    <h3 class="feature-name">구조 체크</h3>
+                    <p class="feature-desc">논리적 흐름을 점검해요</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-emoji">💡</div>
+                    <h3 class="feature-name">개선 제안</h3>
+                    <p class="feature-desc">구체적인 수정 방법을 알려드려요</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example -->
+    <section class="example">
+        <div class="container">
+            <h2 class="example-title">이렇게 리뷰해드려요 📝</h2>
+            
+            <div class="review-card">
+                <div class="score-circle">78점</div>
+                
+                <div class="feedback-section">
+                    <h3 class="feedback-title">
+                        <span>😊</span> 잘하신 점
+                    </h3>
+                    <div class="feedback-item">
+                        ✨ 도입부가 재밌어서 계속 읽고 싶어져요!
+                    </div>
+                    <div class="feedback-item">
+                        ✨ 예시가 구체적이라 이해가 쉬워요
+                    </div>
+                </div>
+                
+                <div class="feedback-section">
+                    <h3 class="feedback-title">
+                        <span>🛠️</span> 개선하면 좋을 점
+                    </h3>
+                    <div class="feedback-item">
+                        💭 3번째 문단이 너무 길어요. 나누면 읽기 편할 것 같아요
+                    </div>
+                    <div class="feedback-item">
+                        💭 전문용어를 쉽게 풀어서 설명해주세요
+                    </div>
+                    <div class="feedback-item">
+                        💭 마무리가 조금 허전해요. 정리를 추가하면 어떨까요?
+                    </div>
+                </div>
+                
+                <div class="feedback-section">
+                    <h3 class="feedback-title">
+                        <span>💡</span> 이렇게 해보세요
+                    </h3>
+                    <div class="feedback-item">
+                        🎯 중간에 소제목 2-3개를 넣어보세요
+                    </div>
+                    <div class="feedback-item">
+                        🎯 마지막에 "이 글이 도움이 되셨나요?" 같은 질문을 추가해보세요
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="bottom-cta">
+        <div class="container">
+            <h2 class="cta-title">글쓰기가 두렵지 않아요!</h2>
+            <p class="cta-subtitle">AI 친구와 함께라면 누구나 좋은 글을 쓸 수 있어요</p>
+            
+            <div class="speech-bubble">
+                "도큐멘토 덕분에 블로그 조회수가 2배 늘었어요!" - 파워블로거 A님
+            </div>
+            
+            <button class="btn-fun" style="display: inline-block; width: auto; padding: 20px 60px;">
+                🎉 지금 시작하기
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Made with ❤️ by AsyncSite Lab | 도큐멘토 v1.0</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fun interactions
+        document.querySelectorAll('.platform-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                const url = document.querySelector('.url-field');
+                const examples = {
+                    '📗 네이버 블로그': 'https://blog.naver.com/example/post123',
+                    '📘 티스토리': 'https://example.tistory.com/123',
+                    '📙 브런치': 'https://brunch.co.kr/@example/123',
+                    '📸 인스타그램': 'https://instagram.com/p/example',
+                    '🧵 스레드': 'https://threads.net/@example/post/123',
+                    '📝 벨로그': 'https://velog.io/@example/post'
+                };
+                url.value = examples[this.textContent] || '';
+                url.focus();
+            });
+        });
+
+        document.querySelectorAll('.btn-fun').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const url = document.querySelector('.url-field');
+                if (url && url.value) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.width = '100px';
+                    ripple.style.height = '100px';
+                    ripple.style.background = 'rgba(255,255,255,0.5)';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.transform = 'translate(-50%, -50%)';
+                    ripple.style.pointerEvents = 'none';
+                    ripple.style.animation = 'ripple 0.6s ease-out';
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        alert(`🎉 "${url.value}" 분석을 시작합니다!\n\n잠시만 기다려주세요... (프로토타입)`);
+                        ripple.remove();
+                    }, 300);
+                } else {
+                    alert('😅 URL을 먼저 입력해주세요!');
+                    document.querySelector('.url-field').focus();
+                }
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                from {
+                    width: 0;
+                    height: 0;
+                    opacity: 1;
+                }
+                to {
+                    width: 300px;
+                    height: 300px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Floating animation for cards
+        document.querySelectorAll('.feature-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.style.animation = 'float 3s ease-in-out infinite';
+        });
+    </script>
+</body>
+</html>

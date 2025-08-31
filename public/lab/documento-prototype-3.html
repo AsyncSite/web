@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento - Next-Gen Writing Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #c3e88d;
+            --secondary: #9C27B0;
+            --dark: #0a0a0a;
+            --text: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(125deg, #0a0a0a 0%, #1a0f1f 100%);
+        }
+        
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            opacity: 0.1;
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            bottom: -300px;
+            left: -300px;
+            opacity: 0.1;
+            animation: pulse 10s ease-in-out infinite reverse;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        nav.scrolled {
+            padding: 15px 50px;
+            background: rgba(10, 10, 10, 0.95);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-animated {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+        
+        .nav-menu a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+            position: relative;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            z-index: 2;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(195, 232, 141, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            color: var(--primary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            animation: slideDown 0.8s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-title {
+            font-size: clamp(40px, 8vw, 80px);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            animation: slideUp 0.8s ease 0.2s both;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: #999;
+            margin-bottom: 50px;
+            animation: slideUp 0.8s ease 0.4s both;
+        }
+        
+        /* Futuristic Input */
+        .input-group {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            animation: slideUp 0.8s ease 0.6s both;
+        }
+        
+        .future-input {
+            width: 100%;
+            padding: 25px 30px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(195, 232, 141, 0.2);
+            border-radius: 15px;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .future-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(195, 232, 141, 0.05);
+            box-shadow: 0 0 30px rgba(195, 232, 141, 0.2);
+        }
+        
+        .future-input::placeholder {
+            color: #666;
+        }
+        
+        .btn-glow {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-glow:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 10px 40px rgba(195, 232, 141, 0.4);
+        }
+        
+        /* Animated Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 80px;
+            animation: fadeIn 1s ease 0.8s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Features Grid */
+        .features {
+            padding: 150px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .section-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+        
+        .section-desc {
+            font-size: 18px;
+            color: #999;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(195, 232, 141, 0.2);
+        }
+        
+        .feature-box:hover::before {
+            opacity: 0.05;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+        
+        .feature-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .feature-text {
+            color: #999;
+            line-height: 1.6;
+        }
+        
+        /* Live Demo */
+        .demo {
+            padding: 150px 20px;
+            background: rgba(195, 232, 141, 0.02);
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-window {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+        }
+        
+        .window-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .window-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+        }
+        
+        .window-dot:nth-child(2) { background: #ffbd2e; }
+        .window-dot:nth-child(3) { background: #27c93f; }
+        
+        .window-title {
+            margin-left: auto;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .demo-content {
+            padding: 40px;
+        }
+        
+        .typing-animation {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--primary);
+        }
+        
+        .typing-animation span {
+            opacity: 0;
+            animation: typing 0.05s forwards;
+        }
+        
+        @keyframes typing {
+            to { opacity: 1; }
+        }
+        
+        /* Process Timeline */
+        .process {
+            padding: 150px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 80px;
+            align-items: center;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        
+        .timeline-content:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(195, 232, 141, 0.2);
+        }
+        
+        .timeline-dot {
+            width: 30px;
+            height: 30px;
+            background: var(--dark);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            z-index: 1;
+            margin: 0 40px;
+            flex-shrink: 0;
+        }
+        
+        .timeline-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-desc {
+            color: #999;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 150px 20px;
+            text-align: center;
+        }
+        
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-title {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 30px;
+        }
+        
+        .cta-text {
+            font-size: 20px;
+            color: #999;
+            margin-bottom: 50px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary-large {
+            padding: 20px 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary-large:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(195, 232, 141, 0.4);
+        }
+        
+        .btn-outline {
+            padding: 20px 50px;
+            background: transparent;
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--dark);
+            transform: translateY(-5px);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 40px;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                margin-left: 60px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .timeline-dot {
+                position: absolute;
+                left: -45px;
+                margin: 0;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo-animated">DOCUMENTO</div>
+            <ul class="nav-menu">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#start">Start</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">AI-Powered Writing Review</div>
+            <h1 class="hero-title">
+                Transform Your Writing<br>
+                with <span class="gradient-text">AI Intelligence</span>
+            </h1>
+            <p class="hero-subtitle">
+                Professional feedback in 3 minutes. Powered by advanced LLM technology.
+            </p>
+            
+            <div class="input-group">
+                <input type="url" class="future-input" placeholder="Enter your content URL...">
+                <button class="btn-glow">ANALYZE</button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="10">0</span>
+                    <span class="stat-label">Review Points</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="3">0</span>
+                    <span class="stat-label">Minutes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="78">0</span>
+                    <span class="stat-label">Avg Score</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Advanced <span class="gradient-text">Analysis</span></h2>
+            <p class="section-desc">Comprehensive review powered by cutting-edge AI</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-box">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Title Impact</h3>
+                <p class="feature-text">Analyze headline effectiveness and click-through potential with psychological insights</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Structure Analysis</h3>
+                <p class="feature-text">Evaluate logical flow, paragraph transitions, and overall content architecture</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">Style Assessment</h3>
+                <p class="feature-text">Review tone consistency, voice authenticity, and audience alignment</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">💡</div>
+                <h3 class="feature-title">Smart Suggestions</h3>
+                <p class="feature-text">Get actionable improvements with specific examples and alternatives</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Readability Score</h3>
+                <p class="feature-text">Advanced metrics including Flesch score, reading time, and complexity analysis</p>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-icon">🌍</div>
+                <h3 class="feature-title">Multi-Platform</h3>
+                <p class="feature-text">Support for all major platforms: blogs, social media, and professional content</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="demo" id="demo">
+        <div class="demo-container">
+            <div class="section-header">
+                <h2 class="section-title">Live <span class="gradient-text">Demo</span></h2>
+                <p class="section-desc">See the AI in action</p>
+            </div>
+            
+            <div class="demo-window">
+                <div class="window-header">
+                    <div class="window-dot"></div>
+                    <div class="window-dot"></div>
+                    <div class="window-dot"></div>
+                    <div class="window-title">AI Review Result</div>
+                </div>
+                <div class="demo-content">
+                    <div class="typing-animation" id="typing-demo">
+                        <p>📊 Overall Score: <strong style="color: var(--primary)">78/100</strong></p>
+                        <br>
+                        <p>✅ Strengths:</p>
+                        <p>• Engaging introduction captures reader attention</p>
+                        <p>• Clear examples support main arguments</p>
+                        <p>• Professional tone maintained throughout</p>
+                        <br>
+                        <p>🔧 Areas for Improvement:</p>
+                        <p>• Paragraph 3 exceeds optimal length (287 words)</p>
+                        <p>• Consider adding subheadings for better navigation</p>
+                        <p>• Conclusion could be more impactful</p>
+                        <br>
+                        <p>💡 Recommendations:</p>
+                        <p>• Split long paragraphs into 3-4 sentences each</p>
+                        <p>• Add a call-to-action at the end</p>
+                        <p>• Include 2-3 relevant keywords for SEO</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Timeline -->
+    <section class="process" id="process">
+        <div class="section-header">
+            <h2 class="section-title">How It <span class="gradient-text">Works</span></h2>
+            <p class="section-desc">Simple 4-step process to better writing</p>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3 class="timeline-title">1. Submit URL</h3>
+                    <p class="timeline-desc">Paste your blog, social media, or any content URL</p>
+                </div>
+                <div class="timeline-dot"></div>
+                <div style="flex: 1;"></div>
+            </div>
+            
+            <div class="timeline-item">
+                <div style="flex: 1;"></div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">2. AI Processing</h3>
+                    <p class="timeline-desc">Advanced LLM analyzes structure, style, and impact</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3 class="timeline-title">3. Get Feedback</h3>
+                    <p class="timeline-desc">Receive comprehensive review with actionable insights</p>
+                </div>
+                <div class="timeline-dot"></div>
+                <div style="flex: 1;"></div>
+            </div>
+            
+            <div class="timeline-item">
+                <div style="flex: 1;"></div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">4. Improve & Publish</h3>
+                    <p class="timeline-desc">Apply suggestions and watch your engagement soar</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="start">
+        <div class="cta-content">
+            <h2 class="cta-title">Ready to <span class="gradient-text">Level Up</span>?</h2>
+            <p class="cta-text">
+                Join thousands of writers improving their craft with AI-powered feedback
+            </p>
+            <div class="cta-buttons">
+                <button class="btn-primary-large">Start Free Trial</button>
+                <button class="btn-outline">View Examples</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo gradient-text">DOCUMENTO</div>
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#demo">Demo</a>
+                <a href="#process">Process</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="copyright">
+                © 2024 Documento. Part of AsyncSite Lab. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Animated counter
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 200;
+
+        const runCounter = (counter) => {
+            const target = +counter.getAttribute('data-target');
+            const increment = target / speed;
+            let count = 0;
+
+            const updateCount = () => {
+                count += increment;
+                if (count < target) {
+                    counter.innerText = Math.ceil(count);
+                    requestAnimationFrame(updateCount);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        };
+
+        // Intersection Observer for counters
+        const observerOptions = { threshold: 0.5 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    runCounter(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        counters.forEach(counter => observer.observe(counter));
+
+        // Typing animation
+        const typingText = document.getElementById('typing-demo');
+        if (typingText) {
+            const text = typingText.innerHTML;
+            typingText.innerHTML = '';
+            let i = 0;
+            
+            const typeWriter = () => {
+                if (i < text.length) {
+                    typingText.innerHTML = text.slice(0, i + 1);
+                    i++;
+                    setTimeout(typeWriter, 10);
+                }
+            };
+            
+            // Start typing when visible
+            const typingObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        typeWriter();
+                        typingObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            typingObserver.observe(typingText);
+        }
+
+        // Button interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.width = ripple.style.height = '100px';
+                ripple.style.background = 'rgba(255,255,255,0.5)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                
+                const rect = this.getBoundingClientRect();
+                ripple.style.left = e.clientX - rect.left + 'px';
+                ripple.style.top = e.clientY - rect.top + 'px';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                from { width: 0; height: 0; opacity: 1; }
+                to { width: 200px; height: 200px; opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Input focus effect
+        document.querySelector('.btn-glow').addEventListener('click', () => {
+            const input = document.querySelector('.future-input');
+            if (input.value) {
+                alert(`🚀 Analyzing: "${input.value}"\n\nProcessing... (Prototype)`);
+            } else {
+                input.focus();
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => input.style.animation = '', 500);
+            }
+        });
+
+        // Add shake animation
+        const shakeStyle = document.createElement('style');
+        shakeStyle.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(shakeStyle);
+    </script>
+</body>
+</html>
