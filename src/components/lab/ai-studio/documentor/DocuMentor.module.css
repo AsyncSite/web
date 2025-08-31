@@ -56,25 +56,25 @@
 .chatBubble {
   background: white;
   border-radius: 30px;
-  padding: 30px;
+  padding: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   animation: float 3s ease-in-out infinite;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  max-width: 500px;
+  max-width: 380px;
   margin: 0 auto 20px;
 }
 
 .chatBubble.user {
-  margin-right: 50px;
+  margin-right: 120px;
   margin-left: 0;
   background: #f5f6fa;
 }
 
 .chatBubble.ai {
-  margin-left: 50px;
+  margin-left: 120px;
   margin-right: 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
