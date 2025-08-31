@@ -19,6 +19,14 @@ function ChatBubbles(): React.ReactNode {
           <div className={styles.chatSubtext}>3분이면 10가지 개선점을 찾아드려요</div>
         </div>
       </div>
+      
+      <div className={`${styles.chatBubble} ${styles.user}`}>
+        <span className={styles.emojiLarge}>😍</span>
+        <div className={styles.chatContent}>
+          <div className={styles.chatText}>우와, 이런 부분은 몰랐네!</div>
+          <div className={styles.chatSubtext}>독자 입장에서 놓칠 수 있는 부분까지</div>
+        </div>
+      </div>
     </div>
   );
 }
