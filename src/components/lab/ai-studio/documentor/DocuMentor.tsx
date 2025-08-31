@@ -135,6 +135,10 @@ function DocuMentor(): React.ReactNode {
       <div className={styles.mainContent}>
         {currentView === 'form' && (
           <>
+            {/* Chat Bubbles - Now First */}
+            <ChatBubbles />
+            
+            {/* Form - Moved After Chat */}
             <DocuMentorForm
               onSubmit={handleSubmit}
               stats={stats}
@@ -142,9 +146,6 @@ function DocuMentor(): React.ReactNode {
               loading={loading}
               error={error}
             />
-            
-            {/* Chat Bubbles - Moved Down */}
-            <ChatBubbles />
           </>
         )}
 
