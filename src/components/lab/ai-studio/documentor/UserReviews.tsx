@@ -87,7 +87,7 @@ function UserReviews(): React.ReactNode {
             카카오톡 오픈채팅 참여하기
           </a>
           <p className={styles.ctaNote}>
-            🎁 지금 참여하시면 프리미엄 기능 무료 체험 기회를 드려요!
+            💡 200명이 넘는 작가님들이 함께 성장하고 있어요!
           </p>
         </div>
       </div>
