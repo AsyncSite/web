@@ -516,9 +516,11 @@
 }
 
 .exampleTitle {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   color: #2d3436;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .exampleCard {
@@ -628,7 +630,7 @@
   border-radius: 10px;
   margin-bottom: 8px;
   font-size: 14px;
-  color: #ccc;
+  color: #2d3436;
   border-left: 3px solid #667eea;
 }
 
@@ -1003,7 +1005,7 @@
 }
 
 .itemText {
-  color: #ccc;
+  color: #2d3436;
 }
 
 /* Metadata */
@@ -1124,7 +1126,6 @@
   color: #2d3436;
   text-align: center;
   margin-bottom: 40px;
-  color: #2d3436;
 }
 
 .featureCards {

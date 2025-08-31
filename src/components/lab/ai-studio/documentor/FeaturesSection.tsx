@@ -37,7 +37,7 @@ const FeaturesSection = () => {
 
   return (
     <div className={styles.features}>
-      <h2 className={styles.featuresTitle}>뭘 봐주는데요? 🤔</h2>
+      <h3 className={styles.featuresTitle}>뭘 봐주는데요? 🤔</h3>
       
       <div className={styles.featureCards}>
         {features.map((feature, index) => (
