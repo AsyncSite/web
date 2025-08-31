@@ -3,18 +3,16 @@
    컴팩트하고 밀도있는 리더 소개
    ======================================== */
 
-/* CSS Variables */
-:root {
-  --color-primary: #c3e88d;
-  --color-secondary: #82aaff;
-  --color-accent: #ffea00;
-  --color-text-primary: #f0f0f0;
-  --color-text-secondary: #ddd;
-  --color-text-muted: #aaa;
-}
-
 /* Base Section Styles - 다른 섹션과 동일 */
 .studyDetailLeaderIntroSection {
+  /* CSS Variables - 모듈 스코프로 제한 */
+  --leader-intro-primary: #c3e88d;
+  --leader-intro-secondary: #82aaff;
+  --leader-intro-accent: #ffea00;
+  --leader-intro-text-primary: #f0f0f0;
+  --leader-intro-text-secondary: #ddd;
+  --leader-intro-text-muted: #aaa;
+  
   position: relative;
   padding: 50px 30px 40px;
   min-height: auto; /* 높이 자동 조절 */
@@ -31,7 +29,7 @@
   left: 30px;
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--color-secondary);
+  color: var(--leader-intro-secondary);
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -41,7 +39,7 @@
   margin-top: 30px;
   text-align: left;
   display: block;
-  color: var(--color-text-primary);
+  color: var(--leader-intro-text-primary);
   font-size: 2.5rem;
   font-weight: 700;
   line-height: 1.3;
@@ -50,10 +48,90 @@
 
 .sectionSubtitle {
   font-size: 1.125rem;
-  color: var(--color-text-secondary);
+  color: var(--leader-intro-text-secondary);
   line-height: 1.6;
   margin-bottom: 30px;
   text-align: left;
+}
+
+/* RichTextRenderer 내부 요소 스타일 */
+.sectionTitle :global(.richtext-renderer) p,
+.sectionSubtitle :global(.richtext-renderer) p,
+.qaAnswer :global(.richtext-renderer) p,
+.welcomeTextCompact :global(.richtext-renderer) p {
+  margin: 0;
+  color: inherit;
+  line-height: inherit;
+}
+
+.sectionTitle :global(.richtext-renderer) strong {
+  color: var(--leader-intro-primary);
+  font-weight: 800;
+}
+
+.qaAnswer :global(.richtext-renderer) strong {
+  color: var(--leader-intro-primary);
+  font-weight: 600;
+}
+
+.welcomeTextCompact :global(.richtext-renderer) em {
+  font-style: italic;
+  color: var(--leader-intro-secondary);
+}
+
+/* RichTextRenderer 추가 요소 스타일 */
+.qaAnswer :global(.richtext-renderer) ul,
+.qaAnswer :global(.richtext-renderer) ol {
+  margin: 8px 0;
+  padding-left: 20px;
+  color: var(--leader-intro-text-secondary);
+}
+
+.qaAnswer :global(.richtext-renderer) li {
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
+.qaAnswer :global(.richtext-renderer) a {
+  color: var(--leader-intro-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.qaAnswer :global(.richtext-renderer) a:hover {
+  border-bottom-color: var(--leader-intro-secondary);
+}
+
+.welcomeTextCompact :global(.richtext-renderer) strong {
+  color: var(--leader-intro-primary);
+  font-weight: 600;
+}
+
+/* 제목에서 RichText 블록 스타일 */
+.sectionTitle :global(.richtext-renderer) {
+  display: inline;
+}
+
+.sectionSubtitle :global(.richtext-renderer) {
+  display: inline;
+}
+
+/* Q&A 답변 내 RichText 스타일 강화 */
+.qaAnswer :global(.richtext-renderer) h1,
+.qaAnswer :global(.richtext-renderer) h2,
+.qaAnswer :global(.richtext-renderer) h3 {
+  color: var(--leader-intro-text-primary);
+  margin: 10px 0 8px 0;
+  font-weight: 600;
+}
+
+.qaAnswer :global(.richtext-renderer) blockquote {
+  border-left: 3px solid var(--leader-intro-primary);
+  padding-left: 15px;
+  margin: 10px 0;
+  color: var(--leader-intro-text-secondary);
+  font-style: italic;
 }
 
 /* Content Container */
@@ -104,7 +182,7 @@
   position: absolute;
   bottom: 5px;
   right: 5px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(135deg, var(--leader-intro-primary), var(--leader-intro-secondary));
   color: #1a1a1a;
   padding: 4px 10px;
   border-radius: 15px;
@@ -122,7 +200,7 @@
 .leaderNameCompact {
   font-size: 1.8rem;
   font-weight: 900;
-  color: var(--color-text-primary);
+  color: var(--leader-intro-text-primary);
   margin-bottom: 5px;
   line-height: 1.2;
   text-shadow: 0 0 15px rgba(195, 232, 141, 0.2);
@@ -130,7 +208,7 @@
 
 .taglineCompact {
   font-size: 1.1rem;
-  color: var(--color-text-secondary);
+  color: var(--leader-intro-text-secondary);
   font-weight: 300;
   font-style: italic;
   margin-bottom: 12px;
@@ -151,7 +229,7 @@
   background: linear-gradient(135deg, rgba(195, 232, 141, 0.12), rgba(130, 170, 255, 0.12));
   border: 1px solid rgba(195, 232, 141, 0.25);
   border-radius: 18px;
-  color: var(--color-primary);
+  color: var(--leader-intro-primary);
   font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.3px;
@@ -185,12 +263,12 @@
   align-items: center;
   gap: 8px;
   font-size: 0.95rem;
-  color: var(--color-text-primary);
+  color: var(--leader-intro-text-primary);
   font-weight: 600;
 }
 
 .qIconCompact {
-  color: var(--color-secondary);
+  color: var(--leader-intro-secondary);
   font-weight: 800;
   font-family: 'Source Code Pro', monospace;
 }
@@ -202,7 +280,7 @@
 .qaAnswer {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--color-text-secondary);
+  color: var(--leader-intro-text-secondary);
   padding-left: 24px;
   /* max-height 제거 - 전체 내용 표시 */
   position: relative;
@@ -213,7 +291,7 @@
 }
 
 .qaAnswer strong {
-  color: var(--color-primary);
+  color: var(--leader-intro-primary);
   font-weight: 600;
 }
 
@@ -227,7 +305,7 @@
   border-radius: 12px;
   font-size: 1rem;
   line-height: 1.5;
-  color: var(--color-text-primary);
+  color: var(--leader-intro-text-primary);
   font-style: italic;
 }
 
@@ -264,7 +342,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 24px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(135deg, var(--leader-intro-primary), var(--leader-intro-secondary));
   color: #1a1a1a;
   text-decoration: none;
   border-radius: 25px;
@@ -290,7 +368,7 @@
 }
 
 .socialIconLink {
-  color: var(--color-text-muted);
+  color: var(--leader-intro-text-muted);
   text-decoration: none;
   font-size: 0.85rem;
   transition: color 0.2s ease;
@@ -305,12 +383,12 @@
   left: 0;
   width: 0;
   height: 1px;
-  background: var(--color-primary);
+  background: var(--leader-intro-primary);
   transition: width 0.3s ease;
 }
 
 .socialIconLink:hover {
-  color: var(--color-primary);
+  color: var(--leader-intro-primary);
 }
 
 .socialIconLink:hover::after {
@@ -321,7 +399,7 @@
 .experienceLineCompact {
   text-align: center;
   font-size: 0.85rem;
-  color: var(--color-text-muted);
+  color: var(--leader-intro-text-muted);
   opacity: 0.7;
   padding-top: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.03);
@@ -333,7 +411,7 @@
 }
 
 .expDivider {
-  color: var(--color-text-muted);
+  color: var(--leader-intro-text-muted);
   opacity: 0.5;
 }
 
