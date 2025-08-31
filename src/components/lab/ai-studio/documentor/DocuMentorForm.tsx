@@ -216,6 +216,7 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error }: Pr
                 {stats.remainingToday > 0 && (
                   <> | <span className={styles.remaining}>{stats.remainingToday}회 남음</span></>
                 )}
+                <span className={styles.resetTime}> | 🕐 자정에 리셋</span>
               </>
             ) : (
               <>로그인하면 매일 5회 무료로 이용할 수 있어요!</>
