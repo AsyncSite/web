@@ -1,0 +1,102 @@
+/* Studio Layout Wrapper */
+.studioLayoutWrapper {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Studio Content */
+.studioContent {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Loading State */
+.studioLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.loadingSpinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.loadingEmoji {
+  font-size: 48px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loadingText {
+  font-size: 18px;
+  color: #636e72;
+  font-weight: 500;
+  animation: fadeInOut 1.5s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Global styles when studio theme is active */
+:global(body.studio-theme) {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Reset any conflicting styles from main app */
+:global(body.studio-theme) :global(*) {
+  box-sizing: border-box;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .studioContent {
+    padding: 0;
+  }
+  
+  .loadingEmoji {
+    font-size: 36px;
+  }
+  
+  .loadingText {
+    font-size: 16px;
+  }
+}

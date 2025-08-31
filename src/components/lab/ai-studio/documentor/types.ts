@@ -1,14 +1,11 @@
 export interface DocuMentorSubmitRequest {
   url: string;
-  notification?: 'instant' | 'daily' | 'weekly';
 }
 
 export interface DocuMentorContent {
   id: string;
   url: string;
   status: 'SUBMITTED' | 'CRAWLING' | 'PARSING' | 'COMPLETED' | 'FAILED';
-  crawledTitle?: string;
-  crawledContent?: string;
   errorMessage?: string;
   createdAt: string;
   updatedAt: string;
@@ -16,7 +13,6 @@ export interface DocuMentorContent {
 
 export interface DocuMentorAnalysis {
   id: string;
-  contentId: string;
   overallScore: number;
   strengths: string[];
   improvements: string[];
@@ -45,21 +41,9 @@ export interface ReviewSection {
   type: 'positive' | 'improvement' | 'suggestion';
 }
 
-// 플랫폼 타입 정보 - 백엔드에서 파싱 최적화를 위해 사용
-export const PLATFORM_TYPES = [
-  '네이버 블로그',
-  '티스토리', 
-  '브런치',
-  '인스타그램',
-  '스레드',
-  '벨로그',
-  '미디엄',
-  '노션',
-];
 
 export const MOCK_REVIEW: DocuMentorAnalysis = {
   id: 'mock-1',
-  contentId: 'mock-content-1',
   overallScore: 78,
   strengths: [
     '도입부가 재밌어서 계속 읽고 싶어져요!',

@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate, ScrollRestoration } from 'react-router-d
 import App from '../App';
 import subRouter from './subRouter';
 import { SubContentsTemplate } from '../components/layout';
+import StudioLayout from '../components/layout/StudioLayout';
 import PrivateRoute from '../components/auth/PrivateRoute';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
@@ -18,6 +19,9 @@ const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
 const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
 const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
+
+// Studio components
+const DocuMentor = lazy(() => import('../components/lab/ai-studio/documentor/DocuMentor'));
 
 const router = createBrowserRouter([
   {
@@ -84,6 +88,17 @@ const router = createBrowserRouter([
       {
         path: 'payment/fail',
         element: <PaymentFailPage />,
+      },
+      {
+        path: 'studio',
+        element: <StudioLayout />,
+        children: [
+          {
+            path: 'documentor',
+            element: <DocuMentor />,
+          },
+          // Add more studio routes here in the future
+        ],
       },
       {
         path: '/',

@@ -68,7 +68,7 @@ const labCategories: LabCategory[] = [
       {
         title: '도큐멘토',
         description: 'AI가 당신의 글을 분석하고 개선해주는 똑똑한 글쓰기 멘토',
-        link: 'documentor',
+        link: '/studio/documentor',
         status: 'active',
         tags: ['AI', '글쓰기', '리뷰'],
       },
