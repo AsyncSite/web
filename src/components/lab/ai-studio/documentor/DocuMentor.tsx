@@ -28,6 +28,19 @@ function DocuMentor(): React.ReactNode {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [processingStep, setProcessingStep] = useState<'submitting' | 'crawling' | 'analyzing' | 'complete'>('submitting');
+  
+  // Check if user has used trial
+  const [hasUsedTrial, setHasUsedTrial] = useState(false);
+  
+  // Check trial usage on mount
+  useEffect(() => {
+    const trialEmails = localStorage.getItem('documento_trial_emails');
+    if (trialEmails) {
+      // In real implementation, check if current user's email is in the list
+      // For now, just check if any trial was used
+      setHasUsedTrial(true);
+    }
+  }, []);
 
   // Check authentication
   useEffect(() => {
@@ -53,16 +66,26 @@ function DocuMentor(): React.ReactNode {
     loadStats();
   }, [isAuthenticated]);
 
-  const handleSubmit = async (url: string, tone?: string, purpose?: string, audience?: string) => {
+  const handleSubmit = async (url: string, email?: string, tone?: string, purpose?: string, audience?: string) => {
+    // Handle trial submission for non-authenticated users
     if (!isAuthenticated) {
-      if (confirm('로그인이 필요한 서비스입니다. 로그인 페이지로 이동하시겠습니까?')) {
-        sessionStorage.setItem('documentor_return_url', '/lab/documentor');
-        navigate('/login');
+      if (!email) {
+        setError('이메일을 입력해주세요');
+        return;
       }
-      return;
-    }
-
-    if (stats.remainingToday === 0) {
+      
+      // Check if this email already used trial
+      const trialEmails = JSON.parse(localStorage.getItem('documento_trial_emails') || '[]');
+      if (trialEmails.includes(email)) {
+        setHasUsedTrial(true);
+        setError('이미 무료 체험을 사용하셨습니다. 회원가입 후 이용해주세요!');
+        return;
+      }
+      
+      // Save email to trial list
+      trialEmails.push(email);
+      localStorage.setItem('documento_trial_emails', JSON.stringify(trialEmails));
+    } else if (stats.remainingToday === 0) {
       setError('오늘 사용 가능한 횟수를 모두 사용하셨습니다. 자정에 다시 시도해주세요!');
       return;
     }
@@ -145,6 +168,7 @@ function DocuMentor(): React.ReactNode {
               isAuthenticated={isAuthenticated}
               loading={loading}
               error={error}
+              hasUsedTrial={hasUsedTrial}
             />
           </>
         )}

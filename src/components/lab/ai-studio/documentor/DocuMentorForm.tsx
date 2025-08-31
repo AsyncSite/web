@@ -3,11 +3,12 @@ import { DocuMentorStats } from './types';
 import styles from './DocuMentor.module.css';
 
 interface Props {
-  onSubmit: (url: string, tone?: string, purpose?: string, audience?: string) => void;
+  onSubmit: (url: string, email?: string, tone?: string, purpose?: string, audience?: string) => void;
   stats: DocuMentorStats;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  hasUsedTrial?: boolean;
 }
 
 const TONE_OPTIONS = [
@@ -37,12 +38,14 @@ const TONE_OPTIONS = [
   }
 ];
 
-function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error }: Props): React.ReactNode {
+function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasUsedTrial }: Props): React.ReactNode {
   const [url, setUrl] = useState('');
+  const [email, setEmail] = useState('');
   const [tone, setTone] = useState<string>('mentor');
   const [purpose, setPurpose] = useState<string>('');
   const [audience, setAudience] = useState<string>('');
   const [urlError, setUrlError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [showOptions, setShowOptions] = useState(false);
 
   const validateUrl = (urlString: string): boolean => {
@@ -65,6 +68,22 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error }: Pr
     }
   };
 
+  const validateEmail = (emailString: string): boolean => {
+    if (!emailString) {
+      setEmailError('이메일을 입력해주세요');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailString)) {
+      setEmailError('올바른 이메일 형식이 아니에요');
+      return false;
+    }
+    
+    setEmailError(null);
+    return true;
+  };
+
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
     if (urlError) setUrlError(null);
@@ -78,18 +97,60 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error }: Pr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // 비로그인 사용자는 이메일 검증
+    if (!isAuthenticated) {
+      if (!validateEmail(email)) return;
+    }
+    
     if (url && validateUrl(url)) {
-      onSubmit(url, tone, purpose || undefined, audience || undefined);
+      onSubmit(url, !isAuthenticated ? email : undefined, tone, purpose || undefined, audience || undefined);
     }
   };
 
   return (
     <div className={styles.formContainer}>
       <div className={styles.formCard}>
-        <h2 className={styles.formTitle}>🔗 리뷰 받고 싶은 글 링크를 알려주세요</h2>
+        <h2 className={styles.formTitle}>
+          {!isAuthenticated && !hasUsedTrial ? (
+            <>✨ 1회 무료 AI 리뷰 체험!</>
+          ) : hasUsedTrial ? (
+            <>🎯 회원가입하고 매일 5회 사용하세요!</>
+          ) : (
+            <>🔗 리뷰 받고 싶은 글 링크를 알려주세요</>
+          )}
+        </h2>
         <form onSubmit={handleSubmit}>
+          {/* Email Input for non-authenticated users */}
+          {!isAuthenticated && !hasUsedTrial && (
+            <div className={styles.inputGroup}>
+              <label className={styles.inputLabel}>📧 결과를 받아보실 이메일</label>
+              <input
+                type="email"
+                className={`${styles.urlInput} ${emailError ? styles.error : ''}`}
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError(null);
+                }}
+                onBlur={() => email && validateEmail(email)}
+                disabled={loading}
+                autoComplete="email"
+              />
+              {emailError && (
+                <div className={styles.errorMessage}>
+                  ⚠️ {emailError}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* URL Input */}
           <div className={styles.inputGroup}>
+            {!isAuthenticated && !hasUsedTrial && (
+              <label className={styles.inputLabel}>🔗 리뷰 받을 글의 URL</label>
+            )}
             <input
               type="url"
               className={`${styles.urlInput} ${urlError ? styles.error : ''}`}
@@ -193,35 +254,67 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error }: Pr
             )}
           </div>
 
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={loading || !url || stats.remainingToday === 0}
-          >
-            {loading ? (
-              <>🔄 처리 중...</>
-            ) : !isAuthenticated ? (
-              <>🔐 로그인 후 이용 가능</>
-            ) : stats.remainingToday === 0 ? (
-              <>😅 오늘 횟수 모두 사용</>
-            ) : (
-              <>🚀 AI 리뷰 받기</>
-            )}
-          </button>
+          {/* Trial used - show signup CTA */}
+          {hasUsedTrial ? (
+            <div className={styles.trialUsedContainer}>
+              <p className={styles.trialUsedMessage}>
+                이미 무료 체험을 사용하셨습니다.<br />
+                회원가입하면 매일 5회씩 무료로 사용할 수 있어요!
+              </p>
+              <div className={styles.ctaButtons}>
+                <button
+                  type="button"
+                  className={styles.signupButton}
+                  onClick={() => window.location.href = '/register'}
+                >
+                  🚀 회원가입하기
+                </button>
+                <button
+                  type="button"
+                  className={styles.loginButton}
+                  onClick={() => window.location.href = '/login'}
+                >
+                  로그인
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={loading || !url || (isAuthenticated && stats.remainingToday === 0)}
+            >
+              {loading ? (
+                <>🔄 처리 중...</>
+              ) : !isAuthenticated ? (
+                <>✨ 무료 체험하기</>
+              ) : stats.remainingToday === 0 ? (
+                <>😅 오늘 횟수 모두 사용</>
+              ) : (
+                <>🚀 AI 리뷰 받기</>
+              )}
+            </button>
+          )}
 
-          <div className={styles.usageCounter}>
-            {isAuthenticated ? (
-              <>
-                오늘 <span className={styles.countNumber}>{stats.usedToday}/{stats.dailyLimit}</span> 회 사용 
-                {stats.remainingToday > 0 && (
-                  <> | <span className={styles.remaining}>{stats.remainingToday}회 남음</span></>
-                )}
-                <span className={styles.resetTime}> | 🕐 자정에 리셋</span>
-              </>
-            ) : (
-              <>로그인하면 매일 5회 무료로 이용할 수 있어요!</>
-            )}
-          </div>
+          {!hasUsedTrial && (
+            <div className={styles.usageCounter}>
+              {isAuthenticated ? (
+                <>
+                  오늘 <span className={styles.countNumber}>{stats.usedToday}/{stats.dailyLimit}</span> 회 사용 
+                  {stats.remainingToday > 0 && (
+                    <> | <span className={styles.remaining}>{stats.remainingToday}회 남음</span></>
+                  )}
+                  <span className={styles.resetTime}> | 🕐 자정에 리셋</span>
+                </>
+              ) : (
+                <>
+                  <span className={styles.trialHighlight}>✨ 지금 1회 무료 체험 가능!</span>
+                  <br />
+                  <span className={styles.loginPrompt}>로그인하면 매일 5회 무료로 이용할 수 있어요!</span>
+                </>
+              )}
+            </div>
+          )}
 
           {error && (
             <div className={styles.globalError}>

@@ -6,12 +6,40 @@ const DOCUMENTOR_API_URL = `${API_BASE_URL}/documentor`;
 
 class DocumentorService {
   private getAuthHeaders() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
   /**
-   * Submit a URL for AI review
+   * Check if user is authenticated
+   */
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('authToken');
+  }
+
+  /**
+   * Submit a URL for AI review (Trial version for non-authenticated users)
+   */
+  async submitTrialUrl(email: string, url: string): Promise<DocuMentorContent> {
+    // TODO: Implement when backend trial endpoint is ready
+    // Endpoint: POST /api/documento/contents/trial
+    try {
+      const response = await axios.post(
+        `${DOCUMENTOR_API_URL}/contents/trial`,
+        { email, url },
+        // No auth headers for trial
+      );
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        throw new Error('이미 무료 체험을 사용하셨습니다.');
+      }
+      throw new Error(error.response?.data?.message || '처리 중 오류가 발생했습니다.');
+    }
+  }
+
+  /**
+   * Submit a URL for AI review (Authenticated version)
    */
   async submitUrl(request: DocuMentorSubmitRequest): Promise<DocuMentorContent> {
     try {

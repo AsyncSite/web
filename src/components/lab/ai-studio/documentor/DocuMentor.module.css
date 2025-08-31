@@ -1517,3 +1517,79 @@
     font-size: 15px;
   }
 }
+
+/* Trial and Auth Related Styles */
+.inputLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d3436;
+  margin-bottom: 8px;
+}
+
+.trialUsedContainer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(253, 121, 168, 0.05) 0%, rgba(253, 203, 110, 0.05) 100%);
+  border-radius: 15px;
+  border: 2px dashed rgba(253, 121, 168, 0.3);
+}
+
+.trialUsedMessage {
+  font-size: 16px;
+  color: #2d3436;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.signupButton {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.signupButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(253, 121, 168, 0.3);
+}
+
+.loginButton {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.loginButton:hover {
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateY(-2px);
+}
+
+.trialHighlight {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fd79a8;
+}
+
+.loginPrompt {
+  font-size: 13px;
+  color: #636e72;
+  margin-top: 5px;
+}

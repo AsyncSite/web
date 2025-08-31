@@ -91,18 +91,34 @@ cd documento-content-service
 - OpenAI GPT-4
 - Custom Prompt Engineering
 
-## 📊 현재 상태
+## 📊 현재 상태 (2025-08-31 업데이트)
 
 ### 구현 완료 ✅
-- Studio UI 레이아웃
+- Studio UI 레이아웃 (독립 서비스 느낌)
 - 기본 폼 인터페이스
 - CSS Module 기반 스타일링
 - 라우팅 설정
+- **✨ Trial/Login 조건부 UI (NEW)**
+  - 비로그인 사용자 이메일 입력 필드
+  - Trial 사용 여부 추적 (localStorage)
+  - 회원가입 CTA
+- **⭐ 별점 평가 시스템 (NEW)**
+  - 5점 만점 카테고리별 평가
+  - 친근한 피드백 메시지
+- **💬 사용자 후기 섹션 (NEW)**
+  - 실제 사용자 리뷰 표시
+  - 카카오톡 커뮤니티 CTA
+
+### 백엔드 요청 중 📝
+- Trial 엔드포인트 구현 (`/api/documento/contents/trial`)
+- Redis 기반 이메일별 1회 제한
+- Gateway 인증 bypass 설정
+- [요청서 문서](../../documento-content-service/docs/trial-endpoint-requirements.md)
 
 ### 진행 중 🚧
-- 백엔드 API 연동
-- 실시간 처리 상태 표시
-- 결과 화면 구현
+- 백엔드 API 연동 대기
+- 실시간 처리 상태 표시 (Mock 구현 완료)
+- 결과 화면 구현 (디자인 완료)
 
 ### 예정 📅
 - 히스토리 기능

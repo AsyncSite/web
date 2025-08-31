@@ -3,18 +3,18 @@
 ## 개요
 프로토타입 단계에서 사용자 진입 장벽을 낮추면서도 서비스 품질을 유지하기 위한 인증 전략
 
-## 현재 구현 상태
+## 구현 상태 (2025-08-31 업데이트)
 
-### 로그인 필수 방식
-- **장점**
-  - 사용자 컨텍스트 완전 파악
-  - 일일 제한 (5회) 정확한 추적
-  - 사용자별 히스토리 관리 가능
-  
-- **단점**
-  - 진입 장벽 높음
-  - 빠른 피드백 수집 어려움
-  - 초기 사용자 이탈 가능성
+### ✅ 프론트엔드 구현 완료
+- **DocuMentorForm**: 이메일 필드 추가 및 조건부 렌더링
+- **인증 상태별 UI 분기**: 비로그인/Trial 사용/로그인 상태별 다른 UI
+- **LocalStorage 기반 Trial 추적**: `documento_trial_emails` 키로 이메일 저장
+- **서비스 레이어**: `documentorService.submitTrialUrl()` 메소드 추가
+
+### 📝 백엔드 요청 중
+- **문서 위치**: `documento-content-service/docs/trial-endpoint-requirements.md`
+- **요청 내용**: Trial 엔드포인트 및 Redis 기반 추적 구현
+- **Gateway 설정**: `/api/documento/contents/trial/**` 인증 bypass 필요
 
 ## 제안: 하이브리드 접근법
 
@@ -108,27 +108,96 @@ trial:user@email.com -> "used" (TTL: 24시간)
 daily:userId:2024-01-31 -> 3 (TTL: 당일 끝)
 ```
 
-## 프론트엔드 구현
+## 실제 프론트엔드 구현 (2025-08-31)
+
+### DocuMentorForm.tsx - UI 조건부 렌더링
 ```typescript
-const submitDocument = async (data) => {
-    const isLoggedIn = !!user;
-    
-    if (!isLoggedIn) {
-        // 무료 체험 API
-        return await fetch('/api/documento/trial', {
-            body: JSON.stringify({
-                ...data,
-                email: userEmail
-            })
-        });
-    } else {
-        // 정식 API
-        return await fetch('/api/documento/submit', {
-            headers: { 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify(data)
-        });
+// 타이틀 조건부 렌더링
+<h2 className={styles.formTitle}>
+  {!isAuthenticated && !hasUsedTrial ? (
+    <>✨ 1회 무료 AI 리뷰 체험!</>
+  ) : hasUsedTrial ? (
+    <>🎯 회원가입하고 매일 5회 사용하세요!</>
+  ) : (
+    <>🔗 리뷰 받고 싶은 글 링크를 알려주세요</>
+  )}
+</h2>
+
+// 이메일 필드 (비로그인 & Trial 미사용)
+{!isAuthenticated && !hasUsedTrial && (
+  <div className={styles.inputGroup}>
+    <label className={styles.inputLabel}>📧 결과를 받아보실 이메일</label>
+    <input type="email" ... />
+  </div>
+)}
+
+// Trial 사용 완료 시 CTA
+{hasUsedTrial ? (
+  <div className={styles.trialUsedContainer}>
+    <button className={styles.signupButton}>🚀 회원가입하기</button>
+    <button className={styles.loginButton}>로그인</button>
+  </div>
+) : (
+  <button className={styles.submitButton}>
+    {!isAuthenticated ? <>✨ 무료 체험하기</> : <>🚀 AI 리뷰 받기</>}
+  </button>
+)}
+```
+
+### DocuMentor.tsx - Trial 추적 로직
+```typescript
+// Trial 사용 체크
+const [hasUsedTrial, setHasUsedTrial] = useState(false);
+
+useEffect(() => {
+  const trialEmails = localStorage.getItem('documento_trial_emails');
+  if (trialEmails) {
+    setHasUsedTrial(true);
+  }
+}, []);
+
+// 제출 핸들러
+const handleSubmit = async (url: string, email?: string, ...) => {
+  if (!isAuthenticated) {
+    // Trial 이메일 중복 체크
+    const trialEmails = JSON.parse(localStorage.getItem('documento_trial_emails') || '[]');
+    if (trialEmails.includes(email)) {
+      setHasUsedTrial(true);
+      setError('이미 무료 체험을 사용하셨습니다.');
+      return;
     }
+    
+    // Trial 이메일 저장
+    trialEmails.push(email);
+    localStorage.setItem('documento_trial_emails', JSON.stringify(trialEmails));
+  }
+  // ...
 };
+```
+
+### documentorService.ts - API 분기
+```typescript
+class DocumentorService {
+  // Trial 제출 (비인증)
+  async submitTrialUrl(email: string, url: string): Promise<DocuMentorContent> {
+    const response = await axios.post(
+      `${DOCUMENTOR_API_URL}/contents/trial`,
+      { email, url }
+      // No auth headers for trial
+    );
+    return response.data;
+  }
+  
+  // 정식 제출 (인증 필수)
+  async submitUrl(request: DocuMentorSubmitRequest): Promise<DocuMentorContent> {
+    const response = await axios.post(
+      `${DOCUMENTOR_API_URL}/contents`,
+      request,
+      { headers: this.getAuthHeaders() }
+    );
+    return response.data;
+  }
+}
 ```
 
 ## 장점
