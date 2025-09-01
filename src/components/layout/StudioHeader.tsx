@@ -10,7 +10,31 @@ const StudioHeader = () => {
   const handleLogin = () => {
     // Store return URL for after login
     sessionStorage.setItem('documentor_return_url', '/studio/documentor');
-    navigate('/login');
+    navigate('/login', {
+      state: {
+        from: '/studio/documentor',
+        service: 'documento',
+        branding: {
+          title: '도큐멘토 ✏️',
+          subtitle: '계속하려면 로그인이 필요해요'
+        }
+      }
+    });
+  };
+
+  const handleSignup = () => {
+    // Store return URL for after signup
+    sessionStorage.setItem('documentor_return_url', '/studio/documentor');
+    navigate('/signup', {
+      state: {
+        from: '/studio/documentor',
+        service: 'documento',
+        branding: {
+          title: '도큐멘토 ✏️',
+          subtitle: 'AI 글쓰기 친구와 함께하세요'
+        }
+      }
+    });
   };
 
   const handleLogout = () => {
@@ -47,12 +71,20 @@ const StudioHeader = () => {
               </button>
             </>
           ) : (
-            <button 
-              onClick={handleLogin}
-              className={styles.loginButton}
-            >
-              로그인
-            </button>
+            <>
+              <button 
+                onClick={handleSignup}
+                className={styles.signupButton}
+              >
+                회원가입
+              </button>
+              <button 
+                onClick={handleLogin}
+                className={styles.loginButton}
+              >
+                로그인
+              </button>
+            </>
           )}
         </div>
       </div>

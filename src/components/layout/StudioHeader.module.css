@@ -81,6 +81,7 @@
 
 /* Buttons */
 .loginButton,
+.signupButton,
 .logoutButton {
   padding: 8px 20px;
   border-radius: 20px;
@@ -90,6 +91,19 @@
   transition: all 0.2s ease;
   border: none;
   outline: none;
+}
+
+.signupButton {
+  background: transparent;
+  color: #636e72;
+  border: 1px solid #e0e0e0;
+  margin-right: 10px;
+}
+
+.signupButton:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .loginButton {

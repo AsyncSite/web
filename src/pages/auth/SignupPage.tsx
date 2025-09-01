@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import userService from '../../api/userService';
@@ -37,6 +37,7 @@ type SignupMethod = 'google' | 'email' | 'passkey' | null;
 function SignupPage(): React.ReactNode {
   const { register, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState<SignupFormData>({
     email: '',
     password: '',
@@ -146,7 +147,8 @@ function SignupPage(): React.ReactNode {
 
   // Redirect if already authenticated and should redirect - MUST be after all hooks
   if (isAuthenticated && shouldRedirect) {
-    return <Navigate to="/users/me" replace />;
+    const redirectTo = location.state?.from || '/users/me';
+    return <Navigate to={redirectTo} replace />;
   }
 
   // Check email availability button handler
