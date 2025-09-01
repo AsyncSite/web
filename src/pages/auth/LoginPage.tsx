@@ -32,9 +32,17 @@ interface LoginFormErrors {
 }
 
 function LoginPage(): React.ReactNode {
+  console.log('[LoginPage] \ucef4\ud3ec\ub10c\ud2b8 \ub80c\ub354\ub9c1');
   const { login, isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  console.log('[LoginPage] \ucd08\uae30 location:', location);
+  console.log('[LoginPage] \ucd08\uae30 isAuthenticated:', isAuthenticated);
+  
+  // Documento 서비스 감지 (변수명 충돌 방지를 위해 명확한 이름 사용)
+  const documentoService = location.state?.service;
+  console.log('[LoginPage] location.state:', location.state);
+  console.log('[LoginPage] documentoService:', documentoService);
   const [formData, setFormData] = useState<LoginFormData>({
     username: '',
     password: ''
@@ -86,11 +94,16 @@ function LoginPage(): React.ReactNode {
     }
   }, []);
 
-  // Get the redirect path from location state
-  const from = location.state?.from?.pathname || '/users/me';
+  // Get the redirect path from location state (문자열과 객체 모두 처리)
+  console.log('[LoginPage] location.state?.from?.pathname:', location.state?.from?.pathname);
+  console.log('[LoginPage] location.state?.from:', location.state?.from);
+  const from = location.state?.from?.pathname || location.state?.from || '/users/me';
+  console.log('[LoginPage] 최종 from 값:', from);
+  console.log('[LoginPage] isAuthenticated:', isAuthenticated);
 
   // Redirect if already authenticated
   if (isAuthenticated) {
+    console.log('[LoginPage] 이미 로그인됨, 리다이렉트:', from);
     return <Navigate to={from} replace />;
   }
 
@@ -144,10 +157,13 @@ function LoginPage(): React.ReactNode {
     setErrors({});
 
     try {
+      console.log('[LoginPage] 로그인 시도, from:', from);
+      console.log('[LoginPage] location.state 로그인 시도 시점:', location.state);
       await login({
         username: formData.username,
         password: formData.password
       });
+      console.log('[LoginPage] 로그인 성공 후');
       
       // 로그인 성공 후 사용자 정보 가져오기
       try {
@@ -171,13 +187,16 @@ function LoginPage(): React.ReactNode {
             }, 3000);
           } else {
             // 패스키가 있으면 바로 이동
+            console.log('[LoginPage] 패스키 있음, navigate to:', from);
             navigate(from, { replace: true });
           }
         } else {
+          console.log('[LoginPage] webauthn 미지원, navigate to:', from);
           navigate(from, { replace: true });
         }
       } catch (profileError) {
         // 프로필 가져오기 실패해도 로그인은 성공이므로 이동
+        console.log('[LoginPage] 프로필 에러, navigate to:', from);
         navigate(from, { replace: true });
       }
     } catch (error) {
@@ -197,7 +216,7 @@ function LoginPage(): React.ReactNode {
   }
 
   return (
-    <div className="login-page auth-page">
+    <div className={`login-page auth-page ${documentoService ? `login-page--${documentoService}` : ''}`}>
       {/* 뒤로가기 버튼 */}
       <button 
         className="auth-back-button" 
@@ -210,6 +229,13 @@ function LoginPage(): React.ReactNode {
       </button>
       <StarBackground />
       <div className="login-container auth-container wide auth-fade-in">
+        {/* Documento 서비스 브랜딩 표시 */}
+        {documentoService && location.state?.branding && (
+          <div className="documento-service-branding">
+            <h2 className="documento-service-title">{location.state.branding.title}</h2>
+            <p className="documento-service-subtitle">{location.state.branding.subtitle}</p>
+          </div>
+        )}
         <div className="login-brand"><Link to="/" className="login-logo" aria-label="홈으로 이동">AS</Link></div>
         <div className="login-header">
           <h1>로그인</h1>
@@ -278,6 +304,8 @@ function LoginPage(): React.ReactNode {
                   authService.storeAuthData(loginResponse);
                   dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, {});
                   setFlowState('success');
+                  console.log('[LoginPage] Passkey \ub85c\uadf8\uc778 \uc131\uacf5, navigate to:', from);
+                  console.log('[LoginPage] Passkey \ub85c\uadf8\uc778 \uc2dc\uc810 location.state:', location.state);
                   navigate(from, { replace: true });
                 } else {
                   // verifyEmailRequired

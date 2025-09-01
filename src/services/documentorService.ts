@@ -1,15 +1,8 @@
-import axios from 'axios';
+import apiClient from '../api/client';
+import publicApiClient from '../api/publicClient';
 import { DocuMentorSubmitRequest, DocuMentorContent, DocuMentorAnalysis, DocuMentorStats } from '../components/lab/ai-studio/documentor/types';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api';
-const DOCUMENTOR_API_URL = `${API_BASE_URL}/documentor`;
-
 class DocumentorService {
-  private getAuthHeaders() {
-    const token = localStorage.getItem('authToken');
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
-
   /**
    * Check if user is authenticated
    */
@@ -21,15 +14,12 @@ class DocumentorService {
    * Submit a URL for AI review (Trial version for non-authenticated users)
    */
   async submitTrialUrl(email: string, url: string): Promise<DocuMentorContent> {
-    // TODO: Implement when backend trial endpoint is ready
-    // Endpoint: POST /api/documento/contents/trial
     try {
-      const response = await axios.post(
-        `${DOCUMENTOR_API_URL}/contents/trial`,
-        { email, url },
-        // No auth headers for trial
+      const response = await publicApiClient.post(
+        '/api/public/documento/contents/trial',
+        { email, url }
       );
-      return response.data;
+      return response.data.data;
     } catch (error: any) {
       if (error.response?.status === 409) {
         throw new Error('이미 무료 체험을 사용하셨습니다.');
@@ -43,12 +33,11 @@ class DocumentorService {
    */
   async submitUrl(request: DocuMentorSubmitRequest): Promise<DocuMentorContent> {
     try {
-      const response = await axios.post(
-        `${DOCUMENTOR_API_URL}/contents`,
-        request,
-        { headers: this.getAuthHeaders() }
+      const response = await apiClient.post(
+        '/api/documento/contents',
+        request
       );
-      return response.data;
+      return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
       if (error.response?.status === 409) {
         if (error.response.data?.errorCode === 'DOC-001') {
@@ -73,11 +62,28 @@ class DocumentorService {
    */
   async getContent(contentId: string): Promise<DocuMentorContent> {
     try {
-      const response = await axios.get(
-        `${DOCUMENTOR_API_URL}/contents/${contentId}`,
-        { headers: this.getAuthHeaders() }
+      const response = await apiClient.get(
+        `/api/documento/contents/${contentId}`
       );
-      return response.data;
+      return response.data.data;  // ApiResponse wrapper
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        throw new Error('콘텐츠를 찾을 수 없습니다.');
+      }
+      throw new Error(error.response?.data?.message || '콘텐츠 조회 중 오류가 발생했습니다.');
+    }
+  }
+
+  /**
+   * Get trial content details by ID
+   */
+  async getTrialContent(contentId: string, email: string): Promise<DocuMentorContent> {
+    try {
+      const response = await publicApiClient.get(
+        `/api/public/documento/contents/trial/${contentId}`,
+        { params: { email } }
+      );
+      return response.data.data;
     } catch (error: any) {
       if (error.response?.status === 404) {
         throw new Error('콘텐츠를 찾을 수 없습니다.');
@@ -91,11 +97,10 @@ class DocumentorService {
    */
   async getAnalysis(contentId: string): Promise<DocuMentorAnalysis> {
     try {
-      const response = await axios.get(
-        `${DOCUMENTOR_API_URL}/contents/${contentId}/analysis`,
-        { headers: this.getAuthHeaders() }
+      const response = await apiClient.get(
+        `/api/documento/contents/${contentId}/analysis`
       );
-      return response.data;
+      return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
       if (error.response?.status === 404) {
         throw new Error('분석 결과를 찾을 수 없습니다.');
@@ -118,14 +123,11 @@ class DocumentorService {
       const params: any = { page, size };
       if (status) params.status = status;
       
-      const response = await axios.get(
-        `${DOCUMENTOR_API_URL}/contents`,
-        { 
-          headers: this.getAuthHeaders(),
-          params
-        }
+      const response = await apiClient.get(
+        '/api/documento/contents',
+        { params }
       );
-      return response.data;
+      return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
       throw new Error(error.response?.data?.message || '콘텐츠 목록 조회 중 오류가 발생했습니다.');
     }
@@ -136,11 +138,10 @@ class DocumentorService {
    */
   async getStats(): Promise<DocuMentorStats> {
     try {
-      const response = await axios.get(
-        `${DOCUMENTOR_API_URL}/contents/stats`,
-        { headers: this.getAuthHeaders() }
+      const response = await apiClient.get(
+        '/api/documento/contents/stats'
       );
-      return response.data;
+      return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
       throw new Error(error.response?.data?.message || '사용 통계 조회 중 오류가 발생했습니다.');
     }

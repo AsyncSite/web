@@ -36,9 +36,17 @@ function DocuMentor(): React.ReactNode {
   useEffect(() => {
     const trialEmails = localStorage.getItem('documento_trial_emails');
     if (trialEmails) {
-      // In real implementation, check if current user's email is in the list
-      // For now, just check if any trial was used
-      setHasUsedTrial(true);
+      try {
+        const emailList = JSON.parse(trialEmails);
+        // If any trials have been used from this browser, show the appropriate UI
+        // Note: We can't match against a specific email since user hasn't entered it yet
+        if (emailList && emailList.length > 0) {
+          setHasUsedTrial(true);
+        }
+      } catch (e) {
+        // If parsing fails, clean up localStorage
+        localStorage.removeItem('documento_trial_emails');
+      }
     }
   }, []);
 
@@ -55,11 +63,11 @@ function DocuMentor(): React.ReactNode {
     const loadStats = async () => {
       if (isAuthenticated) {
         try {
-          // TODO: Replace with real API call
-          // const userStats = await documentoService.getStats();
-          // setStats(userStats);
+          const userStats = await documentorService.getStats();
+          setStats(userStats);
         } catch (err) {
           console.error('Failed to load stats:', err);
+          // Keep default stats if API fails
         }
       }
     };
@@ -74,17 +82,8 @@ function DocuMentor(): React.ReactNode {
         return;
       }
       
-      // Check if this email already used trial
-      const trialEmails = JSON.parse(localStorage.getItem('documento_trial_emails') || '[]');
-      if (trialEmails.includes(email)) {
-        setHasUsedTrial(true);
-        setError('이미 무료 체험을 사용하셨습니다. 회원가입 후 이용해주세요!');
-        return;
-      }
-      
-      // Save email to trial list
-      trialEmails.push(email);
-      localStorage.setItem('documento_trial_emails', JSON.stringify(trialEmails));
+      // Remove localStorage check - let backend handle trial limits
+      // Backend will track by email hash and return proper error
     } else if (stats.remainingToday === 0) {
       setError('오늘 사용 가능한 횟수를 모두 사용하셨습니다. 자정에 다시 시도해주세요!');
       return;
@@ -96,42 +95,88 @@ function DocuMentor(): React.ReactNode {
     setProcessingStep('submitting');
 
     try {
-      // Simulate API call with mock data for now
-      // TODO: Replace with real API call
-      // const content = await documentoService.submitUrl({ url, notification });
+      // Submit URL to backend - different endpoints for authenticated vs trial
+      let content;
+      if (!isAuthenticated && email) {
+        // Trial submission
+        content = await documentorService.submitTrialUrl(email, url);
+        
+        // Update localStorage to track trial usage
+        const trialEmails = localStorage.getItem('documento_trial_emails');
+        const emailList = trialEmails ? JSON.parse(trialEmails) : [];
+        if (!emailList.includes(email)) {
+          emailList.push(email);
+          localStorage.setItem('documento_trial_emails', JSON.stringify(emailList));
+          setHasUsedTrial(true);
+        }
+      } else {
+        // Authenticated submission
+        content = await documentorService.submitUrl({ url });
+      }
+      setSubmittedContent(content);
       
-      // Mock processing flow
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setProcessingStep('crawling');
+      // Poll for status updates
+      let currentStatus = content.status;
+      let attempts = 0;
+      const maxAttempts = 60; // 3 minutes max (60 * 3 seconds)
       
-      const mockContent: DocuMentorContent = {
-        id: 'mock-' + Date.now(),
-        url,
-        status: 'CRAWLING',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setSubmittedContent(mockContent);
+      while (currentStatus !== 'COMPLETED' && currentStatus !== 'FAILED' && attempts < maxAttempts) {
+        // Update UI based on status
+        if (currentStatus === 'SUBMITTED') {
+          setProcessingStep('submitting');
+        } else if (currentStatus === 'CRAWLING') {
+          setProcessingStep('crawling');
+        } else if (currentStatus === 'PARSING') {
+          setProcessingStep('analyzing');
+        }
+        
+        // Wait before next poll
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        // Poll for updated status
+        try {
+          const updatedContent = !isAuthenticated && email
+            ? await documentorService.getTrialContent(content.id, email)
+            : await documentorService.getContent(content.id);
+          currentStatus = updatedContent.status;
+          setSubmittedContent(updatedContent);
+          attempts++;
+        } catch (pollError) {
+          console.error('Failed to poll status:', pollError);
+          attempts++;
+        }
+      }
       
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setProcessingStep('analyzing');
-      mockContent.status = 'PARSING';
-      
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      setProcessingStep('complete');
-      mockContent.status = 'COMPLETED';
+      // Final status update
+      if (currentStatus === 'COMPLETED') {
+        setProcessingStep('complete');
+        // Wait a bit to show completion
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } else if (currentStatus === 'FAILED') {
+        throw new Error('콘텐츠 처리 중 오류가 발생했습니다.');
+      } else {
+        throw new Error('처리 시간이 초과되었습니다. 나중에 다시 확인해주세요.');
+      }
       
       // After processing, go back to form
-      await new Promise(resolve => setTimeout(resolve, 1000));
       setCurrentView('form');
       
-      // Update stats
-      setStats(prev => ({
-        ...prev,
-        usedToday: prev.usedToday + 1,
-        remainingToday: prev.remainingToday - 1,
-        totalSubmissions: prev.totalSubmissions + 1,
-      }));
+      // Reload stats to get updated counts
+      if (isAuthenticated) {
+        try {
+          const updatedStats = await documentorService.getStats();
+          setStats(updatedStats);
+        } catch (statsError) {
+          console.error('Failed to reload stats:', statsError);
+          // Fallback to manual update
+          setStats(prev => ({
+            ...prev,
+            usedToday: prev.usedToday + 1,
+            remainingToday: Math.max(0, prev.remainingToday - 1),
+            totalSubmissions: prev.totalSubmissions + 1,
+          }));
+        }
+      }
       
     } catch (err: any) {
       setError(err.message || '처리 중 오류가 발생했습니다. 다시 시도해주세요.');

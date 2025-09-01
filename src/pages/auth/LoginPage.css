@@ -613,3 +613,85 @@
     gap: 0.75rem;
   }
 }
+
+/* ===============================================
+   Documento Service Theme (고유한 클래스명 사용)
+   =============================================== */
+
+/* Documento 서비스 브랜딩 컨테이너 */
+.documento-service-branding {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(99, 102, 241, 0.04);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+/* Documento 서비스 타이틀 */
+.documento-service-title {
+  margin: 0 0 8px 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #6366f1;
+  letter-spacing: -0.02em;
+}
+
+/* Documento 서비스 서브타이틀 */
+.documento-service-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(148, 163, 184, 0.9);
+  line-height: 1.5;
+}
+
+/* Documento 테마가 적용된 로그인 페이지 */
+.login-page--documento .login-brand {
+  /* 브랜드 색상을 보라색으로 부드럽게 변경 */
+  filter: hue-rotate(45deg) saturate(1.2);
+}
+
+.login-page--documento .login-header h1::after {
+  content: ' - 도큐멘토';
+  font-size: 0.65em;
+  color: #6366f1;
+  opacity: 0.7;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+/* Documento 테마 탭 활성 상태 */
+.login-page--documento .tab-button.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+/* Documento 테마 입력 필드 포커스 */
+.login-page--documento .auth-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Documento 테마 버튼 호버 */
+.login-page--documento .auth-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+  .documento-service-branding {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .documento-service-title {
+    font-size: 1.5rem;
+  }
+  
+  .documento-service-subtitle {
+    font-size: 0.875rem;
+  }
+}

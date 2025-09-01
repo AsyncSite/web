@@ -4,9 +4,17 @@ export interface DocuMentorSubmitRequest {
 
 export interface DocuMentorContent {
   id: string;
+  userId?: string;  // null for trial users
   url: string;
-  status: 'SUBMITTED' | 'CRAWLING' | 'PARSING' | 'COMPLETED' | 'FAILED';
+  normalizedUrl?: string;
+  crawledTitle?: string;
+  crawledContent?: string;
+  summary?: string;
+  keywords?: string[];
+  status: 'SUBMITTED' | 'CRAWLING' | 'CRAWLED' | 'PARSING' | 'COMPLETED' | 'FAILED';
   errorMessage?: string;
+  crawledAt?: string;
+  parsedAt?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DocuMentorStats } from './types';
 import styles from './DocuMentor.module.css';
 
@@ -39,6 +40,7 @@ const TONE_OPTIONS = [
 ];
 
 function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasUsedTrial }: Props): React.ReactNode {
+  const navigate = useNavigate();
   const [url, setUrl] = useState('');
   const [email, setEmail] = useState('');
   const [tone, setTone] = useState<string>('mentor');
@@ -265,14 +267,39 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
                 <button
                   type="button"
                   className={styles.signupButton}
-                  onClick={() => window.location.href = '/register'}
+                  onClick={() => {
+                    navigate('/signup', {
+                      state: {
+                        from: '/studio/documentor',
+                        service: 'documento',
+                        branding: {
+                          title: '도큐멘토 ✏️',
+                          subtitle: 'AI 글쓰기 친구와 함께하세요'
+                        }
+                      }
+                    });
+                  }}
                 >
                   🚀 회원가입하기
                 </button>
                 <button
                   type="button"
                   className={styles.loginButton}
-                  onClick={() => window.location.href = '/login'}
+                  onClick={() => {
+                    console.log('[DocuMentorForm] 로그인 버튼 클릭');
+                    const stateToSend = {
+                      from: '/studio/documentor',
+                      service: 'documento',
+                      branding: {
+                        title: '도큐멘토 ✏️',
+                        subtitle: '계속하려면 로그인이 필요해요'
+                      }
+                    };
+                    console.log('[DocuMentorForm] navigate state:', stateToSend);
+                    navigate('/login', {
+                      state: stateToSend
+                    });
+                  }}
                 >
                   로그인
                 </button>

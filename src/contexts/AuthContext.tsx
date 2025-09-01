@@ -245,13 +245,16 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
   }, []);
 
   const login = useCallback(async (credentials: LoginRequest) => {
+    console.log('[AuthContext] login \ud568\uc218 \ud638\ucd9c');
     try {
       const response = await authService.login(credentials);
       authService.storeAuthData(response);
       
       // Fetch full user profile after login
       const userProfile = await userService.getProfile();
+      console.log('[AuthContext] setUser \ud638\ucd9c \uc804');
       setUser(userProfile);
+      console.log('[AuthContext] setUser \ud638\ucd9c \ud6c4, user:', userProfile);
       
       // Migrate guest scores after successful login (don't await to prevent blocking)
       migrateGuestScores().catch(() => {
@@ -260,7 +263,9 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       
       // Dispatch login success event
       dispatchAuthEvent(AUTH_EVENTS.LOGIN_SUCCESS, { user: userProfile });
+      console.log('[AuthContext] login \uc131\uacf5 \uc644\ub8cc');
     } catch (error) {
+      console.log('[AuthContext] login \uc2e4\ud328:', error);
       throw new Error(handleApiError(error));
     }
   }, [migrateGuestScores]);
