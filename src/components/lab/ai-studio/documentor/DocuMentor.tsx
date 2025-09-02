@@ -27,7 +27,7 @@ function DocuMentor(): React.ReactNode {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [processingStep, setProcessingStep] = useState<'submitting' | 'crawling' | 'analyzing' | 'complete'>('submitting');
+  const [processingStep, setProcessingStep] = useState<'submitting' | 'analyzing' | 'complete'>('submitting');
   
   // Check if user has used trial
   const [hasUsedTrial, setHasUsedTrial] = useState(false);
@@ -124,9 +124,7 @@ function DocuMentor(): React.ReactNode {
         // Update UI based on status
         if (currentStatus === 'SUBMITTED') {
           setProcessingStep('submitting');
-        } else if (currentStatus === 'CRAWLING') {
-          setProcessingStep('crawling');
-        } else if (currentStatus === 'PARSING') {
+        } else if (currentStatus === 'CRAWLING' || currentStatus === 'PARSING') {
           setProcessingStep('analyzing');
         }
         
@@ -223,15 +221,13 @@ function DocuMentor(): React.ReactNode {
             <div className={styles.processingCard}>
               <div className={styles.processingEmoji}>
                 {processingStep === 'submitting' && '📤'}
-                {processingStep === 'crawling' && '🔍'}
                 {processingStep === 'analyzing' && '🤖'}
                 {processingStep === 'complete' && '✅'}
               </div>
               
               <h2 className={styles.processingTitle}>
                 {processingStep === 'submitting' && 'URL을 제출하고 있어요...'}
-                {processingStep === 'crawling' && '글을 읽어오고 있어요...'}
-                {processingStep === 'analyzing' && 'AI가 분석하고 있어요...'}
+                {processingStep === 'analyzing' && 'AI가 글을 분석하고 있어요...'}
                 {processingStep === 'complete' && '분석이 완료되었어요!'}
               </h2>
               
@@ -240,16 +236,12 @@ function DocuMentor(): React.ReactNode {
                   <span className={styles.stepNumber}>1</span>
                   <span className={styles.stepLabel}>제출</span>
                 </div>
-                <div className={`${styles.step} ${processingStep === 'analyzing' || processingStep === 'complete' ? styles.completed : processingStep === 'crawling' ? styles.active : ''}`}>
-                  <span className={styles.stepNumber}>2</span>
-                  <span className={styles.stepLabel}>크롤링</span>
-                </div>
                 <div className={`${styles.step} ${processingStep === 'complete' ? styles.completed : processingStep === 'analyzing' ? styles.active : ''}`}>
-                  <span className={styles.stepNumber}>3</span>
+                  <span className={styles.stepNumber}>2</span>
                   <span className={styles.stepLabel}>분석</span>
                 </div>
                 <div className={`${styles.step} ${processingStep === 'complete' ? styles.completed : ''}`}>
-                  <span className={styles.stepNumber}>4</span>
+                  <span className={styles.stepNumber}>3</span>
                   <span className={styles.stepLabel}>완료</span>
                 </div>
               </div>
@@ -258,16 +250,14 @@ function DocuMentor(): React.ReactNode {
                 <div 
                   className={styles.progressFill}
                   style={{
-                    width: processingStep === 'submitting' ? '25%' :
-                           processingStep === 'crawling' ? '50%' :
-                           processingStep === 'analyzing' ? '75%' : '100%'
+                    width: processingStep === 'submitting' ? '33%' :
+                           processingStep === 'analyzing' ? '66%' : '100%'
                   }}
                 />
               </div>
               
               <p className={styles.processingHint}>
                 {processingStep === 'submitting' && '서버와 통신 중이에요...'}
-                {processingStep === 'crawling' && '페이지 내용을 추출하고 있어요...'}
                 {processingStep === 'analyzing' && '10가지 항목을 체크하고 있어요...'}
                 {processingStep === 'complete' && '곧 결과를 보여드릴게요!'}
               </p>
