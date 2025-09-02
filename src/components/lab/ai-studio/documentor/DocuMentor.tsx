@@ -16,8 +16,8 @@ function DocuMentor(): React.ReactNode {
   const navigate = useNavigate();
   
   // States
-  const [currentView, setCurrentView] = useState<'form' | 'processing'>('form');
-  const [submittedContent, setSubmittedContent] = useState<DocuMentorContent | null>(null);
+  const [currentView, setCurrentView] = useState<'form' | 'success'>('form');
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const [stats, setStats] = useState<DocuMentorStats>({
     dailyLimit: 5,
     usedToday: 2,
@@ -27,7 +27,6 @@ function DocuMentor(): React.ReactNode {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [processingStep, setProcessingStep] = useState<'submitting' | 'analyzing' | 'complete'>('submitting');
   
   // Check if user has used trial
   const [hasUsedTrial, setHasUsedTrial] = useState(false);
@@ -91,15 +90,12 @@ function DocuMentor(): React.ReactNode {
 
     setLoading(true);
     setError(null);
-    setCurrentView('processing');
-    setProcessingStep('submitting');
 
     try {
       // Submit URL to backend - different endpoints for authenticated vs trial
-      let content;
       if (!isAuthenticated && email) {
         // Trial submission
-        content = await documentorService.submitTrialUrl(email, url, tone, purpose, audience);
+        await documentorService.submitTrialUrl(email, url, tone, purpose, audience);
         
         // Update localStorage to track trial usage
         const trialEmails = localStorage.getItem('documento_trial_emails');
@@ -109,55 +105,15 @@ function DocuMentor(): React.ReactNode {
           localStorage.setItem('documento_trial_emails', JSON.stringify(emailList));
           setHasUsedTrial(true);
         }
+        setSubmittedEmail(email);
       } else {
         // Authenticated submission
-        content = await documentorService.submitUrl({ url, tone, purpose, audience });
-      }
-      setSubmittedContent(content);
-      
-      // Poll for status updates
-      let currentStatus = content.status;
-      let attempts = 0;
-      const maxAttempts = 60; // 3 minutes max (60 * 3 seconds)
-      
-      while (currentStatus !== 'COMPLETED' && currentStatus !== 'FAILED' && attempts < maxAttempts) {
-        // Update UI based on status
-        if (currentStatus === 'SUBMITTED') {
-          setProcessingStep('submitting');
-        } else if (currentStatus === 'CRAWLING' || currentStatus === 'PARSING') {
-          setProcessingStep('analyzing');
-        }
-        
-        // Wait before next poll
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        
-        // Poll for updated status
-        try {
-          const updatedContent = !isAuthenticated && email
-            ? await documentorService.getTrialContent(content.id, email)
-            : await documentorService.getContent(content.id);
-          currentStatus = updatedContent.status;
-          setSubmittedContent(updatedContent);
-          attempts++;
-        } catch (pollError) {
-          console.error('Failed to poll status:', pollError);
-          attempts++;
-        }
+        await documentorService.submitUrl({ url, tone, purpose, audience });
+        setSubmittedEmail(user?.email || null);
       }
       
-      // Final status update
-      if (currentStatus === 'COMPLETED') {
-        setProcessingStep('complete');
-        // Wait a bit to show completion
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      } else if (currentStatus === 'FAILED') {
-        throw new Error('콘텐츠 처리 중 오류가 발생했습니다.');
-      } else {
-        throw new Error('처리 시간이 초과되었습니다. 나중에 다시 확인해주세요.');
-      }
-      
-      // After processing, go back to form
-      setCurrentView('form');
+      // Show success view immediately
+      setCurrentView('success');
       
       // Reload stats to get updated counts
       if (isAuthenticated) {
@@ -186,9 +142,8 @@ function DocuMentor(): React.ReactNode {
 
   const handleReset = () => {
     setCurrentView('form');
-    setSubmittedContent(null);
+    setSubmittedEmail(null);
     setError(null);
-    setProcessingStep('submitting');
   };
 
 
@@ -216,51 +171,48 @@ function DocuMentor(): React.ReactNode {
           </>
         )}
 
-        {currentView === 'processing' && (
-          <div className={styles.processingContainer}>
-            <div className={styles.processingCard}>
-              <div className={styles.processingEmoji}>
-                {processingStep === 'submitting' && '📤'}
-                {processingStep === 'analyzing' && '🤖'}
-                {processingStep === 'complete' && '✅'}
-              </div>
+        {currentView === 'success' && (
+          <div className={styles.successContainer}>
+            <div className={styles.successCard}>
+              <div className={styles.successEmoji}>✉️</div>
               
-              <h2 className={styles.processingTitle}>
-                {processingStep === 'submitting' && 'URL을 제출하고 있어요...'}
-                {processingStep === 'analyzing' && 'AI가 글을 분석하고 있어요...'}
-                {processingStep === 'complete' && '분석이 완료되었어요!'}
+              <h2 className={styles.successTitle}>
+                제출이 완료되었습니다!
               </h2>
               
-              <div className={styles.processingSteps}>
-                <div className={`${styles.step} ${processingStep !== 'submitting' ? styles.completed : styles.active}`}>
-                  <span className={styles.stepNumber}>1</span>
-                  <span className={styles.stepLabel}>제출</span>
+              <div className={styles.successMessage}>
+                <p className={styles.mainMessage}>
+                  AI가 글을 분석하고 있어요.<br />
+                  <strong>{submittedEmail}</strong>로 결과를 보내드릴게요.
+                </p>
+                
+                <div className={styles.timeInfo}>
+                  <p className={styles.expectedTime}>
+                    📧 예상 도착 시간: <strong>10-20분</strong>
+                  </p>
+                  <p className={styles.disclaimer}>
+                    * 서버 상황에 따라 최대 24시간까지 소요될 수 있습니다.
+                  </p>
                 </div>
-                <div className={`${styles.step} ${processingStep === 'complete' ? styles.completed : processingStep === 'analyzing' ? styles.active : ''}`}>
-                  <span className={styles.stepNumber}>2</span>
-                  <span className={styles.stepLabel}>분석</span>
-                </div>
-                <div className={`${styles.step} ${processingStep === 'complete' ? styles.completed : ''}`}>
-                  <span className={styles.stepNumber}>3</span>
-                  <span className={styles.stepLabel}>완료</span>
+                
+                <div className={styles.tipBox}>
+                  <p className={styles.tipTitle}>💡 Tip</p>
+                  <ul className={styles.tipList}>
+                    <li>스팸 메일함도 확인해주세요</li>
+                    <li>이메일이 도착하지 않으면 24시간 후 다시 시도해주세요</li>
+                  </ul>
                 </div>
               </div>
               
-              <div className={styles.progressBar}>
-                <div 
-                  className={styles.progressFill}
-                  style={{
-                    width: processingStep === 'submitting' ? '33%' :
-                           processingStep === 'analyzing' ? '66%' : '100%'
-                  }}
-                />
-              </div>
-              
-              <p className={styles.processingHint}>
-                {processingStep === 'submitting' && '서버와 통신 중이에요...'}
-                {processingStep === 'analyzing' && '10가지 항목을 체크하고 있어요...'}
-                {processingStep === 'complete' && '곧 결과를 보여드릴게요!'}
-              </p>
+              <button
+                className={styles.newSubmitButton}
+                onClick={() => {
+                  setCurrentView('form');
+                  setSubmittedEmail(null);
+                }}
+              >
+                🔄 다른 글 분석하기
+              </button>
             </div>
           </div>
         )}
