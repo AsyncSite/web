@@ -1623,7 +1623,7 @@
   font-weight: 700;
   color: #2d3436;
   margin-bottom: 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1641,7 +1641,7 @@
 }
 
 .mainMessage strong {
-  color: #667eea;
+  color: #fd79a8;
   font-weight: 600;
 }
 
@@ -1659,7 +1659,7 @@
 }
 
 .expectedTime strong {
-  color: #667eea;
+  color: #fd79a8;
   font-weight: 600;
 }
 
@@ -1670,8 +1670,8 @@
 }
 
 .tipBox {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  border-left: 4px solid #667eea;
+  background: linear-gradient(135deg, rgba(253, 121, 168, 0.05) 0%, rgba(253, 203, 110, 0.05) 100%);
+  border-left: 4px solid #fd79a8;
   border-radius: 10px;
   padding: 20px;
   text-align: left;
@@ -1704,12 +1704,12 @@
   content: "•";
   position: absolute;
   left: 0;
-  color: #667eea;
+  color: #fd79a8;
   font-weight: bold;
 }
 
 .newSubmitButton {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
   color: white;
   border: none;
   padding: 15px 30px;
@@ -1722,7 +1722,7 @@
 
 .newSubmitButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 30px rgba(253, 121, 168, 0.3);
 }
 
 .newSubmitButton:active {
