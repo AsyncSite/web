@@ -1,5 +1,8 @@
 export interface DocuMentorSubmitRequest {
   url: string;
+  tone?: string;
+  purpose?: string;
+  audience?: string;
 }
 
 export interface DocuMentorContent {
@@ -17,6 +20,8 @@ export interface DocuMentorContent {
   parsedAt?: string;
   createdAt: string;
   updatedAt: string;
+  analysisResult?: string;  // JSON string containing analysis results
+  analysisMetadata?: string;  // JSON string containing metadata
 }
 
 export interface CategoryRating {

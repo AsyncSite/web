@@ -99,7 +99,7 @@ function DocuMentor(): React.ReactNode {
       let content;
       if (!isAuthenticated && email) {
         // Trial submission
-        content = await documentorService.submitTrialUrl(email, url);
+        content = await documentorService.submitTrialUrl(email, url, tone, purpose, audience);
         
         // Update localStorage to track trial usage
         const trialEmails = localStorage.getItem('documento_trial_emails');
@@ -111,7 +111,7 @@ function DocuMentor(): React.ReactNode {
         }
       } else {
         // Authenticated submission
-        content = await documentorService.submitUrl({ url });
+        content = await documentorService.submitUrl({ url, tone, purpose, audience });
       }
       setSubmittedContent(content);
       

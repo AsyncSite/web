@@ -1,6 +1,6 @@
 import apiClient from '../api/client';
 import publicApiClient from '../api/publicClient';
-import { DocuMentorSubmitRequest, DocuMentorContent, DocuMentorAnalysis, DocuMentorStats } from '../components/lab/ai-studio/documentor/types';
+import { DocuMentorSubmitRequest, DocuMentorContent, DocuMentorAnalysis, DocuMentorStats, CategoryRating } from '../components/lab/ai-studio/documentor/types';
 
 class DocumentorService {
   /**
@@ -13,11 +13,11 @@ class DocumentorService {
   /**
    * Submit a URL for AI review (Trial version for non-authenticated users)
    */
-  async submitTrialUrl(email: string, url: string): Promise<DocuMentorContent> {
+  async submitTrialUrl(email: string, url: string, tone?: string, purpose?: string, audience?: string): Promise<DocuMentorContent> {
     try {
       const response = await publicApiClient.post(
         '/api/public/documento/contents/trial',
-        { email, url }
+        { email, url, tone, purpose, audience }
       );
       return response.data.data;
     } catch (error: any) {
@@ -35,7 +35,7 @@ class DocumentorService {
     try {
       const response = await apiClient.post(
         '/api/documento/contents',
-        request
+        request  // Now includes tone, purpose, audience
       );
       return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
@@ -93,14 +93,59 @@ class DocumentorService {
   }
 
   /**
+   * Get trial analysis results
+   */
+  async getTrialAnalysis(contentId: string, email: string): Promise<DocuMentorAnalysis> {
+    try {
+      // Get trial content with analysis data
+      const content = await this.getTrialContent(contentId, email);
+      
+      // Parse analysisResult and analysisMetadata if they exist
+      const analysisResult = content.analysisResult ? JSON.parse(content.analysisResult) : {};
+      const analysisMetadata = content.analysisMetadata ? JSON.parse(content.analysisMetadata) : {};
+      
+      // Transform to DocuMentorAnalysis format
+      return {
+        id: content.id,
+        overallAssessment: analysisMetadata.feedback || analysisResult.overallAssessment || '',
+        categoryRatings: analysisResult.categoryRatings || [],
+        strengths: analysisResult.strengths || [],
+        growthPoints: analysisResult.growthPoints || [],
+        summary: content.summary || '',
+        keywords: analysisResult.keywords || content.keywords || [],
+        category: analysisResult.category || ''
+      };
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        throw new Error('분석 결과를 찾을 수 없습니다.');
+      }
+      throw new Error(error.response?.data?.message || '분석 결과 조회 중 오류가 발생했습니다.');
+    }
+  }
+
+  /**
    * Get analysis results for content
    */
   async getAnalysis(contentId: string): Promise<DocuMentorAnalysis> {
     try {
-      const response = await apiClient.get(
-        `/api/documento/contents/${contentId}/analysis`
-      );
-      return response.data.data;  // ApiResponse wrapper
+      // Get content with analysis data
+      const content = await this.getContent(contentId);
+      
+      // Parse analysisResult and analysisMetadata if they exist
+      const analysisResult = content.analysisResult ? JSON.parse(content.analysisResult) : {};
+      const analysisMetadata = content.analysisMetadata ? JSON.parse(content.analysisMetadata) : {};
+      
+      // Transform to DocuMentorAnalysis format
+      return {
+        id: content.id,
+        overallAssessment: analysisMetadata.feedback || analysisResult.overallAssessment || '',
+        categoryRatings: analysisResult.categoryRatings || [],
+        strengths: analysisResult.strengths || [],
+        growthPoints: analysisResult.growthPoints || [],
+        summary: content.summary || '',
+        keywords: analysisResult.keywords || content.keywords || [],
+        category: analysisResult.category || ''
+      };
     } catch (error: any) {
       if (error.response?.status === 404) {
         throw new Error('분석 결과를 찾을 수 없습니다.');
