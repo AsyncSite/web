@@ -20,10 +20,10 @@ function DocuMentor(): React.ReactNode {
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const [stats, setStats] = useState<DocuMentorStats>({
     dailyLimit: 5,
-    usedToday: 2,
-    remainingToday: 3,
+    usedToday: 0,
+    remainingToday: 5,
     resetTime: '00:00',
-    totalSubmissions: 12,
+    totalSubmissions: 0,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,10 +63,12 @@ function DocuMentor(): React.ReactNode {
       if (isAuthenticated) {
         try {
           const userStats = await documentorService.getStats();
+          console.log('Stats API 응답:', userStats); // 디버깅용
           setStats(userStats);
         } catch (err) {
-          console.error('Failed to load stats:', err);
-          // Keep default stats if API fails
+          console.error('Stats API 호출 실패:', err);
+          // API 실패 시에도 기본값 유지하되 사용자에게 알림
+          // setError('사용 통계를 불러올 수 없습니다.');
         }
       }
     };
@@ -119,9 +121,10 @@ function DocuMentor(): React.ReactNode {
       if (isAuthenticated) {
         try {
           const updatedStats = await documentorService.getStats();
+          console.log('제출 후 stats 업데이트:', updatedStats);
           setStats(updatedStats);
         } catch (statsError) {
-          console.error('Failed to reload stats:', statsError);
+          console.error('Stats 업데이트 실패:', statsError);
           // Fallback to manual update
           setStats(prev => ({
             ...prev,

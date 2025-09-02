@@ -489,7 +489,19 @@ function LoginPage(): React.ReactNode {
         )}
 
         <div className="login-divider"><span>또는</span></div>
-        <button onClick={() => window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`} className="google-login-button auth-button" type="button" aria-label="Google 계정으로 로그인" disabled={isSubmitting}>
+        <button 
+          onClick={() => {
+            // OAuth 콜백 후 돌아올 URL 저장
+            if (from && from !== '/users/me') {
+              localStorage.setItem('oauth_return_url', from);
+              console.log('[LoginPage] OAuth return URL 저장:', from);
+            }
+            window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`;
+          }} 
+          className="google-login-button auth-button" 
+          type="button" 
+          aria-label="Google 계정으로 로그인" 
+          disabled={isSubmitting}>
           <svg width="20" height="20" viewBox="0 0 533.5 544.3" aria-hidden="true" focusable="false">
             <path fill="#4285F4" d="M533.5 278.4c0-18.5-1.7-36.3-4.9-53.6H272v101.4h146.9c-6.3 34-25 62.7-53.5 82v68.2h86.5c50.7-46.7 81.6-115.4 81.6-198z"/>
             <path fill="#34A853" d="M272 544.3c73.9 0 135.9-24.5 181.1-66.2l-86.5-68.2c-24.1 16.1-55 25.6-94.6 25.6-72.7 0-134.3-49-156.3-114.9H26.7v71.9C71.6 486.2 165.5 544.3 272 544.3z"/>

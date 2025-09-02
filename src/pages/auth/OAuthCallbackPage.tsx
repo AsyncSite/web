@@ -78,11 +78,31 @@ function OAuthCallbackPage(): React.ReactNode {
           isNewUser = true;
         }
 
+        // Check for return URL in localStorage or sessionStorage
+        const oauthReturnUrl = localStorage.getItem('oauth_return_url');
+        const documentorReturnUrl = sessionStorage.getItem('documentor_return_url');
+        const returnUrl = oauthReturnUrl || documentorReturnUrl;
+        
+        // Clean up storage
+        if (oauthReturnUrl) {
+          localStorage.removeItem('oauth_return_url');
+          console.log('[OAuthCallbackPage] OAuth return URL 사용:', oauthReturnUrl);
+        }
+        if (documentorReturnUrl) {
+          sessionStorage.removeItem('documentor_return_url');
+          console.log('[OAuthCallbackPage] Documentor return URL 사용:', documentorReturnUrl);
+        }
+        
         // Force a page reload to ensure AuthContext picks up the new auth state
-        // If new user, add showOnboarding query parameter
-        if (isNewUser) {
+        if (returnUrl) {
+          // Return to the original page
+          console.log('[OAuthCallbackPage] Returning to:', returnUrl);
+          window.location.href = returnUrl;
+        } else if (isNewUser) {
+          // If new user and no return URL, show onboarding
           window.location.href = '/users/me?showOnboarding=true';
         } else {
+          // Default to user profile
           window.location.href = '/users/me';
         }
       } catch (err) {

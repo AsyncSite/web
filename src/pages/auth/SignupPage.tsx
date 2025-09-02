@@ -472,7 +472,15 @@ function SignupPage(): React.ReactNode {
           <div className="signup-method-selection">
             {/* Google Sign up Button */}
             <button
-              onClick={() => window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`}
+              onClick={() => {
+                // OAuth 콜백 후 돌아올 URL 저장
+                const from = location.state?.from;
+                if (from && from !== '/users/me') {
+                  localStorage.setItem('oauth_return_url', from);
+                  console.log('[SignupPage] OAuth return URL 저장:', from);
+                }
+                window.location.href = `${env.apiBaseUrl}/api/auth/oauth/google/login`;
+              }}
               className="google-signup-button auth-button"
               type="button"
               aria-label="Google 계정으로 회원가입"

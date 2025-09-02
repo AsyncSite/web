@@ -47,6 +47,7 @@ export interface DocuMentorStats {
   remainingToday: number;
   resetTime: string;
   totalSubmissions: number;
+  successRate?: number;  // 백엔드 응답과 일치시킴
 }
 
 export interface ReviewSection {
