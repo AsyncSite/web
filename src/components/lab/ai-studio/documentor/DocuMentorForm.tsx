@@ -256,8 +256,8 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
             )}
           </div>
 
-          {/* Trial used - show signup CTA */}
-          {hasUsedTrial ? (
+          {/* Trial used - show signup CTA (only for non-authenticated users) */}
+          {hasUsedTrial && !isAuthenticated ? (
             <div className={styles.trialUsedContainer}>
               <p className={styles.trialUsedMessage}>
                 이미 무료 체험을 사용하셨습니다.<br />
