@@ -6,6 +6,8 @@ import subRouter from './subRouter';
 import { SubContentsTemplate } from '../components/layout';
 import StudioLayout from '../components/layout/StudioLayout';
 import PrivateRoute from '../components/auth/PrivateRoute';
+import RouterErrorBoundary from '../components/common/RouterErrorBoundary';
+import NotFoundPage from '../pages/NotFoundPage';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
 const LoginPage = lazy(() => import('../pages/auth/LoginPage'));
@@ -32,6 +34,7 @@ const router = createBrowserRouter([
         <App />
       </>
     ),
+    errorElement: <RouterErrorBoundary />,
     children: [
       {
         index: true,
@@ -104,6 +107,10 @@ const router = createBrowserRouter([
         path: '/',
         Component: SubContentsTemplate,
         children: subRouter,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },
