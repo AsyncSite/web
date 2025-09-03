@@ -34,7 +34,7 @@ function ActivityCarousel(): React.ReactNode {
   }, [isPaused]);
   
   return (
-    <section className={styles.carouselSection}>
+    <div className={styles.carouselSection}>
       <div className={styles.container}>
         {/* 헤더 - 심플하게 */}
         <div className={styles.header}>
@@ -79,15 +79,8 @@ function ActivityCarousel(): React.ReactNode {
           </div>
         </div>
         
-        {/* 하단 메시지 - 정직하게 */}
-        <div className={styles.bottomInfo}>
-          <span className={styles.infoIcon}>💡</span>
-          <span className={styles.infoText}>
-            실제 사용자들의 활동을 기반으로 구성된 예시입니다
-          </span>
-        </div>
       </div>
-    </section>
+    </div>
   );
 }
 

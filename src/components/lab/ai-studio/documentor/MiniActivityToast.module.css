@@ -1,0 +1,96 @@
+.toastContainer {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: white;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 
+              0 2px 8px rgba(253, 121, 168, 0.1);
+  border: 1px solid rgba(253, 121, 168, 0.15);
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-size: 14px;
+  color: #2d3436;
+  font-weight: 500;
+  max-width: 320px;
+}
+
+.toastContainer.visible .toast {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.emoji {
+  font-size: 18px;
+  animation: bounce 2s infinite;
+}
+
+.text {
+  flex: 1;
+  line-height: 1.3;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* 작은 펄스 효과 */
+.toastContainer.visible .toast::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(253, 121, 168, 0.1);
+  border-radius: 50px;
+  transform: translate(-50%, -50%);
+  animation: pulse 2s ease-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 0;
+  }
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .toastContainer {
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+  }
+  
+  .toast {
+    max-width: none;
+    font-size: 13px;
+  }
+  
+  .emoji {
+    font-size: 16px;
+  }
+}
+
+/* 다크모드 대응 (필요 시) */
+@media (prefers-color-scheme: dark) {
+  .toast {
+    background: rgba(255, 255, 255, 0.95);
+  }
+}

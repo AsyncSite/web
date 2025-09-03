@@ -7,7 +7,10 @@ import ChatBubbles from './ChatBubbles';
 import ExampleCard from './ExampleCard';
 import FeaturesSection from './FeaturesSection';
 import UserReviews from './UserReviews';
-import ActivityCarousel from './ActivityCarousel';
+// import ActivityCarousel from './ActivityCarousel';
+// import MiniActivityToast from './MiniActivityToast';
+import ActivityNotification from './ActivityNotification';
+import CommunitySection from './CommunitySection';
 import { DocuMentorContent, DocuMentorAnalysis, DocuMentorStats, MOCK_REVIEW } from './types';
 import documentorService from '../../../../services/documentorService';
 import styles from './DocuMentor.module.css';
@@ -172,6 +175,9 @@ function DocuMentor(): React.ReactNode {
               error={error}
               hasUsedTrial={hasUsedTrial}
             />
+            
+            {/* 실시간 활동 알림 (첫 번째 버전) */}
+            <ActivityNotification />
           </>
         )}
 
@@ -228,8 +234,11 @@ function DocuMentor(): React.ReactNode {
             <ExampleCard />
             <UserReviews />
             
-            {/* Activity Carousel - After Reviews, Before next CTA */}
-            <ActivityCarousel />
+            {/* Activity Carousel - After Reviews */}
+            {/* <ActivityCarousel /> */}
+            
+            {/* Community CTA - Separated from reviews */}
+            <CommunitySection />
           </>
         )}
       </div>

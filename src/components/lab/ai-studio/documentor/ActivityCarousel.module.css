@@ -1,6 +1,6 @@
 .carouselSection {
-  padding: 32px 0 24px;
-  background: transparent;
+  padding: 20px 0 24px;
+  background: linear-gradient(180deg, rgba(253, 121, 168, 0.03) 0%, transparent 100%);
   position: relative;
   overflow: hidden;
 }
@@ -50,12 +50,12 @@
 
 .fadeLeft {
   left: 0;
-  background: linear-gradient(90deg, white 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.98) 0%, transparent 100%);
 }
 
 .fadeRight {
   right: 0;
-  background: linear-gradient(90deg, transparent 0%, white 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.98) 100%);
 }
 
 .carouselTrack {
@@ -70,18 +70,21 @@
   flex-shrink: 0;
   width: 320px;
   padding: 16px;
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 10px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f5f5f5;
+  border: 1px solid rgba(253, 121, 168, 0.1);
   transition: all 0.3s ease;
   cursor: default;
 }
 
 .activityItem:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(253, 121, 168, 0.1);
-  border-color: rgba(253, 121, 168, 0.2);
+  box-shadow: 0 4px 12px rgba(253, 121, 168, 0.15);
+  border-color: rgba(253, 121, 168, 0.25);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .itemHeader {
