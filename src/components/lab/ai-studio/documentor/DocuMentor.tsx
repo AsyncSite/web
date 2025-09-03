@@ -163,7 +163,10 @@ function DocuMentor(): React.ReactNode {
             {/* Chat Bubbles - Now First */}
             <ChatBubbles />
             
-            {/* Form */}
+            {/* Activity Carousel - Before CTA */}
+            <ActivityCarousel />
+            
+            {/* Form - CTA */}
             <DocuMentorForm
               onSubmit={handleSubmit}
               stats={stats}
@@ -227,7 +230,6 @@ function DocuMentor(): React.ReactNode {
             <FeaturesSection />
             <ExampleCard />
             <UserReviews />
-            <ActivityCarousel />
           </>
         )}
       </div>
