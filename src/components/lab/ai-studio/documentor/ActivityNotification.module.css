@@ -181,6 +181,131 @@
   }
 }
 
+/* Medium Mobile (iPhone 6/7/8 Plus) */
+@media (max-width: 414px) {
+  .notificationContainer {
+    bottom: 15px;
+    right: 15px;
+    left: 15px;
+  }
+  
+  .notification {
+    padding: 12px 16px;
+    border-radius: 14px;
+  }
+  
+  .avatarCircle {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .emoji {
+    font-size: 18px;
+  }
+  
+  .message {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  
+  .time {
+    font-size: 10px;
+  }
+  
+  .closeButton {
+    top: 6px;
+    right: 10px;
+    font-size: 16px;
+  }
+}
+
+/* Standard Mobile (iPhone SE, 6/7/8) */
+@media (max-width: 375px) {
+  .notificationContainer {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+  }
+  
+  .notification {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  
+  .avatarCircle {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .emoji {
+    font-size: 17px;
+  }
+  
+  /* Adjust ripple animation position */
+  .notification::after {
+    left: 30px;
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* Small Mobile (iPhone SE 1st gen) */
+@media (max-width: 320px) {
+  .notificationContainer {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .notification {
+    padding: 8px 12px;
+    gap: 10px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06),
+                0 2px 6px rgba(253, 121, 168, 0.03);
+  }
+  
+  .avatarCircle {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .emoji {
+    font-size: 16px;
+  }
+  
+  .message {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  
+  .message strong {
+    font-size: 11px;
+  }
+  
+  .time {
+    font-size: 9px;
+  }
+  
+  .closeButton {
+    width: 18px;
+    height: 18px;
+    font-size: 14px;
+  }
+  
+  /* Smaller progress bar */
+  .notification::before {
+    height: 2px;
+  }
+  
+  /* Adjust ripple for smaller avatar */
+  .notification::after {
+    left: 28px;
+    width: 36px;
+    height: 36px;
+  }
+}
+
 /* 다크모드 대응 */
 @media (prefers-color-scheme: dark) {
   .notification {
@@ -207,5 +332,22 @@
     font-size: 12px;
     padding: 6px 10px;
     margin: 6px 0 4px 0;
+  }
+}
+
+@media (max-width: 375px) {
+  .reviewContent {
+    font-size: 11px;
+    padding: 5px 8px;
+    margin: 5px 0 3px 0;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 320px) {
+  .reviewContent {
+    font-size: 10px;
+    padding: 4px 6px;
+    line-height: 1.3;
   }
 }
