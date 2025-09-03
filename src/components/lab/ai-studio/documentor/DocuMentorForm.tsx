@@ -162,7 +162,6 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
               onBlur={handleUrlBlur}
               disabled={loading}
               autoComplete="url"
-              autoFocus
             />
             {urlError && (
               <div className={styles.errorMessage}>
