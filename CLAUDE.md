@@ -94,6 +94,25 @@ src/
    - GSAP for animations
    - React Intersection Observer for scroll-triggered effects
 
+5. **⚠️ 전역 CSS 충돌 주의사항 (CRITICAL)**:
+   ```css
+   /* App.css의 전역 스타일 예시 */
+   section {
+     min-height: 100vh; /* 모든 section 태그에 영향! */
+     padding: 40px 20px;
+   }
+   ```
+   
+   **문제 발생 사례**:
+   - ActivityCarousel 컴포넌트가 `<section>` 태그 사용 시 의도치 않게 100vh 높이 차지
+   - 전역 스타일이 모든 동일 태그에 적용되어 레이아웃 깨짐
+   
+   **해결 방법**:
+   - ✅ HTML 시맨틱 태그 신중히 선택 (`section` → `div` 변경)
+   - ✅ CSS Module 사용으로 스타일 스코프 격리
+   - ✅ 전역 스타일 정의 시 더 구체적인 선택자 사용
+   - ❌ 절대 피해야 할 것: 범용 태그(`section`, `article`, `header`)에 전역 스타일 적용
+
 ### TypeScript Configuration
 - Strict mode enabled (`strict: true`)
 - React JSX transform (no React import needed)
