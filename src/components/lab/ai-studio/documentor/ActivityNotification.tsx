@@ -34,7 +34,9 @@ function ActivityNotification({ isEnabled = true }: Props): React.ReactNode {
       newSet.add(activity.id);
       if (newSet.size > 5) {
         const firstId = newSet.values().next().value;
-        newSet.delete(firstId);
+        if (firstId !== undefined) {
+          newSet.delete(firstId);
+        }
       }
       return newSet;
     });
