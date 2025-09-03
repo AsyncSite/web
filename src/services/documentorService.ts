@@ -21,10 +21,23 @@ class DocumentorService {
       );
       return response.data.data;
     } catch (error: any) {
-      if (error.response?.status === 409) {
-        throw new Error('이미 무료 체험을 사용하셨습니다.');
+      if (error.response) {
+        switch (error.response.status) {
+          case 409:
+            throw new Error('이미 무료 체험을 사용하셨습니다.');
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+        }
       }
-      throw new Error(error.response?.data?.message || '처리 중 오류가 발생했습니다.');
+      throw new Error('처리 중 오류가 발생했습니다.');
     }
   }
 
@@ -39,21 +52,33 @@ class DocumentorService {
       );
       return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
-      if (error.response?.status === 409) {
-        if (error.response.data?.errorCode === 'DOC-001') {
-          throw new Error('오늘 사용 가능한 횟수를 모두 사용하셨습니다. 자정에 다시 시도해주세요!');
+      if (error.response) {
+        switch (error.response.status) {
+          case 409:
+            if (error.response.data?.errorCode === 'DOC-001') {
+              throw new Error('오늘 사용 가능한 횟수를 모두 사용하셨습니다. 자정에 다시 시도해주세요!');
+            }
+            if (error.response.data?.errorCode === 'DOC-002') {
+              throw new Error('이미 24시간 내에 제출한 URL입니다. 다른 URL을 시도해보세요!');
+            }
+            break;
+          case 400:
+            throw new Error('올바르지 않은 URL 형식입니다. 다시 확인해주세요.');
+          case 401:
+            throw new Error('로그인이 필요한 서비스입니다.');
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
         }
-        if (error.response.data?.errorCode === 'DOC-002') {
-          throw new Error('이미 24시간 내에 제출한 URL입니다. 다른 URL을 시도해보세요!');
-        }
       }
-      if (error.response?.status === 400) {
-        throw new Error('올바르지 않은 URL 형식입니다. 다시 확인해주세요.');
-      }
-      if (error.response?.status === 401) {
-        throw new Error('로그인이 필요한 서비스입니다.');
-      }
-      throw new Error(error.response?.data?.message || '처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+      throw new Error('처리 중 오류가 발생했습니다.');
     }
   }
 
@@ -67,10 +92,23 @@ class DocumentorService {
       );
       return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        throw new Error('콘텐츠를 찾을 수 없습니다.');
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            throw new Error('콘텐츠를 찾을 수 없습니다.');
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+        }
       }
-      throw new Error(error.response?.data?.message || '콘텐츠 조회 중 오류가 발생했습니다.');
+      throw new Error('콘텐츠 조회 중 오류가 발생했습니다.');
     }
   }
 
@@ -85,10 +123,23 @@ class DocumentorService {
       );
       return response.data.data;
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        throw new Error('콘텐츠를 찾을 수 없습니다.');
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            throw new Error('콘텐츠를 찾을 수 없습니다.');
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+        }
       }
-      throw new Error(error.response?.data?.message || '콘텐츠 조회 중 오류가 발생했습니다.');
+      throw new Error('콘텐츠 조회 중 오류가 발생했습니다.');
     }
   }
 
@@ -116,10 +167,23 @@ class DocumentorService {
         category: analysisResult.category || ''
       };
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        throw new Error('분석 결과를 찾을 수 없습니다.');
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            throw new Error('분석 결과를 찾을 수 없습니다.');
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+        }
       }
-      throw new Error(error.response?.data?.message || '분석 결과 조회 중 오류가 발생했습니다.');
+      throw new Error('분석 결과 조회 중 오류가 발생했습니다.');
     }
   }
 
@@ -147,10 +211,23 @@ class DocumentorService {
         category: analysisResult.category || ''
       };
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        throw new Error('분석 결과를 찾을 수 없습니다.');
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            throw new Error('분석 결과를 찾을 수 없습니다.');
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+        }
       }
-      throw new Error(error.response?.data?.message || '분석 결과 조회 중 오류가 발생했습니다.');
+      throw new Error('분석 결과 조회 중 오류가 발생했습니다.');
     }
   }
 
@@ -174,7 +251,21 @@ class DocumentorService {
       );
       return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || '콘텐츠 목록 조회 중 오류가 발생했습니다.');
+      if (error.response) {
+        switch (error.response.status) {
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+        }
+      }
+      throw new Error('콘텐츠 목록 조회 중 오류가 발생했습니다.');
     }
   }
 
@@ -188,7 +279,21 @@ class DocumentorService {
       );
       return response.data.data;  // ApiResponse wrapper
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || '사용 통계 조회 중 오류가 발생했습니다.');
+      if (error.response) {
+        switch (error.response.status) {
+          case 502:
+            throw new Error('📋 콘텐츠 분석 서비스가 일시적으로 응답하지 않습니다.\n잠시 후 다시 시도해 주세요.');
+          case 500:
+            throw new Error('⚠️ 일시적인 서버 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+          case 503:
+            throw new Error('🔧 서비스 점검 중입니다.\n잠시 후 다시 이용해 주세요.');
+          case 429:
+            throw new Error('⏰ 무료 이용 한도에 도달했습니다.\n7일 후에 다시 이용하실 수 있습니다.');
+          default:
+            throw new Error(error.response?.data?.message || '일시적인 문제가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+        }
+      }
+      throw new Error('사용 통계 조회 중 오류가 발생했습니다.');
     }
   }
 
