@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getRandomActivity, getTimeText, ActivityData } from './mockActivityData';
 import styles from './ActivityNotification.module.css';
 
@@ -15,7 +15,7 @@ function ActivityNotification({ isEnabled = true }: Props): React.ReactNode {
   const [recentIds, setRecentIds] = useState<Set<number>>(new Set());
 
   // 새로운 활동 가져오기
-  const getNextActivity = () => {
+  const getNextActivity = useCallback(() => {
     let activity = getRandomActivity();
     let attempts = 0;
     
@@ -42,7 +42,7 @@ function ActivityNotification({ isEnabled = true }: Props): React.ReactNode {
     });
     
     return activity;
-  };
+  }, [recentIds]);
 
   // 알림 표시 사이클
   useEffect(() => {
@@ -56,7 +56,7 @@ function ActivityNotification({ isEnabled = true }: Props): React.ReactNode {
     }, 3000);
 
     return () => clearTimeout(initialTimer);
-  }, [isEnabled]);
+  }, [isEnabled, getNextActivity]);
 
   // 알림 자동 순환
   useEffect(() => {
@@ -78,7 +78,7 @@ function ActivityNotification({ isEnabled = true }: Props): React.ReactNode {
       clearTimeout(hideTimer);
       clearTimeout(nextTimer);
     };
-  }, [currentActivity, isEnabled]);
+  }, [currentActivity, isEnabled, getNextActivity]);
 
   // 닫기 버튼 핸들러
   const handleClose = () => {
