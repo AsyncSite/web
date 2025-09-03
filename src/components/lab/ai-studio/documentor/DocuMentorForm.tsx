@@ -322,26 +322,25 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
             </button>
           )}
 
-          {!hasUsedTrial && (
+          {isAuthenticated ? (
             <div className={styles.usageCounter}>
-              {isAuthenticated ? (
-                <>
-                  오늘 <span className={styles.countNumber}>{stats.usedToday}/{stats.dailyLimit}</span> 회 사용 
-                  {stats.remainingToday > 0 && (
-                    <> | <span className={styles.remaining}>{stats.remainingToday}회 남음</span></>
-                  )}
-                  <span className={styles.resetTime}> | 🕐 자정에 리셋</span>
-                </>
-              ) : (
-                <>
-                  <span className={styles.trialHighlight}>✨ 지금 1회 무료 체험 가능!</span>
-                  <br />
-                  <span className={styles.loginPrompt}>로그인하면 매일 5회 무료로 이용할 수 있어요!</span>
-                </>
-              )}
+              <>
+                오늘 <span className={styles.countNumber}>{stats.usedToday}/{stats.dailyLimit}</span> 회 사용 
+                {stats.remainingToday > 0 && (
+                  <> | <span className={styles.remaining}>{stats.remainingToday}회 남음</span></>
+                )}
+                <span className={styles.resetTime}> | 🕐 자정에 리셋</span>
+              </>
             </div>
-          )}
-
+          ) : !hasUsedTrial ? (
+            <div className={styles.usageCounter}>
+              <>
+                <span className={styles.trialHighlight}>✨ 지금 1회 무료 체험 가능!</span>
+                <br />
+                <span className={styles.loginPrompt}>로그인하면 매일 5회 무료로 이용할 수 있어요!</span>
+              </>
+            </div>
+          ) : null}
           {error && (
             <div className={styles.globalError}>
               ❌ {error}
