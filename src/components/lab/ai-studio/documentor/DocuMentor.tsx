@@ -7,6 +7,7 @@ import ChatBubbles from './ChatBubbles';
 import ExampleCard from './ExampleCard';
 import FeaturesSection from './FeaturesSection';
 import UserReviews from './UserReviews';
+import ActivityNotification from './ActivityNotification';
 import { DocuMentorContent, DocuMentorAnalysis, DocuMentorStats, MOCK_REVIEW } from './types';
 import documentorService from '../../../../services/documentorService';
 import styles from './DocuMentor.module.css';
@@ -229,6 +230,9 @@ function DocuMentor(): React.ReactNode {
           </>
         )}
       </div>
+      
+      {/* 실시간 활동 알림 */}
+      <ActivityNotification isEnabled={currentView === 'form'} />
     </div>
   );
 }
