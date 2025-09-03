@@ -112,16 +112,16 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
 
   return (
     <div className={styles.formContainer}>
+      <h2 className={styles.formTitle}>
+        {!isAuthenticated && !hasUsedTrial ? (
+          <>✨ 1회 무료 AI 리뷰 체험!</>
+        ) : hasUsedTrial ? (
+          <>🎯 회원가입하고 매일 5회 사용하세요!</>
+        ) : (
+          <>🔗 리뷰 받고 싶은 글 링크를 알려주세요</>
+        )}
+      </h2>
       <div className={styles.formCard}>
-        <h2 className={styles.formTitle}>
-          {!isAuthenticated && !hasUsedTrial ? (
-            <>✨ 1회 무료 AI 리뷰 체험!</>
-          ) : hasUsedTrial ? (
-            <>🎯 회원가입하고 매일 5회 사용하세요!</>
-          ) : (
-            <>🔗 리뷰 받고 싶은 글 링크를 알려주세요</>
-          )}
-        </h2>
         <form onSubmit={handleSubmit}>
           {/* Email Input for non-authenticated users */}
           {!isAuthenticated && !hasUsedTrial && (

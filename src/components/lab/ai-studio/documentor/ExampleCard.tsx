@@ -13,7 +13,7 @@ function ExampleCard(): React.ReactNode {
 
   return (
     <div className={styles.exampleSection}>
-      <h3 className={styles.exampleTitle}>이렇게 리뷰해드려요 ✨</h3>
+      <h2 className={styles.exampleTitle}>이렇게 리뷰해드려요 ✨</h2>
       
       <div className={styles.exampleCard}>
         {/* Overall Assessment */}

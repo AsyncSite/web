@@ -43,7 +43,7 @@ function UserReviews(): React.ReactNode {
 
   return (
     <div className={styles.userReviewsSection}>
-      <h3 className={styles.userReviewsTitle}>실제 사용자들의 이야기 💬</h3>
+      <h2 className={styles.userReviewsTitle}>실제 사용자들의 이야기 💬</h2>
       
       <div className={styles.reviewsGrid}>
         {reviews.map((review, index) => (
