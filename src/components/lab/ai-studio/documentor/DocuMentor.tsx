@@ -35,6 +35,11 @@ function DocuMentor(): React.ReactNode {
   // Check if user has used trial
   const [hasUsedTrial, setHasUsedTrial] = useState(false);
   
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   // Check trial usage on mount
   useEffect(() => {
     const trialEmails = localStorage.getItem('documento_trial_emails');
