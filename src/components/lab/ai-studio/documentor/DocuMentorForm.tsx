@@ -14,6 +14,20 @@ interface Props {
 
 const TONE_OPTIONS = [
   {
+    value: 'sns',
+    emoji: '💬',
+    name: 'SNS 스타일',
+    example: '"ㅋㅋㅋ 이거 완전 찐이다!! 🔥 근데 엔딩이 좀 별로임 ㅠㅠ 다시 ㄱㄱ"',
+    isRecommended: true
+  },
+  {
+    value: 'resume',
+    emoji: '💼',
+    name: '이력서 전문가',
+    example: '"경력 기술이 모호합니다. STAR 기법으로 정량적 성과를 제시하세요."',
+    isRecommended: true
+  },
+  {
     value: 'friend',
     emoji: '🤗',
     name: '친근한 친구',
@@ -179,9 +193,41 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
               disabled={loading}
             >
               <span className={styles.toggleIcon}>{showOptions ? '▼' : '▶'}</span>
-              <span className={styles.toggleText}>추가 옵션 설정 (선택사항)</span>
+              <span className={styles.toggleText}>추가 옵션 설정</span>
+              <span className={styles.recommendBadge}>추천 톤 있음!</span>
               <span className={styles.toggleHint}>AI 리뷰를 더 정확하게 받고 싶다면</span>
             </button>
+            
+            {/* Tone Preview - Always visible */}
+            {!showOptions && (
+              <div className={styles.tonePreview}>
+                <span className={styles.previewLabel}>추천 AI 톤:</span>
+                <div className={styles.previewTones}>
+                  <button
+                    type="button"
+                    className={`${styles.previewTone} ${tone === 'sns' ? styles.selected : ''}`}
+                    onClick={() => {
+                      setTone('sns');
+                      setShowOptions(true);
+                    }}
+                    disabled={loading}
+                  >
+                    💬 SNS 스타일
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.previewTone} ${tone === 'resume' ? styles.selected : ''}`}
+                    onClick={() => {
+                      setTone('resume');
+                      setShowOptions(true);
+                    }}
+                    disabled={loading}
+                  >
+                    💼 이력서 전문가
+                  </button>
+                </div>
+              </div>
+            )}
             
             {showOptions && (
               <div className={styles.optionsContent}>
@@ -199,6 +245,7 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
                     <option value="일기">일기/에세이</option>
                     <option value="리뷰">제품/서비스 리뷰</option>
                     <option value="교육">교육/튜토리얼</option>
+                    <option value="이력서">이력서/자소서</option>
                     <option value="기타">기타</option>
                   </select>
                 </div>
@@ -242,6 +289,7 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
                           <div className={styles.toneHeader}>
                             <span className={styles.toneEmoji}>{option.emoji}</span>
                             <span className={styles.toneName}>{option.name}</span>
+                            {option.isRecommended && <span className={styles.recommendedBadge}>추천</span>}
                           </div>
                           <div className={styles.toneExample}>
                             {option.example}

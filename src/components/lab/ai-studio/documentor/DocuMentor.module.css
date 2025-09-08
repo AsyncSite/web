@@ -291,6 +291,109 @@
   font-style: italic;
 }
 
+/* Recommend Badge in Toggle Button */
+.recommendBadge {
+  padding: 3px 8px;
+  background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 12px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Recommended Badge for Individual Tone Options */
+.recommendedBadge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(255, 107, 107, 0.2);
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 2px 4px rgba(255, 107, 107, 0.2);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+  }
+}
+
+/* Tone Preview Section */
+.tonePreview {
+  margin-top: 15px;
+  padding: 15px;
+  background: linear-gradient(135deg, rgba(253, 121, 168, 0.05) 0%, rgba(253, 203, 110, 0.05) 100%);
+  border: 1px solid rgba(253, 121, 168, 0.1);
+  border-radius: 12px;
+  animation: slideDown 0.3s ease;
+}
+
+.previewLabel {
+  display: block;
+  font-size: 13px;
+  color: #636e72;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.previewTones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.previewTone {
+  padding: 10px 16px;
+  background: white;
+  border: 2px solid rgba(253, 121, 168, 0.2);
+  border-radius: 20px;
+  color: #2d3436;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.previewTone:hover {
+  background: linear-gradient(135deg, rgba(253, 121, 168, 0.1) 0%, rgba(253, 203, 110, 0.1) 100%);
+  border-color: #fd79a8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(253, 121, 168, 0.2);
+}
+
+.previewTone.selected {
+  background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.previewTone:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .optionsContent {
   margin-top: 20px;
   padding: 20px;
