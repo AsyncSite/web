@@ -71,7 +71,7 @@
 └───────┬──────────────┬──────────────┬──────────────────────┘
         │              │              │
 ┌───────▼──────┐ ┌─────▼──────┐ ┌────▼─────────────────────┐
-│  PostgreSQL  │ │   GitHub   │ │      Slack API           │
+│    MySQL     │ │   GitHub   │ │      Slack API           │
 │              │ │ Repository │ │  (OAuth + Emoji Admin)   │
 └──────────────┘ └────────────┘ └──────────────────────────┘
 ```
@@ -177,7 +177,7 @@ sequenceDiagram
     participant W as Web App
     participant API as API Gateway
     participant SES as slack-emoji-service
-    participant DB as PostgreSQL
+    participant DB as MySQL
     participant GH as GitHub Repo
     participant S as Slack API
 
@@ -286,8 +286,8 @@ sequenceDiagram
 
 ### Backend (slack-emoji-service)
 - **Framework**: Spring Boot 3.x
-- **Language**: Java 17
-- **Database**: PostgreSQL
+- **Language**: Java 21
+- **Database**: MySQL 8.0
 - **Queue**: Spring @Async + ThreadPoolExecutor
 - **Security**: AES-256 for token encryption
 - **HTTP Client**: RestTemplate / WebClient
