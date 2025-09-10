@@ -25,6 +25,12 @@
 - **Primary**: 슬랙 워크스페이스 관리자/소유자
 - **Secondary**: 팀 리더, 커뮤니티 매니저, 문화 담당자
 
+### 🔴 핵심 성공 요인 (Critical Success Factor)
+> **SEO 최적화가 이 프로젝트의 생사를 결정합니다.**
+> 
+> documento의 실패 사례에서 배운 가장 중요한 교훈: 아무리 좋은 서비스도 검색에 노출되지 않으면 무용지물입니다.
+> SlackDori는 처음부터 Next.js SSR로 구축하여 "slack emoji pack" 검색 시 상위 노출을 목표로 합니다.
+
 ---
 
 ## 문제 정의
@@ -45,9 +51,10 @@
 ### 핵심 설계 원칙
 
 1. **GitHub as a CDN**: 모든 이모지 이미지는 GitHub Public Repository에 저장
-2. **서버리스 우선**: 인프라 관리 최소화
+2. **SEO 최우선**: 검색 엔진 최적화를 위한 서버사이드 렌더링 필수
 3. **비동기 처리**: Rate Limiting 대응을 위한 백그라운드 작업
 4. **독립 서비스**: 기존 시스템과 완전 분리된 마이크로서비스
+5. **AsyncSite 통합**: slackdori.asyncsite.com 서브도메인으로 브랜드 일관성 유지
 
 ### 시스템 구성도
 
@@ -55,7 +62,15 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                         사용자 Layer                         │
 ├─────────────────────────────────────────────────────────────┤
-│  React Web App  │  Lab > Utilities > Slack Emoji Factory   │
+│     Google 검색     │     직접 접속 (asyncsite.com)         │
+└────────┬─────────────────────┬──────────────────────────────┘
+         │                     │
+┌────────▼─────────────────────▼──────────────────────────────┐
+│          slackdori.asyncsite.com (Next.js SSR)             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │   SSR    │  │   SEO    │  │  AdSense │  │  Static  │   │
+│  │  Pages   │  │ Metadata │  │  Slots   │  │  Assets  │   │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
 └────────────────┬────────────────────────────────────────────┘
                  │
 ┌────────────────▼────────────────────────────────────────────┐
@@ -164,6 +179,95 @@ slack-emoji-packs/                    # GitHub Public Repository
 3. **커뮤니티 기여**
    - Pull Request로 새 이모지 제안
    - Issue로 버그 리포트
+
+---
+
+## SEO 최적화 및 수익화 전략
+
+### documento의 실패에서 배운 교훈
+
+**documento가 SEO에 실패한 이유:**
+1. **클라이언트 사이드 렌더링 (CSR)**: React SPA로 구현되어 검색엔진 봇이 콘텐츠를 읽을 수 없음
+2. **정적 메타태그**: 모든 페이지가 동일한 메타 정보를 가짐
+3. **URL 구조 문제**: 단일 경로(/studio/documentor)로만 서비스
+4. **사이트맵 부재**: 검색엔진이 페이지를 발견할 수 없음
+
+### SlackDori의 SEO 성공 전략
+
+#### 1. 서버사이드 렌더링 (SSR) 필수
+```
+slackdori.asyncsite.com
+├── /                           # 메인 랜딩 (SSR)
+├── /packs                      # 팩 목록 (SSR)
+├── /packs/[id]                 # 팩 상세 (SSR + 동적 메타태그)
+├── /how-to-use                 # 사용법 가이드 (SSG)
+├── /pricing                    # 가격 정책 (SSG)
+└── /sitemap.xml               # 동적 사이트맵
+```
+
+#### 2. 검색 최적화 타겟 키워드
+- **Primary**: "slack emoji pack", "슬랙 이모지 팩"
+- **Secondary**: "slack custom emoji", "슬랙 커스텀 이모지"
+- **Long-tail**: "how to add multiple emojis to slack", "슬랙 이모지 일괄 추가"
+
+#### 3. 팩별 동적 메타태그
+```html
+<!-- /packs/developer-essentials -->
+<title>개발자 필수 슬랙 이모지 팩 50개 - SlackDori</title>
+<meta name="description" content="디버깅, 배포, 코드리뷰 등 개발팀 필수 이모지 50개를 한 번에 설치하세요">
+<meta property="og:image" content="https://slackdori.asyncsite.com/og/developer-pack.png">
+<meta property="og:title" content="개발자 슬랙 이모지 팩 | SlackDori">
+<link rel="canonical" href="https://slackdori.asyncsite.com/packs/developer-essentials">
+```
+
+#### 4. 구조화된 데이터 (JSON-LD)
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SlackDori - 개발자 이모지 팩",
+  "applicationCategory": "ProductivityApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "324"
+  }
+}
+```
+
+### Google AdSense 수익화 전략
+
+#### 1. 광고 배치 최적화
+- **팩 상세 페이지**: 콘텐츠 중간 광고 (In-article ads)
+- **팩 목록 페이지**: 그리드 사이 네이티브 광고
+- **설치 대기 페이지**: 디스플레이 광고
+- **블로그 섹션**: 자동 광고 (Auto ads)
+
+#### 2. 콘텐츠 마케팅
+- **블로그 포스트**: "슬랙 생산성 향상 팁" 시리즈
+- **사용 사례**: "스타트업이 SlackDori로 팀 문화 만들기"
+- **튜토리얼**: "커스텀 이모지로 원격 팀 소통 개선하기"
+
+#### 3. 트래픽 유입 전략
+1. **SEO 트래픽**: 팩별 랜딩 페이지 최적화
+2. **소셜 트래픽**: 팩 공유 기능 + OG 이미지
+3. **직접 트래픽**: AsyncSite 메인에서 유입
+4. **추천 트래픽**: 슬랙 커뮤니티, 개발자 포럼
+
+### 성과 측정 지표
+
+| 지표 | 목표 (6개월) | 측정 방법 |
+|------|------------|----------|
+| 검색 트래픽 | 월 50,000 UV | Google Analytics |
+| 검색 순위 | "slack emoji pack" 1페이지 | Search Console |
+| AdSense 수익 | 월 $500 | AdSense Dashboard |
+| 페이지 체류 시간 | 평균 3분 이상 | GA4 |
+| 바운스율 | 40% 이하 | GA4 |
 
 ---
 
@@ -276,13 +380,14 @@ sequenceDiagram
 
 ## 기술 스택
 
-### Frontend
-- **Framework**: React 19 + TypeScript
-- **Routing**: React Router v7
-- **State**: Context API
-- **Styling**: CSS Modules
-- **HTTP**: Fetch API
-- **위치**: `/lab/utilities/slack-emoji-factory`
+### Frontend (SlackDori Web)
+- **Framework**: Next.js 14 + TypeScript
+- **Rendering**: SSR/SSG Hybrid
+- **State**: Zustand (가벼운 상태 관리)
+- **Styling**: CSS Modules + Tailwind CSS
+- **SEO**: Next.js Metadata API
+- **Domain**: `slackdori.asyncsite.com`
+- **Analytics**: Google Analytics 4 + AdSense
 
 ### Backend (slack-emoji-service)
 - **Framework**: Spring Boot 3.x
@@ -293,40 +398,55 @@ sequenceDiagram
 - **HTTP Client**: RestTemplate / WebClient
 
 ### Infrastructure
+- **Frontend Hosting**: Vercel (Next.js 최적화 호스팅)
+  - 자동 SSR/SSG 처리
+  - Edge Functions로 빠른 응답
+  - slackdori.asyncsite.com 커스텀 도메인
+- **Backend**: Docker + Kubernetes (기존 인프라 활용)
 - **Image Storage**: GitHub Public Repository
-- **Deployment**: Docker + Kubernetes
 - **API Gateway**: 기존 Gateway 활용
-- **Monitoring**: Prometheus + Grafana
+- **CDN**: Vercel Edge Network (프론트엔드) + GitHub CDN (이미지)
+- **Monitoring**: Vercel Analytics + Prometheus + Grafana
 - **Logging**: ELK Stack
 
 ---
 
 ## 구현 계획
 
-### Phase 1: MVP (1주)
-- [ ] GitHub 저장소 구성
-- [ ] 기본 이모지 팩 3개 준비
+### Phase 1: 기반 구축 (1주)
+- [ ] Next.js 프로젝트 초기 설정 (SSR/SSG 구성)
+- [ ] slackdori.asyncsite.com 서브도메인 설정
+- [ ] GitHub 이모지 저장소 구성
+- [ ] 기본 이모지 팩 5개 준비 (개발자, 한국어, 프로젝트 상태 등)
 - [ ] Spring Boot 서비스 스켈레톤
-- [ ] OAuth 인증 플로우
-- [ ] 단일 이모지 추가 테스트
+- [ ] SEO 기본 설정 (robots.txt, sitemap.xml)
 
 ### Phase 2: 핵심 기능 (1주)
+- [ ] OAuth 인증 플로우 구현
 - [ ] 비동기 작업 큐 구현
 - [ ] Rate Limiting 대응 로직
-- [ ] 프론트엔드 UI 개발
+- [ ] SSR 페이지 구성 (메인, 팩 목록, 팩 상세)
 - [ ] 워크스페이스 관리 기능
+- [ ] 동적 메타태그 구현
 
-### Phase 3: 사용자 경험 (3일)
-- [ ] 설치 진행률 표시
-- [ ] 설치 내역 페이지
-- [ ] 에러 핸들링 개선
-- [ ] Slack DM 알림
+### Phase 3: SEO 최적화 (3일)
+- [ ] 팩별 랜딩 페이지 최적화
+- [ ] 구조화된 데이터 (JSON-LD) 추가
+- [ ] Open Graph 이미지 생성
+- [ ] 페이지 속도 최적화 (Core Web Vitals)
+- [ ] Google Search Console 등록
 
-### Phase 4: 최적화 (3일)
-- [ ] 이미지 최적화 스크립트
-- [ ] 캐싱 전략 구현
-- [ ] 모니터링 대시보드
-- [ ] 문서화
+### Phase 4: 수익화 준비 (3일)
+- [ ] Google AdSense 계정 신청
+- [ ] 광고 슬롯 배치 최적화
+- [ ] 콘텐츠 페이지 추가 (블로그, 가이드)
+- [ ] Analytics 이벤트 트래킹 설정
+
+### Phase 5: 출시 및 모니터링 (1주)
+- [ ] 베타 테스트 진행
+- [ ] 성능 모니터링 대시보드
+- [ ] SEO 성과 추적 시작
+- [ ] 사용자 피드백 수집 체계 구축
 
 ---
 
