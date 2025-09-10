@@ -100,6 +100,11 @@ const nextConfig = {
   
   // Redirects for SEO
   async redirects() {
+    // Only apply redirects in production
+    if (process.env.NODE_ENV === 'development') {
+      return [];
+    }
+    
     return [
       // Redirect www to non-www
       {
