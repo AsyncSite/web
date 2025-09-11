@@ -18,9 +18,11 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
   const isLocal = window.location.hostname === 'localhost' || 
                   window.location.hostname === '127.0.0.1';
   
-  // Determine API base URL based on environment
-  // Build-time decision: use environment variable, no fallback to localhost
-  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'https://api.asyncsite.com';
+  // Determine API base URL based on environment and hostname
+  let apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'https://api.asyncsite.com';
+  if (window.location.hostname === 'documentor.asyncsite.com') {
+    apiBaseUrl = 'https://documentor.asyncsite.com';
+  }
   
   return {
     apiBaseUrl,
