@@ -289,9 +289,9 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactNode {
       if (options?.redirectTo) {
         redirectPath = options.redirectTo;
       } else {
-        redirectPath = '/';
+        redirectPath = 'https://asyncsite.com';
       }
-      
+      console.log("redirectPath: ", redirectPath)
       // Force navigation and reload to clear any cached state
       window.location.href = redirectPath;
     }
