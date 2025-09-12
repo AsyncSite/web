@@ -69,6 +69,8 @@ interface GameState {
   currentCombo: number;
   lastClearedLines: number;
   totalPieces: number;
+  holdPiece: number[][] | null;
+  canHold: boolean;
 }
 
 interface TetrisLeaderboardEntry {
@@ -89,6 +91,7 @@ const TetrisGame: React.FC = () => {
   // Canvas refs
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nextCanvasRef = useRef<HTMLCanvasElement>(null);
+  const holdCanvasRef = useRef<HTMLCanvasElement>(null);
   
   // Game state
   const [gameState, setGameState] = useState<GameState>({
@@ -103,7 +106,9 @@ const TetrisGame: React.FC = () => {
     maxCombo: 0,
     currentCombo: 0,
     lastClearedLines: 0,
-    totalPieces: 0
+    totalPieces: 0,
+    holdPiece: null,
+    canHold: true
   });
 
   const [showLeaderboard, setShowLeaderboard] = useState(false);
@@ -304,11 +309,13 @@ const TetrisGame: React.FC = () => {
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     const nextCanvas = nextCanvasRef.current;
-    if (!canvas || !nextCanvas) return;
+    const holdCanvas = holdCanvasRef.current;
+    if (!canvas || !nextCanvas || !holdCanvas) return;
 
     const context = canvas.getContext('2d');
     const nextContext = nextCanvas.getContext('2d');
-    if (!context || !nextContext) return;
+    const holdContext = holdCanvas.getContext('2d');
+    if (!context || !nextContext || !holdContext) return;
 
     // Main canvas
     context.fillStyle = '#000';
@@ -350,7 +357,25 @@ const TetrisGame: React.FC = () => {
       const offsetY = (nextCanvas.height / blockSizeNext - nextMatrix.length) / 2;
       drawMatrix(nextMatrix, { x: offsetX, y: offsetY }, nextContext, blockSizeNext);
     }
-  }, [gameState.board, gameState.player, gameState.isStarted, gameState.isGameOver, drawMatrix, drawGhost]);
+
+    // Hold block canvas
+    holdContext.fillStyle = '#000';
+    holdContext.fillRect(0, 0, holdCanvas.width, holdCanvas.height);
+    
+    if (gameState.holdPiece) {
+      const blockSizeHold = 25;
+      const holdMatrix = gameState.holdPiece;
+      const offsetX = (holdCanvas.width / blockSizeHold - holdMatrix[0].length) / 2;
+      const offsetY = (holdCanvas.height / blockSizeHold - holdMatrix.length) / 2;
+      
+      // Draw with reduced opacity if can't hold
+      if (!gameState.canHold) {
+        holdContext.globalAlpha = 0.5;
+      }
+      drawMatrix(holdMatrix, { x: offsetX, y: offsetY }, holdContext, blockSizeHold);
+      holdContext.globalAlpha = 1;
+    }
+  }, [gameState.board, gameState.player, gameState.holdPiece, gameState.canHold, gameState.isStarted, gameState.isGameOver, drawMatrix, drawGhost]);
 
   // Player movements
   const playerMove = useCallback((dir: number) => {
@@ -454,7 +479,8 @@ const TetrisGame: React.FC = () => {
           currentCombo: newCombo,
           maxCombo: newMaxCombo,
           lastClearedLines: clearedCount,
-          totalPieces: prev.totalPieces + 1
+          totalPieces: prev.totalPieces + 1,
+          canHold: true
         }));
       }
     } else {
@@ -490,6 +516,44 @@ const TetrisGame: React.FC = () => {
     // Force immediate drop
     dropCounterRef.current = dropIntervalRef.current;
   }, [gameState.player, gameState.board, gameState.isGameOver, gameState.isPaused, gameState.isStarted, collision]);
+
+  // Hold piece functionality
+  const holdPiece = useCallback(() => {
+    if (!gameState.player || gameState.isGameOver || gameState.isPaused || !gameState.isStarted || !gameState.canHold) return;
+
+    const currentPiece = gameState.player.matrix;
+    
+    if (gameState.holdPiece === null) {
+      // First time holding a piece
+      const nextPlayer = createPlayer();
+      nextPlayer.matrix = gameState.player.next;
+      nextPlayer.next = SHAPES[Math.floor(Math.random() * (SHAPES.length - 1)) + 1];
+      
+      setGameState(prev => ({
+        ...prev,
+        holdPiece: currentPiece,
+        player: nextPlayer,
+        canHold: false
+      }));
+    } else {
+      // Swap current piece with held piece
+      const newPlayer = {
+        ...gameState.player,
+        matrix: gameState.holdPiece,
+        pos: { x: Math.floor(COLS / 2) - Math.floor(gameState.holdPiece[0].length / 2), y: 0 }
+      };
+      
+      // Check if swapped piece can be placed
+      if (!collision(gameState.board, newPlayer)) {
+        setGameState(prev => ({
+          ...prev,
+          holdPiece: currentPiece,
+          player: newPlayer,
+          canHold: false
+        }));
+      }
+    }
+  }, [gameState.player, gameState.board, gameState.isGameOver, gameState.isPaused, gameState.isStarted, gameState.canHold, gameState.holdPiece, createPlayer, collision]);
 
   // Game loop
   const update = useCallback((time: number = 0) => {
@@ -578,7 +642,9 @@ const TetrisGame: React.FC = () => {
       maxCombo: 0,
       currentCombo: 0,
       lastClearedLines: 0,
-      totalPieces: 0
+      totalPieces: 0,
+      holdPiece: null,
+      canHold: true
     });
 
     setShowStartScreen(false);
@@ -699,6 +765,10 @@ const TetrisGame: React.FC = () => {
             startNewGame();
           }
           break;
+        case 'q':
+        case 'Q':
+          holdPiece();
+          break;
       }
     };
     
@@ -719,12 +789,13 @@ const TetrisGame: React.FC = () => {
       window.removeEventListener('keyup', handleKeyUp);
       if (keyDownTimer) clearInterval(keyDownTimer);
     };
-  }, [playerMove, playerDrop, playerRotate, playerHardDrop, gameState.isStarted, gameState.isGameOver, startNewGame]);
+  }, [playerMove, playerDrop, playerRotate, playerHardDrop, holdPiece, gameState.isStarted, gameState.isGameOver, startNewGame]);
 
   // Set canvas size and prevent layout shift
   useEffect(() => {
     const canvas = canvasRef.current;
     const nextCanvas = nextCanvasRef.current;
+    const holdCanvas = holdCanvasRef.current;
     
     if (canvas) {
       // Set dimensions before any drawing to prevent layout shift
@@ -739,6 +810,13 @@ const TetrisGame: React.FC = () => {
       nextCanvas.style.height = '120px';
       nextCanvas.width = 120;
       nextCanvas.height = 120;
+    }
+
+    if (holdCanvas) {
+      holdCanvas.style.width = '120px';
+      holdCanvas.style.height = '120px';
+      holdCanvas.width = 120;
+      holdCanvas.height = 120;
     }
     
     // Initial draw to prevent blank canvas
@@ -847,6 +925,10 @@ const TetrisGame: React.FC = () => {
                   <div className="control-item">
                     <span className="control-key">P / ESC</span>
                     <span className="control-desc">일시정지</span>
+                  </div>
+                  <div className="control-item">
+                    <span className="control-key">Q</span>
+                    <span className="control-desc">블록 저장/교체</span>
                   </div>
                 </div>
                 <div className="tetris-level-description">
@@ -957,6 +1039,14 @@ const TetrisGame: React.FC = () => {
                 <div className="tetris-info-box">
                   <h3>라인</h3>
                   <p className="tetris-lines">{gameState.linesCleared}</p>
+                </div>
+                <div className="tetris-info-box">
+                  <h3>저장 (Q)</h3>
+                  <canvas 
+                    ref={holdCanvasRef}
+                    id="hold"
+                    className="tetris-hold-canvas"
+                  />
                 </div>
                 <div className="tetris-info-box">
                   <h3>다음</h3>
