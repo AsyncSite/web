@@ -1,0 +1,774 @@
+/**
+ * CheckoutService API Client
+ * 
+ * Checkout 백엔드와의 모든 통신을 담당하는 서비스 레이어
+ * Mock과 Real 모드를 지원하여 개발/프로덕션 환경 대응
+ */
+
+import { 
+  CheckoutRequest, 
+  CheckoutResponse, 
+  CheckoutResult,
+  CheckoutError,
+  CheckoutErrorCode,
+  CheckoutStatus
+} from '../types/checkout';
+
+// PaymentIntent 타입 정의
+export interface PaymentIntent {
+  intentId: string;
+  userId: string;
+  domainId: string;
+  domain: string;
+  reservations: Record<string, string>; // {domainName: reservationId}
+  status: 'CREATED' | 'RESERVED' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+  totalAmount: number;
+  expiresAt: string;
+  createdAt: string;
+  paymentUrl?: string;
+  correlationId: string;
+  requestId: string;
+}
+
+// 결제 상태 확인 응답
+export interface PaymentStatusResponse {
+  intentId: string;
+  status: 'PENDING' | 'CONFIRMED' | 'FAILED' | 'EXPIRED';
+  result?: CheckoutResult;
+  message?: string;
+  updatedAt: string;
+}
+
+// 도메인 검증 응답
+export interface ValidationResponse {
+  canPurchase: boolean;
+  reason?: string;
+  constraints?: string[];
+}
+
+// 예약 응답
+export interface ReservationResponse {
+  reservationId: string;
+  domain: string;
+  domainId: string;
+  expiresAt: string;
+}
+
+// 세션 저장 타입
+interface SessionData {
+  intentId: string;
+  domain: string;
+  domainId: string;
+  reservations: Record<string, string>;
+  expiresAt: string;
+  correlationId: string;
+}
+
+// API 설정
+interface CheckoutServiceConfig {
+  baseUrl: string;
+  useMock: boolean;
+  mockDelay?: number;
+  timeout?: number;
+}
+
+// PG 리턴 파라미터 타입
+interface PGReturnParams {
+  success: boolean;
+  paymentId?: string;
+  pgToken?: string;
+  tid?: string;
+  paymentKey?: string;
+  orderId?: string;
+  message?: string;
+}
+
+class CheckoutService {
+  private config: CheckoutServiceConfig;
+  private mockSessions: Map<string, PaymentIntent> = new Map();
+  private mockStatuses: Map<string, PaymentStatusResponse> = new Map();
+  private abortControllers: Map<string, AbortController> = new Map();
+  private pendingRequests: Set<string> = new Set();
+  private broadcastChannel: BroadcastChannel | null = null;
+
+  constructor(config?: Partial<CheckoutServiceConfig>) {
+    this.config = {
+      baseUrl: config?.baseUrl || process.env.REACT_APP_CHECKOUT_API_URL || '/api/checkout',
+      useMock: config?.useMock ?? (process.env.REACT_APP_USE_MOCK === 'true' || !process.env.REACT_APP_CHECKOUT_API_URL),
+      mockDelay: config?.mockDelay || 500,
+      timeout: config?.timeout || 30000 // 30초 타임아웃
+    };
+    
+    // BroadcastChannel 초기화 (브라우저 지원 확인)
+    if (typeof BroadcastChannel !== 'undefined') {
+      try {
+        this.broadcastChannel = new BroadcastChannel('payment-session');
+        this.setupBroadcastListener();
+      } catch {
+        // BroadcastChannel 지원하지 않는 브라우저
+        this.broadcastChannel = null;
+      }
+    }
+  }
+
+  /**
+   * BroadcastChannel 리스너 설정
+   */
+  private setupBroadcastListener(): void {
+    if (!this.broadcastChannel) return;
+    
+    this.broadcastChannel.addEventListener('message', (event) => {
+      // 다른 탭에서 결제 시작 알림을 받음
+      if (event.data.type === 'PAYMENT_START') {
+        const { orderId, tabId } = event.data;
+        
+        // 현재 탭에서 같은 주문의 결제가 진행 중이면 충돌 감지
+        if (this.pendingRequests.has(`checkout_${orderId}`)) {
+          // 탭 ID가 다르면 충돌
+          if (tabId !== this.getTabId()) {
+            // 사용자에게 알림
+            alert('다른 탭에서 동일한 상품의 결제가 진행 중입니다.');
+            // 현재 진행 중인 요청 취소
+            const controller = this.abortControllers.get(`checkout_${orderId}`);
+            if (controller) {
+              controller.abort();
+            }
+          }
+        }
+      }
+      
+      // 다른 탭에서 결제 완료 알림
+      if (event.data.type === 'PAYMENT_COMPLETE') {
+        const { orderId } = event.data;
+        // 해당 주문의 pending 상태 제거
+        this.pendingRequests.delete(`checkout_${orderId}`);
+      }
+    });
+  }
+  
+  /**
+   * 탭 고유 ID 생성
+   */
+  private getTabId(): string {
+    if (!sessionStorage.getItem('tabId')) {
+      sessionStorage.setItem('tabId', `tab_${Date.now()}_${Math.random()}`);
+    }
+    return sessionStorage.getItem('tabId') || '';
+  }
+  
+  /**
+   * 다른 탭에 결제 시작 알림
+   */
+  private broadcastPaymentStart(orderId: string): void {
+    if (this.broadcastChannel) {
+      this.broadcastChannel.postMessage({
+        type: 'PAYMENT_START',
+        orderId,
+        tabId: this.getTabId(),
+        timestamp: Date.now()
+      });
+    }
+  }
+  
+  /**
+   * 다른 탭에 결제 완료 알림
+   */
+  private broadcastPaymentComplete(orderId: string): void {
+    if (this.broadcastChannel) {
+      this.broadcastChannel.postMessage({
+        type: 'PAYMENT_COMPLETE',
+        orderId,
+        tabId: this.getTabId(),
+        timestamp: Date.now()
+      });
+    }
+  }
+
+  /**
+   * 안전한 localStorage 접근
+   */
+  private safeGetFromStorage(key: string, storage: Storage = localStorage): string | null {
+    try {
+      return storage.getItem(key);
+    } catch (error) {
+      // Private browsing mode 등에서 실패할 수 있음
+      return null;
+    }
+  }
+
+  /**
+   * 안전한 localStorage 저장
+   */
+  private safeSetToStorage(key: string, value: string, storage: Storage = localStorage): void {
+    try {
+      storage.setItem(key, value);
+    } catch (error) {
+      // Quota exceeded 등의 에러 무시
+    }
+  }
+
+  /**
+   * 안전한 JSON 파싱
+   */
+  private safeJsonParse<T>(json: string | null, fallback: T): T {
+    if (!json) return fallback;
+    try {
+      return JSON.parse(json);
+    } catch {
+      return fallback;
+    }
+  }
+
+  /**
+   * 인증 토큰 가져오기
+   */
+  private getAuthToken(): string {
+    const token = this.safeGetFromStorage('accessToken');
+    if (!token) {
+      throw this.createCheckoutError({
+        code: 'AUTH_REQUIRED',
+        message: '로그인이 필요한 서비스입니다.'
+      });
+    }
+    return token;
+  }
+
+  /**
+   * AbortController 생성 및 관리
+   */
+  private createAbortController(key: string): AbortController {
+    // 이전 요청 취소
+    const existingController = this.abortControllers.get(key);
+    if (existingController) {
+      existingController.abort();
+    }
+
+    const controller = new AbortController();
+    this.abortControllers.set(key, controller);
+
+    // 타임아웃 설정
+    setTimeout(() => {
+      controller.abort();
+      this.abortControllers.delete(key);
+    }, this.config.timeout!);
+
+    return controller;
+  }
+
+  /**
+   * 중복 요청 방지
+   */
+  private checkDuplicateRequest(key: string): void {
+    if (this.pendingRequests.has(key)) {
+      throw this.createCheckoutError({
+        code: 'DUPLICATE_REQUEST',
+        message: '이미 처리 중인 요청입니다.'
+      });
+    }
+    this.pendingRequests.add(key);
+  }
+
+  /**
+   * 요청 완료 처리
+   */
+  private completeRequest(key: string): void {
+    this.pendingRequests.delete(key);
+    this.abortControllers.delete(key);
+    
+    // 결제 완료 알림 (checkout 요청인 경우)
+    if (key.startsWith('checkout_')) {
+      const orderId = key.replace('checkout_', '');
+      this.broadcastPaymentComplete(orderId);
+    }
+  }
+
+  /**
+   * 결제 세션 시작 - 도메인 검증, 예약, PaymentIntent 생성
+   */
+  async initiateCheckout(request: CheckoutRequest): Promise<PaymentIntent> {
+    const requestKey = `checkout_${request.orderId}`;
+    
+    try {
+      // 중복 요청 체크
+      this.checkDuplicateRequest(requestKey);
+      
+      // 다른 탭에 결제 시작 알림
+      this.broadcastPaymentStart(request.orderId);
+
+      if (this.config.useMock) {
+        return await this.mockInitiateCheckout(request);
+      }
+
+      const token = this.getAuthToken();
+      const controller = this.createAbortController(requestKey);
+
+      const response = await fetch(`${this.config.baseUrl}/sessions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'X-Request-Id': this.generateRequestId(),
+          'X-Correlation-Id': this.generateCorrelationId()
+        },
+        body: JSON.stringify(request),
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw this.createCheckoutError({
+          code: error.code || 'CHECKOUT_FAILED',
+          message: error.message || `결제 시작 실패: ${response.status}`,
+          details: error
+        });
+      }
+
+      const intent: PaymentIntent = await response.json();
+      
+      // 타입 검증
+      if (!intent.intentId || !intent.paymentUrl) {
+        throw this.createCheckoutError({
+          code: 'INVALID_RESPONSE',
+          message: '서버 응답이 올바르지 않습니다.'
+        });
+      }
+      
+      // 세션 정보 로컬 저장 (브라우저 새로고침 대응)
+      this.saveSession(intent);
+      
+      return intent;
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          throw this.createCheckoutError({
+            code: 'REQUEST_TIMEOUT',
+            message: '요청 시간이 초과되었습니다.'
+          });
+        }
+      }
+      throw error;
+    } finally {
+      this.completeRequest(requestKey);
+    }
+  }
+
+  /**
+   * 결제 상태 확인 (폴링용)
+   */
+  async checkPaymentStatus(intentId: string): Promise<PaymentStatusResponse> {
+    if (!intentId) {
+      throw this.createCheckoutError({
+        code: 'INVALID_PARAM',
+        message: 'Intent ID가 필요합니다.'
+      });
+    }
+
+    try {
+      if (this.config.useMock) {
+        return await this.mockCheckPaymentStatus(intentId);
+      }
+
+      const token = this.getAuthToken();
+      const controller = this.createAbortController(`status_${intentId}`);
+
+      const response = await fetch(`${this.config.baseUrl}/sessions/${intentId}/status`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        throw this.createCheckoutError({
+          code: 'STATUS_CHECK_FAILED',
+          message: '결제 상태 확인 실패'
+        });
+      }
+
+      const status: PaymentStatusResponse = await response.json();
+      return status;
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw this.createCheckoutError({
+          code: 'REQUEST_TIMEOUT',
+          message: '상태 확인 시간 초과'
+        });
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * 결제 검증 (Success 페이지에서 호출)
+   */
+  async verifyPayment(orderId: string, paymentKey: string, amount: number): Promise<CheckoutResult> {
+    const requestKey = `verify_${orderId}`;
+    
+    try {
+      this.checkDuplicateRequest(requestKey);
+
+      if (this.config.useMock) {
+        return await this.mockVerifyPayment(orderId, paymentKey, amount);
+      }
+
+      const token = this.getAuthToken();
+      const controller = this.createAbortController(requestKey);
+
+      const response = await fetch(`${this.config.baseUrl}/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ orderId, paymentKey, amount }),
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw this.createCheckoutError({
+          code: error.code || 'VERIFY_FAILED',
+          message: error.message || '결제 검증 실패'
+        });
+      }
+
+      const result: CheckoutResult = await response.json();
+      return result;
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw this.createCheckoutError({
+          code: 'REQUEST_TIMEOUT',
+          message: '검증 요청 시간 초과'
+        });
+      }
+      throw error;
+    } finally {
+      this.completeRequest(requestKey);
+    }
+  }
+
+  /**
+   * 예약 취소 (결제 실패/취소 시)
+   */
+  async cancelReservation(intentId: string): Promise<void> {
+    if (!intentId) return;
+
+    try {
+      if (this.config.useMock) {
+        return await this.mockCancelReservation(intentId);
+      }
+
+      const token = this.safeGetFromStorage('accessToken');
+      if (!token) return; // 토큰 없으면 조용히 실패
+
+      const controller = this.createAbortController(`cancel_${intentId}`);
+
+      await fetch(`${this.config.baseUrl}/sessions/${intentId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal
+      });
+      // 취소는 실패해도 무시
+    } catch (error) {
+      // 예약 취소 실패는 조용히 처리하되, 개발 환경에서는 로깅
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`[CheckoutService] Failed to cancel reservation ${intentId}:`, error);
+      }
+    }
+  }
+
+  /**
+   * 결제 상태 폴링 (최대 20초)
+   */
+  async pollPaymentStatus(
+    intentId: string, 
+    maxAttempts: number = 20,
+    intervalMs: number = 1000
+  ): Promise<PaymentStatusResponse> {
+    let attempts = 0;
+    const abortController = this.createAbortController(`poll_${intentId}`);
+
+    try {
+      while (attempts < maxAttempts) {
+        // Abort 체크
+        if (abortController.signal.aborted) {
+          throw this.createCheckoutError({
+            code: 'POLLING_ABORTED',
+            message: '폴링이 중단되었습니다.'
+          });
+        }
+
+        const status = await this.checkPaymentStatus(intentId);
+        
+        if (status.status === 'CONFIRMED' || status.status === 'FAILED') {
+          return status;
+        }
+
+        // PENDING 또는 EXPIRED 체크
+        if (status.status === 'EXPIRED') {
+          throw this.createCheckoutError({
+            code: 'CHECKOUT_EXPIRED',
+            message: '결제 시간이 만료되었습니다.'
+          });
+        }
+
+        // 대기
+        await this.sleep(intervalMs);
+        attempts++;
+      }
+
+      // 타임아웃
+      throw this.createCheckoutError({
+        code: 'PAYMENT_TIMEOUT',
+        message: '결제 확인 시간이 초과되었습니다.'
+      });
+    } finally {
+      this.abortControllers.delete(`poll_${intentId}`);
+    }
+  }
+
+  /**
+   * 세션 정보 저장 (브라우저 저장소)
+   */
+  private saveSession(intent: PaymentIntent): void {
+    try {
+      const sessionData: SessionData = {
+        intentId: intent.intentId,
+        domain: intent.domain,
+        domainId: intent.domainId,
+        reservations: intent.reservations,
+        expiresAt: intent.expiresAt,
+        correlationId: intent.correlationId
+      };
+      
+      this.safeSetToStorage('currentPaymentSession', JSON.stringify(sessionData), sessionStorage);
+      
+      // 진행중인 세션 목록 관리
+      const sessions = this.safeJsonParse<SessionData[]>(
+        this.safeGetFromStorage('paymentSessions'),
+        []
+      );
+      sessions.push(sessionData);
+      this.safeSetToStorage('paymentSessions', JSON.stringify(sessions));
+    } catch (error) {
+      // 저장 실패는 치명적이지 않으므로 경고만
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[CheckoutService] Failed to save session:', error);
+      }
+    }
+  }
+
+  /**
+   * 세션 정보 조회
+   */
+  getSession(intentId?: string): SessionData | null {
+    try {
+      if (intentId) {
+        const sessions = this.safeJsonParse<SessionData[]>(
+          this.safeGetFromStorage('paymentSessions'),
+          []
+        );
+        return sessions.find((s) => s.intentId === intentId) || null;
+      }
+      
+      const current = this.safeGetFromStorage('currentPaymentSession', sessionStorage);
+      return this.safeJsonParse<SessionData | null>(current, null);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[CheckoutService] Failed to get session:', error);
+      }
+      return null;
+    }
+  }
+
+  /**
+   * 세션 정보 삭제
+   */
+  clearSession(intentId: string): void {
+    try {
+      sessionStorage.removeItem('currentPaymentSession');
+      
+      const sessions = this.safeJsonParse<SessionData[]>(
+        this.safeGetFromStorage('paymentSessions'),
+        []
+      );
+      const filtered = sessions.filter((s) => s.intentId !== intentId);
+      this.safeSetToStorage('paymentSessions', JSON.stringify(filtered));
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[CheckoutService] Failed to clear session:', error);
+      }
+    }
+  }
+
+  /**
+   * 도메인별 성공 후 리다이렉트 URL 결정
+   */
+  getSuccessRedirectUrl(intent: PaymentIntent | SessionData): string {
+    const domain = intent.domain || 'study';
+    const domainId = intent.domainId;
+
+    switch (domain) {
+      case 'study':
+        return `/study/${domainId || ''}`;
+      case 'documento':
+        return `/documento/dashboard`;
+      case 'job-navigator':
+        return `/job-navigator/premium`;
+      default:
+        return '/';
+    }
+  }
+
+  /**
+   * 모든 진행중인 요청 취소
+   */
+  cancelAllRequests(): void {
+    this.abortControllers.forEach(controller => controller.abort());
+    this.abortControllers.clear();
+    this.pendingRequests.clear();
+  }
+
+  // ===== Mock 구현 =====
+
+  private async mockInitiateCheckout(request: CheckoutRequest): Promise<PaymentIntent> {
+    await this.sleep(this.config.mockDelay!);
+
+    const intent: PaymentIntent = {
+      intentId: `intent_${Date.now()}`,
+      userId: 'mock_user',
+      domain: request.domain,
+      domainId: request.domainId,
+      reservations: {
+        [request.domain]: `res_${Date.now()}`
+      },
+      status: 'RESERVED',
+      totalAmount: request.amount.final,
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(), // 10분
+      createdAt: new Date().toISOString(),
+      correlationId: this.generateCorrelationId(),
+      requestId: this.generateRequestId(),
+      paymentUrl: `/mock-payment/${request.paymentMethod}?checkoutId=${request.orderId}`
+    };
+
+    this.mockSessions.set(intent.intentId, intent);
+    this.saveSession(intent);
+
+    // Mock 상태도 초기화
+    this.mockStatuses.set(intent.intentId, {
+      intentId: intent.intentId,
+      status: 'PENDING',
+      updatedAt: new Date().toISOString()
+    });
+
+    // 5초 후 자동으로 CONFIRMED로 변경 (Mock 웹훅 시뮬레이션)
+    setTimeout(() => {
+      const status = this.mockStatuses.get(intent.intentId);
+      if (status && status.status === 'PENDING') {
+        status.status = 'CONFIRMED';
+        status.updatedAt = new Date().toISOString();
+      }
+    }, 5000);
+
+    return intent;
+  }
+
+  private async mockCheckPaymentStatus(intentId: string): Promise<PaymentStatusResponse> {
+    await this.sleep(200);
+    
+    const status = this.mockStatuses.get(intentId);
+    if (!status) {
+      return {
+        intentId,
+        status: 'FAILED',
+        message: 'Session not found',
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    return status;
+  }
+
+  private async mockVerifyPayment(orderId: string, paymentKey: string, amount: number): Promise<CheckoutResult> {
+    await this.sleep(this.config.mockDelay!);
+
+    return {
+      checkoutId: `checkout_${Date.now()}`,
+      orderId,
+      status: 'completed',
+      paidAt: new Date().toISOString(),
+      paymentKey,
+      receiptUrl: 'https://mock-receipt.example.com'
+    };
+  }
+
+  private async mockCancelReservation(intentId: string): Promise<void> {
+    await this.sleep(this.config.mockDelay!);
+    
+    const session = this.mockSessions.get(intentId);
+    if (session) {
+      session.status = 'CANCELLED';
+    }
+  }
+
+  // ===== 유틸리티 =====
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private generateRequestId(): string {
+    return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private generateCorrelationId(): string {
+    return `corr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private createCheckoutError(error: {
+    code?: string;
+    message?: string;
+    details?: any;
+  }): CheckoutError {
+    return {
+      code: (error.code || 'UNKNOWN_ERROR') as CheckoutErrorCode,
+      message: error.message || '알 수 없는 오류가 발생했습니다.',
+      details: error.details
+    };
+  }
+
+  /**
+   * PG사별 리턴 파라미터 파싱
+   */
+  parsePGReturnParams(params: URLSearchParams, paymentMethod: string): PGReturnParams {
+    switch (paymentMethod) {
+      case 'naverpay':
+        return {
+          success: params.get('resultCode') === 'Success',
+          paymentId: params.get('paymentId') || undefined,
+          message: params.get('resultMessage') || undefined
+        };
+      
+      case 'kakaopay':
+        return {
+          success: params.get('status') === 'success',
+          pgToken: params.get('pg_token') || undefined,
+          tid: params.get('tid') || undefined
+        };
+      
+      default:
+        return {
+          success: params.get('status') === 'success',
+          paymentKey: params.get('paymentKey') || undefined,
+          orderId: params.get('orderId') || undefined
+        };
+    }
+  }
+}
+
+// 싱글톤 인스턴스 export
+export const checkoutService = new CheckoutService();
+
+export default CheckoutService;

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import StudyCalendar from '../components/study/StudyCalendar/StudyCalendar';
-import { PaymentButton } from '../components/payment';
-import { PaymentProvider } from '../contexts/PaymentContext';
-import { PaymentRequest, PaymentResponse } from '../types/payment';
+import { CheckoutButton } from '../components/UnifiedCheckout';
+import { 
+  createStudyCheckoutRequest,
+  CheckoutResponse,
+  CheckoutError
+} from '../types/checkout';
 import EmptyState from '../components/ui/EmptyState';
 import studyService, { Study } from '../api/studyService';
 import { useAuth } from '../contexts/AuthContext';
@@ -221,49 +224,36 @@ const StudyPage: React.FC = () => {
   };
 
   // 결제 성공 핸들러
-  const handlePaymentSuccess = (payment: PaymentResponse) => {
-    console.log('Payment successful:', payment);
-    alert(`결제가 완료되었습니다!\n주문번호: ${payment.orderId}\n금액: ${payment.amount.final.toLocaleString()}원`);
+  const handleCheckoutComplete = (response: CheckoutResponse) => {
+    console.log('Checkout completed:', response);
+    alert(`결제가 시작되었습니다!\nCheckout ID: ${response.checkoutId}\n상태: ${response.status}`);
   };
 
   // 결제 에러 핸들러
-  const handlePaymentError = (error: any) => {
-    console.error('Payment error:', error);
+  const handleCheckoutError = (error: CheckoutError) => {
+    console.error('Checkout error:', error);
     alert('결제 처리 중 오류가 발생했습니다.');
   };
 
-  // 테스트용 결제 요청 데이터
-  // TODO: 프로덕션에서는 백엔드 API를 호출하여 주문번호를 받아와야 함
-  const createPaymentRequest = (studyName: string, price: number): PaymentRequest => ({
-    orderId: `STUDY_${Date.now()}`, // 임시 주문번호 - 백엔드에서 생성 필요
-    orderName: studyName,
-    amount: {
-      original: price,
-      discount: price >= 50000 ? 10000 : 0,
-      final: price >= 50000 ? price - 10000 : price,
-      currency: 'KRW'
-    },
-    items: [{
-      id: '1',
-      name: studyName,
-      description: '온라인 개발 스터디',
-      quantity: 1,
-      price: price
-    }],
-    customer: {
-      id: 'user_123',
-      name: '테스트 사용자',
-      email: 'test@asyncsite.com'
-    },
-    metadata: {
-      studyType: 'online',
-      promotionCode: price >= 50000 ? 'EARLYBIRD' : undefined
-    }
-  });
+  // 테스트용 스터디 결제 요청 데이터 생성
+  const createStudyCheckoutData = (studyName: string, price: number) => {
+    return createStudyCheckoutRequest({
+      studyId: `study-${Date.now()}`,
+      studyName: studyName,
+      price: price,
+      discountRate: price >= 50000 ? 20 : 0, // 5만원 이상일 때 20% 할인
+      customerName: '테스트 사용자',
+      customerEmail: 'test@asyncsite.com',
+      customerPhone: '010-1234-5678',
+      cohortId: `cohort-${Date.now()}`,
+      cohortName: '테스트 기수',
+      startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7일 후
+      endDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 60일 후
+    });
+  };
 
   return (
-    <PaymentProvider>
-      <div className={styles['page-container']}>
+    <div className={styles['page-container']}>
         <main className={styles['page-content']}>
           <div className={styles['study-list-page']}>
             <h1>STUDY</h1>
@@ -558,57 +548,58 @@ const StudyPage: React.FC = () => {
                 </div>
                 </section>
 
-              {/* 결제 시스템 테스트 섹션 (임시) */}
+              {/* 통합 결제 시스템 테스트 섹션 */}
               <div className={styles['payment-test-section']}>
-                <h2>💳 결제 시스템 테스트</h2>
+                <h2>💳 통합 결제 시스템 테스트</h2>
                 <p className={styles['payment-test-description']}>
-                  통합 결제 UI를 테스트해보세요. 실제 결제는 이루어지지 않습니다.
+                  새로운 UnifiedCheckout 시스템을 테스트해보세요. 네이버페이/카카오페이로 결제할 수 있습니다.
                 </p>
 
                 <div className={styles['payment-buttons']}>
                   {/* 다양한 스타일의 결제 버튼 */}
-                  <PaymentButton
+                  <CheckoutButton
                     variant="primary"
                     size="medium"
                     label="테코테코 3기 참가 신청"
-                    request={createPaymentRequest('테코테코 3기', 50000)}
-                    onSuccess={handlePaymentSuccess}
-                    onError={handlePaymentError}
+                    checkoutData={createStudyCheckoutData('테코테코 3기', 50000)}
+                    onCheckoutComplete={handleCheckoutComplete}
+                    onCheckoutError={handleCheckoutError}
+                    showPrice={true}
                   />
 
-                  <PaymentButton
+                  <CheckoutButton
                     variant="secondary"
                     size="medium"
                     label="11루틴 2기 (무료)"
-                    request={createPaymentRequest('11루틴 2기', 0)}
-                    onSuccess={handlePaymentSuccess}
-                    onError={handlePaymentError}
+                    checkoutData={createStudyCheckoutData('11루틴 2기', 0)}
+                    onCheckoutComplete={handleCheckoutComplete}
+                    onCheckoutError={handleCheckoutError}
                   />
 
-                  <PaymentButton
-                    variant="gradient"
+                  <CheckoutButton
+                    variant="primary"
                     size="large"
-                    icon="✨"
-                    request={createPaymentRequest('프리미엄 멘토링', 150000)}
-                    onSuccess={handlePaymentSuccess}
-                    onError={handlePaymentError}
+                    icon={<span>✨</span>}
+                    checkoutData={createStudyCheckoutData('프리미엄 멘토링', 150000)}
+                    onCheckoutComplete={handleCheckoutComplete}
+                    onCheckoutError={handleCheckoutError}
                     showPrice={true}
-                    pricePrefix="프리미엄"
+                    label="프리미엄 멘토링 신청"
                   />
 
-                  <PaymentButton
+                  <CheckoutButton
                     variant="outline"
                     size="small"
                     label="₩30,000 결제 테스트"
-                    request={createPaymentRequest('일반 스터디', 30000)}
-                    onSuccess={handlePaymentSuccess}
-                    onError={handlePaymentError}
+                    checkoutData={createStudyCheckoutData('일반 스터디', 30000)}
+                    onCheckoutComplete={handleCheckoutComplete}
+                    onCheckoutError={handleCheckoutError}
                   />
                 </div>
 
                 <div className={styles['payment-test-notes']}>
                   <p>💡 이 버튼들은 나중에 스터디 상세 페이지나 AI 이력서 서비스에서 사용됩니다.</p>
-                  <p>💡 토스페이먼츠 테스트 모드로 동작하며, 실제 결제는 이루어지지 않습니다.</p>
+                  <p>💡 네이버페이/카카오페이 테스트 모드로 동작하며, 실제 결제는 이루어지지 않습니다.</p>
                 </div>
               </div>
             </>
@@ -618,8 +609,7 @@ const StudyPage: React.FC = () => {
           </div>
         </main>
       </div>
-    </PaymentProvider>
-  );
+    );
 };
 
 export default StudyPage;

@@ -21,6 +21,8 @@ const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
 const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
 const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
+const CheckoutTestPage = lazy(() => import('../pages/CheckoutTestPage'));
+const MockPaymentPage = lazy(() => import('../pages/MockPaymentPage'));
 
 // Studio components
 const DocuMentor = lazy(() => import('../components/lab/ai-studio/documentor/DocuMentor'));
@@ -91,6 +93,14 @@ const router = createBrowserRouter([
       {
         path: 'payment/fail',
         element: <PaymentFailPage />,
+      },
+      {
+        path: 'checkout/test',
+        element: <CheckoutTestPage />,
+      },
+      {
+        path: 'mock-payment/:method',
+        element: <MockPaymentPage />,
       },
       {
         path: 'studio',

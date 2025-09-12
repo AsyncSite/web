@@ -1,0 +1,232 @@
+/* PaymentFailPage.module.css */
+
+/* Container */
+.payment-fail-container {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 40px;
+  background: rgba(239, 83, 80, 0.05);
+  border: 1px solid rgba(239, 83, 80, 0.2);
+  border-radius: 16px;
+  text-align: center;
+}
+
+/* Icon */
+.fail-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+/* Title */
+.fail-title {
+  color: #ef5350;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Error Info Box */
+.error-info-box {
+  margin: 32px 0;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  text-align: left;
+}
+
+.error-info-item {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.error-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.error-info-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.error-info-value {
+  color: #ffffff;
+  word-break: break-word;
+}
+
+.error-info-value.error-code {
+  color: #ef5350;
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+  font-size: 14px;
+}
+
+/* Description */
+.fail-description {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.button-retry {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #c3e88d, #8fd67a);
+  border: none;
+  border-radius: 8px;
+  color: #05060A;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button-retry:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d4f09e, #9fe78b);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+.button-retry:disabled {
+  background: rgba(195, 232, 141, 0.3);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.button-secondary {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.button-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Support Info Box */
+.support-info {
+  margin-top: 40px;
+  padding: 16px;
+  background: rgba(130, 170, 255, 0.05);
+  border: 1px solid rgba(130, 170, 255, 0.1);
+  border-radius: 8px;
+}
+
+.support-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.support-contacts {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.support-contact {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.support-contact:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.support-divider {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Dev Session Info */
+.dev-session-info {
+  margin-top: 20px;
+  padding: 12px;
+  background: rgba(239, 83, 80, 0.05);
+  border: 1px solid rgba(239, 83, 80, 0.1);
+  border-radius: 8px;
+}
+
+.dev-session-title {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 4px;
+}
+
+.dev-session-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+}
+
+.dev-session-cancelling {
+  font-size: 11px;
+  color: #ef5350;
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .payment-fail-container {
+    margin: 40px 20px;
+    padding: 30px 20px;
+  }
+
+  .fail-icon {
+    font-size: 48px;
+  }
+
+  .fail-title {
+    font-size: 20px;
+  }
+
+  .error-info-box {
+    padding: 16px;
+  }
+
+  .error-info-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .button-retry,
+  .button-secondary {
+    width: 100%;
+  }
+
+  .support-contacts {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .support-divider {
+    display: none;
+  }
+}

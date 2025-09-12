@@ -1,0 +1,202 @@
+/* CheckoutSummary.module.css */
+/* 주문 요약 컴포넌트 전용 스타일 - 네임스페이스 격리 */
+
+/* ===== 컨테이너 ===== */
+.unified-checkout-summary-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* ===== 헤더 ===== */
+.unified-checkout-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.unified-checkout-summary-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.unified-checkout-summary-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* ===== 주문명 ===== */
+.unified-checkout-summary-order-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #c3e88d;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+/* ===== 도메인별 정보 섹션 ===== */
+.unified-checkout-summary-domain-info {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.unified-checkout-summary-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.unified-checkout-summary-info-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: -0.01em;
+}
+
+.unified-checkout-summary-info-value {
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 500;
+  text-align: right;
+  letter-spacing: -0.01em;
+}
+
+/* ===== 가격 섹션 ===== */
+.unified-checkout-summary-price-section {
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.unified-checkout-summary-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.unified-checkout-summary-price-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: -0.01em;
+}
+
+.unified-checkout-summary-price-value {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: -0.01em;
+}
+
+.unified-checkout-summary-price-discount {
+  font-size: 14px;
+  color: #ff6b6b;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* ===== 최종 금액 ===== */
+.unified-checkout-summary-price-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 8px;
+  margin-top: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.unified-checkout-summary-price-total-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.unified-checkout-summary-price-total-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #c3e88d;
+  letter-spacing: -0.02em;
+}
+
+/* ===== VAT 안내 ===== */
+.unified-checkout-summary-vat-notice {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+  letter-spacing: -0.01em;
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 480px) {
+  .unified-checkout-summary-container {
+    padding: 16px;
+  }
+  
+  .unified-checkout-summary-order-name {
+    font-size: 16px;
+  }
+  
+  .unified-checkout-summary-price-total-value {
+    font-size: 18px;
+  }
+  
+  .unified-checkout-summary-info-row,
+  .unified-checkout-summary-price-row {
+    padding: 6px 0;
+  }
+}
+
+/* ===== 라이트 모드 대응 ===== */
+@media (prefers-color-scheme: light) {
+  .unified-checkout-summary-container {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .unified-checkout-summary-title {
+    color: #333333;
+  }
+  
+  .unified-checkout-summary-order-name {
+    color: #648050;
+  }
+  
+  .unified-checkout-summary-info-label,
+  .unified-checkout-summary-price-label {
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .unified-checkout-summary-info-value,
+  .unified-checkout-summary-price-value {
+    color: #333333;
+  }
+  
+  .unified-checkout-summary-price-total-label {
+    color: #333333;
+  }
+  
+  .unified-checkout-summary-price-total-value {
+    color: #648050;
+  }
+  
+  .unified-checkout-summary-domain-info,
+  .unified-checkout-summary-price-section {
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .unified-checkout-summary-price-total {
+    border-top-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .unified-checkout-summary-vat-notice {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}

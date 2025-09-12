@@ -1,0 +1,414 @@
+/* UnifiedCheckoutModal.module.css */
+/* 통합 결제 모달 전용 스타일 - 네임스페이스 완전 격리 */
+
+/* ===== 오버레이 ===== */
+.unified-checkout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: unified-checkout-modal-fade-in 0.2s ease-out;
+}
+
+/* ===== 모달 컨테이너 ===== */
+.unified-checkout-modal {
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  background: #0a0b0f;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: unified-checkout-modal-slide-up 0.3s ease-out;
+}
+
+/* ===== 헤더 ===== */
+.unified-checkout-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.unified-checkout-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.unified-checkout-modal-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.unified-checkout-modal-close:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+/* ===== 본문 ===== */
+.unified-checkout-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== 약관 동의 ===== */
+.unified-checkout-modal-terms {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.unified-checkout-modal-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.unified-checkout-modal-checkbox {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #c3e88d;
+  cursor: pointer;
+}
+
+.unified-checkout-modal-checkbox-text {
+  flex: 1;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+.unified-checkout-modal-checkbox-text a {
+  color: #c3e88d;
+  text-decoration: underline;
+  margin: 0 4px;
+}
+
+.unified-checkout-modal-checkbox-text a:hover {
+  color: #d4f09e;
+}
+
+/* ===== 에러 메시지 ===== */
+.unified-checkout-modal-error {
+  padding: 12px 16px;
+  background: rgba(239, 83, 80, 0.1);
+  border: 1px solid rgba(239, 83, 80, 0.2);
+  border-radius: 8px;
+  color: #ef5350;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+/* ===== 처리중 상태 ===== */
+.unified-checkout-modal-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 24px;
+}
+
+.unified-checkout-modal-spinner {
+  display: flex;
+  gap: 8px;
+}
+
+.unified-checkout-modal-spinner > div {
+  width: 12px;
+  height: 12px;
+  background: #c3e88d;
+  border-radius: 50%;
+  animation: unified-checkout-modal-pulse 1.4s ease-in-out infinite;
+}
+
+.unified-checkout-modal-spinner > div:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.unified-checkout-modal-spinner > div:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.unified-checkout-modal-processing-text {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* ===== 푸터 ===== */
+.unified-checkout-modal-footer {
+  display: flex;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.unified-checkout-modal-cancel-button {
+  flex: 1;
+  padding: 14px 24px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.unified-checkout-modal-cancel-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.unified-checkout-modal-submit-button {
+  flex: 2;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #c3e88d 0%, #8fd67a 100%);
+  border: none;
+  border-radius: 12px;
+  color: #05060A;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.unified-checkout-modal-submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d4f09e 0%, #9fe78b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(195, 232, 141, 0.3);
+}
+
+.unified-checkout-modal-submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== 타이머 스타일 ===== */
+.unified-checkout-modal-timer-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid rgba(130, 170, 255, 0.2);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.unified-checkout-modal-timer-container.warning {
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.3);
+  animation: unified-checkout-modal-timer-pulse 1s ease-in-out infinite;
+}
+
+.unified-checkout-modal-timer-container.critical {
+  background: rgba(239, 83, 80, 0.15);
+  border-color: rgba(239, 83, 80, 0.3);
+  animation: unified-checkout-modal-timer-pulse 0.5s ease-in-out infinite;
+}
+
+.unified-checkout-modal-timer-icon {
+  font-size: 14px;
+  animation: unified-checkout-modal-timer-rotate 2s linear infinite;
+}
+
+.unified-checkout-modal-timer-container.critical .unified-checkout-modal-timer-icon {
+  animation-duration: 1s;
+}
+
+.unified-checkout-modal-timer-text {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.5px;
+}
+
+.unified-checkout-modal-timer-container.warning .unified-checkout-modal-timer-text {
+  color: #ffc107;
+}
+
+.unified-checkout-modal-timer-container.critical .unified-checkout-modal-timer-text {
+  color: #ef5350;
+}
+
+/* ===== 애니메이션 ===== */
+@keyframes unified-checkout-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes unified-checkout-modal-slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes unified-checkout-modal-pulse {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes unified-checkout-modal-timer-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes unified-checkout-modal-timer-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 600px) {
+  .unified-checkout-modal {
+    max-width: 100%;
+    max-height: 100vh;
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  .unified-checkout-modal-overlay {
+    padding: 0;
+  }
+  
+  .unified-checkout-modal-body {
+    padding: 20px;
+  }
+  
+  .unified-checkout-modal-footer {
+    flex-direction: column;
+  }
+  
+  .unified-checkout-modal-cancel-button,
+  .unified-checkout-modal-submit-button {
+    width: 100%;
+  }
+}
+
+/* ===== 라이트 모드 대응 ===== */
+@media (prefers-color-scheme: light) {
+  .unified-checkout-modal {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .unified-checkout-modal-header {
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .unified-checkout-modal-title {
+    color: #333333;
+  }
+  
+  .unified-checkout-modal-close {
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .unified-checkout-modal-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000000;
+  }
+  
+  .unified-checkout-modal-terms {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .unified-checkout-modal-checkbox-text {
+    color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .unified-checkout-modal-checkbox-text a {
+    color: #648050;
+  }
+  
+  .unified-checkout-modal-processing-text {
+    color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .unified-checkout-modal-footer {
+    border-top-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .unified-checkout-modal-cancel-button {
+    border-color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .unified-checkout-modal-cancel-button:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.3);
+    color: #000000;
+  }
+}
+
+/* ===== 접근성 ===== */
+.unified-checkout-modal-close:focus-visible,
+.unified-checkout-modal-cancel-button:focus-visible,
+.unified-checkout-modal-submit-button:focus-visible {
+  outline: 2px solid #c3e88d;
+  outline-offset: 2px;
+}

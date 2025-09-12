@@ -132,6 +132,14 @@ function AdminFloatingToolbar({ backofficeUrl }: AdminFloatingToolbarProps): Rea
                 <span className="admin-floating-action-text">캐시 클리어</span>
               </button>
               
+              <a 
+                href="/checkout/test"
+                className="admin-floating-action-btn admin-floating-primary"
+              >
+                <span className="admin-floating-action-icon">💳</span>
+                <span className="admin-floating-action-text">결제 테스트</span>
+              </a>
+              
               <button 
                 onClick={() => window.location.reload()}
                 className="admin-floating-action-btn"

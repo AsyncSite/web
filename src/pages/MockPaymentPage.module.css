@@ -1,0 +1,271 @@
+/* MockPaymentPage.module.css */
+/* Mock 결제 페이지 전용 스타일 - 네임스페이스 격리 */
+
+/* ===== 페이지 컨테이너 ===== */
+.mock-payment-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ===== 메인 컨테이너 ===== */
+.mock-payment-container {
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== 헤더 ===== */
+.mock-payment-header {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mock-payment-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: #000000;
+}
+
+.mock-payment-badge {
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ===== 결제 정보 ===== */
+.mock-payment-info {
+  padding: 24px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.mock-payment-info h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #333333;
+}
+
+.mock-payment-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.mock-payment-label {
+  font-size: 14px;
+  color: #666666;
+}
+
+.mock-payment-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  text-align: right;
+}
+
+/* ===== 안내 메시지 ===== */
+.mock-payment-notice {
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-left: 4px solid #ffc107;
+}
+
+.mock-payment-notice p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.mock-payment-notice p:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== 액션 버튼 ===== */
+.mock-payment-actions {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mock-payment-button-success,
+.mock-payment-button-fail,
+.mock-payment-button-cancel {
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mock-payment-button-success {
+  color: #ffffff;
+}
+
+.mock-payment-button-success:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.mock-payment-button-fail {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.mock-payment-button-fail:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.mock-payment-button-cancel {
+  background: transparent;
+  color: #666666;
+  border: 1px solid #dee2e6;
+}
+
+.mock-payment-button-cancel:hover {
+  background: #f8f9fa;
+}
+
+/* ===== 처리중 상태 ===== */
+.mock-payment-processing {
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.mock-payment-spinner {
+  display: flex;
+  gap: 8px;
+}
+
+.mock-payment-spinner > div {
+  width: 12px;
+  height: 12px;
+  background: #667eea;
+  border-radius: 50%;
+  animation: mock-payment-pulse 1.4s ease-in-out infinite;
+}
+
+.mock-payment-spinner > div:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.mock-payment-spinner > div:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.mock-payment-processing p {
+  margin: 0;
+  font-size: 16px;
+  color: #495057;
+}
+
+/* ===== 디버그 정보 ===== */
+.mock-payment-debug {
+  padding: 0 24px 24px;
+}
+
+.mock-payment-debug details {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.mock-payment-debug summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 12px;
+  user-select: none;
+}
+
+.mock-payment-debug pre {
+  margin: 12px 0 0 0;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  color: #495057;
+  overflow-x: auto;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ===== 에러 상태 ===== */
+.mock-payment-error {
+  text-align: center;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.mock-payment-error h1 {
+  font-size: 20px;
+  color: #dc3545;
+  margin: 0 0 20px 0;
+}
+
+.mock-payment-error button {
+  padding: 12px 24px;
+  background: #667eea;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mock-payment-error button:hover {
+  background: #5a67d8;
+}
+
+/* ===== 애니메이션 ===== */
+@keyframes mock-payment-pulse {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 480px) {
+  .mock-payment-container {
+    border-radius: 0;
+    min-height: 100vh;
+  }
+  
+  .mock-payment-page {
+    padding: 0;
+    align-items: stretch;
+  }
+}

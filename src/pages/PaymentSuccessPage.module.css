@@ -1,0 +1,242 @@
+/* PaymentSuccessPage.module.css */
+
+/* Container */
+.payment-success-container {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.payment-success-container.success {
+  background: rgba(195, 232, 141, 0.05);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+}
+
+.payment-success-container.failed {
+  background: rgba(239, 83, 80, 0.05);
+  border: 1px solid rgba(239, 83, 80, 0.2);
+}
+
+.payment-success-container.verifying {
+  background: rgba(130, 170, 255, 0.05);
+  border: 1px solid rgba(130, 170, 255, 0.2);
+}
+
+/* Icon */
+.payment-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+/* Title */
+.payment-title {
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.payment-title.success {
+  color: #c3e88d;
+}
+
+.payment-title.failed {
+  color: #ef5350;
+}
+
+.payment-title.verifying {
+  color: #82aaff;
+}
+
+/* Payment Info Box */
+.payment-info-box {
+  margin: 32px 0;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  text-align: left;
+}
+
+.payment-info-item {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-info-item:last-child {
+  margin-bottom: 0;
+}
+
+.payment-info-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.payment-info-value {
+  color: #ffffff;
+}
+
+.payment-info-value.monospace {
+  font-size: 12px;
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+}
+
+/* Error Message */
+.error-message {
+  margin: 24px 0;
+  padding: 16px;
+  background: rgba(239, 83, 80, 0.1);
+  border: 1px solid rgba(239, 83, 80, 0.2);
+  border-radius: 8px;
+  color: #ef5350;
+  font-size: 14px;
+}
+
+/* Description */
+.payment-description {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.button-secondary {
+  padding: 12px 24px;
+  background: rgba(195, 232, 141, 0.1);
+  border: 1px solid rgba(195, 232, 141, 0.3);
+  border-radius: 8px;
+  color: #c3e88d;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button-secondary:hover {
+  background: rgba(195, 232, 141, 0.15);
+  transform: translateY(-1px);
+}
+
+.button-primary {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #c3e88d, #8fd67a);
+  border: none;
+  border-radius: 8px;
+  color: #05060A;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button-primary:hover {
+  background: linear-gradient(135deg, #d4f09e, #9fe78b);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
+}
+
+.button-retry {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #82aaff, #6a8fdb);
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button-retry:hover {
+  background: linear-gradient(135deg, #93b5ff, #7b9fe8);
+  transform: translateY(-1px);
+}
+
+.button-outline {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button-outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Dev Mode Info */
+.dev-info {
+  margin-top: 40px;
+  padding: 16px;
+  background: rgba(130, 170, 255, 0.05);
+  border: 1px solid rgba(130, 170, 255, 0.1);
+  border-radius: 8px;
+}
+
+.dev-info-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dev-info-session {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 8px;
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.payment-title.verifying {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .payment-success-container {
+    margin: 40px 20px;
+    padding: 30px 20px;
+  }
+
+  .payment-icon {
+    font-size: 48px;
+  }
+
+  .payment-title {
+    font-size: 20px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .button-primary,
+  .button-secondary,
+  .button-retry,
+  .button-outline {
+    width: 100%;
+  }
+}
