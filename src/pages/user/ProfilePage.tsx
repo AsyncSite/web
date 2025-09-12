@@ -14,6 +14,12 @@ import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
 import { calculateUserProfileCompleteness, getProfileCompletenessColorClass } from '../../utils/profileCompleteness';
 import StudyUpdateModal from '../../components/ui/StudyUpdateModal';
+import { CheckoutButton } from '../../components/UnifiedCheckout';
+import { 
+  createStudyCheckoutRequest,
+  CheckoutResponse,
+  CheckoutError
+} from '../../types/checkout';
 
 function ProfilePage(): React.ReactNode {
   // Auth context에서 실제 사용자 정보 가져오기
@@ -148,7 +154,32 @@ function ProfilePage(): React.ReactNode {
         // Use grouped API to get all study relationships
         const grouped = await studyService.getMyStudiesGrouped();
         console.log('My studies grouped:', grouped);
-        setMyStudiesGrouped(grouped);
+        
+        // 테스트용: ACCEPTED 상태의 더미 데이터 추가
+        const testAcceptedApplications = [
+          {
+            applicationId: 'test-app-001',
+            studyId: 'test-study-001',
+            studyTitle: 'React 심화 스터디 3기',
+            status: 'ACCEPTED',
+            appliedAt: new Date().toISOString(),
+            price: 150000,
+            discountRate: 10,
+            paymentDeadline: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3일 후
+            cohortId: 'cohort-2024-q1',
+            cohortName: '2024년 1기',
+            startDate: '2024-02-01',
+            endDate: '2024-04-30'
+          }
+        ];
+        
+        // 기존 applications에 테스트 데이터 추가
+        const enhancedGrouped = {
+          ...grouped,
+          applications: [...(grouped.applications || []), ...testAcceptedApplications]
+        };
+        
+        setMyStudiesGrouped(enhancedGrouped);
         
         // Also get memberships for backward compatibility
         const list = await studyService.getMyMemberships();
@@ -198,6 +229,32 @@ function ProfilePage(): React.ReactNode {
     if (hour < 12) return '좋은 아침이에요';
     if (hour < 18) return '좋은 오후예요';
     return '좋은 저녁이에요';
+  };
+
+  // 결제 성공 핸들러
+  const handlePaymentSuccess = async (response: CheckoutResponse) => {
+    console.log('Payment successful:', response);
+    alert(`결제가 성공적으로 시작되었습니다!\nCheckout ID: ${response.checkoutId}`);
+    
+    // TODO: 백엔드 API 연동 후 아래 로직 활성화
+    // try {
+    //   await studyService.confirmPayment({
+    //     applicationId: response.metadata?.applicationId,
+    //     paymentId: response.checkoutId
+    //   });
+    //   
+    //   // 스터디 목록 새로고침
+    //   const grouped = await studyService.getMyStudiesGrouped();
+    //   setMyStudiesGrouped(grouped);
+    // } catch (error) {
+    //   console.error('Payment confirmation failed:', error);
+    // }
+  };
+
+  // 결제 실패 핸들러
+  const handlePaymentError = (error: CheckoutError) => {
+    console.error('Payment failed:', error);
+    alert(`결제 처리 중 오류가 발생했습니다.\n오류 코드: ${error.code}\n메시지: ${error.message}`);
   };
 
   return (
@@ -431,6 +488,81 @@ function ProfilePage(): React.ReactNode {
                           {study.message && (
                             <p className={styles.studyMeta}>메시지: {study.message}</p>
                           )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 결제 대기 중인 스터디 섹션 (승인된 신청) */}
+                {myStudiesGrouped?.applications && myStudiesGrouped.applications
+                  .filter((app: any) => app.status === 'ACCEPTED')
+                  .length > 0 && (
+                  <div className={styles.studyGroup}>
+                    <div className={styles.mystSectionHeader}>
+                      <h3>
+                        결제 대기 중인 스터디 
+                        <span className={styles.mystBadge}>
+                          {myStudiesGrouped.applications.filter((app: any) => app.status === 'ACCEPTED').length}
+                        </span>
+                      </h3>
+                    </div>
+                    <div className={styles.studyCards}>
+                      {myStudiesGrouped.applications
+                        .filter((study: any) => study.status === 'ACCEPTED')
+                        .map((study: any) => (
+                        <div key={study.applicationId || study.studyId} className={`${styles.studyCard} ${styles.paymentPending}`}>
+                          <h4>
+                            {study.studyTitle}
+                            <span className={`${styles.studyStatusBadge} ${styles.accepted}`}>
+                              승인됨
+                            </span>
+                          </h4>
+                          <div className={styles.paymentNotice}>
+                            <p className={styles.successMessage}>
+                              🎉 축하합니다! 참가 신청이 승인되었습니다.
+                            </p>
+                            <p className={styles.paymentInfo}>
+                              결제를 완료하면 스터디 참여가 확정됩니다.
+                            </p>
+                            {study.paymentDeadline && (
+                              <p className={styles.deadline}>
+                                결제 마감: {parseDate(study.paymentDeadline)?.toLocaleDateString() || '확인 필요'}
+                              </p>
+                            )}
+                          </div>
+                          
+                          <div className={styles.paymentSection}>
+                            <div className={styles.priceInfo}>
+                              <span className={styles.priceLabel}>참가비</span>
+                              <span className={styles.priceAmount}>
+                                {study.price ? `${study.price.toLocaleString()}원` : '무료'}
+                              </span>
+                            </div>
+                            
+                            <CheckoutButton
+                              variant="primary"
+                              size="medium"
+                              fullWidth
+                              checkoutData={createStudyCheckoutRequest({
+                                studyId: study.studyId,
+                                studyName: study.studyTitle,
+                                price: study.price || 150000, // 기본값 설정
+                                discountRate: study.discountRate || 0,
+                                customerName: authUser?.name || '사용자',
+                                customerEmail: authUser?.email || 'test@asyncsite.com',
+                                customerPhone: '010-0000-0000', // TODO: User 타입에 phone 필드 추가 필요
+                                cohortId: study.cohortId || `cohort-${Date.now()}`,
+                                cohortName: study.cohortName || '기본 기수',
+                                startDate: study.startDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                                endDate: study.endDate || new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                              })}
+                              onCheckoutComplete={handlePaymentSuccess}
+                              onCheckoutError={handlePaymentError}
+                              label="결제하고 참여 확정하기"
+                              showPrice={true}
+                            />
+                          </div>
                         </div>
                       ))}
                     </div>

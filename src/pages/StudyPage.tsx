@@ -548,60 +548,7 @@ const StudyPage: React.FC = () => {
                 </div>
                 </section>
 
-              {/* 통합 결제 시스템 테스트 섹션 */}
-              <div className={styles['payment-test-section']}>
-                <h2>💳 통합 결제 시스템 테스트</h2>
-                <p className={styles['payment-test-description']}>
-                  새로운 UnifiedCheckout 시스템을 테스트해보세요. 네이버페이/카카오페이로 결제할 수 있습니다.
-                </p>
-
-                <div className={styles['payment-buttons']}>
-                  {/* 다양한 스타일의 결제 버튼 */}
-                  <CheckoutButton
-                    variant="primary"
-                    size="medium"
-                    label="테코테코 3기 참가 신청"
-                    checkoutData={createStudyCheckoutData('테코테코 3기', 50000)}
-                    onCheckoutComplete={handleCheckoutComplete}
-                    onCheckoutError={handleCheckoutError}
-                    showPrice={true}
-                  />
-
-                  <CheckoutButton
-                    variant="secondary"
-                    size="medium"
-                    label="11루틴 2기 (무료)"
-                    checkoutData={createStudyCheckoutData('11루틴 2기', 0)}
-                    onCheckoutComplete={handleCheckoutComplete}
-                    onCheckoutError={handleCheckoutError}
-                  />
-
-                  <CheckoutButton
-                    variant="primary"
-                    size="large"
-                    icon={<span>✨</span>}
-                    checkoutData={createStudyCheckoutData('프리미엄 멘토링', 150000)}
-                    onCheckoutComplete={handleCheckoutComplete}
-                    onCheckoutError={handleCheckoutError}
-                    showPrice={true}
-                    label="프리미엄 멘토링 신청"
-                  />
-
-                  <CheckoutButton
-                    variant="outline"
-                    size="small"
-                    label="₩30,000 결제 테스트"
-                    checkoutData={createStudyCheckoutData('일반 스터디', 30000)}
-                    onCheckoutComplete={handleCheckoutComplete}
-                    onCheckoutError={handleCheckoutError}
-                  />
-                </div>
-
-                <div className={styles['payment-test-notes']}>
-                  <p>💡 이 버튼들은 나중에 스터디 상세 페이지나 AI 이력서 서비스에서 사용됩니다.</p>
-                  <p>💡 네이버페이/카카오페이 테스트 모드로 동작하며, 실제 결제는 이루어지지 않습니다.</p>
-                </div>
-              </div>
+              {/* 결제 테스트 UI는 /checkout/test 페이지로 통합되었습니다. */}
             </>
           ) : (
             <StudyCalendar studies={studies} />

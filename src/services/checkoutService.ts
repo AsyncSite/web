@@ -11,7 +11,8 @@ import {
   CheckoutResult,
   CheckoutError,
   CheckoutErrorCode,
-  CheckoutStatus
+  CheckoutStatus,
+  ApiResponse
 } from '../types/checkout';
 
 // PaymentIntent 타입 정의
@@ -223,7 +224,7 @@ class CheckoutService {
    * 인증 토큰 가져오기
    */
   private getAuthToken(): string {
-    const token = this.safeGetFromStorage('accessToken');
+    const token = this.safeGetFromStorage('authToken');
     if (!token) {
       throw this.createCheckoutError({
         code: 'AUTH_REQUIRED',
@@ -302,7 +303,7 @@ class CheckoutService {
       const token = this.getAuthToken();
       const controller = this.createAbortController(requestKey);
 
-      const response = await fetch(`${this.config.baseUrl}/sessions`, {
+      const response = await fetch(`${this.config.baseUrl}/payment-intents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -315,15 +316,28 @@ class CheckoutService {
       });
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
+        const apiResponse: ApiResponse<any> = await response.json().catch(() => ({
+          success: false,
+          error: { code: 'PARSE_ERROR', message: '응답 파싱 실패' }
+        }));
         throw this.createCheckoutError({
-          code: error.code || 'CHECKOUT_FAILED',
-          message: error.message || `결제 시작 실패: ${response.status}`,
-          details: error
+          code: apiResponse.error?.code || 'CHECKOUT_FAILED',
+          message: apiResponse.error?.message || `결제 시작 실패: ${response.status}`,
+          details: apiResponse.error?.details
         });
       }
 
-      const intent: PaymentIntent = await response.json();
+      const apiResponse: ApiResponse<PaymentIntent> = await response.json();
+      
+      // API 응답 검증
+      if (!apiResponse.success || !apiResponse.data) {
+        throw this.createCheckoutError({
+          code: apiResponse.error?.code || 'INVALID_RESPONSE',
+          message: apiResponse.error?.message || '서버 응답이 올바르지 않습니다.'
+        });
+      }
+      
+      const intent = apiResponse.data;
       
       // 타입 검증
       if (!intent.intentId || !intent.paymentUrl) {
@@ -371,7 +385,7 @@ class CheckoutService {
       const token = this.getAuthToken();
       const controller = this.createAbortController(`status_${intentId}`);
 
-      const response = await fetch(`${this.config.baseUrl}/sessions/${intentId}/status`, {
+      const response = await fetch(`${this.config.baseUrl}/payment-intents/${intentId}/status`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -379,14 +393,26 @@ class CheckoutService {
       });
 
       if (!response.ok) {
+        const apiResponse: ApiResponse<any> = await response.json().catch(() => ({
+          success: false,
+          error: { code: 'STATUS_CHECK_FAILED', message: '결제 상태 확인 실패' }
+        }));
         throw this.createCheckoutError({
-          code: 'STATUS_CHECK_FAILED',
-          message: '결제 상태 확인 실패'
+          code: apiResponse.error?.code || 'STATUS_CHECK_FAILED',
+          message: apiResponse.error?.message || '결제 상태 확인 실패'
         });
       }
 
-      const status: PaymentStatusResponse = await response.json();
-      return status;
+      const apiResponse: ApiResponse<PaymentStatusResponse> = await response.json();
+      
+      if (!apiResponse.success || !apiResponse.data) {
+        throw this.createCheckoutError({
+          code: apiResponse.error?.code || 'INVALID_RESPONSE',
+          message: apiResponse.error?.message || '서버 응답이 올바르지 않습니다.'
+        });
+      }
+      
+      return apiResponse.data;
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         throw this.createCheckoutError({
@@ -414,7 +440,7 @@ class CheckoutService {
       const token = this.getAuthToken();
       const controller = this.createAbortController(requestKey);
 
-      const response = await fetch(`${this.config.baseUrl}/verify`, {
+      const response = await fetch(`${this.config.baseUrl}/payment-intents/verification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -425,15 +451,26 @@ class CheckoutService {
       });
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
+        const apiResponse: ApiResponse<any> = await response.json().catch(() => ({
+          success: false,
+          error: { code: 'VERIFY_FAILED', message: '결제 검증 실패' }
+        }));
         throw this.createCheckoutError({
-          code: error.code || 'VERIFY_FAILED',
-          message: error.message || '결제 검증 실패'
+          code: apiResponse.error?.code || 'VERIFY_FAILED',
+          message: apiResponse.error?.message || '결제 검증 실패'
         });
       }
 
-      const result: CheckoutResult = await response.json();
-      return result;
+      const apiResponse: ApiResponse<CheckoutResult> = await response.json();
+      
+      if (!apiResponse.success || !apiResponse.data) {
+        throw this.createCheckoutError({
+          code: apiResponse.error?.code || 'INVALID_RESPONSE',
+          message: apiResponse.error?.message || '결제 검증 응답이 올바르지 않습니다.'
+        });
+      }
+      
+      return apiResponse.data;
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         throw this.createCheckoutError({
@@ -458,12 +495,12 @@ class CheckoutService {
         return await this.mockCancelReservation(intentId);
       }
 
-      const token = this.safeGetFromStorage('accessToken');
+      const token = this.safeGetFromStorage('authToken');
       if (!token) return; // 토큰 없으면 조용히 실패
 
       const controller = this.createAbortController(`cancel_${intentId}`);
 
-      await fetch(`${this.config.baseUrl}/sessions/${intentId}/cancel`, {
+      await fetch(`${this.config.baseUrl}/payment-intents/${intentId}/cancel`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -636,8 +673,10 @@ class CheckoutService {
   private async mockInitiateCheckout(request: CheckoutRequest): Promise<PaymentIntent> {
     await this.sleep(this.config.mockDelay!);
 
+    const intentId = `intent_${Date.now()}`;
+    
     const intent: PaymentIntent = {
-      intentId: `intent_${Date.now()}`,
+      intentId: intentId,
       userId: 'mock_user',
       domain: request.domain,
       domainId: request.domainId,
@@ -650,11 +689,18 @@ class CheckoutService {
       createdAt: new Date().toISOString(),
       correlationId: this.generateCorrelationId(),
       requestId: this.generateRequestId(),
-      paymentUrl: `/mock-payment/${request.paymentMethod}?checkoutId=${request.orderId}`
+      paymentUrl: `/mock-payment/${request.paymentMethod}?intentId=${intentId}`
     };
 
     this.mockSessions.set(intent.intentId, intent);
     this.saveSession(intent);
+    
+    // intentId를 키로 사용하여 체크아웃 데이터 저장
+    try {
+      localStorage.setItem(`payment_intent_${intent.intentId}`, JSON.stringify(request));
+    } catch (_) {
+      // storage 에러는 무시
+    }
 
     // Mock 상태도 초기화
     this.mockStatuses.set(intent.intentId, {

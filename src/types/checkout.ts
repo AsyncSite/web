@@ -7,6 +7,18 @@
  * - Checkout Service와 통신하기 위한 인터페이스
  */
 
+// ===== API Response Wrapper =====
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: any;
+  };
+  timestamp: string;
+}
+
 // ===== 도메인 정의 =====
 export type CheckoutDomain = 'study' | 'documento' | 'job-navigator';
 

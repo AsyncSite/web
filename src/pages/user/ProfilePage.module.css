@@ -1607,3 +1607,104 @@
 .profileCompleteness__checklist__icon {
   font-size: 1rem;
 }
+
+/* Payment Pending Section Styles */
+.studyCard.paymentPending {
+  background: linear-gradient(135deg, rgba(46, 213, 115, 0.1) 0%, rgba(52, 211, 153, 0.05) 100%);
+  border: 1px solid rgba(46, 213, 115, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.studyCard.paymentPending::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2ed573, #34d399);
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.paymentNotice {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border-left: 3px solid #2ed573;
+}
+
+.paymentNotice .successMessage {
+  color: #2ed573;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.paymentNotice .paymentInfo {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.paymentNotice .deadline {
+  color: #ffc107;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  background: rgba(255, 193, 7, 0.1);
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.paymentSection {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.priceInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+}
+
+.priceLabel {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.priceAmount {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.studyStatusBadge.accepted {
+  background: linear-gradient(135deg, #2ed573, #34d399);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(46, 213, 115, 0.3);
+}
