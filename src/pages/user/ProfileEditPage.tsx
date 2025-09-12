@@ -97,7 +97,7 @@ function ProfileEditPage(): React.ReactNode {
       }));
       
       // Load notification settings separately
-      notiService.getNotiSetting(user.id)
+      notiService.getNotiSetting(user.email)
           .then(notiSetting => {
             setFormData(prev => ({
               ...prev,
@@ -234,7 +234,7 @@ function ProfileEditPage(): React.ReactNode {
       // 알림 설정 업데이트
       if (user) {
         try {
-          await notiService.updateNotiSetting(user.id, {
+          await notiService.updateNotiSetting(user.email, {
             studyUpdates: formData.studyUpdates,
             marketing: formData.marketing,
             emailEnabled: formData.emailEnabled,
