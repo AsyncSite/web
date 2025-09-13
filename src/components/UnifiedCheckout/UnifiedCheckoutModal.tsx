@@ -117,6 +117,64 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
     }
   }, [session, isProcessing, remainingTime, isOpen]);
   
+  // Payment status 폴링 시작
+  const startPollingForPaymentStatus = async (intentId: string) => {
+    console.log('[UnifiedCheckoutModal] Starting payment status polling for intentId:', intentId);
+    try {
+      // checkoutService의 기존 pollPaymentStatus 메소드 사용 (최대 30초, 2초 간격)
+      const status = await checkoutService.pollPaymentStatus(intentId, 30, 2000);
+
+      if (status.status === 'CONFIRMED') {
+        // 성공 처리
+        if (onSuccess) {
+          onSuccess({
+            checkoutId: intentId,
+            paymentUrl: '',
+            expiresAt: new Date().toISOString(),
+            status: 'completed'
+          });
+        }
+
+        // 세션 정리
+        clearSession();
+
+        // 성공 페이지로 이동 (URL 파라미터 포함)
+        const successUrl = new URL('/payment/success', window.location.origin);
+        successUrl.searchParams.set('orderId', checkoutData.orderId);
+        successUrl.searchParams.set('amount', checkoutData.amount.final.toString());
+        successUrl.searchParams.set('paymentKey', intentId); // intentId를 paymentKey로 사용
+
+        setTimeout(() => {
+          window.location.href = successUrl.toString();
+        }, 1000);
+      } else if (status.status === 'FAILED' || status.status === 'EXPIRED') {
+        setIsProcessing(false);
+        setErrorMessage(status.message || '결제가 실패했습니다.');
+        clearSession();
+
+        if (onError) {
+          onError({
+            code: 'PAYMENT_FAILED' as CheckoutErrorCode,
+            message: status.message || '결제가 실패했습니다.',
+            details: status
+          });
+        }
+      }
+    } catch (error) {
+      setIsProcessing(false);
+      setErrorMessage(error instanceof Error ? error.message : '결제 확인 중 오류가 발생했습니다.');
+      clearSession();
+
+      if (onError) {
+        onError({
+          code: 'PAYMENT_FAILED' as CheckoutErrorCode,
+          message: error instanceof Error ? error.message : '결제 확인 중 오류가 발생했습니다.',
+          details: error
+        });
+      }
+    }
+  };
+
   // 결제 처리
   const handleCheckout = async () => {
     if (!selectedMethod) {
@@ -141,10 +199,10 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
       
       // CheckoutService를 통한 세션 시작
       const intent = await checkoutService.initiateCheckout(fullRequest);
-      
+
       // 세션 시작
       startSession(intent);
-      
+
       // PaymentIntent ID를 키로 사용하여 결제 정보 저장
       try {
         localStorage.setItem(`payment_intent_${intent.intentId}`, JSON.stringify(fullRequest));
@@ -152,15 +210,19 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
         // storage 에러는 무시
       }
 
-      // URL 모드면 결제 URL로 이동 (SDK 모드는 initiateCheckout 내에서 SDK 호출)
+      // URL 모드면 결제 URL로 이동
       if (intent.paymentUrl && intent.invocationType !== 'SDK') {
         // 1초 후 redirect (로딩 표시를 위해)
         setTimeout(() => {
           window.location.href = intent.paymentUrl!; // paymentUrl is checked above
         }, 1000);
+      } else if ((intent as any).sdkCompleted) {
+        // SDK 모드: initiateCheckout 내에서 PortOne.requestPayment 호출 완료
+        // 결제창이 닫혔으므로 바로 폴링 시작
+        startPollingForPaymentStatus(intent.intentId);
       } else if (intent.invocationType === 'SDK') {
-        // SDK 모드: 이미 initiateCheckout 내에서 PortOne.requestPayment 호출 완료
-        // 사용자는 SDK 흐름(redirect 포함)에 따라 결제 진행
+        // SDK 호출이 실패한 경우 (sdkCompleted 플래그가 없음)
+        throw new Error('결제 창을 열 수 없습니다.');
       } else {
         throw new Error('결제 시작 정보가 올바르지 않습니다.');
       }

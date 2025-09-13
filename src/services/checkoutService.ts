@@ -404,6 +404,10 @@ class CheckoutService {
             PortOne = await import('@portone/browser-sdk');
           }
           await PortOne.requestPayment(intent.portOneSdkPayload);
+
+          // SDK 결제창이 닫힌 후 폴링 시작을 위해 플래그 설정
+          // 실제 폴링은 UnifiedCheckoutModal에서 처리
+          (intent as any).sdkCompleted = true;
         } catch (e: any) {
           // 사용자 친화적 메시지로 변경
           let userMessage = '결제를 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.';
@@ -478,14 +482,28 @@ class CheckoutService {
       }
 
       const apiResponse: ApiResponse<PaymentStatusResponse> = await response.json();
-      
+
       if (!apiResponse.success || !apiResponse.data) {
+        console.error('[CheckoutService] Payment status check failed:', {
+          intentId,
+          success: apiResponse.success,
+          error: apiResponse.error,
+          data: apiResponse.data
+        });
         throw this.createCheckoutError({
           code: apiResponse.error?.code || 'INVALID_RESPONSE',
           message: apiResponse.error?.message || '서버 응답이 올바르지 않습니다.'
         });
       }
-      
+
+      // 폴링 상태 로깅
+      console.log('[CheckoutService] Payment status check:', {
+        intentId,
+        status: apiResponse.data.status,
+        message: apiResponse.data.message,
+        updatedAt: apiResponse.data.updatedAt
+      });
+
       return apiResponse.data;
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
@@ -594,31 +612,51 @@ class CheckoutService {
    * 결제 상태 폴링 (최대 20초)
    */
   async pollPaymentStatus(
-    intentId: string, 
+    intentId: string,
     maxAttempts: number = 20,
     intervalMs: number = 1000
   ): Promise<PaymentStatusResponse> {
     let attempts = 0;
     const abortController = this.createAbortController(`poll_${intentId}`);
 
+    console.log('[CheckoutService] Starting payment status polling:', {
+      intentId,
+      maxAttempts,
+      intervalMs
+    });
+
     try {
       while (attempts < maxAttempts) {
         // Abort 체크
         if (abortController.signal.aborted) {
+          console.log('[CheckoutService] Polling aborted:', { intentId, attempts });
           throw this.createCheckoutError({
             code: 'POLLING_ABORTED',
             message: '폴링이 중단되었습니다.'
           });
         }
 
+        console.log('[CheckoutService] Polling attempt:', {
+          intentId,
+          attempt: attempts + 1,
+          maxAttempts
+        });
+
         const status = await this.checkPaymentStatus(intentId);
-        
+
         if (status.status === 'CONFIRMED' || status.status === 'FAILED') {
+          console.log('[CheckoutService] Polling completed:', {
+            intentId,
+            finalStatus: status.status,
+            attempts: attempts + 1,
+            message: status.message
+          });
           return status;
         }
 
         // PENDING 또는 EXPIRED 체크
         if (status.status === 'EXPIRED') {
+          console.error('[CheckoutService] Payment expired:', { intentId, attempts });
           throw this.createCheckoutError({
             code: 'CHECKOUT_EXPIRED',
             message: '결제 시간이 만료되었습니다.'
@@ -631,6 +669,11 @@ class CheckoutService {
       }
 
       // 타임아웃
+      console.error('[CheckoutService] Polling timeout:', {
+        intentId,
+        totalAttempts: attempts,
+        totalTime: `${attempts * intervalMs}ms`
+      });
       throw this.createCheckoutError({
         code: 'PAYMENT_TIMEOUT',
         message: '결제 확인 시간이 초과되었습니다.'
@@ -797,9 +840,10 @@ class CheckoutService {
 
   private async mockCheckPaymentStatus(intentId: string): Promise<PaymentStatusResponse> {
     await this.sleep(200);
-    
+
     const status = this.mockStatuses.get(intentId);
     if (!status) {
+      console.log('[CheckoutService] Mock status check - Session not found:', { intentId });
       return {
         intentId,
         status: 'FAILED',
@@ -807,6 +851,13 @@ class CheckoutService {
         updatedAt: new Date().toISOString()
       };
     }
+
+    console.log('[CheckoutService] Mock status check:', {
+      intentId,
+      status: status.status,
+      message: status.message,
+      updatedAt: status.updatedAt
+    });
 
     return status;
   }

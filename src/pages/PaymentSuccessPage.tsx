@@ -22,6 +22,8 @@ const PaymentSuccessPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const pollingCountRef = useRef(0);
   const [displayCount, setDisplayCount] = useState(0);
+  const [domainRedirectUrl, setDomainRedirectUrl] = useState<string>('');
+  const [domainName, setDomainName] = useState<string>('');
 
   // 결제 검증 및 폴링
   const verifyPayment = useCallback(async () => {
@@ -57,16 +59,23 @@ const PaymentSuccessPage: React.FC = () => {
         
         if (status.status === 'CONFIRMED') {
           setVerificationStatus('SUCCESS');
-          
+
           // 세션 정리
           checkoutService.clearSession(intentId);
-          
-          // 도메인별 리다이렉트 (3초 후)
+
+          // 도메인별 리다이렉트 URL 저장 (자동 이동 제거)
           if (session) {
             const redirectUrl = checkoutService.getSuccessRedirectUrl(session);
-            setTimeout(() => {
-              navigate(redirectUrl);
-            }, 3000);
+            setDomainRedirectUrl(redirectUrl);
+
+            // 도메인명 설정
+            const domain = session.domain || 'study';
+            const domainNameMap: Record<string, string> = {
+              'study': '스터디 페이지',
+              'documento': 'Documento 대시보드',
+              'job-navigator': 'Job Navigator 프리미엄'
+            };
+            setDomainName(domainNameMap[domain] || '서비스 페이지');
           }
         } else if (status.status === 'FAILED') {
           throw new Error(status.message || '결제 검증에 실패했습니다.');
@@ -213,15 +222,17 @@ const PaymentSuccessPage: React.FC = () => {
           <div className={styles['action-buttons']}>
             {verificationStatus === 'SUCCESS' && (
               <>
-                <button
-                  onClick={() => navigate('/study')}
-                  className={styles['button-secondary']}
-                >
-                  스터디 목록으로
-                </button>
+                {domainRedirectUrl && (
+                  <button
+                    onClick={() => navigate(domainRedirectUrl)}
+                    className={styles['button-primary']}
+                  >
+                    {domainName}로 이동
+                  </button>
+                )}
                 <button
                   onClick={() => navigate('/')}
-                  className={styles['button-primary']}
+                  className={styles['button-secondary']}
                 >
                   홈으로 이동
                 </button>
