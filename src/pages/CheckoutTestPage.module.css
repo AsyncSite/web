@@ -6,6 +6,12 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
   padding: 40px 20px;
+  overflow-y: auto; /* Ensure page can scroll independently */
+}
+
+/* Override global App.css section min-height for this page only */
+.checkout-test-page section {
+  min-height: auto !important;
 }
 
 .checkout-test-container {

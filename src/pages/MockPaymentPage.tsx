@@ -12,17 +12,17 @@ const MockPaymentPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedAction, setSelectedAction] = useState<'success' | 'fail' | null>(null);
   
-  const checkoutId = searchParams.get('checkoutId');
+  const intentId = searchParams.get('intentId');
   
-  // localStorage에서 checkout 데이터 읽기
+  // localStorage에서 PaymentIntent 데이터 읽기
   useEffect(() => {
-    if (checkoutId) {
-      const storedData = localStorage.getItem(`checkout_${checkoutId}`);
+    if (intentId) {
+      const storedData = localStorage.getItem(`payment_intent_${intentId}`);
       if (storedData) {
         setCheckoutData(JSON.parse(storedData));
       }
     }
-  }, [checkoutId]);
+  }, [intentId]);
   
   // 결제 성공 처리
   const handleSuccess = () => {
@@ -31,7 +31,7 @@ const MockPaymentPage: React.FC = () => {
     
     // Mock 결제 결과 저장
     const paymentResult = {
-      checkoutId,
+      intentId: intentId,
       orderId: checkoutData?.orderId,
       paymentKey: `mock_${method}_${Date.now()}`,
       status: 'completed',

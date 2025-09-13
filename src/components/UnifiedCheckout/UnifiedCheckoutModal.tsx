@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { 
   CheckoutRequest, 
   CheckoutPaymentMethod,
@@ -97,7 +98,7 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
           if (session) {
             // 동기적으로 취소 요청 전송
             navigator.sendBeacon(
-              `${checkoutService['config'].baseUrl}/sessions/${session.intentId}/cancel`,
+              `${checkoutService['config'].baseUrl}/payment-intents/${session.intentId}/cancel`,
               JSON.stringify({ intentId: session.intentId })
             );
           }
@@ -143,6 +144,13 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
       // 세션 시작
       startSession(intent);
       
+      // PaymentIntent ID를 키로 사용하여 결제 정보 저장
+      try {
+        localStorage.setItem(`payment_intent_${intent.intentId}`, JSON.stringify(fullRequest));
+      } catch (_) {
+        // storage 에러는 무시
+      }
+
       // 결제 URL이 있으면 이동
       if (intent.paymentUrl) {
         // 1초 후 redirect (로딩 표시를 위해)
@@ -173,7 +181,8 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
   
   if (!isOpen) return null;
   
-  return (
+  // Portal을 사용하여 body에 직접 렌더링
+  return ReactDOM.createPortal(
     <div 
       className={styles['unified-checkout-modal-overlay']}
       onClick={(e) => {
@@ -297,7 +306,8 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
