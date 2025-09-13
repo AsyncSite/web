@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { 
-  CheckoutRequest, 
+import {
+  CheckoutRequest,
   CheckoutPaymentMethod,
   CheckoutError,
+  CheckoutErrorCode,
   CheckoutResponse
 } from '../../types/checkout';
 import { checkoutService } from '../../services/checkoutService';
@@ -151,26 +152,47 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
         // storage 에러는 무시
       }
 
-      // 결제 URL이 있으면 이동
-      if (intent.paymentUrl) {
+      // URL 모드면 결제 URL로 이동 (SDK 모드는 initiateCheckout 내에서 SDK 호출)
+      if (intent.paymentUrl && intent.invocationType !== 'SDK') {
         // 1초 후 redirect (로딩 표시를 위해)
         setTimeout(() => {
           window.location.href = intent.paymentUrl!; // paymentUrl is checked above
         }, 1000);
+      } else if (intent.invocationType === 'SDK') {
+        // SDK 모드: 이미 initiateCheckout 내에서 PortOne.requestPayment 호출 완료
+        // 사용자는 SDK 흐름(redirect 포함)에 따라 결제 진행
       } else {
-        throw new Error('결제 URL을 받지 못했습니다.');
+        throw new Error('결제 시작 정보가 올바르지 않습니다.');
       }
       
     } catch (error) {
       setIsProcessing(false);
+
+      // 사용자 친화적 메시지 처리
+      let userMessage = '결제를 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.';
+      let errorCode: CheckoutErrorCode = 'UNKNOWN_ERROR';
+
+      if (error instanceof Error) {
+        userMessage = error.message;
+        if ('code' in error) {
+          errorCode = (error as any).code as CheckoutErrorCode;
+        }
+      }
+
       const checkoutError: CheckoutError = {
-        code: error instanceof Error && 'code' in error ? (error as any).code : 'CHECKOUT_FAILED',
-        message: error instanceof Error ? error.message : '결제 처리 중 오류가 발생했습니다.',
+        code: errorCode,
+        message: userMessage,
         details: error
       };
-      setErrorMessage(checkoutError.message);
+
+      setErrorMessage(userMessage);
       onError?.(checkoutError);
-      
+
+      // 개발 환경에서만 상세 로그 출력
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Checkout error details:', checkoutError);
+      }
+
       // 세션이 있으면 취소
       if (session) {
         await checkoutService.cancelReservation(session.intentId);

@@ -15,6 +15,18 @@ import {
   ApiResponse
 } from '../types/checkout';
 
+// PortOne SDK payload (server-provided)
+export interface PortOneSdkPayload {
+  storeId: string;
+  channelKey: string;
+  paymentId: string;
+  orderName: string;
+  totalAmount: number;
+  currency: string; // e.g., CURRENCY_KRW
+  payMethod: string; // e.g., CARD | KAKAOPAY | NAVERPAY
+  redirectUrl: string;
+}
+
 // PaymentIntent 타입 정의
 export interface PaymentIntent {
   intentId: string;
@@ -29,6 +41,9 @@ export interface PaymentIntent {
   paymentUrl?: string;
   correlationId: string;
   requestId: string;
+  // New fields for SDK-first flow
+  invocationType?: 'SDK' | 'URL';
+  portOneSdkPayload?: PortOneSdkPayload | null;
 }
 
 // 결제 상태 확인 응답
@@ -94,8 +109,8 @@ class CheckoutService {
 
   constructor(config?: Partial<CheckoutServiceConfig>) {
     this.config = {
-      baseUrl: config?.baseUrl || process.env.REACT_APP_CHECKOUT_API_URL || '/api/checkout',
-      useMock: config?.useMock ?? (process.env.REACT_APP_USE_MOCK === 'true' || !process.env.REACT_APP_CHECKOUT_API_URL),
+      baseUrl: config?.baseUrl || process.env.REACT_APP_CHECKOUT_API_URL || 'http://localhost:8080/api/checkout',
+      useMock: config?.useMock ?? (process.env.REACT_APP_USE_MOCK === 'true'),
       mockDelay: config?.mockDelay || 500,
       timeout: config?.timeout || 30000 // 30초 타임아웃
     };
@@ -320,10 +335,28 @@ class CheckoutService {
           success: false,
           error: { code: 'PARSE_ERROR', message: '응답 파싱 실패' }
         }));
+        // 사용자 친화적 메시지 처리
+        let userMessage = '결제를 시작할 수 없습니다.';
+
+        // HTTP 상태 코드별 메시지
+        if (response.status === 500 || response.status === 502 || response.status === 503) {
+          userMessage = '서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+        } else if (response.status === 404) {
+          userMessage = '결제 서비스를 찾을 수 없습니다. 관리자에게 문의해 주세요.';
+        } else if (response.status === 401 || response.status === 403) {
+          userMessage = '로그인이 필요하거나 권한이 없습니다.';
+        } else if (response.status === 400) {
+          userMessage = apiResponse.error?.message || '입력한 정보를 다시 확인해 주세요.';
+        }
+
         throw this.createCheckoutError({
-          code: apiResponse.error?.code || 'CHECKOUT_FAILED',
-          message: apiResponse.error?.message || `결제 시작 실패: ${response.status}`,
-          details: apiResponse.error?.details
+          code: apiResponse.error?.code || 'PAYMENT_INIT_ERROR',
+          message: userMessage,
+          details: {
+            originalMessage: apiResponse.error?.message,
+            statusCode: response.status,
+            ...apiResponse.error?.details
+          }
         });
       }
 
@@ -339,8 +372,8 @@ class CheckoutService {
       
       const intent = apiResponse.data;
       
-      // 타입 검증
-      if (!intent.intentId || !intent.paymentUrl) {
+      // 타입 검증 (SDK 또는 URL 중 하나는 유효해야 함)
+      if (!intent.intentId || (!intent.paymentUrl && !(intent.invocationType === 'SDK' && intent.portOneSdkPayload))) {
         throw this.createCheckoutError({
           code: 'INVALID_RESPONSE',
           message: '서버 응답이 올바르지 않습니다.'
@@ -349,6 +382,47 @@ class CheckoutService {
       
       // 세션 정보 로컬 저장 (브라우저 새로고침 대응)
       this.saveSession(intent);
+
+      // SDK 모드인 경우: PortOne SDK 호출 (redirect형 포함)
+      if (intent.invocationType === 'SDK' && intent.portOneSdkPayload) {
+        // 결제 요청 직전 페이로드 로깅 (민감정보 마스킹)
+        try {
+          const pl = intent.portOneSdkPayload;
+          const masked = {
+            ...pl,
+            channelKey: pl.channelKey ? `*${pl.channelKey.slice(-6)}` : undefined,
+            storeId: pl.storeId ? `*${pl.storeId.slice(-6)}` : undefined,
+          };
+          console.info('[PortOne SDK] requestPayment payload', masked);
+          console.info('[PortOne SDK] redirectUrl typeof/value', typeof pl.redirectUrl, pl.redirectUrl);
+        } catch {}
+        try {
+          let PortOne: any;
+          try {
+            PortOne = await import('@portone/browser-sdk/v2');
+          } catch {
+            PortOne = await import('@portone/browser-sdk');
+          }
+          await PortOne.requestPayment(intent.portOneSdkPayload);
+        } catch (e: any) {
+          // 사용자 친화적 메시지로 변경
+          let userMessage = '결제를 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.';
+
+          // SDK 특정 에러 처리
+          if (e?.code === 'USER_CANCEL') {
+            userMessage = '결제가 취소되었습니다.';
+          } else if (e?.code === 'NETWORK_ERROR') {
+            userMessage = '네트워크 연결을 확인해 주세요.';
+          }
+
+          console.error('[PortOne SDK] error', { code: e?.code, message: e?.message, err: e });
+          throw this.createCheckoutError({
+            code: 'PAYMENT_SDK_ERROR',
+            message: userMessage,
+            details: { originalError: e?.message, originalCode: e?.code }
+          });
+        }
+      }
       
       return intent;
     } catch (error) {
