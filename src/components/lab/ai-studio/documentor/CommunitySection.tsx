@@ -13,7 +13,7 @@ function CommunitySection(): React.ReactNode {
           다른 사용자들과 글쓰기 팁을 공유하고, 도큐멘토 활용법을 배워보세요!
         </p>
         <a 
-          href="https://open.kakao.com/o/gXXXXXXX" 
+          href="https://open.kakao.com/o/g5seEORh"
           target="_blank" 
           rel="noopener noreferrer"
           className={styles.kakaoButton}
