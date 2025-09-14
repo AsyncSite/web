@@ -77,8 +77,11 @@ const PaymentSuccessPage: React.FC = () => {
             };
             setDomainName(domainNameMap[domain] || '서비스 페이지');
           }
-        } else if (status.status === 'FAILED') {
-          throw new Error(status.message || '결제 검증에 실패했습니다.');
+        } else if (status.status === 'FAILED' || status.status === 'NOT_COMPLETED') {
+          const errorMsg = status.status === 'NOT_COMPLETED'
+            ? '결제가 완료되지 않았습니다.'
+            : (status.message || '결제 검증에 실패했습니다.');
+          throw new Error(errorMsg);
         }
       } else {
         // 세션이 없으면 직접 검증 (fallback)
@@ -90,6 +93,8 @@ const PaymentSuccessPage: React.FC = () => {
         
         if (result.status === 'completed') {
           setVerificationStatus('SUCCESS');
+        } else if (result.status === 'not_completed') {
+          throw new Error('결제가 완료되지 않았습니다.');
         } else {
           throw new Error('결제 상태가 완료되지 않았습니다.');
         }
@@ -195,7 +200,9 @@ const PaymentSuccessPage: React.FC = () => {
                 </span>
               </div>
               <div className={styles['payment-info-item']}>
-                <strong className={styles['payment-info-label']}>결제키:</strong>
+                <strong className={styles['payment-info-label']}>
+                  {paymentInfo.paymentKey.startsWith('intent_') ? '거래 ID:' : '결제키:'}
+                </strong>
                 <span className={`${styles['payment-info-value']} ${styles.monospace}`}>
                   {paymentInfo.paymentKey}
                 </span>
@@ -257,11 +264,11 @@ const PaymentSuccessPage: React.FC = () => {
             )}
           </div>
 
-          {/* 개발 모드 정보 */}
-          {process.env.NODE_ENV === 'development' && (
+          {/* Mock 모드 정보 */}
+          {process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_MOCK === 'true' && (
             <div className={styles['dev-info']}>
               <p className={styles['dev-info-text']}>
-                💡 개발 모드: 5초 후 자동으로 CONFIRMED 상태로 변경됩니다.
+                💡 Mock 모드: 테스트 결제가 자동으로 승인됩니다.
               </p>
               {paymentInfo?.intentId && (
                 <p className={styles['dev-info-session']}>

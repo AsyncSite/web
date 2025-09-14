@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import StudyCalendar from '../components/study/StudyCalendar/StudyCalendar';
 import { CheckoutButton } from '../components/UnifiedCheckout';
 import { 
@@ -226,13 +227,19 @@ const StudyPage: React.FC = () => {
   // 결제 성공 핸들러
   const handleCheckoutComplete = (response: CheckoutResponse) => {
     console.log('Checkout completed:', response);
-    alert(`결제가 시작되었습니다!\nCheckout ID: ${response.checkoutId}\n상태: ${response.status}`);
+    toast.success('결제가 시작되었습니다!', {
+      duration: 5000,
+      position: 'top-center',
+    });
   };
 
   // 결제 에러 핸들러
   const handleCheckoutError = (error: CheckoutError) => {
     console.error('Checkout error:', error);
-    alert('결제 처리 중 오류가 발생했습니다.');
+    toast.error('결제 처리 중 오류가 발생했습니다.', {
+      duration: 5000,
+      position: 'top-center',
+    });
   };
 
   // 테스트용 스터디 결제 요청 데이터 생성
@@ -487,7 +494,7 @@ const StudyPage: React.FC = () => {
                                           window.location.reload();
                                         } catch (err) {
                                           console.error('Failed to cancel application:', err);
-                                          alert('신청 취소에 실패했습니다.');
+                                          toast.error('신청 취소에 실패했습니다.');
                                         }
                                       }
                                     }}

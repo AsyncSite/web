@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import toast from 'react-hot-toast';
 import {
   CheckoutRequest,
   CheckoutPaymentMethod,
@@ -33,7 +34,6 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
   const [selectedMethod, setSelectedMethod] = useState<CheckoutPaymentMethod | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   // 세션 관리
   const {
@@ -47,11 +47,15 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
   // 만료 시 모달 자동 닫기
   useEffect(() => {
     if (isExpired && isOpen) {
-      setErrorMessage('결제 시간이 만료되었습니다.');
+      toast.error('결제 시간이 만료되었습니다.', {
+        duration: 4000,
+        position: 'top-center',
+        icon: '⏱️',
+      });
       setTimeout(() => {
         onClose();
         clearSession();
-      }, 3000);
+      }, 2000);
     }
   }, [isExpired, isOpen, onClose, clearSession]);
   
@@ -60,7 +64,6 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
     if (isOpen) {
       setSelectedMethod(null);
       setAgreedToTerms(false);
-      setErrorMessage(null);
       setIsProcessing(false);
     }
   }, [isOpen]);
@@ -147,28 +150,44 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
         setTimeout(() => {
           window.location.href = successUrl.toString();
         }, 1000);
-      } else if (status.status === 'FAILED' || status.status === 'EXPIRED') {
+      } else if (status.status === 'FAILED' || status.status === 'NOT_COMPLETED' || status.status === 'EXPIRED') {
         setIsProcessing(false);
-        setErrorMessage(status.message || '결제가 실패했습니다.');
         clearSession();
+
+        // Toast 에러 메시지
+        const errorMessage = status.status === 'NOT_COMPLETED'
+          ? '결제가 완료되지 않았습니다.'
+          : (status.message || '결제가 실패했습니다.');
+
+        toast.error(errorMessage, {
+          duration: 5000,
+          position: 'top-center',
+        });
 
         if (onError) {
           onError({
             code: 'PAYMENT_FAILED' as CheckoutErrorCode,
-            message: status.message || '결제가 실패했습니다.',
+            message: errorMessage,
             details: status
           });
         }
       }
     } catch (error) {
       setIsProcessing(false);
-      setErrorMessage(error instanceof Error ? error.message : '결제 확인 중 오류가 발생했습니다.');
       clearSession();
+
+      const errorMessage = error instanceof Error ? error.message : '결제 확인 중 오류가 발생했습니다.';
+
+      // Toast 에러 메시지
+      toast.error(errorMessage, {
+        duration: 5000,
+        position: 'top-center',
+      });
 
       if (onError) {
         onError({
           code: 'PAYMENT_FAILED' as CheckoutErrorCode,
-          message: error instanceof Error ? error.message : '결제 확인 중 오류가 발생했습니다.',
+          message: errorMessage,
           details: error
         });
       }
@@ -178,17 +197,24 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
   // 결제 처리
   const handleCheckout = async () => {
     if (!selectedMethod) {
-      setErrorMessage('결제 수단을 선택해주세요.');
+      toast.error('결제 수단을 선택해주세요.', {
+        duration: 3000,
+        position: 'top-center',
+        icon: '⚠️',
+      });
       return;
     }
-    
+
     if (!agreedToTerms) {
-      setErrorMessage('약관에 동의해주세요.');
+      toast.error('약관에 동의해주세요.', {
+        duration: 3000,
+        position: 'top-center',
+        icon: '⚠️',
+      });
       return;
     }
-    
+
     setIsProcessing(true);
-    setErrorMessage(null);
     
     try {
       // 실제 Checkout Request 생성
@@ -247,17 +273,38 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
         details: error
       };
 
-      setErrorMessage(userMessage);
-      onError?.(checkoutError);
+      // 사용자 취소는 info로, 나머지는 error로 표시
+      if (errorCode === ('USER_CANCEL' as CheckoutErrorCode)) {
+        toast(userMessage, {
+          duration: 3000,
+          position: 'top-center',
+          icon: 'ℹ️',
+        });
+      } else {
+        toast.error(userMessage, {
+          duration: 5000,
+          position: 'top-center',
+        });
+      }
+
+      // 취소가 아닌 경우만 onError 콜백 호출
+      if (errorCode !== ('USER_CANCEL' as CheckoutErrorCode)) {
+        onError?.(checkoutError);
+      }
 
       // 개발 환경에서만 상세 로그 출력
       if (process.env.NODE_ENV === 'development') {
         console.error('Checkout error details:', checkoutError);
       }
 
-      // 세션이 있으면 취소
+      // 세션이 있으면 취소 시도 (실패해도 UI는 업데이트)
       if (session) {
-        await checkoutService.cancelReservation(session.intentId);
+        try {
+          await checkoutService.cancelReservation(session.intentId);
+        } catch (cancelError) {
+          // 취소 실패는 무시 (이미 만료되었거나 네트워크 오류일 수 있음)
+          console.error('Failed to cancel reservation:', cancelError);
+        }
         clearSession();
       }
     }
@@ -301,9 +348,14 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
             {!isProcessing && (
               <button
                 className={styles['unified-checkout-modal-close']}
-                onClick={() => {
+                onClick={async () => {
                   if (session) {
-                    checkoutService.cancelReservation(session.intentId);
+                    try {
+                      await checkoutService.cancelReservation(session.intentId);
+                    } catch (cancelError) {
+                      // 취소 실패는 무시
+                      console.error('Failed to cancel reservation:', cancelError);
+                    }
                     clearSession();
                   }
                   onClose();
@@ -361,12 +413,6 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
                 </label>
               </div>
               
-              {/* 에러 메시지 */}
-              {errorMessage && (
-                <div className={styles['unified-checkout-modal-error']}>
-                  {errorMessage}
-                </div>
-              )}
             </>
           )}
         </div>

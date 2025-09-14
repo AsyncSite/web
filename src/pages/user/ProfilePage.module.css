@@ -657,6 +657,9 @@
 /* Review Action Button */
 .studyActions {
   margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .cancelButton {
@@ -674,6 +677,25 @@
 .cancelButton:hover {
   background: rgba(244, 67, 54, 0.25);
   transform: translateY(-1px);
+}
+
+.cancelPaymentButton {
+  padding: 8px 16px;
+  background: rgba(239, 83, 80, 0.1);
+  color: #ef5350;
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelPaymentButton:hover {
+  background: rgba(239, 83, 80, 0.2);
+  border-color: #ef5350;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(239, 83, 80, 0.2);
 }
 
 .reviewActionButton {

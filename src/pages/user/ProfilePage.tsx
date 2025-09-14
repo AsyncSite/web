@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useAuth } from '../../contexts/AuthContext';
 import { parseDate } from '../../utils/studyScheduleUtils';
 import Header from '../../components/layout/Header';
 import PasswordChangeModal from '../../components/auth/PasswordChangeModalEnhanced';
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import ProfileOnboardingModal from '../../components/auth/ProfileOnboardingModal';
+import PaymentCancelModal from '../../components/payment/PaymentCancelModal';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import styles from './ProfilePage.module.css';
@@ -51,6 +53,8 @@ function ProfilePage(): React.ReactNode {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
+  const [showPaymentCancelModal, setShowPaymentCancelModal] = useState(false);
+  const [selectedStudyForCancel, setSelectedStudyForCancel] = useState<any>(null);
   const [gameActivities, setGameActivities] = useState<GameActivity[]>([]);
   const [gameSummary, setGameSummary] = useState<{
     totalGames: number;
@@ -127,7 +131,7 @@ function ProfilePage(): React.ReactNode {
       console.log('Is UUID:', isUuid, selectedStudyForEdit.id);
       
       if (!isUuid) {
-        alert('올바르지 않은 스터디 ID 형식입니다. UUID 형태의 ID가 필요합니다.');
+        toast.error('올바르지 않은 스터디 ID 형식입니다. UUID 형태의 ID가 필요합니다.');
         return;
       }
       
@@ -137,7 +141,7 @@ function ProfilePage(): React.ReactNode {
       const grouped = await studyService.getMyStudiesGrouped();
       setMyStudiesGrouped(grouped);
       
-      alert('스터디 정보가 성공적으로 수정되었습니다.');
+      toast.success('스터디 정보가 성공적으로 수정되었습니다.');
       setShowUpdateModal(false);
       setSelectedStudyForEdit(null);
     } catch (error: any) {
@@ -234,7 +238,10 @@ function ProfilePage(): React.ReactNode {
   // 결제 성공 핸들러
   const handlePaymentSuccess = async (response: CheckoutResponse) => {
     console.log('Payment successful:', response);
-    alert(`결제가 성공적으로 시작되었습니다!\nCheckout ID: ${response.checkoutId}`);
+    toast.success('결제가 성공적으로 시작되었습니다!', {
+      duration: 5000,
+      position: 'top-center',
+    });
     
     // TODO: 백엔드 API 연동 후 아래 로직 활성화
     // try {
@@ -254,7 +261,10 @@ function ProfilePage(): React.ReactNode {
   // 결제 실패 핸들러
   const handlePaymentError = (error: CheckoutError) => {
     console.error('Payment failed:', error);
-    alert(`결제 처리 중 오류가 발생했습니다.\n오류 코드: ${error.code}\n메시지: ${error.message}`);
+    toast.error(`결제 처리 중 오류가 발생했습니다: ${error.message}`, {
+      duration: 5000,
+      position: 'top-center',
+    });
   };
 
   return (
@@ -597,9 +607,9 @@ function ProfilePage(): React.ReactNode {
                         <p className={styles.studyMeta}>역할: {study.role}</p>
                         <p className={styles.studyMeta}>참여일: {parseDate(study.joinedAt)?.toLocaleDateString() || 'Invalid Date'}</p>
                         <p className={styles.studyMeta}>출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
-                        {study.studyStatus === 'COMPLETED' && (
-                          <div className={styles.studyActions}>
-                            <button 
+                        <div className={styles.studyActions}>
+                          {study.studyStatus === 'COMPLETED' && (
+                            <button
                               className={styles.reviewActionButton}
                               onClick={() => {
                                 console.log('Button clicked for study:', study.studyId);
@@ -610,8 +620,17 @@ function ProfilePage(): React.ReactNode {
                             >
                               {studyReviews[study.studyId] ? '리뷰 수정' : '리뷰 작성'}
                             </button>
-                          </div>
-                        )}
+                          )}
+                          <button
+                            className={styles.cancelPaymentButton}
+                            onClick={() => {
+                              setSelectedStudyForCancel(study);
+                              setShowPaymentCancelModal(true);
+                            }}
+                          >
+                            결제 취소
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -813,6 +832,16 @@ function ProfilePage(): React.ReactNode {
           onUpdate={handleUpdateStudy}
         />
       )}
+
+      {/* Payment Cancel Modal */}
+      <PaymentCancelModal
+        isOpen={showPaymentCancelModal}
+        onClose={() => {
+          setShowPaymentCancelModal(false);
+          setSelectedStudyForCancel(null);
+        }}
+        studyInfo={selectedStudyForCancel}
+      />
     </div>
   );
 }

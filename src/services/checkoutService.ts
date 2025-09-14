@@ -5,15 +5,16 @@
  * Mock과 Real 모드를 지원하여 개발/프로덕션 환경 대응
  */
 
-import { 
-  CheckoutRequest, 
-  CheckoutResponse, 
+import {
+  CheckoutRequest,
+  CheckoutResponse,
   CheckoutResult,
   CheckoutError,
   CheckoutErrorCode,
   CheckoutStatus,
   ApiResponse
 } from '../types/checkout';
+import toast from 'react-hot-toast';
 
 // PortOne SDK payload (server-provided)
 export interface PortOneSdkPayload {
@@ -34,7 +35,7 @@ export interface PaymentIntent {
   domainId: string;
   domain: string;
   reservations: Record<string, string>; // {domainName: reservationId}
-  status: 'CREATED' | 'RESERVED' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+  status: 'CREATED' | 'RESERVED' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'CANCELLED' | 'NOT_COMPLETED';
   totalAmount: number;
   expiresAt: string;
   createdAt: string;
@@ -49,7 +50,7 @@ export interface PaymentIntent {
 // 결제 상태 확인 응답
 export interface PaymentStatusResponse {
   intentId: string;
-  status: 'PENDING' | 'CONFIRMED' | 'FAILED' | 'EXPIRED';
+  status: 'PENDING' | 'CONFIRMED' | 'FAILED' | 'NOT_COMPLETED' | 'EXPIRED';
   result?: CheckoutResult;
   message?: string;
   updatedAt: string;
@@ -142,8 +143,17 @@ class CheckoutService {
         if (this.pendingRequests.has(`checkout_${orderId}`)) {
           // 탭 ID가 다르면 충돌
           if (tabId !== this.getTabId()) {
-            // 사용자에게 알림
-            alert('다른 탭에서 동일한 상품의 결제가 진행 중입니다.');
+            // 사용자에게 Toast 알림
+            toast.error('다른 탭에서 동일한 상품의 결제가 진행 중입니다.', {
+              duration: 5000,
+              position: 'top-center',
+              style: {
+                background: '#EF4444',
+                color: '#fff',
+                padding: '16px',
+                borderRadius: '8px',
+              },
+            });
             // 현재 진행 중인 요청 취소
             const controller = this.abortControllers.get(`checkout_${orderId}`);
             if (controller) {
@@ -403,26 +413,57 @@ class CheckoutService {
           } catch {
             PortOne = await import('@portone/browser-sdk');
           }
-          await PortOne.requestPayment(intent.portOneSdkPayload);
+          const response = await PortOne.requestPayment(intent.portOneSdkPayload);
 
-          // SDK 결제창이 닫힌 후 폴링 시작을 위해 플래그 설정
-          // 실제 폴링은 UnifiedCheckoutModal에서 처리
-          (intent as any).sdkCompleted = true;
-        } catch (e: any) {
-          // 사용자 친화적 메시지로 변경
-          let userMessage = '결제를 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.';
+          // SDK 응답 체크 (문서 기반)
+          if (response.code !== undefined) {
+            // 오류 발생 (취소, 실패 등)
+            console.log('[PortOne SDK] Payment cancelled or failed:', {
+              code: response.code,
+              message: response.message,
+              pgCode: response.pgCode,
+              pgMessage: response.pgMessage
+            });
 
-          // SDK 특정 에러 처리
-          if (e?.code === 'USER_CANCEL') {
-            userMessage = '결제가 취소되었습니다.';
-          } else if (e?.code === 'NETWORK_ERROR') {
-            userMessage = '네트워크 연결을 확인해 주세요.';
+            // 사용자 친화적 메시지로 변환
+            let userMessage = '결제를 처리할 수 없습니다.';
+            if (response.code === 'USER_CANCEL' || response.message?.includes('취소')) {
+              userMessage = '결제가 취소되었습니다.';
+            } else if (response.code === 'NETWORK_ERROR') {
+              userMessage = '네트워크 연결을 확인해 주세요.';
+            } else if (response.message) {
+              userMessage = response.message;
+            }
+
+            throw this.createCheckoutError({
+              code: response.code === 'USER_CANCEL' ? 'USER_CANCEL' : 'PAYMENT_SDK_ERROR',
+              message: userMessage,
+              details: {
+                originalCode: response.code,
+                originalMessage: response.message,
+                pgCode: response.pgCode,
+                pgMessage: response.pgMessage
+              }
+            });
           }
 
-          console.error('[PortOne SDK] error', { code: e?.code, message: e?.message, err: e });
+          // 성공한 경우만 플래그 설정
+          console.log('[PortOne SDK] Payment request succeeded, paymentId:', response.paymentId);
+          (intent as any).sdkCompleted = true;
+          (intent as any).paymentId = response.paymentId;
+        } catch (e: any) {
+          // SDK import 실패 또는 기타 에러
+          console.error('[PortOne SDK] Unexpected error:', { code: e?.code, message: e?.message, err: e });
+
+          // 이미 CheckoutError인 경우 그대로 throw
+          if (e?.code && e?.message && e?.details) {
+            throw e;
+          }
+
+          // 새로운 에러 생성
           throw this.createCheckoutError({
             code: 'PAYMENT_SDK_ERROR',
-            message: userMessage,
+            message: e?.message || '결제 SDK를 로드할 수 없습니다.',
             details: { originalError: e?.message, originalCode: e?.code }
           });
         }
@@ -644,7 +685,7 @@ class CheckoutService {
 
         const status = await this.checkPaymentStatus(intentId);
 
-        if (status.status === 'CONFIRMED' || status.status === 'FAILED') {
+        if (status.status === 'CONFIRMED' || status.status === 'FAILED' || status.status === 'NOT_COMPLETED') {
           console.log('[CheckoutService] Polling completed:', {
             intentId,
             finalStatus: status.status,
@@ -846,7 +887,7 @@ class CheckoutService {
       console.log('[CheckoutService] Mock status check - Session not found:', { intentId });
       return {
         intentId,
-        status: 'FAILED',
+        status: 'NOT_COMPLETED',
         message: 'Session not found',
         updatedAt: new Date().toISOString()
       };
@@ -880,7 +921,7 @@ class CheckoutService {
     
     const session = this.mockSessions.get(intentId);
     if (session) {
-      session.status = 'CANCELLED';
+      session.status = 'NOT_COMPLETED';
     }
   }
 

@@ -123,12 +123,13 @@ export interface CheckoutResponse {
   status: CheckoutStatus;
 }
 
-export type CheckoutStatus = 
+export type CheckoutStatus =
   | 'pending'          // 결제 대기
   | 'processing'       // 결제 진행중
   | 'completed'        // 결제 완료
-  | 'failed'           // 결제 실패
-  | 'cancelled'        // 사용자 취소
+  | 'failed'           // 결제 실패 (deprecated - use not_completed)
+  | 'cancelled'        // 사용자 취소 (deprecated - use not_completed)
+  | 'not_completed'    // 완료되지 않음 (실패/취소 통합)
   | 'expired';         // 만료
 
 // ===== 결제 결과 타입 =====
@@ -140,6 +141,14 @@ export interface CheckoutResult {
   failureReason?: string;
   paymentKey?: string;           // PG사 결제 키
   receiptUrl?: string;           // 영수증 URL
+
+  // NOT_COMPLETED 상태 추적 필드
+  userAction?: string;           // "cancelled" or null
+  userActionAt?: string;         // ISO 8601 timestamp
+  webhookResult?: string;        // "failed", "cancelled" or null
+  webhookAt?: string;            // ISO 8601 timestamp
+  cancellationReason?: string;   // 취소 사유
+  finalSource?: string;          // "user" or "webhook" (first-win)
 }
 
 // ===== 에러 타입 =====
@@ -149,7 +158,7 @@ export interface CheckoutError {
   details?: any;
 }
 
-export type CheckoutErrorCode = 
+export type CheckoutErrorCode =
   | 'INVALID_DOMAIN'
   | 'INVALID_AMOUNT'
   | 'USER_NOT_ELIGIBLE'          // 구매 자격 없음
@@ -158,6 +167,7 @@ export type CheckoutErrorCode =
   | 'CHECKOUT_EXPIRED'
   | 'CHECKOUT_FAILED'             // 체크아웃 실패
   | 'PAYMENT_FAILED'
+  | 'USER_CANCEL'                 // 사용자 취소
   | 'NETWORK_ERROR'
   | 'UNKNOWN_ERROR';
 

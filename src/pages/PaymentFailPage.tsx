@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { checkoutService } from '../services/checkoutService';
 import styles from './PaymentFailPage.module.css';
 import './TabPage.css';
@@ -158,7 +159,11 @@ const PaymentFailPage: React.FC = () => {
   // 고객센터 연락처 복사
   const copySupport = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert('복사되었습니다.');
+    toast.success('복사되었습니다.', {
+      duration: 2000,
+      position: 'top-center',
+      icon: '📋',
+    });
   };
 
   return (
