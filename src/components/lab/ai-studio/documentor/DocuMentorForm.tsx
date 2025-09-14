@@ -4,7 +4,7 @@ import { DocuMentorStats } from './types';
 import styles from './DocuMentor.module.css';
 
 interface Props {
-  onSubmit: (url: string, email?: string, tone?: string, purpose?: string, audience?: string) => void;
+  onSubmit: (url: string, email?: string, tone?: string, purpose?: string, audience?: string, marketingConsent?: boolean) => void;
   stats: DocuMentorStats;
   isAuthenticated: boolean;
   loading: boolean;
@@ -24,8 +24,7 @@ const TONE_OPTIONS = [
     value: 'resume',
     emoji: '💼',
     name: '이력서 전문가',
-    example: '"경력 기술이 모호합니다. STAR 기법으로 정량적 성과를 제시하세요."',
-    isRecommended: true
+    example: '"경력 기술이 모호합니다. STAR 기법으로 정량적 성과를 제시하세요."'
   },
   {
     value: 'friend',
@@ -63,6 +62,7 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
   const [urlError, setUrlError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [showOptions, setShowOptions] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   const validateUrl = (urlString: string): boolean => {
     if (!urlString) {
@@ -120,17 +120,15 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
     }
     
     if (url && validateUrl(url)) {
-      onSubmit(url, !isAuthenticated ? email : undefined, tone, purpose || undefined, audience || undefined);
+      onSubmit(url, !isAuthenticated ? email : undefined, tone, purpose || undefined, audience || undefined, !isAuthenticated ? marketingConsent : undefined);
     }
   };
 
   return (
     <div className={styles.formContainer}>
       <h2 className={styles.formTitle}>
-        {!isAuthenticated && !hasUsedTrial ? (
-          <>✨ 1회 무료 AI 리뷰 체험!</>
-        ) : hasUsedTrial ? (
-          <>🎯 회원가입하고 매일 5회 사용하세요!</>
+        {!isAuthenticated ? (
+          <>🎉 9월 31일까지 무제한 무료!</>
         ) : (
           <>🔗 리뷰 받고 싶은 글 링크를 알려주세요</>
         )}
@@ -138,7 +136,7 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
       <div className={styles.formCard}>
         <form onSubmit={handleSubmit}>
           {/* Email Input for non-authenticated users */}
-          {!isAuthenticated && !hasUsedTrial && (
+          {!isAuthenticated && (
             <div className={styles.inputGroup}>
               <label className={styles.inputLabel}>📧 결과를 받아보실 이메일</label>
               <input
@@ -159,6 +157,34 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
                   ⚠️ {emailError}
                 </div>
               )}
+              
+              {/* Marketing Consent Checkbox */}
+              <div className={styles.marketingWrapper}>
+                <label className={styles.marketingConsent}>
+                  <input
+                    type="checkbox"
+                    checked={marketingConsent}
+                    onChange={(e) => setMarketingConsent(e.target.checked)}
+                    disabled={loading}
+                  />
+                  <div className={styles.consentContent}>
+                    <span className={styles.consentText}>
+                      도큐멘토의 글쓰기 팁과 새로운 기능 소식 받기
+                    </span>
+                    <span className={styles.consentFrequency}>월 1-2회, 언제든 구독 해지 가능</span>
+                  </div>
+                </label>
+                <div className={`${styles.consentBenefits} ${marketingConsent ? styles.benefitsActive : ''}`}>
+                  <span className={styles.benefitEmoji}>🎁</span>
+                  <span className={styles.benefitText}>구독자 전용 혜택</span>
+                  <span className={styles.benefitDivider}>•</span>
+                  <span className={styles.benefitEmoji}>📚</span>
+                  <span className={styles.benefitText}>글쓰기 꿀팁</span>
+                  <span className={styles.benefitDivider}>•</span>
+                  <span className={styles.benefitEmoji}>🚀</span>
+                  <span className={styles.benefitText}>신기능 먼저 체험</span>
+                </div>
+              </div>
             </div>
           )}
 
@@ -213,17 +239,6 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
                     disabled={loading}
                   >
                     💬 SNS 스타일
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.previewTone} ${tone === 'resume' ? styles.selected : ''}`}
-                    onClick={() => {
-                      setTone('resume');
-                      setShowOptions(true);
-                    }}
-                    disabled={loading}
-                  >
-                    💼 이력서 전문가
                   </button>
                 </div>
               </div>
@@ -303,92 +318,28 @@ function DocuMentorForm({ onSubmit, stats, isAuthenticated, loading, error, hasU
             )}
           </div>
 
-          {/* Trial used - show signup CTA (only for non-authenticated users) */}
-          {hasUsedTrial && !isAuthenticated ? (
-            <div className={styles.trialUsedContainer}>
-              <p className={styles.trialUsedMessage}>
-                이미 무료 체험을 사용하셨습니다.<br />
-                회원가입하면 매일 5회씩 무료로 사용할 수 있어요!
-              </p>
-              <div className={styles.ctaButtons}>
-                <button
-                  type="button"
-                  className={styles.signupButton}
-                  onClick={() => {
-                    navigate('/signup', {
-                      state: {
-                        from: '/studio/documentor',
-                        service: 'documento',
-                        branding: {
-                          title: '도큐멘토 ✏️',
-                          subtitle: 'AI 글쓰기 친구와 함께하세요'
-                        }
-                      }
-                    });
-                  }}
-                >
-                  🚀 회원가입하기
-                </button>
-                <button
-                  type="button"
-                  className={styles.loginButton}
-                  onClick={() => {
-                    console.log('[DocuMentorForm] 로그인 버튼 클릭');
-                    const stateToSend = {
-                      from: '/studio/documentor',
-                      service: 'documento',
-                      branding: {
-                        title: '도큐멘토 ✏️',
-                        subtitle: '계속하려면 로그인이 필요해요'
-                      }
-                    };
-                    console.log('[DocuMentorForm] navigate state:', stateToSend);
-                    navigate('/login', {
-                      state: stateToSend
-                    });
-                  }}
-                >
-                  로그인
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={loading || !url || (isAuthenticated && stats.remainingToday === 0)}
-            >
-              {loading ? (
-                <>🔄 처리 중...</>
-              ) : !isAuthenticated ? (
-                <>✨ 무료 체험하기</>
-              ) : stats.remainingToday === 0 ? (
-                <>😅 오늘 횟수 모두 사용</>
-              ) : (
-                <>🚀 AI 리뷰 받기</>
-              )}
-            </button>
-          )}
+          {/* Event period - always show submit button */}
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={loading || !url}
+          >
+            {loading ? (
+              <>🔄 처리 중...</>
+            ) : !isAuthenticated ? (
+              <>🎉 무료로 AI 리뷰 받기</>
+            ) : (
+              <>🚀 AI 리뷰 받기</>
+            )}
+          </button>
 
-          {isAuthenticated ? (
-            <div className={styles.usageCounter}>
-              <>
-                오늘 <span className={styles.countNumber}>{stats.usedToday}/{stats.dailyLimit}</span> 회 사용 
-                {stats.remainingToday > 0 && (
-                  <> | <span className={styles.remaining}>{stats.remainingToday}회 남음</span></>
-                )}
-                <span className={styles.resetTime}> | 🕐 자정에 리셋</span>
-              </>
-            </div>
-          ) : !hasUsedTrial ? (
-            <div className={styles.usageCounter}>
-              <>
-                <span className={styles.trialHighlight}>✨ 지금 1회 무료 체험 가능!</span>
-                <br />
-                <span className={styles.loginPrompt}>로그인하면 매일 5회 무료로 이용할 수 있어요!</span>
-              </>
-            </div>
-          ) : null}
+          <div className={styles.usageCounter}>
+            <>
+              <span className={styles.trialHighlight}>🎉 9월 31일까지 무제한 무료!</span>
+              <br />
+              <span className={styles.loginPrompt}>이벤트 기간 동안 횟수 제한 없이 이용하세요!</span>
+            </>
+          </div>
           {error && (
             <div className={styles.globalError}>
               ❌ {error}

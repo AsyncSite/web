@@ -13,11 +13,11 @@ class DocumentorService {
   /**
    * Submit a URL for AI review (Trial version for non-authenticated users)
    */
-  async submitTrialUrl(email: string, url: string, tone?: string, purpose?: string, audience?: string): Promise<DocuMentorContent> {
+  async submitTrialUrl(email: string, url: string, tone?: string, purpose?: string, audience?: string, marketingConsent?: boolean): Promise<DocuMentorContent> {
     try {
       const response = await publicApiClient.post(
         '/api/public/documento/contents/trial',
-        { email, url, tone, purpose, audience }
+        { email, url, tone, purpose, audience, marketingConsent }
       );
       return response.data.data;
     } catch (error: any) {

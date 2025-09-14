@@ -44,6 +44,49 @@
   animation: fadeIn 0.8s ease;
 }
 
+/* Event Banner */
+.eventBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 100%);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 30px;
+  margin-top: 20px;
+  animation: pulse 2s infinite;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.eventEmoji {
+  font-size: 24px;
+  animation: bounce 1s infinite;
+}
+
+.eventText {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
 /* Chat Bubbles */
 .chatBubbles {
   margin: 60px auto;
@@ -596,6 +639,102 @@
 
 .remaining {
   color: #764ba2;
+}
+
+/* Marketing Consent Styles */
+.marketingWrapper {
+  margin-top: 12px;
+}
+
+.marketingConsent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.marketingConsent:hover {
+  opacity: 0.8;
+}
+
+.marketingConsent input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #b2bec3;
+}
+
+.consentContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.consentText {
+  font-size: 13px;
+  color: #636e72;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.consentFrequency {
+  font-size: 11px;
+  color: #b2bec3;
+  font-weight: 400;
+}
+
+.consentBenefits {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  margin-left: 24px;
+  padding: 4px 0;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.consentBenefits.benefitsActive {
+  opacity: 1;
+}
+
+.benefitEmoji {
+  font-size: 12px;
+}
+
+.benefitText {
+  font-size: 11px;
+  color: #636e72;
+  font-weight: 400;
+}
+
+.benefitDivider {
+  color: #dfe6e9;
+  font-size: 10px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
 .resetTime {

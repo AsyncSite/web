@@ -20,6 +20,13 @@ function HeroSection({ isAuthenticated, user }: Props): React.ReactNode {
         <h1 className={styles.logo}>도큐멘토 ✏️</h1>
         <p className={styles.tagline}>AI가 당신의 글쓰기 친구가 되어드려요!</p>
         
+        {/* Event Banner */}
+        <div className={styles.eventBanner}>
+          <span className={styles.eventEmoji}>🎉</span>
+          <span className={styles.eventText}>9월 31일까지 무제한 무료!</span>
+          <span className={styles.eventEmoji}>🎉</span>
+        </div>
+        
         {isAuthenticated && user && (
           <div className={styles.greeting}>
             {getGreeting()}, {user.name || user.username}님! 👋
