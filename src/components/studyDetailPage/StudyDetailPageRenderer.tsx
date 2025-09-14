@@ -57,7 +57,8 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
         joinTitle: section.props.joinTitle,
         joinDescription: section.props.joinDescription,
         joinButtonText: section.props.joinButtonText,
-        joinButtonAction: section.props.joinButtonAction
+        joinButtonAction: section.props.joinButtonAction,
+        kakaoOpenChatUrl: section.props.kakaoOpenChatUrl
       };
 
     case SectionType.HERO:
