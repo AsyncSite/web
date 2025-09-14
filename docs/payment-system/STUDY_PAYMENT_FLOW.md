@@ -247,7 +247,7 @@ Response:
 
 ## 📌 참고사항
 
-- 현재 CheckoutService는 Mock 모드와 Real 모드를 지원
+- 현재 CheckoutService는 Real 모드만 지원 (Mock 제거됨)
 - PaymentIntent 기반 세션 관리 구현됨
 - 네이버페이/카카오페이 통합 준비 완료
 - 도메인별 (study/documento/job-navigator) 결제 지원

@@ -264,19 +264,7 @@ const PaymentSuccessPage: React.FC = () => {
             )}
           </div>
 
-          {/* Mock 모드 정보 */}
-          {process.env.NODE_ENV === 'development' && process.env.REACT_APP_USE_MOCK === 'true' && (
-            <div className={styles['dev-info']}>
-              <p className={styles['dev-info-text']}>
-                💡 Mock 모드: 테스트 결제가 자동으로 승인됩니다.
-              </p>
-              {paymentInfo?.intentId && (
-                <p className={styles['dev-info-session']}>
-                  Session ID: {paymentInfo.intentId}
-                </p>
-              )}
-            </div>
-          )}
+          {/* 개발 모드 안내 제거됨 */}
         </div>
       </main>
     </div>

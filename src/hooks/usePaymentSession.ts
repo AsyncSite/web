@@ -89,7 +89,7 @@ export const usePaymentSession = (): UsePaymentSessionReturn => {
       
       if (expiresAt > now) {
         // SessionData를 PaymentIntent로 변환 (필요한 필드만 있으면 됨)
-        const mockIntent: PaymentIntent = {
+        const restoredIntent: PaymentIntent = {
           intentId: savedSession.intentId,
           userId: 'restored_user', // 복구시 기본값
           domain: savedSession.domain,
@@ -102,8 +102,8 @@ export const usePaymentSession = (): UsePaymentSessionReturn => {
           correlationId: savedSession.correlationId,
           requestId: 'restored_request' // 복구시 기본값
         };
-        startSession(mockIntent);
-        return mockIntent;
+        startSession(restoredIntent);
+        return restoredIntent;
       }
     }
     

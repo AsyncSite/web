@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast';
+// Removed dev-only toast usage
 
 // Refund request and response types
 export interface RefundRequest {
@@ -72,10 +72,11 @@ class RefundService {
    */
   async processRefund(request: RefundRequest): Promise<RefundResponse> {
     try {
-      // For now, we'll use a mock payment intent ID since we don't have it from the backend
-      // In production, this should be retrieved from the study enrollment data
-      const mockIntentId = `mock-intent-${request.studyId}-${Date.now()}`;
-      const intentId = request.intentId || mockIntentId;
+      // Require a real payment intent id
+      const intentId = request.intentId ?? (await this.getPaymentIntentId(request.studyId));
+      if (!intentId) {
+        throw new Error('결제 내역을 찾을 수 없습니다. 환불을 진행할 수 없습니다.');
+      }
 
       const response = await fetch(`${this.baseUrl}/payment-intents/${intentId}/refund`, {
         method: 'POST',
@@ -105,23 +106,6 @@ class RefundService {
       return data.data || data;
     } catch (error: any) {
       console.error('Error processing refund:', error);
-
-      // For now, return a mock successful response for testing
-      // Remove this in production
-      if (process.env.NODE_ENV === 'development') {
-        toast.success('(개발 모드) 환불이 요청되었습니다.', {
-          duration: 4000,
-          position: 'top-center',
-        });
-        return {
-          success: true,
-          transactionId: `mock-txn-${Date.now()}`,
-          status: 'REFUNDED',
-          message: '환불이 처리되었습니다 (개발 모드)',
-          refundedAmount: 50000,
-        };
-      }
-
       throw error;
     }
   }
@@ -150,7 +134,7 @@ class RefundService {
    * Get payment intent ID for a study enrollment
    * This would normally be stored with the enrollment data
    */
-  async getPaymentIntentId(studyId: string, userId?: string): Promise<string | null> {
+  async getPaymentIntentId(studyId: string, userId?: string): Promise<string | undefined> {
     try {
       // Try to retrieve from checkout service
       const params = new URLSearchParams({
@@ -172,14 +156,14 @@ class RefundService {
 
       if (!response.ok) {
         console.warn('Could not retrieve payment intent ID');
-        return null;
+        return undefined;
       }
 
       const data = await response.json();
-      return data.data?.id || null;
+      return data.data?.id || undefined;
     } catch (error) {
       console.error('Error getting payment intent ID:', error);
-      return null;
+      return undefined;
     }
   }
 }

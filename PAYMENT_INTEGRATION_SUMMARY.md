@@ -7,7 +7,6 @@ AsyncSite의 통합 결제 시스템이 **Checkout Service 백엔드 연동을 �
 ### 🚀 구현된 핵심 기능
 
 #### 1. **CheckoutService API Client** (`src/services/checkoutService.ts`)
-- ✅ Mock/Real API 자동 전환 (환경변수 기반)
 - ✅ PaymentIntent 생성 및 관리
 - ✅ 결제 상태 폴링 (최대 20초, 1초 간격)
 - ✅ PG사별 파라미터 통합 파싱
@@ -22,7 +21,6 @@ AsyncSite의 통합 결제 시스템이 **Checkout Service 백엔드 연동을 �
 #### 3. **Payment Flow Pages**
 - ✅ **PaymentSuccessPage**: 웹훅 지연 대응 폴링 구현
 - ✅ **PaymentFailPage**: 세션 복구 및 재시도 지원
-- ✅ **MockPaymentPage**: 개발/테스트용 PG 시뮬레이터
 
 #### 4. **Enhanced UI/UX**
 - ✅ 만료 시간 시각적 경고 (30초: 빨강, 60초: 노랑)
@@ -42,20 +40,16 @@ AsyncSite의 통합 결제 시스템이 **Checkout Service 백엔드 연동을 �
 ```bash
 # Production
 REACT_APP_CHECKOUT_API_URL=https://api.asyncsite.com/checkout
-REACT_APP_USE_MOCK=false
-
-# Development (Mock Mode)
-REACT_APP_USE_MOCK=true
 ```
 
 ### API Endpoints Required
 Backend must implement these endpoints:
 
 ```typescript
-POST   /api/checkout/sessions        # Create PaymentIntent
-GET    /api/checkout/sessions/{id}/status  # Check payment status
-POST   /api/checkout/verify         # Verify payment completion
-POST   /api/checkout/sessions/{id}/cancel  # Cancel reservation
+POST   /api/checkout/payment-intents        # Create PaymentIntent
+GET    /api/checkout/payment-intents/{id}/status  # Check payment status
+POST   /api/checkout/payment-intents/verification # Verify payment completion
+POST   /api/checkout/payment-intents/{id}/cancel  # Cancel reservation
 ```
 
 ### Expected Response Formats
@@ -85,30 +79,7 @@ POST   /api/checkout/sessions/{id}/cancel  # Cancel reservation
 
 ## 🎮 Testing the Integration
 
-### 1. Mock Mode Test
-```bash
-# Start with mock mode
-REACT_APP_USE_MOCK=true npm start
-
-# Navigate to any study page and click "신청하기"
-# Payment will auto-confirm after 5 seconds
-```
-
-### 2. Integration Test Script
-```bash
-chmod +x test-payment-integration.sh
-./test-payment-integration.sh
-```
-
-### 3. Manual Test Flow
-1. Open study detail page
-2. Click "신청하기" button
-3. Select payment method (NaverPay/KakaoPay)
-4. Agree to terms
-5. Click payment button
-6. Mock payment page opens → Complete payment
-7. Redirect to success page with polling
-8. Verify payment status shows "SUCCESS"
+백엔드 연동 환경에서 실제 결제 플로우로만 동작합니다. Mock/시뮬레이션 페이지와 코드는 제거되었습니다.
 
 ## 📝 Key Implementation Details
 
@@ -131,29 +102,17 @@ chmod +x test-payment-integration.sh
 
 ## ⚠️ Important Notes
 
-1. **Polling is Critical**: Webhooks can be delayed 5-10 seconds
-2. **Session Expiry**: Default 10 minutes, countdown UI warns users
-3. **PG Differences**: NaverPay and KakaoPay return different parameters
-4. **Error Recovery**: Failed payments auto-cancel reservations
-
-## 📋 Checklist for Backend Team
-
-- [ ] Implement Checkout Service orchestration endpoints
-- [ ] Configure webhook handlers for each PG provider
-- [ ] Set up reservation system with reserve/confirm/cancel
-- [ ] Implement payment verification logic
-- [ ] Configure CORS for frontend domain
-- [ ] Set appropriate session expiry times
-- [ ] Test webhook delays and retries
+1. 프론트 Mock 모드 및 시뮬레이터는 제거됨
+2. 백엔드 CORS/인증 설정이 필요함
+3. 결제 실패시 예약 취소 호출 유지
 
 ## 🔗 Related Files
 
 - Architecture: `/Users/rene/asyncsite/core-platform/docs/architecture/payment-system-design.md`
 - Test Script: `/Users/rene/asyncsite/web/test-payment-integration.sh`
-- Mock Page: `http://localhost:3000/mock-payment/*`
 
 ---
 
 **Status**: ✅ Frontend Ready for Backend Integration
-**Date**: 2024
-**Implemented by**: AsyncSite Frontend Team
+**Date**: 2025-09-14
+**Maintained by**: AsyncSite Frontend Team

@@ -84,8 +84,6 @@ interface SessionData {
 // API 설정
 interface CheckoutServiceConfig {
   baseUrl: string;
-  useMock: boolean;
-  mockDelay?: number;
   timeout?: number;
 }
 
@@ -102,8 +100,6 @@ interface PGReturnParams {
 
 class CheckoutService {
   private config: CheckoutServiceConfig;
-  private mockSessions: Map<string, PaymentIntent> = new Map();
-  private mockStatuses: Map<string, PaymentStatusResponse> = new Map();
   private abortControllers: Map<string, AbortController> = new Map();
   private pendingRequests: Set<string> = new Set();
   private broadcastChannel: BroadcastChannel | null = null;
@@ -111,8 +107,6 @@ class CheckoutService {
   constructor(config?: Partial<CheckoutServiceConfig>) {
     this.config = {
       baseUrl: config?.baseUrl || process.env.REACT_APP_CHECKOUT_API_URL || 'http://localhost:8080/api/checkout',
-      useMock: config?.useMock ?? (process.env.REACT_APP_USE_MOCK === 'true'),
-      mockDelay: config?.mockDelay || 500,
       timeout: config?.timeout || 30000 // 30초 타임아웃
     };
     
@@ -321,9 +315,7 @@ class CheckoutService {
       // 다른 탭에 결제 시작 알림
       this.broadcastPaymentStart(request.orderId);
 
-      if (this.config.useMock) {
-        return await this.mockInitiateCheckout(request);
-      }
+      // Mock 모드 비활성화
 
       const token = this.getAuthToken();
       const controller = this.createAbortController(requestKey);
@@ -497,9 +489,7 @@ class CheckoutService {
     }
 
     try {
-      if (this.config.useMock) {
-        return await this.mockCheckPaymentStatus(intentId);
-      }
+      // Mock 모드 비활성화
 
       const token = this.getAuthToken();
       const controller = this.createAbortController(`status_${intentId}`);
@@ -566,9 +556,7 @@ class CheckoutService {
     try {
       this.checkDuplicateRequest(requestKey);
 
-      if (this.config.useMock) {
-        return await this.mockVerifyPayment(orderId, paymentKey, amount);
-      }
+      // Mock 모드 비활성화
 
       const token = this.getAuthToken();
       const controller = this.createAbortController(requestKey);
@@ -624,9 +612,7 @@ class CheckoutService {
     if (!intentId) return;
 
     try {
-      if (this.config.useMock) {
-        return await this.mockCancelReservation(intentId);
-      }
+      // Mock 모드 비활성화
 
       const token = this.safeGetFromStorage('authToken');
       if (!token) return; // 토큰 없으면 조용히 실패
@@ -826,104 +812,7 @@ class CheckoutService {
     this.pendingRequests.clear();
   }
 
-  // ===== Mock 구현 =====
-
-  private async mockInitiateCheckout(request: CheckoutRequest): Promise<PaymentIntent> {
-    await this.sleep(this.config.mockDelay!);
-
-    const intentId = `intent_${Date.now()}`;
-    
-    const intent: PaymentIntent = {
-      intentId: intentId,
-      userId: 'mock_user',
-      domain: request.domain,
-      domainId: request.domainId,
-      reservations: {
-        [request.domain]: `res_${Date.now()}`
-      },
-      status: 'RESERVED',
-      totalAmount: request.amount.final,
-      expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(), // 10분
-      createdAt: new Date().toISOString(),
-      correlationId: this.generateCorrelationId(),
-      requestId: this.generateRequestId(),
-      paymentUrl: `/mock-payment/${request.paymentMethod}?intentId=${intentId}`
-    };
-
-    this.mockSessions.set(intent.intentId, intent);
-    this.saveSession(intent);
-    
-    // intentId를 키로 사용하여 체크아웃 데이터 저장
-    try {
-      localStorage.setItem(`payment_intent_${intent.intentId}`, JSON.stringify(request));
-    } catch (_) {
-      // storage 에러는 무시
-    }
-
-    // Mock 상태도 초기화
-    this.mockStatuses.set(intent.intentId, {
-      intentId: intent.intentId,
-      status: 'PENDING',
-      updatedAt: new Date().toISOString()
-    });
-
-    // 5초 후 자동으로 CONFIRMED로 변경 (Mock 웹훅 시뮬레이션)
-    setTimeout(() => {
-      const status = this.mockStatuses.get(intent.intentId);
-      if (status && status.status === 'PENDING') {
-        status.status = 'CONFIRMED';
-        status.updatedAt = new Date().toISOString();
-      }
-    }, 5000);
-
-    return intent;
-  }
-
-  private async mockCheckPaymentStatus(intentId: string): Promise<PaymentStatusResponse> {
-    await this.sleep(200);
-
-    const status = this.mockStatuses.get(intentId);
-    if (!status) {
-      console.log('[CheckoutService] Mock status check - Session not found:', { intentId });
-      return {
-        intentId,
-        status: 'NOT_COMPLETED',
-        message: 'Session not found',
-        updatedAt: new Date().toISOString()
-      };
-    }
-
-    console.log('[CheckoutService] Mock status check:', {
-      intentId,
-      status: status.status,
-      message: status.message,
-      updatedAt: status.updatedAt
-    });
-
-    return status;
-  }
-
-  private async mockVerifyPayment(orderId: string, paymentKey: string, amount: number): Promise<CheckoutResult> {
-    await this.sleep(this.config.mockDelay!);
-
-    return {
-      checkoutId: `checkout_${Date.now()}`,
-      orderId,
-      status: 'completed',
-      paidAt: new Date().toISOString(),
-      paymentKey,
-      receiptUrl: 'https://mock-receipt.example.com'
-    };
-  }
-
-  private async mockCancelReservation(intentId: string): Promise<void> {
-    await this.sleep(this.config.mockDelay!);
-    
-    const session = this.mockSessions.get(intentId);
-    if (session) {
-      session.status = 'NOT_COMPLETED';
-    }
-  }
+  // ===== Mock 구현 제거됨 =====
 
   // ===== 유틸리티 =====
 

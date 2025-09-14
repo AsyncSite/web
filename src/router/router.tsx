@@ -22,7 +22,7 @@ const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
 const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
 const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
 const CheckoutTestPage = lazy(() => import('../pages/CheckoutTestPage'));
-const MockPaymentPage = lazy(() => import('../pages/MockPaymentPage'));
+// MockPaymentPage 제거
 
 // Studio components
 const DocuMentor = lazy(() => import('../components/lab/ai-studio/documentor/DocuMentor'));
@@ -98,10 +98,7 @@ const router = createBrowserRouter([
         path: 'checkout/test',
         element: <CheckoutTestPage />,
       },
-      {
-        path: 'mock-payment/:method',
-        element: <MockPaymentPage />,
-      },
+      // mock-payment 라우트 제거
       {
         path: 'studio',
         element: <StudioLayout />,
