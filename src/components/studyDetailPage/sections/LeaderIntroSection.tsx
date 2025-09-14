@@ -31,7 +31,7 @@ const LeaderIntroSection: React.FC<LeaderIntroSectionProps> = ({ data }) => {
     if (!sinceYear) return data.experience.since;
     const currentYear = new Date().getFullYear();
     const years = currentYear - sinceYear + 1;
-    return `${years}년차`;
+    return `스터디 ${years}년차`;
   };
 
   // Q&A 데이터 구성 (기존 필드 활용)
