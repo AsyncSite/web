@@ -18,21 +18,23 @@ interface FAQSectionProps {
     joinTitle?: string;
     joinDescription?: string;
     joinButtonText?: string;
-    joinButtonAction?: string;
+    joinButtonAction?: string; // Deprecated - for backward compatibility
+    kakaoOpenChatUrl?: string; // 카카오톡 오픈채팅 URL
   };
 }
 
 const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
-  const { 
-    items = [], 
+  const {
+    items = [],
     title = '자주 묻는 질문',
     tagHeader,
     showIcons = false,
     showJoinCTA = false,
     joinTitle = '당신의 합류를 기다려요!',
     joinDescription = '',
-    joinButtonText = '@renechoi에게 커피챗 요청하기 ☕',
-    joinButtonAction = '@renechoi에게 커피챗 요청!'
+    joinButtonText = '카카오톡 오픈채팅 참여하기 💬',
+    joinButtonAction = '@renechoi에게 커피챗 요청!', // Deprecated
+    kakaoOpenChatUrl = ''
   } = data;
   
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -80,9 +82,16 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
           <div className={styles.joinCtaBlock}>
             <h3 className={styles.joinCtaTitle}>{joinTitle}</h3>
             {joinDescription && <p className={styles.joinDescription}>{joinDescription}</p>}
-            <button 
-              className={styles.joinContactButton} 
-              onClick={() => alert(joinButtonAction)}
+            <button
+              className={styles.joinContactButton}
+              onClick={() => {
+                if (kakaoOpenChatUrl) {
+                  window.open(kakaoOpenChatUrl, '_blank', 'noopener,noreferrer');
+                } else if (joinButtonAction) {
+                  // Backward compatibility - deprecated
+                  alert(joinButtonAction);
+                }
+              }}
             >
               {joinButtonText}
             </button>

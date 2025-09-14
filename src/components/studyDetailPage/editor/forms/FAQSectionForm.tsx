@@ -18,7 +18,8 @@ interface FAQSectionFormProps {
     joinTitle?: string;
     joinDescription?: string;
     joinButtonText?: string;
-    joinButtonAction?: string;
+    joinButtonAction?: string; // Deprecated
+    kakaoOpenChatUrl?: string;
   };
   onSave: (data: any) => void;
   onCancel: () => void;
@@ -35,8 +36,9 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   const [showJoinCTA, setShowJoinCTA] = useState(initialData.showJoinCTA || false);
   const [joinTitle, setJoinTitle] = useState(initialData.joinTitle || '당신의 합류를 기다려요!');
   const [joinDescription, setJoinDescription] = useState(initialData.joinDescription || '');
-  const [joinButtonText, setJoinButtonText] = useState(initialData.joinButtonText || '@renechoi에게 커피챗 요청하기 ☕');
-  const [joinButtonAction, setJoinButtonAction] = useState(initialData.joinButtonAction || '@renechoi에게 커피챗 요청!');
+  const [joinButtonText, setJoinButtonText] = useState(initialData.joinButtonText || '카카오톡 오픈채팅 참여하기 💬');
+  const [joinButtonAction, setJoinButtonAction] = useState(initialData.joinButtonAction || ''); // Deprecated
+  const [kakaoOpenChatUrl, setKakaoOpenChatUrl] = useState(initialData.kakaoOpenChatUrl || '');
   const [faqs, setFaqs] = useState<FAQItem[]>(
     // FAQSection uses 'items' not 'faqs'
     initialData.items || initialData.faqs || [
@@ -80,7 +82,8 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       joinTitle,
       joinDescription,
       joinButtonText,
-      joinButtonAction,
+      joinButtonAction, // Deprecated but kept for backward compatibility
+      kakaoOpenChatUrl,
       items: validFaqs, // FAQSection expects 'items' not 'faqs'
     });
   };
@@ -131,8 +134,8 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
     setShowJoinCTA(true);
     setJoinTitle('당신의 합류를 기다려요!');
     setJoinDescription('');
-    setJoinButtonText('@renechoi에게 커피챗 요청하기 ☕');
-    setJoinButtonAction('@renechoi에게 커피챗 요청!');
+    setJoinButtonText('카카오톡 오픈채팅 참여하기 💬');
+    setKakaoOpenChatUrl('https://open.kakao.com/o/example');
     setFaqs([
       {
         question: '이 스터디는 어떤 스터디인가요?',
@@ -359,20 +362,23 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
               type="text"
               value={joinButtonText}
               onChange={(e) => setJoinButtonText(e.target.value)}
-              placeholder="예: @renechoi에게 커피챗 요청하기 ☕"
+              placeholder="예: 카카오톡 오픈채팅 참여하기 💬"
               className="study-management-faq-input"
             />
           </div>
-          
+
           <div className="study-management-faq-form-group">
-            <label>버튼 클릭 액션 메시지</label>
+            <label>카카오톡 오픈채팅 URL <span style={{ color: '#89DDFF' }}>(필수)</span></label>
             <input
               type="text"
-              value={joinButtonAction}
-              onChange={(e) => setJoinButtonAction(e.target.value)}
-              placeholder="예: @renechoi에게 커피챗 요청!"
+              value={kakaoOpenChatUrl}
+              onChange={(e) => setKakaoOpenChatUrl(e.target.value)}
+              placeholder="https://open.kakao.com/o/g..."
               className="study-management-faq-input"
             />
+            <span className="study-management-faq-help">
+              💡 카카오톡 오픈채팅방 URL을 입력해주세요. 버튼 클릭 시 이 링크로 이동합니다.
+            </span>
           </div>
         </>
       )}
