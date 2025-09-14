@@ -117,6 +117,86 @@
   cursor: pointer;
 }
 
+/* 키워드 섹션 */
+.leader-intro-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.leader-intro-keyword-item {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid rgba(130, 170, 255, 0.2);
+  border-radius: 20px;
+  padding: 6px 8px 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.leader-intro-keyword-item:hover {
+  background: rgba(130, 170, 255, 0.15);
+  border-color: rgba(130, 170, 255, 0.3);
+}
+
+.leader-intro-keyword-prefix {
+  color: rgba(130, 170, 255, 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.leader-intro-keyword-input {
+  background: transparent;
+  border: none;
+  color: #f0f0f0;
+  font-size: 0.875rem;
+  width: 80px;
+  outline: none;
+  padding: 2px 4px;
+}
+
+.leader-intro-keyword-input::placeholder {
+  color: rgba(240, 240, 240, 0.3);
+}
+
+.leader-intro-keyword-remove {
+  background: transparent;
+  border: none;
+  color: rgba(247, 140, 108, 0.8);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  margin-left: 4px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.leader-intro-keyword-remove:hover {
+  color: #F78C6C;
+}
+
+.leader-intro-add-keyword-btn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px dashed rgba(130, 170, 255, 0.3);
+  border-radius: 20px;
+  color: rgba(130, 170, 255, 0.8);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.leader-intro-add-keyword-btn:hover {
+  border-color: rgba(130, 170, 255, 0.5);
+  background: rgba(130, 170, 255, 0.05);
+  color: #82AAFF;
+}
+
 /* 배열 항목 관리 */
 .leader-intro-array-item {
   display: flex;
@@ -219,6 +299,86 @@
 .leader-intro-add-expertise-btn:hover {
   border-color: rgba(130, 170, 255, 0.5);
   background: rgba(130, 170, 255, 0.05);
+}
+
+/* 추가 옵션 토글 버튼 */
+.leader-intro-toggle-btn {
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(240, 240, 240, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.leader-intro-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #f0f0f0;
+}
+
+/* 추가 옵션 서브섹션 */
+.leader-intro-subsection {
+  margin-top: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.leader-intro-subsection h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(130, 170, 255, 0.9);
+  margin: 0 0 16px 0;
+}
+
+.leader-intro-warning {
+  font-size: 0.875rem;
+  color: rgba(247, 140, 108, 0.7);
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(247, 140, 108, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(247, 140, 108, 0.1);
+}
+
+/* 도움말 텍스트 */
+.leader-intro-help {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(240, 240, 240, 0.4);
+  margin-top: 6px;
+}
+
+/* 안내 메시지 */
+.leader-intro-form-notice {
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(195, 232, 141, 0.05), rgba(130, 170, 255, 0.05));
+  border: 1px solid rgba(195, 232, 141, 0.15);
+  border-radius: 8px;
+  color: rgba(240, 240, 240, 0.8);
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.leader-intro-form-notice strong {
+  color: #C3E88D;
+}
+
+/* 한 줄 철학 입력 필드 */
+.leader-intro-tagline {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(195, 232, 141, 0.9);
 }
 
 /* 액션 버튼 */
