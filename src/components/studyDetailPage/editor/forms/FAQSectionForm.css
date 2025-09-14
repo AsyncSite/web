@@ -21,9 +21,36 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Checkbox labels */
-.study-management-faq-form-group label input[type="checkbox"] {
-  margin-right: 8px;
+/* Checkbox styling */
+.study-management-faq-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.study-management-faq-checkbox-label:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(195, 232, 141, 0.3);
+}
+
+.study-management-faq-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #C3E88D;
+}
+
+.study-management-faq-checkbox-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
 }
 
 /* Form Inputs */

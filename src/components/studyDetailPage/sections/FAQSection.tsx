@@ -32,7 +32,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
     showJoinCTA = false,
     joinTitle = '당신의 합류를 기다려요!',
     joinDescription = '',
-    joinButtonText = '카카오톡 오픈채팅 참여하기 💬',
+    joinButtonText = '리더에게 커피챗 요청하기 ☕',
     joinButtonAction = '@renechoi에게 커피챗 요청!', // Deprecated
     kakaoOpenChatUrl = ''
   } = data;

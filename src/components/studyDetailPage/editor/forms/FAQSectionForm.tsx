@@ -36,7 +36,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   const [showJoinCTA, setShowJoinCTA] = useState(initialData.showJoinCTA || false);
   const [joinTitle, setJoinTitle] = useState(initialData.joinTitle || '당신의 합류를 기다려요!');
   const [joinDescription, setJoinDescription] = useState(initialData.joinDescription || '');
-  const [joinButtonText, setJoinButtonText] = useState(initialData.joinButtonText || '카카오톡 오픈채팅 참여하기 💬');
+  const [joinButtonText, setJoinButtonText] = useState(initialData.joinButtonText || '리더에게 커피챗 요청하기 ☕');
   const [joinButtonAction, setJoinButtonAction] = useState(initialData.joinButtonAction || ''); // Deprecated
   const [kakaoOpenChatUrl, setKakaoOpenChatUrl] = useState(initialData.kakaoOpenChatUrl || '');
   const [faqs, setFaqs] = useState<FAQItem[]>(
@@ -134,7 +134,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
     setShowJoinCTA(true);
     setJoinTitle('당신의 합류를 기다려요!');
     setJoinDescription('');
-    setJoinButtonText('카카오톡 오픈채팅 참여하기 💬');
+    setJoinButtonText('리더에게 커피챗 요청하기 ☕');
     setKakaoOpenChatUrl('https://open.kakao.com/o/example');
     setFaqs([
       {
@@ -322,13 +322,14 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       </div>
       
       <div className="study-management-faq-form-group">
-        <label>
+        <label className="study-management-faq-checkbox-label">
           <input
             type="checkbox"
             checked={showJoinCTA}
             onChange={(e) => setShowJoinCTA(e.target.checked)}
+            className="study-management-faq-checkbox"
           />
-          Join CTA 블록 표시
+          <span className="study-management-faq-checkbox-text">Join CTA 블록 표시</span>
         </label>
       </div>
       
@@ -362,7 +363,7 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
               type="text"
               value={joinButtonText}
               onChange={(e) => setJoinButtonText(e.target.value)}
-              placeholder="예: 카카오톡 오픈채팅 참여하기 💬"
+              placeholder="예: 리더에게 커피챗 요청하기 ☕"
               className="study-management-faq-input"
             />
           </div>
