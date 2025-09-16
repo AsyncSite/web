@@ -456,17 +456,24 @@
     font-size: 1rem;
   }
   
-  /* 모바일에서 아코디언 표시 */
+  /* 모바일에서도 기본 UI 표시 */
+  .stepsNav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .stepItem {
+    min-width: 80px;
+  }
+
+  .stepDetailContainer {
+    margin-top: 20px;
+  }
+
+  /* 아코디언은 mobileCollapse가 true일 때만 표시되므로 기본값 유지 */
   .mobileAccordion {
     display: block;
-  }
-  
-  .stepsNav {
-    display: none;
-  }
-  
-  .stepDetailContainer {
-    display: none;
   }
 }
 

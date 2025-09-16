@@ -273,8 +273,8 @@
 
   .overviewCard {
     padding: 20px;
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    text-align: left;
     gap: 15px;
   }
 
