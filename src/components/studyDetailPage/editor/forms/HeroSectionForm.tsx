@@ -121,7 +121,7 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
     setButtonText('참가 신청하기');
     setButtonLink('#apply');
     setBackgroundImage('/images/tecoteco/profile1.svg');
-    
+
     // InfoBox 예시 데이터
     setUseInfoBox(true);
     setInfoBoxHeader('함께 성장할 용기');
