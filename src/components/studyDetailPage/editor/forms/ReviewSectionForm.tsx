@@ -5,11 +5,7 @@ import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import {
   ReviewSectionData,
   Review,
-  ReviewStats,
-  sampleReviews,
-  sampleReviewStats,
-  sampleStandardReviewData,
-  sampleStandardReviews
+  ReviewStats
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
 import { algorithmTemplate } from '../templateData';
@@ -136,10 +132,10 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
       extractKeywordsFromReviews(transformedReviews);
     } catch (error) {
       console.error('Failed to load reviews:', error);
-      // 에러 시 샘플 데이터 사용 (개발 편의를 위해)
-      setReviews(sampleReviews);
-      setStats(sampleReviewStats);
-      extractKeywordsFromReviews(sampleReviews);
+      // 에러 시 빈 데이터 설정
+      setReviews([]);
+      setStats(undefined);
+      setExtractedKeywords([]);
     } finally {
       setIsLoadingReviews(false);
     }
