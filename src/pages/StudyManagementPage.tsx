@@ -1177,7 +1177,18 @@ const StudyManagementPage: React.FC = () => {
                       <div className={styles.modalContent}>
                         <h5>새 섹션 추가</h5>
                         <div className={styles.sectionTypes}>
-                          {Object.keys(SectionType).map((type) => (
+                          {/* 필요한 섹션 타입만 표시 */}
+                          {[
+                            SectionType.HERO,
+                            SectionType.LEADER_INTRO,
+                            SectionType.RICH_TEXT,
+                            SectionType.MEMBERS,
+                            SectionType.FAQ,
+                            SectionType.REVIEWS,
+                            SectionType.HOW_WE_ROLL,
+                            SectionType.JOURNEY,
+                            SectionType.EXPERIENCE
+                          ].map((type) => (
                             <button
                               key={type}
                               className={styles.sectionTypeBtn}
@@ -1191,7 +1202,7 @@ const StudyManagementPage: React.FC = () => {
                                 // 새 섹션을 즉시 목록에 추가
                                 const newSection = {
                                   id: tempId,
-                                  type: type as any,
+                                  type: type,
                                   props: {},
                                   order: maxOrder + 100,
                                   isTemp: true  // 임시 섹션 표시
