@@ -174,13 +174,6 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
               {template.name}
             </button>
           ))}
-          <button 
-            type="button" 
-            onClick={loadExampleData}
-            className="study-management-richtext-template-btn study-management-richtext-example"
-          >
-            표준 예시
-          </button>
         </div>
       </div>
 

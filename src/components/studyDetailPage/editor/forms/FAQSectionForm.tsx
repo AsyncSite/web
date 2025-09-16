@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './FAQSectionForm.css';
-import { algorithmTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 
 interface FAQItem {
@@ -94,44 +94,28 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
   const loadExampleData = (templateType: string) => {
     if (!templateType) return;
 
+    let faqData;
     if (templateType === 'algorithm') {
-    setTitle('자주 묻는 질문');
-    setTagHeader('궁금증 해결');
-    setFaqs([
-      {
-        question: '프로그래밍 초보자도 참여할 수 있나요?',
-        answer: '네, 가능합니다! 기본적인 프로그래밍 문법만 알고 있다면 충분히 따라올 수 있도록 커리큘럼이 구성되어 있습니다. 처음에는 어렵게 느껴질 수 있지만, 함께 학습하며 성장할 수 있습니다.',
-        category: '참가 자격'
-      },
-      {
-        question: '스터디 시간에 참석하지 못하면 어떻게 되나요?',
-        answer: '부득이한 사정으로 참석하지 못하는 경우, 스터디 자료와 녹화본(가능한 경우)을 제공합니다. 다만, 실시간 참여를 통한 토론과 피드백이 중요하므로 가급적 참석을 권장합니다.',
-        category: '스터디 진행'
-      },
-      {
-        question: '스터디 비용은 어떻게 되나요?',
-        answer: '현재는 무료로 진행되고 있습니다. 다만, 스터디룸 대여나 특별 세션이 있을 경우 소정의 비용이 발생할 수 있으며, 이는 사전에 공지됩니다.',
-        category: '비용'
-      },
-      {
-        question: '사전 학습이 필요한가요?',
-        answer: '특별한 사전 학습은 필요하지 않습니다. 다만, 사용하실 프로그래밍 언어의 기본 문법은 숙지하고 계시면 좋습니다. 스터디 시작 전 준비 자료를 제공할 예정입니다.',
-        category: '준비사항'
-      },
-      {
-        question: '수료 기준은 어떻게 되나요?',
-        answer: '전체 세션의 80% 이상 참석하고, 주어진 과제를 성실히 수행하신 분들께 수료증을 발급해드립니다. 또한 우수 참가자에게는 별도의 혜택이 제공됩니다.',
-        category: '수료'
-      },
-      {
-        question: '스터디 후 네트워킹 기회가 있나요?',
-        answer: '네, 스터디 종료 후에도 슬랙 채널을 통해 지속적으로 소통할 수 있으며, 정기적인 오프라인 모임도 계획하고 있습니다. 함께 성장하는 개발자 네트워크를 만들어갑니다.',
-        category: '네트워킹'
-      }
-    ]);
+      faqData = algorithmTemplate.sections.faq;
+    } else if (templateType === 'mogakup') {
+      faqData = mogakupTemplate.sections.faq;
+    } else {
+      return;
     }
-    // 추후 다른 템플릿 추가
-    // else if (templateType === 'mogakko') { ... }
+
+    if (!faqData) return;
+
+    setTitle(faqData.title);
+    setTagHeader(faqData.tagHeader);
+    setFaqs(faqData.items);
+    setShowIcons(faqData.showIcons || false);
+    setShowJoinCTA(faqData.showJoinCTA || false);
+    if (faqData.showJoinCTA) {
+      setJoinTitle(faqData.joinTitle || '');
+      setJoinDescription(faqData.joinDescription || '');
+      setJoinButtonText(faqData.joinButtonText || '');
+      setKakaoOpenChatUrl(faqData.kakaoOpenChatUrl || '');
+    }
   };
   
   // Clear form and reset to initial state

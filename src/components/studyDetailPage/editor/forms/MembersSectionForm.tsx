@@ -14,7 +14,7 @@ import ConfirmModal from '../../../common/ConfirmModal';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { algorithmTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 
 interface MembersSectionFormProps {
@@ -311,9 +311,16 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   const loadStandardExample = (templateType: string) => {
     if (!templateType) return;
 
+    let membersData;
     if (templateType === 'algorithm') {
-      const membersData = algorithmTemplate.sections.members;
-      if (!membersData) return;
+      membersData = algorithmTemplate.sections.members;
+    } else if (templateType === 'mogakup') {
+      membersData = mogakupTemplate.sections.members;
+    } else {
+      return;
+    }
+
+    if (!membersData) return;
 
     setTagHeader(membersData.tagHeader);
     setTitle(RichTextConverter.fromHTML(membersData.title));
@@ -358,9 +365,6 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
         popularAlgorithms: membersData.stats.popularAlgorithms,
         customStats: membersData.stats.customStats
       });
-    }
-    // 추후 다른 템플릿 추가
-    // else if (templateType === 'mogakko') { ... }
   };
 
   // Clear form and reset to initial state

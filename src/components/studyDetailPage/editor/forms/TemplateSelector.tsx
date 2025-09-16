@@ -61,10 +61,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           <option value="algorithm" style={{ background: '#1a1f2e', color: '#C3E88D' }}>
             알고리즘 스터디
           </option>
-          {/* 추후 추가 예정 */}
-          {/* <option value="mogakko" style={{ background: '#1a1f2e', color: '#C3E88D' }}>
-            모각코
-          </option> */}
+          <option value="mogakup" style={{ background: '#1a1f2e', color: '#C3E88D' }}>
+            모각업
+          </option>
         </select>
       </div>
       {selectedTemplate && (

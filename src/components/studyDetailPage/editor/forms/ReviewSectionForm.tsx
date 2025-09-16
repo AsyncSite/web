@@ -8,7 +8,7 @@ import {
   ReviewStats
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
-import { algorithmTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './ReviewSectionForm.css';
 
@@ -171,9 +171,16 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
   const loadExampleData = (templateType: string) => {
     if (!templateType) return;
 
+    let reviewData;
     if (templateType === 'algorithm') {
-      const reviewData = algorithmTemplate.sections.review;
-      if (!reviewData) return;
+      reviewData = algorithmTemplate.sections.review;
+    } else if (templateType === 'mogakup') {
+      reviewData = mogakupTemplate.sections.review;
+    } else {
+      return;
+    }
+
+    if (!reviewData) return;
 
     setTagHeader(reviewData.tagHeader);
     setTitle(RichTextConverter.fromHTML(reviewData.title));
@@ -210,9 +217,6 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
       if (reviewData.keywords) {
         setKeywords(reviewData.keywords);
       }
-    }
-    // 추후 다른 템플릿 추가
-    // else if (templateType === 'mogakko') { ... }
   };
 
   // Clear form and reset to initial state

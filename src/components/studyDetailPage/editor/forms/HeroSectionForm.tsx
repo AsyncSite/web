@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { algorithmTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './HeroSectionForm.css';
 
@@ -118,33 +118,36 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
   const loadExampleData = (templateType: string) => {
     if (!templateType) return;
 
-    // 현재는 algorithm 템플릿만 지원, 추후 모각코 등 추가 예정
+    let heroData;
     if (templateType === 'algorithm') {
-      const heroData = algorithmTemplate.sections.hero;
-      if (!heroData) return;
-
-      // RichText 형식으로 변환
-      setTitle(RichTextConverter.fromHTML(heroData.title));
-      setSubtitle(RichTextConverter.fromHTML(heroData.subtitle));
-      setDescription(heroData.description);
-      setButtonText(heroData.buttonText);
-      setButtonLink(heroData.buttonLink);
-      setBackgroundImage(heroData.backgroundImage);
-
-      // InfoBox 예시 데이터
-      if (heroData.infoBox) {
-        setUseInfoBox(true);
-        setInfoBoxHeader(heroData.infoBox.header);
-        setInfoBoxItems(
-          heroData.infoBox.items.map(item => ({
-            icon: item.icon,
-            text: RichTextConverter.fromHTML(item.text)
-          }))
-        );
-      }
+      heroData = algorithmTemplate.sections.hero;
+    } else if (templateType === 'mogakup') {
+      heroData = mogakupTemplate.sections.hero;
+    } else {
+      return;
     }
-    // 추후 다른 템플릿 추가
-    // else if (templateType === 'mogakko') { ... }
+
+    if (!heroData) return;
+
+    // RichText 형식으로 변환
+    setTitle(RichTextConverter.fromHTML(heroData.title));
+    setSubtitle(RichTextConverter.fromHTML(heroData.subtitle));
+    setDescription(heroData.description);
+    setButtonText(heroData.buttonText);
+    setButtonLink(heroData.buttonLink);
+    setBackgroundImage(heroData.backgroundImage);
+
+    // InfoBox 예시 데이터
+    if (heroData.infoBox) {
+      setUseInfoBox(true);
+      setInfoBoxHeader(heroData.infoBox.header);
+      setInfoBoxItems(
+        heroData.infoBox.items.map(item => ({
+          icon: item.icon,
+          text: RichTextConverter.fromHTML(item.text)
+        }))
+      );
+    }
   };
 
   // Clear form and reset to initial state

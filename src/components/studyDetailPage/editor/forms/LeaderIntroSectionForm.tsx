@@ -4,7 +4,7 @@ import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import studyService from '../../../../api/studyService';
-import { algorithmTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './LeaderIntroSectionForm.css';
 
@@ -104,9 +104,16 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
   const loadExampleData = (templateType: string) => {
     if (!templateType) return;
 
+    let leaderData;
     if (templateType === 'algorithm') {
-      const leaderData = algorithmTemplate.sections.leaderIntro;
-      if (!leaderData) return;
+      leaderData = algorithmTemplate.sections.leaderIntro;
+    } else if (templateType === 'mogakup') {
+      leaderData = mogakupTemplate.sections.leaderIntro;
+    } else {
+      return;
+    }
+
+    if (!leaderData) return;
 
     setName(leaderData.name);
     setProfileImage(leaderData.profileImage);
@@ -123,11 +130,8 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
     setTotalMembers(leaderData.totalMembers);
 
     setEmail(leaderData.email);
-      setGithub(leaderData.github);
-      setBlog(leaderData.blog);
-    }
-    // 추후 다른 템플릿 추가
-    // else if (templateType === 'mogakko') { ... }
+    setGithub(leaderData.github);
+    setBlog(leaderData.blog);
   };
 
   // Clear form and reset to initial state
