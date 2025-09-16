@@ -10,7 +10,8 @@ import studyDetailPageService, {
   PageSection,
   SectionType,
   AddSectionRequest,
-  UpdatePageRequest
+  UpdatePageRequest,
+  convertSectionTypeToLabel
 } from '../api/studyDetailPageService';
 import { SectionRenderer } from '../components/studyDetailPage/sections';
 import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
@@ -1176,17 +1177,7 @@ const StudyManagementPage: React.FC = () => {
                       <div className={styles.modalContent}>
                         <h5>새 섹션 추가</h5>
                         <div className={styles.sectionTypes}>
-                          {[
-                            SectionType.HERO,
-                            SectionType.LEADER_INTRO,
-                            SectionType.RICH_TEXT,
-                            SectionType.MEMBERS,
-                            SectionType.FAQ,
-                            SectionType.REVIEWS,
-                            SectionType.HOW_WE_ROLL,
-                            SectionType.JOURNEY,
-                            SectionType.EXPERIENCE
-                          ].map((type) => (
+                          {Object.keys(SectionType).map((type) => (
                             <button
                               key={type}
                               className={styles.sectionTypeBtn}
@@ -1220,7 +1211,7 @@ const StudyManagementPage: React.FC = () => {
                                 setShowAddSection(false);
                               }}
                             >
-                              {type}
+                              {convertSectionTypeToLabel(type)}
                             </button>
                           ))}
                         </div>
@@ -1271,7 +1262,7 @@ const StudyManagementPage: React.FC = () => {
                             </svg>
                           </div>
                           <div className={styles.studyMgmtSectionInfo}>
-                            <span className={styles.studyMgmtSectionType}>{section.type}</span>
+                            <span className={styles.studyMgmtSectionType}>{convertSectionTypeToLabel(section.type)}</span>
                             {section.id && (section.id.startsWith('temp_') || section.id.startsWith('imported_')) && (
                               <span className={styles.tempLabel}>저장 필요</span>
                             )}

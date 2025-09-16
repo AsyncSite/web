@@ -44,6 +44,30 @@ export enum SectionType {
   LEADER_INTRO = 'LEADER_INTRO'
 }
 
+const SectionTypeToLabel: Record<string, string> = {
+  [SectionType.MEMBERS]: '맴버 소개',
+  [SectionType.FAQ]: 'FAQ',
+  [SectionType.GALLERY]: '갤러리',
+  [SectionType.HERO]: '히어로',
+  [SectionType.REVIEWS]: '리뷰',
+  [SectionType.VIDEO_EMBED]: '비디오 삽입',
+  [SectionType.TABS]: '탭',
+  [SectionType.ACCORDION]: '아코디언',
+  [SectionType.RICH_TEXT]: '리치 텍스트',
+  [SectionType.HOW_WE_ROLL]: '호우 월 롤',
+  [SectionType.STATS]: '통계',
+  [SectionType.TABLE]: '테이블',
+  [SectionType.CUSTOM_HTML]: '커스텀 헤더',
+  [SectionType.CODE_BLOCK]: '코드 블럭',
+  [SectionType.JOURNEY]: '여정',
+  [SectionType.EXPERIENCE]: '경험',
+  [SectionType.LEADER_INTRO]: '리더 소개'
+}
+
+export const convertSectionTypeToLabel = (sectionType: string) => {
+  return SectionTypeToLabel[sectionType];
+}
+
 export enum PageStatus {
   DRAFT = 'DRAFT',
   REVIEW = 'REVIEW',
