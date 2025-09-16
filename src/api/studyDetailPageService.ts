@@ -45,22 +45,22 @@ export enum SectionType {
 }
 
 const SectionTypeToLabel: Record<string, string> = {
-  [SectionType.HERO]: '히어로',
+  [SectionType.HERO]: '메인 배너',
   [SectionType.LEADER_INTRO]: '리더 소개',
-  [SectionType.RICH_TEXT]: '리치 텍스트',
+  [SectionType.RICH_TEXT]: '텍스트 섹션',
   [SectionType.MEMBERS]: '멤버',
-  [SectionType.FAQ]: 'FAQ',
-  [SectionType.REVIEWS]: '리뷰',
+  [SectionType.FAQ]: '자주 묻는 질문',
+  [SectionType.REVIEWS]: '후기',
   [SectionType.HOW_WE_ROLL]: '우리의 방식',
   [SectionType.JOURNEY]: '여정',
   [SectionType.EXPERIENCE]: '경험',
   [SectionType.GALLERY]: '갤러리',
-  [SectionType.VIDEO_EMBED]: '비디오',
+  [SectionType.VIDEO_EMBED]: '동영상',
   [SectionType.TABS]: '탭',
-  [SectionType.ACCORDION]: '아코디언',
+  [SectionType.ACCORDION]: '접이식 메뉴',
   [SectionType.STATS]: '통계',
-  [SectionType.TABLE]: '테이블',
-  [SectionType.CUSTOM_HTML]: '커스텀 HTML',
+  [SectionType.TABLE]: '표',
+  [SectionType.CUSTOM_HTML]: '사용자 정의 HTML',
   [SectionType.CODE_BLOCK]: '코드 블록'
 }
 
