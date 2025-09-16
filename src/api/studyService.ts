@@ -57,6 +57,7 @@ export interface StudyDTO {
   tagline?: string;
   schedule?: string;
   duration?: string;
+  location?: string;
   capacity?: number;
   enrolled?: number;
   recruitDeadline?: string | number[];
@@ -111,6 +112,7 @@ export interface Study {
   };
   schedule: string;
   duration: string;
+  location?: string;
   capacity: number;
   enrolled: number;
   deadline: Date | null;
@@ -181,6 +183,7 @@ const transformStudy = (dto: StudyDTO): Study => {
     },
     schedule: dto.schedule || '', // 기본값 제거
     duration: dto.duration || '', // 기본값 제거
+    location: dto.location,
     capacity: dto.capacity || 0, // 기본값을 0으로 (UI에서 처리)
     enrolled: dto.enrolled || 0,
     deadline: dto.recruitDeadline ? (parseDate(dto.recruitDeadline) || null) : null,
@@ -215,6 +218,7 @@ export interface StudyProposalRequest {
   welcomeMessage?: string;  // 스터디 리더 환영 메시지
   schedule?: string;
   duration?: string;
+  location?: string;
   capacity?: number;
   recruitDeadline?: string;
   startDate?: string;
@@ -283,6 +287,7 @@ export interface StudyUpdateRequest {
   tagline?: string;
   schedule?: string;
   duration?: string;
+  location?: string;
   capacity?: number;
   recruitDeadline?: string;
   startDate?: string;

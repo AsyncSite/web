@@ -81,6 +81,7 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
         tagline: study.tagline,
         schedule: study.schedule,
         duration: study.duration,
+        location: study.location || '',
         capacity: study.capacity,
         recruitDeadline: study.deadline ? formatDateForInput(study.deadline) : '',
         startDate: study.startDate ? formatDateForInput(study.startDate) : '',
@@ -302,7 +303,11 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
       if (formData.capacity && formData.capacity !== study.capacity) {
         updateData.capacity = formData.capacity;
       }
-      
+
+      if (formData.location && formData.location !== (study.location || '')) {
+        updateData.location = formData.location;
+      }
+
       if (formData.recruitDeadline) {
         updateData.recruitDeadline = formData.recruitDeadline + 'T23:59:59';
       }
@@ -454,6 +459,21 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
             </div>
             
             {/* ModernScheduleInput이 시간도 포함하므로 별도 시간 선택 제거 */}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="location">
+              스터디 장소
+            </label>
+            <input
+              id="location"
+              type="text"
+              value={formData.location || ''}
+              onChange={handleChange('location')}
+              placeholder="예: 강남역 스터디룸"
+              disabled={loading}
+            />
+            {errors.location && <span className="error-message">{errors.location}</span>}
           </div>
 
           <div className="form-group">
