@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
+import { algorithmTemplate } from '../templateData';
 import './HeroSectionForm.css';
 
 interface InfoBoxItem {
@@ -112,33 +113,30 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
     setInfoBoxItems(updatedItems);
   };
 
-  // 표준 예시 데이터
+  // 표준 예시 데이터 - templateData.ts에서 가져오기
   const loadExampleData = () => {
+    const heroData = algorithmTemplate.sections.hero;
+    if (!heroData) return;
+
     // RichText 형식으로 변환
-    setTitle(RichTextConverter.fromHTML('💯 코테 스터디<br/>테코테코'));
-    setSubtitle(RichTextConverter.fromHTML('변화 속에서<br/><span class="highlight">변치 않는 ____를 찾다</span>'));
-    setDescription('기술 변화 속 흔들리지 않는 개발자 사고의 뿌리를 탐구하고, 단순한 코딩 테스트를 넘어 자료구조와 알고리즘의 본질에 Deep Dive합니다.');
-    setButtonText('참가 신청하기');
-    setButtonLink('#apply');
-    setBackgroundImage('/images/tecoteco/profile1.svg');
+    setTitle(RichTextConverter.fromHTML(heroData.title));
+    setSubtitle(RichTextConverter.fromHTML(heroData.subtitle));
+    setDescription(heroData.description);
+    setButtonText(heroData.buttonText);
+    setButtonLink(heroData.buttonLink);
+    setBackgroundImage(heroData.backgroundImage);
 
     // InfoBox 예시 데이터
-    setUseInfoBox(true);
-    setInfoBoxHeader('함께 성장할 용기');
-    setInfoBoxItems([
-      {
-        icon: '💡',
-        text: RichTextConverter.fromHTML('기술 변화 속 흔들리지 않는 <span class="subtle-highlight" style="color: rgb(130, 170, 255)">개발자 사고의 뿌리</span>를 탐구해요.')
-      },
-      {
-        icon: '📚',
-        text: RichTextConverter.fromHTML('단순한 코딩 테스트 넘어, 자료구조와 알고리즘의 <span class="highlight" style="color: rgb(255, 234, 0)">본질에 Deep Dive</span> 해요.')
-      },
-      {
-        icon: '🤝',
-        text: RichTextConverter.fromHTML('서로의 질문이 해답이 되고, <span class="subtle-highlight" style="color: rgb(130, 170, 255)">함께 성장</span>하는 시너지를 경험해요.')
-      }
-    ]);
+    if (heroData.infoBox) {
+      setUseInfoBox(true);
+      setInfoBoxHeader(heroData.infoBox.header);
+      setInfoBoxItems(
+        heroData.infoBox.items.map(item => ({
+          icon: item.icon,
+          text: RichTextConverter.fromHTML(item.text)
+        }))
+      );
+    }
   };
 
   return (
