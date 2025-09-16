@@ -20,6 +20,8 @@ import {
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
+import { algorithmTemplate } from '../templateData';
+import TemplateSelector from './TemplateSelector';
 import './RichTextSectionForm.css';
 
 interface RichTextSectionFormProps {
@@ -123,7 +125,10 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
   };
 
   // 표준 예시 데이터 로드
-  const loadExampleData = () => {
+  const loadExampleData = (templateType: string) => {
+    if (!templateType) return;
+
+    if (templateType === 'algorithm') {
     setTitle('TecoTeco 소개');
     setBackgroundColor('#0a0a0a');
     
@@ -181,6 +186,22 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
     ];
     
     setBlocks(exampleBlocks);
+    }
+    // 추후 다른 템플릿 추가
+    // else if (templateType === 'mogakko') { ... }
+  };
+
+  // Clear form and reset to initial state
+  const handleClearTemplate = () => {
+    setTitle(initialData?.title || '');
+    setBackgroundColor(initialData?.backgroundColor || '#0a0a0a');
+    if (initialData?.blocks) {
+      setBlocks(initialData.blocks);
+    } else if (initialData?.content) {
+      setBlocks(htmlToBlocks(initialData.content));
+    } else {
+      setBlocks([]);
+    }
   };
 
   // 블록 렌더링
@@ -621,41 +642,10 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
         justifyContent: 'flex-end',
         marginBottom: '20px'
       }}>
-        <button 
-          type="button" 
-          onClick={loadExampleData}
-          className="study-management-richtext-template-btn study-management-richtext-example"
-          style={{
-            padding: '8px 16px',
-            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
-            border: '1px solid rgba(195, 232, 141, 0.3)',
-            borderRadius: '6px',
-            color: '#C3E88D',
-            fontSize: '14px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            whiteSpace: 'nowrap'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <span style={{ fontSize: '16px' }}>✨</span>
-          예시 데이터 불러오기
-        </button>
+        <TemplateSelector
+        onTemplateSelect={loadExampleData}
+        onClear={handleClearTemplate}
+      />
       </div>
 
       <div className="study-management-richtext-form-group">

@@ -3,6 +3,7 @@ import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichT
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import { algorithmTemplate } from '../templateData';
+import TemplateSelector from './TemplateSelector';
 import './HeroSectionForm.css';
 
 interface InfoBoxItem {
@@ -114,75 +115,67 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
   };
 
   // 표준 예시 데이터 - templateData.ts에서 가져오기
-  const loadExampleData = () => {
-    const heroData = algorithmTemplate.sections.hero;
-    if (!heroData) return;
+  const loadExampleData = (templateType: string) => {
+    if (!templateType) return;
 
-    // RichText 형식으로 변환
-    setTitle(RichTextConverter.fromHTML(heroData.title));
-    setSubtitle(RichTextConverter.fromHTML(heroData.subtitle));
-    setDescription(heroData.description);
-    setButtonText(heroData.buttonText);
-    setButtonLink(heroData.buttonLink);
-    setBackgroundImage(heroData.backgroundImage);
+    // 현재는 algorithm 템플릿만 지원, 추후 모각코 등 추가 예정
+    if (templateType === 'algorithm') {
+      const heroData = algorithmTemplate.sections.hero;
+      if (!heroData) return;
 
-    // InfoBox 예시 데이터
-    if (heroData.infoBox) {
-      setUseInfoBox(true);
-      setInfoBoxHeader(heroData.infoBox.header);
-      setInfoBoxItems(
-        heroData.infoBox.items.map(item => ({
-          icon: item.icon,
-          text: RichTextConverter.fromHTML(item.text)
-        }))
-      );
+      // RichText 형식으로 변환
+      setTitle(RichTextConverter.fromHTML(heroData.title));
+      setSubtitle(RichTextConverter.fromHTML(heroData.subtitle));
+      setDescription(heroData.description);
+      setButtonText(heroData.buttonText);
+      setButtonLink(heroData.buttonLink);
+      setBackgroundImage(heroData.backgroundImage);
+
+      // InfoBox 예시 데이터
+      if (heroData.infoBox) {
+        setUseInfoBox(true);
+        setInfoBoxHeader(heroData.infoBox.header);
+        setInfoBoxItems(
+          heroData.infoBox.items.map(item => ({
+            icon: item.icon,
+            text: RichTextConverter.fromHTML(item.text)
+          }))
+        );
+      }
     }
+    // 추후 다른 템플릿 추가
+    // else if (templateType === 'mogakko') { ... }
+  };
+
+  // Clear form and reset to initial state
+  const handleClearTemplate = () => {
+    // Reset all form fields to initial state
+    setTitle(initialData.title ?
+      (typeof initialData.title === 'string' ? RichTextConverter.fromHTML(initialData.title) : initialData.title)
+      : '');
+    setSubtitle(initialData.subtitle ?
+      (typeof initialData.subtitle === 'string' ? RichTextConverter.fromHTML(initialData.subtitle) : initialData.subtitle)
+      : '');
+    setDescription(initialData.description || '');
+    setButtonText(initialData.buttonText || '참가 신청하기');
+    setButtonLink(initialData.buttonLink || '#apply');
+    setBackgroundImage(initialData.backgroundImage || initialData.image || '');
+    setUseInfoBox(!!initialData.infoBox);
+    setInfoBoxHeader(initialData.infoBox?.header || '');
+    setInfoBoxItems(
+      initialData.infoBox?.items?.map((item: any) => ({
+        icon: item.icon,
+        text: typeof item.text === 'string' ? RichTextConverter.fromHTML(item.text) : item.text
+      })) || []
+    );
   };
 
   return (
     <form onSubmit={handleSubmit} className="study-management-hero-form">
-      {/* 예시 데이터 버튼 - 우측 정렬 */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginBottom: '20px'
-      }}>
-        <button 
-          type="button" 
-          onClick={loadExampleData}
-          className="study-management-hero-example-btn"
-          style={{
-            padding: '8px 16px',
-            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
-            border: '1px solid rgba(195, 232, 141, 0.3)',
-            borderRadius: '6px',
-            color: '#C3E88D',
-            fontSize: '14px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            whiteSpace: 'nowrap'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <span style={{ fontSize: '16px' }}>✨</span>
-          예시 데이터 불러오기
-        </button>
-      </div>
+      <TemplateSelector
+        onTemplateSelect={loadExampleData}
+        onClear={handleClearTemplate}
+      />
 
       <div className="study-management-hero-form-group">
         <div style={{

@@ -13,6 +13,7 @@ import {
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
 import { algorithmTemplate } from '../templateData';
+import TemplateSelector from './TemplateSelector';
 import './ReviewSectionForm.css';
 
 interface ReviewSectionFormProps {
@@ -171,9 +172,12 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
 
 
   // 예시 데이터 로드 - templateData.ts에서 가져오기
-  const loadExampleData = () => {
-    const reviewData = algorithmTemplate.sections.review;
-    if (!reviewData) return;
+  const loadExampleData = (templateType: string) => {
+    if (!templateType) return;
+
+    if (templateType === 'algorithm') {
+      const reviewData = algorithmTemplate.sections.review;
+      if (!reviewData) return;
 
     setTagHeader(reviewData.tagHeader);
     setTitle(RichTextConverter.fromHTML(reviewData.title));
@@ -206,10 +210,33 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
     // 리뷰에서 키워드 자동 추출
     extractKeywordsFromReviews(templateReviews);
 
-    // 템플릿의 기본 키워드 사용
-    if (reviewData.keywords) {
-      setKeywords(reviewData.keywords);
+      // 템플릿의 기본 키워드 사용
+      if (reviewData.keywords) {
+        setKeywords(reviewData.keywords);
+      }
     }
+    // 추후 다른 템플릿 추가
+    // else if (templateType === 'mogakko') { ... }
+  };
+
+  // Clear form and reset to initial state
+  const handleClearTemplate = () => {
+    setEnabled(initialData?.enabled ?? true);
+    setTagHeader(initialData?.tagHeader || '');
+    setTitle(initialData?.title ?
+      (typeof initialData.title === 'string' ? RichTextConverter.fromHTML(initialData.title) : initialData.title)
+      : '');
+    setSubtitle(initialData?.subtitle ?
+      (typeof initialData.subtitle === 'string' ? RichTextConverter.fromHTML(initialData.subtitle) : initialData.subtitle)
+      : '');
+    setShowStats(initialData?.showStats ?? true);
+    setShowKeywords(initialData?.showKeywords ?? true);
+    setKeywords(initialData?.keywords || []);
+    setDisplayCount(initialData?.displayCount || 10);
+    setSortBy(initialData?.sortBy || 'latest');
+    setReviews([]);
+    setStats(undefined);
+    setExtractedKeywords([]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -250,47 +277,16 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="study-management-review-form">
-      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      {/* 예시 데이터 템플릿 선택 - 우측 정렬 */}
       <div style={{
         display: 'flex',
         justifyContent: 'flex-end',
         marginBottom: '20px'
       }}>
-        <button 
-          type="button" 
-          onClick={loadExampleData}
-          className="example-btn"
-          style={{
-            padding: '8px 16px',
-            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
-            border: '1px solid rgba(195, 232, 141, 0.3)',
-            borderRadius: '6px',
-            color: '#C3E88D',
-            fontSize: '14px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            whiteSpace: 'nowrap'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <span style={{ fontSize: '16px' }}>✨</span>
-          예시 데이터 불러오기
-        </button>
+        <TemplateSelector
+          onTemplateSelect={loadExampleData}
+          onClear={handleClearTemplate}
+        />
       </div>
 
       {/* 섹션 활성화 토글 */}

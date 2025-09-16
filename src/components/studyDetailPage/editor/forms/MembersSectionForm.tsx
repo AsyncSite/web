@@ -15,6 +15,7 @@ import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichT
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import { algorithmTemplate } from '../templateData';
+import TemplateSelector from './TemplateSelector';
 
 interface MembersSectionFormProps {
   studyId?: string;  // 실제 멤버 데이터를 불러올 스터디 ID
@@ -307,9 +308,12 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   };
 
   // 표준 예시 데이터 로드 - templateData.ts에서 가져오기
-  const loadStandardExample = () => {
-    const membersData = algorithmTemplate.sections.members;
-    if (!membersData) return;
+  const loadStandardExample = (templateType: string) => {
+    if (!templateType) return;
+
+    if (templateType === 'algorithm') {
+      const membersData = algorithmTemplate.sections.members;
+      if (!membersData) return;
 
     setTagHeader(membersData.tagHeader);
     setTitle(RichTextConverter.fromHTML(membersData.title));
@@ -345,15 +349,42 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
     updateStats(exampleMembers); // 통계 자동 계산
 
     // stats 설정
-    setStats({
-      totalMembers: membersData.stats.totalMembers,
-      activeMembers: membersData.stats.activeMembers,
-      totalHours: membersData.stats.totalHours,
-      totalProblems: membersData.stats.totalProblems,
-      participationRate: membersData.stats.participationRate,
-      popularAlgorithms: membersData.stats.popularAlgorithms,
-      customStats: membersData.stats.customStats
+      setStats({
+        totalMembers: membersData.stats.totalMembers,
+        activeMembers: membersData.stats.activeMembers,
+        totalHours: membersData.stats.totalHours,
+        totalProblems: membersData.stats.totalProblems,
+        participationRate: membersData.stats.participationRate,
+        popularAlgorithms: membersData.stats.popularAlgorithms,
+        customStats: membersData.stats.customStats
+      });
+    }
+    // 추후 다른 템플릿 추가
+    // else if (templateType === 'mogakko') { ... }
+  };
+
+  // Clear form and reset to initial state
+  const handleClearTemplate = () => {
+    setTagHeader(initialData.tagHeader || '함께하는 멤버들이에요');
+    setTitle(initialData.title ?
+      (typeof initialData.title === 'string' ? RichTextConverter.fromHTML(initialData.title) : initialData.title)
+      : '');
+    setSubtitle(initialData.subtitle ?
+      (typeof initialData.subtitle === 'string' ? RichTextConverter.fromHTML(initialData.subtitle) : initialData.subtitle)
+      : '');
+    setLayout(initialData.layout || 'carousel');
+    setStudyType(initialData.studyType || 'custom');
+    setMembers(initialData.members?.length ? initialData.members : []);
+    setShowStats(initialData.showStats || false);
+    setStats(initialData.stats || {
+      totalMembers: 0,
+      activeMembers: 0,
+      totalHours: 0,
+      customStats: [],
+      popularAlgorithms: []
     });
+    setWeeklyMvp(initialData.weeklyMvp);
+    setHasLoadedFromAPI(false);
   };
 
   // 폼 제출
@@ -384,47 +415,16 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
   return (
     <>
       <form onSubmit={handleSubmit} className="study-management-members-form">
-      {/* 예시 데이터 버튼 - 우측 정렬 */}
+      {/* 예시 데이터 템플릿 선택 - 우측 정렬 */}
       <div style={{
         display: 'flex',
         justifyContent: 'flex-end',
         marginBottom: '20px'
       }}>
-        <button
-          type="button"
-          onClick={loadStandardExample}
-          className="study-management-members-example-btn"
-          style={{
-            padding: '8px 16px',
-            background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
-            border: '1px solid rgba(195, 232, 141, 0.3)',
-            borderRadius: '6px',
-            color: '#C3E88D',
-            fontSize: '14px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            whiteSpace: 'nowrap'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
-            e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <span style={{ fontSize: '16px' }}>✨</span>
-          예시 데이터 불러오기
-        </button>
+        <TemplateSelector
+          onTemplateSelect={loadStandardExample}
+          onClear={handleClearTemplate}
+        />
       </div>
 
       {/* 섹션 헤더 */}

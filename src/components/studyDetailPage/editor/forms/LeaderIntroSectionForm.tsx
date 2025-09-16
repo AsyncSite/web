@@ -5,6 +5,7 @@ import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import studyService from '../../../../api/studyService';
 import { algorithmTemplate } from '../templateData';
+import TemplateSelector from './TemplateSelector';
 import './LeaderIntroSectionForm.css';
 
 interface LeaderIntroSectionFormProps {
@@ -100,9 +101,12 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
   }, [studyId, initialData]);
   
   // 예시 데이터 로드 - templateData에서 가져오기
-  const loadExampleData = () => {
-    const leaderData = algorithmTemplate.sections.leaderIntro;
-    if (!leaderData) return;
+  const loadExampleData = (templateType: string) => {
+    if (!templateType) return;
+
+    if (templateType === 'algorithm') {
+      const leaderData = algorithmTemplate.sections.leaderIntro;
+      if (!leaderData) return;
 
     setName(leaderData.name);
     setProfileImage(leaderData.profileImage);
@@ -119,8 +123,34 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
     setTotalMembers(leaderData.totalMembers);
 
     setEmail(leaderData.email);
-    setGithub(leaderData.github);
-    setBlog(leaderData.blog);
+      setGithub(leaderData.github);
+      setBlog(leaderData.blog);
+    }
+    // 추후 다른 템플릿 추가
+    // else if (templateType === 'mogakko') { ... }
+  };
+
+  // Clear form and reset to initial state
+  const handleClearTemplate = () => {
+    // Reset all form fields to initial state
+    setName(initialData?.name || '');
+    setProfileImage(initialData?.profileImage || '');
+    setRole(initialData?.role || '');
+    setIntroduction(initialData?.introduction || RichTextConverter.fromHTML(''));
+    setMotivation(initialData?.motivation || RichTextConverter.fromHTML(''));
+    setPhilosophy(initialData?.philosophy || RichTextConverter.fromHTML(''));
+    setWelcomeMessage(initialData?.welcomeMessage || RichTextConverter.fromHTML(''));
+    setSince(initialData?.experience?.since || '');
+    setTotalStudies(initialData?.experience?.totalStudies || 0);
+    setTotalMembers(initialData?.experience?.totalMembers || 0);
+    setAchievements(initialData?.experience?.achievements || []);
+    setCareer(initialData?.background?.career || []);
+    setEducation(initialData?.background?.education || []);
+    setExpertise(initialData?.background?.expertise || []);
+    setEmail(initialData?.links?.email || '');
+    setGithub(initialData?.links?.github || '');
+    setLinkedin(initialData?.links?.linkedin || '');
+    setBlog(initialData?.links?.blog || '');
   };
   
   // 키워드 관리
@@ -212,14 +242,12 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
       {/* 헤더 */}
       <div className="leader-intro-form-header">
         <h3>🌟 리더 소개 - 미니멀 감성 프로필</h3>
-        <button 
-          type="button" 
-          onClick={loadExampleData}
-          className="leader-intro-example-btn"
-        >
-          ✨ 예시 데이터 불러오기
-        </button>
       </div>
+
+      <TemplateSelector
+        onTemplateSelect={loadExampleData}
+        onClear={handleClearTemplate}
+      />
       
       {/* 안내 메시지 */}
       <div className="leader-intro-form-notice">

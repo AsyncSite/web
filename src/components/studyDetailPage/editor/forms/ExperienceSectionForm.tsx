@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ExperienceSectionData, StepContent, experienceTemplates } from '../../types/experienceTypes';
 import { algorithmTemplate } from '../templateData';
+import TemplateSelector from './TemplateSelector';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
@@ -144,7 +145,7 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
     }
   };
 
-  const loadTemplate = (templateKey: keyof typeof experienceTemplates) => {
+  const loadTemplate = (templateKey: string) => {
     // Use templateData for algorithm template
     if (templateKey === 'algorithm') {
       const experienceData = algorithmTemplate.sections.experience;
@@ -169,7 +170,7 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
       ));
     } else {
       // Use original experienceTemplates for other templates
-      const template = experienceTemplates[templateKey];
+      const template = experienceTemplates[templateKey as keyof typeof experienceTemplates];
       setFormData(template);
 
       // Set RichTextEditor values
@@ -188,6 +189,14 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
         RichTextConverter.fromHTML(step.description)
       ));
     }
+  };
+
+  const handleClearTemplate = () => {
+    setFormData(defaultData);
+    setTitle(defaultData.title ? RichTextConverter.fromHTML(defaultData.title) : '');
+    setSubtitle(defaultData.subtitle ? RichTextConverter.fromHTML(defaultData.subtitle) : '');
+    setStepTitles(defaultData.steps.map(step => RichTextConverter.fromHTML(step.title)));
+    setStepDescriptions(defaultData.steps.map(step => RichTextConverter.fromHTML(step.description)));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -221,48 +230,10 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="study-management-experience-form">
-        {/* 예시 데이터 버튼 - 우측 정렬 */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginBottom: '20px'
-        }}>
-          <button 
-            type="button" 
-            onClick={() => loadTemplate('algorithm')}
-            className="experience-example-btn"
-            style={{
-              padding: '8px 16px',
-              background: 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))',
-              border: '1px solid rgba(195, 232, 141, 0.3)',
-              borderRadius: '6px',
-              color: '#C3E88D',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              whiteSpace: 'nowrap'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.2), rgba(130, 170, 255, 0.2))';
-              e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.5)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(195, 232, 141, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1))';
-              e.currentTarget.style.borderColor = 'rgba(195, 232, 141, 0.3)';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <span style={{ fontSize: '16px' }}>✨</span>
-            예시 데이터 불러오기
-          </button>
-        </div>
+        <TemplateSelector
+          onTemplateSelect={loadTemplate}
+          onClear={handleClearTemplate}
+        />
 
         {/* 기본 정보 */}
         <div className="study-management-experience-form-group">
