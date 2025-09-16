@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './MembersSectionForm.css';
-import { 
-  MemberProfile, 
-  CustomField, 
+import {
+  MemberProfile,
+  CustomField,
   Badge,
   MemberLayoutType,
   STUDY_TEMPLATES,
@@ -14,6 +14,7 @@ import ConfirmModal from '../../../common/ConfirmModal';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
+import { algorithmTemplate } from '../templateData';
 
 interface MembersSectionFormProps {
   studyId?: string;  // 실제 멤버 데이터를 불러올 스터디 ID
@@ -305,214 +306,53 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
     setMembers(updatedMembers);
   };
 
-  // 표준 예시 데이터 로드
+  // 표준 예시 데이터 로드 - templateData.ts에서 가져오기
   const loadStandardExample = () => {
-    setTagHeader('함께하는 멤버들이에요');
-    setTitle(RichTextConverter.fromHTML('더 멋진 여정이 펼쳐질 거예요,<br/>함께라면.'));
-    setSubtitle(RichTextConverter.fromHTML(''));
-    setLayout('carousel');
-    setStudyType('algorithm');
-    setShowStats(true);
-    setWeeklyMvp('renechoi');
-    
-    const exampleMembers: MemberProfile[] = [
-      {
-        userId: 'renechoi@example.com',  // 테스트용 userId 추가
-        name: 'renechoi',
-        role: '스터디 리더',
-        imageUrl: '/images/face/rene.png',
-        joinDate: '2024-10-01',  // 가장 오래된 멤버 (약 3개월 전)
-        tagline: '모임을 처음 시작한 사람 🏆',
-        streak: 15,
-        solvedProblems: 342,
-        memorableProblem: '백준 11053 - 가장 긴 증가하는 부분 수열',
-        currentFocus: '고급 DP 문제와 팀 빌딩 스킬',
-        whatIGained: 'DP의 최적화 방법과 스터디 운영의 노하우를 얻었어요',
-        testimonial: '리더십과 알고리즘 실력 모두 뛰어나요!',
-        from: 'kdelay',
-        recentActivity: '1일 전 활동',
-        customFields: [
-          { label: '해결한 문제', value: '342', icon: '✅' },
-          { label: '연속 참여', value: '15일', icon: '🔥' },
-          { label: '주력 분야', value: '고급 DP', icon: '📚' }
-        ],
-        badges: [
-          { type: 'mvp', label: '이주의 MVP', icon: '👑' }
-        ],
-        isActive: true,
-        lastActivity: '1일 전'
-      },
-      {
-        name: 'kdelay',
-        role: '코드 리뷰어',
-        imageUrl: '/images/face/kdelay.png',
-        joinDate: '2024-11-01',
-        tagline: '꼼꼼한 코드 리뷰어 📝',
-        streak: 12,
-        solvedProblems: 298,
-        memorableProblem: '백준 1932 - 정수 삼각형',
-        currentFocus: '트리 DP와 멘토링 스킬 마스터하기',
-        whatIGained: 'DP의 진정한 의미를 깨달았고, 코드 리뷰 스킬을 키웠어요',
-        testimonial: '꼼꼼한 리뷰로 모두의 실력 향상에 기여해요!',
-        from: 'KrongDev',
-        recentActivity: '2일 전 활동',
-        customFields: [
-          { label: '해결한 문제', value: '298', icon: '✅' },
-          { label: '연속 참여', value: '12일', icon: '🔥' },
-          { label: '주력 분야', value: '트리 DP', icon: '📚' }
-        ],
-        badges: [
-          { type: 'streak', label: '개근왕', icon: '🔥' }
-        ],
-        isActive: true,
-        lastActivity: '2일 전'
-      },
-      {
-        name: 'KrongDev',
-        role: '문제 해결사',
-        imageUrl: 'https://avatars.githubusercontent.com/u/138358867?s=40&v=4',
-        joinDate: '2024-11-01',
-        tagline: '알고리즘 문제 해결사 💬',
-        streak: 8,
-        solvedProblems: 156,
-        memorableProblem: '프로그래머스 - 네트워크',
-        currentFocus: '최단경로 알고리즘과 문제 분석 능력',
-        whatIGained: 'DFS/BFS를 완전히 이해하게 됐고, 문제 해결 패턴을 익혔어요',
-        testimonial: '어려운 문제도 차근차근 해결하는 능력이 대단해요!',
-        from: 'renechoi',
-        recentActivity: '1일 전 활동',
-        customFields: [
-          { label: '해결한 문제', value: '156', icon: '✅' },
-          { label: '연속 참여', value: '8일', icon: '🔥' },
-          { label: '주력 분야', value: '그래프', icon: '📚' }
-        ],
-        isActive: true,
-        lastActivity: '1일 전'
-      },
-      {
-        name: '탁형',
-        role: '멘토',
-        imageUrl: '/images/face/xxx.png',
-        joinDate: '2024-11-01',
-        tagline: '복잡한 개념도 쉽게 설명하는 멘토 📚',
-        streak: 6,
-        solvedProblems: 89,
-        memorableProblem: '백준 9019 - DSLR',
-        currentFocus: '세그먼트 트리와 설명 스킬 도전',
-        whatIGained: 'BFS 최적화 방법을 터득했고, 설명하는 능력을 키웠어요',
-        testimonial: '복잡한 개념도 쉽게 설명해주는 천재예요!',
-        from: 'kdelay',
-        recentActivity: '3일 전 활동',
-        customFields: [
-          { label: '해결한 문제', value: '89', icon: '✅' },
-          { label: '연속 참여', value: '6일', icon: '🔥' },
-          { label: '주력 분야', value: '세그먼트 트리', icon: '📚' }
-        ],
-        badges: [
-          { type: 'special', label: '멘토', icon: '🌟' }
-        ],
-        isActive: false,
-        lastActivity: '3일 전'
-      },
-      {
-        name: '민수',
-        role: '트렌드 탐험가',
-        imageUrl: '/images/face/xxx.png',
-        joinDate: '2024-10-15',
-        tagline: '새로운 알고리즘 트렌드를 가져오는 탐험가 🔍',
-        streak: 9,
-        solvedProblems: 124,
-        memorableProblem: '백준 2206 - 벽 부수고 이동하기',
-        currentFocus: '고급 그래프 알고리즘 탐구',
-        whatIGained: 'BFS와 상태 관리의 핵심을 이해했어요',
-        testimonial: '새로운 접근법으로 모두를 놀라게 해요!',
-        from: 'renechoi',
-        recentActivity: '2일 전 활동',
-        customFields: [
-          { label: '해결한 문제', value: '124', icon: '✅' },
-          { label: '연속 참여', value: '9일', icon: '🔥' },
-          { label: '주력 분야', value: '고급 그래프', icon: '📚' }
-        ],
-        isActive: true,
-        lastActivity: '2일 전'
-      },
-      {
-        name: '지영',
-        role: '분위기 메이커',
-        imageUrl: '/images/face/xxx.png',
-        joinDate: '2024-11-20',
-        tagline: '분위기 메이커이자 팀워크의 핵심 🎉',
-        streak: 11,
-        solvedProblems: 187,
-        memorableProblem: '프로그래머스 - 카카오톡 채팅방',
-        currentFocus: '문자열 알고리즘과 소통 스킬',
-        whatIGained: '문자열 처리와 팀워크의 중요성을 배웠어요',
-        testimonial: '힘든 순간에도 웃음을 잃지 않는 에너지!',
-        from: '탁형',
-        recentActivity: '1일 전 활동',
-        customFields: [
-          { label: '해결한 문제', value: '187', icon: '✅' },
-          { label: '연속 참여', value: '11일', icon: '🔥' },
-          { label: '주력 분야', value: '문자열', icon: '📚' }
-        ],
-        isActive: true,
-        lastActivity: '1일 전'
-      },
-      {
-        name: '현우',
-        role: '최적화 마법사',
-        imageUrl: '/images/face/xxx.png',
-        joinDate: '2025-01-20',
-        tagline: '최적화 마법사, 효율성의 달인 ⚡',
-        streak: 7,
-        solvedProblems: 98,
-        memorableProblem: '백준 1759 - 암호 만들기',
-        currentFocus: '고급 최적화와 성능 분석',
-        whatIGained: '백트래킹과 최적화 기법을 체득했어요',
-        testimonial: '복잡한 문제도 효율적으로 해결하는 마법사!',
-        from: 'kdelay',
-        recentActivity: '1일 전 활동',
-        customFields: [
-          { label: '해결한 문제', value: '98', icon: '✅' },
-          { label: '연속 참여', value: '7일', icon: '🔥' },
-          { label: '주력 분야', value: '최적화', icon: '📚' }
-        ],
-        isActive: true,
-        lastActivity: '1일 전'
-      },
-      {
-        name: "who's next?",
-        role: '미래의 멤버',
-        imageUrl: '/images/face/another.png',
-        tagline: '당신의 합류를 기다려요 👋',
-        streak: 0,
-        solvedProblems: 0,
-        memorableProblem: '',
-        currentFocus: '',
-        whatIGained: '',
-        testimonial: '',
-        from: '',
-        recentActivity: '',
-        customFields: [],
-        isActive: false
-      }
-    ];
-    
+    const membersData = algorithmTemplate.sections.members;
+    if (!membersData) return;
+
+    setTagHeader(membersData.tagHeader);
+    setTitle(RichTextConverter.fromHTML(membersData.title));
+    setSubtitle(RichTextConverter.fromHTML(membersData.subtitle));
+    setLayout(membersData.layout as MemberLayoutType);
+    setStudyType(membersData.studyType as keyof typeof STUDY_TEMPLATES);
+    setShowStats(membersData.showStats);
+    setWeeklyMvp(membersData.weeklyMvp);
+
+    // MemberProfile 타입으로 변환
+    const exampleMembers: MemberProfile[] = membersData.members.map(member => ({
+      userId: member.userId,
+      name: member.name,
+      role: member.role,
+      imageUrl: member.imageUrl,
+      joinDate: member.joinDate,
+      tagline: member.tagline,
+      streak: member.streak,
+      solvedProblems: member.solvedProblems,
+      memorableProblem: member.memorableProblem,
+      currentFocus: member.currentFocus,
+      whatIGained: member.whatIGained,
+      testimonial: member.testimonial,
+      from: member.from,
+      recentActivity: member.recentActivity,
+      customFields: member.customFields,
+      badges: member.badges as Badge[],
+      isActive: member.isActive,
+      lastActivity: member.lastActivity
+    }));
+
     setMembers(exampleMembers);
-    updateStats(exampleMembers);  // 통계 자동 계산
-    
+    updateStats(exampleMembers); // 통계 자동 계산
+
+    // stats 설정
     setStats({
-      totalMembers: 8,
-      activeMembers: 6,
-      totalHours: 180,
-      totalProblems: 1247,
-      participationRate: 85,
-      popularAlgorithms: ['DP', '그래프', '이분탐색', '그리디'],
-      customStats: [
-        { label: '총 해결한 문제', value: '1247', icon: '💡' },
-        { label: '평균 참여율', value: '85%', icon: '📊' },
-        { label: '인기 알고리즘', value: 'DP, 그래프, 이분탐색, 그리디', icon: '🏆' }
-      ]
+      totalMembers: membersData.stats.totalMembers,
+      activeMembers: membersData.stats.activeMembers,
+      totalHours: membersData.stats.totalHours,
+      totalProblems: membersData.stats.totalProblems,
+      participationRate: membersData.stats.participationRate,
+      popularAlgorithms: membersData.stats.popularAlgorithms,
+      customStats: membersData.stats.customStats
     });
   };
 

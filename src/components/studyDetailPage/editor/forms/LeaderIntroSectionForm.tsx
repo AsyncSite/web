@@ -4,6 +4,7 @@ import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import studyService from '../../../../api/studyService';
+import { algorithmTemplate } from '../templateData';
 import './LeaderIntroSectionForm.css';
 
 interface LeaderIntroSectionFormProps {
@@ -98,33 +99,28 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
     fetchStudyLeaderInfo();
   }, [studyId, initialData]);
   
-  // 예시 데이터 로드 (미니멀 버전)
+  // 예시 데이터 로드 - templateData에서 가져오기
   const loadExampleData = () => {
-    setName('김개발');
-    setProfileImage('/images/face/leader-example.png');
-    setRole('실패를 두려워하지 않는 10년차 개발자');
-    
-    setMotivation(RichTextConverter.fromHTML(
-      '혼자 공부하다 막막했던 순간들을 기억합니다. <strong>함께라면 더 멀리 갈 수 있다</strong>는 믿음으로 이 공간을 만들었어요.'
-    ));
-    
-    setPhilosophy(RichTextConverter.fromHTML(
-      '정답을 알려주기보다 <strong>스스로 생각하는 힘</strong>을 기르는 것을 중요하게 생각합니다.'
-    ));
-    
-    setWelcomeMessage(RichTextConverter.fromHTML(
-      '완벽하지 않아도 괜찮아요. <strong>꾸준히 노력하는 것</strong>이 가장 중요합니다. 편하게 질문하고, 자유롭게 의견을 나누어요! 🚀'
-    ));
-    
-    setExpertise(['도전', '성장', '공유']);
-    
-    setSince('2022년 1월부터');
-    setTotalStudies(5);
-    setTotalMembers(67);
-    
-    setEmail('leader@example.com');
-    setGithub('https://github.com/kimdev');
-    setBlog('https://kimdev.blog');
+    const leaderData = algorithmTemplate.sections.leaderIntro;
+    if (!leaderData) return;
+
+    setName(leaderData.name);
+    setProfileImage(leaderData.profileImage);
+    setRole(leaderData.role);
+
+    setMotivation(RichTextConverter.fromHTML(leaderData.motivation));
+    setPhilosophy(RichTextConverter.fromHTML(leaderData.philosophy));
+    setWelcomeMessage(RichTextConverter.fromHTML(leaderData.welcomeMessage));
+
+    setExpertise(leaderData.expertise);
+
+    setSince(leaderData.since);
+    setTotalStudies(leaderData.totalStudies);
+    setTotalMembers(leaderData.totalMembers);
+
+    setEmail(leaderData.email);
+    setGithub(leaderData.github);
+    setBlog(leaderData.blog);
   };
   
   // 키워드 관리
