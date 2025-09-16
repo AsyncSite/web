@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  HowWeRollData, 
-  MeetingOverviewItem, 
+import {
+  HowWeRollData,
+  MeetingOverviewItem,
   ScheduleItem,
-  howWeRollTemplates 
+  howWeRollTemplates
 } from '../../types/howWeRollTypes';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
+import { algorithmTemplate } from '../templateData';
 import './HowWeRollSectionForm.css';
 
 interface HowWeRollSectionFormProps {
@@ -60,15 +61,31 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
   const [editingScheduleIndex, setEditingScheduleIndex] = useState<number | null>(null);
 
   const loadTemplate = (templateType: 'algorithm' | 'design' | 'language') => {
-    const template = howWeRollTemplates[templateType];
-    setTitle(RichTextConverter.fromHTML(template.title));
-    setSubtitle(RichTextConverter.fromHTML(template.subtitle || ''));
-    setTagHeader(template.tagHeader);
-    setScheduleIntro(RichTextConverter.fromHTML(template.scheduleIntro));
-    setSubHeading(RichTextConverter.fromHTML(template.subHeading));
-    setClosingMessage(RichTextConverter.fromHTML(template.closingMessage || ''));
-    setMeetingOverview(template.meetingOverview);
-    setSchedule(template.schedule);
+    // algorithm 템플릿은 templateData에서 가져오기
+    if (templateType === 'algorithm') {
+      const howWeRollData = algorithmTemplate.sections.howWeRoll;
+      if (!howWeRollData) return;
+
+      setTitle(RichTextConverter.fromHTML(howWeRollData.title));
+      setSubtitle(RichTextConverter.fromHTML(howWeRollData.subtitle || ''));
+      setTagHeader(howWeRollData.tagHeader || '');
+      setScheduleIntro(RichTextConverter.fromHTML(howWeRollData.scheduleIntro || ''));
+      setSubHeading(RichTextConverter.fromHTML(howWeRollData.subHeading || ''));
+      setClosingMessage(RichTextConverter.fromHTML(howWeRollData.closingMessage || ''));
+      setMeetingOverview(howWeRollData.meetingOverview);
+      setSchedule(howWeRollData.schedule);
+    } else {
+      // 다른 템플릿은 기존대로
+      const template = howWeRollTemplates[templateType];
+      setTitle(RichTextConverter.fromHTML(template.title));
+      setSubtitle(RichTextConverter.fromHTML(template.subtitle || ''));
+      setTagHeader(template.tagHeader);
+      setScheduleIntro(RichTextConverter.fromHTML(template.scheduleIntro));
+      setSubHeading(RichTextConverter.fromHTML(template.subHeading));
+      setClosingMessage(RichTextConverter.fromHTML(template.closingMessage || ''));
+      setMeetingOverview(template.meetingOverview);
+      setSchedule(template.schedule);
+    }
   };
 
   const addOverviewItem = () => {

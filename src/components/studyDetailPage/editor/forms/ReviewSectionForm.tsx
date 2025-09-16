@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { 
-  ReviewSectionData, 
-  Review, 
+import {
+  ReviewSectionData,
+  Review,
   ReviewStats,
   sampleReviews,
   sampleReviewStats,
@@ -12,6 +12,7 @@ import {
   sampleStandardReviews
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
+import { algorithmTemplate } from '../templateData';
 import './ReviewSectionForm.css';
 
 interface ReviewSectionFormProps {
@@ -169,25 +170,45 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
   };
 
 
-  // 예시 데이터 로드 (표준 데이터 사용)
+  // 예시 데이터 로드 - templateData.ts에서 가져오기
   const loadExampleData = () => {
-    setTagHeader(sampleStandardReviewData.tagHeader || '솔직한 후기');
-    setTitle(RichTextConverter.fromHTML(sampleStandardReviewData.title));
-    setSubtitle(RichTextConverter.fromHTML(sampleStandardReviewData.subtitle || ''));
-    setShowKeywords(sampleStandardReviewData.showKeywords ?? true);
-    setDisplayCount(sampleStandardReviewData.displayCount || 3);
-    setSortBy(sampleStandardReviewData.sortBy || 'latest');
-    setShowStats(false); // 표준 형식은 통계를 표시하지 않음
-    
-    // 표준 리뷰 샘플 데이터 로드
-    setReviews(sampleStandardReviews);
-    
-    // 표준 리뷰에서 키워드 자동 추출
-    extractKeywordsFromReviews(sampleStandardReviews);
-    
-    // 표준 형식은 기본 키워드도 사용 (자동 추출 + 하드코딩된 키워드)
-    if (sampleStandardReviewData.keywords) {
-      setKeywords(sampleStandardReviewData.keywords);
+    const reviewData = algorithmTemplate.sections.review;
+    if (!reviewData) return;
+
+    setTagHeader(reviewData.tagHeader);
+    setTitle(RichTextConverter.fromHTML(reviewData.title));
+    setSubtitle(RichTextConverter.fromHTML(reviewData.subtitle));
+    setShowKeywords(reviewData.showKeywords);
+    setDisplayCount(reviewData.displayCount);
+    setSortBy(reviewData.sortBy as ReviewSectionData['sortBy']);
+    setShowStats(reviewData.showStats);
+
+    // 리뷰 데이터 변환 (templateData 형식을 Review 타입으로)
+    const templateReviews: Review[] = reviewData.reviews.map(r => ({
+      id: r.id,
+      userId: r.userId,
+      userName: r.userName,
+      rating: r.rating,
+      title: r.title,
+      content: r.content,
+      createdAt: r.createdAt,
+      attendCount: r.attendCount,
+      helpfulCount: r.helpfulCount,
+      tags: r.tags.map(tag => ({
+        ...tag,
+        category: tag.category as any
+      })),
+      timeAgo: r.timeAgo
+    }));
+
+    setReviews(templateReviews);
+
+    // 리뷰에서 키워드 자동 추출
+    extractKeywordsFromReviews(templateReviews);
+
+    // 템플릿의 기본 키워드 사용
+    if (reviewData.keywords) {
+      setKeywords(reviewData.keywords);
     }
   };
 

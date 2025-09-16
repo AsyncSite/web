@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './FAQSectionForm.css';
+import { algorithmTemplate } from '../templateData';
 
 interface FAQItem {
   question: string;
@@ -126,43 +127,20 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
     ]);
   };
   
-  // 표준 FAQ 템플릿
+  // 표준 FAQ 템플릿 - templateData.ts에서 가져오기
   const loadStandardData = () => {
-    setTitle('FAQ');
-    setTagHeader('궁금증 해결');
-    setShowIcons(true);
-    setShowJoinCTA(true);
-    setJoinTitle('당신의 합류를 기다려요!');
-    setJoinDescription('');
-    setJoinButtonText('리더에게 커피챗 요청하기 ☕');
-    setKakaoOpenChatUrl('https://open.kakao.com/o/example');
-    setFaqs([
-      {
-        question: '이 스터디는 어떤 스터디인가요?',
-        answer: '코딩 테스트 완전 정복을 목표로 하는 알고리즘 스터디입니다. 단순히 문제를 푸는 것을 넘어, 논리적 사고력과 커뮤니케이션 역량 강화를 지향합니다.',
-        category: ''
-      },
-      {
-        question: '모임은 언제, 어디서 진행되나요?',
-        answer: '매주 금요일 저녁 7:30 ~ 9:30에 강남역 인근 스터디룸에서 오프라인 모임을 중심으로 진행됩니다. 상황에 따라 온라인(Discord)으로 전환될 수 있습니다.',
-        category: ''
-      },
-      {
-        question: '스터디 비용은 어떻게 되나요?',
-        answer: '스터디룸 대관료는 참석자끼리 N/1로 정산합니다. 별도의 회비나 멤버십 비용은 없습니다.',
-        category: ''
-      },
-      {
-        question: '참여하려면 어떻게 해야 하나요?',
-        answer: '현재는 공식 모집은 진행하고 있지 않아요. 관심 있으신 분들은 @renechoi에게 커피챗을 요청해주시면 참여 방법을 안내해 드립니다.',
-        category: ''
-      },
-      {
-        question: '코딩 테스트 실력이 부족해도 참여할 수 있나요?',
-        answer: '네, 실력에 관계없이 누구나 참여할 수 있습니다. 함께의 가치를 중요하게 생각하며, 서로 돕고 배우며 성장할 수 있는 환경을 지향합니다.',
-        category: ''
-      }
-    ]);
+    const faqData = algorithmTemplate.sections.faq;
+    if (!faqData) return;
+
+    setTitle(faqData.title);
+    setTagHeader(faqData.tagHeader);
+    setShowIcons(faqData.showIcons);
+    setShowJoinCTA(faqData.showJoinCTA);
+    setJoinTitle(faqData.joinTitle);
+    setJoinDescription(faqData.joinDescription);
+    setJoinButtonText(faqData.joinButtonText);
+    setKakaoOpenChatUrl(faqData.kakaoOpenChatUrl);
+    setFaqs(faqData.items);
   };
 
   return (

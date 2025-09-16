@@ -20,10 +20,21 @@ export interface StudyTemplate {
         }>;
       };
     };
-    faq?: Array<{
-      question: string;
-      answer: string;
-    }>;
+    faq?: {
+      title: string;
+      tagHeader: string;
+      showIcons: boolean;
+      showJoinCTA: boolean;
+      joinTitle: string;
+      joinDescription: string;
+      joinButtonText: string;
+      kakaoOpenChatUrl: string;
+      items: Array<{
+        question: string;
+        answer: string;
+        category: string;
+      }>;
+    };
     experience?: {
       title: string;
       items: Array<{
@@ -34,14 +45,25 @@ export interface StudyTemplate {
     };
     howWeRoll?: {
       title: string;
-      items: Array<{
+      subtitle?: string;
+      tagHeader?: string;
+      scheduleIntro?: string;
+      subHeading?: string;
+      closingMessage?: string;
+      meetingOverview: Array<{
         icon: string;
         title: string;
-        description: string;
-        details?: Array<{
-          label: string;
-          value: string;
-        }>;
+        highlight: string;
+        description?: string;
+        subNote?: string;
+        type: string;
+        link?: string;
+      }>;
+      schedule: Array<{
+        time: string;
+        activity: string;
+        detail: string;
+        type: 'primary' | 'secondary';
       }>;
     };
     journey?: {
@@ -54,29 +76,105 @@ export interface StudyTemplate {
       }>;
     };
     review?: {
+      enabled: boolean;
+      tagHeader: string;
       title: string;
       subtitle: string;
-      items: Array<{
-        author: string;
-        role?: string;
+      showStats: boolean;
+      displayCount: number;
+      sortBy: string;
+      showKeywords: boolean;
+      keywords: string[];
+      reviews: Array<{
+        id: string;
+        userId: string;
+        userName: string;
         rating: number;
-        date: string;
-        text: string;
-        helpful?: number;
+        title: string;
+        content: string;
+        createdAt: string;
+        attendCount: number;
+        helpfulCount: number;
+        tags: Array<{
+          id: string;
+          emoji: string;
+          label: string;
+          category: string;
+          description: string;
+        }>;
+        timeAgo: string;
       }>;
     };
     members?: {
+      tagHeader: string;
       title: string;
       subtitle: string;
+      layout: string;
+      studyType: string;
+      showStats: boolean;
+      weeklyMvp: string;
+      stats: {
+        totalMembers: number;
+        activeMembers: number;
+        totalHours: number;
+        totalProblems: number;
+        participationRate: number;
+        popularAlgorithms: string[];
+        customStats: Array<{
+          label: string;
+          value: string;
+          icon: string;
+        }>;
+      };
       members: Array<{
+        userId?: string;
         name: string;
         role: string;
-        bio: string;
-        image: string;
-        github?: string;
-        linkedin?: string;
-        tags?: string[];
+        imageUrl?: string;
+        joinDate?: string;
+        tagline?: string;
+        streak?: number;
+        solvedProblems?: number;
+        memorableProblem?: string;
+        currentFocus?: string;
+        whatIGained?: string;
+        testimonial?: string;
+        from?: string;
+        recentActivity?: string;
+        customFields?: Array<{
+          label: string;
+          value: string;
+          icon: string;
+        }>;
+        badges?: Array<{
+          type: string;
+          label: string;
+          icon: string;
+        }>;
+        isActive?: boolean;
+        lastActivity?: string;
       }>;
+    };
+    richText?: {
+      title: string;
+      content: string;
+      alignment: string;
+      backgroundColor: string;
+    };
+    leaderIntro?: {
+      name: string;
+      profileImage: string;
+      role: string;
+      motivation: string;
+      philosophy: string;
+      welcomeMessage: string;
+      expertise: string[];
+      since: string;
+      totalStudies: number;
+      totalMembers: number;
+      email: string;
+      github: string;
+      blog: string;
     };
   };
 }
@@ -111,28 +209,43 @@ export const algorithmTemplate: StudyTemplate = {
         ]
       }
     },
-    faq: [
-      {
-        question: '스터디 난이도가 어떻게 되나요?',
-        answer: '중급 수준의 알고리즘 문제를 다룹니다. 기본적인 자료구조(배열, 리스트, 스택, 큐)를 이해하고 있다면 참여 가능합니다.'
-      },
-      {
-        question: '온라인으로만 진행되나요?',
-        answer: '네, 100% 온라인으로 진행됩니다. 매주 화요일 저녁 8시에 Zoom을 통해 만나며, Discord로 일상적인 소통을 합니다.'
-      },
-      {
-        question: '스터디 자료는 제공되나요?',
-        answer: '매주 선별된 문제 리스트와 풀이 접근법 가이드를 제공합니다. 또한 핵심 개념 정리 노트도 함께 공유됩니다.'
-      },
-      {
-        question: '참가비가 있나요?',
-        answer: '월 3만원의 참가비가 있으며, 이는 스터디 운영(Zoom, 자료 제작 등)과 우수 참여자 시상에 사용됩니다.'
-      },
-      {
-        question: '중도 탈퇴가 가능한가요?',
-        answer: '개인 사정으로 중도 탈퇴는 가능하나, 해당 월의 참가비는 환불되지 않습니다. 2주 전 사전 공지를 부탁드립니다.'
-      }
-    ],
+    faq: {
+      title: 'FAQ',
+      tagHeader: '궁금증 해결',
+      showIcons: true,
+      showJoinCTA: true,
+      joinTitle: '당신의 합류를 기다려요!',
+      joinDescription: '',
+      joinButtonText: '리더에게 커피챗 요청하기 ☕',
+      kakaoOpenChatUrl: 'https://open.kakao.com/o/example',
+      items: [
+        {
+          question: '이 스터디는 어떤 스터디인가요?',
+          answer: '코딩 테스트 완전 정복을 목표로 하는 알고리즘 스터디입니다. 단순히 문제를 푸는 것을 넘어, 논리적 사고력과 커뮤니케이션 역량 강화를 지향합니다.',
+          category: ''
+        },
+        {
+          question: '모임은 언제, 어디서 진행되나요?',
+          answer: '매주 금요일 저녁 7:30 ~ 9:30에 강남역 인근 스터디룸에서 오프라인 모임을 중심으로 진행됩니다. 상황에 따라 온라인(Discord)으로 전환될 수 있습니다.',
+          category: ''
+        },
+        {
+          question: '스터디 비용은 어떻게 되나요?',
+          answer: '스터디룸 대관료는 참석자끼리 N/1로 정산합니다. 별도의 회비나 멤버십 비용은 없습니다.',
+          category: ''
+        },
+        {
+          question: '참여하려면 어떻게 해야 하나요?',
+          answer: '현재는 공식 모집은 진행하고 있지 않아요. 관심 있으신 분들은 @renechoi에게 커피챗을 요청해주시면 참여 방법을 안내해 드립니다.',
+          category: ''
+        },
+        {
+          question: '코딩 테스트 실력이 부족해도 참여할 수 있나요?',
+          answer: '네, 실력에 관계없이 누구나 참여할 수 있습니다. 함께의 가치를 중요하게 생각하며, 서로 돕고 배우며 성장할 수 있는 환경을 지향합니다.',
+          category: ''
+        }
+      ]
+    },
     experience: {
       title: '알고리즘 스터디 경험',
       items: [
@@ -169,47 +282,54 @@ export const algorithmTemplate: StudyTemplate = {
       ]
     },
     howWeRoll: {
-      title: '우리가 굴러가는 방식',
-      items: [
+      title: '특별한 건 없어요.<br/>그냥 계속 모일 뿐이에요.',
+      subtitle: '꾸준함이 만드는 <span style="color: #c3e88d;">작은 기적</span>들',
+      tagHeader: '모임 상세 안내',
+      scheduleIntro: '금요일 저녁의 <span style="color: #c3e88d;">2시간</span>은 몰입하기 딱 좋은 시간인 것 같아요.',
+      subHeading: '몰입, 해본 적 있으세요?',
+      closingMessage: '우리가 함께 만들어가는 <span style="color: #c3e88d;">성장의 여정</span>에 당신도 함께해요.',
+      meetingOverview: [
         {
-          icon: '📅',
+          icon: '🏢',
           title: '정기 모임',
-          description: '매주 화요일 저녁 8시, 2시간 동안 온라인으로 만납니다.',
-          details: [
-            { label: '시간', value: '매주 화요일 20:00-22:00' },
-            { label: '장소', value: 'Zoom 온라인' },
-            { label: '진행', value: '문제 리뷰 + 개념 학습' }
-          ]
+          highlight: '매주 금요일 저녁 7:30 ~ 9:30',
+          description: '강남역 인근 스터디룸에서 만나 오프라인 중심으로 진행해요',
+          subNote: '상황에 따라 온라인(Discord)으로도 진행합니다',
+          type: 'main-meeting'
         },
         {
-          icon: '📝',
-          title: '과제 & 피드백',
-          description: '주 5문제를 풀고, 상세한 풀이를 작성하여 공유합니다.',
-          details: [
-            { label: '문제 수', value: '주 5-7문제' },
-            { label: '난이도', value: '실버~골드' },
-            { label: '제출', value: 'GitHub PR' }
-          ]
+          icon: '📚',
+          title: '함께 공부하는 교재',
+          highlight: '코딩 테스트 합격자 되기: 자바 편',
+          description: '온라인 저지는 백준, 프로그래머스를 활용하고 있어요',
+          type: 'study-material',
+          link: 'https://product.kyobobook.co.kr/detail/S000212576322'
         },
         {
-          icon: '👥',
-          title: '페어 프로그래밍',
-          description: '매주 다른 파트너와 함께 문제를 풀며 사고를 확장합니다.',
-          details: [
-            { label: '방식', value: '로테이션' },
-            { label: '시간', value: '주 1회 1시간' },
-            { label: '도구', value: 'VS Code Live Share' }
-          ]
+          icon: '💰',
+          title: '참여 비용',
+          highlight: '스터디룸 대관료 1/N 정산',
+          type: 'cost-info'
+        }
+      ],
+      schedule: [
+        {
+          time: '19:30 ~ 20:20',
+          activity: '이론/코드 리뷰',
+          detail: '선정된 리뷰어의 깊이 있는 주제/문제 발표',
+          type: 'primary' as const
         },
         {
-          icon: '🎯',
-          title: '실전 모의고사',
-          description: '월 1회 실제 코테와 동일한 환경에서 모의고사를 진행합니다.',
-          details: [
-            { label: '주기', value: '월 1회' },
-            { label: '시간', value: '2-3시간' },
-            { label: '환경', value: '프로그래머스/백준' }
-          ]
+          time: '20:20 ~ 20:30',
+          activity: '잠깐의 휴식 & 자유로운 네트워킹',
+          detail: '커피 한 잔과 함께하는 소소한 대화',
+          type: 'secondary' as const
+        },
+        {
+          time: '20:30 ~ 21:30',
+          activity: '함께 문제 풀이',
+          detail: '실시간으로 머리를 맞대고 해결하는 문제들',
+          type: 'primary' as const
         }
       ]
     },
@@ -279,73 +399,355 @@ export const algorithmTemplate: StudyTemplate = {
       ]
     },
     review: {
-      title: '참여자 후기',
-      subtitle: '함께 성장한 동료들의 이야기',
-      items: [
+      enabled: true,
+      tagHeader: '솔직한 후기',
+      title: '가장 진솔한 이야기, <br /> 멤버들의 목소리 🗣️',
+      subtitle: '숫자와 코드만으로는 설명할 수 없는 <span class="highlight">우리 모임의 진짜 가치</span>를 들어보세요.',
+      showStats: false,
+      displayCount: 3,
+      sortBy: 'latest',
+      showKeywords: true,
+      keywords: [
+        '😌 편안한 분위기',
+        '💥 사고의 확장',
+        '🤗 배려왕 멤버',
+        '🥳 즐거운 분위기',
+        '📝 꼼꼼한 코드 리뷰',
+        '👩‍💻 실전 코딩',
+        '🧠 논리적 사고력',
+        '🗣️ 커뮤니케이션 역량',
+        '🤖 AI 활용',
+        '🌱 함께 성장'
+      ],
+      reviews: [
         {
-          author: '김개발',
-          role: '네이버 입사',
+          id: 'standard-1',
+          userId: 'user1',
+          userName: '익명1',
           rating: 5,
-          date: '2024.10',
-          text: '체계적인 커리큘럼과 동료들의 열정 덕분에 목표했던 기업에 합격할 수 있었습니다. 특히 페어 프로그래밍을 통해 다양한 사고 방식을 배울 수 있었던 것이 큰 도움이 되었습니다.',
-          helpful: 42
+          title: '인생의 의미',
+          content: '누가 시킨것도 ..부자가 되는 것도 아닌데 코딩테스트 문제를 풀고 바쁜 일상을 탈탈 털어 진지한 이야기를 나눈 소중한 경험',
+          createdAt: '2024-02-15',
+          attendCount: 3,
+          helpfulCount: 2,
+          tags: [
+            { id: 'growth', emoji: '😃', label: '성장', category: 'GROWTH', description: '' },
+            { id: 'spark', emoji: '✨', label: '영감', category: 'GROWTH', description: '' },
+            { id: 'passion', emoji: '🔥', label: '열정', category: 'MENTORING', description: '' }
+          ],
+          timeAgo: '6달 전'
         },
         {
-          author: '박코딩',
-          role: '카카오 입사',
+          id: 'standard-2',
+          userId: 'user2',
+          userName: '익명2',
           rating: 5,
-          date: '2024.09',
-          text: '혼자 공부할 때는 쉽게 포기했던 어려운 문제들도 스터디원들과 함께라면 해결할 수 있었습니다. 서로 격려하고 응원하는 분위기가 정말 좋았어요.',
-          helpful: 38
+          title: 'Better together !',
+          content: '혼자서는 엄두도 못 냈던 어려운 알고리즘 문제들! 스터디 모임에서 함께 고민하고 해결하며 완독하는 뿌듯함을 느꼈습니다. 함께라면 우린 해낼 수 있어요!',
+          createdAt: '2023-08-10',
+          attendCount: 10,
+          helpfulCount: 1,
+          tags: [
+            { id: 'teamwork', emoji: '🧡', label: '팀워크', category: 'COMMUNITY', description: '' },
+            { id: 'love', emoji: '😍', label: '사랑', category: 'ATMOSPHERE', description: '' },
+            { id: 'happy', emoji: '😃', label: '행복', category: 'ATMOSPHERE', description: '' }
+          ],
+          timeAgo: '2년 전'
         },
         {
-          author: '이알고',
-          role: '토스 입사',
+          id: 'standard-3',
+          userId: 'user3',
+          userName: '김코딩',
           rating: 5,
-          date: '2024.08',
-          text: '단순히 문제를 푸는 것을 넘어서 알고리즘의 본질을 이해하게 되었습니다. 실무에서도 더 효율적인 코드를 작성할 수 있게 되었어요.',
-          helpful: 35
+          title: '알고리즘 실력이 확실히 늘었어요',
+          content: 'DP, 그래프, BFS/DFS... 막막하기만 했던 알고리즘들이 이제는 패턴이 보이기 시작해요. 매주 금요일이 기다려지는 스터디입니다!',
+          createdAt: '2024-10-15',
+          attendCount: 8,
+          helpfulCount: 5,
+          tags: [
+            { id: 'skill', emoji: '💪', label: '실력향상', category: 'GROWTH', description: '' },
+            { id: 'pattern', emoji: '🎯', label: '패턴인식', category: 'LEARNING', description: '' },
+            { id: 'excited', emoji: '🎉', label: '기대감', category: 'ATMOSPHERE', description: '' }
+          ],
+          timeAgo: '1달 전'
         },
         {
-          author: '최로직',
-          role: '쿠팡 입사',
+          id: 'standard-4',
+          userId: 'user4',
+          userName: '박개발',
           rating: 5,
-          date: '2024.07',
-          text: '모의 테스트가 정말 큰 도움이 되었습니다. 실제 시험장에서도 떨지 않고 실력을 발휘할 수 있었어요. 스터디 덕분에 자신감을 얻었습니다.',
-          helpful: 31
+          title: '코딩테스트 합격했습니다!',
+          content: '스터디에서 배운 문제 해결 접근법과 시간 복잡도 최적화 덕분에 드디어 코딩테스트를 통과했어요. 함께 고민해주신 모든 분들께 감사드립니다.',
+          createdAt: '2024-11-20',
+          attendCount: 12,
+          helpfulCount: 8,
+          tags: [
+            { id: 'success', emoji: '🎊', label: '합격', category: 'PRACTICAL', description: '' },
+            { id: 'grateful', emoji: '🙏', label: '감사', category: 'COMMUNITY', description: '' },
+            { id: 'optimization', emoji: '⚡', label: '최적화', category: 'LEARNING', description: '' }
+          ],
+          timeAgo: '2주 전'
         }
       ]
     },
     members: {
-      title: '스터디 멤버',
-      subtitle: '함께 성장하는 동료들',
+      tagHeader: '함께하는 멤버들이에요',
+      title: '더 멋진 여정이 펼쳐질 거예요,<br/>함께라면.',
+      subtitle: '',
+      layout: 'carousel',
+      studyType: 'algorithm',
+      showStats: true,
+      weeklyMvp: 'renechoi',
+      stats: {
+        totalMembers: 8,
+        activeMembers: 6,
+        totalHours: 180,
+        totalProblems: 1247,
+        participationRate: 85,
+        popularAlgorithms: ['DP', '그래프', '이분탐색', '그리디'],
+        customStats: [
+          { label: '총 해결한 문제', value: '1247', icon: '💡' },
+          { label: '평균 참여율', value: '85%', icon: '📊' },
+          { label: '인기 알고리즘', value: 'DP, 그래프, 이분탐색, 그리디', icon: '🏆' }
+        ]
+      },
       members: [
         {
-          name: '홍길동',
+          userId: 'renechoi@example.com',
+          name: 'renechoi',
           role: '스터디 리더',
-          bio: '3년차 백엔드 개발자입니다. 알고리즘을 통해 문제 해결 능력을 기르고 있습니다.',
-          image: '/images/members/member1.jpg',
-          github: 'https://github.com/honggildong',
-          linkedin: 'https://linkedin.com/in/honggildong',
-          tags: ['Python', 'Algorithm', 'Backend']
+          imageUrl: '/images/face/rene.png',
+          joinDate: '2024-10-01',
+          tagline: '모임을 처음 시작한 사람 🏆',
+          streak: 15,
+          solvedProblems: 342,
+          memorableProblem: '백준 11053 - 가장 긴 증가하는 부분 수열',
+          currentFocus: '고급 DP 문제와 팀 빌딩 스킬',
+          whatIGained: 'DP의 최적화 방법과 스터디 운영의 노하우를 얻었어요',
+          testimonial: '리더십과 알고리즘 실력 모두 뛰어나요!',
+          from: 'kdelay',
+          recentActivity: '1일 전 활동',
+          customFields: [
+            { label: '해결한 문제', value: '342', icon: '✅' },
+            { label: '연속 참여', value: '15일', icon: '🔥' },
+            { label: '주력 분야', value: '고급 DP', icon: '📚' }
+          ],
+          badges: [
+            { type: 'mvp', label: '이주의 MVP', icon: '👑' }
+          ],
+          isActive: true,
+          lastActivity: '1일 전'
         },
         {
-          name: '김철수',
-          role: '스터디원',
-          bio: '프론트엔드 개발을 공부하며 알고리즘 실력을 키우고 있습니다.',
-          image: '/images/members/member2.jpg',
-          github: 'https://github.com/kimcs',
-          tags: ['JavaScript', 'React', 'Algorithm']
+          name: 'kdelay',
+          role: '코드 리뷰어',
+          imageUrl: '/images/face/kdelay.png',
+          joinDate: '2024-11-01',
+          tagline: '꼼꼼한 코드 리뷰어 📝',
+          streak: 12,
+          solvedProblems: 298,
+          memorableProblem: '백준 1932 - 정수 삼각형',
+          currentFocus: '트리 DP와 멘토링 스킬 마스터하기',
+          whatIGained: 'DP의 진정한 의미를 깨달았고, 코드 리뷰 스킬을 키웠어요',
+          testimonial: '꼼꼼한 리뷰로 모두의 실력 향상에 기여해요!',
+          from: 'KrongDev',
+          recentActivity: '2일 전 활동',
+          customFields: [
+            { label: '해결한 문제', value: '298', icon: '✅' },
+            { label: '연속 참여', value: '12일', icon: '🔥' },
+            { label: '주력 분야', value: '트리 DP', icon: '📚' }
+          ],
+          badges: [
+            { type: 'streak', label: '개근왕', icon: '🔥' }
+          ],
+          isActive: true,
+          lastActivity: '2일 전'
         },
         {
-          name: '이영희',
-          role: '스터디원',
-          bio: '컴퓨터공학 전공 4학년입니다. 대기업 코딩 테스트 준비중입니다.',
-          image: '/images/members/member3.jpg',
-          github: 'https://github.com/leeyh',
-          tags: ['Java', 'Spring', 'Algorithm']
+          name: 'KrongDev',
+          role: '문제 해결사',
+          imageUrl: 'https://avatars.githubusercontent.com/u/138358867?s=40&v=4',
+          joinDate: '2024-11-01',
+          tagline: '알고리즘 문제 해결사 💬',
+          streak: 8,
+          solvedProblems: 156,
+          memorableProblem: '프로그래머스 - 네트워크',
+          currentFocus: '최단경로 알고리즘과 문제 분석 능력',
+          whatIGained: 'DFS/BFS를 완전히 이해하게 됐고, 문제 해결 패턴을 익혔어요',
+          testimonial: '어려운 문제도 차근차근 해결하는 능력이 대단해요!',
+          from: 'renechoi',
+          recentActivity: '1일 전 활동',
+          customFields: [
+            { label: '해결한 문제', value: '156', icon: '✅' },
+            { label: '연속 참여', value: '8일', icon: '🔥' },
+            { label: '주력 분야', value: '그래프', icon: '📚' }
+          ],
+          isActive: true,
+          lastActivity: '1일 전'
+        },
+        {
+          name: '탁형',
+          role: '멘토',
+          imageUrl: '/images/face/xxx.png',
+          joinDate: '2024-11-01',
+          tagline: '복잡한 개념도 쉽게 설명하는 멘토 📚',
+          streak: 6,
+          solvedProblems: 89,
+          memorableProblem: '백준 9019 - DSLR',
+          currentFocus: '세그먼트 트리와 설명 스킬 도전',
+          whatIGained: 'BFS 최적화 방법을 터득했고, 설명하는 능력을 키웠어요',
+          testimonial: '복잡한 개념도 쉽게 설명해주는 천재예요!',
+          from: 'kdelay',
+          recentActivity: '3일 전 활동',
+          customFields: [
+            { label: '해결한 문제', value: '89', icon: '✅' },
+            { label: '연속 참여', value: '6일', icon: '🔥' },
+            { label: '주력 분야', value: '세그먼트 트리', icon: '📚' }
+          ],
+          badges: [
+            { type: 'special', label: '멘토', icon: '🌟' }
+          ],
+          isActive: false,
+          lastActivity: '3일 전'
+        },
+        {
+          name: '민수',
+          role: '트렌드 탐험가',
+          imageUrl: '/images/face/xxx.png',
+          joinDate: '2024-10-15',
+          tagline: '새로운 알고리즘 트렌드를 가져오는 탐험가 🔍',
+          streak: 9,
+          solvedProblems: 124,
+          memorableProblem: '백준 2206 - 벽 부수고 이동하기',
+          currentFocus: '고급 그래프 알고리즘 탐구',
+          whatIGained: 'BFS와 상태 관리의 핵심을 이해했어요',
+          testimonial: '새로운 접근법으로 모두를 놀라게 해요!',
+          from: 'renechoi',
+          recentActivity: '2일 전 활동',
+          customFields: [
+            { label: '해결한 문제', value: '124', icon: '✅' },
+            { label: '연속 참여', value: '9일', icon: '🔥' },
+            { label: '주력 분야', value: '고급 그래프', icon: '📚' }
+          ],
+          isActive: true,
+          lastActivity: '2일 전'
+        },
+        {
+          name: '지영',
+          role: '분위기 메이커',
+          imageUrl: '/images/face/xxx.png',
+          joinDate: '2024-11-20',
+          tagline: '분위기 메이커이자 팀워크의 핵심 🎉',
+          streak: 11,
+          solvedProblems: 187,
+          memorableProblem: '프로그래머스 - 카카오톡 채팅방',
+          currentFocus: '문자열 알고리즘과 소통 스킬',
+          whatIGained: '문자열 처리와 팀워크의 중요성을 배웠어요',
+          testimonial: '힘든 순간에도 웃음을 잃지 않는 에너지!',
+          from: '탁형',
+          recentActivity: '1일 전 활동',
+          customFields: [
+            { label: '해결한 문제', value: '187', icon: '✅' },
+            { label: '연속 참여', value: '11일', icon: '🔥' },
+            { label: '주력 분야', value: '문자열', icon: '📚' }
+          ],
+          isActive: true,
+          lastActivity: '1일 전'
+        },
+        {
+          name: '현우',
+          role: '최적화 마법사',
+          imageUrl: '/images/face/xxx.png',
+          joinDate: '2025-01-20',
+          tagline: '최적화 마법사, 효율성의 달인 ⚡',
+          streak: 7,
+          solvedProblems: 98,
+          memorableProblem: '백준 1759 - 암호 만들기',
+          currentFocus: '고급 최적화와 성능 분석',
+          whatIGained: '백트래킹과 최적화 기법을 체득했어요',
+          testimonial: '복잡한 문제도 효율적으로 해결하는 마법사!',
+          from: 'kdelay',
+          recentActivity: '1일 전 활동',
+          customFields: [
+            { label: '해결한 문제', value: '98', icon: '✅' },
+            { label: '연속 참여', value: '7일', icon: '🔥' },
+            { label: '주력 분야', value: '최적화', icon: '📚' }
+          ],
+          isActive: true,
+          lastActivity: '1일 전'
+        },
+        {
+          name: "who's next?",
+          role: '미래의 멤버',
+          imageUrl: '/images/face/another.png',
+          tagline: '당신의 합류를 기다려요 👋',
+          streak: 0,
+          solvedProblems: 0,
+          memorableProblem: '',
+          currentFocus: '',
+          whatIGained: '',
+          testimonial: '',
+          from: '',
+          recentActivity: '',
+          customFields: [],
+          isActive: false
         }
       ]
+    },
+    richText: {
+      title: '스터디 소개',
+      content: `<h2 style="margin-bottom: 2rem;">변화하는 세상에서<br/>흔들리지 않을 '나'를 위한 스터디</h2>
+
+<p>코딩과 지식의 가치가 흔해지는 시절입니다. AI가 순식간에 코드를 작성하고, 개발 도구들이 날마다 진화하는 지금. 개발자로서 우리가 정말 집중해야 할 것은 무엇일까요?</p>
+
+<p>우리는 이런 질문에서 출발했습니다. 기술이 아무리 발달해도 <span style="color: rgb(195, 232, 141); font-weight: 600;">변하지 않는 개발자의 핵심 역량</span>이 있다고 믿거든요.</p>
+
+<h3 style="margin-top: 2.5rem; margin-bottom: 1rem; color: rgb(195, 232, 141);">물고기를 잡는 방법을 익히는 것</h3>
+
+<p>우리는 '물고기 그 자체'가 아닌, <span style="color: rgb(130, 170, 255); font-weight: 500;">'물고기를 잡는 방법'</span>에 집중합니다. 단순히 문제를 푸는 것을 넘어서, 문제의 본질을 이해하고 <span style="color: rgb(130, 170, 255); font-weight: 500;">견고한 사고력과 논리력</span>을 단련하는 것이 목표입니다.</p>
+
+<p>매주 함께 모여 한 문제를 깊이 파고들고, 서로 다른 관점으로 접근해보며 사고의 폭을 넓혀갑니다. 왜 이 알고리즘을 선택했는지, 다른 방법은 없었는지, 이 문제에서 배울 수 있는 더 큰 인사이트는 무엇인지 함께 고민해요.</p>
+
+<h3 style="margin-top: 2.5rem; margin-bottom: 1rem; color: rgb(195, 232, 141);">물고기를 '잘' 잡는 방법을 모색하는 것</h3>
+
+<p>AI를 배척하지 않고 <span style="color: rgb(130, 170, 255); font-weight: 500;">현명하게 활용하는 방법</span>을 함께 모색합니다. AI와 페어 코딩하고, 비판적으로 분석하며 코드를 개선합니다. AI가 <span style="color: rgb(130, 170, 255); font-weight: 500;">우리의 통찰력을 확장시키는 강력한 파트너</span>가 될 수 있음을 증명해나가고 있어요.</p>
+
+<div class="study-management-richtext-info-box">
+  <div class="study-management-richtext-info-header">💡 핵심 포인트</div>
+  <div class="study-management-richtext-info-content">
+    <div class="study-management-richtext-info-item">
+      <span class="study-management-richtext-info-icon">📌</span>
+      <span class="study-management-richtext-info-text">단순 암기가 아닌 <span class="study-management-richtext-highlight">사고력 향상</span></span>
+    </div>
+    <div class="study-management-richtext-info-item">
+      <span class="study-management-richtext-info-icon">🎯</span>
+      <span class="study-management-richtext-info-text">AI와의 <span class="study-management-richtext-highlight">협업 능력</span> 개발</span>
+    </div>
+    <div class="study-management-richtext-info-item">
+      <span class="study-management-richtext-info-icon">🚀</span>
+      <span class="study-management-richtext-info-text">변화에 흔들리지 않는 <span class="study-management-richtext-highlight">개발자 핵심 역량</span></span>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top: 3rem; text-align: center; font-size: 1.1rem;">우리가 찾는 건 변화 속에서도 <span style="color: rgb(195, 232, 141); font-weight: 600;">흔들리지 않을 '나'</span><br/>생각하는 힘이에요.</p>`,
+      alignment: 'left',
+      backgroundColor: 'transparent'
+    },
+    leaderIntro: {
+      name: '김개발',
+      profileImage: '/images/face/leader-example.png',
+      role: '실패를 두려워하지 않는 10년차 개발자',
+      motivation: '혼자 공부하다 막막했던 순간들을 기억합니다. <strong>함께라면 더 멀리 갈 수 있다</strong>는 믿음으로 이 공간을 만들었어요.',
+      philosophy: '정답을 알려주기보다 <strong>스스로 생각하는 힘</strong>을 기르는 것을 중요하게 생각합니다.',
+      welcomeMessage: '완벽하지 않아도 괜찮아요. <strong>꾸준히 노력하는 것</strong>이 가장 중요합니다. 편하게 질문하고, 자유롭게 의견을 나누어요! 🚀',
+      expertise: ['도전', '성장', '공유'],
+      since: '2022년 1월부터',
+      totalStudies: 5,
+      totalMembers: 67,
+      email: 'leader@example.com',
+      github: 'https://github.com/kimdev',
+      blog: 'https://kimdev.blog'
     }
   }
 };
