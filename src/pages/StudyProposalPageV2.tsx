@@ -56,6 +56,7 @@ const StudyProposalPageV2: React.FC = () => {
     endDate: '',
     costType: 'FREE' as CostType,
     costDescription: '',
+    location: '',  // 스터디 장소 추가
   });
 
   // Validation functions
@@ -75,6 +76,11 @@ const StudyProposalPageV2: React.FC = () => {
     if (!welcomeMessage.trim()) return '환영 메시지는 필수입니다.';
     if (welcomeMessage.length > 100) return '환영 메시지는 100자 이내로 입력해주세요.';
     if (welcomeMessage.length < 5) return '환영 메시지는 5자 이상 입력해주세요.';
+    return null;
+  };
+
+  const validateLocation = (location: string): string | null => {
+    if (location && location.length > 200) return '장소는 200자 이내로 입력해주세요.';
     return null;
   };
 
@@ -178,6 +184,7 @@ const StudyProposalPageV2: React.FC = () => {
         recurrenceType: detailedStudy.recurrenceType || 'WEEKLY',
         tagline: detailedStudy.tagline || '',
         welcomeMessage: detailedStudy.leader?.welcomeMessage || '',
+        location: detailedStudy.location || '',
         capacity: detailedStudy.capacity || 20,
         costType: detailedStudy.costType || 'FREE',
         costDescription: detailedStudy.costDescription || '',
@@ -393,7 +400,19 @@ const StudyProposalPageV2: React.FC = () => {
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 0:
-        return formData.title.trim() !== '';
+        // 첫 번째 단계: 제목과 환영 메시지 검증
+        const titleError = validateTitle(formData.title);
+        const welcomeMessageError = validateWelcomeMessage(formData.welcomeMessage);
+
+        if (titleError) {
+          error(titleError);
+          return false;
+        }
+        if (welcomeMessageError) {
+          error(welcomeMessageError);
+          return false;
+        }
+        return true;
       case 1:
         if (formData.recurrenceType === 'ONE_TIME') {
           return formData.selectedDate !== '' && formData.startTime !== '' && formData.endTime !== '';
@@ -435,6 +454,12 @@ const StudyProposalPageV2: React.FC = () => {
     const welcomeMessageError = validateWelcomeMessage(formData.welcomeMessage);
     if (welcomeMessageError) {
       error(welcomeMessageError);
+      return;
+    }
+
+    const locationError = validateLocation(formData.location);
+    if (locationError) {
+      error(locationError);
       return;
     }
 
@@ -637,6 +662,7 @@ const StudyProposalPageV2: React.FC = () => {
         welcomeMessage: formData.welcomeMessage.trim(),
         schedule: scheduleString,
         duration: durationString,
+        location: formData.location || undefined,
         capacity: formData.capacity || undefined,
         recruitDeadline: recruitDeadlineDateTime,
         startDate: finalStartDate || undefined,
@@ -1123,6 +1149,21 @@ const StudyProposalPageV2: React.FC = () => {
               </div>
 
               <div className={styles['form-group-v2']}>
+                <label>스터디 장소</label>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  placeholder="예: 강남역 스터디룸, 온라인, 강남역 인근 카페"
+                  className={styles['proposal-input']}
+                  maxLength={200}
+                />
+                <span className={styles['form-hint']}>
+                  스터디가 진행될 장소를 입력해주세요 (최대 200자)
+                </span>
+              </div>
+
+              <div className={styles['form-group-v2']}>
                 <label>스터디 비용 정보</label>
                 <div className={styles['cost-type-selector']}>
                   {[
@@ -1314,9 +1355,8 @@ const StudyProposalPageV2: React.FC = () => {
                 onClick={() => {
                   if (validateStep(currentStep)) {
                     setCurrentStep(currentStep + 1);
-                  } else {
-                    warning('필수 항목을 모두 입력해주세요.');
                   }
+                  // validateStep이 false를 반환하면 이미 구체적인 에러 메시지를 표시했음
                 }}
                 className={styles['proposal-primary-btn']}
               >
@@ -1329,9 +1369,8 @@ const StudyProposalPageV2: React.FC = () => {
                   // validation을 통과해야 모달 표시
                   if (validateStep(currentStep)) {
                     setShowPreviewModal(true);
-                  } else {
-                    warning('필수 항목을 모두 입력해주세요.');
                   }
+                  // validateStep이 false를 반환하면 이미 구체적인 에러 메시지를 표시했음
                 }}
                 className={styles['proposal-primary-btn']}
                 disabled={isSubmitting}
