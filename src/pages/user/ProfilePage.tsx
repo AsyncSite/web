@@ -159,12 +159,16 @@ function ProfilePage(): React.ReactNode {
         const grouped = await studyService.getMyStudiesGrouped();
         console.log('My studies grouped:', grouped);
         
-        // 테스트용: ACCEPTED 상태의 더미 데이터 추가
-        const testAcceptedApplications = [
+        // 관리자인 경우에만 테스트용 ACCEPTED 상태의 더미 데이터 추가
+        const isAdmin = authUser?.systemRole === 'ROLE_ADMIN' ||
+                       authUser?.roles?.includes('ROLE_ADMIN') ||
+                       authUser?.roles?.includes('ADMIN');
+
+        const testAcceptedApplications = isAdmin ? [
           {
             applicationId: 'test-app-001',
             studyId: 'test-study-001',
-            studyTitle: 'React 심화 스터디 3기',
+            studyTitle: '🧪 [테스트] React 심화 스터디 3기',
             status: 'ACCEPTED',
             appliedAt: new Date().toISOString(),
             price: 150000,
@@ -175,9 +179,9 @@ function ProfilePage(): React.ReactNode {
             startDate: '2024-02-01',
             endDate: '2024-04-30'
           }
-        ];
-        
-        // 기존 applications에 테스트 데이터 추가
+        ] : [];
+
+        // 기존 applications에 테스트 데이터 추가 (관리자인 경우에만)
         const enhancedGrouped = {
           ...grouped,
           applications: [...(grouped.applications || []), ...testAcceptedApplications]
