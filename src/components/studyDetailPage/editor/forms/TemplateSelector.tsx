@@ -13,9 +13,15 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
 
   const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const template = e.target.value;
+    console.log('TemplateSelector - handleTemplateChange 호출됨');
+    console.log('선택된 template:', template);
     setSelectedTemplate(template);
     if (template) {
+      console.log('onTemplateSelect 호출 예정, template:', template);
       onTemplateSelect(template);
+      console.log('onTemplateSelect 호출 완료');
+    } else {
+      console.log('template이 비어있어서 onTemplateSelect 호출 안함');
     }
   };
 
@@ -63,6 +69,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           </option>
           <option value="mogakup" style={{ background: '#1a1f2e', color: '#C3E88D' }}>
             모각업
+          </option>
+          <option value="bookStudy" style={{ background: '#1a1f2e', color: '#C3E88D' }}>
+            북스터디
           </option>
         </select>
       </div>

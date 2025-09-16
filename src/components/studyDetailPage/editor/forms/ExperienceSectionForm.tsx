@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ExperienceSectionData, StepContent, experienceTemplates } from '../../types/experienceTypes';
-import { algorithmTemplate, mogakupTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
@@ -170,6 +170,27 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
       ));
     } else if (templateKey === 'mogakup') {
       const experienceData = mogakupTemplate.sections.experience;
+      if (!experienceData) return;
+
+      setFormData(experienceData as ExperienceSectionData);
+
+      // Set RichTextEditor values
+      if (experienceData.title) {
+        setTitle(RichTextConverter.fromHTML(experienceData.title));
+      }
+      if (experienceData.subtitle) {
+        setSubtitle(RichTextConverter.fromHTML(experienceData.subtitle));
+      }
+
+      // Set step titles and descriptions
+      setStepTitles(experienceData.steps.map(step =>
+        RichTextConverter.fromHTML(step.title)
+      ));
+      setStepDescriptions(experienceData.steps.map(step =>
+        RichTextConverter.fromHTML(step.description)
+      ));
+    } else if (templateKey === 'bookStudy') {
+      const experienceData = bookStudyTemplate.sections.experience;
       if (!experienceData) return;
 
       setFormData(experienceData as ExperienceSectionData);

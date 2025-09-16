@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './RichTextSectionForm.css';
-import { algorithmTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
+import TemplateSelector from './TemplateSelector';
 
 interface RichTextSectionFormProps {
   initialData?: {
@@ -18,6 +19,8 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
   onSave,
   onCancel
 }) => {
+  console.log('===== RichTextSectionForm 컴포넌트 렌더링 =====');
+  console.log('initialData:', initialData);
   const [title, setTitle] = useState(initialData.title || '');
   const [content, setContent] = useState(initialData.content || '');
   const [alignment, setAlignment] = useState(initialData.alignment || 'left');
@@ -45,19 +48,48 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
   };
 
   // 표준 예시 데이터 - templateData.ts에서 가져오기
-  const loadExampleData = () => {
-    const richTextData = algorithmTemplate.sections.richText;
-    if (!richTextData) return;
+  const loadExampleData = (templateType: string) => {
+    console.log('=== loadExampleData 호출됨 ===');
+    console.log('templateType:', templateType);
+    console.log('mogakupTemplate 체크:', mogakupTemplate);
+    console.log('bookStudyTemplate 체크:', bookStudyTemplate);
 
-    setTitle(richTextData.title);
+    if (!templateType) return;
+
+    let richTextData;
+    if (templateType === 'algorithm') {
+      richTextData = algorithmTemplate.sections.richText;
+    } else if (templateType === 'mogakup') {
+      richTextData = mogakupTemplate?.sections?.richText;
+    } else if (templateType === 'bookStudy') {
+      richTextData = bookStudyTemplate?.sections?.richText;
+    } else {
+      return;
+    }
+
+    console.log('richTextData:', richTextData);
+
+    if (!richTextData) {
+      console.error('richTextData is undefined for', templateType);
+      return;
+    }
+
+    setTitle(richTextData.title || '');
     setEditorMode('visual'); // 비주얼 모드로 전환
-    setContent(richTextData.content);
-    setAlignment(richTextData.alignment as 'left' | 'center' | 'right');
-    setBackgroundColor(richTextData.backgroundColor);
-    // 표준 테마 고정됨
+    setContent(richTextData.content || '');
+    setAlignment((richTextData.alignment || 'left') as 'left' | 'center' | 'right');
+    setBackgroundColor(richTextData.backgroundColor || '#0a0a0a');
 
-    // Example loaded successfully
-    // Parent component can show a success message if needed
+    console.log('=== loadExampleData 완료 ===');
+  };
+
+  // Clear form and reset to initial state
+  const handleClearTemplate = () => {
+    setTitle(initialData.title || '');
+    setContent(initialData.content || '');
+    setAlignment(initialData.alignment || 'left');
+    setBackgroundColor(initialData.backgroundColor || '#0a0a0a');
+    setEditorMode('visual');
   };
 
   // 템플릿 예시
@@ -130,6 +162,14 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="study-management-richtext-form">
+      <TemplateSelector
+        onTemplateSelect={(templateType) => {
+          console.log('RichTextSectionForm - onTemplateSelect prop 호출됨, templateType:', templateType);
+          loadExampleData(templateType);
+        }}
+        onClear={handleClearTemplate}
+      />
+
       <div className="study-management-richtext-form-group">
         <label>태그 헤더</label>
         <input

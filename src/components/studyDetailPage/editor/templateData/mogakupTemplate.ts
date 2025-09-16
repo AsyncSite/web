@@ -48,16 +48,16 @@ export const mogakupTemplate: StudyTemplate = {
 
         <p><strong>모각업</strong>은 바로 그 지점에서 출발했습니다.</p>
 
-        <h3 style="color: #89DDFF; margin-top: 40px;">환경이 성장을 만든다</h3>
-        <p>우리는 거창한 목표 대신 <strong>\'수요일 저녁 8시, 강남역 스터디룸에 모여 노트북을 연다\'</strong>는 하나의 약속에 집중합니다. 정해진 시간에, 정해진 장소에서 함께 작업하는 것. 이 단순한 규칙이 미루는 습관을 끊고, 꾸준함을 만듭니다.</p>
+        <h3 style="color: rgb(195, 232, 141); margin-top: 40px;">환경이 성장을 만든다</h3>
+        <p>우리는 거창한 목표 대신 <span style="color: rgb(130, 170, 255); font-weight: 500;">\'수요일 저녁 8시, 강남역 스터디룸에 모여 노트북을 연다\'</span>는 하나의 약속에 집중합니다. 정해진 시간에, 정해진 장소에서 함께 작업하는 것. 이 단순한 규칙이 <span style="color: rgb(195, 232, 141); font-weight: 600;">미루는 습관을 끊고, 꾸준함</span>을 만듭니다.</p>
 
-        <h3 style="color: #FFCB6B; margin-top: 40px;">각자의 레이스, 공동의 페이스메이커</h3>
-        <p>모두가 각자의 목표와 속도에 맞춰 작업합니다. 하지만 결코 혼자가 아닙니다. 치열하게 고민하는 동료의 모습은 가장 강력한 동기부여가 되고, 막막했던 문제의 힌트는 바로 옆자리에서 얻을 수 있습니다.</p>
+        <h3 style="color: rgb(195, 232, 141); margin-top: 40px;">각자의 레이스, 공동의 페이스메이커</h3>
+        <p>모두가 각자의 목표와 속도에 맞춰 작업합니다. 하지만 결코 혼자가 아닙니다. <span style="color: rgb(130, 170, 255); font-weight: 500;">치열하게 고민하는 동료의 모습</span>은 가장 강력한 동기부여가 되고, 막막했던 문제의 힌트는 <span style="color: rgb(130, 170, 255); font-weight: 500;">바로 옆자리</span>에서 얻을 수 있습니다.</p>
 
         <div style="background: linear-gradient(135deg, rgba(195, 232, 141, 0.1), rgba(130, 170, 255, 0.1)); padding: 30px; border-radius: 12px; margin-top: 40px; text-align: center;">
           <span style="font-size: 24px;">✨</span><br/>
-          <p style="margin-top: 16px; font-size: 18px;">우리가 함께 만드는 건 코드 그 이상의 <strong style="color: #C3E88D;">\'성장하는 환경\'</strong><br/>
-          그리고 그 안에서 발견할 <strong style="color: #89DDFF;">\'어제보다 나은 나\'</strong> 입니다.</p>
+          <p style="margin-top: 16px; font-size: 18px;">우리가 함께 만드는 건 코드 그 이상의 <strong style="color: rgb(195, 232, 141);">\'성장하는 환경\'</strong><br/>
+          그리고 그 안에서 발견할 <strong style="color: rgb(130, 170, 255);">\'어제보다 나은 나\'</strong> 입니다.</p>
         </div>
       `,
       alignment: 'left',

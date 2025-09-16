@@ -8,7 +8,7 @@ import {
   ReviewStats
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
-import { algorithmTemplate, mogakupTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './ReviewSectionForm.css';
 
@@ -176,6 +176,8 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
       reviewData = algorithmTemplate.sections.review;
     } else if (templateType === 'mogakup') {
       reviewData = mogakupTemplate.sections.review;
+    } else if (templateType === 'bookStudy') {
+      reviewData = bookStudyTemplate.sections.review;
     } else {
       return;
     }

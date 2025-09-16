@@ -20,7 +20,7 @@ import {
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { algorithmTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './RichTextSectionForm.css';
 
@@ -129,7 +129,8 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
     if (!templateType) return;
 
     if (templateType === 'algorithm') {
-    setTitle('TecoTeco 소개');
+    const richTextData = algorithmTemplate.sections.richText;
+    setTitle(richTextData?.title || 'TecoTeco 소개');
     setBackgroundColor('#0a0a0a');
     
     const exampleBlocks: RichTextBlock[] = [
@@ -186,9 +187,27 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
     ];
     
     setBlocks(exampleBlocks);
+    } else if (templateType === 'mogakup') {
+      const richTextData = mogakupTemplate.sections.richText;
+      if (richTextData) {
+        setTitle(richTextData.title || '');
+        setBackgroundColor(richTextData.backgroundColor || '#0a0a0a');
+
+        // HTML content를 블록으로 변환
+        const blocks = htmlToBlocks(richTextData.content || '');
+        setBlocks(blocks);
+      }
+    } else if (templateType === 'bookStudy') {
+      const richTextData = bookStudyTemplate.sections.richText;
+      if (richTextData) {
+        setTitle(richTextData.title || '');
+        setBackgroundColor(richTextData.backgroundColor || '#0a0a0a');
+
+        // HTML content를 블록으로 변환
+        const blocks = htmlToBlocks(richTextData.content || '');
+        setBlocks(blocks);
+      }
     }
-    // 추후 다른 템플릿 추가
-    // else if (templateType === 'mogakko') { ... }
   };
 
   // Clear form and reset to initial state
