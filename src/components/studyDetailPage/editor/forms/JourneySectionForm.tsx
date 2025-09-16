@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { JourneySectionData, Generation, journeyTemplates } from '../../types/journeyTypes';
+import { algorithmTemplate } from '../templateData';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
@@ -61,21 +62,45 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
 
   // 템플릿 로드
   const loadTemplate = (templateKey: keyof typeof journeyTemplates) => {
-    const template = journeyTemplates[templateKey];
-    setData({
-      ...data,
-      ...template,
-      generations: [...template.generations]
-    });
-    // Set RichTextEditor values
-    if (template.title) {
-      setTitle(RichTextConverter.fromHTML(template.title));
-    }
-    if (template.subtitle) {
-      setSubtitle(RichTextConverter.fromHTML(template.subtitle));
-    }
-    if (template.closingMessage) {
-      setClosingMessage(RichTextConverter.fromHTML(template.closingMessage));
+    // Use templateData for algorithm template
+    if (templateKey === 'algorithm') {
+      const journeyData = algorithmTemplate.sections.journey;
+      if (!journeyData) return;
+
+      setData({
+        ...data,
+        ...journeyData,
+        generations: [...journeyData.generations],
+        layout: journeyData.layout as 'list' | 'timeline' | 'cards' | undefined
+      });
+      // Set RichTextEditor values
+      if (journeyData.title) {
+        setTitle(RichTextConverter.fromHTML(journeyData.title));
+      }
+      if (journeyData.subtitle) {
+        setSubtitle(RichTextConverter.fromHTML(journeyData.subtitle));
+      }
+      if (journeyData.closingMessage) {
+        setClosingMessage(RichTextConverter.fromHTML(journeyData.closingMessage));
+      }
+    } else {
+      // Use original journeyTemplates for other templates
+      const template = journeyTemplates[templateKey];
+      setData({
+        ...data,
+        ...template,
+        generations: [...template.generations]
+      });
+      // Set RichTextEditor values
+      if (template.title) {
+        setTitle(RichTextConverter.fromHTML(template.title));
+      }
+      if (template.subtitle) {
+        setSubtitle(RichTextConverter.fromHTML(template.subtitle));
+      }
+      if (template.closingMessage) {
+        setClosingMessage(RichTextConverter.fromHTML(template.closingMessage));
+      }
     }
   };
 

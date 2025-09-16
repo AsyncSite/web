@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ExperienceSectionData, StepContent, experienceTemplates } from '../../types/experienceTypes';
+import { algorithmTemplate } from '../templateData';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
@@ -144,24 +145,49 @@ const ExperienceSectionForm: React.FC<ExperienceSectionFormProps> = ({
   };
 
   const loadTemplate = (templateKey: keyof typeof experienceTemplates) => {
-    const template = experienceTemplates[templateKey];
-    setFormData(template);
-    
-    // Set RichTextEditor values
-    if (template.title) {
-      setTitle(RichTextConverter.fromHTML(template.title));
+    // Use templateData for algorithm template
+    if (templateKey === 'algorithm') {
+      const experienceData = algorithmTemplate.sections.experience;
+      if (!experienceData) return;
+
+      setFormData(experienceData as ExperienceSectionData);
+
+      // Set RichTextEditor values
+      if (experienceData.title) {
+        setTitle(RichTextConverter.fromHTML(experienceData.title));
+      }
+      if (experienceData.subtitle) {
+        setSubtitle(RichTextConverter.fromHTML(experienceData.subtitle));
+      }
+
+      // Set step titles and descriptions
+      setStepTitles(experienceData.steps.map(step =>
+        RichTextConverter.fromHTML(step.title)
+      ));
+      setStepDescriptions(experienceData.steps.map(step =>
+        RichTextConverter.fromHTML(step.description)
+      ));
+    } else {
+      // Use original experienceTemplates for other templates
+      const template = experienceTemplates[templateKey];
+      setFormData(template);
+
+      // Set RichTextEditor values
+      if (template.title) {
+        setTitle(RichTextConverter.fromHTML(template.title));
+      }
+      if (template.subtitle) {
+        setSubtitle(RichTextConverter.fromHTML(template.subtitle));
+      }
+
+      // Set step titles and descriptions
+      setStepTitles(template.steps.map(step =>
+        RichTextConverter.fromHTML(step.title)
+      ));
+      setStepDescriptions(template.steps.map(step =>
+        RichTextConverter.fromHTML(step.description)
+      ));
     }
-    if (template.subtitle) {
-      setSubtitle(RichTextConverter.fromHTML(template.subtitle));
-    }
-    
-    // Set step titles and descriptions
-    setStepTitles(template.steps.map(step => 
-      RichTextConverter.fromHTML(step.title)
-    ));
-    setStepDescriptions(template.steps.map(step => 
-      RichTextConverter.fromHTML(step.description)
-    ));
   };
 
   const handleSubmit = (e: React.FormEvent) => {

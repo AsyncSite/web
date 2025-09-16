@@ -36,12 +36,28 @@ export interface StudyTemplate {
       }>;
     };
     experience?: {
+      tagHeader?: string;
       title: string;
-      items: Array<{
-        icon: string;
+      subtitle?: string;
+      highlightText?: string;
+      steps: Array<{
+        label: string;
         title: string;
         description: string;
+        illustrationType?: 'problem' | 'question' | 'explore' | 'review' | 'grow' | 'custom';
+        customSvg?: string;
       }>;
+      theme?: string;
+      layout?: 'horizontal' | 'vertical' | 'grid';
+      enableAnimation?: boolean;
+      animationType?: 'fadeIn' | 'slideUp' | 'scale';
+      defaultActiveStep?: number | null;
+      navigationStyle?: 'numbers' | 'dots' | 'progress' | 'timeline';
+      autoProgress?: boolean;
+      autoProgressInterval?: number;
+      primaryColor?: string;
+      secondaryColor?: string;
+      mobileCollapse?: boolean;
     };
     howWeRoll?: {
       title: string;
@@ -67,13 +83,29 @@ export interface StudyTemplate {
       }>;
     };
     journey?: {
-      title: string;
-      items: Array<{
-        week: string;
+      tagHeader?: string;
+      title?: string;
+      subtitle?: string;
+      closingMessage?: string;
+      startDate?: string;
+      calculateDays?: boolean;
+      generations: Array<{
         title: string;
         description: string;
-        assignments?: string[];
+        icon?: string;
+        achievements?: string[];
+        status?: 'completed' | 'ongoing' | 'planned';
       }>;
+      showStats?: boolean;
+      stats?: {
+        totalProblems?: string | number;
+        studyHours?: string | number;
+        memberGrowth?: string;
+      };
+      theme?: string;
+      layout?: string;
+      showAchievements?: boolean;
+      showIcons?: boolean;
     };
     review?: {
       enabled: boolean;
@@ -246,41 +278,6 @@ export const algorithmTemplate: StudyTemplate = {
         }
       ]
     },
-    experience: {
-      title: '알고리즘 스터디 경험',
-      items: [
-        {
-          icon: '🎯',
-          title: '목표 설정',
-          description: '개인별 맞춤 목표를 설정하고 체계적으로 관리합니다. 코딩 테스트 합격부터 알고리즘 대회 입상까지, 각자의 목표를 향해 함께 나아갑니다.'
-        },
-        {
-          icon: '💻',
-          title: '문제 풀이',
-          description: '매주 엄선된 5-7개의 문제를 풀고 다양한 접근법을 공유합니다. 단순 정답이 아닌, 사고 과정과 최적화 방법을 함께 학습합니다.'
-        },
-        {
-          icon: '🗣️',
-          title: '코드 리뷰',
-          description: '서로의 코드를 리뷰하며 더 나은 해법을 찾아갑니다. 시간 복잡도, 공간 복잡도, 가독성 측면에서 개선점을 논의합니다.'
-        },
-        {
-          icon: '📚',
-          title: '개념 학습',
-          description: '알고리즘의 이론적 배경과 실제 적용 사례를 학습합니다. DP, 그래프, 그리디 등 핵심 알고리즘을 깊이 있게 다룹니다.'
-        },
-        {
-          icon: '🏆',
-          title: '모의 테스트',
-          description: '실제 코딩 테스트와 동일한 환경에서 모의고사를 진행합니다. 시간 관리와 문제 선택 전략을 실전처럼 연습합니다.'
-        },
-        {
-          icon: '🤝',
-          title: '스터디 네트워킹',
-          description: '같은 목표를 가진 동료들과 네트워크를 형성합니다. 취업 정보 공유, 멘토링, 그리고 지속적인 성장 동반자를 만나게 됩니다.'
-        }
-      ]
-    },
     howWeRoll: {
       title: '특별한 건 없어요.<br/>그냥 계속 모일 뿐이에요.',
       subtitle: '꾸준함이 만드는 <span style="color: #c3e88d;">작은 기적</span>들',
@@ -289,6 +286,13 @@ export const algorithmTemplate: StudyTemplate = {
       subHeading: '몰입, 해본 적 있으세요?',
       closingMessage: '우리가 함께 만들어가는 <span style="color: #c3e88d;">성장의 여정</span>에 당신도 함께해요.',
       meetingOverview: [
+        {
+          icon: '📅',
+          title: '스터디 기간',
+          highlight: '9월 19일부터 8주간',
+          description: '매주 진행하며 10월 3일, 10일은 휴식 주간입니다',
+          type: 'study-period'
+        },
         {
           icon: '🏢',
           title: '정기 모임',
@@ -333,7 +337,8 @@ export const algorithmTemplate: StudyTemplate = {
         }
       ]
     },
-    journey: {
+    /* OLD JOURNEY REMOVED - using new template data below
+    journey_old: {
       title: '12주 여정',
       items: [
         {
@@ -397,7 +402,7 @@ export const algorithmTemplate: StudyTemplate = {
           ]
         }
       ]
-    },
+    }, */
     review: {
       enabled: true,
       tagHeader: '솔직한 후기',
@@ -748,6 +753,90 @@ export const algorithmTemplate: StudyTemplate = {
       email: 'leader@example.com',
       github: 'https://github.com/kimdev',
       blog: 'https://kimdev.blog'
+    },
+    journey: {
+      tagHeader: '우리의 여정',
+      title: '하루하루가 쌓이니 벌써 <span style="color: #c3e88d;">{days}</span>이 되었어요.',
+      subtitle: '작은 시작이 모여 <span style="color: #c3e88d;">의미 있는 변화</span>를 만들어가고 있어요.<br/>각자의 속도로, <span style="color: #82aaff;">함께의 힘</span>으로.',
+      closingMessage: '작은 걸음이지만 <span style="color: #c3e88d;">꾸준히</span>, <span style="color: #82aaff;">의미 있게</span>.',
+      startDate: new Date().toISOString().split('T')[0],
+      calculateDays: true,
+      generations: [
+        {
+          title: '시즌 1 (기초 다지기)',
+          description: '자료구조의 기본기를 다지고, 알고리즘 문제 해결의 첫 발을 내디뎠습니다.',
+          icon: '🌱',
+          achievements: ['기본 자료구조 마스터', '문제 해결 패턴 습득', '팀워크 기반 다지기'],
+          status: 'completed' as const
+        },
+        {
+          title: '시즌 2 (기본 알고리즘)',
+          description: '정렬, 탐색, 그래프 등 기본 알고리즘을 체계적으로 학습하며 문제 해결의 기초를 탄탄히 다졌습니다.',
+          icon: '🚀',
+          achievements: ['정렬 알고리즘 마스터', 'BFS/DFS 완벽 이해', '그래프 기초 정복'],
+          status: 'completed' as const
+        },
+        {
+          title: '시즌 3 (DP & 그리디)',
+          description: '동적 계획법과 그리디 알고리즘을 집중적으로 학습하며, 최적화 문제 해결 능력을 극대화합니다.',
+          icon: '💎',
+          achievements: ['DP 완전 정복', '그리디 사고력 향상', '최적화 전략 마스터'],
+          status: 'ongoing' as const
+        }
+      ],
+      showStats: true,
+      stats: {
+        totalProblems: '100+',
+        studyHours: '50+',
+        memberGrowth: '평균 30% 향상'
+      },
+      theme: 'standard',
+      layout: 'list',
+      showAchievements: true,
+      showIcons: true
+    },
+    experience: {
+      tagHeader: '성장을 위한 스텝',
+      title: '알고리즘 스터디를 <span style="color: #c3e88d;">한다는 건</span>',
+      subtitle: '매주 모임을 통해 <span style="color: #82aaff;">이런 루틴으로</span> 함께 성장해요.',
+      steps: [
+        {
+          label: '문제를 만나고',
+          title: '새로운 도전, 익숙한 문제',
+          description: '혼자서는 엄두 내지 못했던 문제들.<br/><span style="color: #82aaff;">함께라면</span> 그 문제들을 피하지 않고 마주하며 새로운 도전을 시작합니다.',
+          illustrationType: 'problem' as const
+        },
+        {
+          label: '질문하고',
+          title: '멈추지 않는 호기심, 날카로운 질문',
+          description: '막히는 지점에서 주저하지 않고 <span style="color: #c3e88d;">끝없이 질문</span>하며<br/>서로에게 배우고 이해의 폭을 넓힙니다.',
+          illustrationType: 'question' as const
+        },
+        {
+          label: '파고들고',
+          title: '본질을 꾸뚛는 탐구',
+          description: '단순히 정답을 아는 것을 넘어,<br/>문제의 <span style="color: #c3e88d;">본질과 원리</span>를 집요하게 파고듭니다.',
+          illustrationType: 'explore' as const
+        },
+        {
+          label: '리뷰하고',
+          title: '성장을 위한 따뜻한 피드백',
+          description: '서로의 코드를 읽고 배우며,<br/>더 나은 코드를 위해 <span style="color: #c3e88d;">아낌없이 피드백</span>합니다.',
+          illustrationType: 'review' as const
+        },
+        {
+          label: '성장해요',
+          title: '코드를 넘어, 삶의 이야기',
+          description: '알고리즘을 넘어 <span style="color: #c3e88d;">개발 문화와 커리어</span>까지,<br/>함께 성장하는 소중한 시간.',
+          illustrationType: 'grow' as const
+        }
+      ],
+      theme: 'standard',
+      layout: 'horizontal' as const,
+      enableAnimation: true,
+      animationType: 'fadeIn' as const,
+      defaultActiveStep: 0,
+      navigationStyle: 'numbers' as const
     }
   }
 };
