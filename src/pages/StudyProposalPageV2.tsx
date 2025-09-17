@@ -1593,6 +1593,7 @@ const StudyProposalPageV2: React.FC = () => {
           handleSubmit();
         }}
         formData={formData}
+        sectionData={sectionData}
         isSubmitting={isSubmitting}
       />
 

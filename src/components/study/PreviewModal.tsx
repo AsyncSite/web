@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { parseDate } from '../../utils/studyScheduleUtils';
+import { convertSectionTypeToLabel } from '../../api/studyDetailPageService';
 import styles from './PreviewModal.module.css';
 
 interface PreviewModalProps {
@@ -26,6 +27,9 @@ interface PreviewModalProps {
     costType: string;
     costDescription: string;
   };
+  sectionData?: {
+    [key: string]: any;
+  };
   isSubmitting: boolean;
 }
 
@@ -34,6 +38,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   onClose,
   onSubmit,
   formData,
+  sectionData = {},
   isSubmitting
 }) => {
   // 스크롤 위치 저장을 위한 ref
@@ -145,6 +150,56 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
       default: return costType;
     }
   };
+
+  // 섹션 타입 라벨 표시 (아이콘 추가)
+  const getSectionTypeLabel = (sectionType: string) => {
+    const baseLabel = convertSectionTypeToLabel(sectionType) || sectionType;
+    
+    // 아이콘 매핑
+    const iconMap: Record<string, string> = {
+      'HERO': '🎯',
+      'LEADER_INTRO': '👤',
+      'HOW_WE_ROLL': '📋',
+      'RICH_TEXT': '📝',
+      'FAQ': '❓',
+      'REVIEWS': '💬',
+      'MEMBERS': '👥',
+      'JOURNEY': '🗺️',
+      'EXPERIENCE': '🎓'
+    };
+    
+    const icon = iconMap[sectionType] || '📄';
+    return `${icon} ${baseLabel}`;
+  };
+
+  // 섹션 데이터 요약 표시
+  const getSectionSummary = (sectionType: string, data: any) => {
+    if (!data || Object.keys(data).length === 0) {
+      return '(비어 있음)';
+    }
+
+    switch (sectionType) {
+      case 'HERO':
+        return data.title ? `제목: ${data.title}` : '배너 설정됨';
+      case 'LEADER_INTRO':
+        const parts = [];
+        if (data.name) parts.push(`이름: ${data.name}`);
+        if (data.role) parts.push(`역할: ${data.role}`);
+        return parts.length > 0 ? parts.join(', ') : '리더 정보 설정됨';
+      case 'HOW_WE_ROLL':
+        const items = [];
+        if (data.meetingOverview?.length > 0) items.push(`미팅 개요 ${data.meetingOverview.length}개`);
+        if (data.schedule?.length > 0) items.push(`일정 ${data.schedule.length}개`);
+        return items.length > 0 ? items.join(', ') : '규칙 설정됨';
+      default:
+        return '내용 설정됨';
+    }
+  };
+
+  // 섹션이 있는지 확인
+  const hasSections = sectionData && Object.keys(sectionData).some(key => 
+    sectionData[key] && Object.keys(sectionData[key]).length > 0
+  );
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -267,6 +322,36 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
               </div>
             </div>
           </div>
+
+          {/* 섹션 정보 (있는 경우만 표시) */}
+          {hasSections && (
+            <div className={styles.previewSection}>
+              <div className={styles.sectionTitle}>
+                <span className={styles.sectionIcon}>📄</span>
+                <span>상세 페이지 섹션</span>
+              </div>
+              <div className={styles.sectionContent}>
+                {Object.entries(sectionData).map(([sectionType, data]) => {
+                  // 비어있는 섹션은 제외
+                  if (!data || Object.keys(data).length === 0) return null;
+                  
+                  return (
+                    <div key={sectionType} className={styles.previewItem}>
+                      <span className={styles.previewLabel}>
+                        {getSectionTypeLabel(sectionType)}
+                      </span>
+                      <span className={styles.previewValue}>
+                        {getSectionSummary(sectionType, data)}
+                      </span>
+                    </div>
+                  );
+                })}
+                <div className={styles.sectionNote}>
+                  💡 상세 페이지는 스터디 승인 후 자동으로 생성됩니다
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 가격 정보 섹션 */}
           <div className={styles.previewSection}>
