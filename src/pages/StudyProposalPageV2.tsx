@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import studyService, { StudyProposalRequest, StudyType, RecurrenceType, CostType, Study } from '../api/studyService';
+import studyService, { StudyProposalRequest, StudyType, RecurrenceType, CostType, Study, SectionRequest } from '../api/studyService';
 import { ScheduleFrequency, DurationUnit } from '../types/schedule';
 import { ToastContainer, useToast } from '../components/ui/Toast';
 import TimePickerCustom from '../components/study/TimePickerCustom';
@@ -11,6 +11,8 @@ import GenerationSelector from '../components/study/GenerationSelector';
 import PreviewModal from '../components/study/PreviewModal';
 import { useDebouncedCallback } from '../hooks/useDebounce';
 import { useApiError } from '../hooks/useApiError';
+import { SectionType as DetailPageSectionType } from '../api/studyDetailPageService';
+import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
 import styles from './StudyProposalPageV2.module.css';
 
 const StudyProposalPageV2: React.FC = () => {
@@ -25,6 +27,16 @@ const StudyProposalPageV2: React.FC = () => {
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [isSearchingStudies, setIsSearchingStudies] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Section data states
+  const [sectionData, setSectionData] = useState<{
+    [key: string]: any;
+  }>({
+    [DetailPageSectionType.HERO]: {},
+    [DetailPageSectionType.LEADER_INTRO]: {},
+    [DetailPageSectionType.HOW_WE_ROLL]: {}
+  });
+  const [currentEditingSection, setCurrentEditingSection] = useState<DetailPageSectionType | null>(null);
   
   // Helper function to format date to YYYY-MM-DD in local timezone
   const getLocalDateString = (date: Date = new Date()): string => {
@@ -216,6 +228,9 @@ const StudyProposalPageV2: React.FC = () => {
         setFormData(prev => ({ ...prev, daysOfWeek }));
       }
 
+      // TODO: 이전 기수의 상세 페이지 섹션 데이터도 가져오기
+      // 현재는 기본 정보만 가져오고, 나중에 상세 페이지 API 연동 시 섹션 데이터도 가져올 수 있음
+      
       success(`${detailedStudy.name}의 정보를 가져왔습니다. 날짜는 새로 설정해주세요.`);
       setShowImportDialog(false);
     } catch (err) {
@@ -279,6 +294,24 @@ const StudyProposalPageV2: React.FC = () => {
   const validateGeneration = (generation: number): string | null => {
     if (generation < 1) return '기수는 1 이상이어야 합니다.';
     if (generation > 100) return '기수는 100 이하로 설정해주세요.';
+    return null;
+  };
+
+  const validateSections = (): string | null => {
+    // LEADER_INTRO 필수 검증
+    const leaderIntroData = sectionData[DetailPageSectionType.LEADER_INTRO];
+    if (!leaderIntroData?.name || !leaderIntroData?.introduction) {
+      return '리더 소개 섹션에서 이름과 소개를 입력해주세요.';
+    }
+
+    // HOW_WE_ROLL 필수 검증 - HowWeRollData 구조에 맞게 수정
+    const howWeRollData = sectionData[DetailPageSectionType.HOW_WE_ROLL];
+    if (!howWeRollData?.meetingOverview || howWeRollData.meetingOverview.length === 0) {
+      if (!howWeRollData?.schedule || howWeRollData.schedule.length === 0) {
+        return '스터디 규칙 섹션에서 미팅 개요 또는 일정을 최소 하나 입력해주세요.';
+      }
+    }
+
     return null;
   };
 
@@ -419,6 +452,14 @@ const StudyProposalPageV2: React.FC = () => {
         }
         return formData.daysOfWeek.length > 0 && formData.startTime !== '' && formData.endTime !== '';
       case 2:
+        // 섹션 정보 검증
+        const sectionError = validateSections();
+        if (sectionError) {
+          error(sectionError);
+          return false;
+        }
+        return true;
+      case 3:
         return true; // Optional fields
       default:
         return true;
@@ -653,6 +694,39 @@ const StudyProposalPageV2: React.FC = () => {
 
       // Removed debug console.log
 
+      // 섹션 데이터를 detailPage 형태로 변환
+      const detailPageSections: SectionRequest[] = [];
+      
+      // HERO 섹션 추가 (데이터가 있는 경우만)
+      if (sectionData[DetailPageSectionType.HERO] && Object.keys(sectionData[DetailPageSectionType.HERO]).length > 0) {
+        detailPageSections.push({
+          type: DetailPageSectionType.HERO,
+          order: 100,
+          data: sectionData[DetailPageSectionType.HERO], // SectionEditForm에서 저장한 데이터를 data 필드에 저장
+          props: sectionData[DetailPageSectionType.HERO] // 호환성을 위해 props에도 저장
+        });
+      }
+      
+      // LEADER_INTRO 섹션 추가 (필수)
+      if (sectionData[DetailPageSectionType.LEADER_INTRO]) {
+        detailPageSections.push({
+          type: DetailPageSectionType.LEADER_INTRO,
+          order: 200,
+          data: sectionData[DetailPageSectionType.LEADER_INTRO], // SectionEditForm에서 저장한 데이터를 data 필드에 저장
+          props: sectionData[DetailPageSectionType.LEADER_INTRO] // 호환성을 위해 props에도 저장
+        });
+      }
+      
+      // HOW_WE_ROLL 섹션 추가 (필수)
+      if (sectionData[DetailPageSectionType.HOW_WE_ROLL]) {
+        detailPageSections.push({
+          type: DetailPageSectionType.HOW_WE_ROLL,
+          order: 300,
+          data: sectionData[DetailPageSectionType.HOW_WE_ROLL], // SectionEditForm에서 저장한 데이터를 data 필드에 저장
+          props: sectionData[DetailPageSectionType.HOW_WE_ROLL] // 호환성을 위해 props에도 저장
+        });
+      }
+
       const proposalRequest: StudyProposalRequest = {
         title: formData.title.trim(),
         proposerId: user.id || user.username || user.email,
@@ -670,8 +744,10 @@ const StudyProposalPageV2: React.FC = () => {
         recurrenceType: formData.recurrenceType,
         costType: formData.costType,
         costDescription: formData.costDescription || undefined,
-        // detailPage는 제안 단계에서는 보내지 않음 - 승인 후 관리 페이지에서 생성
-        // detailPage: undefined
+        // 섹션 데이터 포함
+        detailPage: detailPageSections.length > 0 ? {
+          sections: detailPageSections
+        } : undefined
       };
 
       await studyService.proposeStudy(proposalRequest);
@@ -706,6 +782,7 @@ const StudyProposalPageV2: React.FC = () => {
   const steps = [
     { title: '기본 정보', icon: '📝' },
     { title: '일정 설정', icon: '📅' },
+    { title: '섹션 정보', icon: '📄' },
     { title: '모집 정보', icon: '👥' },
   ];
 
@@ -1130,6 +1207,131 @@ const StudyProposalPageV2: React.FC = () => {
           )}
 
           {currentStep === 2 && (
+            <div className={styles['form-step']}>
+              <div className={styles['section-editor-container']}>
+                <h3>스터디 상세 페이지 섹션</h3>
+                <p className={styles['section-description']}>
+                  스터디 참여자들이 보게 될 상세 페이지의 주요 섹션들을 미리 작성해주세요.
+                </p>
+
+                <div className={styles['required-sections']}>
+                  {/* HERO 섹션 */}
+                  <div className={styles['section-card']}>
+                    <div className={styles['section-header']}>
+                      <h4>🎯 메인 배너 (선택사항)</h4>
+                      <button
+                        type="button"
+                        className={styles['edit-section-btn']}
+                        onClick={() => setCurrentEditingSection(DetailPageSectionType.HERO)}
+                      >
+                        {Object.keys(sectionData[DetailPageSectionType.HERO]).length > 0 ? '✏️ 수정' : '➕ 추가'}
+                      </button>
+                    </div>
+                    <p className={styles['section-desc']}>스터디의 첫인상을 결정하는 메인 배너를 설정할 수 있습니다.</p>
+                    {sectionData[DetailPageSectionType.HERO]?.title && (
+                      <div className={styles['section-preview']}>
+                        <strong>제목:</strong> {sectionData[DetailPageSectionType.HERO].title}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* LEADER_INTRO 섹션 */}
+                  <div className={styles['section-card']}>
+                    <div className={styles['section-header']}>
+                      <h4>👤 리더 소개 <span className={styles['required-badge']}>*필수</span></h4>
+                      <button
+                        type="button"
+                        className={styles['edit-section-btn']}
+                        onClick={() => setCurrentEditingSection(DetailPageSectionType.LEADER_INTRO)}
+                      >
+                        {sectionData[DetailPageSectionType.LEADER_INTRO]?.name ? '✏️ 수정' : '➕ 작성'}
+                      </button>
+                    </div>
+                    <p className={styles['section-desc']}>스터디 리더 자신을 소개하고 참여자들과 친밀감을 형성하세요.</p>
+                    {sectionData[DetailPageSectionType.LEADER_INTRO]?.name && (
+                      <div className={styles['section-preview']}>
+                        <strong>이름:</strong> {sectionData[DetailPageSectionType.LEADER_INTRO].name}<br/>
+                        {sectionData[DetailPageSectionType.LEADER_INTRO].role && (
+                          <><strong>역할:</strong> {sectionData[DetailPageSectionType.LEADER_INTRO].role}<br/></>
+                        )}
+                        {sectionData[DetailPageSectionType.LEADER_INTRO].introduction && (
+                          <>
+                            <strong>소개:</strong> {typeof sectionData[DetailPageSectionType.LEADER_INTRO].introduction === 'string' 
+                              ? sectionData[DetailPageSectionType.LEADER_INTRO].introduction.substring(0, 50) 
+                              : '작성됨'}...
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                    {/* HOW_WE_ROLL 섹션 */}
+                  <div className={styles['section-card']}>
+                    <div className={styles['section-header']}>
+                      <h4>📋 스터디 규칙 <span className={styles['required-badge']}>*필수</span></h4>
+                      <button
+                        type="button"
+                        className={styles['edit-section-btn']}
+                        onClick={() => setCurrentEditingSection(DetailPageSectionType.HOW_WE_ROLL)}
+                      >
+                        {(sectionData[DetailPageSectionType.HOW_WE_ROLL]?.meetingOverview?.length > 0 || 
+                          sectionData[DetailPageSectionType.HOW_WE_ROLL]?.schedule?.length > 0) ? '✏️ 수정' : '➕ 작성'}
+                      </button>
+                    </div>
+                    <p className={styles['section-desc']}>스터디 진행 방식과 참여자들이 지켜야 할 규칙을 명시하세요.</p>
+                    {(sectionData[DetailPageSectionType.HOW_WE_ROLL]?.meetingOverview?.length > 0 || 
+                      sectionData[DetailPageSectionType.HOW_WE_ROLL]?.schedule?.length > 0) && (
+                      <div className={styles['section-preview']}>
+                        <strong>
+                          {sectionData[DetailPageSectionType.HOW_WE_ROLL]?.meetingOverview?.length > 0 && 
+                            `미팅 개요 ${sectionData[DetailPageSectionType.HOW_WE_ROLL].meetingOverview.length}개`}
+                          {sectionData[DetailPageSectionType.HOW_WE_ROLL]?.meetingOverview?.length > 0 && 
+                           sectionData[DetailPageSectionType.HOW_WE_ROLL]?.schedule?.length > 0 && ', '}
+                          {sectionData[DetailPageSectionType.HOW_WE_ROLL]?.schedule?.length > 0 && 
+                            `일정 ${sectionData[DetailPageSectionType.HOW_WE_ROLL].schedule.length}개`}
+                          {' 작성됨'}
+                        </strong>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 섹션 편집 모달 */}
+                {currentEditingSection && (
+                  <div className={styles['section-edit-overlay']}>
+                    <div className={styles['section-edit-modal']}>
+                      <div className={styles['section-edit-header']}>
+                        <h3>{currentEditingSection} 섹션 편집</h3>
+                        <button
+                          className={styles['close-edit-btn']}
+                          onClick={() => setCurrentEditingSection(null)}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <div className={styles['section-edit-content']}>
+                        <SectionEditForm
+                          sectionType={currentEditingSection}
+                          initialData={sectionData[currentEditingSection] || {}}
+                          onSave={(data) => {
+                            setSectionData(prev => ({
+                              ...prev,
+                              [currentEditingSection]: data
+                            }));
+                            setCurrentEditingSection(null);
+                            success('섹션이 저장되었습니다.');
+                          }}
+                          onCancel={() => setCurrentEditingSection(null)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {currentStep === 3 && (
             <div className={styles['form-step']}>
               <div className={styles['form-group-v2']}>
                 <label>모집 인원</label>

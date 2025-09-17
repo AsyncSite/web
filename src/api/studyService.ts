@@ -208,6 +208,22 @@ export interface GetStudiesParams {
   sort?: string;
 }
 
+// Section Request Type (서버의 SectionRequest와 매칭)
+export interface SectionRequest {
+  id?: string;
+  type: string;
+  title?: string;
+  content?: string;
+  order?: number;
+  props?: Record<string, any>;
+  data?: any; // JsonNode - SectionEditForm에서 저장하는 섹션 데이터
+}
+
+// Detail Page Request Type (서버의 DetailPageRequest와 매칭)
+export interface DetailPageRequest {
+  sections: SectionRequest[];
+}
+
 // Study Proposal Request Type
 export interface StudyProposalRequest {
   title: string;
@@ -226,12 +242,7 @@ export interface StudyProposalRequest {
   recurrenceType?: RecurrenceType;
   costType?: CostType;
   costDescription?: string;
-  detailPage?: {
-    sections: Array<{
-      type: string;
-      content: any;
-    }>;
-  };
+  detailPage?: DetailPageRequest;
 }
 
 // Application related types
