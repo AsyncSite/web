@@ -1298,8 +1298,14 @@ const StudyProposalPageV2: React.FC = () => {
 
                 {/* 섹션 편집 모달 */}
                 {currentEditingSection && (
-                  <div className={styles['section-edit-overlay']}>
-                    <div className={styles['section-edit-modal']}>
+                  <div 
+                    className={styles['section-edit-overlay']}
+                    onClick={() => setCurrentEditingSection(null)}
+                  >
+                    <div 
+                      className={styles['section-edit-modal']}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <div className={styles['section-edit-content']}>
                         <SectionEditForm
                           sectionType={currentEditingSection}
