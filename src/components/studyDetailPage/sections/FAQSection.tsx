@@ -71,7 +71,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
               {openIndex === index && (
                 <div className={styles.faqAnswer}>
                   {showIcons && <span className={styles.faqIcon}>A.</span>}
-                  <p>{item.answer}</p>
+                  <p style={{whiteSpace: "break-spaces"}}>{item.answer}</p>
                 </div>
               )}
             </div>
