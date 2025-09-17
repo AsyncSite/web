@@ -159,35 +159,7 @@ function ProfilePage(): React.ReactNode {
         const grouped = await studyService.getMyStudiesGrouped();
         console.log('My studies grouped:', grouped);
         
-        // 관리자인 경우에만 테스트용 ACCEPTED 상태의 더미 데이터 추가
-        const isAdmin = authUser?.systemRole === 'ROLE_ADMIN' ||
-                       authUser?.roles?.includes('ROLE_ADMIN') ||
-                       authUser?.roles?.includes('ADMIN');
-
-        const testAcceptedApplications = isAdmin ? [
-          {
-            applicationId: 'test-app-001',
-            studyId: 'test-study-001',
-            studyTitle: '🧪 [테스트] React 심화 스터디 3기',
-            status: 'ACCEPTED',
-            appliedAt: new Date().toISOString(),
-            price: 150000,
-            discountRate: 10,
-            paymentDeadline: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3일 후
-            cohortId: 'cohort-2024-q1',
-            cohortName: '2024년 1기',
-            startDate: '2024-02-01',
-            endDate: '2024-04-30'
-          }
-        ] : [];
-
-        // 기존 applications에 테스트 데이터 추가 (관리자인 경우에만)
-        const enhancedGrouped = {
-          ...grouped,
-          applications: [...(grouped.applications || []), ...testAcceptedApplications]
-        };
-        
-        setMyStudiesGrouped(enhancedGrouped);
+        setMyStudiesGrouped(grouped);
         
         // Also get memberships for backward compatibility
         const list = await studyService.getMyMemberships();
@@ -481,23 +453,47 @@ function ProfilePage(): React.ReactNode {
                 )}
 
                 {/* 신청 중인 스터디 섹션 */}
-                {myStudiesGrouped?.applications && myStudiesGrouped.applications.length > 0 && (
+                {myStudiesGrouped?.applications && myStudiesGrouped.applications
+                  .filter((app: any) => app.status !== 'ACCEPTED')
+                  .length > 0 && (
                   <div className={styles.studyGroup}>
                     <div className={styles.mystSectionHeader}>
-                      <h3>신청 중인 스터디 <span className={styles.mystBadge}>{myStudiesGrouped.applications.length}</span></h3>
+                      <h3>신청한 스터디 <span className={styles.mystBadge}>{myStudiesGrouped.applications.filter((app: any) => app.status !== 'ACCEPTED').length}</span></h3>
                     </div>
                     <div className={styles.studyCards}>
-                      {myStudiesGrouped.applications.map((study: any) => (
-                        <div key={study.applicationId || study.studyId} className={styles.studyCard}>
+                      {myStudiesGrouped.applications
+                        .filter((app: any) => app.status !== 'ACCEPTED')
+                        .map((study: any) => (
+                        <div 
+                          key={study.applicationId || study.studyId} 
+                          className={`${styles.studyCard} ${study.status === 'REJECTED' ? styles.rejected : ''} ${study.status === 'REJECTED' ? styles.clickable : ''}`}
+                          onClick={() => {
+                            if (study.status === 'REJECTED' && study.rejectionReason) {
+                              alert(`거절 사유: ${study.rejectionReason}`);
+                            }
+                          }}
+                          style={study.status === 'REJECTED' ? { cursor: 'pointer' } : {}}
+                          title={study.status === 'REJECTED' ? '클릭하여 거절 사유 확인' : ''}
+                        >
                           <h4>
                             {study.studyTitle}
-                            <span className={`${styles.studyStatusBadge} ${styles.pending}`}>
-                              대기중
+                            <span className={`${styles.studyStatusBadge} ${
+                              study.status === 'REJECTED' ? styles.rejected : 
+                              study.status === 'PENDING' ? styles.pending : styles.pending
+                            }`}>
+                              {study.status === 'REJECTED' ? '거절됨' : 
+                               study.status === 'PENDING' ? '대기중' : '대기중'}
                             </span>
                           </h4>
-                          <p className={styles.studyMeta}>상태: 승인 대기중</p>
+                          <p className={styles.studyMeta}>
+                            상태: {study.status === 'REJECTED' ? '신청 거절됨' : 
+                                  study.status === 'PENDING' ? '승인 대기중' : '승인 대기중'}
+                          </p>
                           {study.appliedAt && (
                             <p className={styles.studyMeta}>신청일: {parseDate(study.appliedAt)?.toLocaleDateString() || 'Invalid Date'}</p>
+                          )}
+                          {study.status === 'REJECTED' && study.rejectionReason && (
+                            <p className={styles.studyMeta}>💬 클릭하여 거절 사유 확인</p>
                           )}
                           {study.message && (
                             <p className={styles.studyMeta}>메시지: {study.message}</p>

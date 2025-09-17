@@ -1,5 +1,5 @@
 import React from 'react';
-import { SectionType } from '../../../api/studyDetailPageService';
+import { SectionType, convertSectionTypeToLabel } from '../../../api/studyDetailPageService';
 import HeroSectionForm from './forms/HeroSectionForm';
 import MembersSectionForm from './forms/MembersSectionForm';
 import ReviewSectionForm from './forms/ReviewSectionForm';
@@ -127,7 +127,7 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
   return (
     <div className="section-edit-form">
       <div className="form-header">
-        <h3>{sectionType} 섹션 편집</h3>
+        <h3>{convertSectionTypeToLabel(sectionType) || sectionType} 섹션 편집</h3>
       </div>
       <div className="form-content">
         {renderForm()}

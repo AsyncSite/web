@@ -1730,3 +1730,20 @@
   letter-spacing: 0.5px;
   box-shadow: 0 2px 4px rgba(46, 213, 115, 0.3);
 }
+
+.studyStatusBadge.rejected {
+  background: rgba(244, 67, 54, 0.15);
+  color: #F44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.studyCard.rejected {
+  border-left: 4px solid #F44336;
+  background: rgba(244, 67, 54, 0.02);
+}
+
+.studyCard.rejected:hover {
+  background: rgba(244, 67, 54, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+}
