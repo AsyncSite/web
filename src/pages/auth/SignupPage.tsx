@@ -5,12 +5,13 @@ import { useDebounce } from '../../hooks/useDebounce';
 import userService from '../../api/userService';
 import StarBackground from '../../components/common/StarBackground';
 import { ValidationFeedback } from '../../components/common/validation';
-import { registrationEmailValidator, profileNameValidator } from '../../utils/clientAuthValidation';
+import { registrationEmailValidator, profileNameValidator, securePasswordValidator } from '../../utils/clientAuthValidation';
 import { env } from '../../config/environment';
 import { createPasskey, getPasskey } from '../../utils/webauthn/helpers';
 import apiClient from '../../api/client';
 import PasskeyPromptModal from '../../components/auth/PasskeyPromptModal';
 import ProfileOnboardingModal from '../../components/auth/ProfileOnboardingModal';
+import PasswordStrengthIndicator from '../../components/auth/PasswordStrengthIndicator';
 import authService from '../../api/authService';
 import { AUTH_EVENTS, dispatchAuthEvent } from '../../utils/authEvents';
 import './auth-common.css';
@@ -203,11 +204,23 @@ function SignupPage(): React.ReactNode {
         break;
         
       case 'password':
-        // Minimal rule: show only length error
+        // Enhanced password validation with backend sync
         if (!formData.password) {
           newErrors.password = '비밀번호를 입력해주세요';
-        } else if (formData.password.length < 8) {
-          newErrors.password = '8자 이상 입력해주세요';
+        } else {
+          // Use SecurePasswordInputValidator for comprehensive validation
+          const validationResult = securePasswordValidator.validateSecurePassword(
+            formData.password,
+            {
+              registrationEmailValue: formData.email,
+              profileNameValue: formData.name
+            }
+          );
+
+          if (!validationResult.isValid && validationResult.fieldErrors.length > 0) {
+            // Show the most critical error first
+            newErrors.password = validationResult.fieldErrors[0].errorMessage;
+          }
         }
         break;
         
@@ -252,11 +265,21 @@ function SignupPage(): React.ReactNode {
       newErrors.email = '올바른 이메일 형식을 입력해주세요';
     }
 
-    // Password validation (minimal): only length
+    // Password validation with backend sync
     if (!formData.password) {
       newErrors.password = '비밀번호를 입력해주세요';
-    } else if (formData.password.length < 8) {
-      newErrors.password = '8자 이상 입력해주세요';
+    } else {
+      const validationResult = securePasswordValidator.validateSecurePassword(
+        formData.password,
+        {
+          registrationEmailValue: formData.email,
+          profileNameValue: formData.name
+        }
+      );
+
+      if (!validationResult.isValid && validationResult.fieldErrors.length > 0) {
+        newErrors.password = validationResult.fieldErrors[0].errorMessage;
+      }
     }
 
     // Confirm password validation
@@ -684,6 +707,16 @@ function SignupPage(): React.ReactNode {
                   )}
                 </button>
               </div>
+              {/* Real-time password strength feedback */}
+              {formData.password && (
+                <PasswordStrengthIndicator
+                  password={formData.password}
+                  email={formData.email}
+                  name={formData.name}
+                  showRequirements={true}
+                  showStrengthBar={true}
+                />
+              )}
               {/* Show a single-line password error only after blur or next-step attempt */}
               {errors.password && (passwordTouched || passwordNextAttempted) && (
                 <span className="error-message auth-error-message">

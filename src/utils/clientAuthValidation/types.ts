@@ -163,6 +163,7 @@ export const ClientAuthValidationErrorCodes = {
   SECURE_PASSWORD_ENTROPY_TOO_LOW: 'SECURE_PASSWORD_ENTROPY_TOO_LOW',
   SECURE_PASSWORD_COMMON_PASSWORD: 'SECURE_PASSWORD_COMMON_PASSWORD',
   SECURE_PASSWORD_BREACHED_PASSWORD: 'SECURE_PASSWORD_BREACHED_PASSWORD',
+  SECURE_PASSWORD_CONTAINS_SPACE: 'SECURE_PASSWORD_CONTAINS_SPACE',
   
   // 프로필 이름 에러
   PROFILE_NAME_FIELD_EMPTY: 'PROFILE_NAME_FIELD_EMPTY',
@@ -191,17 +192,18 @@ export const ClientAuthValidationErrorMessagesKO: Record<string, string> = {
   [ClientAuthValidationErrorCodes.REGISTRATION_EMAIL_ALREADY_EXISTS]: '이미 등록된 이메일입니다',
   [ClientAuthValidationErrorCodes.REGISTRATION_EMAIL_DNS_INVALID]: '유효하지 않은 이메일 도메인입니다',
   
-  // 보안 비밀번호 에러 메시지
+  // 보안 비밀번호 에러 메시지 (백엔드와 동기화)
   [ClientAuthValidationErrorCodes.SECURE_PASSWORD_FIELD_EMPTY]: '비밀번호를 입력해주세요',
-  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_LENGTH_TOO_SHORT]: '비밀번호는 최소 8자 이상이어야 합니다',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_LENGTH_TOO_SHORT]: '비밀번호는 8자 이상이어야 합니다',
   [ClientAuthValidationErrorCodes.SECURE_PASSWORD_LENGTH_TOO_LONG]: '비밀번호는 최대 128자까지 가능합니다',
-  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_CHAR_TYPES_INSUFFICIENT]: '대문자, 소문자, 숫자, 특수문자 중 3종류 이상을 포함해야 합니다',
-  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_SEQUENTIAL_PATTERN]: '연속된 문자나 숫자(abc, 123 등)는 사용할 수 없습니다',
-  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_REPEATED_PATTERN]: '반복된 문자(aaa, 111 등)는 사용할 수 없습니다',
-  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_PERSONAL_INFO_INCLUDED]: '비밀번호에 이메일이나 이름이 포함되어 있습니다',
-  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_ENTROPY_TOO_LOW]: '비밀번호가 너무 단순합니다. 더 복잡한 조합을 사용해주세요',
-  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_COMMON_PASSWORD]: '너무 흔한 비밀번호입니다. 다른 비밀번호를 선택해주세요',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_CHAR_TYPES_INSUFFICIENT]: '대문자, 소문자, 숫자, 특수문자 중 최소 3가지를 포함해야 합니다',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_SEQUENTIAL_PATTERN]: '연속된 문자나 숫자를 4개 이상 사용할 수 없습니다 (예: abcd, 1234)',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_REPEATED_PATTERN]: '같은 문자를 3번 이상 연속으로 사용할 수 없습니다',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_PERSONAL_INFO_INCLUDED]: '비밀번호에 이메일이나 이름이 포함될 수 없습니다',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_ENTROPY_TOO_LOW]: '비밀번호가 너무 예측 가능합니다. 더 복잡한 조합을 사용하세요',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_COMMON_PASSWORD]: '너무 일반적이거나 예측 가능한 비밀번호입니다',
   [ClientAuthValidationErrorCodes.SECURE_PASSWORD_BREACHED_PASSWORD]: '유출된 비밀번호 목록에 있는 비밀번호입니다',
+  [ClientAuthValidationErrorCodes.SECURE_PASSWORD_CONTAINS_SPACE]: '비밀번호에 공백을 포함할 수 없습니다',
   
   // 프로필 이름 에러 메시지
   [ClientAuthValidationErrorCodes.PROFILE_NAME_FIELD_EMPTY]: '이름을 입력해주세요',

@@ -89,7 +89,15 @@ export class SecurePasswordInputValidator {
       improvementTips.push(lengthValidation.tip);
     }
 
-    // 3. 문자 종류 검증
+    // 3. 공백 문자 검증 (백엔드와 동기화)
+    if (password.includes(' ')) {
+      errors.push(this.createError(
+        ClientAuthValidationErrorCodes.SECURE_PASSWORD_CONTAINS_SPACE,
+        'major'
+      ));
+    }
+
+    // 4. 문자 종류 검증
     const charTypeValidation = this.validateCharacterTypes(password, options);
     if (charTypeValidation.error) {
       errors.push(charTypeValidation.error);
@@ -97,7 +105,7 @@ export class SecurePasswordInputValidator {
     // tips는 나중에 generateImprovementTips에서 한 번만 추가하도록 제거
     // improvementTips.push(...charTypeValidation.tips);
 
-    // 4. 연속/반복 문자 검증
+    // 5. 연속/반복 문자 검증
     const patternValidation = this.validatePatterns(password);
     if (patternValidation.sequentialError) {
       errors.push(patternValidation.sequentialError);
@@ -114,7 +122,7 @@ export class SecurePasswordInputValidator {
       });
     }
 
-    // 5. 개인정보 포함 검증
+    // 6. 개인정보 포함 검증
     if (context) {
       const personalInfoValidation = this.checkPersonalInfoInclusion(password, context);
       if (personalInfoValidation) {
@@ -122,7 +130,7 @@ export class SecurePasswordInputValidator {
       }
     }
 
-    // 6. 공통 비밀번호 검증
+    // 7. 공통 비밀번호 검증
     const commonPasswordCheck = this.checkCommonPassword(password);
     if (commonPasswordCheck.error) {
       errors.push(commonPasswordCheck.error);
@@ -131,14 +139,14 @@ export class SecurePasswordInputValidator {
       warnings.push(commonPasswordCheck.warning);
     }
 
-    // 7. 엔트로피 계산 및 강도 평가
+    // 8. 엔트로피 계산 및 강도 평가
     const entropy = this.calculateEntropy(password);
     const strength = this.getPasswordStrength(entropy);
     const crackTime = this.estimateCrackTime(entropy);
 
-    // 8. 엔트로피 기반 검증 - 백엔드와 동기화
+    // 9. 엔트로피 기반 검증 - 백엔드와 동기화
     const backendSync_minEntropy = BACKEND_SYNC_PASSWORD_RULES.MIN_ENTROPY_REQUIRED;
-    
+
     if (entropy < backendSync_minEntropy) {
       errors.push(this.createError(
         ClientAuthValidationErrorCodes.SECURE_PASSWORD_ENTROPY_TOO_LOW,
@@ -154,7 +162,7 @@ export class SecurePasswordInputValidator {
       });
     }
 
-    // 9. 개선 제안 생성
+    // 10. 개선 제안 생성
     if (entropy < SECURE_PASSWORD_ENTROPY_THRESHOLDS.STRONG) {
       improvementTips.push(...this.generateImprovementTips(password, charTypeValidation.types));
     }
@@ -293,6 +301,14 @@ export class SecurePasswordInputValidator {
       );
     }
 
+    // 반복 시퀀스 검증 (예: Aa1!Aa1!)
+    if (this.hasRepeatedSequence(password)) {
+      result.repeatedError = this.createError(
+        ClientAuthValidationErrorCodes.SECURE_PASSWORD_ENTROPY_TOO_LOW,
+        'major'
+      );
+    }
+
     // 키보드 패턴 검증
     if (this.hasKeyboardPattern(password)) {
       result.keyboardError = true;
@@ -361,6 +377,33 @@ export class SecurePasswordInputValidator {
     const backendSync_minRepLength = BACKEND_SYNC_PASSWORD_RULES.MIN_REPEATED_LENGTH_TO_CHECK;
     const backendSync_repeatRegex = new RegExp(`(.)\\1{${backendSync_minRepLength - 1},}`);
     return backendSync_repeatRegex.test(password);
+  }
+
+  /**
+   * 반복 시퀀스 검사 (예: Aa1!Aa1! 같은 패턴)
+   */
+  private hasRepeatedSequence(password: string): boolean {
+    // 비밀번호가 너무 짧으면 검사 생략
+    if (password.length < 4) return false;
+
+    // 반으로 나누어 같은지 확인 (정확히 반복되는 경우)
+    const halfLength = Math.floor(password.length / 2);
+    if (password.length % 2 === 0) {
+      const firstHalf = password.substring(0, halfLength);
+      const secondHalf = password.substring(halfLength);
+      if (firstHalf === secondHalf) return true;
+    }
+
+    // 3-4자 패턴이 반복되는지 확인
+    for (let patternLength = 3; patternLength <= 4; patternLength++) {
+      for (let i = 0; i <= password.length - patternLength * 2; i++) {
+        const pattern = password.substring(i, i + patternLength);
+        const nextPattern = password.substring(i + patternLength, i + patternLength * 2);
+        if (pattern === nextPattern) return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -485,7 +528,7 @@ export class SecurePasswordInputValidator {
 
     let charsetSize = 0;
 
-    // 사용된 문자셋 크기 계산
+    // 사용된 문자셋 크기 계산 (백엔드와 맞추기 위해 보수적으로 계산)
     if (SECURE_PASSWORD_CHARACTER_PATTERNS.LOWERCASE.test(password)) {
       charsetSize += SECURE_PASSWORD_CHARSET_SIZES.LOWERCASE;
     }
@@ -496,22 +539,28 @@ export class SecurePasswordInputValidator {
       charsetSize += SECURE_PASSWORD_CHARSET_SIZES.DIGITS;
     }
     if (SECURE_PASSWORD_CHARACTER_PATTERNS.SPECIAL_CHARS.test(password)) {
-      charsetSize += SECURE_PASSWORD_CHARSET_SIZES.SPECIAL;
+      // 특수문자는 보수적으로 계산 (백엔드 동기화)
+      charsetSize += 10; // 일반적으로 사용되는 특수문자 수만 고려
     }
     if (SECURE_PASSWORD_CHARACTER_PATTERNS.SPACE.test(password)) {
       charsetSize += SECURE_PASSWORD_CHARSET_SIZES.SPACE;
     }
 
     // 엔트로피 = log2(charsetSize^length) = length * log2(charsetSize)
-    const entropy = password.length * Math.log2(charsetSize);
+    let baseEntropy = password.length * Math.log2(charsetSize);
+
+    // 백엔드와 동기화를 위한 스케일링 팩터 적용 (0.75)
+    // 백엔드는 더 보수적인 엔트로피 계산을 사용하는 것으로 보임
+    baseEntropy = baseEntropy * 0.75;
 
     // 패턴 페널티 적용
     let penalty = 0;
     if (this.hasSequentialCharacters(password)) penalty += 5;
     if (this.hasRepeatedCharacters(password)) penalty += 5;
+    if (this.hasRepeatedSequence(password)) penalty += 15; // 반복 시퀀스는 큰 페널티
     if (this.hasKeyboardPattern(password)) penalty += 3;
 
-    const finalEntropy = Math.max(0, entropy - penalty);
+    const finalEntropy = Math.max(0, baseEntropy - penalty);
 
     // 캐시 저장
     this.entropyCache.set(password, finalEntropy);

@@ -10,6 +10,7 @@ import authService from '../../api/authService';
 import userService from '../../api/userService';
 import { AUTH_EVENTS, dispatchAuthEvent } from '../../utils/authEvents';
 import PasskeyPromptModal from '../../components/auth/PasskeyPromptModal';
+import { registrationEmailValidator } from '../../utils/clientAuthValidation';
 
 // Simple timeout wrapper to avoid indefinite hanging on WebAuthn prompts
 function withTimeout<T>(promise: Promise<T>, ms: number, onTimeoutMessage?: string): Promise<T> {
@@ -277,12 +278,21 @@ function LoginPage(): React.ReactNode {
               setOtpError('');
               setIsSubmitting(true);
               try {
-                if (!formData.username || !formData.username.trim()) {
+                // Email validation for PassKey flow
+                const email = formData.username.trim();
+                if (!email) {
                   setErrors(prev => ({ ...prev, username: '이메일을 입력해주세요' }));
                   return;
                 }
+
+                // Validate email format
+                const emailValidation = registrationEmailValidator.validateRegistrationEmail(email);
+                if (!emailValidation.isValid && emailValidation.fieldErrors.length > 0) {
+                  setErrors(prev => ({ ...prev, username: emailValidation.fieldErrors[0].errorMessage }));
+                  return;
+                }
                 setFlowState('starting');
-                const startRes = await apiClient.post('/api/webauthn/start', { email: formData.username.trim() });
+                const startRes = await apiClient.post('/api/webauthn/start', { email });
                 const data = startRes.data.data;
                 if (data.mode === 'authenticate') {
                   setFlowState('authenticating');
@@ -290,7 +300,7 @@ function LoginPage(): React.ReactNode {
                   setFlowState('finishing');
                   const finishRes = await apiClient.post('/api/webauthn/finish', {
                     mode: 'authenticate',
-                    email: formData.username.trim(),
+                    email,
                     webauthnPayload: {
                       id: assertion.id,
                       rawId: assertion.rawId,
@@ -311,7 +321,7 @@ function LoginPage(): React.ReactNode {
                   // verifyEmailRequired
                   setFlowState('awaitingOtp');
                   // fire-and-forget send OTP
-                  await apiClient.post('/api/webauthn/otp/start', { email: formData.username.trim() });
+                  await apiClient.post('/api/webauthn/otp/start', { email });
                 }
               } catch (err: any) {
                 const name = err?.name;
