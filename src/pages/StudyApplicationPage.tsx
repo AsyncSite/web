@@ -86,9 +86,12 @@ const StudyApplicationPage: React.FC = () => {
         const isPaid = studyData.costType === 'PAID';
         setIsPaidStudy(isPaid);
         
-        // 임시로 고정 가격 설정 (실제로는 백엔드에서 가격 정보를 받아와야 함)
-        if (isPaid) {
-          setStudyPrice(150000); // 15만원 기본값
+        // 실제 스터디 가격 설정
+        if (isPaid && studyData.cost) {
+          setStudyPrice(studyData.cost);
+        } else if (isPaid) {
+          // 가격 정보가 없는 경우 기본값 설정
+          setStudyPrice(150000);
         }
       } catch (error) {
         console.error('스터디 정보 로딩 실패:', error);

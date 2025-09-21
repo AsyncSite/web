@@ -68,6 +68,7 @@ const StudyProposalPageV2: React.FC = () => {
     endDate: '',
     costType: 'FREE' as CostType,
     costDescription: '',
+    cost: null as number | null,  // 스터디 비용 추가
     location: '',  // 스터디 장소 추가
   });
 
@@ -744,6 +745,7 @@ const StudyProposalPageV2: React.FC = () => {
         recurrenceType: formData.recurrenceType,
         costType: formData.costType,
         costDescription: formData.costDescription || undefined,
+        cost: formData.cost || undefined,
         // 섹션 데이터 포함
         detailPage: detailPageSections.length > 0 ? {
           sections: detailPageSections
@@ -1388,24 +1390,43 @@ const StudyProposalPageV2: React.FC = () => {
               </div>
 
               {formData.costType !== 'FREE' && (
-                <div className={styles['form-group-v2']}>
-                  <label>비용 상세 설명</label>
-                  <textarea
-                    value={formData.costDescription}
-                    onChange={(e) => handleInputChange('costDescription', e.target.value)}
-                    placeholder={
-                      formData.costType === 'FREE_WITH_VENUE' 
-                        ? '예: 카페 대관비 인당 5,000원, 교재비 별도' 
-                        : '예: 월 30,000원, 교재비 포함'
-                    }
-                    className={styles['modern-textarea']}
-                    rows={3}
-                    maxLength={500}
-                  />
-                  <span className={styles['form-hint']}>
-                    참가자가 이해하기 쉽게 구체적으로 작성해주세요 (최대 500자)
-                  </span>
-                </div>
+                <>
+                  <div className={styles['form-group-v2']}>
+                    <label>스터디 비용 {formData.costType === 'PAID' && <span className={styles['required-badge']}>*</span>}</label>
+                    <input
+                      type="number"
+                      value={formData.cost || ''}
+                      onChange={(e) => handleInputChange('cost', e.target.value ? parseInt(e.target.value) : '')}
+                      placeholder="비용을 입력하세요 (원)"
+                      className={styles['modern-input']}
+                      min="0"
+                      step="1000"
+                    />
+                    <span className={styles['form-hint']}>
+                      {formData.costType === 'PAID' 
+                        ? '스터디 참가비를 원 단위로 입력해주세요' 
+                        : '예상 비용을 원 단위로 입력해주세요 (장소비, 교재비 등)'}
+                    </span>
+                  </div>
+                  <div className={styles['form-group-v2']}>
+                    <label>비용 상세 설명</label>
+                    <textarea
+                      value={formData.costDescription}
+                      onChange={(e) => handleInputChange('costDescription', e.target.value)}
+                      placeholder={
+                        formData.costType === 'FREE_WITH_VENUE' 
+                          ? '예: 카페 대관비 인당 5,000원, 교재비 별도' 
+                          : '예: 월 30,000원, 교재비 포함'
+                      }
+                      className={styles['modern-textarea']}
+                      rows={3}
+                      maxLength={500}
+                    />
+                    <span className={styles['form-hint']}>
+                      참가자가 이해하기 쉽게 구체적으로 작성해주세요 (최대 500자)
+                    </span>
+                  </div>
+                </>
               )}
 
               <div className={styles['form-row-v2']}>

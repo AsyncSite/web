@@ -68,6 +68,7 @@ export interface StudyDTO {
   recurrenceType?: RecurrenceType;
   costType?: CostType;
   costDescription?: string; // 비용 관련 상세 설명
+  cost?: number; // 스터디 비용
   leader?: {
     name: string;
     profileImage: string;
@@ -122,6 +123,7 @@ export interface Study {
   endDate?: Date | string | number[] | null;
   costType?: CostType;
   costDescription?: string;
+  cost?: number;
   recentTestimonial?: {
     content: string;
     author: string;
@@ -193,6 +195,7 @@ const transformStudy = (dto: StudyDTO): Study => {
     endDate: dto.endDate,
     costType: dto.costType,
     costDescription: dto.costDescription,
+    cost: dto.cost,
     recentTestimonial: undefined, // TODO: Fetch from testimonial service
     color: getStudyTheme(dto.id)
   };
@@ -242,6 +245,7 @@ export interface StudyProposalRequest {
   recurrenceType?: RecurrenceType;
   costType?: CostType;
   costDescription?: string;
+  cost?: number;
   detailPage?: DetailPageRequest;
 }
 
@@ -307,6 +311,7 @@ export interface StudyUpdateRequest {
   recurrenceType?: RecurrenceType;
   costType?: CostType;
   costDescription?: string;
+  cost?: number;
 }
 
 // Member related types
