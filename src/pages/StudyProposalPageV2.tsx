@@ -1394,13 +1394,17 @@ const StudyProposalPageV2: React.FC = () => {
                   <div className={styles['form-group-v2']}>
                     <label>스터디 비용 {formData.costType === 'PAID' && <span className={styles['required-badge']}>*</span>}</label>
                     <input
-                      type="number"
+                      type="text"
                       value={formData.cost || ''}
-                      onChange={(e) => handleInputChange('cost', e.target.value ? parseInt(e.target.value) : '')}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // 숫자만 허용 (빈 문자열도 허용)
+                        if (value === '' || /^\d+$/.test(value)) {
+                          handleInputChange('cost', value === '' ? null : parseInt(value));
+                        }
+                      }}
                       placeholder="비용을 입력하세요 (원)"
-                      className={styles['modern-input']}
-                      min="0"
-                      step="1000"
+                      className={styles['proposal-input']}
                     />
                     <span className={styles['form-hint']}>
                       {formData.costType === 'PAID' 
@@ -1418,7 +1422,7 @@ const StudyProposalPageV2: React.FC = () => {
                           ? '예: 카페 대관비 인당 5,000원, 교재비 별도' 
                           : '예: 월 30,000원, 교재비 포함'
                       }
-                      className={styles['modern-textarea']}
+                      className={styles['proposal-input']}
                       rows={3}
                       maxLength={500}
                     />
