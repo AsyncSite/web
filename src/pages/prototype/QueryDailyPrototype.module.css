@@ -601,6 +601,7 @@
 }
 
 /* How It Works */
+/* Old steps styles - commented out to prevent conflicts
 .steps {
     display: flex;
     align-items: center;
@@ -649,6 +650,7 @@
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
 }
+*/
 
 /* Vertical Timeline */
 .timeline {
@@ -2025,6 +2027,7 @@
         margin-left: 0;
     }
 
+    /* Commented out old steps styles
     .steps {
         flex-direction: column;
     }
@@ -2032,6 +2035,7 @@
     .stepArrow {
         transform: rotate(90deg);
     }
+    */
 
     .heroStats {
         flex-direction: column;
