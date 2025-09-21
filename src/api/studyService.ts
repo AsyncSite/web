@@ -258,6 +258,7 @@ export type ApplicationStatus = typeof ApplicationStatus[keyof typeof Applicatio
 export interface ApplicationRequest {
   applicantId: string;
   answers: Record<string, string>;
+  paymentId?: string; // 결제 ID (유료 스터디의 경우)
 }
 
 export interface ApplicationResponse {

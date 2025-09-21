@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import studyService, { Study, ApplicationRequest } from '../api/studyService';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 import Modal from '../components/common/Modal/Modal';
+import { CheckoutButton } from '../components/UnifiedCheckout';
+import { createStudyCheckoutRequest, CheckoutResponse, CheckoutError } from '../types/checkout';
 import './StudyApplicationPage.css';
 
 const StudyApplicationPage: React.FC = () => {
@@ -14,6 +16,8 @@ const StudyApplicationPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [isPaidStudy, setIsPaidStudy] = useState(false);
+  const [studyPrice, setStudyPrice] = useState(0);
   const [modalConfig, setModalConfig] = useState<{
     title?: string;
     message: string;
@@ -77,6 +81,15 @@ const StudyApplicationPage: React.FC = () => {
         }
 
         setStudy(studyData);
+        
+        // 유료 스터디 여부 확인
+        const isPaid = studyData.costType === 'PAID';
+        setIsPaidStudy(isPaid);
+        
+        // 임시로 고정 가격 설정 (실제로는 백엔드에서 가격 정보를 받아와야 함)
+        if (isPaid) {
+          setStudyPrice(150000); // 15만원 기본값
+        }
       } catch (error) {
         console.error('스터디 정보 로딩 실패:', error);
         alert('스터디 정보를 불러올 수 없습니다.');
@@ -96,6 +109,85 @@ const StudyApplicationPage: React.FC = () => {
       ...prev,
       [key]: value
     }));
+  };
+
+  // 결제 완료 후 신청 처리
+  const handlePaymentSuccess = async (result: CheckoutResponse) => {
+    console.log('결제 완료:', result);
+    console.log('결제 ID (checkoutId):', result.checkoutId);
+    
+    // 결제 완료 후 신청 진행 (checkoutId를 paymentId로 사용)
+    await submitApplication(result.checkoutId);
+  };
+
+  // 결제 오류 처리
+  const handlePaymentError = (error: CheckoutError) => {
+    console.error('결제 실패:', error);
+    alert('결제 중 오류가 발생했습니다. 다시 시도해주세요.');
+  };
+
+  // 실제 신청 제출 함수
+  const submitApplication = async (paymentId?: string) => {
+    if (!user || !studyId) {
+      return;
+    }
+
+    // Validation
+    const requiredFields = ['motivation', 'experience', 'availability'];
+    const missingFields = requiredFields.filter(field => !answers[field]?.trim());
+    
+    if (missingFields.length > 0) {
+      alert('필수 항목을 모두 입력해주세요.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const applicationRequest: ApplicationRequest = {
+        applicantId: user.email,
+        answers: Object.fromEntries(
+          Object.entries(answers).filter(([_, value]) => value.trim())
+        ),
+        paymentId: paymentId // 결제 ID 포함
+      };
+      
+      await studyService.applyToStudy(studyId, applicationRequest);
+      
+      setModalConfig({
+        title: '신청 완료',
+        message: isPaidStudy 
+          ? '결제 및 스터디 참여 신청이 완료되었습니다! 스터디 호스트가 검토 후 연락드릴 예정입니다.'
+          : '스터디 참여 신청이 완료되었습니다! 스터디 호스트가 검토 후 연락드릴 예정입니다.',
+        type: 'success',
+        onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+      });
+      setShowModal(true);
+    } catch (error: any) {
+      console.error('스터디 신청 실패:', error);
+      
+      // 중복 신청 체크 (409 Conflict)
+      if (error.response?.status === 409) {
+        setModalConfig({
+          title: '중복 신청',
+          message: '이미 이 스터디에 참가 신청을 하셨습니다. 관리자가 검토 중이니 조금만 기다려주세요.',
+          type: 'warning',
+          onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+        });
+        setShowModal(true);
+        return;
+      }
+      
+      const errorMessage = error.response?.data?.message || '스터디 신청 중 오류가 발생했습니다. 다시 시도해주세요.';
+      setModalConfig({
+        title: '오류',
+        message: errorMessage,
+        type: 'error'
+      });
+      setShowModal(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -126,50 +218,14 @@ const StudyApplicationPage: React.FC = () => {
       return;
     }
 
-    setIsSubmitting(true);
-    
-    try {
-      const applicationRequest: ApplicationRequest = {
-        applicantId: user.email, // Use email as identifier like in proposal
-        answers: Object.fromEntries(
-          Object.entries(answers).filter(([_, value]) => value.trim())
-        )
-      };
-      
-      await studyService.applyToStudy(studyId, applicationRequest);
-      
-      setModalConfig({
-        title: '신청 완료',
-        message: '스터디 참여 신청이 완료되었습니다! 스터디 호스트가 검토 후 연락드릴 예정입니다.',
-        type: 'success',
-        onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
-      });
-      setShowModal(true);
-    } catch (error: any) {
-      console.error('스터디 신청 실패:', error);
-      
-      // 중복 신청 체크 (409 Conflict)
-      if (error.response?.status === 409) {
-        setModalConfig({
-          title: '중복 신청',
-          message: '이미 이 스터디에 참가 신청을 하셨습니다. 관리자가 검토 중이니 조금만 기다려주세요.',
-          type: 'warning',
-          onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
-        });
-        setShowModal(true);
-        return;
-      }
-      
-      const errorMessage = error.response?.data?.message || '스터디 신청 중 오류가 발생했습니다. 다시 시도해주세요.';
-      setModalConfig({
-        title: '오류',
-        message: errorMessage,
-        type: 'error'
-      });
-      setShowModal(true);
-    } finally {
-      setIsSubmitting(false);
+    // 유료 스터디가 아닌 경우 바로 신청 진행
+    if (!isPaidStudy) {
+      await submitApplication();
+      return;
     }
+
+    // 유료 스터디인 경우 결제는 CheckoutButton에서 처리됨
+    // 여기서는 아무것도 하지 않음 (CheckoutButton 클릭 시 결제 진행)
   };
 
   if (loading) {
@@ -214,6 +270,9 @@ const StudyApplicationPage: React.FC = () => {
               {study.duration && <span>⏱️ {study.duration}</span>}
               {study.capacity && study.capacity > 0 && (
                 <span>👥 {study.enrolled}/{study.capacity}명</span>
+              )}
+              {isPaidStudy && (
+                <span className="price-info">💰 {studyPrice.toLocaleString()}원</span>
               )}
             </div>
           </div>
@@ -308,13 +367,45 @@ const StudyApplicationPage: React.FC = () => {
             >
               취소
             </button>
-            <button 
-              type="submit" 
-              className="submit-button"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? '신청 중...' : '참여 신청하기'}
-            </button>
+            
+            {isPaidStudy ? (
+              <CheckoutButton
+                variant="primary"
+                size="large"
+                fullWidth={false}
+                checkoutData={createStudyCheckoutRequest({
+                  studyId: study.id,
+                  studyName: study.name,
+                  price: studyPrice,
+                  discountRate: 0,
+                  customerName: user?.name || '사용자',
+                  customerEmail: user?.email || 'user@example.com',
+                  customerPhone: '010-0000-0000',
+                  cohortId: `cohort-${study.id}`,
+                  cohortName: `${study.name} ${study.generation}기`,
+                  startDate: study.startDate ? 
+                    (typeof study.startDate === 'string' ? study.startDate : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]) :
+                    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                  endDate: study.endDate ? 
+                    (typeof study.endDate === 'string' ? study.endDate : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]) :
+                    new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                })}
+                onCheckoutComplete={handlePaymentSuccess}
+                onCheckoutError={handlePaymentError}
+                label={`${studyPrice.toLocaleString()}원 결제하고 신청하기`}
+                showPrice={false}
+                disabled={isSubmitting}
+                className="submit-button"
+              />
+            ) : (
+              <button 
+                type="submit" 
+                className="submit-button"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? '신청 중...' : '참여 신청하기'}
+              </button>
+            )}
           </div>
         </form>
 
