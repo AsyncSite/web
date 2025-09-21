@@ -1130,6 +1130,94 @@
     font-weight: 600;
 }
 
+/* FAQ Accordion Styles */
+.faqAccordion {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.faqAccordionItem {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-bg-tertiary);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+    overflow: hidden;
+    transition: var(--transition-base);
+}
+
+.faqAccordionItem:hover {
+    border-color: var(--color-primary);
+}
+
+.faqAccordionHeader {
+    width: 100%;
+    padding: var(--spacing-xl);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    transition: var(--transition-base);
+}
+
+.faqAccordionHeader:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.faqAccordionHeaderOpen {
+    background: var(--color-bg-tertiary);
+    border-bottom: 1px solid var(--color-bg-tertiary);
+}
+
+.faqQuestionContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex: 1;
+}
+
+.faqQuestionText {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.faqToggleIcon {
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    font-weight: 300;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-primary);
+    border-radius: 50%;
+}
+
+.faqAccordionContent {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.faqAccordionContentOpen {
+    max-height: 600px;
+    transition: max-height 0.5s ease-in;
+}
+
+.faqAnswerInner {
+    padding: 0 var(--spacing-xl) var(--spacing-xl) var(--spacing-xl);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+}
+
+.faqAnswerInner strong {
+    color: var(--color-text-primary);
+}
+
 /* Privacy Trust Section */
 .privacyTrust {
     background: linear-gradient(180deg, transparent 0%, rgba(195, 232, 141, 0.03) 100%);
@@ -2215,5 +2303,33 @@
 
     .problemCard {
         padding: var(--spacing-lg);
+    }
+
+    /* FAQ Accordion - Mobile */
+    .faqAccordion {
+        margin: 0;
+    }
+
+    .faqAccordionHeader {
+        padding: var(--spacing-md);
+    }
+
+    .faqQuestionText {
+        font-size: var(--font-size-base);
+    }
+
+    .faqToggleIcon {
+        width: 25px;
+        height: 25px;
+        font-size: var(--font-size-lg);
+    }
+
+    .faqAnswerInner {
+        padding: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
+        font-size: var(--font-size-sm);
+    }
+
+    .faqAccordionContentOpen {
+        max-height: 800px;
     }
 }
