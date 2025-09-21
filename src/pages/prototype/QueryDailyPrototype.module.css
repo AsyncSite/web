@@ -178,7 +178,7 @@
 
 /* Hero Section */
 .hero {
-    padding: 140px 0 80px;
+    padding: 200px 0 80px;
     position: relative;
     overflow: hidden;
 }
@@ -1233,6 +1233,7 @@
 
 .faqAnswerContent p:first-child {
     color: var(--color-text-primary);
+    margin-top: var(--spacing-md);
 }
 
 /* FAQ Comparison Section */
