@@ -512,24 +512,13 @@
 
 @media (min-width: 1200px) {
     .problemsBalancedGrid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
+}
 
-    .problemsBalancedGrid .problemCard:nth-child(4),
-    .problemsBalancedGrid .problemCard:nth-child(5) {
-        grid-column: span 1;
-    }
-
+@media (min-width: 768px) and (max-width: 1199px) {
     .problemsBalancedGrid {
-        grid-template-rows: auto auto;
-    }
-
-    .problemsBalancedGrid .problemCard:nth-child(4) {
-        grid-column: 1 / 2;
-    }
-
-    .problemsBalancedGrid .problemCard:nth-child(5) {
-        grid-column: 2 / 3;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

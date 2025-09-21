@@ -202,12 +202,7 @@ const QueryDailyPrototype: React.FC = () => {
             <div className={styles.problemCard}>
               <div className={styles.problemIcon}>😰</div>
               <h3>"긴장하면 백지"</h3>
-              <p>집에서는 잘 아는데, 면접장에서는 머릿속이 하얘집니다.</p>
-            </div>
-            <div className={styles.problemCard}>
-              <div className={styles.problemIcon}>🎯</div>
-              <h3>"뭘 물어볼까?"</h3>
-              <p>면접관이 뭘 원하는지, 어떻게 대답해야 할지 감이 안 잡힙니다.</p>
+              <p>집에서는 잘 아는데, 면접장에서는 머릿속이 하얜집니다.</p>
             </div>
           </div>
         </div>
