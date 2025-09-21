@@ -175,7 +175,7 @@ const QueryDailyPrototype: React.FC = () => {
         </div>
       </div>
 
-      {/* Problem Section - Varied Card Layout */}
+      {/* Problem Section */}
       <div id="why" className={`${styles.section} ${styles.problem}`}>
         <div className={styles.sectionContainer}>
           <h2 className={styles.sectionTitle}>혹시 당신의 이야기인가요?</h2>
@@ -183,41 +183,31 @@ const QueryDailyPrototype: React.FC = () => {
             "코드는 돌아가는데, 제 경력은 설명이 안됩니다."
           </p>
 
-          <div className={styles.problemsVariedGrid}>
-            {/* Featured Main Problem */}
-            <div className={`${styles.problemCard} ${styles.problemCardFeatured}`}>
+          <div className={styles.problemsBalancedGrid}>
+            <div className={styles.problemCard}>
               <div className={styles.problemIcon}>🤔</div>
               <h3>"왜 썼죠?"</h3>
               <p>분명 내가 사용한 기술인데, '왜?'라는 질문 앞에서는 말문이 막힙니다.</p>
-              <div className={styles.problemQuote}>
-                "Spring Security를 사용하신 이유가 뭔가요?"<br/>
-                "어... 그냥... 인증이 필요해서요..."<br/>
-                <span className={styles.problemQuoteAuthor}>- 실제 면접 현장에서</span>
-              </div>
             </div>
-
-            {/* Secondary Problems */}
-            <div className={styles.problemsSecondaryGrid}>
-              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
-                <div className={styles.problemIcon}>🤯</div>
-                <h3>"그래서 뭘 했죠?"</h3>
-                <p>내 프로젝트는 너무 평범해서, 뭘 어떻게 어필해야 할지 모르겠습니다.</p>
-              </div>
-              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
-                <div className={styles.problemIcon}>📚</div>
-                <h3>"어떻게 다르죠?"</h3>
-                <p>분명 Spring의 동작 원리는 아는데, 이걸 제 프로젝트 경험과 연결하지 못하겠습니다.</p>
-              </div>
-              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
-                <div className={styles.problemIcon}>😰</div>
-                <h3>"긴장하면 백지"</h3>
-                <p>집에서는 잘 아는데, 면접장에서는 머릿속이 하얘집니다.</p>
-              </div>
-              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
-                <div className={styles.problemIcon}>🎯</div>
-                <h3>"뭘 물어볼까?"</h3>
-                <p>면접관이 뭘 원하는지, 어떻게 대답해야 할지 감이 안 잡힙니다.</p>
-              </div>
+            <div className={styles.problemCard}>
+              <div className={styles.problemIcon}>🤯</div>
+              <h3>"그래서 뭘 했죠?"</h3>
+              <p>내 프로젝트는 너무 평범해서, 뭘 어떻게 어필해야 할지 모르겠습니다.</p>
+            </div>
+            <div className={styles.problemCard}>
+              <div className={styles.problemIcon}>📚</div>
+              <h3>"어떻게 다르죠?"</h3>
+              <p>분명 Spring의 동작 원리는 아는데, 이걸 제 프로젝트 경험과 연결하지 못하겠습니다.</p>
+            </div>
+            <div className={styles.problemCard}>
+              <div className={styles.problemIcon}>😰</div>
+              <h3>"긴장하면 백지"</h3>
+              <p>집에서는 잘 아는데, 면접장에서는 머릿속이 하얘집니다.</p>
+            </div>
+            <div className={styles.problemCard}>
+              <div className={styles.problemIcon}>🎯</div>
+              <h3>"뭘 물어볼까?"</h3>
+              <p>면접관이 뭘 원하는지, 어떻게 대답해야 할지 감이 안 잡힙니다.</p>
             </div>
           </div>
         </div>
