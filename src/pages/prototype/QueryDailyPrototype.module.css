@@ -641,20 +641,22 @@
 }
 */
 
-/* Vertical Timeline */
+/* Vertical Timeline - Fixed */
 .timeline {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     max-width: 800px;
     margin: 0 auto;
-    padding: var(--spacing-2xl) 0;
+    padding: var(--spacing-2xl) var(--spacing-xl);
+    position: relative;
 }
 
 .timeline::before {
     content: '';
     position: absolute;
-    left: 60px;
-    top: 0;
-    bottom: 0;
+    left: 80px;
+    top: 40px;
+    bottom: 40px;
     width: 2px;
     background: linear-gradient(
         to bottom,
@@ -666,9 +668,11 @@
 }
 
 .timelineItem {
-    position: relative;
-    padding-left: 120px;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xl);
     margin-bottom: var(--spacing-3xl);
+    position: relative;
     animation: slideInFromLeft 0.5s ease;
 }
 
@@ -688,9 +692,7 @@
 }
 
 .timelineMarker {
-    position: absolute;
-    left: 20px;
-    top: 0;
+    flex-shrink: 0;
     width: 80px;
     height: 80px;
     background: var(--color-bg-primary);
@@ -701,6 +703,7 @@
     align-items: center;
     justify-content: center;
     z-index: 2;
+    position: relative;
 }
 
 .timelineNumber {
@@ -719,6 +722,7 @@
 }
 
 .timelineContent {
+    flex: 1;
     background: var(--color-bg-secondary);
     border-left: 3px solid var(--color-primary);
     border-radius: var(--radius-lg);
@@ -2150,27 +2154,29 @@
 
     /* Vertical Timeline - Mobile */
     .timeline {
-        padding-left: 0;
+        padding: var(--spacing-xl) var(--spacing-md);
     }
 
     .timeline::before {
-        left: 20px;
+        left: 40px;
+        top: 20px;
+        bottom: 20px;
     }
 
     .timelineItem {
-        padding-left: 60px;
-        margin-bottom: var(--spacing-2xl);
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
     }
 
     .timelineMarker {
-        left: 0;
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
     }
 
     .timelineNumber {
         font-size: 10px;
-        top: -20px;
+        top: -18px;
+        padding: 1px 6px;
     }
 
     .timelineIcon {
@@ -2178,16 +2184,27 @@
     }
 
     .timelineContent {
-        padding: var(--spacing-lg);
+        padding: var(--spacing-md);
+    }
+
+    .timelineContent::before {
+        left: -10px;
+        top: 15px;
+        border-width: 8px 8px 8px 0;
     }
 
     .timelineTitle {
-        font-size: var(--font-size-lg);
+        font-size: var(--font-size-base);
+    }
+
+    .timelineDesc {
+        font-size: var(--font-size-sm);
     }
 
     .timelineDetail {
         flex-direction: column;
         gap: var(--spacing-sm);
+        font-size: var(--font-size-xs);
     }
 
     /* Problem Balanced Grid - Mobile */
