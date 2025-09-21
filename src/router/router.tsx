@@ -15,6 +15,7 @@ const SignupPage = lazy(() => import('../pages/auth/SignupPage'));
 const OAuthCallbackPage = lazy(() => import('../pages/auth/OAuthCallbackPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('../pages/auth/ResetPasswordPage'));
+const KakaoOAuthTestPage = lazy(() => import('../pages/test/KakaoOAuthTestPage'));
 const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
 const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
 const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
@@ -23,6 +24,9 @@ const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
 const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
 const CheckoutTestPage = lazy(() => import('../pages/CheckoutTestPage'));
 // MockPaymentPage 제거
+
+// Prototype pages (hidden routes)
+const QueryDailyPrototype = lazy(() => import('../pages/prototype/QueryDailyPrototype'));
 
 // Studio components
 const DocuMentor = lazy(() => import('../components/lab/ai-studio/documentor/DocuMentor'));
@@ -61,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: 'reset-password',
         element: <ResetPasswordPage />,
+      },
+      {
+        path: 'test/kakao-oauth',
+        element: <KakaoOAuthTestPage />,
       },
       {
         path: 'users/me',
@@ -109,6 +117,10 @@ const router = createBrowserRouter([
           },
           // Add more studio routes here in the future
         ],
+      },
+      {
+        path: 'prototype/querydaily',
+        element: <QueryDailyPrototype />,
       },
       {
         path: '/',

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUERYDAILY — Interview Preparation System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Grid Pattern Background -->
+    <div class="grid-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-mark">QD</div>
+                <div class="brand-text">
+                    <span>QUERY</span>
+                    <span>DAILY</span>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#method" class="nav-link">[METHOD]</a>
+                <a href="#system" class="nav-link">[SYSTEM]</a>
+                <a href="#pricing" class="nav-link">[PRICING]</a>
+                <a href="#start" class="nav-link nav-primary">[START_NOW]</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-label">SYSTEM_001</div>
+            <h1 class="hero-title">
+                <span class="title-line">INTERVIEW</span>
+                <span class="title-line outline">PREPARATION</span>
+                <span class="title-line">SYSTEM</span>
+            </h1>
+            <div class="hero-meta">
+                <div class="meta-item">
+                    <span class="meta-label">TYPE</span>
+                    <span class="meta-value">AI_POWERED</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">VERSION</span>
+                    <span class="meta-value">BETA_2.0</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">STATUS</span>
+                    <span class="meta-value blink">ACTIVE</span>
+                </div>
+            </div>
+            <div class="hero-description">
+                <p>
+                    QUERYDAILY는 이력서 기반 AI 면접 준비 시스템입니다.<br>
+                    매일 10분, 당신의 약점을 정확히 공략합니다.
+                </p>
+            </div>
+            <div class="hero-actions">
+                <button class="btn btn-primary" onclick="scrollToStart()">
+                    <span>INITIALIZE →</span>
+                </button>
+                <button class="btn btn-secondary" onclick="showSpecs()">
+                    <span>VIEW_SPECS</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Method -->
+    <section id="method" class="method">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">001</span>
+                <h2 class="section-title">METHOD</h2>
+            </div>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <div class="card-index">01</div>
+                    <h3 class="card-title">ANALYZE</h3>
+                    <p class="card-text">이력서 데이터를 파싱하여 핵심 키워드와 경험을 추출합니다.</p>
+                    <div class="card-stat">
+                        <span class="stat-label">ACCURACY</span>
+                        <span class="stat-value">97.3%</span>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="card-index">02</div>
+                    <h3 class="card-title">GENERATE</h3>
+                    <p class="card-text">기업별 면접 패턴과 매칭하여 예상 질문을 생성합니다.</p>
+                    <div class="card-stat">
+                        <span class="stat-label">DATABASE</span>
+                        <span class="stat-value">50K+</span>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="card-index">03</div>
+                    <h3 class="card-title">DELIVER</h3>
+                    <p class="card-text">매일 오전 10:00 정확히 맞춤 질문을 전송합니다.</p>
+                    <div class="card-stat">
+                        <span class="stat-label">ON_TIME</span>
+                        <span class="stat-value">100%</span>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="card-index">04</div>
+                    <h3 class="card-title">EVALUATE</h3>
+                    <p class="card-text">답변을 분석하여 개선점과 모범 사례를 제공합니다.</p>
+                    <div class="card-stat">
+                        <span class="stat-label">FEEDBACK</span>
+                        <span class="stat-value">INSTANT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Architecture -->
+    <section id="system" class="system">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">002</span>
+                <h2 class="section-title">SYSTEM_ARCHITECTURE</h2>
+            </div>
+
+            <div class="architecture">
+                <div class="arch-diagram">
+                    <div class="arch-node node-input">
+                        <span>INPUT</span>
+                        <div class="node-desc">RESUME.PDF</div>
+                    </div>
+                    <div class="arch-flow">→</div>
+                    <div class="arch-node node-process">
+                        <span>PROCESS</span>
+                        <div class="node-desc">AI_ENGINE</div>
+                    </div>
+                    <div class="arch-flow">→</div>
+                    <div class="arch-node node-output">
+                        <span>OUTPUT</span>
+                        <div class="node-desc">QUESTIONS</div>
+                    </div>
+                </div>
+
+                <div class="system-specs">
+                    <div class="spec-row">
+                        <span class="spec-key">PROCESSING_TIME</span>
+                        <span class="spec-value">&lt;100ms</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-key">SUPPORTED_FORMATS</span>
+                        <span class="spec-value">PDF, DOCX</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-key">MAX_FILE_SIZE</span>
+                        <span class="spec-value">10MB</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-key">ENCRYPTION</span>
+                        <span class="spec-value">AES-256</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="terminal-title">SYSTEM_LOG</span>
+                    <div class="terminal-controls">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">querydaily --analyze resume.pdf</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">[OK] Resume parsed successfully</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">[OK] 15 key skills identified</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">[OK] 8 projects analyzed</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">[OK] Generating question set...</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">[SUCCESS] 50 questions ready</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="cursor">_</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Matrix -->
+    <section id="pricing" class="pricing">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">003</span>
+                <h2 class="section-title">PRICING_MATRIX</h2>
+            </div>
+
+            <div class="pricing-table">
+                <div class="pricing-plan">
+                    <div class="plan-header">
+                        <div class="plan-tier">TIER_0</div>
+                        <div class="plan-name">TRIAL</div>
+                    </div>
+                    <div class="plan-price">
+                        <span class="price-amount">0</span>
+                        <span class="price-currency">KRW</span>
+                    </div>
+                    <div class="plan-specs">
+                        <div class="spec">• 5_DAYS_ACCESS</div>
+                        <div class="spec">• 1_QUESTION/DAY</div>
+                        <div class="spec">• BASIC_ANALYSIS</div>
+                        <div class="spec">• EMAIL_DELIVERY</div>
+                    </div>
+                    <button class="plan-button">ACTIVATE</button>
+                </div>
+
+                <div class="pricing-plan featured">
+                    <div class="plan-label">RECOMMENDED</div>
+                    <div class="plan-header">
+                        <div class="plan-tier">TIER_1</div>
+                        <div class="plan-name">STANDARD</div>
+                    </div>
+                    <div class="plan-price">
+                        <span class="price-amount">9,900</span>
+                        <span class="price-currency">KRW/M</span>
+                    </div>
+                    <div class="plan-specs">
+                        <div class="spec">• UNLIMITED_ACCESS</div>
+                        <div class="spec">• 3_QUESTIONS/DAY</div>
+                        <div class="spec">• DEEP_ANALYSIS</div>
+                        <div class="spec">• INSTANT_FEEDBACK</div>
+                        <div class="spec">• ANSWER_TEMPLATES</div>
+                        <div class="spec">• PROGRESS_TRACKING</div>
+                    </div>
+                    <button class="plan-button primary">ACTIVATE</button>
+                </div>
+
+                <div class="pricing-plan">
+                    <div class="plan-header">
+                        <div class="plan-tier">TIER_2</div>
+                        <div class="plan-name">PREMIUM</div>
+                    </div>
+                    <div class="plan-price">
+                        <span class="price-amount">49,000</span>
+                        <span class="price-currency">KRW</span>
+                    </div>
+                    <div class="plan-specs">
+                        <div class="spec">• 1:1_MOCK_INTERVIEW</div>
+                        <div class="spec">• 30_MINUTES</div>
+                        <div class="spec">• SENIOR_REVIEWER</div>
+                        <div class="spec">• VIDEO_RECORDING</div>
+                        <div class="spec">• DETAILED_REPORT</div>
+                    </div>
+                    <button class="plan-button">ACTIVATE</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Start Section -->
+    <section id="start" class="start">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">004</span>
+                <h2 class="section-title">INITIALIZE_SYSTEM</h2>
+            </div>
+
+            <div class="start-grid">
+                <div class="start-form">
+                    <form id="init-form" class="init-form">
+                        <div class="form-header">
+                            <span>USER_REGISTRATION</span>
+                            <span class="form-status">READY</span>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-label">NAME</label>
+                            <input type="text" class="field-input" placeholder="YOUR_NAME" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-label">EMAIL</label>
+                            <input type="email" class="field-input" placeholder="YOUR@EMAIL.COM" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-label">RESUME</label>
+                            <div class="file-zone" id="file-zone">
+                                <input type="file" id="file-input" accept=".pdf,.docx" hidden>
+                                <div class="file-zone-content">
+                                    <div class="file-icon">[↑]</div>
+                                    <div class="file-text">DROP_FILE_HERE</div>
+                                    <div class="file-formats">PDF / DOCX</div>
+                                </div>
+                                <div class="file-selected" style="display: none;">
+                                    <span class="selected-name"></span>
+                                    <button type="button" class="file-clear">[X]</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="field-checkbox">
+                                <input type="checkbox" required>
+                                <span>ACCEPT_TERMS_AND_CONDITIONS</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="submit-button">
+                            <span>EXECUTE_INITIALIZATION</span>
+                            <span class="button-arrow">→</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="start-info">
+                    <div class="info-block">
+                        <h3 class="info-title">PROCESS_FLOW</h3>
+                        <ol class="info-list">
+                            <li>UPLOAD_RESUME</li>
+                            <li>SYSTEM_ANALYSIS</li>
+                            <li>QUESTION_GENERATION</li>
+                            <li>DAILY_DELIVERY</li>
+                            <li>PERFORMANCE_TRACKING</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-block">
+                        <h3 class="info-title">SECURITY_PROTOCOL</h3>
+                        <div class="security-items">
+                            <div class="security-item">
+                                <span class="security-icon">[✓]</span>
+                                <span>END_TO_END_ENCRYPTION</span>
+                            </div>
+                            <div class="security-item">
+                                <span class="security-icon">[✓]</span>
+                                <span>GDPR_COMPLIANT</span>
+                            </div>
+                            <div class="security-item">
+                                <span class="security-icon">[✓]</span>
+                                <span>AUTO_DATA_DELETION</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-monitor">
+                        <div class="monitor-header">SYSTEM_STATUS</div>
+                        <div class="monitor-grid">
+                            <div class="monitor-item">
+                                <span class="monitor-dot active"></span>
+                                <span>API</span>
+                            </div>
+                            <div class="monitor-item">
+                                <span class="monitor-dot active"></span>
+                                <span>DATABASE</span>
+                            </div>
+                            <div class="monitor-item">
+                                <span class="monitor-dot active"></span>
+                                <span>AI_ENGINE</span>
+                            </div>
+                            <div class="monitor-item">
+                                <span class="monitor-dot active"></span>
+                                <span>EMAIL_SERVICE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-block">
+                    <div class="footer-brand">QUERYDAILY</div>
+                    <div class="footer-tagline">INTERVIEW_PREPARATION_SYSTEM</div>
+                </div>
+
+                <div class="footer-block">
+                    <div class="footer-label">CONTACT</div>
+                    <a href="#" class="footer-link">SUPPORT@QUERYDAILY.COM</a>
+                    <a href="#" class="footer-link">DOCUMENTATION</a>
+                </div>
+
+                <div class="footer-block">
+                    <div class="footer-label">LEGAL</div>
+                    <a href="#" class="footer-link">TERMS_OF_SERVICE</a>
+                    <a href="#" class="footer-link">PRIVACY_POLICY</a>
+                </div>
+
+                <div class="footer-block">
+                    <div class="footer-label">VERSION</div>
+                    <div class="version-info">BETA_2.0.1</div>
+                    <div class="copyright">© 2024 QUERYDAILY</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>SYSTEM_MESSAGE</span>
+                <button class="modal-close" onclick="closeModal()">[X]</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-icon">[✓]</div>
+                <h3 class="modal-title">INITIALIZATION_COMPLETE</h3>
+                <p class="modal-text">
+                    SYSTEM_ACTIVATED<br>
+                    FIRST_QUESTION_SCHEDULED: TOMORROW_10:00
+                </p>
+                <button class="modal-button" onclick="closeModal()">ACKNOWLEDGE</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

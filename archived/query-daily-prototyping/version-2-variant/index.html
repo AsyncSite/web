@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryDaily - AI시대의 스마트한 면접 준비</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-orb gradient-orb-1"></div>
+        <div class="gradient-orb gradient-orb-2"></div>
+        <div class="gradient-orb gradient-orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">
+                    <div class="logo-icon">Q</div>
+                    <span class="logo-text">Query<span class="logo-accent">Daily</span></span>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#features" class="nav-link">특징</a>
+                    <a href="#process" class="nav-link">진행방식</a>
+                    <a href="#pricing" class="nav-link">요금</a>
+                    <a href="#apply" class="nav-link nav-link-cta">
+                        <span>무료 체험</span>
+                        <svg class="cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">🚀</span>
+                    <span>Beta 선착순 10명</span>
+                </div>
+
+                <h1 class="hero-title">
+                    면접 준비,<br>
+                    <span class="hero-highlight">AI가 당신을 코칭</span>합니다
+                </h1>
+
+                <p class="hero-subtitle">
+                    이력서 분석부터 맞춤 질문, 모범 답변까지<br>
+                    매일 10분 투자로 면접 합격률을 높이세요
+                </p>
+
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-large" onclick="scrollToApply()">
+                        5일 무료 체험 시작
+                        <span class="btn-shine"></span>
+                    </button>
+                    <button class="btn btn-secondary btn-large" onclick="scrollToDemo()">
+                        <span class="play-icon">▶</span>
+                        데모 보기
+                    </button>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">87%</div>
+                        <div class="stat-label">만족도</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <div class="stat-number">3.5x</div>
+                        <div class="stat-label">합격률 상승</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <div class="stat-number">10분</div>
+                        <div class="stat-label">일일 학습</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Features</span>
+                <h2 class="section-title">왜 QueryDaily인가?</h2>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <div class="icon-bg"></div>
+                        <span>🎯</span>
+                    </div>
+                    <h3 class="feature-title">이력서 맞춤 분석</h3>
+                    <p class="feature-desc">AI가 당신의 이력서를 분석해 예상 질문을 정확히 예측합니다</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <div class="icon-bg"></div>
+                        <span>💡</span>
+                    </div>
+                    <h3 class="feature-title">페르소나별 답변</h3>
+                    <p class="feature-desc">대기업, 스타트업, 외국계 등 회사별 맞춤 답변 전략을 제공합니다</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <div class="icon-bg"></div>
+                        <span>📈</span>
+                    </div>
+                    <h3 class="feature-title">점진적 난이도</h3>
+                    <p class="feature-desc">기초부터 심화까지, 당신의 수준에 맞춰 질문 난이도가 조절됩니다</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <div class="icon-bg"></div>
+                        <span>🔄</span>
+                    </div>
+                    <h3 class="feature-title">실시간 피드백</h3>
+                    <p class="feature-desc">답변 작성 즉시 AI가 개선점과 모범 사례를 제시합니다</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="process">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Process</span>
+                <h2 class="section-title">간단한 3단계 프로세스</h2>
+            </div>
+
+            <div class="process-timeline">
+                <div class="timeline-line"></div>
+
+                <div class="process-step">
+                    <div class="step-marker">
+                        <div class="marker-inner">1</div>
+                    </div>
+                    <div class="step-content">
+                        <h3>이력서 업로드</h3>
+                        <p>PDF 형식의 이력서를 업로드하면 AI가 즉시 분석을 시작합니다</p>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-marker">
+                        <div class="marker-inner">2</div>
+                    </div>
+                    <div class="step-content">
+                        <h3>매일 질문 수신</h3>
+                        <p>오전 10시, 당신만을 위한 맞춤 면접 질문이 도착합니다</p>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-marker">
+                        <div class="marker-inner">3</div>
+                    </div>
+                    <div class="step-content">
+                        <h3>답변 & 피드백</h3>
+                        <p>작성한 답변에 대해 AI와 전문가의 피드백을 받아보세요</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Reviews</span>
+                <h2 class="section-title">실제 사용자 후기</h2>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"매일 받는 질문이 정말 날카로워요. 실제 면접에서 비슷한 질문이 나와서 놀랐습니다."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">김◯◯</div>
+                        <div class="author-info">
+                            <div class="author-name">김◯◯</div>
+                            <div class="author-role">네◯버 합격</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"페르소나별 답변 예시가 정말 유용했어요. 회사 문화에 맞는 답변을 준비할 수 있었습니다."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">이◯◯</div>
+                        <div class="author-info">
+                            <div class="author-name">이◯◯</div>
+                            <div class="author-role">카◯오 합격</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"5일 챌린지만으로도 면접 준비의 방향을 잡을 수 있었습니다. 강력 추천!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">박◯◯</div>
+                        <div class="author-info">
+                            <div class="author-name">박◯◯</div>
+                            <div class="author-role">토◯ 합격</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Pricing</span>
+                <h2 class="section-title">합리적인 가격</h2>
+                <p class="section-subtitle">필요한 만큼만 결제하세요</p>
+            </div>
+
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <div class="card-header">
+                        <h3 class="plan-name">스타터</h3>
+                        <div class="plan-price">
+                            <span class="currency">₩</span>
+                            <span class="amount">4,900</span>
+                            <span class="period">/건</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> 단일 질문 답변 가이드</li>
+                        <li><span class="check">✓</span> 핵심 키워드 분석</li>
+                        <li><span class="check">✓</span> STAR 기법 템플릿</li>
+                        <li><span class="check">✓</span> 기본 피드백</li>
+                    </ul>
+                    <button class="btn btn-outline">선택하기</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="card-badge">BEST VALUE</div>
+                    <div class="card-header">
+                        <h3 class="plan-name">프리미엄</h3>
+                        <div class="plan-price">
+                            <span class="currency">₩</span>
+                            <span class="amount">9,900</span>
+                            <span class="period">/월</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> 매일 3개 맞춤 질문</li>
+                        <li><span class="check">✓</span> 무제한 답변 가이드</li>
+                        <li><span class="check">✓</span> AI 실시간 피드백</li>
+                        <li><span class="check">✓</span> 50개 예상 질문 리스트</li>
+                        <li><span class="check">✓</span> 1:1 채팅 상담</li>
+                    </ul>
+                    <button class="btn btn-primary">시작하기</button>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="card-header">
+                        <h3 class="plan-name">엔터프라이즈</h3>
+                        <div class="plan-price">
+                            <span class="currency">₩</span>
+                            <span class="amount">49,000</span>
+                            <span class="period">/회</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li><span class="check">✓</span> 1:1 모의 면접 (30분)</li>
+                        <li><span class="check">✓</span> 현직자 직접 코칭</li>
+                        <li><span class="check">✓</span> 상세 평가 리포트</li>
+                        <li><span class="check">✓</span> 녹화본 제공</li>
+                    </ul>
+                    <button class="btn btn-outline">문의하기</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="apply" class="cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <div class="cta-content">
+                    <h2 class="cta-title">
+                        지금 시작하세요
+                        <span class="cta-highlight">완전 무료</span>
+                    </h2>
+                    <p class="cta-subtitle">5일간 모든 기능을 무료로 체험해보세요</p>
+
+                    <form class="cta-form" id="application-form">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <input type="text" placeholder="이름" required>
+                            </div>
+                            <div class="form-field">
+                                <input type="email" placeholder="이메일" required>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <div class="file-dropzone" id="dropzone">
+                                <input type="file" id="resume-upload" accept=".pdf,.docx" hidden>
+                                <div class="dropzone-content">
+                                    <div class="dropzone-icon">📎</div>
+                                    <div class="dropzone-text">
+                                        <p>이력서를 드래그하거나 클릭하여 업로드</p>
+                                        <span class="dropzone-hint">PDF, DOCX (최대 10MB)</span>
+                                    </div>
+                                </div>
+                                <div class="file-preview" id="file-preview" style="display: none;">
+                                    <span class="file-icon">📄</span>
+                                    <span class="file-name"></span>
+                                    <button type="button" class="file-remove">✕</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            무료 체험 시작하기
+                        </button>
+
+                        <p class="form-note">
+                            <span>🔒</span>
+                            개인정보는 안전하게 보호되며, 언제든 삭제 요청 가능합니다
+                        </p>
+                    </form>
+                </div>
+
+                <div class="cta-image">
+                    <div class="floating-cards">
+                        <div class="floating-card card-1">
+                            <span class="card-emoji">💼</span>
+                            <span class="card-text">면접 준비</span>
+                        </div>
+                        <div class="floating-card card-2">
+                            <span class="card-emoji">📊</span>
+                            <span class="card-text">AI 분석</span>
+                        </div>
+                        <div class="floating-card card-3">
+                            <span class="card-emoji">✨</span>
+                            <span class="card-text">합격!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">Q</div>
+                        <span class="logo-text">QueryDaily</span>
+                    </div>
+                    <p class="footer-tagline">AI와 함께하는 스마트한 면접 준비</p>
+
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">💬</a>
+                        <a href="#" class="social-link">📱</a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>서비스</h4>
+                        <a href="#">기능 소개</a>
+                        <a href="#">요금제</a>
+                        <a href="#">FAQ</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>회사</h4>
+                        <a href="#">소개</a>
+                        <a href="#">채용</a>
+                        <a href="#">블로그</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>지원</h4>
+                        <a href="#">고객센터</a>
+                        <a href="#">이용약관</a>
+                        <a href="#">개인정보처리방침</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2024 QueryDaily. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h3 class="modal-title">신청이 완료되었습니다!</h3>
+            <p class="modal-text">내일 오전 10시부터 첫 질문을 받아보실 수 있습니다.</p>
+            <button class="btn btn-primary" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

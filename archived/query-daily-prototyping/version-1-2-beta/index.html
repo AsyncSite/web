@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryDaily - Beta Launch 🚀 선착순 10명 무료</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">
+                    <span class="logo-text">Query<span class="logo-accent">Daily</span></span>
+                    <span class="beta-badge">BETA</span>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#how-it-works" class="nav-link">진행 방식</a>
+                    <a href="#beta-benefits" class="nav-link">베타 혜택</a>
+                    <a href="#faq" class="nav-link">FAQ</a>
+                    <a href="#apply" class="nav-link nav-link-cta">베타 테스터 신청</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="launch-badge">
+                    <span class="pulse"></span>
+                    <span>🎉 BETA LAUNCH EVENT</span>
+                </div>
+
+                <h1 class="hero-title">
+                    면접 준비의 새로운 기준<br>
+                    <span class="text-gradient">베타 테스터 10명</span><br>
+                    선착순 모집
+                </h1>
+
+                <p class="hero-subtitle">
+                    QueryDaily의 첫 베타 테스터가 되어주세요.<br>
+                    <strong>평생 무료</strong>로 모든 프리미엄 기능을 이용하실 수 있습니다.
+                </p>
+
+                <!-- Live Counter -->
+                <div class="beta-counter">
+                    <div class="counter-item">
+                        <div class="counter-number" id="spots-remaining">10</div>
+                        <div class="counter-label">남은 자리</div>
+                    </div>
+                    <div class="counter-divider"></div>
+                    <div class="counter-item">
+                        <div class="counter-number" id="time-remaining">23:59:45</div>
+                        <div class="counter-label">마감까지</div>
+                    </div>
+                    <div class="counter-divider"></div>
+                    <div class="counter-item">
+                        <div class="counter-number">0</div>
+                        <div class="counter-label">신청 완료</div>
+                    </div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="#apply" class="btn btn-primary btn-large">
+                        <span>베타 테스터 신청하기</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    <p class="cta-note">• 신용카드 불필요 • 평생 무료 • 즉시 시작</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beta Benefits Section -->
+    <section id="beta-benefits" class="section beta-benefits">
+        <div class="container">
+            <h2 class="section-title">베타 테스터만의 특별한 혜택</h2>
+            <p class="section-subtitle">단 10명의 베타 테스터에게만 제공되는 독점 혜택</p>
+
+            <div class="benefits-grid">
+                <div class="benefit-card premium">
+                    <div class="benefit-icon">👑</div>
+                    <h3 class="benefit-title">평생 무료 이용권</h3>
+                    <p class="benefit-desc">
+                        정식 출시 후에도 모든 프리미엄 기능을<br>
+                        평생 무료로 이용하실 수 있습니다.
+                    </p>
+                    <div class="benefit-value">₩9,900/월 → ₩0 영구</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚀</div>
+                    <h3 class="benefit-title">모든 기능 우선 체험</h3>
+                    <p class="benefit-desc">
+                        새로운 기능이 추가될 때마다<br>
+                        가장 먼저 체험하실 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">💬</div>
+                    <h3 class="benefit-title">1:1 전담 서포트</h3>
+                    <p class="benefit-desc">
+                        개발팀과 직접 소통하며<br>
+                        즉각적인 지원을 받으실 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3 class="benefit-title">서비스 개발 참여</h3>
+                    <p class="benefit-desc">
+                        여러분의 피드백이 서비스에<br>
+                        직접 반영됩니다.
+                    </p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏆</div>
+                    <h3 class="benefit-title">얼리어답터 인증</h3>
+                    <p class="benefit-desc">
+                        QueryDaily 베타 테스터<br>
+                        공식 인증서를 발급해드립니다.
+                    </p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3 class="benefit-title">상세 분석 리포트</h3>
+                    <p class="benefit-desc">
+                        면접 준비 과정을 분석한<br>
+                        맞춤형 리포트를 제공합니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="beta-commitment">
+                <h3>우리의 약속</h3>
+                <p>베타 테스터로 선정되신 10분께는 QueryDaily가 존재하는 한,<br>
+                모든 서비스를 <strong>평생 무료</strong>로 제공할 것을 약속드립니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section how-it-works">
+        <div class="container">
+            <h2 class="section-title">이렇게 진행됩니다</h2>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <h3 class="step-title">베타 신청</h3>
+                    <p class="step-desc">이력서와 함께 베타 테스터로 신청해주세요. 선착순 10명만 선정됩니다.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <h3 class="step-title">즉시 시작</h3>
+                    <p class="step-desc">선정되는 즉시 서비스를 이용하실 수 있습니다. 결제 정보는 필요하지 않습니다.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <h3 class="step-title">매일 질문 수신</h3>
+                    <p class="step-desc">이력서 기반으로 매일 맞춤형 면접 질문을 받아보세요.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">04</div>
+                    <h3 class="step-title">피드백 공유</h3>
+                    <p class="step-desc">서비스를 이용하시면서 느낀 점을 공유해주세요. 모든 의견을 반영합니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Questions Section -->
+    <section class="section sample-questions">
+        <div class="container">
+            <h2 class="section-title">베타 테스터가 받게 될 질문들</h2>
+            <div class="questions-grid">
+                <div class="question-card">
+                    <div class="question-tag">경험 연결</div>
+                    <p class="question-text">"React에서 상태 관리를 위해 Redux를 선택하신 이유는 무엇인가요? 다른 대안들과 비교했을 때 어떤 트레이드오프가 있었나요?"</p>
+                </div>
+                <div class="question-card">
+                    <div class="question-tag">트레이드오프</div>
+                    <p class="question-text">"마이크로서비스 아키텍처 도입 경험에서, 실제로 겪었던 가장 큰 challenge는 무엇이었고 어떻게 해결하셨나요?"</p>
+                </div>
+                <div class="question-card">
+                    <div class="question-tag">상황 가정</div>
+                    <p class="question-text">"프로덕션 환경에서 갑자기 메모리 누수가 발생한다면, 어떤 순서로 문제를 진단하고 해결하시겠습니까?"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section faq">
+        <div class="container">
+            <h2 class="section-title">자주 묻는 질문</h2>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3 class="faq-question">정말 평생 무료인가요?</h3>
+                    <p class="faq-answer">네, 베타 테스터로 선정되신 10분께는 QueryDaily가 존재하는 한 모든 기능을 평생 무료로 제공합니다.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">베타 테스터의 의무사항이 있나요?</h3>
+                    <p class="faq-answer">특별한 의무는 없습니다. 다만 서비스를 이용하시면서 느낀 점을 월 1회 정도 간단히 공유해주시면 감사하겠습니다.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">신청 후 언제부터 이용할 수 있나요?</h3>
+                    <p class="faq-answer">선착순 10명 내에 들어가시면 신청 당일부터 바로 이용 가능합니다. 24시간 내에 안내 이메일을 보내드립니다.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">이력서 정보는 안전한가요?</h3>
+                    <p class="faq-answer">모든 데이터는 암호화되어 저장되며, 오직 AI 분석 용도로만 사용됩니다. 언제든 삭제 요청이 가능합니다.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">주니어만 신청 가능한가요?</h3>
+                    <p class="faq-answer">아닙니다. 면접 준비가 필요한 모든 개발자분들이 신청 가능합니다.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">10명이 다 차면 어떻게 되나요?</h3>
+                    <p class="faq-answer">베타 테스트가 종료되고 정식 출시 때 유료 서비스로 전환됩니다. 지금이 무료로 평생 이용할 수 있는 유일한 기회입니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section id="apply" class="section apply">
+        <div class="container">
+            <div class="apply-card">
+                <div class="apply-header">
+                    <h2 class="section-title">베타 테스터 신청</h2>
+                    <p class="apply-subtitle">
+                        선착순 10명 • 평생 무료 • 지금이 유일한 기회입니다
+                    </p>
+                    <div class="spots-indicator">
+                        <div class="spots-bar">
+                            <div class="spots-filled" style="width: 0%"></div>
+                        </div>
+                        <p class="spots-text"><span id="spots-count">10</span>자리 남음</p>
+                    </div>
+                </div>
+
+                <form id="application-form" class="application-form">
+                    <div class="form-group">
+                        <label for="name">이름 *</label>
+                        <input type="text" id="name" name="name" required placeholder="홍길동">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">이메일 *</label>
+                        <input type="email" id="email" name="email" required placeholder="example@gmail.com">
+                        <p class="form-hint">베타 테스터 선정 결과를 이 이메일로 알려드립니다</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">개발 경력</label>
+                        <select id="experience" name="experience">
+                            <option value="junior">주니어 (0-3년)</option>
+                            <option value="mid">미드레벨 (3-7년)</option>
+                            <option value="senior">시니어 (7년+)</option>
+                            <option value="student">학생/취준생</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="motivation">베타 테스터 지원 동기 (선택)</label>
+                        <textarea id="motivation" name="motivation" rows="3" placeholder="간단히 작성해주세요 (선택사항)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="resume">이력서 업로드 *</label>
+                        <div class="file-upload">
+                            <input type="file" id="resume" name="resume" accept=".pdf,.docx" required>
+                            <label for="resume" class="file-upload-label">
+                                <span class="file-upload-icon">📄</span>
+                                <span class="file-upload-text">파일 선택 (PDF 권장)</span>
+                            </label>
+                            <p class="file-name" id="file-name"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" required>
+                            <span>개인정보 수집 및 이용에 동의합니다</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>베타 테스터 선정 소식을 이메일로 받겠습니다</span>
+                        </label>
+                    </div>
+
+                    <div class="submit-wrapper">
+                        <button type="submit" class="btn btn-primary btn-submit">
+                            베타 테스터 신청하기
+                            <span class="submit-arrow">→</span>
+                        </button>
+                        <p class="submit-note">신청 즉시 선착순으로 자동 선정됩니다</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Indicators -->
+    <section class="section trust">
+        <div class="container">
+            <div class="trust-content">
+                <div class="trust-item">
+                    <div class="trust-icon">🔒</div>
+                    <div class="trust-text">
+                        <h4>256-bit 암호화</h4>
+                        <p>모든 데이터는 안전하게 보호됩니다</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">⚡</div>
+                    <div class="trust-text">
+                        <h4>24시간 내 시작</h4>
+                        <p>신청 즉시 서비스를 이용하실 수 있습니다</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">💳</div>
+                    <div class="trust-text">
+                        <h4>결제 정보 불필요</h4>
+                        <p>신용카드 없이 바로 시작하세요</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-text">Query<span class="logo-accent">Daily</span></span>
+                    <span class="beta-badge">BETA</span>
+                    <p>AI 기반 맞춤형 면접 준비 서비스</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#">이용약관</a>
+                    <a href="#">개인정보처리방침</a>
+                    <a href="#">문의: beta@querydaily.com</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">🎉</div>
+            <h2 class="modal-title">베타 테스터 신청 완료!</h2>
+            <p class="modal-text">
+                축하합니다! 선착순 10명 안에 들어오셨습니다.<br>
+                24시간 내에 상세 안내 메일을 보내드리겠습니다.<br><br>
+                <strong>QueryDaily와 함께 면접 준비의 새로운 기준을 만들어주세요!</strong>
+            </p>
+            <button class="btn btn-primary" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
