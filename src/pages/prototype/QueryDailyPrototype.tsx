@@ -11,6 +11,7 @@ const QueryDailyPrototype: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [activeQuestionTab, setActiveQuestionTab] = useState(0);
 
   useEffect(() => {
     // Smooth scroll setup
@@ -174,7 +175,7 @@ const QueryDailyPrototype: React.FC = () => {
         </div>
       </div>
 
-      {/* Problem Section */}
+      {/* Problem Section - Varied Card Layout */}
       <div id="why" className={`${styles.section} ${styles.problem}`}>
         <div className={styles.sectionContainer}>
           <h2 className={styles.sectionTitle}>혹시 당신의 이야기인가요?</h2>
@@ -182,21 +183,41 @@ const QueryDailyPrototype: React.FC = () => {
             "코드는 돌아가는데, 제 경력은 설명이 안됩니다."
           </p>
 
-          <div className={styles.problemsGrid}>
-            <div className={styles.problemCard}>
+          <div className={styles.problemsVariedGrid}>
+            {/* Featured Main Problem */}
+            <div className={`${styles.problemCard} ${styles.problemCardFeatured}`}>
               <div className={styles.problemIcon}>🤔</div>
               <h3>"왜 썼죠?"</h3>
               <p>분명 내가 사용한 기술인데, '왜?'라는 질문 앞에서는 말문이 막힙니다.</p>
+              <div className={styles.problemQuote}>
+                "Spring Security를 사용하신 이유가 뭔가요?"<br/>
+                "어... 그냥... 인증이 필요해서요..."<br/>
+                <span className={styles.problemQuoteAuthor}>- 실제 면접 현장에서</span>
+              </div>
             </div>
-            <div className={styles.problemCard}>
-              <div className={styles.problemIcon}>🤯</div>
-              <h3>"그래서 뭘 했죠?"</h3>
-              <p>내 프로젝트는 너무 평범해서, 뭘 어떻게 어필해야 할지 모르겠습니다.</p>
-            </div>
-            <div className={styles.problemCard}>
-              <div className={styles.problemIcon}>📚</div>
-              <h3>"어떻게 다르죠?"</h3>
-              <p>분명 Spring의 동작 원리는 아는데, 이걸 제 프로젝트 경험과 연결하지 못하겠습니다.</p>
+
+            {/* Secondary Problems */}
+            <div className={styles.problemsSecondaryGrid}>
+              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
+                <div className={styles.problemIcon}>🤯</div>
+                <h3>"그래서 뭘 했죠?"</h3>
+                <p>내 프로젝트는 너무 평범해서, 뭘 어떻게 어필해야 할지 모르겠습니다.</p>
+              </div>
+              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
+                <div className={styles.problemIcon}>📚</div>
+                <h3>"어떻게 다르죠?"</h3>
+                <p>분명 Spring의 동작 원리는 아는데, 이걸 제 프로젝트 경험과 연결하지 못하겠습니다.</p>
+              </div>
+              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
+                <div className={styles.problemIcon}>😰</div>
+                <h3>"긴장하면 백지"</h3>
+                <p>집에서는 잘 아는데, 면접장에서는 머릿속이 하얘집니다.</p>
+              </div>
+              <div className={`${styles.problemCard} ${styles.problemCardSecondary}`}>
+                <div className={styles.problemIcon}>🎯</div>
+                <h3>"뭘 물어볼까?"</h3>
+                <p>면접관이 뭘 원하는지, 어떻게 대답해야 할지 감이 안 잡힙니다.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -229,44 +250,55 @@ const QueryDailyPrototype: React.FC = () => {
         </div>
       </div>
 
-      {/* How It Works Section */}
+      {/* How It Works Section - Vertical Timeline */}
       <div id="how-it-works" className={`${styles.section} ${styles.howItWorks}`}>
         <div className={styles.sectionContainer}>
           <h2 className={styles.sectionTitle}>어떻게 작동하나요?</h2>
           <p className={styles.sectionSubtitle}>단 3단계로 시작하는 챌린지</p>
 
-          <div className={styles.steps}>
-            <div className={styles.step}>
-              <div className={styles.stepIcon}>
-                <span>📄</span>
+          <div className={styles.timeline}>
+            <div className={styles.timelineItem}>
+              <div className={styles.timelineMarker}>
+                <div className={styles.timelineNumber}>1</div>
+                <div className={styles.timelineIcon}>📄</div>
               </div>
-              <div className={styles.stepContent}>
-                <h3 className={styles.stepTitle}>이력서 제출</h3>
-                <p className={styles.stepDesc}>당신의 경험이 세상에 하나뿐인 면접 질문지가 됩니다.</p>
-              </div>
-            </div>
-
-            <div className={styles.stepArrow}>→</div>
-
-            <div className={styles.step}>
-              <div className={styles.stepIcon}>
-                <span>👨‍🏫</span>
-              </div>
-              <div className={styles.stepContent}>
-                <h3 className={styles.stepTitle}>매일 질문 수신</h3>
-                <p className={styles.stepDesc}>7일 동안 매일 아침, 전문가가 당신을 위한 질문을 준비합니다.</p>
+              <div className={styles.timelineContent}>
+                <h3 className={styles.timelineTitle}>이력서 제출</h3>
+                <p className={styles.timelineDesc}>당신의 경험이 세상에 하나뿐인 면접 질문지가 됩니다.</p>
+                <div className={styles.timelineDetail}>
+                  <span className={styles.timelineTiming}>⏱ 소요 시간: 30초</span>
+                  <span className={styles.timelineNote}>PDF 파일로 간단하게</span>
+                </div>
               </div>
             </div>
 
-            <div className={styles.stepArrow}>→</div>
-
-            <div className={styles.step}>
-              <div className={styles.stepIcon}>
-                <span>📧</span>
+            <div className={styles.timelineItem}>
+              <div className={styles.timelineMarker}>
+                <div className={styles.timelineNumber}>2</div>
+                <div className={styles.timelineIcon}>👨‍🏫</div>
               </div>
-              <div className={styles.stepContent}>
-                <h3 className={styles.stepTitle}>성장의 시작</h3>
-                <p className={styles.stepDesc}>질문에 스스로 답을 고민하는 과정에서, 당신의 경험은 비로소 날카로운 무기가 됩니다. 우리는 당신의 머릿속을 가장 효과적으로 자극합니다.</p>
+              <div className={styles.timelineContent}>
+                <h3 className={styles.timelineTitle}>매일 질문 수신</h3>
+                <p className={styles.timelineDesc}>7일 동안 매일 아침, 전문가가 당신을 위한 질문을 준비합니다.</p>
+                <div className={styles.timelineDetail}>
+                  <span className={styles.timelineTiming}>📅 매일 오전 10시</span>
+                  <span className={styles.timelineNote}>이메일로 편하게</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.timelineItem}>
+              <div className={styles.timelineMarker}>
+                <div className={styles.timelineNumber}>3</div>
+                <div className={styles.timelineIcon}>🚀</div>
+              </div>
+              <div className={styles.timelineContent}>
+                <h3 className={styles.timelineTitle}>성장의 시작</h3>
+                <p className={styles.timelineDesc}>질문에 스스로 답을 고민하는 과정에서, 당신의 경험은 비로소 날카로운 무기가 됩니다.</p>
+                <div className={styles.timelineDetail}>
+                  <span className={styles.timelineTiming}>💎 7일 후 변화</span>
+                  <span className={styles.timelineNote}>면접 자신감 상승</span>
+                </div>
               </div>
             </div>
           </div>
@@ -296,46 +328,100 @@ const QueryDailyPrototype: React.FC = () => {
         </div>
       </div>
 
-      {/* Question Types Section */}
+      {/* Question Types Section - Tabbed Interface */}
       <div className={`${styles.section} ${styles.questionTypes}`}>
         <div className={styles.sectionContainer}>
           <h2 className={styles.sectionTitle}>어떤 질문들을 받게 되나요?</h2>
           <p className={styles.sectionSubtitle}>실제 면접관들이 자주 묻는 3가지 유형</p>
 
-          <div className={styles.questionsGrid}>
-            <div className={styles.questionCard}>
-              <div className={styles.questionBadge}>Type 1</div>
-              <h3 className={styles.questionType}>🔗 경험 연결형</h3>
-              <p className={styles.questionExample}>
-                "JPA 쓰면서 '차라리 SQL 짜는게 나았겠다' 싶었던 순간은 언제였나요?"
-              </p>
-              <div className={styles.questionInsight}>
-                <strong>면접관의 의도:</strong> 기술 선택의 후회와 실제 경험 확인
-              </div>
-            </div>
+          {/* Tab Navigation */}
+          <div className={styles.questionTabs}>
+            <button
+              className={`${styles.questionTab} ${activeQuestionTab === 0 ? styles.questionTabActive : ''}`}
+              onClick={() => setActiveQuestionTab(0)}
+            >
+              <span className={styles.tabIcon}>🔗</span>
+              <span className={styles.tabLabel}>경험 연결형</span>
+            </button>
+            <button
+              className={`${styles.questionTab} ${activeQuestionTab === 1 ? styles.questionTabActive : ''}`}
+              onClick={() => setActiveQuestionTab(1)}
+            >
+              <span className={styles.tabIcon}>⚖️</span>
+              <span className={styles.tabLabel}>트레이드오프형</span>
+            </button>
+            <button
+              className={`${styles.questionTab} ${activeQuestionTab === 2 ? styles.questionTabActive : ''}`}
+              onClick={() => setActiveQuestionTab(2)}
+            >
+              <span className={styles.tabIcon}>🎯</span>
+              <span className={styles.tabLabel}>상황 가정형</span>
+            </button>
+          </div>
 
-            <div className={styles.questionCard}>
-              <div className={styles.questionBadge}>Type 2</div>
-              <h3 className={styles.questionType}>⚖️ 트레이드오프형</h3>
-              <p className={styles.questionExample}>
-                "성능 최적화했더니 코드 가독성이 망가졌는데, 그게 맞는 선택이었나요?"
-              </p>
-              <div className={styles.questionInsight}>
-                <strong>면접관의 의도:</strong> 트레이드오프 인식과 의사결정 판단력
+          {/* Tab Content */}
+          <div className={styles.questionTabContent}>
+            {activeQuestionTab === 0 && (
+              <div className={styles.questionTabPanel}>
+                <div className={styles.questionBadge}>Type 1</div>
+                <h3 className={styles.questionType}>🔗 경험 연결형</h3>
+                <p className={styles.questionExample}>
+                  "JPA 쓰면서 '차라리 SQL 짜는게 나았겠다' 싶었던 순간은 언제였나요?"
+                </p>
+                <div className={styles.questionInsight}>
+                  <strong>면접관의 의도:</strong> 기술 선택의 후회와 실제 경험 확인
+                </div>
+                <div className={styles.additionalExamples}>
+                  <h4>다른 예시들:</h4>
+                  <ul>
+                    <li>"왜 Spring Boot를 선택하셨나요? Express.js는 고려해보셨나요?"</li>
+                    <li>"이력서에 작성하신 '성능 개선'이 정확히 어떤 지표를 개선한 건가요?"</li>
+                    <li>"Redis 도입 후 장애가 발생한 적이 있나요? 어떻게 대응하셨죠?"</li>
+                  </ul>
+                </div>
               </div>
-            </div>
-
-            <div className={styles.questionCard}>
-              <div className={styles.questionBadge}>Type 3</div>
-              <h3 className={styles.questionType}>🎯 상황 가정형</h3>
-              <p className={styles.questionExample}>
-                "Spring Batch로 대용량 데이터를 처리하던 중 OOM이 발생한다면,
-                어떤 순서로 문제를 진단하고 해결하시겠습니까?"
-              </p>
-              <div className={styles.questionInsight}>
-                <strong>면접관의 의도:</strong> 문제 해결 접근법, 실무 대처 능력
+            )}
+            {activeQuestionTab === 1 && (
+              <div className={styles.questionTabPanel}>
+                <div className={styles.questionBadge}>Type 2</div>
+                <h3 className={styles.questionType}>⚖️ 트레이드오프형</h3>
+                <p className={styles.questionExample}>
+                  "성능 최적화했더니 코드 가독성이 망가졌는데, 그게 맞는 선택이었나요?"
+                </p>
+                <div className={styles.questionInsight}>
+                  <strong>면접관의 의도:</strong> 트레이드오프 인식과 의사결정 판단력
+                </div>
+                <div className={styles.additionalExamples}>
+                  <h4>다른 예시들:</h4>
+                  <ul>
+                    <li>"MSA로 전환하면서 복잡도가 증가했는데, 그만한 가치가 있었나요?"</li>
+                    <li>"JPA의 편리함 vs Native Query의 성능, 어떤 기준으로 선택하시나요?"</li>
+                    <li>"테스트 커버리지 100%가 정말 필요한가요? 시간 대비 효율은요?"</li>
+                  </ul>
+                </div>
               </div>
-            </div>
+            )}
+            {activeQuestionTab === 2 && (
+              <div className={styles.questionTabPanel}>
+                <div className={styles.questionBadge}>Type 3</div>
+                <h3 className={styles.questionType}>🎯 상황 가정형</h3>
+                <p className={styles.questionExample}>
+                  "Spring Batch로 대용량 데이터를 처리하던 중 OOM이 발생한다면,
+                  어떤 순서로 문제를 진단하고 해결하시겠습니까?"
+                </p>
+                <div className={styles.questionInsight}>
+                  <strong>면접관의 의도:</strong> 문제 해결 접근법, 실무 대처 능력
+                </div>
+                <div className={styles.additionalExamples}>
+                  <h4>다른 예시들:</h4>
+                  <ul>
+                    <li>"배포 직후 API 응답속도가 10배 느려졌어요. 어떻게 접근하시겠어요?"</li>
+                    <li>"DB 커넥션 풀이 고갈되는 상황, 당장 어떻게 대응하실 건가요?"</li>
+                    <li>"코드리뷰에서 시니어와 의견 충돌이 생긴다면 어떻게 하시겠어요?"</li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

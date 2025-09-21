@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryDaily - 매일 성장하는 면접 준비</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">
+                    <span class="logo-text">Query<span class="logo-accent">Daily</span></span>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#how-it-works" class="nav-link">진행 방식</a>
+                    <a href="#pricing" class="nav-link">요금</a>
+                    <a href="#apply" class="nav-link nav-link-cta">무료 챌린지 신청</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="badge">선착순 10명 한정</div>
+                <h1 class="hero-title">
+                    당신의 이력서로<br>
+                    <span class="text-gradient">매일 면접 질문</span>을<br>
+                    보내드립니다
+                </h1>
+                <p class="hero-subtitle">
+                    주니어 개발자를 위한 이력서 기반 맞춤형 면접 준비 서비스<br>
+                    5일간 무료로 당신의 면접 근육을 단련시켜 드립니다
+                </p>
+                <div class="hero-cta">
+                    <a href="#apply" class="btn btn-primary">무료 챌린지 시작하기</a>
+                    <p class="cta-note">• 신청 마감까지 <span id="spots-left">7</span>자리 남음</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section how-it-works">
+        <div class="container">
+            <h2 class="section-title">이렇게 진행됩니다</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <h3 class="step-title">이력서 제출</h3>
+                    <p class="step-desc">현재 사용 중인 이력서를 업로드해주세요. PDF 형식을 권장합니다.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <h3 class="step-title">매일 아침 10시</h3>
+                    <p class="step-desc">이력서 기반으로 날카로운 면접 질문 1개를 이메일로 발송합니다.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <h3 class="step-title">답변 준비</h3>
+                    <p class="step-desc">질문에 대한 답변을 고민하며 실제 면접처럼 준비해보세요.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">04</div>
+                    <h3 class="step-title">프리미엄 가이드</h3>
+                    <p class="step-desc">막막하다면? 현직자의 모범 답변 가이드를 확인할 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Questions Section -->
+    <section class="section sample-questions">
+        <div class="container">
+            <h2 class="section-title">이런 질문들을 받게 됩니다</h2>
+            <div class="questions-grid">
+                <div class="question-card">
+                    <div class="question-tag">경험 연결</div>
+                    <p class="question-text">"React에서 상태 관리를 위해 Redux를 선택하신 이유는 무엇인가요? 다른 대안들과 비교했을 때 어떤 트레이드오프가 있었나요?"</p>
+                </div>
+                <div class="question-card">
+                    <div class="question-tag">트레이드오프</div>
+                    <p class="question-text">"마이크로서비스 아키텍처 도입 경험에서, 실제로 겪었던 가장 큰 challenge는 무엇이었고 어떻게 해결하셨나요?"</p>
+                </div>
+                <div class="question-card">
+                    <div class="question-tag">상황 가정</div>
+                    <p class="question-text">"프로덕션 환경에서 갑자기 메모리 누수가 발생한다면, 어떤 순서로 문제를 진단하고 해결하시겠습니까?"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section pricing">
+        <div class="container">
+            <h2 class="section-title">심화 콘텐츠 요금</h2>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3 class="pricing-title">프리미엄 답변 패키지</h3>
+                    <div class="price">₩4,900<span class="price-unit">/건</span></div>
+                    <ul class="pricing-features">
+                        <li>✓ 질문 의도 분석</li>
+                        <li>✓ 핵심 키워드 및 구조 제시</li>
+                        <li>✓ 3가지 페르소나별 모범 답변</li>
+                        <li>✓ STAR 기법 적용 가이드</li>
+                    </ul>
+                    <button class="btn btn-secondary">챌린지 중 구매 가능</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">인기</div>
+                    <h3 class="pricing-title">프리미엄 구독</h3>
+                    <div class="price">₩9,900<span class="price-unit">/월</span></div>
+                    <ul class="pricing-features">
+                        <li>✓ 매일 3개 질문 제공</li>
+                        <li>✓ 모든 질문에 꼬리 질문 추가</li>
+                        <li>✓ 전체 예상 질문 50개 리스트</li>
+                        <li>✓ 모든 답변 가이드 무제한</li>
+                    </ul>
+                    <button class="btn btn-primary">곧 출시 예정</button>
+                </div>
+                <div class="pricing-card">
+                    <h3 class="pricing-title">1:1 모의 면접</h3>
+                    <div class="price">₩49,000<span class="price-unit">/30분</span></div>
+                    <ul class="pricing-features">
+                        <li>✓ 현직 시니어 개발자와 진행</li>
+                        <li>✓ 실시간 피드백 제공</li>
+                        <li>✓ 맞춤형 개선 포인트 분석</li>
+                        <li>✓ 녹화본 제공 (복습용)</li>
+                    </ul>
+                    <button class="btn btn-secondary">챌린지 후 이용 가능</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section id="apply" class="section apply">
+        <div class="container">
+            <div class="apply-card">
+                <h2 class="section-title">5일 무료 챌린지 신청</h2>
+                <p class="apply-subtitle">지금 신청하면 내일부터 시작됩니다</p>
+
+                <form id="application-form" class="application-form">
+                    <div class="form-group">
+                        <label for="name">이름 *</label>
+                        <input type="text" id="name" name="name" required placeholder="홍길동">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">이메일 *</label>
+                        <input type="email" id="email" name="email" required placeholder="example@gmail.com">
+                        <p class="form-hint">매일 이 이메일로 질문을 보내드립니다</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="resume">이력서 업로드 *</label>
+                        <div class="file-upload">
+                            <input type="file" id="resume" name="resume" accept=".pdf,.docx" required>
+                            <label for="resume" class="file-upload-label">
+                                <span class="file-upload-icon">📄</span>
+                                <span class="file-upload-text">파일 선택 (PDF 권장)</span>
+                            </label>
+                            <p class="file-name" id="file-name"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" required>
+                            <span>개인정보 수집 및 이용에 동의합니다</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit">무료 챌린지 신청하기</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-text">Query<span class="logo-accent">Daily</span></span>
+                    <p>매일 성장하는 면접 준비</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#">이용약관</a>
+                    <a href="#">개인정보처리방침</a>
+                    <a href="#">문의: querydaily@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">✨ 신청이 완료되었습니다!</h2>
+            <p class="modal-text">첫 질문은 내일 오전 10시에 발송됩니다.<br>스팸 메일함도 꼭 확인해주세요.</p>
+            <button class="btn btn-primary" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

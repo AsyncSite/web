@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryDaily - Prototype Versions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .versions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .version-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .version-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .version-header {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .version-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .version-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+
+        .version-desc {
+            color: #636e72;
+            line-height: 1.6;
+        }
+
+        .version-features {
+            padding: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            color: #495057;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #c3e88d;
+            color: #2d3436;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            margin-right: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .version-1 .feature-list li::before {
+            background: #c3e88d;
+        }
+
+        .version-2 .feature-list li::before {
+            background: #667eea;
+            color: white;
+        }
+
+        .version-3 .feature-list li::before {
+            background: #000;
+            color: white;
+        }
+
+        .version-actions {
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border-color: #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .version-1 .btn-primary {
+            background: #c3e88d;
+            color: #0d0d0d;
+        }
+
+        .version-1 .btn-primary:hover {
+            background: #a8d378;
+        }
+
+        .version-3 .btn-primary {
+            background: #000;
+            color: white;
+        }
+
+        .version-3 .btn-primary:hover {
+            background: #333;
+        }
+
+        .comparison-table {
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 60px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .table-header {
+            background: #2d3436;
+            color: white;
+            padding: 20px 30px;
+        }
+
+        .table-header h2 {
+            font-size: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 30px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        td {
+            color: #636e72;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-dark {
+            background: #2d3436;
+            color: white;
+        }
+
+        .badge-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .badge-mono {
+            background: #000;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .versions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.875rem;
+            }
+
+            th, td {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>QueryDaily Prototypes</h1>
+        <p>이력서 기반 맞춤형 면접 준비 서비스 - 3가지 디자인 프로토타입</p>
+    </div>
+
+    <div class="versions-grid">
+        <!-- Version 1 -->
+        <div class="version-card version-1">
+            <div class="version-header">
+                <span class="version-number">Version 1</span>
+                <h2 class="version-title">AsyncSite Matching</h2>
+                <p class="version-desc">기존 AsyncSite 디자인 시스템과 완벽하게 일치하는 버전</p>
+            </div>
+            <div class="version-features">
+                <ul class="feature-list">
+                    <li>다크 테마 (#0d0d0d 배경)</li>
+                    <li>연두색 주요 강조색 (#c3e88d)</li>
+                    <li>미니멀한 디자인 언어</li>
+                    <li>Inter 폰트 사용</li>
+                    <li>부드러운 애니메이션</li>
+                </ul>
+            </div>
+            <div class="version-actions">
+                <a href="version-1-matching/index.html" class="btn btn-primary">View Demo</a>
+            </div>
+        </div>
+
+        <!-- Version 2 -->
+        <div class="version-card version-2">
+            <div class="version-header">
+                <span class="version-number">Version 2</span>
+                <h2 class="version-title">Gradient Variant</h2>
+                <p class="version-desc">그라디언트와 글래스모피즘을 활용한 모던한 변형</p>
+            </div>
+            <div class="version-features">
+                <ul class="feature-list">
+                    <li>라이트 테마 기반</li>
+                    <li>다채로운 그라디언트</li>
+                    <li>글래스모피즘 효과</li>
+                    <li>Outfit 폰트 사용</li>
+                    <li>플로팅 애니메이션</li>
+                </ul>
+            </div>
+            <div class="version-actions">
+                <a href="version-2-variant/index.html" class="btn btn-primary">View Demo</a>
+            </div>
+        </div>
+
+        <!-- Version 3 -->
+        <div class="version-card version-3">
+            <div class="version-header">
+                <span class="version-number">Version 3</span>
+                <h2 class="version-title">Brutalist Innovation</h2>
+                <p class="version-desc">브루탈리즘 스타일의 혁신적이고 대담한 디자인</p>
+            </div>
+            <div class="version-features">
+                <ul class="feature-list">
+                    <li>모노크롬 색상 팔레트</li>
+                    <li>타이포그래피 중심</li>
+                    <li>기하학적 레이아웃</li>
+                    <li>Space Mono 폰트</li>
+                    <li>터미널 스타일 UI</li>
+                </ul>
+            </div>
+            <div class="version-actions">
+                <a href="version-3-innovative/index.html" class="btn btn-primary">View Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="comparison-table">
+        <div class="table-header">
+            <h2>디자인 비교표</h2>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>특징</th>
+                    <th>Version 1</th>
+                    <th>Version 2</th>
+                    <th>Version 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>테마</strong></td>
+                    <td><span class="badge badge-dark">다크</span></td>
+                    <td><span class="badge badge-gradient">라이트</span></td>
+                    <td><span class="badge badge-mono">모노크롬</span></td>
+                </tr>
+                <tr>
+                    <td><strong>주요 색상</strong></td>
+                    <td>연두색 (#c3e88d)</td>
+                    <td>퍼플 그라디언트</td>
+                    <td>블랙 & 화이트</td>
+                </tr>
+                <tr>
+                    <td><strong>타이포그래피</strong></td>
+                    <td>Inter</td>
+                    <td>Outfit, Space Grotesk</td>
+                    <td>Space Mono, Work Sans</td>
+                </tr>
+                <tr>
+                    <td><strong>디자인 스타일</strong></td>
+                    <td>미니멀리즘</td>
+                    <td>네오모피즘/글래스모피즘</td>
+                    <td>브루탈리즘</td>
+                </tr>
+                <tr>
+                    <td><strong>애니메이션</strong></td>
+                    <td>서브틀, 페이드인</td>
+                    <td>다이나믹, 플로팅</td>
+                    <td>글리치, 타이핑</td>
+                </tr>
+                <tr>
+                    <td><strong>타겟 느낌</strong></td>
+                    <td>전문적, 신뢰감</td>
+                    <td>친근함, 모던함</td>
+                    <td>혁신적, 테크니컬</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Add some interactivity
+        document.querySelectorAll('.version-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 200);
+        });
+
+        // Log prototype info
+        console.log('QueryDaily Prototypes Loaded');
+        console.log('Version 1: AsyncSite Matching Design');
+        console.log('Version 2: Gradient Variant Design');
+        console.log('Version 3: Brutalist Innovation Design');
+    </script>
+</body>
+</html>
