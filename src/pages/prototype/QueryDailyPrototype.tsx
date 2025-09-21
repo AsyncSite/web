@@ -583,78 +583,98 @@ const QueryDailyPrototype: React.FC = () => {
                 icon: '🤔',
                 question: '정말 내 이력서에 맞는 질문이 올까요?',
                 answer: (
-                  <>
-                    네, <strong>현직 면접관 수준의 전문가로 파인 튜닝한 AI</strong>가<br/>
-                    당신의 기술 스택, 프로젝트 경험, 사용한 라이브러리까지 분석해서 실제 면접관이 물어볼 만한 꼬리 질문을 생성합니다.
-                    <br/><br/>
-                    ❌ "왜 Spring Security를 썼나요?" 같은 뻔한 질문이 아닌,<br/>
-                    ✅ "JWT 인증 방식에서 Refresh Token을 사용하셨나요?<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;만약 사용했다면 어디에 어떻게 저장하셨고,<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;그 이유는 무엇인가요?"<br/>
-                    같은 <strong>날카로운 질문</strong>을 받게 됩니다.
-                  </>
+                  <div className={styles.faqAnswerContent}>
+                    <p>네, <strong>현직 면접관 수준의 전문가로 파인 튜닝한 AI</strong>가 당신의 기술 스택, 프로젝트 경험, 사용한 라이브러리까지 분석해서 실제 면접관이 물어볼 만한 꼬리 질문을 생성합니다.</p>
+
+                    <div className={styles.faqComparison}>
+                      <div className={styles.faqBad}>
+                        <span className={styles.faqLabel}>❌ 뻔한 질문</span>
+                        <div className={styles.faqExample}>"왜 Spring Security를 썼나요?"</div>
+                      </div>
+                      <div className={styles.faqGood}>
+                        <span className={styles.faqLabel}>✅ 날카로운 질문</span>
+                        <div className={styles.faqExample}>
+                          "JWT 인증 방식에서 Refresh Token을 사용하셨나요? 만약 사용했다면 어디에 어떻게 저장하셨고, 그 이유는 무엇인가요?"
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 )
               },
               {
                 icon: '⏰',
                 question: '7일이면 충분한가요?',
                 answer: (
-                  <>
-                    <strong>7일은 시작입니다.</strong><br/>
-                    이 기간 동안 당신은 자신의 약점을 명확히 파악하고,<br/>
-                    어떤 부분을 보강해야 할지 알게 됩니다.
-                    <br/><br/>
-                    📌 <strong>핵심은 깊이입니다</strong><br/>
-                    매일 단 하나의 질문에 깊이 고민하는 것이<br/>
-                    100개의 질문을 훑어보는 것보다 효과적입니다.
-                  </>
+                  <div className={styles.faqAnswerContent}>
+                    <p><strong>7일은 시작입니다.</strong></p>
+                    <p>이 기간 동안 당신은 자신의 약점을 명확히 파악하고, 어떤 부분을 보강해야 할지 알게 됩니다.</p>
+
+                    <div className={styles.faqHighlight}>
+                      <span className={styles.faqHighlightIcon}>📌</span>
+                      <div>
+                        <strong>핵심은 깊이입니다</strong>
+                        <p>매일 단 하나의 질문에 깊이 고민하는 것이 100개의 질문을 훑어보는 것보다 효과적입니다.</p>
+                      </div>
+                    </div>
+                  </div>
                 )
               },
               {
                 icon: '💭',
                 question: '답변 가이드 없이 혼자 할 수 있을까요?',
                 answer: (
-                  <>
-                    <strong>오히려 그래서 효과적입니다.</strong><br/>
-                    스스로 고민하고 답을 찾는 과정에서<br/>
-                    진짜 <strong>'면접 근육'</strong>이 생깁니다.
-                    <br/><br/>
-                    💪 답변이 궁금하다면<br/>
-                    7일 후 '인터뷰 패스' 플랜으로 업그레이드하실 수 있습니다.<br/>
-                    하지만 <strong>먼저 스스로 생각해보는 시간</strong>이 꼭 필요합니다.
-                  </>
+                  <div className={styles.faqAnswerContent}>
+                    <p><strong>오히려 그래서 효과적입니다.</strong></p>
+                    <p>스스로 고민하고 답을 찾는 과정에서 진짜 <strong>'면접 근육'</strong>이 생깁니다.</p>
+
+                    <div className={styles.faqNote}>
+                      <span className={styles.faqNoteIcon}>💪</span>
+                      <div>
+                        <p>답변이 궁금하다면 7일 후 '인터뷰 패스' 플랜으로 업그레이드하실 수 있습니다.</p>
+                        <p>하지만 <strong>먼저 스스로 생각해보는 시간</strong>이 꼭 필요합니다.</p>
+                      </div>
+                    </div>
+                  </div>
                 )
               },
               {
                 icon: '🎯',
                 question: '어떤 사람에게 가장 효과적인가요?',
                 answer: (
-                  <>
-                    <strong>이런 분들께 가장 효과적입니다:</strong>
-                    <br/><br/>
-                    ✅ 이력서는 준비됐지만 <strong>면접이 막막한</strong> 주니어 개발자<br/>
-                    ✅ 특히 <strong>1-3년차 개발자</strong>분들<br/>
-                    ✅ 코드는 잘 짜지만 <strong>왜 그렇게 짰는지</strong> 설명하기 어려우신 분<br/>
-                    ✅ 기술 선택의 이유를 <strong>논리적으로 설명</strong>하고 싶으신 분
-                  </>
+                  <div className={styles.faqAnswerContent}>
+                    <p><strong>이런 분들께 가장 효과적입니다:</strong></p>
+
+                    <ul className={styles.faqCheckList}>
+                      <li>이력서는 준비됐지만 <strong>면접이 막막한</strong> 주니어 개발자</li>
+                      <li>특히 <strong>1-3년차 개발자</strong>분들</li>
+                      <li>코드는 잘 짜지만 <strong>왜 그렇게 짰는지</strong> 설명하기 어려우신 분</li>
+                      <li>기술 선택의 이유를 <strong>논리적으로 설명</strong>하고 싶으신 분</li>
+                    </ul>
+                  </div>
                 )
               },
               {
                 icon: '🌐',
                 question: 'Java/Spring이 아닌 다른 기술 스택도 지원하나요?',
                 answer: (
-                  <>
-                    <strong>현재는 Java/Spring 백엔드 개발자를 위한 베타 테스트 중입니다.</strong>
-                    <br/><br/>
-                    📅 <strong>향후 지원 예정 기술 스택:</strong><br/>
-                    • Python/Django, FastAPI<br/>
-                    • Node.js/Express, NestJS<br/>
-                    • Go (Gin, Echo)<br/>
-                    • Ruby on Rails<br/>
-                    <br/>
-                    💡 다른 기술 스택 개발자시라면,<br/>
-                    이메일을 남겨주시면 <strong>해당 스택 오픈 시 우선 안내</strong>해드리겠습니다.
-                  </>
+                  <div className={styles.faqAnswerContent}>
+                    <p><strong>현재는 Java/Spring 백엔드 개발자를 위한 베타 테스트 중입니다.</strong></p>
+
+                    <div className={styles.faqRoadmap}>
+                      <h4>📅 향후 지원 예정 기술 스택</h4>
+                      <ul>
+                        <li>Python/Django, FastAPI</li>
+                        <li>Node.js/Express, NestJS</li>
+                        <li>Go (Gin, Echo)</li>
+                        <li>Ruby on Rails</li>
+                      </ul>
+                    </div>
+
+                    <div className={styles.faqTip}>
+                      <span className={styles.faqTipIcon}>💡</span>
+                      <p>다른 기술 스택 개발자시라면, 이메일을 남겨주시면 <strong>해당 스택 오픈 시 우선 안내</strong>해드리겠습니다.</p>
+                    </div>
+                  </div>
                 )
               }
             ].map((faq, index) => (
