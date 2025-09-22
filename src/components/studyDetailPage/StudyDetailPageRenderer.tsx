@@ -504,6 +504,33 @@ const StudyDetailPageRenderer: React.FC = () => {
                 )}
                 {studyData.status === 'IN_PROGRESS' && (
                   <>
+                    <span className={styles.statusIcon}>📚</span>
+                    <div className={styles.statusInfo}>
+                      <h3>진행 중인 스터디입니다</h3>
+                      <p>{getStudyDisplayInfo(
+                        studyData.status,
+                        studyData.recruitDeadline,
+                        studyData.startDate,
+                        studyData.endDate,
+                        studyData.capacity,
+                        studyData.enrolled
+                      ).canApply
+                        ? `마감일: ${studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '상시 모집'}`
+                        : '현재 활발히 진행되고 있습니다'}</p>
+                    </div>
+                    {/* 스터디 제안자를 위한 관리 버튼 */}
+                    {user && studyData.proposerId === user.email && (
+                      <button
+                        className={styles.manageButton}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          navigate(`/study/${studyData.id}/manage`);
+                        }}
+                      >
+                        🎛️ 스터디 관리
+                      </button>
+                    )}
                     {/* IN_PROGRESS 상태에서도 조건부 신청 가능 */}
                     {(!user || studyData.proposerId !== user.email) &&
                      applicationStatus === 'none' &&
@@ -514,7 +541,7 @@ const StudyDetailPageRenderer: React.FC = () => {
                        studyData.endDate,
                        studyData.capacity,
                        studyData.enrolled
-                     ).canApply ? (
+                     ).canApply && (
                       <button
                         className={styles.applyButton}
                         onClick={(e) => {
@@ -529,23 +556,8 @@ const StudyDetailPageRenderer: React.FC = () => {
                           navigate(`/study/${studyData.id}/apply`);
                         }}
                       >
-                        스터디 참가 신청하기
+                        참가 신청하기
                       </button>
-                    ) : (
-                      <>
-                        <span className={styles.statusIcon}>📚</span>
-                        <div className={styles.statusInfo}>
-                          <h3>진행 중인 스터디입니다</h3>
-                          <p>{getStudyDisplayInfo(
-                            studyData.status,
-                            studyData.recruitDeadline,
-                            studyData.startDate,
-                            studyData.endDate,
-                            studyData.capacity,
-                            studyData.enrolled
-                          ).canApply ? '신청 가능한 스터디입니다' : '현재 활발히 진행되고 있습니다'}</p>
-                        </div>
-                      </>
                     )}
                   </>
                 )}
