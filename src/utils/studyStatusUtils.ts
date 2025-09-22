@@ -88,10 +88,22 @@ export function getStudyDisplayInfo(
       };
 
     case 'IN_PROGRESS':
+      // IN_PROGRESS 상태에서도 조건부 모집 가능 (백엔드와 일치)
+      // recruit_deadline이 NULL이면 상시 모집, 정원 체크
+      let canApplyInProgress = false;
+
+      // 마감일이 없거나 아직 지나지 않았으면
+      if (!deadlineDate || deadlineDate >= now) {
+        // 정원이 없거나 정원이 남아있으면 신청 가능
+        if (!capacity || (enrolled !== undefined && enrolled < capacity)) {
+          canApplyInProgress = true;
+        }
+      }
+
       return {
-        label: '진행 중',
+        label: canApplyInProgress ? '진행 중 (모집 중)' : '진행 중',
         color: 'blue',
-        canApply: false,
+        canApply: canApplyInProgress,
         isActive: true,
         showReviewButton: false
       };
