@@ -222,10 +222,10 @@ const StudyApplicationPage: React.FC = () => {
     }
 
     // 유료 스터디가 아닌 경우 바로 신청 진행
-    if (!isPaidStudy) {
+    // if (!isPaidStudy) {
       await submitApplication();
       return;
-    }
+    // }
 
     // 유료 스터디인 경우 결제는 CheckoutButton에서 처리됨
     // 여기서는 아무것도 하지 않음 (CheckoutButton 클릭 시 결제 진행)
@@ -371,7 +371,7 @@ const StudyApplicationPage: React.FC = () => {
               취소
             </button>
             
-            {isPaidStudy ? (
+            {/* {isPaidStudy ? (
               <CheckoutButton
                 variant="primary"
                 size="large"
@@ -400,7 +400,7 @@ const StudyApplicationPage: React.FC = () => {
                 disabled={isSubmitting}
                 className="submit-button"
               />
-            ) : (
+            ) : ( */}
               <button 
                 type="submit" 
                 className="submit-button"
@@ -408,7 +408,6 @@ const StudyApplicationPage: React.FC = () => {
               >
                 {isSubmitting ? '신청 중...' : '참여 신청하기'}
               </button>
-            )}
           </div>
         </form>
 
