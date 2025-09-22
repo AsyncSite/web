@@ -25,9 +25,6 @@ const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
 const CheckoutTestPage = lazy(() => import('../pages/CheckoutTestPage'));
 // MockPaymentPage 제거
 
-// Prototype pages (hidden routes)
-const QueryDailyPrototype = lazy(() => import('../pages/prototype/QueryDailyPrototype'));
-
 // Studio components
 const DocuMentor = lazy(() => import('../components/lab/ai-studio/documentor/DocuMentor'));
 
@@ -117,10 +114,6 @@ const router = createBrowserRouter([
           },
           // Add more studio routes here in the future
         ],
-      },
-      {
-        path: 'prototype/querydaily',
-        element: <QueryDailyPrototype />,
       },
       {
         path: '/',
