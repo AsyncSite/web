@@ -36,7 +36,17 @@ const router = createBrowserRouter([
         <ScrollRestoration
           getKey={(location, matches) => {
             // 각 페이지마다 고유한 키를 생성하여 스크롤 위치를 독립적으로 관리
-            return location.pathname + location.search;
+            // 중첩 라우트와 직접 라우트 모두에 대해 일관된 키 생성
+            const key = location.pathname + location.search;
+
+            // 중첩 라우트의 경우 더 구체적인 키 생성
+            if (matches.length > 2) {
+              // 가장 구체적인 매치의 경로를 사용
+              const specificMatch = matches[matches.length - 1];
+              return `${key}-${specificMatch.pathname}`;
+            }
+
+            return key;
           }}
         />
         <App />
