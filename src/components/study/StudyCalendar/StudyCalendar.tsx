@@ -15,7 +15,7 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hoveredEvent, setHoveredEvent] = useState<StudyCalendarEvent | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number; isReady: boolean }>({ x: 0, y: 0, isReady: false });
+  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [modalEvents, setModalEvents] = useState<StudyCalendarEvent[] | null>(null);
   const [modalDate, setModalDate] = useState<Date | null>(null);
 
@@ -35,26 +35,17 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
     return allEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [studies, currentDate.getMonth(), currentDate.getFullYear()]);
 
-  // 툴팁 관련 핸들러
+  // 툴팁 관련 핸들러 - 항상 위쪽에만 표시
   const handleEventHover = useCallback((event: StudyCalendarEvent | null, e?: React.MouseEvent) => {
     if (event && e) {
-      // 먼저 이벤트를 설정하지만 툴팁은 아직 보이지 않게 함
-      setHoveredEvent(event);
-      setTooltipPosition(prev => ({ ...prev, isReady: false }));
-
-      // 다음 프레임에서 위치 계산 후 툴팁 표시 (항상 위쪽에만)
-      requestAnimationFrame(() => {
-        const rect = e.currentTarget.getBoundingClientRect();
-
-        setTooltipPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top - 15,
-          isReady: true
-        });
+      const rect = e.currentTarget.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 15
       });
+      setHoveredEvent(event);
     } else {
       setHoveredEvent(null);
-      setTooltipPosition(prev => ({ ...prev, isReady: false }));
     }
   }, []);
 
@@ -402,16 +393,14 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
       </div>
       
       {/* 이벤트 상세 정보 툴팁 */}
-      {hoveredEvent && tooltipPosition.isReady && (
+      {hoveredEvent && (
         <div
           className={styles['event-tooltip']}
           style={{
             position: 'fixed',
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
-            transform: 'translate(-50%, -100%)',
-            opacity: tooltipPosition.isReady ? 1 : 0,
-            visibility: tooltipPosition.isReady ? 'visible' : 'hidden'
+            transform: 'translate(-50%, -100%)'
           }}
           onMouseEnter={() => setHoveredEvent(hoveredEvent)}
           onMouseLeave={() => setHoveredEvent(null)}
