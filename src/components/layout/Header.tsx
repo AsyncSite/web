@@ -191,7 +191,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
         clearTimeout(studyDropdownTimeoutRef.current);
         studyDropdownTimeoutRef.current = null;
       }
-      // 즉시 표시하여 깜빡임 방지
+      // 드롭다운 위치 이동 방지를 위해 즉시 표시
       setShowStudyDropdown(true);
     }
   };
@@ -323,7 +323,7 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                 </button>
                 {showStudyDropdown && (
                   <div
-                    className="nav-dropdown"
+                    className={`nav-dropdown ${showStudyDropdown ? 'show' : ''}`}
                     onMouseEnter={handleStudyMouseEnter}
                     onMouseLeave={handleStudyMouseLeave}
                   >
