@@ -11,17 +11,19 @@ const IgnitionPage: React.FC = () => {
       </div>
 
       <div className="ignition-services">
-        <div className="ignition-service-card">
-          <div className="service-icon">🚀</div>
-          <h3 className="service-title">Career Navigator</h3>
-          <p className="service-description">
-            AI 기반 채용 공고 분석과 맞춤형 커리어 로드맵으로 
-            당신의 다음 도전을 설계합니다.
-          </p>
-          <Link to="/ignition/navigator" className="service-link">
-            시작하기 →
-          </Link>
-        </div>
+        <Link to="/ignition/navigator" className="ignition-service-card-link">
+          <div className="ignition-service-card">
+            <div className="service-icon">🚀</div>
+            <h3 className="service-title">Career Navigator</h3>
+            <p className="service-description">
+              AI 기반 채용 공고 분석과 맞춤형 커리어 로드맵으로
+              당신의 다음 도전을 설계합니다.
+            </p>
+            <span className="service-link">
+              시작하기 →
+            </span>
+          </div>
+        </Link>
 
         <div className="ignition-service-card coming-soon">
           <div className="service-icon">🤖</div>
