@@ -50,10 +50,18 @@ const faqData: FAQItem[] = [
 ];
 
 const FAQ: React.FC = () => {
-  const [openFAQId, setOpenFAQId] = useState<number | null>(null);
+  const [openFAQIds, setOpenFAQIds] = useState<Set<number>>(new Set());
 
   const toggleFAQ = (id: number) => {
-    setOpenFAQId(openFAQId === id ? null : id);
+    setOpenFAQIds(prevOpenIds => {
+      const newOpenIds = new Set(prevOpenIds);
+      if (newOpenIds.has(id)) {
+        newOpenIds.delete(id);
+      } else {
+        newOpenIds.add(id);
+      }
+      return newOpenIds;
+    });
   };
 
   return (
@@ -66,18 +74,19 @@ const FAQ: React.FC = () => {
 
         <div className={styles.mainPageFaqList}>
           {faqData.map((faq) => (
-            <div key={faq.id} className={`${styles.mainPageFaqItem} ${styles.card} ${openFAQId === faq.id ? styles.open : ''}`}>
+            <div key={faq.id} className={`${styles.mainPageFaqItem} ${styles.card} ${openFAQIds.has(faq.id) ? styles.open : ''}`} data-testid="faq-item">
               <div
                 className={styles.mainPageFaqQuestion}
                 onClick={() => toggleFAQ(faq.id)}
+                data-testid="faq-question"
               >
                 <h3>{faq.question}</h3>
-                <span className={styles.mainPageFaqIcon}>
-                  {openFAQId === faq.id ? '−' : '+'}
+                <span className={styles.mainPageFaqIcon} data-testid="faq-icon">
+                  {openFAQIds.has(faq.id) ? '−' : '+'}
                 </span>
               </div>
 
-              <div className={styles.mainPageFaqAnswer}>
+              <div className={styles.mainPageFaqAnswer} data-testid="faq-answer">
                 {typeof faq.answer === 'string' ? <p>{faq.answer}</p> : faq.answer}
               </div>
             </div>
