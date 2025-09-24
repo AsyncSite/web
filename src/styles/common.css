@@ -69,12 +69,24 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  outline: none;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(195, 232, 141, 0.4);
   background: linear-gradient(135deg, #A8D66F, #C3E88D);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(195, 232, 141, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  outline: none;
+  box-shadow: 0 4px 12px rgba(195, 232, 141, 0.3);
 }
 
 .btn-secondary {
@@ -92,11 +104,23 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  outline: none;
 }
 
 .btn-secondary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(51, 51, 51, 0.4);
+}
+
+.btn-secondary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  outline: none;
+  box-shadow: 0 4px 12px rgba(51, 51, 51, 0.3);
 }
 
 /* CSS 변수 정의 */
