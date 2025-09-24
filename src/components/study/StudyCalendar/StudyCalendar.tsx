@@ -15,7 +15,7 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hoveredEvent, setHoveredEvent] = useState<StudyCalendarEvent | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number; showAbove: boolean }>({ x: 0, y: 0, showAbove: true });
   const [modalEvents, setModalEvents] = useState<StudyCalendarEvent[] | null>(null);
   const [modalDate, setModalDate] = useState<Date | null>(null);
 
@@ -37,13 +37,24 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
 
   // 툴팁 관련 핸들러
   const handleEventHover = useCallback((event: StudyCalendarEvent | null, e?: React.MouseEvent) => {
-    setHoveredEvent(event);
     if (event && e) {
       const rect = e.currentTarget.getBoundingClientRect();
+      const tooltipHeight = 300; // 예상 툴팁 높이
+      const windowHeight = window.innerHeight;
+      const spaceAbove = rect.top;
+      const spaceBelow = windowHeight - rect.bottom;
+
+      // 위쪽 공간이 충분하면 위에, 아니면 아래에 표시
+      const shouldShowAbove = spaceAbove > tooltipHeight + 20;
+
       setTooltipPosition({
         x: rect.left + rect.width / 2,
-        y: rect.top - 10
+        y: shouldShowAbove ? rect.top - 15 : rect.bottom + 10,
+        showAbove: shouldShowAbove
       });
+      setHoveredEvent(event);
+    } else {
+      setHoveredEvent(null);
     }
   }, []);
 
@@ -392,14 +403,17 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
       
       {/* 이벤트 상세 정보 툴팁 */}
       {hoveredEvent && (
-        <div 
+        <div
           className={styles['event-tooltip']}
+          data-show-above={tooltipPosition.showAbove}
           style={{
             position: 'fixed',
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
-            transform: 'translate(-50%, -100%)'
+            transform: tooltipPosition.showAbove ? 'translate(-50%, -100%)' : 'translate(-50%, 0%)'
           }}
+          onMouseEnter={() => setHoveredEvent(hoveredEvent)}
+          onMouseLeave={() => setHoveredEvent(null)}
         >
           <div className={styles['tooltip-header']}>
             <h4>{hoveredEvent.title}</h4>
