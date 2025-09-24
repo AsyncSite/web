@@ -936,7 +936,6 @@
   max-width: 400px;
   z-index: 1000;
   backdrop-filter: blur(10px);
-  animation: sc-fade-in 0.2s ease-out;
   pointer-events: auto;
 }
 
