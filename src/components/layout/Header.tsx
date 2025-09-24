@@ -189,21 +189,22 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     if (!isMobile) {
       if (studyDropdownTimeoutRef.current) {
         clearTimeout(studyDropdownTimeoutRef.current);
+        studyDropdownTimeoutRef.current = null;
       }
-      studyDropdownTimeoutRef.current = setTimeout(() => {
-        setShowStudyDropdown(true);
-      }, 300); // 300ms 딜레이로 실수 방지
+      // 즉시 표시하여 깜빡임 방지
+      setShowStudyDropdown(true);
     }
   };
-  
+
   const handleStudyMouseLeave = () => {
     if (!isMobile) {
       if (studyDropdownTimeoutRef.current) {
         clearTimeout(studyDropdownTimeoutRef.current);
       }
+      // 짧은 딜레이로 사용자가 다시 호버할 수 있도록 함
       studyDropdownTimeoutRef.current = setTimeout(() => {
         setShowStudyDropdown(false);
-      }, 300);
+      }, 150);
     }
   };
   

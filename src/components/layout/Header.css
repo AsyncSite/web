@@ -292,7 +292,7 @@
 
 .nav-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 4px);
   left: 50%;
   transform: translateX(-50%);
   min-width: 260px;
@@ -302,7 +302,7 @@
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   padding: 8px 0;
-  animation: dropdownFadeIn 0.2s ease-out;
+  animation: dropdownFadeIn 0.15s ease-out;
   z-index: 1001;
 }
 
@@ -310,27 +310,27 @@
 .nav-dropdown::before {
   content: '';
   position: absolute;
-  top: -6px;
+  top: -4px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid rgba(195, 232, 141, 0.2);
+  border-bottom: 4px solid rgba(195, 232, 141, 0.2);
 }
 
 .nav-dropdown::after {
   content: '';
   position: absolute;
-  top: -5px;
+  top: -3px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid rgba(13, 17, 23, 0.98);
+  border-bottom: 4px solid rgba(13, 17, 23, 0.98);
 }
 
 .nav-dropdown-item {
@@ -725,23 +725,23 @@
   /* 하단 GNB일 때 STUDY 드롭다운을 위로 표시 */
   .header:not(.fixed-top) .nav-dropdown {
     top: auto;
-    bottom: calc(100% + 8px);
-    animation: dropdownFadeInUp 0.2s ease-out;
+    bottom: calc(100% + 4px);
+    animation: dropdownFadeInUp 0.15s ease-out;
   }
   
   /* 하단 GNB일 때 STUDY 드롭다운 화살표 위치 조정 */
   .header:not(.fixed-top) .nav-dropdown::before {
     top: auto;
-    bottom: -6px;
+    bottom: -4px;
     border-bottom: none;
-    border-top: 6px solid rgba(195, 232, 141, 0.2);
+    border-top: 4px solid rgba(195, 232, 141, 0.2);
   }
-  
+
   .header:not(.fixed-top) .nav-dropdown::after {
     top: auto;
-    bottom: -5px;
+    bottom: -3px;
     border-bottom: none;
-    border-top: 6px solid rgba(13, 17, 23, 0.98);
+    border-top: 4px solid rgba(13, 17, 23, 0.98);
   }
 
   /* 사용자 메뉴를 위로 표시하는 명시적 클래스 */
