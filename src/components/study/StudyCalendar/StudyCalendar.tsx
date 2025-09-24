@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Study } from '../../../api/studyService';
 import { generateEventsFromStudy, StudyCalendarEvent } from '../../../utils/studyScheduleUtils';
 import styles from './StudyCalendar.module.css';
@@ -18,6 +18,16 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [modalEvents, setModalEvents] = useState<StudyCalendarEvent[] | null>(null);
   const [modalDate, setModalDate] = useState<Date | null>(null);
+  const [hideTooltipTimeout, setHideTooltipTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  // 컴포넌트 언마운트 시 타임아웃 정리
+  useEffect(() => {
+    return () => {
+      if (hideTooltipTimeout) {
+        clearTimeout(hideTooltipTimeout);
+      }
+    };
+  }, [hideTooltipTimeout]);
 
   // 스터디 데이터 기반 이벤트 생성
   const events = useMemo(() => {
@@ -37,6 +47,12 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
 
   // 툴팁 관련 핸들러 - 항상 위쪽에만 표시
   const handleEventHover = useCallback((event: StudyCalendarEvent | null, e?: React.MouseEvent) => {
+    // 기존 타임아웃이 있으면 클리어
+    if (hideTooltipTimeout) {
+      clearTimeout(hideTooltipTimeout);
+      setHideTooltipTimeout(null);
+    }
+
     if (event && e) {
       const rect = e.currentTarget.getBoundingClientRect();
       setTooltipPosition({
@@ -45,9 +61,32 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
       });
       setHoveredEvent(event);
     } else {
-      setHoveredEvent(null);
+      // 툴팁을 즉시 숨기지 않고 150ms 후에 숨김
+      const timeout = setTimeout(() => {
+        setHoveredEvent(null);
+        setHideTooltipTimeout(null);
+      }, 150);
+      setHideTooltipTimeout(timeout);
     }
-  }, []);
+  }, [hideTooltipTimeout]);
+
+  // 툴팁에 마우스 엔터/리브 핸들러
+  const handleTooltipMouseEnter = useCallback(() => {
+    // 툴팁에 마우스가 올라가면 숨기기 타임아웃 취소
+    if (hideTooltipTimeout) {
+      clearTimeout(hideTooltipTimeout);
+      setHideTooltipTimeout(null);
+    }
+  }, [hideTooltipTimeout]);
+
+  const handleTooltipMouseLeave = useCallback(() => {
+    // 툴팁에서 마우스가 벗어나면 즉시 숨김
+    setHoveredEvent(null);
+    if (hideTooltipTimeout) {
+      clearTimeout(hideTooltipTimeout);
+      setHideTooltipTimeout(null);
+    }
+  }, [hideTooltipTimeout]);
 
   // 더보기 모달 열기
   const handleShowMoreEvents = useCallback((events: StudyCalendarEvent[], date: Date) => {
@@ -402,8 +441,8 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
             top: `${tooltipPosition.y}px`,
             transform: 'translate(-50%, -100%)'
           }}
-          onMouseEnter={() => setHoveredEvent(hoveredEvent)}
-          onMouseLeave={() => setHoveredEvent(null)}
+          onMouseEnter={handleTooltipMouseEnter}
+          onMouseLeave={handleTooltipMouseLeave}
         >
           <div className={styles['tooltip-header']}>
             <h4>{hoveredEvent.title}</h4>
