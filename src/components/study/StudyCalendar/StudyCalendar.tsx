@@ -15,7 +15,7 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hoveredEvent, setHoveredEvent] = useState<StudyCalendarEvent | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number; isReady: boolean }>({ x: 0, y: 0, isReady: false });
+  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number; showAbove: boolean }>({ x: 0, y: 0, showAbove: true });
   const [modalEvents, setModalEvents] = useState<StudyCalendarEvent[] | null>(null);
   const [modalDate, setModalDate] = useState<Date | null>(null);
 
@@ -38,23 +38,23 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
   // 툴팁 관련 핸들러
   const handleEventHover = useCallback((event: StudyCalendarEvent | null, e?: React.MouseEvent) => {
     if (event && e) {
-      // 먼저 이벤트를 설정하지만 툴팁은 아직 보이지 않게 함
-      setHoveredEvent(event);
-      setTooltipPosition(prev => ({ ...prev, isReady: false }));
+      const rect = e.currentTarget.getBoundingClientRect();
+      const tooltipHeight = 300; // 예상 툴팁 높이
+      const windowHeight = window.innerHeight;
+      const spaceAbove = rect.top;
+      const spaceBelow = windowHeight - rect.bottom;
 
-      // 다음 프레임에서 위치 계산 후 툴팁 표시 (항상 위쪽에만)
-      requestAnimationFrame(() => {
-        const rect = e.currentTarget.getBoundingClientRect();
+      // 위쪽 공간이 충분하면 위에, 아니면 아래에 표시
+      const shouldShowAbove = spaceAbove > tooltipHeight + 20;
 
-        setTooltipPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top - 15,
-          isReady: true
-        });
+      setTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: shouldShowAbove ? rect.top - 15 : rect.bottom + 10,
+        showAbove: shouldShowAbove
       });
+      setHoveredEvent(event);
     } else {
       setHoveredEvent(null);
-      setTooltipPosition(prev => ({ ...prev, isReady: false }));
     }
   }, []);
 
@@ -402,16 +402,15 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
       </div>
       
       {/* 이벤트 상세 정보 툴팁 */}
-      {hoveredEvent && tooltipPosition.isReady && (
+      {hoveredEvent && (
         <div
           className={styles['event-tooltip']}
+          data-show-above={tooltipPosition.showAbove}
           style={{
             position: 'fixed',
             left: `${tooltipPosition.x}px`,
             top: `${tooltipPosition.y}px`,
-            transform: 'translate(-50%, -100%)',
-            opacity: tooltipPosition.isReady ? 1 : 0,
-            visibility: tooltipPosition.isReady ? 'visible' : 'hidden'
+            transform: tooltipPosition.showAbove ? 'translate(-50%, -100%)' : 'translate(-50%, 0%)'
           }}
           onMouseEnter={() => setHoveredEvent(hoveredEvent)}
           onMouseLeave={() => setHoveredEvent(null)}
