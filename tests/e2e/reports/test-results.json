@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 5
+      "actualWorkers": 4
     },
     "preserveOutput": "always",
     "reporter": [
@@ -50,7 +50,7 @@
         "repeatEach": 1,
         "retries": 1,
         "metadata": {
-          "actualWorkers": 5
+          "actualWorkers": 4
         },
         "id": "chromium",
         "name": "chromium",
@@ -66,7 +66,7 @@
         "repeatEach": 1,
         "retries": 1,
         "metadata": {
-          "actualWorkers": 5
+          "actualWorkers": 4
         },
         "id": "firefox",
         "name": "firefox",
@@ -82,7 +82,7 @@
         "repeatEach": 1,
         "retries": 1,
         "metadata": {
-          "actualWorkers": 5
+          "actualWorkers": 4
         },
         "id": "webkit",
         "name": "webkit",
@@ -98,7 +98,7 @@
         "repeatEach": 1,
         "retries": 1,
         "metadata": {
-          "actualWorkers": 5
+          "actualWorkers": 4
         },
         "id": "mobile-chrome",
         "name": "mobile-chrome",
@@ -114,7 +114,7 @@
         "repeatEach": 1,
         "retries": 1,
         "metadata": {
-          "actualWorkers": 5
+          "actualWorkers": 4
         },
         "id": "mobile-safari",
         "name": "mobile-safari",
@@ -143,346 +143,206 @@
   },
   "suites": [
     {
-      "title": "navigation-tooltip-flicker.spec.ts",
-      "file": "navigation-tooltip-flicker.spec.ts",
+      "title": "lab-tab-persistence-complete.spec.ts",
+      "file": "lab-tab-persistence-complete.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [
+      "specs": [],
+      "suites": [
         {
-          "title": "메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "실험실 탭 상태 유지 완전 테스트",
+          "file": "lab-tab-persistence-complete.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
             {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "Utilities → 팀 나누기 → 뒤로가기 시 탭 유지",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 10837,
-                  "errors": [],
-                  "stdout": [
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
                     {
-                      "text": "Found element with selector: [class*=\"dropdown\"]\n"
-                    },
-                    {
-                      "text": "Current URL after clicking Study: http://localhost:3000/\n"
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4540,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Utilities → 팀 나누기 → 뒤로가기 테스트 성공\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-24T15:22:41.340Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/chadongmin/web/tests/e2e/test-results/lab-tab-persistence-comple-bc81a-ities-→-팀-나누기-→-뒤로가기-시-탭-유지-chromium/video.webm"
+                        }
+                      ]
                     }
                   ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-09-24T08:01:31.331Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-chromium/video.webm"
-                    }
-                  ]
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "9ffbb94c62b542c4ac7c-68286c451ad02737f087",
-          "file": "navigation-tooltip-flicker.spec.ts",
-          "line": 3,
-          "column": 5
-        },
-        {
-          "title": "메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "5538bce7325784c5c82a-ad3dd7dd16a7175437a2",
+              "file": "lab-tab-persistence-complete.spec.ts",
+              "line": 12,
+              "column": 7
+            },
             {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "firefox",
-              "projectName": "firefox",
-              "results": [
+              "title": "Utilities → 스포트라이트 아레나 → 뒤로가기 시 탭 유지",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 15007,
-                  "errors": [],
-                  "stdout": [
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
                     {
-                      "text": "Found element with selector: [class*=\"dropdown\"]\n"
-                    },
-                    {
-                      "text": "Current URL after clicking Study: http://localhost:3000/\n"
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5086,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Utilities → 스포트라이트 아레나 → 뒤로가기 테스트 성공\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-24T15:22:41.339Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/chadongmin/web/tests/e2e/test-results/lab-tab-persistence-comple-39562--→-스포트라이트-아레나-→-뒤로가기-시-탭-유지-chromium/video.webm"
+                        }
+                      ]
                     }
                   ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-09-24T08:01:31.329Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-firefox/video.webm"
-                    }
-                  ]
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "9ffbb94c62b542c4ac7c-09db00cf804431e1e0c6",
-          "file": "navigation-tooltip-flicker.spec.ts",
-          "line": 3,
-          "column": 5
-        },
-        {
-          "title": "메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "5538bce7325784c5c82a-ec9bdf18c14456c8aa29",
+              "file": "lab-tab-persistence-complete.spec.ts",
+              "line": 39,
+              "column": 7
+            },
             {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "webkit",
-              "projectName": "webkit",
-              "results": [
+              "title": "Playground → 테트리스 → 뒤로가기 시 탭 유지",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 11368,
-                  "errors": [],
-                  "stdout": [
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
                     {
-                      "text": "Found element with selector: [class*=\"dropdown\"]\n"
-                    },
-                    {
-                      "text": "Current URL after clicking Study: http://localhost:3000/\n"
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 4398,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ Playground → 테트리스 → 뒤로가기 테스트 성공\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-24T15:22:41.339Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/chadongmin/web/tests/e2e/test-results/lab-tab-persistence-comple-e3349-ground-→-테트리스-→-뒤로가기-시-탭-유지-chromium/video.webm"
+                        }
+                      ]
                     }
                   ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-09-24T08:01:31.333Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-webkit/video.webm"
-                    }
-                  ]
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "9ffbb94c62b542c4ac7c-9274e649ff50adacafc6",
-          "file": "navigation-tooltip-flicker.spec.ts",
-          "line": 3,
-          "column": 5
-        },
-        {
-          "title": "메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "5538bce7325784c5c82a-e10f23c0c33107ca5e94",
+              "file": "lab-tab-persistence-complete.spec.ts",
+              "line": 66,
+              "column": 7
+            },
             {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "mobile-chrome",
-              "projectName": "mobile-chrome",
-              "results": [
+              "title": "전체 → Utilities → 팀 나누기 → 뒤로가기 → 전체 → Playground 순서 테스트",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 21960,
-                  "errors": [],
-                  "stdout": [
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
                     {
-                      "text": "Found element with selector: [class*=\"dropdown\"]\n"
-                    },
-                    {
-                      "text": "Current URL after clicking Study: http://localhost:3000/\n"
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 5540,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "✅ 복잡한 탭 전환 시나리오 테스트 성공\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-24T15:22:41.339Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/chadongmin/web/tests/e2e/test-results/lab-tab-persistence-comple-01281-가기-→-전체-→-Playground-순서-테스트-chromium/video.webm"
+                        }
+                      ]
                     }
                   ],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-09-24T08:01:31.338Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-chrome/video.webm"
-                    }
-                  ]
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "5538bce7325784c5c82a-9e408bbee3b59f9713a5",
+              "file": "lab-tab-persistence-complete.spec.ts",
+              "line": 93,
+              "column": 7
             }
-          ],
-          "id": "9ffbb94c62b542c4ac7c-7ef493f371d4d6f9a0d7",
-          "file": "navigation-tooltip-flicker.spec.ts",
-          "line": 3,
-          "column": 5
-        },
-        {
-          "title": "메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "mobile-safari",
-              "projectName": "mobile-safari",
-              "results": [
-                {
-                  "workerIndex": 4,
-                  "parallelIndex": 4,
-                  "status": "failed",
-                  "duration": 18057,
-                  "error": {
-                    "message": "TimeoutError: locator.hover: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav').getByText('Study')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"nav-link \" aria-haspopup=\"true\" aria-expanded=\"false\">…</button>\u001b[22m\n\u001b[2m  - attempting hover action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    20 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m       - element is visible and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying hover action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
-                    "stack": "TimeoutError: locator.hover: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav').getByText('Study')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"nav-link \" aria-haspopup=\"true\" aria-expanded=\"false\">…</button>\u001b[22m\n\u001b[2m  - attempting hover action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    20 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m       - element is visible and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying hover action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts:15:23",
-                    "location": {
-                      "file": "/Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts",
-                      "column": 23,
-                      "line": 15
-                    },
-                    "snippet": "  13 |\n  14 |   // Study 메뉴에 마우스 호버\n> 15 |   await studyMenuItem.hover();\n     |                       ^\n  16 |\n  17 |   // 툴팁이나 드롭다운이 나타나는지 확인\n  18 |   await page.waitForTimeout(500);"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts",
-                        "column": 23,
-                        "line": 15
-                      },
-                      "message": "TimeoutError: locator.hover: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav').getByText('Study')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"nav-link \" aria-haspopup=\"true\" aria-expanded=\"false\">…</button>\u001b[22m\n\u001b[2m  - attempting hover action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    20 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m       - element is visible and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying hover action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  13 |\n  14 |   // Study 메뉴에 마우스 호버\n> 15 |   await studyMenuItem.hover();\n     |                       ^\n  16 |\n  17 |   // 툴팁이나 드롭다운이 나타나는지 확인\n  18 |   await page.waitForTimeout(500);\n    at /Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts:15:23"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2025-09-24T08:01:31.329Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/test-failed-1.png"
-                    },
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/video.webm"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/trace.zip"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts",
-                    "column": 23,
-                    "line": 15
-                  }
-                },
-                {
-                  "workerIndex": 5,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 17649,
-                  "error": {
-                    "message": "TimeoutError: locator.hover: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav').getByText('Study')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"nav-link \" aria-haspopup=\"true\" aria-expanded=\"false\">…</button>\u001b[22m\n\u001b[2m  - attempting hover action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    - waiting for element to be visible and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  19 × retrying hover action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m       - waiting for element to be visible and stable\u001b[22m\n\u001b[2m       - element is visible and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m  - retrying hover action\u001b[22m\n\u001b[2m    - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible and stable\u001b[22m\n",
-                    "stack": "TimeoutError: locator.hover: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav').getByText('Study')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"nav-link \" aria-haspopup=\"true\" aria-expanded=\"false\">…</button>\u001b[22m\n\u001b[2m  - attempting hover action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    - waiting for element to be visible and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  19 × retrying hover action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m       - waiting for element to be visible and stable\u001b[22m\n\u001b[2m       - element is visible and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m  - retrying hover action\u001b[22m\n\u001b[2m    - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible and stable\u001b[22m\n\n    at /Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts:15:23",
-                    "location": {
-                      "file": "/Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts",
-                      "column": 23,
-                      "line": 15
-                    },
-                    "snippet": "  13 |\n  14 |   // Study 메뉴에 마우스 호버\n> 15 |   await studyMenuItem.hover();\n     |                       ^\n  16 |\n  17 |   // 툴팁이나 드롭다운이 나타나는지 확인\n  18 |   await page.waitForTimeout(500);"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts",
-                        "column": 23,
-                        "line": 15
-                      },
-                      "message": "TimeoutError: locator.hover: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('nav').getByText('Study')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"nav-link \" aria-haspopup=\"true\" aria-expanded=\"false\">…</button>\u001b[22m\n\u001b[2m  - attempting hover action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and stable\u001b[22m\n\u001b[2m      - element is visible and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying hover action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    - waiting for element to be visible and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  19 × retrying hover action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m       - waiting for element to be visible and stable\u001b[22m\n\u001b[2m       - element is visible and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m  - retrying hover action\u001b[22m\n\u001b[2m    - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible and stable\u001b[22m\n\n\n  13 |\n  14 |   // Study 메뉴에 마우스 호버\n> 15 |   await studyMenuItem.hover();\n     |                       ^\n  16 |\n  17 |   // 툴팁이나 드롭다운이 나타나는지 확인\n  18 |   await page.waitForTimeout(500);\n    at /Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts:15:23"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 1,
-                  "startTime": "2025-09-24T08:01:50.614Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/test-failed-1.png"
-                    },
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/video.webm"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/Users/chadongmin/web/tests/e2e/test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/trace.zip"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts",
-                    "column": 23,
-                    "line": 15
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "9ffbb94c62b542c4ac7c-4c0d48147445726c16c5",
-          "file": "navigation-tooltip-flicker.spec.ts",
-          "line": 3,
-          "column": 5
+          ]
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-09-24T08:01:30.335Z",
-    "duration": 38729.532,
+    "startTime": "2025-09-24T15:22:40.592Z",
+    "duration": 6926.339,
     "expected": 4,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

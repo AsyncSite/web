@@ -1,188 +1,34 @@
-<testsuites id="" name="" tests="5" failures="1" skipped="0" errors="0" time="38.729532">
-<testsuite name="navigation-tooltip-flicker.spec.ts" timestamp="2025-09-24T08:01:31.049Z" hostname="chromium" tests="1" failures="0" skipped="0" time="10.837" errors="0">
-<testcase name="메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인" classname="navigation-tooltip-flicker.spec.ts" time="10.837">
+<testsuites id="" name="" tests="4" failures="0" skipped="0" errors="0" time="6.926339">
+<testsuite name="lab-tab-persistence-complete.spec.ts" timestamp="2025-09-24T15:22:41.091Z" hostname="chromium" tests="4" failures="0" skipped="0" time="19.564" errors="0">
+<testcase name="실험실 탭 상태 유지 완전 테스트 › Utilities → 팀 나누기 → 뒤로가기 시 탭 유지" classname="lab-tab-persistence-complete.spec.ts" time="4.54">
 <system-out>
-<![CDATA[Found element with selector: [class*="dropdown"]
-Current URL after clicking Study: http://localhost:3000/
+<![CDATA[✅ Utilities → 팀 나누기 → 뒤로가기 테스트 성공
 
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-chromium/video.webm]]
+[[ATTACHMENT|../test-results/lab-tab-persistence-comple-bc81a-ities-→-팀-나누기-→-뒤로가기-시-탭-유지-chromium/video.webm]]
 ]]>
 </system-out>
 </testcase>
-</testsuite>
-<testsuite name="navigation-tooltip-flicker.spec.ts" timestamp="2025-09-24T08:01:31.049Z" hostname="firefox" tests="1" failures="0" skipped="0" time="15.007" errors="0">
-<testcase name="메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인" classname="navigation-tooltip-flicker.spec.ts" time="15.007">
+<testcase name="실험실 탭 상태 유지 완전 테스트 › Utilities → 스포트라이트 아레나 → 뒤로가기 시 탭 유지" classname="lab-tab-persistence-complete.spec.ts" time="5.086">
 <system-out>
-<![CDATA[Found element with selector: [class*="dropdown"]
-Current URL after clicking Study: http://localhost:3000/
+<![CDATA[✅ Utilities → 스포트라이트 아레나 → 뒤로가기 테스트 성공
 
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-firefox/video.webm]]
+[[ATTACHMENT|../test-results/lab-tab-persistence-comple-39562--→-스포트라이트-아레나-→-뒤로가기-시-탭-유지-chromium/video.webm]]
 ]]>
 </system-out>
 </testcase>
-</testsuite>
-<testsuite name="navigation-tooltip-flicker.spec.ts" timestamp="2025-09-24T08:01:31.049Z" hostname="webkit" tests="1" failures="0" skipped="0" time="11.368" errors="0">
-<testcase name="메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인" classname="navigation-tooltip-flicker.spec.ts" time="11.368">
+<testcase name="실험실 탭 상태 유지 완전 테스트 › Playground → 테트리스 → 뒤로가기 시 탭 유지" classname="lab-tab-persistence-complete.spec.ts" time="4.398">
 <system-out>
-<![CDATA[Found element with selector: [class*="dropdown"]
-Current URL after clicking Study: http://localhost:3000/
+<![CDATA[✅ Playground → 테트리스 → 뒤로가기 테스트 성공
 
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-webkit/video.webm]]
+[[ATTACHMENT|../test-results/lab-tab-persistence-comple-e3349-ground-→-테트리스-→-뒤로가기-시-탭-유지-chromium/video.webm]]
 ]]>
 </system-out>
 </testcase>
-</testsuite>
-<testsuite name="navigation-tooltip-flicker.spec.ts" timestamp="2025-09-24T08:01:31.049Z" hostname="mobile-chrome" tests="1" failures="0" skipped="0" time="21.96" errors="0">
-<testcase name="메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인" classname="navigation-tooltip-flicker.spec.ts" time="21.96">
+<testcase name="실험실 탭 상태 유지 완전 테스트 › 전체 → Utilities → 팀 나누기 → 뒤로가기 → 전체 → Playground 순서 테스트" classname="lab-tab-persistence-complete.spec.ts" time="5.54">
 <system-out>
-<![CDATA[Found element with selector: [class*="dropdown"]
-Current URL after clicking Study: http://localhost:3000/
+<![CDATA[✅ 복잡한 탭 전환 시나리오 테스트 성공
 
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-chrome/video.webm]]
-]]>
-</system-out>
-</testcase>
-</testsuite>
-<testsuite name="navigation-tooltip-flicker.spec.ts" timestamp="2025-09-24T08:01:31.049Z" hostname="mobile-safari" tests="1" failures="1" skipped="0" time="35.706" errors="0">
-<testcase name="메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인" classname="navigation-tooltip-flicker.spec.ts" time="35.706">
-<failure message="navigation-tooltip-flicker.spec.ts:3:5 메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인" type="FAILURE">
-<![CDATA[  [mobile-safari] › navigation-tooltip-flicker.spec.ts:3:5 › 메인페이지 상단 내비게이션 Study 툴팁 깜빡임 현상 확인 ─────
-
-    TimeoutError: locator.hover: Timeout 15000ms exceeded.
-    Call log:
-      - waiting for locator('nav').getByText('Study')
-        - locator resolved to <button class="nav-link " aria-haspopup="true" aria-expanded="false">…</button>
-      - attempting hover action
-        2 × waiting for element to be visible and stable
-          - element is visible and stable
-          - scrolling into view if needed
-          - done scrolling
-          - element is outside of the viewport
-        - retrying hover action
-        - waiting 20ms
-        2 × waiting for element to be visible and stable
-          - element is visible and stable
-          - scrolling into view if needed
-          - done scrolling
-          - element is outside of the viewport
-        - retrying hover action
-          - waiting 100ms
-        20 × waiting for element to be visible and stable
-           - element is visible and stable
-           - scrolling into view if needed
-           - done scrolling
-           - element is outside of the viewport
-         - retrying hover action
-           - waiting 500ms
-
-
-      13 |
-      14 |   // Study 메뉴에 마우스 호버
-    > 15 |   await studyMenuItem.hover();
-         |                       ^
-      16 |
-      17 |   // 툴팁이나 드롭다운이 나타나는지 확인
-      18 |   await page.waitForTimeout(500);
-        at /Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts:15:23
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
-    test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/video.webm
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/error-context.md
-
-    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
-    test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/trace.zip
-    Usage:
-
-        npx playwright show-trace test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/trace.zip
-
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
-
-    TimeoutError: locator.hover: Timeout 15000ms exceeded.
-    Call log:
-      - waiting for locator('nav').getByText('Study')
-        - locator resolved to <button class="nav-link " aria-haspopup="true" aria-expanded="false">…</button>
-      - attempting hover action
-        2 × waiting for element to be visible and stable
-          - element is visible and stable
-          - scrolling into view if needed
-          - done scrolling
-          - element is outside of the viewport
-        - retrying hover action
-        - waiting 20ms
-        2 × waiting for element to be visible and stable
-          - element is visible and stable
-          - scrolling into view if needed
-          - done scrolling
-          - element is outside of the viewport
-        - retrying hover action
-          - waiting 100ms
-        - waiting for element to be visible and stable
-        - element is not stable
-      19 × retrying hover action
-           - waiting 500ms
-           - waiting for element to be visible and stable
-           - element is visible and stable
-           - scrolling into view if needed
-           - done scrolling
-           - element is outside of the viewport
-      - retrying hover action
-        - waiting 500ms
-        - waiting for element to be visible and stable
-
-
-      13 |
-      14 |   // Study 메뉴에 마우스 호버
-    > 15 |   await studyMenuItem.hover();
-         |                       ^
-      16 |
-      17 |   // 툴팁이나 드롭다운이 나타나는지 확인
-      18 |   await page.waitForTimeout(500);
-        at /Users/chadongmin/web/tests/e2e/navigation-tooltip-flicker.spec.ts:15:23
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
-    test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/video.webm
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/error-context.md
-
-    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
-    test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/trace.zip
-    Usage:
-
-        npx playwright show-trace test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/trace.zip
-
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/test-failed-1.png]]
-
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/video.webm]]
-
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/error-context.md]]
-
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari/trace.zip]]
-
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/test-failed-1.png]]
-
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/video.webm]]
-
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/error-context.md]]
-
-[[ATTACHMENT|../test-results/navigation-tooltip-flicker-메인페이지-상단-내비게이션-Study-툴팁-깜빡임-현상-확인-mobile-safari-retry1/trace.zip]]
+[[ATTACHMENT|../test-results/lab-tab-persistence-comple-01281-가기-→-전체-→-Playground-순서-테스트-chromium/video.webm]]
 ]]>
 </system-out>
 </testcase>
