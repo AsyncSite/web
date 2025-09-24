@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ItemBox } from '../components/lab/common';
 import { LabCategory, CategoryId } from '../components/lab/types';
 import './LabPage.css';
@@ -77,7 +77,23 @@ const labCategories: LabCategory[] = [
 ];
 
 const LabPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>(() => {
+    // 컴포넌트 초기화 시 sessionStorage에서 이전 선택 값을 복원
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('lab-selected-category');
+      if (saved && ['all', 'playground', 'utilities', 'ai-studio'].includes(saved)) {
+        return saved as CategoryId | 'all';
+      }
+    }
+    return 'all';
+  });
+
+  // 카테고리가 변경될 때마다 sessionStorage에 저장
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('lab-selected-category', selectedCategory);
+    }
+  }, [selectedCategory]);
 
   const filteredCategories =
     selectedCategory === 'all'
