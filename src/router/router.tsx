@@ -33,7 +33,12 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <>
-        <ScrollRestoration />
+        <ScrollRestoration
+          getKey={(location, matches) => {
+            // 각 페이지마다 고유한 키를 생성하여 스크롤 위치를 독립적으로 관리
+            return location.pathname + location.search;
+          }}
+        />
         <App />
       </>
     ),
