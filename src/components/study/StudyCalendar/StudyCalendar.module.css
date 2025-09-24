@@ -936,29 +936,23 @@
   max-width: 400px;
   z-index: 1000;
   backdrop-filter: blur(10px);
-  animation: sc-fade-in 0.2s ease-out;
   pointer-events: auto;
+  transition: opacity 0.15s ease-out, visibility 0.15s ease-out;
+  opacity: 1;
+  visibility: visible;
 }
 
 .event-tooltip::after {
   content: '';
   position: absolute;
+  bottom: -8px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-}
-
-.event-tooltip[data-show-above="true"]::after {
-  bottom: -8px;
   border-top: 8px solid var(--sc-bg-card);
-}
-
-.event-tooltip[data-show-above="false"]::after {
-  top: -8px;
-  border-bottom: 8px solid var(--sc-bg-card);
 }
 
 .tooltip-header {
