@@ -292,7 +292,7 @@
 
 .nav-dropdown {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 2px); /* 4px → 2px로 간격 줄임 */
   left: 50%;
   transform: translateX(-50%);
   min-width: 260px;
@@ -304,6 +304,8 @@
   padding: 8px 0;
   animation: dropdownFadeIn 0.15s ease-out;
   z-index: 1001;
+  /* 마우스 이동을 위한 invisible padding 영역 추가 */
+  padding-top: 12px; /* 상단에 4px 추가 패딩 */
 }
 
 /* 화살표 삼각형 - 드롭다운 위에 위치 */
@@ -345,6 +347,11 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   transition: all 0.2s ease;
   border-radius: 6px;
+}
+
+/* 첫 번째 드롭다운 아이템의 상단 여백 제거 */
+.nav-dropdown-item:first-child {
+  margin-top: -4px;
 }
 
 .nav-dropdown-item:hover {

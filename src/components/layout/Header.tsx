@@ -201,10 +201,10 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
       if (studyDropdownTimeoutRef.current) {
         clearTimeout(studyDropdownTimeoutRef.current);
       }
-      // 짧은 딜레이로 사용자가 다시 호버할 수 있도록 함
+      // 더 긴 딜레이로 사용자가 드롭다운으로 이동할 시간 제공
       studyDropdownTimeoutRef.current = setTimeout(() => {
         setShowStudyDropdown(false);
-      }, 150);
+      }, 300);
     }
   };
   
@@ -322,13 +322,17 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                   </svg>
                 </button>
                 {showStudyDropdown && (
-                  <div className="nav-dropdown">
+                  <div
+                    className="nav-dropdown"
+                    onMouseEnter={handleStudyMouseEnter}
+                    onMouseLeave={handleStudyMouseLeave}
+                  >
                     {studies.length > 0 ? (
                       <>
                         {studies.map(study => (
-                          <Link 
-                            key={study.id} 
-                            to={`/study/${study.slug}`} 
+                          <Link
+                            key={study.id}
+                            to={`/study/${study.slug}`}
                             className="nav-dropdown-item"
                             onClick={() => {
                               setShowStudyDropdown(false);
@@ -345,8 +349,8 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                           </Link>
                         ))}
                         <div className="nav-dropdown-divider"></div>
-                        <Link 
-                          to="/study" 
+                        <Link
+                          to="/study"
                           className="nav-dropdown-item nav-dropdown-all"
                           onClick={() => {
                             setShowStudyDropdown(false);
