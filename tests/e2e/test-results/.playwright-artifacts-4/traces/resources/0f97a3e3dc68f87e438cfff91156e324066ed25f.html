@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1a2034" />
+    <meta
+      name="description"
+      content="asyncsite - 함께 성장하는 개발자 커뮤니티. 스터디, 프로젝트, 네트워킹을 통해 성장하세요."
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://asyncsite.com/" />
+    <meta property="og:title" content="asyncsite - 함께 성장하는 공간" />
+    <meta property="og:description" content="개발자들이 함께 성장하는 커뮤니티. 스터디, 프로젝트, 네트워킹을 통해 기술력을 향상시키세요." />
+    <meta property="og:image" content="/assets/AsyncSite-profile.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://asyncsite.com/" />
+    <meta property="twitter:title" content="asyncsite - 함께 성장하는 공간" />
+    <meta property="twitter:description" content="개발자들이 함께 성장하는 커뮤니티. 스터디, 프로젝트, 네트워킹을 통해 기술력을 향상시키세요." />
+    <meta property="twitter:image" content="/assets/AsyncSite-profile.png" />
+
+    <link rel="apple-touch-icon" href="/logo192.png" />
+
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Google Fonts for DeductionGame -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Russo+One&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Pretendard Font for Spotlight Arena -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+    <title>asyncsite - 함께 성장하는 공간</title>
+    
+    <!-- Kakao SDK -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    
+    <!-- TossPayments SDK -->
+    <script src="https://js.tosspayments.com/v1/payment"></script>
+    
+    <!-- Chunk Cache Manager -->
+    <script src="/chunk-cache-manager.js"></script>
+  <script defer src="/static/js/bundle.js"></script></head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="text/javascript">
+      // index.html에서 SPA 라우팅 처리
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+  </body>
+</html>

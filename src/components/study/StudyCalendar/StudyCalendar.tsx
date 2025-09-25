@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Study } from '../../../api/studyService';
 import { generateEventsFromStudy, StudyCalendarEvent } from '../../../utils/studyScheduleUtils';
 import styles from './StudyCalendar.module.css';
@@ -10,6 +11,7 @@ interface StudyCalendarProps {
 }
 
 const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
+  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<ViewMode>('modern');
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
@@ -99,6 +101,16 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
     setModalEvents(null);
     setModalDate(null);
   }, []);
+
+  // 스터디 이벤트 클릭 시 상세페이지로 이동
+  const handleEventClick = useCallback((event: StudyCalendarEvent) => {
+    // studySlug를 사용하여 상세페이지로 이동
+    const studySlug = event.studySlug;
+    if (studySlug) {
+      const studyIdentifier = studySlug === 'tecoteco' ? '1-tecoteco' : studySlug;
+      navigate(`/study/${studyIdentifier}`);
+    }
+  }, [navigate]);
 
   // 오늘로 이동하는 함수
   const handleTodayClick = useCallback(() => {
@@ -287,16 +299,18 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
                       <div className={styles['day-number']}>{day.getDate()}</div>
                       <div className={styles['day-events']}>
                         {dayEvents.slice(0, 3).map((event) => (
-                          <div 
-                            key={event.id} 
+                          <div
+                            key={event.id}
                             className={`${styles['event']} ${styles[`event--${event.eventType}`]}`}
                             style={{
                               backgroundColor: event.color.background,
                               borderLeft: `3px solid ${event.color.primary}`,
-                              color: event.color.primary
+                              color: event.color.primary,
+                              cursor: 'pointer'
                             }}
                             onMouseEnter={(e) => handleEventHover(event, e)}
                             onMouseLeave={() => handleEventHover(null)}
+                            onClick={() => handleEventClick(event)}
                           >
                             <span className={styles['event-time']}>{event.startTime}</span>
                             <span className={styles['event-title']}>
@@ -390,15 +404,17 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
                   });
 
                   return (
-                    <div 
-                      key={event.id} 
+                    <div
+                      key={event.id}
                       className={`${styles['timeline-item']} ${styles[`timeline-item--${event.eventType}`]}`}
                       style={{
                         borderLeftColor: event.color.primary,
-                        boxShadow: `0 0 20px ${event.color.glow}`
+                        boxShadow: `0 0 20px ${event.color.glow}`,
+                        cursor: 'pointer'
                       }}
                       onMouseEnter={(e) => handleEventHover(event, e)}
                       onMouseLeave={() => handleEventHover(null)}
+                      onClick={() => handleEventClick(event)}
                     >
                       <div className={styles['timeline-dot']} style={{ backgroundColor: event.color.primary }}></div>
                       <div className={styles['timeline-content']}>
@@ -526,12 +542,17 @@ const StudyCalendar: React.FC<StudyCalendarProps> = ({ studies = [] }) => {
             </div>
             <div className={styles['modal-body']}>
               {modalEvents.map((event) => (
-                <div 
+                <div
                   key={event.id}
                   className={`${styles['modal-event']} ${styles[`modal-event--${event.eventType}`]}`}
                   style={{
                     borderLeft: `4px solid ${event.color.primary}`,
-                    backgroundColor: event.color.background
+                    backgroundColor: event.color.background,
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => {
+                    handleCloseModal();
+                    handleEventClick(event);
                   }}
                 >
                   <div className={styles['modal-event-header']}>

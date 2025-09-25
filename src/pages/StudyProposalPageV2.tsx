@@ -198,7 +198,7 @@ const StudyProposalPageV2: React.FC = () => {
         tagline: detailedStudy.tagline || '',
         welcomeMessage: detailedStudy.leader?.welcomeMessage || '',
         location: detailedStudy.location || '',
-        capacity: detailedStudy.capacity || null,
+        capacity: detailedStudy.capacity || 20,
         costType: detailedStudy.costType || 'FREE',
         costDescription: detailedStudy.costDescription || '',
         // 기간 정보는 기본값 유지 (number 타입)
@@ -1620,7 +1620,10 @@ const StudyProposalPageV2: React.FC = () => {
           setShowPreviewModal(false);
           handleSubmit();
         }}
-        formData={formData}
+        formData={{
+          ...formData,
+          capacity: formData.capacity || 20
+        }}
         sectionData={sectionData}
         isSubmitting={isSubmitting}
       />
