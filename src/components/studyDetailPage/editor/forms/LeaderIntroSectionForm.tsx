@@ -364,7 +364,7 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
         </div>
         
         <div className="leader-intro-form-group">
-          <label>Q. 리더님은 어떤 개발자인가요? (선택)</label>
+          <label>Q. 리더님은 어떤 개발자인가요?</label>
           <StudyDetailRichTextEditor
             value={introduction}
             onChange={setIntroduction}
