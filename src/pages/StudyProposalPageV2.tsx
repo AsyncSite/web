@@ -61,7 +61,7 @@ const StudyProposalPageV2: React.FC = () => {
     endTime: '',
     duration: 8,
     durationUnit: 'WEEKS' as 'WEEKS' | 'MONTHS',
-    capacity: 20,
+    capacity: null as number | null,
     recruitDeadline: '',
     recruitDeadlineTime: '',
     startDate: '',
@@ -81,7 +81,7 @@ const StudyProposalPageV2: React.FC = () => {
   };
 
   const validateTagline = (tagline: string): string | null => {
-    if (tagline && tagline.length > 500) return '한 줄 소개는 500자 이내로 입력해주세요.';
+    if (tagline && tagline.length > 200) return '한 줄 소개는 200자 이내로 입력해주세요.';
     return null;
   };
 
@@ -198,7 +198,7 @@ const StudyProposalPageV2: React.FC = () => {
         tagline: detailedStudy.tagline || '',
         welcomeMessage: detailedStudy.leader?.welcomeMessage || '',
         location: detailedStudy.location || '',
-        capacity: detailedStudy.capacity || 20,
+        capacity: detailedStudy.capacity || null,
         costType: detailedStudy.costType || 'FREE',
         costDescription: detailedStudy.costDescription || '',
         // 기간 정보는 기본값 유지 (number 타입)
@@ -515,7 +515,7 @@ const StudyProposalPageV2: React.FC = () => {
     }
 
     // Capacity validation
-    if (formData.capacity) {
+    if (formData.capacity !== null && formData.capacity !== undefined) {
       const capacityError = validateCapacity(formData.capacity);
       if (capacityError) {
         error(capacityError);
@@ -926,10 +926,10 @@ const StudyProposalPageV2: React.FC = () => {
                   onChange={(e) => handleInputChange('tagline', e.target.value)}
                   placeholder="스터디를 한 문장으로 표현해주세요"
                   className={styles['proposal-input']}
-                  maxLength={500}
+                  maxLength={200}
                 />
                 <span className={styles['form-hint']}>
-                  상세 소개와 콘텐츠는 스터디 생성 후 관리 페이지에서 편집할 수 있습니다
+                  상세 소개와 콘텐츠는 스터디 생성 후 관리 페이지에서 편집할 수 있습니다 (최대 200자)
                 </span>
               </div>
 
@@ -1336,16 +1336,22 @@ const StudyProposalPageV2: React.FC = () => {
                 <label>모집 인원</label>
                 <input
                   type="number"
-                  value={formData.capacity}
+                  value={formData.capacity || ''}
                   onChange={(e) => {
-                    const value = parseInt(e.target.value);
-                    if (!isNaN(value) && value >= 1 && value <= 100) {
-                      handleInputChange('capacity', value);
+                    const value = e.target.value;
+                    if (value === '') {
+                      handleInputChange('capacity', null);
+                    } else {
+                      const numValue = parseInt(value);
+                      if (!isNaN(numValue) && numValue >= 1 && numValue <= 100) {
+                        handleInputChange('capacity', numValue);
+                      }
                     }
                   }}
                   className={styles['proposal-input']}
                   min="1"
                   max="100"
+                  placeholder="모집 인원을 입력하세요 (1-100명)"
                 />
               </div>
 
