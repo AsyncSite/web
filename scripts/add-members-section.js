@@ -165,7 +165,7 @@ const membersSectionData = {
       activeMembers: 6,
       totalHours: 180,
       customStats: [
-        { label: '총 해결한 문제', value: '1247', icon: '💡' },
+        { label: '총 해결한 문제', value: '127', icon: '💡' },
         { label: '평균 참여율', value: '85%', icon: '📊' },
         { label: '인기 알고리즘', value: 'DP, 그래프', icon: '🏆' }
       ]

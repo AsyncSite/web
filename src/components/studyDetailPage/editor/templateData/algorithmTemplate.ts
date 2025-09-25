@@ -511,7 +511,7 @@ export const algorithmTemplate: StudyTemplate = {
         participationRate: 85,
         popularAlgorithms: ['DP', '그래프', '이분탐색', '그리디'],
         customStats: [
-          { label: '총 해결한 문제', value: '1247', icon: '💡' },
+          { label: '총 해결한 문제', value: '127', icon: '💡' },
           { label: '평균 참여율', value: '85%', icon: '📊' },
           { label: '인기 알고리즘', value: 'DP, 그래프, 이분탐색, 그리디', icon: '🏆' }
         ]
