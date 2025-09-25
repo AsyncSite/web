@@ -27,7 +27,8 @@ const StudyProposalPageV2: React.FC = () => {
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [isSearchingStudies, setIsSearchingStudies] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  
+  const [hasRedirected, setHasRedirected] = useState(false);
+
   // Section data states
   const [sectionData, setSectionData] = useState<{
     [key: string]: any;
@@ -792,17 +793,18 @@ const StudyProposalPageV2: React.FC = () => {
 
   // 페이지 진입 시 로그인 체크
   useEffect(() => {
-    // 로딩 중이면 대기
-    if (authLoading) return;
-    
+    // 로딩 중이거나 이미 리다이렉트했으면 대기
+    if (authLoading || hasRedirected) return;
+
     // 로그인이 안 되어 있으면 로그인 페이지로 리다이렉트
     if (!user) {
-      error('스터디 제안을 위해서는 로그인이 필요합니다.');
-      setTimeout(() => {
-        navigate('/login', { state: { from: '/study/propose' } });
-      }, 1500);
+      setHasRedirected(true);
+      // 즉시 리다이렉트 (메시지는 렌더링에서 처리)
+      navigate('/login', { state: { from: '/study/propose' } });
     }
-  }, [user, authLoading, navigate, error]);
+
+    // cleanup 함수는 이제 필요 없음
+  }, [user, authLoading, navigate, hasRedirected]);
 
   // 로딩 중이거나 로그인 안 된 경우 로딩 표시
   if (authLoading) {
