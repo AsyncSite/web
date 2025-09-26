@@ -44,6 +44,8 @@ interface JourneyStep {
   };
 }
 
+const lineColors = ['#C3E88D', '#82aaff', '#ffea00', '#89ddff'];
+
 interface Props {
   studies: Study[];
 }
@@ -181,7 +183,7 @@ const Stats = ({
         id: index,
         name: study.name,
         generation: study.generation,
-        color: study.color.primary,
+        color: lineColors[index%4],
         points: [],
         controlPoints: [],
         amplitude: 40 + Math.random() * 30,
