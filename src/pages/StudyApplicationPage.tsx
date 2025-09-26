@@ -124,7 +124,15 @@ const StudyApplicationPage: React.FC = () => {
     console.log('결제 ID (checkoutId):', result.checkoutId);
     
     // 결제 완료 후 신청 진행 (checkoutId를 paymentId로 사용)
-    await submitApplication(result.checkoutId);
+    setModalConfig({
+      title: '신청 완료',
+      message: isPaidStudy
+          ? '결제 및 스터디 참여 신청이 완료되었습니다! 스터디 호스트가 검토 후 연락드릴 예정입니다.'
+          : '스터디 참여 신청이 완료되었습니다! 스터디 호스트가 검토 후 연락드릴 예정입니다.',
+      type: 'success',
+      onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+    });
+    setShowModal(true);
   };
 
   // 결제 오류 처리
@@ -158,21 +166,52 @@ const StudyApplicationPage: React.FC = () => {
     setShowModal(true);
   };
 
-  // 실제 신청 제출 함수
-  const submitApplication = async (paymentId?: string) => {
-    if (!user || !studyId) {
-      return;
+  const handleStudyApplicationValidate = () => {
+    // Skip check during auth loading
+    if (authLoading) {
+      return true;
+    }
+
+    // Check for user after loading is complete
+    if (!user) {
+      alert('스터디 참여 신청을 위해서는 로그인이 필요합니다.');
+      navigate('/login', { state: { from: `/study/${studyId}/apply` } });
+      return true;
+    }
+
+    if (!studyId) {
+      return true;
     }
 
     // Validation
     const requiredFields = ['motivation', 'experience', 'availability'];
     const missingFields = requiredFields.filter(field => !answers[field]?.trim());
-    
+
     if (missingFields.length > 0) {
       alert('필수 항목을 모두 입력해주세요.');
+      return true;
+    }
+    return false;
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // validation
+    if(handleStudyApplicationValidate()) return;
+
+    // 유료 스터디인 경우 종료
+    if (isPaidStudy)
+      return;
+
+    await submitApplication();
+  };
+
+  // 실제 신청 제출 함수
+  const submitApplication = async (paymentId?: string) => {
+    if (!user || !studyId) {
       return;
     }
-
     setIsSubmitting(true);
     
     try {
@@ -220,44 +259,6 @@ const StudyApplicationPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Skip check during auth loading
-    if (authLoading) {
-      return;
-    }
-    
-    // Check for user after loading is complete
-    if (!user) {
-      alert('스터디 참여 신청을 위해서는 로그인이 필요합니다.');
-      navigate('/login', { state: { from: `/study/${studyId}/apply` } });
-      return;
-    }
-
-    if (!studyId) {
-      return;
-    }
-
-    // Validation
-    const requiredFields = ['motivation', 'experience', 'availability'];
-    const missingFields = requiredFields.filter(field => !answers[field]?.trim());
-    
-    if (missingFields.length > 0) {
-      alert('필수 항목을 모두 입력해주세요.');
-      return;
-    }
-
-    // 유료 스터디가 아닌 경우 바로 신청 진행
-    if (!isPaidStudy) {
-      await submitApplication();
-      return;
-    }
-
-    // 유료 스터디인 경우 결제는 CheckoutButton에서 처리됨
-    // 여기서는 아무것도 하지 않음 (CheckoutButton 클릭 시 결제 진행)
   };
 
   if (loading) {
@@ -421,6 +422,7 @@ const StudyApplicationPage: React.FC = () => {
                     (typeof study.endDate === 'string' ? study.endDate : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]) :
                     new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
                 })}
+                onCheckoutValidate={handleStudyApplicationValidate}
                 onCheckoutComplete={handlePaymentSuccess}
                 onCheckoutError={handlePaymentError}
                 label={`${studyPrice.toLocaleString()}원 결제하고 신청하기`}

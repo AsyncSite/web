@@ -20,6 +20,7 @@ interface CheckoutButtonProps {
   checkoutData: Omit<CheckoutRequest, 'paymentMethod'>;
   
   // 이벤트 핸들러
+  onCheckoutValidate?: () => boolean;
   onCheckoutStart?: () => void;
   onCheckoutComplete?: (result: CheckoutResponse) => void;
   onCheckoutError?: (error: CheckoutError) => void;
@@ -39,6 +40,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   icon,
   showPrice = false,
   checkoutData,
+  onCheckoutValidate = () => false,
   onCheckoutStart,
   onCheckoutComplete,
   onCheckoutError,
@@ -86,7 +88,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   
   const handleClick = () => {
     if (disabled || loading) return;
-    
+    if(onCheckoutValidate()) return;
     onCheckoutStart?.();
     setIsModalOpen(true);
   };
