@@ -6,9 +6,14 @@ import { getStudyDisplayInfo } from '../../../utils/studyStatusUtils';
 import { parseDate } from '../../../utils/studyScheduleUtils';
 import styles from './Studies.module.css';
 
-const Studies: React.FC = () => {
+interface Props {
+  studies: Study[];
+}
+
+const Studies = ({
+                             studies
+                           }: Props) => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [studies, setStudies] = useState<Study[]>([]);
   const [recruitingStudies, setRecruitingStudies] = useState<Study[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,55 +27,30 @@ const Studies: React.FC = () => {
   }, []);
   
   useEffect(() => {
-    const fetchStudies = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        const allStudies = await studyService.getAllStudies();
-        const now = new Date();
-        
-        // 활성 스터디: 모집 중, 시작 예정, 진행 중인 스터디
-        const activeStudies = allStudies.filter(study => {
-          const displayInfo = getStudyDisplayInfo(
-            study.status,
-            study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
-          );
-          
-          // 모집중 또는 진행중
-          if (displayInfo.canApply || displayInfo.isActive) return true;
-          
-          // 시작예정 (모집 마감됐지만 아직 시작 안함)
-          const startDate = parseDate(study.startDate);
-          if (study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now) {
-            return true;
-          }
-          
-          return false;
-        });
-        
-        // 모집 중인 스터디만
-        const recruitingOnly = allStudies.filter(study => {
-          const displayInfo = getStudyDisplayInfo(
-            study.status,
-            study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
-          );
-          return displayInfo.canApply;
-        });
-        
-        setStudies(activeStudies);
-        setRecruitingStudies(recruitingOnly);
-      } catch (err) {
-        console.error('Failed to load studies:', err);
-        const errorMessage = handlePublicApiError(err);
-        setError(errorMessage);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
     fetchStudies();
   }, []);
+
+  const fetchStudies = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      // 모집 중인 스터디만
+      const recruitingOnly = studies.filter(study => {
+        const displayInfo = getStudyDisplayInfo(
+            study.status,
+            study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+        );
+        return displayInfo.canApply;
+      });
+      setRecruitingStudies(recruitingOnly);
+    } catch (err) {
+      console.error('Failed to load studies:', err);
+      const errorMessage = handlePublicApiError(err);
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   const calculateDaysLeft = (deadline: Date | null): number | null => {
     if (!deadline) return null;
