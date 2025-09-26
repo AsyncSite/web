@@ -8,6 +8,7 @@ import { CheckoutButton } from '../components/UnifiedCheckout';
 import { createStudyCheckoutRequest, CheckoutResponse, CheckoutError } from '../types/checkout';
 import './StudyApplicationPage.css';
 
+
 const StudyApplicationPage: React.FC = () => {
   const navigate = useNavigate();
   const { studyId } = useParams<{ studyId: string }>();
@@ -90,8 +91,11 @@ const StudyApplicationPage: React.FC = () => {
         if (isPaid && studyData.cost) {
           setStudyPrice(studyData.cost);
         } else if (isPaid) {
-          // 가격 정보가 없는 경우 기본값 설정
-          setStudyPrice(150000);
+          // 가격 정보가 없는 경우 에러 처리
+          console.error('유료 스터디인데 가격 정보가 없습니다:', studyData);
+          alert('스터디 가격 정보를 확인할 수 없습니다. 관리자에게 문의해주세요.');
+          navigate('/study');
+          return;
         }
       } catch (error) {
         console.error('스터디 정보 로딩 실패:', error);
@@ -126,7 +130,32 @@ const StudyApplicationPage: React.FC = () => {
   // 결제 오류 처리
   const handlePaymentError = (error: CheckoutError) => {
     console.error('결제 실패:', error);
-    alert('결제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    
+    let errorMessage = '결제 중 오류가 발생했습니다.';
+    
+    switch (error.code) {
+      case 'USER_CANCEL':
+        errorMessage = '결제가 취소되었습니다.';
+        break;
+      case 'PAYMENT_FAILED':
+        errorMessage = '결제에 실패했습니다. 카드 정보를 확인해주세요.';
+        break;
+      case 'NETWORK_ERROR':
+        errorMessage = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.';
+        break;
+      case 'CHECKOUT_EXPIRED':
+        errorMessage = '결제 시간이 만료되었습니다. 다시 시도해주세요.';
+        break;
+      default:
+        errorMessage = error.message || '결제 중 오류가 발생했습니다.';
+    }
+    
+    setModalConfig({
+      title: '결제 실패',
+      message: errorMessage,
+      type: 'error'
+    });
+    setShowModal(true);
   };
 
   // 실제 신청 제출 함수
@@ -222,10 +251,10 @@ const StudyApplicationPage: React.FC = () => {
     }
 
     // 유료 스터디가 아닌 경우 바로 신청 진행
-    // if (!isPaidStudy) {
+    if (!isPaidStudy) {
       await submitApplication();
       return;
-    // }
+    }
 
     // 유료 스터디인 경우 결제는 CheckoutButton에서 처리됨
     // 여기서는 아무것도 하지 않음 (CheckoutButton 클릭 시 결제 진행)
@@ -371,7 +400,7 @@ const StudyApplicationPage: React.FC = () => {
               취소
             </button>
             
-            {/* {isPaidStudy ? (
+            {isPaidStudy && study ? (
               <CheckoutButton
                 variant="primary"
                 size="large"
@@ -380,10 +409,9 @@ const StudyApplicationPage: React.FC = () => {
                   studyId: study.id,
                   studyName: study.name,
                   price: studyPrice,
-                  discountRate: 0,
-                  customerName: user?.name || '사용자',
-                  customerEmail: user?.email || 'user@example.com',
-                  customerPhone: '010-0000-0000',
+                  customerName: user?.name || user?.username || '사용자',
+                  customerEmail: user?.email || '',
+                  customerPhone: '010-0000-0000', // 사용자 전화번호가 있으면 사용
                   cohortId: `cohort-${study.id}`,
                   cohortName: `${study.name} ${study.generation}기`,
                   startDate: study.startDate ? 
@@ -400,7 +428,7 @@ const StudyApplicationPage: React.FC = () => {
                 disabled={isSubmitting}
                 className="submit-button"
               />
-            ) : ( */}
+            ) : (
               <button 
                 type="submit" 
                 className="submit-button"
@@ -408,6 +436,7 @@ const StudyApplicationPage: React.FC = () => {
               >
                 {isSubmitting ? '신청 중...' : '참여 신청하기'}
               </button>
+            )}
           </div>
         </form>
 
