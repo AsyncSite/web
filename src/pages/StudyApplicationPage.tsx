@@ -93,7 +93,7 @@ const StudyApplicationPage: React.FC = () => {
         } else if (isPaid) {
           // 가격 정보가 없는 경우 에러 처리
           console.error('유료 스터디인데 가격 정보가 없습니다:', studyData);
-          alert('스터디 가격 정보를 확인할 수 없습니다.\n 관리자에게 문의해주세요.');
+          alert('스터디 가격 정보를 확인할 수 없습니다.\n관리자에게 문의해주세요.');
           navigate('/study');
           return;
         }
@@ -127,8 +127,8 @@ const StudyApplicationPage: React.FC = () => {
     setModalConfig({
       title: '신청 완료',
       message: isPaidStudy
-          ? '결제 및 스터디 참여 신청이 완료되었습니다!\n 스터디 호스트가 검토 후 연락드릴 예정입니다.'
-          : '스터디 참여 신청이 완료되었습니다!\n 스터디 호스트가 검토 후 연락드릴 예정입니다.',
+          ? '결제 및 스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.'
+          : '스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.',
       type: 'success',
       onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
     });
@@ -146,13 +146,13 @@ const StudyApplicationPage: React.FC = () => {
         errorMessage = '결제가 취소되었습니다.';
         break;
       case 'PAYMENT_FAILED':
-        errorMessage = '결제에 실패했습니다.\n 카드 정보를 확인해주세요.';
+        errorMessage = '결제에 실패했습니다.\n카드 정보를 확인해주세요.';
         break;
       case 'NETWORK_ERROR':
-        errorMessage = '네트워크 오류가 발생했습니다.\n 인터넷 연결을 확인해주세요.';
+        errorMessage = '네트워크 오류가 발생했습니다.\n인터넷 연결을 확인해주세요.';
         break;
       case 'CHECKOUT_EXPIRED':
-        errorMessage = '결제 시간이 만료되었습니다.\n 다시 시도해주세요.';
+        errorMessage = '결제 시간이 만료되었습니다.\n다시 시도해주세요.';
         break;
       default:
         errorMessage = error.message || '결제 중 오류가 발생했습니다.';
@@ -228,7 +228,7 @@ const StudyApplicationPage: React.FC = () => {
       setModalConfig({
         title: '신청 완료',
         message: isPaidStudy 
-          ? '결제 및 스터디 참여 신청이 완료되었습니다!\n 스터디 호스트가 검토 후 연락드릴 예정입니다.'
+          ? '결제 및 스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.'
           : '스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.',
         type: 'success',
         onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
@@ -241,7 +241,7 @@ const StudyApplicationPage: React.FC = () => {
       if (error.response?.status === 409) {
         setModalConfig({
           title: '중복 신청',
-          message: '이미 이 스터디에 참가 신청을 하셨습니다.\n 관리자가 검토 중이니 조금만 기다려주세요.',
+          message: '이미 이 스터디에 참가 신청을 하셨습니다.\n관리자가 검토 중이니 조금만 기다려주세요.',
           type: 'warning',
           onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
         });
@@ -249,7 +249,7 @@ const StudyApplicationPage: React.FC = () => {
         return;
       }
       
-      const errorMessage = error.response?.data?.message || '스터디 신청 중 오류가 발생했습니다.\n 다시 시도해주세요.';
+      const errorMessage = error.response?.data?.message || '스터디 신청 중 오류가 발생했습니다.\n다시 시도해주세요.';
       setModalConfig({
         title: '오류',
         message: errorMessage,
