@@ -74,7 +74,7 @@ const StudyPage: React.FC = () => {
     }
     
     // 신청 상태 확인
-    const application = myApplications.find(app => app.studyId === studyId);
+    const application = myApplications.find(app => app.studyId === studyId && app.status !== 'CANCELLED');
     if (application) {
       if (application.status === 'PENDING') {
         return { status: 'pending', applicationId: application.applicationId };
