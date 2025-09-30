@@ -393,6 +393,21 @@ const StudyDetailPageRenderer: React.FC = () => {
                     <div className={styles.statusInfo}>
                       <h3>모집 중인 스터디입니다</h3>
                       <p>마감일: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}</p>
+                      <div className={styles.capacityInfo}>
+                        <span className={styles.capacityText}>
+                          참여 인원: {studyData.enrolled || 0} / {studyData.capacity || 0}명
+                        </span>
+                        {studyData.capacity && studyData.enrolled !== undefined && (
+                          <div className={styles.capacityBar}>
+                            <div 
+                              className={styles.capacityProgress}
+                              style={{ 
+                                width: `${Math.min((studyData.enrolled / studyData.capacity) * 100, 100)}%` 
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                     {/* 스터디 제안자를 위한 관리 버튼 */}
                     {user && studyData.proposerId === user.email && (
@@ -517,6 +532,21 @@ const StudyDetailPageRenderer: React.FC = () => {
                       ).canApply
                         ? `마감일: ${studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '상시 모집'}`
                         : '현재 활발히 진행되고 있습니다'}</p>
+                      <div className={styles.capacityInfo}>
+                        <span className={styles.capacityText}>
+                          참여 인원: {studyData.enrolled || 0} / {studyData.capacity || 0}명
+                        </span>
+                        {studyData.capacity && studyData.enrolled !== undefined && (
+                          <div className={styles.capacityBar}>
+                            <div 
+                              className={styles.capacityProgress}
+                              style={{ 
+                                width: `${Math.min((studyData.enrolled / studyData.capacity) * 100, 100)}%` 
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                     {/* 스터디 제안자를 위한 관리 버튼 */}
                     {user && studyData.proposerId === user.email && (
