@@ -258,6 +258,37 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
     transparent && isScrolled && 'scrolled'
   ].filter(Boolean).join(' ');
 
+  const formatDateForInput = (date: Date | string | number[] | null | undefined): string => {
+    if (!date) return '';
+    
+    // Date 객체인 경우
+    if (date instanceof Date) {
+      return date.toISOString().split('T')[0];
+    }
+    
+    // 문자열인 경우
+    if (typeof date === 'string') {
+      // ISO 형식인 경우 날짜 부분만 추출
+      if (date.includes('T')) {
+        return date.split('T')[0];
+      }
+      // 이미 YYYY-MM-DD 형식인 경우
+      if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return date;
+      }
+      // 다른 형식인 경우 Date 객체로 변환 후 처리
+      return new Date(date).toISOString().split('T')[0];
+    }
+    
+    // 배열인 경우 ([year, month, day, ...] 형식)
+    if (Array.isArray(date) && date.length >= 3) {
+      const [year, month, day] = date;
+      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+    
+    return '';
+  };
+
   return (
     <header
       ref={headerRef}
@@ -344,7 +375,14 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                               {study.generation > 1 && <span className="generation-badge"> {study.generation}기</span>}
                             </span>
                             <span className={`dropdown-item-badge ${study.status.toLowerCase()}`}>
-                              {getStudyDisplayInfo(study.status, study.deadline?.toISOString()).label}
+                              {getStudyDisplayInfo(
+                                study.status,
+                                 study.deadline?.toISOString(),
+                                 formatDateForInput(study.startDate),
+                                 formatDateForInput(study.endDate),
+                                 study.capacity,
+                                 study.enrolled
+                              ).label}
                             </span>
                           </Link>
                         ))}
