@@ -202,12 +202,25 @@ const StudyPage: React.FC = () => {
   const getStatusLabel = (study: Study): string => {
     const displayInfo = getStudyDisplayInfo(
       study.status,
-      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline,
+      study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+      study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+      study.capacity,
+      study.enrolled
     );
     
-    if (displayInfo.canApply) return '모집중';
-    if (study.status === 'IN_PROGRESS') return '진행중';
-    if (study.status === 'COMPLETED') return '완료';
+    if (displayInfo.canApply) {
+      if(study.capacity && study.enrolled && study.enrolled >= study.capacity) {
+        return '정원 마감';
+      }
+      return '모집중';
+    }
+    if (study.status === 'IN_PROGRESS') {
+      return '진행중';
+    }
+    if (study.status === 'COMPLETED') {
+      return '완료';
+    }
     
     // Upcoming 체크
     const startDate = parseDate(study.startDate);
