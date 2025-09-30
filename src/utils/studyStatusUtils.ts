@@ -95,7 +95,7 @@ export function getStudyDisplayInfo(
       // 마감일이 없거나 아직 지나지 않았으면
       if (!deadlineDate || deadlineDate >= now) {
         // 정원이 없거나 정원이 남아있으면 신청 가능
-        if (!capacity || (enrolled !== undefined && enrolled < capacity)) {
+        if (!isFull) {
           canApplyInProgress = true;
         }
       }
