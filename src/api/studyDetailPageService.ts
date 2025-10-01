@@ -41,8 +41,7 @@ export enum SectionType {
   HOW_WE_ROLL = 'HOW_WE_ROLL',
   JOURNEY = 'JOURNEY',
   EXPERIENCE = 'EXPERIENCE',
-  LEADER_INTRO = 'LEADER_INTRO',
-  COFFEE_CHAT = 'COFFEE_CHAT'
+  LEADER_INTRO = 'LEADER_INTRO'
 }
 
 const SectionTypeToLabel: Record<string, string> = {
@@ -62,8 +61,7 @@ const SectionTypeToLabel: Record<string, string> = {
   [SectionType.STATS]: '통계',
   [SectionType.TABLE]: '표',
   [SectionType.CUSTOM_HTML]: '사용자 정의 HTML',
-  [SectionType.CODE_BLOCK]: '코드 블록',
-  [SectionType.COFFEE_CHAT]: '커피챗 요청'
+  [SectionType.CODE_BLOCK]: '코드 블록'
 }
 
 export const convertSectionTypeToLabel = (sectionType: string) => {

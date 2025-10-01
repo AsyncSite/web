@@ -46,21 +46,19 @@ const mapSectionPropsToComponentData = (section: PageSection, pageData?: StudyDe
 
     case SectionType.FAQ:
       // API returns 'questions' but component expects 'items'
+      // Pass all props including tagHeader, showIcons for standard style
+      // Also pass Join CTA props for standard theme
       return {
         items: section.props.questions || section.props.items || [],
         title: section.props.title,
         tagHeader: section.props.tagHeader,
-        showIcons: section.props.showIcons
-      };
-
-    case SectionType.COFFEE_CHAT:
-      // COFFEE_CHAT section props mapping
-      return {
-        title: section.props.title,
-        description: section.props.description,
-        buttonText: section.props.buttonText,
-        kakaoOpenChatUrl: section.props.kakaoOpenChatUrl,
-        tagHeader: section.props.tagHeader
+        showIcons: section.props.showIcons,
+        showJoinCTA: section.props.showJoinCTA,
+        joinTitle: section.props.joinTitle,
+        joinDescription: section.props.joinDescription,
+        joinButtonText: section.props.joinButtonText,
+        joinButtonAction: section.props.joinButtonAction,
+        kakaoOpenChatUrl: section.props.kakaoOpenChatUrl
       };
 
     case SectionType.HERO:
