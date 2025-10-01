@@ -20,6 +20,7 @@ const HowWeRollSection = lazy(() => import('./HowWeRollSection'));
 const JourneySection = lazy(() => import('./JourneySection'));
 const ExperienceSection = lazy(() => import('./ExperienceSection'));
 const LeaderIntroSection = lazy(() => import('./LeaderIntroSection'));
+const CoffeeChatSection = lazy(() => import('./CoffeeChatSection'));
 
 // Section registry mapping section types to components
 export const sectionRegistry: Record<SectionType | string, React.LazyExoticComponent<React.FC<any>>> = {
@@ -40,6 +41,7 @@ export const sectionRegistry: Record<SectionType | string, React.LazyExoticCompo
   [SectionType.JOURNEY]: JourneySection,
   [SectionType.EXPERIENCE]: ExperienceSection,
   [SectionType.LEADER_INTRO]: LeaderIntroSection,
+  [SectionType.COFFEE_CHAT]: CoffeeChatSection,
 };
 
 interface SectionRendererProps {
