@@ -281,6 +281,11 @@ export const mogakupTemplate: StudyTemplate = {
       title: 'FAQ',
       tagHeader: '자주 묻는 질문',
       showIcons: true,
+      showJoinCTA: true,
+      joinTitle: '당신의 레벨업을 기다립니다!',
+      joinDescription: '',
+      joinButtonText: '스터디 합류하기 🚀',
+      kakaoOpenChatUrl: 'https://open.kakao.com/o/example',
       items: [
         {
           question: 'Q. 어떤 사람들이 함께하나요?',
@@ -303,13 +308,6 @@ export const mogakupTemplate: StudyTemplate = {
           category: 'skill'
         }
       ]
-    },
-    coffeeChat: {
-      title: '당신의 레벨업을 기다립니다!',
-      tagHeader: '참가 신청',
-      description: '',
-      buttonText: '스터디 합류하기 🚀',
-      kakaoOpenChatUrl: 'https://open.kakao.com/o/example'
     },
     review: {
       enabled: true,

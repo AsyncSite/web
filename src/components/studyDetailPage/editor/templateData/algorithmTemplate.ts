@@ -24,18 +24,16 @@ export interface StudyTemplate {
       title: string;
       tagHeader: string;
       showIcons: boolean;
+      showJoinCTA: boolean;
+      joinTitle: string;
+      joinDescription: string;
+      joinButtonText: string;
+      kakaoOpenChatUrl: string;
       items: Array<{
         question: string;
         answer: string;
         category: string;
       }>;
-    };
-    coffeeChat?: {
-      title: string;
-      tagHeader?: string;
-      description: string;
-      buttonText: string;
-      kakaoOpenChatUrl: string;
     };
     experience?: {
       tagHeader?: string;
@@ -247,6 +245,11 @@ export const algorithmTemplate: StudyTemplate = {
       title: 'FAQ',
       tagHeader: '궁금증 해결',
       showIcons: true,
+      showJoinCTA: true,
+      joinTitle: '당신의 합류를 기다려요!',
+      joinDescription: '',
+      joinButtonText: '리더에게 커피챗 요청하기 ☕',
+      kakaoOpenChatUrl: 'https://open.kakao.com/o/example',
       items: [
         {
           question: '이 스터디는 어떤 스터디인가요?',
@@ -274,13 +277,6 @@ export const algorithmTemplate: StudyTemplate = {
           category: ''
         }
       ]
-    },
-    coffeeChat: {
-      title: '당신의 합류를 기다려요!',
-      tagHeader: '참가 신청',
-      description: '궁금한 점이 있으시다면 편하게 연락주세요. 함께 성장할 수 있는 기회를 만들어가요!',
-      buttonText: '리더에게 커피챗 요청하기 ☕',
-      kakaoOpenChatUrl: 'https://open.kakao.com/o/example'
     },
     howWeRoll: {
       title: '특별한 건 없어요.<br/>그냥 계속 모일 뿐이에요.',

@@ -141,6 +141,11 @@ export const bookStudyTemplate: StudyTemplate = {
       title: '궁금한 게 있나요?',
       tagHeader: '자주 묻는 질문',
       showIcons: true,
+      showJoinCTA: true,
+      joinTitle: '더 궁금한 게 있다면?',
+      joinDescription: '편하게 연락주세요. 커피챗도 환영!',
+      joinButtonText: '리더에게 문의하기 ☕',
+      kakaoOpenChatUrl: 'https://open.kakao.com/bookclub',
       items: [
         {
           question: '책을 다 못 읽고 가도 되나요?',
@@ -173,13 +178,6 @@ export const bookStudyTemplate: StudyTemplate = {
           category: '비용'
         }
       ]
-    },
-    coffeeChat: {
-      title: '더 궁금한 게 있다면?',
-      tagHeader: '참가 신청',
-      description: '편하게 연락주세요. 커피챗도 환영!',
-      buttonText: '리더에게 문의하기 ☕',
-      kakaoOpenChatUrl: 'https://open.kakao.com/bookclub'
     },
     review: {
       enabled: true,

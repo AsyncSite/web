@@ -4,7 +4,6 @@ import HeroSectionForm from './forms/HeroSectionForm';
 import MembersSectionForm from './forms/MembersSectionForm';
 import ReviewSectionForm from './forms/ReviewSectionForm';
 import FAQSectionForm from './forms/FAQSectionForm';
-import CoffeeChatSectionForm from './forms/CoffeeChatSectionForm';
 import RichTextSectionForm from './forms/RichTextSectionFormV2';
 import HowWeRollSectionForm from './forms/HowWeRollSectionForm';
 import JourneySectionForm from './forms/JourneySectionForm';
@@ -112,16 +111,7 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
             onCancel={onCancel}
           />
         );
-
-      case SectionType.COFFEE_CHAT:
-        return (
-          <CoffeeChatSectionForm
-            initialData={initialData}
-            onSave={onSave}
-            onCancel={onCancel}
-          />
-        );
-
+      
       default:
         return (
           <div className="unsupported-section">
