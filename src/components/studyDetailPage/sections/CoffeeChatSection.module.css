@@ -1,0 +1,125 @@
+/* CSS Variables */
+:root {
+  --color-primary: #c3e88d;
+  --color-secondary: #82aaff;
+  --color-text-primary: #f0f0f0;
+}
+
+/* Coffee Chat Section */
+.coffeeChatSection {
+  position: relative;
+  padding: 50px 30px 40px;
+  margin-bottom: 25px;
+  background: linear-gradient(135deg, #0d0d0d, #1f1f1f);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  min-height: 50vh;
+}
+
+.sectionTagHeader {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.coffeeChatContainer {
+  text-align: center;
+  padding: 30px;
+  background: rgba(130, 170, 255, 0.1);
+  border: 1px solid rgba(130, 170, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.coffeeChatTitle {
+  font-size: 1.8rem;
+  color: var(--color-secondary);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.coffeeChatDescription {
+  font-size: 1.15rem;
+  margin-bottom: 25px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.coffeeChatButton {
+  background-color: var(--color-primary);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 35px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(195, 232, 141, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coffeeChatButton:hover {
+  background-color: #b5d97f;
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(195, 232, 141, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .coffeeChatSection {
+    padding: 40px 20px 30px;
+  }
+
+  .sectionTagHeader {
+    top: 15px;
+    left: 20px;
+    font-size: 1rem;
+  }
+
+  .coffeeChatTitle {
+    font-size: 1.5rem;
+  }
+
+  .coffeeChatDescription {
+    font-size: 1rem;
+  }
+
+  .coffeeChatButton {
+    padding: 14px 30px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .coffeeChatSection {
+    padding: 30px 15px 25px;
+  }
+
+  .sectionTagHeader {
+    top: 10px;
+    left: 15px;
+    font-size: 0.9rem;
+  }
+
+  .coffeeChatTitle {
+    font-size: 1.3rem;
+  }
+
+  .coffeeChatButton {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+}
