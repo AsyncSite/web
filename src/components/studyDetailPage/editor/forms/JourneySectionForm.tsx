@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { JourneySectionData, Generation, journeyTemplates } from '../../types/journeyTypes';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
@@ -106,6 +106,26 @@ const JourneySectionForm: React.FC<JourneySectionFormProps> = ({
       }
     } else if (templateKey === 'bookStudy') {
       const journeyData = bookStudyTemplate.sections.journey;
+      if (!journeyData) return;
+
+      setData({
+        ...data,
+        ...journeyData,
+        generations: [...journeyData.generations],
+        layout: journeyData.layout as 'list' | 'timeline' | 'cards' | undefined
+      });
+      // Set RichTextEditor values
+      if (journeyData.title) {
+        setTitle(RichTextConverter.fromHTML(journeyData.title));
+      }
+      if (journeyData.subtitle) {
+        setSubtitle(RichTextConverter.fromHTML(journeyData.subtitle));
+      }
+      if (journeyData.closingMessage) {
+        setClosingMessage(RichTextConverter.fromHTML(journeyData.closingMessage));
+      }
+    } else if (templateKey === 'systemDesign') {
+      const journeyData = systemDesignTemplate.sections.journey;
       if (!journeyData) return;
 
       setData({

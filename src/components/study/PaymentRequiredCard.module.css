@@ -1,0 +1,223 @@
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.card.urgent {
+  border-color: #ff4444;
+  background: linear-gradient(135deg, #fff 0%, #fff5f5 100%);
+}
+
+/* 긴급 배지 */
+.urgentBadge {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: #ff4444;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.urgentIcon {
+  font-size: 14px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* 상태 배지 */
+.statusBadge {
+  display: inline-block;
+  background: #4CAF50;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* 스터디 제목 */
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+/* 축하 메시지 섹션 */
+.congratsSection {
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+  border-left: 4px solid #4CAF50;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.congratsMessage {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2e7d32;
+  margin: 0 0 8px 0;
+}
+
+.paymentInfo {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+/* 결제 정보 섹션 */
+.paymentSection {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 0;
+  margin-bottom: 20px;
+}
+
+.priceInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.priceLabel {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.priceAmount {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.deadlineInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.deadlineInfo.deadlineUrgent {
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+}
+
+.deadlineLabel {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.deadlineDate {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.deadlineInfo.deadlineUrgent .deadlineDate {
+  color: #d32f2f;
+}
+
+/* CTA 버튼 */
+.paymentButton {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.paymentButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.paymentButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.paymentButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 리뷰 노트 */
+.reviewNote {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 16px;
+  border-left: 3px solid #667eea;
+}
+
+.reviewNoteLabel {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reviewNoteText {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .priceAmount {
+    font-size: 20px;
+  }
+
+  .paymentButton {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}

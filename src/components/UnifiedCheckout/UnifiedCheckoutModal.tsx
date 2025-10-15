@@ -59,10 +59,10 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
     }
   }, [isExpired, isOpen, onClose, clearSession]);
   
-  // 모달이 열릴 때 초기화
+  // 모달이 열릴 때 초기화 (이니시스로 고정)
   useEffect(() => {
     if (isOpen) {
-      setSelectedMethod(null);
+      setSelectedMethod('inicis');
       setAgreedToTerms(false);
       setIsProcessing(false);
     }
@@ -385,13 +385,13 @@ const UnifiedCheckoutModal: React.FC<UnifiedCheckoutModalProps> = ({
             <>
               {/* 주문 요약 */}
               <CheckoutSummary checkoutData={checkoutData} />
-              
-              {/* 결제 수단 선택 */}
-              <PaymentMethodSelector
+
+              {/* 결제 수단 선택 - 이니시스로 고정하므로 UI 숨김 */}
+              {/* <PaymentMethodSelector
                 selectedMethod={selectedMethod}
                 onMethodSelect={setSelectedMethod}
-              />
-              
+              /> */}
+
               {/* 약관 동의 */}
               <div className={styles['unified-checkout-modal-terms']}>
                 <label className={styles['unified-checkout-modal-checkbox-label']}>

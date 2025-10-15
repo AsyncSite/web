@@ -1,0 +1,90 @@
+.study-management-cta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+}
+
+.study-management-cta-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.study-management-cta-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #c3e88d;
+}
+
+.study-management-cta-input,
+.study-management-cta-textarea {
+  padding: 12px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.study-management-cta-input:focus,
+.study-management-cta-textarea:focus {
+  outline: none;
+  border-color: #82aaff;
+}
+
+.study-management-cta-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.study-management-cta-help {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.study-management-cta-form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.study-management-cta-cancel-btn,
+.study-management-cta-save-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.study-management-cta-cancel-btn {
+  background: #3a3a3a;
+  color: #e0e0e0;
+}
+
+.study-management-cta-cancel-btn:hover {
+  background: #4a4a4a;
+}
+
+.study-management-cta-save-btn {
+  background: linear-gradient(135deg, #82aaff, #c3e88d);
+  color: #1a1a1a;
+}
+
+.study-management-cta-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(130, 170, 255, 0.3);
+}
+
+.study-management-cta-save-btn:active {
+  transform: translateY(0);
+}

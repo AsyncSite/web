@@ -7,10 +7,17 @@ import './App.css';
 import { env } from './config/environment';
 
 // Kakao SDK 초기화
-if (window.Kakao && !window.Kakao.isInitialized()) {
+if (window.Kakao && typeof window.Kakao.init === 'function') {
   try {
-    window.Kakao.init(env.kakaoAppKey);
-    console.log('Kakao SDK initialized:', window.Kakao.isInitialized());
+    // isInitialized가 함수인지 확인 후 호출
+    const isInitialized = typeof window.Kakao.isInitialized === 'function'
+      ? window.Kakao.isInitialized()
+      : false;
+
+    if (!isInitialized) {
+      window.Kakao.init(env.kakaoAppKey);
+      console.log('Kakao SDK initialized');
+    }
   } catch (error) {
     console.error('Failed to initialize Kakao SDK:', error);
   }

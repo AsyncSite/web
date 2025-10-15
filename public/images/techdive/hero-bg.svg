@@ -1,0 +1,226 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Glow effects -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#bgGradient)"/>
+
+  <!-- Grid pattern (whiteboard lines) -->
+  <g opacity="0.03">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="0" y1="600" x2="1200" y2="600" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="0" y1="700" x2="1200" y2="700" stroke="#C3E88D" stroke-width="1"/>
+
+    <line x1="100" y1="0" x2="100" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="300" y1="0" x2="300" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="400" y1="0" x2="400" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="500" y1="0" x2="500" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="700" y1="0" x2="700" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="800" y1="0" x2="800" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="900" y1="0" x2="900" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="1000" y1="0" x2="1000" y2="800" stroke="#C3E88D" stroke-width="1"/>
+    <line x1="1100" y1="0" x2="1100" y2="800" stroke="#C3E88D" stroke-width="1"/>
+  </g>
+
+  <!-- System Architecture Diagram -->
+
+  <!-- Client Layer (Top) -->
+  <g opacity="0.7">
+    <!-- Mobile Client -->
+    <rect x="150" y="80" width="120" height="80" rx="8" fill="none" stroke="#82AAFF" stroke-width="2" filter="url(#glow)"/>
+    <text x="210" y="110" fill="#82AAFF" font-size="14" text-anchor="middle" font-family="monospace">Mobile</text>
+    <text x="210" y="130" fill="#82AAFF" font-size="12" text-anchor="middle" font-family="monospace" opacity="0.6">Client</text>
+
+    <!-- Web Client -->
+    <rect x="300" y="80" width="120" height="80" rx="8" fill="none" stroke="#82AAFF" stroke-width="2" filter="url(#glow)"/>
+    <text x="360" y="110" fill="#82AAFF" font-size="14" text-anchor="middle" font-family="monospace">Web</text>
+    <text x="360" y="130" fill="#82AAFF" font-size="12" text-anchor="middle" font-family="monospace" opacity="0.6">Client</text>
+  </g>
+
+  <!-- Load Balancer -->
+  <g opacity="0.8">
+    <rect x="240" y="230" width="140" height="70" rx="8" fill="none" stroke="#FFD700" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="310" y="255" fill="#FFD700" font-size="14" text-anchor="middle" font-family="monospace" font-weight="bold">Load</text>
+    <text x="310" y="275" fill="#FFD700" font-size="14" text-anchor="middle" font-family="monospace" font-weight="bold">Balancer</text>
+  </g>
+
+  <!-- Application Servers -->
+  <g opacity="0.7">
+    <!-- Server 1 -->
+    <rect x="100" y="370" width="100" height="70" rx="6" fill="none" stroke="#C3E88D" stroke-width="2" filter="url(#glow)"/>
+    <text x="150" y="395" fill="#C3E88D" font-size="12" text-anchor="middle" font-family="monospace">Server 1</text>
+    <circle cx="150" cy="418" r="8" fill="#C3E88D" opacity="0.3"/>
+
+    <!-- Server 2 -->
+    <rect x="230" y="370" width="100" height="70" rx="6" fill="none" stroke="#C3E88D" stroke-width="2" filter="url(#glow)"/>
+    <text x="280" y="395" fill="#C3E88D" font-size="12" text-anchor="middle" font-family="monospace">Server 2</text>
+    <circle cx="280" cy="418" r="8" fill="#C3E88D" opacity="0.3"/>
+
+    <!-- Server 3 -->
+    <rect x="360" y="370" width="100" height="70" rx="6" fill="none" stroke="#C3E88D" stroke-width="2" filter="url(#glow)"/>
+    <text x="410" y="395" fill="#C3E88D" font-size="12" text-anchor="middle" font-family="monospace">Server 3</text>
+    <circle cx="410" cy="418" r="8" fill="#C3E88D" opacity="0.3"/>
+  </g>
+
+  <!-- Cache Layer -->
+  <g opacity="0.75">
+    <rect x="530" y="200" width="130" height="90" rx="8" fill="none" stroke="#FF6B9D" stroke-width="2" stroke-dasharray="5,5" filter="url(#glow)"/>
+    <text x="595" y="230" fill="#FF6B9D" font-size="14" text-anchor="middle" font-family="monospace">Redis</text>
+    <text x="595" y="250" fill="#FF6B9D" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Cache</text>
+    <circle cx="565" cy="265" r="4" fill="#FF6B9D"/>
+    <circle cx="595" cy="265" r="4" fill="#FF6B9D"/>
+    <circle cx="625" cy="265" r="4" fill="#FF6B9D"/>
+  </g>
+
+  <!-- Message Queue -->
+  <g opacity="0.75">
+    <rect x="530" y="360" width="130" height="90" rx="8" fill="none" stroke="#FFCB6B" stroke-width="2" stroke-dasharray="5,5" filter="url(#glow)"/>
+    <text x="595" y="390" fill="#FFCB6B" font-size="14" text-anchor="middle" font-family="monospace">Kafka</text>
+    <text x="595" y="410" fill="#FFCB6B" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Queue</text>
+    <path d="M 565 425 L 575 425 L 575 435 L 565 435 Z M 580 425 L 590 425 L 590 435 L 580 435 Z M 595 425 L 605 425 L 605 435 L 595 435 Z" fill="none" stroke="#FFCB6B" stroke-width="1.5"/>
+  </g>
+
+  <!-- Database Cluster -->
+  <g opacity="0.8">
+    <!-- Primary DB -->
+    <rect x="140" y="550" width="110" height="80" rx="6" fill="none" stroke="#82AAFF" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="195" y="575" fill="#82AAFF" font-size="13" text-anchor="middle" font-family="monospace" font-weight="bold">Primary</text>
+    <text x="195" y="595" fill="#82AAFF" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Database</text>
+    <circle cx="195" cy="610" r="6" fill="#82AAFF" opacity="0.5"/>
+
+    <!-- Replica DB 1 -->
+    <rect x="280" y="550" width="90" height="80" rx="6" fill="none" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
+    <text x="325" y="580" fill="#82AAFF" font-size="11" text-anchor="middle" font-family="monospace">Replica</text>
+    <text x="325" y="595" fill="#82AAFF" font-size="10" text-anchor="middle" font-family="monospace" opacity="0.5">Read</text>
+
+    <!-- Replica DB 2 -->
+    <rect x="390" y="550" width="90" height="80" rx="6" fill="none" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
+    <text x="435" y="580" fill="#82AAFF" font-size="11" text-anchor="middle" font-family="monospace">Replica</text>
+    <text x="435" y="595" fill="#82AAFF" font-size="10" text-anchor="middle" font-family="monospace" opacity="0.5">Read</text>
+  </g>
+
+  <!-- CDN / Object Storage -->
+  <g opacity="0.7">
+    <rect x="720" y="150" width="140" height="100" rx="8" fill="none" stroke="#C792EA" stroke-width="2" filter="url(#glow)"/>
+    <text x="790" y="180" fill="#C792EA" font-size="13" text-anchor="middle" font-family="monospace">CDN</text>
+    <text x="790" y="200" fill="#C792EA" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Content</text>
+    <text x="790" y="215" fill="#C792EA" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Delivery</text>
+    <circle cx="760" cy="230" r="3" fill="#C792EA"/>
+    <circle cx="775" cy="230" r="3" fill="#C792EA"/>
+    <circle cx="790" cy="230" r="3" fill="#C792EA"/>
+    <circle cx="805" cy="230" r="3" fill="#C792EA"/>
+    <circle cx="820" cy="230" r="3" fill="#C792EA"/>
+  </g>
+
+  <!-- Connection Lines -->
+  <g opacity="0.4">
+    <!-- Clients to Load Balancer -->
+    <line x1="210" y1="160" x2="310" y2="230" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="5,5"/>
+    <line x1="360" y1="160" x2="310" y2="230" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="5,5"/>
+
+    <!-- Load Balancer to Servers -->
+    <line x1="280" y1="300" x2="150" y2="370" stroke="#FFD700" stroke-width="2"/>
+    <line x1="310" y1="300" x2="280" y2="370" stroke="#FFD700" stroke-width="2"/>
+    <line x1="340" y1="300" x2="410" y2="370" stroke="#FFD700" stroke-width="2"/>
+
+    <!-- Servers to Cache -->
+    <line x1="460" y1="400" x2="530" y2="240" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <!-- Servers to Queue -->
+    <line x1="460" y1="410" x2="530" y2="400" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <!-- Servers to Database -->
+    <line x1="150" y1="440" x2="195" y2="550" stroke="#C3E88D" stroke-width="2"/>
+    <line x1="280" y1="440" x2="325" y2="550" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+    <line x1="410" y1="440" x2="435" y2="550" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+
+    <!-- DB Replication -->
+    <line x1="250" y1="590" x2="280" y2="590" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.3"/>
+    <line x1="370" y1="590" x2="390" y2="590" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.3"/>
+
+    <!-- CDN connection -->
+    <line x1="460" y1="380" x2="720" y2="200" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="5,5" opacity="0.3"/>
+  </g>
+
+  <!-- Floating connection dots (animated feel) -->
+  <g opacity="0.5">
+    <circle cx="285" cy="265" r="3" fill="#FFD700" filter="url(#softGlow)">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="380" cy="405" r="3" fill="#C3E88D" filter="url(#softGlow)">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="495" cy="310" r="3" fill="#FF6B9D" filter="url(#softGlow)">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Annotations (whiteboard style) -->
+  <g opacity="0.6">
+    <!-- Arrow pointing to Load Balancer -->
+    <path d="M 450 260 L 380 260" stroke="#FFD700" stroke-width="1.5" fill="none"/>
+    <polygon points="385,260 390,257 390,263" fill="#FFD700"/>
+    <text x="460" y="265" fill="#FFD700" font-size="11" font-family="monospace" opacity="0.7">nginx</text>
+
+    <!-- Arrow pointing to Cache -->
+    <path d="M 690 230 L 660 235" stroke="#FF6B9D" stroke-width="1.5" fill="none"/>
+    <polygon points="665,235 670,232 670,238" fill="#FF6B9D"/>
+    <text x="700" y="235" fill="#FF6B9D" font-size="11" font-family="monospace" opacity="0.7">fast</text>
+
+    <!-- Scale annotation -->
+    <text x="520" y="540" fill="#82AAFF" font-size="10" font-family="monospace" opacity="0.5">Scale →</text>
+  </g>
+
+  <!-- Background particles (tech feel) -->
+  <g opacity="0.15">
+    <circle cx="850" cy="400" r="2" fill="#C3E88D"/>
+    <circle cx="920" cy="250" r="2" fill="#82AAFF"/>
+    <circle cx="760" cy="500" r="2" fill="#FFD700"/>
+    <circle cx="980" cy="350" r="2" fill="#FF6B9D"/>
+    <circle cx="700" cy="420" r="2" fill="#C792EA"/>
+    <circle cx="880" cy="600" r="2" fill="#FFCB6B"/>
+
+    <!-- More scattered dots -->
+    <circle cx="90" cy="250" r="1.5" fill="#82AAFF"/>
+    <circle cx="50" cy="450" r="1.5" fill="#C3E88D"/>
+    <circle cx="120" cy="700" r="1.5" fill="#FFD700"/>
+    <circle cx="950" cy="120" r="1.5" fill="#FF6B9D"/>
+    <circle cx="1050" cy="550" r="1.5" fill="#C792EA"/>
+  </g>
+
+  <!-- Corner annotations (mob design concept) -->
+  <g opacity="0.3">
+    <text x="20" y="30" fill="#C3E88D" font-size="10" font-family="monospace">// Mob Design Session</text>
+    <text x="20" y="50" fill="#82AAFF" font-size="9" font-family="monospace">6 people, 1 whiteboard</text>
+
+    <text x="1000" y="770" fill="#FFD700" font-size="9" font-family="monospace" text-anchor="end">Phase 1-5 →</text>
+    <text x="1000" y="790" fill="#82AAFF" font-size="8" font-family="monospace" text-anchor="end">2 hours sprint</text>
+  </g>
+</svg>

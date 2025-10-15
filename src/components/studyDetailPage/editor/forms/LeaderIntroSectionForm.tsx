@@ -4,7 +4,7 @@ import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import studyService from '../../../../api/studyService';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './LeaderIntroSectionForm.css';
 
@@ -111,6 +111,8 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
       leaderData = mogakupTemplate.sections.leaderIntro;
     } else if (templateType === 'bookStudy') {
       leaderData = bookStudyTemplate.sections.leaderIntro;
+    } else if (templateType === 'systemDesign') {
+      leaderData = systemDesignTemplate.sections.leaderIntro;
     } else {
       return;
     }

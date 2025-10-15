@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './HeroSectionForm.css';
 
@@ -125,6 +125,8 @@ const HeroSectionForm: React.FC<HeroSectionFormProps> = ({
       heroData = mogakupTemplate.sections.hero;
     } else if (templateType === 'bookStudy') {
       heroData = bookStudyTemplate.sections.hero;
+    } else if (templateType === 'systemDesign') {
+      heroData = systemDesignTemplate.sections.hero;
     } else {
       return;
     }

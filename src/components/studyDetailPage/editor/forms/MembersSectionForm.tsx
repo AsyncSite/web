@@ -14,7 +14,7 @@ import ConfirmModal from '../../../common/ConfirmModal';
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 
 interface MembersSectionFormProps {
@@ -318,6 +318,8 @@ const MembersSectionForm: React.FC<MembersSectionFormProps> = ({
       membersData = mogakupTemplate.sections.members;
     } else if (templateType === 'bookStudy') {
       membersData = bookStudyTemplate.sections.members;
+    } else if (templateType === 'systemDesign') {
+      membersData = systemDesignTemplate.sections.members;
     } else {
       return;
     }

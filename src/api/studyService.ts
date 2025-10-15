@@ -1,6 +1,7 @@
 import publicApiClient, { handlePublicApiError } from './publicClient';
 import apiClient from './client';
 import { parseDate } from '../utils/studyScheduleUtils';
+import type { GroupedStudyRelations } from './types/applicationTypes';
 
 // Constants
 export const StudyStatus = {
@@ -252,9 +253,13 @@ export interface StudyProposalRequest {
 // Application related types
 export const ApplicationStatus = {
   PENDING: 'PENDING',
-  ACCEPTED: 'ACCEPTED', 
+  ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  PAYMENT_PENDING: 'PAYMENT_PENDING', // 결제 진행 중
+  CONFIRMED: 'CONFIRMED',             // 결제 완료 + Member 생성
+  EXPIRED: 'EXPIRED',                 // 결제 기한 만료
+  REFUNDED: 'REFUNDED'                // 환불 처리 완료
 } as const;
 
 export type ApplicationStatus = typeof ApplicationStatus[keyof typeof ApplicationStatus];
@@ -285,6 +290,10 @@ export interface MyApplicationItem {
   status: ApplicationStatus;
   appliedAt: string; // ISO string
   reviewNote?: string;
+  checkoutId?: string;           // Checkout Service의 PaymentIntent ID
+  paymentDeadline?: string;      // 결제 기한 (ISO string)
+  paidAmount?: number;           // 결제 금액
+  confirmedAt?: string;          // 결제 확정 시간
 }
 
 export interface AcceptApplicationRequest {
@@ -295,6 +304,38 @@ export interface AcceptApplicationRequest {
 export interface RejectApplicationRequest {
   reviewerId: string;
   reason: string;
+}
+
+// Payment related types
+export interface CreatePaymentRequest {
+  idempotencyKey?: string; // 멱등성 키 (선택적, 없으면 자동 생성)
+}
+
+export interface PaymentResponse {
+  applicationId: string;
+  checkoutId: string;
+  checkoutUrl: string;
+  transactionId: string;
+  amount: number;
+  expiresAt: string; // ISO string
+  invocationType: string;  // "SDK" | "URL"
+  portOneSdkPayload?: {    // SDK 호출용 페이로드
+    storeId: string;
+    channelKey: string;
+    paymentId: string;
+    orderName: string;
+    totalAmount: number;
+    currency: string;
+    payMethod: string;
+    customer: {
+      fullName: string;
+      email: string;
+      phoneNumber?: string;
+    };
+    redirectUrl: string;
+    noticeUrls: string[];
+    customData?: Record<string, any>;
+  };
 }
 
 // Study Update Request Type
@@ -537,34 +578,33 @@ class StudyService {
   }
 
   /**
-   * Get my studies grouped by role/type
-   * @returns 제안한, 신청한, 리드하는, 참여하는, 완료된 스터디를 구분하여 반환
+   * Get my studies grouped by role/type (카테고리 기반)
+   * @returns 제안한, 대기중, 결제필요, 결제중, 확정, 리드, 참여, 완료, 비활성 스터디를 구분하여 반환
    */
-  async getMyStudiesGrouped(): Promise<{
-    proposed: any[];
-    applications: any[];
-    leading: any[];
-    participating: any[];
-    completed: any[];
-  }> {
+  async getMyStudiesGrouped(): Promise<GroupedStudyRelations> {
     try {
       console.log('Calling getMyStudiesGrouped, URL:', this.MY_API_PATH);
       const response = await apiClient.get<{
         success: boolean;
-        data: any;
+        data: GroupedStudyRelations;
         error: any;
         timestamp: any;
-      } | any>(this.MY_API_PATH, { params: { format: 'grouped' } });
-      
+      } | GroupedStudyRelations>(this.MY_API_PATH, { params: { format: 'grouped' } });
+
       console.log('getMyStudiesGrouped response:', response.data);
-      
+
       const data = (response.data as any)?.data || response.data || {};
+
+      // Backend 응답 구조에 맞게 반환
       return {
         proposed: data.proposed || [],
-        applications: data.applications || [],
+        pending: data.pending || [],
+        awaitingPayment: data.awaitingPayment || [],
+        confirmed: data.confirmed || [],
         leading: data.leading || [],
         participating: data.participating || [],
-        completed: data.completed || []
+        completed: data.completed || [],
+        inactive: data.inactive || []
       };
     } catch (error) {
       console.error('getMyStudiesGrouped error:', error);
@@ -606,6 +646,9 @@ class StudyService {
 
     return list.map((item: any) => {
       const appliedAtDate = parseDate(item.appliedAt);
+      const paymentDeadlineDate = item.paymentDeadline ? parseDate(item.paymentDeadline) : null;
+      const confirmedAtDate = item.confirmedAt ? parseDate(item.confirmedAt) : null;
+
       return {
         applicationId: item.applicationId,
         studyId: item.studyId,
@@ -613,6 +656,10 @@ class StudyService {
         status: (item.status as ApplicationStatus) || ApplicationStatus.PENDING,
         appliedAt: appliedAtDate ? appliedAtDate.toISOString() : new Date().toISOString(),
         reviewNote: item.reviewNote || undefined,
+        checkoutId: item.checkoutId || undefined,
+        paymentDeadline: paymentDeadlineDate ? paymentDeadlineDate.toISOString() : undefined,
+        paidAmount: item.paidAmount || undefined,
+        confirmedAt: confirmedAtDate ? confirmedAtDate.toISOString() : undefined,
       } as MyApplicationItem;
     });
   }
@@ -791,7 +838,24 @@ class StudyService {
       error: any;
       timestamp: number[];
     }>(`${this.STUDY_API_PATH}/${studyId}`, updateRequest);
-    
+
+    return response.data?.data || response.data;
+  }
+
+  /**
+   * Create payment for accepted application (applicant only)
+   * @param studyId - Study ID
+   * @param applicationId - Application ID
+   * @param request - Payment request with optional idempotency key
+   */
+  async createPayment(studyId: string, applicationId: string, request: CreatePaymentRequest = {}): Promise<PaymentResponse> {
+    const response = await apiClient.post<{
+      success: boolean;
+      data: PaymentResponse;
+      error: any;
+      timestamp: number[];
+    }>(`/api/studies/${studyId}/applications/${applicationId}/payment`, request);
+
     return response.data?.data || response.data;
   }
 }

@@ -11,15 +11,7 @@ interface FAQSectionProps {
     }>;
     title?: string;
     tagHeader?: string;
-    // theme removed - using standard styles
     showIcons?: boolean; // Q/A 아이콘 표시 여부
-    // Join CTA 블록 (표준 스타일)
-    showJoinCTA?: boolean;
-    joinTitle?: string;
-    joinDescription?: string;
-    joinButtonText?: string;
-    joinButtonAction?: string; // Deprecated - for backward compatibility
-    kakaoOpenChatUrl?: string; // 카카오톡 오픈채팅 URL
   };
 }
 
@@ -28,13 +20,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
     items = [],
     title = '자주 묻는 질문',
     tagHeader,
-    showIcons = false,
-    showJoinCTA = false,
-    joinTitle = '당신의 합류를 기다려요!',
-    joinDescription = '',
-    joinButtonText = '리더에게 커피챗 요청하기 ☕',
-    joinButtonAction = '@renechoi에게 커피챗 요청!', // Deprecated
-    kakaoOpenChatUrl = ''
+    showIcons = false
   } = data;
   
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -77,26 +63,6 @@ const FAQSection: React.FC<FAQSectionProps> = ({ data }) => {
             </div>
           ))}
         </div>
-        
-        {showJoinCTA && (
-          <div className={styles.joinCtaBlock}>
-            <h3 className={styles.joinCtaTitle}>{joinTitle}</h3>
-            {joinDescription && <p className={styles.joinDescription}>{joinDescription}</p>}
-            <button
-              className={styles.joinContactButton}
-              onClick={() => {
-                if (kakaoOpenChatUrl) {
-                  window.open(kakaoOpenChatUrl, '_blank', 'noopener,noreferrer');
-                } else if (joinButtonAction) {
-                  // Backward compatibility - deprecated
-                  alert(joinButtonAction);
-                }
-              }}
-            >
-              {joinButtonText}
-            </button>
-          </div>
-        )}
     </section>
   );
 };

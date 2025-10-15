@@ -8,6 +8,7 @@ import PasswordChangeModal from '../../components/auth/PasswordChangeModalEnhanc
 import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import ProfileOnboardingModal from '../../components/auth/ProfileOnboardingModal';
 import PaymentCancelModal from '../../components/payment/PaymentCancelModal';
+import PaymentRequiredCard from '../../components/study/PaymentRequiredCard';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import styles from './ProfilePage.module.css';
@@ -16,12 +17,7 @@ import reviewService from '../../api/reviewService';
 import { handleApiError } from '../../api/client';
 import { calculateUserProfileCompleteness, getProfileCompletenessColorClass } from '../../utils/profileCompleteness';
 import StudyUpdateModal from '../../components/ui/StudyUpdateModal';
-import { CheckoutButton } from '../../components/UnifiedCheckout';
-import { 
-  createStudyCheckoutRequest,
-  CheckoutResponse,
-  CheckoutError
-} from '../../types/checkout';
+import type { GroupedStudyRelations } from '../../api/types/applicationTypes';
 
 function ProfilePage(): React.ReactNode {
   // Auth context에서 실제 사용자 정보 가져오기
@@ -114,7 +110,7 @@ function ProfilePage(): React.ReactNode {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedStudyForEdit, setSelectedStudyForEdit] = useState<Study | null>(null);
   const [studyReviews, setStudyReviews] = useState<Record<string, boolean>>({});
-  const [myStudiesGrouped, setMyStudiesGrouped] = useState<any>(null);
+  const [myStudiesGrouped, setMyStudiesGrouped] = useState<GroupedStudyRelations | null>(null);
   const [participatingCollapsed, setParticipatingCollapsed] = useState<boolean>(true);
   const [leadingCollapsed, setLeadingCollapsed] = useState<boolean>(true);
 
@@ -209,38 +205,6 @@ function ProfilePage(): React.ReactNode {
     if (hour < 12) return '좋은 아침이에요';
     if (hour < 18) return '좋은 오후예요';
     return '좋은 저녁이에요';
-  };
-
-  // 결제 성공 핸들러
-  const handlePaymentSuccess = async (response: CheckoutResponse) => {
-    console.log('Payment successful:', response);
-    toast.success('결제가 성공적으로 시작되었습니다!', {
-      duration: 5000,
-      position: 'top-center',
-    });
-    
-    // TODO: 백엔드 API 연동 후 아래 로직 활성화
-    // try {
-    //   await studyService.confirmPayment({
-    //     applicationId: response.metadata?.applicationId,
-    //     paymentId: response.checkoutId
-    //   });
-    //   
-    //   // 스터디 목록 새로고침
-    //   const grouped = await studyService.getMyStudiesGrouped();
-    //   setMyStudiesGrouped(grouped);
-    // } catch (error) {
-    //   console.error('Payment confirmation failed:', error);
-    // }
-  };
-
-  // 결제 실패 핸들러
-  const handlePaymentError = (error: CheckoutError) => {
-    console.error('Payment failed:', error);
-    toast.error(`결제 처리 중 오류가 발생했습니다: ${error.message}`, {
-      duration: 5000,
-      position: 'top-center',
-    });
   };
 
   return (
@@ -400,8 +364,13 @@ function ProfilePage(): React.ReactNode {
                   })();
                 }}>다시 시도</button>
               </div>
-            ) : myStudies.participating.length === 0 && myStudies.leading.length === 0 && 
-                (!myStudiesGrouped || (myStudiesGrouped.proposed.length === 0 && myStudiesGrouped.applications.length === 0)) ? (
+            ) : myStudies.participating.length === 0 && myStudies.leading.length === 0 &&
+                (!myStudiesGrouped || (
+                  myStudiesGrouped.proposed.length === 0 &&
+                  myStudiesGrouped.pending.length === 0 &&
+                  myStudiesGrouped.awaitingPayment.length === 0 &&
+                  myStudiesGrouped.confirmed.length === 0
+                )) ? (
               <div className={styles.emptyState}>
                 <p>아직 참여 중인 스터디가 없어요</p>
                 <p>스터디를 둘러보고 관심있는 주제에 참여해보세요!</p>
@@ -452,18 +421,14 @@ function ProfilePage(): React.ReactNode {
                   </div>
                 )}
 
-                {/* 신청 중인 스터디 섹션 */}
-                {myStudiesGrouped?.applications && myStudiesGrouped.applications
-                  .filter((app: any) => app.status !== 'ACCEPTED')
-                  .length > 0 && (
+                {/* 신청 중인 스터디 섹션 (PENDING, REJECTED만 표시) */}
+                {myStudiesGrouped?.pending && myStudiesGrouped.pending.length > 0 && (
                   <div className={styles.studyGroup}>
                     <div className={styles.mystSectionHeader}>
-                      <h3>신청한 스터디 <span className={styles.mystBadge}>{myStudiesGrouped.applications.filter((app: any) => app.status !== 'ACCEPTED').length}</span></h3>
+                      <h3>신청한 스터디 <span className={styles.mystBadge}>{myStudiesGrouped.pending.length}</span></h3>
                     </div>
                     <div className={styles.studyCards}>
-                      {myStudiesGrouped.applications
-                        .filter((app: any) => app.status !== 'ACCEPTED')
-                        .map((study: any) => (
+                      {myStudiesGrouped.pending.map((study: any) => (
                         <div 
                           key={study.applicationId || study.studyId} 
                           className={`${styles.studyCard} ${study.status === 'REJECTED' ? styles.rejected : ''} ${study.status === 'REJECTED' ? styles.clickable : ''}`}
@@ -504,76 +469,32 @@ function ProfilePage(): React.ReactNode {
                   </div>
                 )}
 
-                {/* 결제 대기 중인 스터디 섹션 (승인된 신청) */}
-                {myStudiesGrouped?.applications && myStudiesGrouped.applications
-                  .filter((app: any) => app.status === 'ACCEPTED')
-                  .length > 0 && (
+                {/* 결제 필요 스터디 섹션 (ACCEPTED - 사용자 액션 필요!) */}
+                {myStudiesGrouped?.awaitingPayment && myStudiesGrouped.awaitingPayment.length > 0 && (
                   <div className={styles.studyGroup}>
                     <div className={styles.mystSectionHeader}>
                       <h3>
-                        결제 대기 중인 스터디 
+                        결제 필요
                         <span className={styles.mystBadge}>
-                          {myStudiesGrouped.applications.filter((app: any) => app.status === 'ACCEPTED').length}
+                          {myStudiesGrouped.awaitingPayment.length}
                         </span>
                       </h3>
                     </div>
                     <div className={styles.studyCards}>
-                      {myStudiesGrouped.applications
-                        .filter((study: any) => study.status === 'ACCEPTED')
-                        .map((study: any) => (
-                        <div key={study.applicationId || study.studyId} className={`${styles.studyCard} ${styles.paymentPending}`}>
-                          <h4>
-                            {study.studyTitle}
-                            <span className={`${styles.studyStatusBadge} ${styles.accepted}`}>
-                              승인됨
-                            </span>
-                          </h4>
-                          <div className={styles.paymentNotice}>
-                            <p className={styles.successMessage}>
-                              🎉 축하합니다! 참가 신청이 승인되었습니다.
-                            </p>
-                            <p className={styles.paymentInfo}>
-                              결제를 완료하면 스터디 참여가 확정됩니다.
-                            </p>
-                            {study.paymentDeadline && (
-                              <p className={styles.deadline}>
-                                결제 마감: {parseDate(study.paymentDeadline)?.toLocaleDateString() || '확인 필요'}
-                              </p>
-                            )}
-                          </div>
-                          
-                          <div className={styles.paymentSection}>
-                            <div className={styles.priceInfo}>
-                              <span className={styles.priceLabel}>참가비</span>
-                              <span className={styles.priceAmount}>
-                                {study.price ? `${study.price.toLocaleString()}원` : '무료'}
-                              </span>
-                            </div>
-                            
-                            <CheckoutButton
-                              variant="primary"
-                              size="medium"
-                              fullWidth
-                              checkoutData={createStudyCheckoutRequest({
-                                studyId: study.studyId,
-                                studyName: study.studyTitle,
-                                price: study.price || 150000, // 기본값 설정
-                                discountRate: study.discountRate || 0,
-                                customerName: authUser?.name || '사용자',
-                                customerEmail: authUser?.email || 'test@asyncsite.com',
-                                customerPhone: '010-0000-0000', // TODO: User 타입에 phone 필드 추가 필요
-                                cohortId: study.cohortId || `cohort-${Date.now()}`,
-                                cohortName: study.cohortName || '기본 기수',
-                                startDate: study.startDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                                endDate: study.endDate || new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-                              })}
-                              onCheckoutComplete={handlePaymentSuccess}
-                              onCheckoutError={handlePaymentError}
-                              label="결제하고 참여 확정하기"
-                              showPrice={true}
-                            />
-                          </div>
-                        </div>
+                      {myStudiesGrouped.awaitingPayment.map((application: any) => (
+                        <PaymentRequiredCard
+                          key={application.applicationId}
+                          application={application}
+                          onPaymentCreated={async () => {
+                            // 결제 생성 후 목록 새로고침
+                            try {
+                              const grouped = await studyService.getMyStudiesGrouped();
+                              setMyStudiesGrouped(grouped);
+                            } catch (error) {
+                              console.error('Failed to refresh studies:', error);
+                            }
+                          }}
+                        />
                       ))}
                     </div>
                   </div>

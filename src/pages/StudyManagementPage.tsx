@@ -13,6 +13,7 @@ import studyDetailPageService, {
   UpdatePageRequest,
   convertSectionTypeToLabel
 } from '../api/studyDetailPageService';
+import { systemDesignTemplate } from '../components/studyDetailPage/editor/templateData/systemDesignTemplate';
 import { SectionRenderer } from '../components/studyDetailPage/sections';
 import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
 import { normalizeMembersPropsForUI, serializeMembersPropsForAPI } from '../components/studyDetailPage/utils/membersAdapter';
@@ -60,6 +61,7 @@ const StudyManagementPage: React.FC = () => {
   const [isSearchingStudies, setIsSearchingStudies] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('');
 
   // Modal and Toast states
   const [confirmModal, setConfirmModal] = useState<{
@@ -362,10 +364,45 @@ const StudyManagementPage: React.FC = () => {
         sections: prev.sections.filter(s => s.id !== sectionId)
       };
     });
-    
+
     // 저장되지 않은 변경사항 표시
     setHasUnsavedChanges(true);
     addToast('섹션이 삭제되었습니다. 저장 버튼을 눌러 변경사항을 저장하세요.', 'info');
+  };
+
+  // 전체 섹션 삭제
+  const handleDeleteAllSections = async () => {
+    if (!studyId || !pageData) return;
+
+    setConfirmModal({
+      isOpen: true,
+      title: '전체 섹션 삭제',
+      message: '⚠️ 정말로 모든 섹션을 삭제하시겠습니까? 이 작업은 실행 취소할 수 없습니다.',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        await doDeleteAllSections();
+      },
+      confirmButtonClass: styles.deleteConfirmButton
+    });
+  };
+
+  const doDeleteAllSections = async () => {
+    if (!studyId || !pageData) return;
+
+    const sectionCount = pageData.sections.length;
+
+    // 로컬 상태에서 모든 섹션 제거 (서버 호출 없음)
+    setPageData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sections: []
+      };
+    });
+
+    // 저장되지 않은 변경사항 표시
+    setHasUnsavedChanges(true);
+    addToast(`${sectionCount}개의 섹션이 모두 삭제되었습니다. 저장 버튼을 눌러 변경사항을 저장하세요.`, 'warning');
   };
 
   const handleReorderSection = async (sectionId: string, newIndex: number) => {
@@ -521,11 +558,11 @@ const StudyManagementPage: React.FC = () => {
 
     try {
       setSaving(true);
-      
+
       // 선택한 스터디의 상세 페이지 가져오기 (상태와 무관하게)
       const sourcePage = await studyDetailPageService.getPageForEditing(selectedStudy.id, selectedStudy.slug);
       // Source page loaded successfully
-      
+
       if (!sourcePage || !sourcePage.sections || sourcePage.sections.length === 0) {
         addToast('가져올 페이지 데이터가 없습니다. 해당 스터디의 상세 페이지가 작성되지 않았습니다.', 'warning');
         setShowImportDialog(false);
@@ -542,7 +579,7 @@ const StudyManagementPage: React.FC = () => {
 
       // 섹션들을 메모리에만 복사 (즉시 저장하지 않음!)
       const sectionsToAdd = sourcePage.sections.filter(section => section.type !== 'REVIEWS');
-      
+
       if (sectionsToAdd.length === 0) {
         addToast('가져올 수 있는 섹션이 없습니다.', 'warning');
         setShowImportDialog(false);
@@ -551,12 +588,12 @@ const StudyManagementPage: React.FC = () => {
 
       // 현재 페이지 데이터에 섹션들 추가 (메모리상에서만)
       const updatedSections = [...(currentPage.sections || [])];
-      
+
       // 최대 order 값 찾기
-      const maxOrder = updatedSections.length > 0 
+      const maxOrder = updatedSections.length > 0
         ? Math.max(...updatedSections.map(s => s.order || 0))
         : 0;
-      
+
       // 새 섹션들 추가 (임시 ID 부여)
       sectionsToAdd.forEach((section, index) => {
         updatedSections.push({
@@ -571,7 +608,7 @@ const StudyManagementPage: React.FC = () => {
         ...currentPage,
         sections: updatedSections
       });
-      
+
       addToast(`${selectedStudy.name}에서 ${sectionsToAdd.length}개 섹션을 가져왔습니다. 저장 버튼을 눌러 변경사항을 저장하세요.`, 'info');
       setShowImportDialog(false);
       setHasUnsavedChanges(true); // 저장되지 않은 변경사항 표시
@@ -579,6 +616,86 @@ const StudyManagementPage: React.FC = () => {
       console.error('Failed to import page:', err);
       addToast('페이지 가져오기에 실패했습니다. 콘솔에서 에러를 확인해주세요.', 'error');
       // 모달은 닫지 않음 - 다른 스터디 선택 가능
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // 선택한 템플릿으로 초안 생성
+  const handleApplyTemplate = async () => {
+    if (!study || !selectedTemplate) {
+      addToast('템플릿을 먼저 선택해주세요.', 'warning');
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      // 현재 페이지가 없으면 먼저 생성
+      let currentPage = pageData;
+      if (!currentPage) {
+        currentPage = await studyDetailPageService.createPage(study.id, { slug: study.slug });
+        setPageData(currentPage);
+      }
+
+      // 템플릿 타입에 따라 섹션 매핑
+      let sectionMapping: Array<{ type: SectionType; props: any }> = [];
+      let templateName = '';
+
+      if (selectedTemplate === 'systemDesign') {
+        templateName = '시스템 디자인 (테크 다이브)';
+        sectionMapping = [
+          { type: SectionType.HERO, props: systemDesignTemplate.sections.hero },
+          { type: SectionType.LEADER_INTRO, props: systemDesignTemplate.sections.leaderIntro },
+          { type: SectionType.RICH_TEXT, props: systemDesignTemplate.sections.richText },
+          { type: SectionType.HOW_WE_ROLL, props: systemDesignTemplate.sections.howWeRoll },
+          { type: SectionType.JOURNEY, props: systemDesignTemplate.sections.journey },
+          { type: SectionType.EXPERIENCE, props: systemDesignTemplate.sections.experience },
+          { type: SectionType.MEMBERS, props: systemDesignTemplate.sections.members },
+          { type: SectionType.REVIEWS, props: systemDesignTemplate.sections.review },
+          { type: SectionType.FAQ, props: systemDesignTemplate.sections.faq },
+          { type: SectionType.CTA, props: systemDesignTemplate.sections.cta }
+        ];
+      }
+      // 향후 다른 템플릿 추가 가능:
+      // else if (selectedTemplate === 'algorithm') { ... }
+      // else if (selectedTemplate === 'mogakup') { ... }
+
+      if (sectionMapping.length === 0) {
+        addToast('선택한 템플릿을 찾을 수 없습니다.', 'error');
+        return;
+      }
+
+      // 현재 페이지 데이터에 섹션들 추가 (메모리상에서만)
+      const updatedSections = [...(currentPage.sections || [])];
+
+      // 최대 order 값 찾기
+      const maxOrder = updatedSections.length > 0
+        ? Math.max(...updatedSections.map(s => s.order || 0))
+        : 0;
+
+      // 템플릿의 모든 섹션 추가 (임시 ID 부여)
+      sectionMapping.forEach((section, index) => {
+        updatedSections.push({
+          id: `template_${Date.now()}_${index}`, // 임시 ID
+          type: section.type,
+          props: section.props,
+          order: maxOrder + (index + 1) * 100
+        });
+      });
+
+      // State만 업데이트 (저장하지 않음!)
+      setPageData({
+        ...currentPage,
+        sections: updatedSections
+      });
+
+      addToast(`${templateName} 템플릿에서 ${sectionMapping.length}개 섹션을 생성했습니다. 저장 버튼을 눌러 변경사항을 저장하세요.`, 'success');
+      setHasUnsavedChanges(true); // 저장되지 않은 변경사항 표시
+      setSelectedTemplate(''); // 선택 초기화
+    } catch (err) {
+      console.error('Failed to generate template:', err);
+      addToast('템플릿 생성에 실패했습니다.', 'error');
     } finally {
       setSaving(false);
     }
@@ -1155,12 +1272,53 @@ const StudyManagementPage: React.FC = () => {
                 <div className={styles.sectionsManager}>
                   <div className={styles.sectionsHeader}>
                     <h4>섹션 관리</h4>
-                    <button
-                      className={styles.btnAddSection}
-                      onClick={() => setShowAddSection(true)}
-                    >
-                      + 섹션 추가
-                    </button>
+                    <div className={styles.sectionsHeaderButtons}>
+                      <button
+                        className={styles.btnDeleteAllSections}
+                        onClick={handleDeleteAllSections}
+                        disabled={!pageData?.sections || pageData.sections.length === 0}
+                        title="모든 섹션 삭제"
+                      >
+                        🗑️ 전체 삭제
+                      </button>
+                      <button
+                        className={styles.btnAddSection}
+                        onClick={() => setShowAddSection(true)}
+                      >
+                        + 섹션 추가
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 템플릿 선택 UI */}
+                  <div className={styles.templateSelector}>
+                    <label className={styles.templateLabel}>
+                      🚀 템플릿으로 빠르게 시작하기
+                    </label>
+                    <div className={styles.templateControls}>
+                      <select
+                        className={styles.templateDropdown}
+                        value={selectedTemplate}
+                        onChange={(e) => setSelectedTemplate(e.target.value)}
+                        disabled={saving}
+                      >
+                        <option value="">템플릿 선택...</option>
+                        <option value="systemDesign">시스템 디자인 (테크 다이브)</option>
+                        {/* 향후 추가 가능:
+                        <option value="algorithm">알고리즘 스터디</option>
+                        <option value="mogakup">모각코</option>
+                        <option value="bookStudy">독서 스터디</option>
+                        */}
+                      </select>
+                      <button
+                        className={styles.btnApplyTemplate}
+                        onClick={handleApplyTemplate}
+                        disabled={saving || !selectedTemplate}
+                        title="선택한 템플릿의 모든 섹션 생성"
+                      >
+                        적용
+                      </button>
+                    </div>
                   </div>
 
                   <div className={styles.keyboardShortcutsHint}>
@@ -1184,6 +1342,7 @@ const StudyManagementPage: React.FC = () => {
                             SectionType.RICH_TEXT,
                             SectionType.MEMBERS,
                             SectionType.FAQ,
+                            SectionType.CTA,
                             SectionType.REVIEWS,
                             SectionType.HOW_WE_ROLL,
                             SectionType.JOURNEY,

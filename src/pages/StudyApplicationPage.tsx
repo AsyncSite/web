@@ -4,8 +4,6 @@ import { useAuth } from '../contexts/AuthContext';
 import studyService, { Study, ApplicationRequest } from '../api/studyService';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 import Modal from '../components/common/Modal/Modal';
-import { CheckoutButton } from '../components/UnifiedCheckout';
-import { createStudyCheckoutRequest, CheckoutResponse, CheckoutError } from '../types/checkout';
 import './StudyApplicationPage.css';
 
 
@@ -118,54 +116,6 @@ const StudyApplicationPage: React.FC = () => {
     }));
   };
 
-  // 결제 완료 후 신청 처리
-  const handlePaymentSuccess = async (result: CheckoutResponse) => {
-    console.log('결제 완료:', result);
-    console.log('결제 ID (checkoutId):', result.checkoutId);
-    
-    // 결제 완료 후 신청 진행 (checkoutId를 paymentId로 사용)
-    setModalConfig({
-      title: '신청 완료',
-      message: isPaidStudy
-          ? '결제 및 스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.'
-          : '스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.',
-      type: 'success',
-      onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
-    });
-    setShowModal(true);
-  };
-
-  // 결제 오류 처리
-  const handlePaymentError = (error: CheckoutError) => {
-    console.error('결제 실패:', error);
-    
-    let errorMessage = '결제 중 오류가 발생했습니다.';
-    
-    switch (error.code) {
-      case 'USER_CANCEL':
-        errorMessage = '결제가 취소되었습니다.';
-        break;
-      case 'PAYMENT_FAILED':
-        errorMessage = '결제에 실패했습니다.\n카드 정보를 확인해주세요.';
-        break;
-      case 'NETWORK_ERROR':
-        errorMessage = '네트워크 오류가 발생했습니다.\n인터넷 연결을 확인해주세요.';
-        break;
-      case 'CHECKOUT_EXPIRED':
-        errorMessage = '결제 시간이 만료되었습니다.\n다시 시도해주세요.';
-        break;
-      default:
-        errorMessage = error.message || '결제 중 오류가 발생했습니다.';
-    }
-    
-    setModalConfig({
-      title: '결제 실패',
-      message: errorMessage,
-      type: 'error'
-    });
-    setShowModal(true);
-  };
-
   const handleStudyApplicationValidate = () => {
     // Skip check during auth loading
     if (authLoading) {
@@ -200,10 +150,7 @@ const StudyApplicationPage: React.FC = () => {
     // validation
     if(handleStudyApplicationValidate()) return;
 
-    // 유료 스터디인 경우 종료
-    if (isPaidStudy)
-      return;
-
+    // 유료/무료 모두 일반 신청 프로세스로 진행 (승인 후 결제)
     await submitApplication();
   };
 
@@ -224,11 +171,11 @@ const StudyApplicationPage: React.FC = () => {
       };
       
       await studyService.applyToStudy(studyId, applicationRequest);
-      
+
       setModalConfig({
         title: '신청 완료',
-        message: isPaidStudy 
-          ? '결제 및 스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.'
+        message: isPaidStudy
+          ? `스터디 참여 신청이 완료되었습니다!\n\n1. 스터디 호스트가 신청서를 검토합니다\n2. 승인되면 이메일로 안내를 받습니다\n3. 48시간 내에 ${studyPrice.toLocaleString()}원을 결제해주세요\n4. 결제 완료 후 스터디에 참여할 수 있습니다`
           : '스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.',
         type: 'success',
         onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
@@ -393,63 +340,42 @@ const StudyApplicationPage: React.FC = () => {
           </div>
 
           <div className="form-actions">
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => navigate('/study')}
               className="cancel-button"
             >
               취소
             </button>
-            
-            {isPaidStudy && study ? (
-              <CheckoutButton
-                variant="primary"
-                size="large"
-                fullWidth={false}
-                checkoutData={createStudyCheckoutRequest({
-                  studyId: study.id,
-                  studyName: study.name,
-                  price: studyPrice,
-                  customerName: user?.name || user?.username || '사용자',
-                  customerEmail: user?.email || '',
-                  customerPhone: '010-0000-0000', // 사용자 전화번호가 있으면 사용
-                  cohortId: `cohort-${study.id}`,
-                  cohortName: `${study.name} ${study.generation}기`,
-                  startDate: study.startDate ? 
-                    (typeof study.startDate === 'string' ? study.startDate : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]) :
-                    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                  endDate: study.endDate ? 
-                    (typeof study.endDate === 'string' ? study.endDate : new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]) :
-                    new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-                })}
-                onCheckoutValidate={handleStudyApplicationValidate}
-                onCheckoutComplete={handlePaymentSuccess}
-                onCheckoutError={handlePaymentError}
-                label={`${studyPrice.toLocaleString()}원 결제하고 신청하기`}
-                showPrice={false}
-                disabled={isSubmitting}
-                className="submit-button"
-              />
-            ) : (
-              <button 
-                type="submit" 
-                className="submit-button"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? '신청 중...' : '참여 신청하기'}
-              </button>
-            )}
+
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? '신청 중...' : isPaidStudy ? `참여 신청하기 (승인 후 ${studyPrice.toLocaleString()}원 결제)` : '참여 신청하기'}
+            </button>
           </div>
         </form>
 
         <div className="application-info">
           <h3>📋 신청 프로세스</h3>
-          <ol>
-            <li>지원서를 작성하여 제출합니다.</li>
-            <li>스터디 호스트가 지원서를 검토합니다. (1-3일 소요)</li>
-            <li>승인되면 이메일로 안내를 받습니다.</li>
-            <li>스터디 멤버로 활동을 시작합니다.</li>
-          </ol>
+          {isPaidStudy ? (
+            <ol>
+              <li>지원서를 작성하여 제출합니다.</li>
+              <li>스터디 호스트가 지원서를 검토합니다. (1-3일 소요)</li>
+              <li>승인되면 이메일로 안내를 받습니다.</li>
+              <li><strong>48시간 내에 {studyPrice.toLocaleString()}원을 결제해주세요.</strong></li>
+              <li>결제 완료 후 스터디 멤버로 활동을 시작합니다.</li>
+            </ol>
+          ) : (
+            <ol>
+              <li>지원서를 작성하여 제출합니다.</li>
+              <li>스터디 호스트가 지원서를 검토합니다. (1-3일 소요)</li>
+              <li>승인되면 이메일로 안내를 받습니다.</li>
+              <li>스터디 멤버로 활동을 시작합니다.</li>
+            </ol>
+          )}
           <p className="info-note">
             * 지원서는 스터디 호스트에게만 공개되며, 성실하게 작성해주시면 선발에 도움이 됩니다.
           </p>

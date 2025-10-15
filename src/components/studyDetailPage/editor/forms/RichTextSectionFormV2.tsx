@@ -20,7 +20,7 @@ import {
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './RichTextSectionForm.css';
 
@@ -199,6 +199,16 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       }
     } else if (templateType === 'bookStudy') {
       const richTextData = bookStudyTemplate.sections.richText;
+      if (richTextData) {
+        setTitle(richTextData.title || '');
+        setBackgroundColor(richTextData.backgroundColor || '#0a0a0a');
+
+        // HTML content를 블록으로 변환
+        const blocks = htmlToBlocks(richTextData.content || '');
+        setBlocks(blocks);
+      }
+    } else if (templateType === 'systemDesign') {
+      const richTextData = systemDesignTemplate.sections.richText;
       if (richTextData) {
         setTitle(richTextData.title || '');
         setBackgroundColor(richTextData.backgroundColor || '#0a0a0a');

@@ -869,15 +869,168 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sectionsHeader h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #C3E88D;
+  margin: 0;
+}
+
+.sectionsHeaderButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .btnAddSection {
-  background: rgba(195, 232, 141, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.btnAddSection:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.btnDeleteAllSections {
+  background: rgba(255, 99, 71, 0.1);
+  color: rgba(255, 99, 71, 0.9);
+  border: 1px solid rgba(255, 99, 71, 0.3);
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.btnDeleteAllSections:hover:not(:disabled) {
+  background: rgba(255, 99, 71, 0.15);
+  border-color: rgba(255, 99, 71, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 99, 71, 0.3);
+}
+
+.btnDeleteAllSections:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btnGenerateTemplate {
+  background: linear-gradient(135deg, #C3E88D 0%, #82AAFF 100%);
+  color: #1a1a1a;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(195, 232, 141, 0.2);
+}
+
+.btnGenerateTemplate:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(195, 232, 141, 0.4);
+}
+
+.btnGenerateTemplate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Template Selector */
+.templateSelector {
+  background: rgba(195, 232, 141, 0.05);
+  border: 1px solid rgba(195, 232, 141, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.templateLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
   color: #C3E88D;
-  border: 1px solid rgba(195, 232, 141, 0.3);
-  padding: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.templateControls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.templateDropdown {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.templateDropdown:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(195, 232, 141, 0.4);
+}
+
+.templateDropdown:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.templateDropdown option {
+  background: #2d2d2d;
+  color: #ffffff;
+  padding: 8px;
+}
+
+.btnApplyTemplate {
+  background: linear-gradient(135deg, #C3E88D 0%, #82AAFF 100%);
+  color: #1a1a1a;
+  border: none;
+  padding: 10px 24px;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.btnApplyTemplate:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(195, 232, 141, 0.4);
+}
+
+.btnApplyTemplate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Add Section Modal */

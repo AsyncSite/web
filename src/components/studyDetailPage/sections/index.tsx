@@ -8,6 +8,7 @@ const HeroSection = lazy(() => import('./HeroSection'));
 // GallerySection removed - not in use
 const MembersSection = lazy(() => import('./MembersSection'));
 const FAQSection = lazy(() => import('./FAQSection'));
+const CTASection = lazy(() => import('./CTASection'));
 const ReviewsSection = lazy(() => import('./ReviewsSection'));
 const VideoEmbedSection = lazy(() => import('./VideoEmbedSection'));
 const TabsSection = lazy(() => import('./TabsSection'));
@@ -28,6 +29,7 @@ export const sectionRegistry: Record<SectionType | string, React.LazyExoticCompo
   // [SectionType.GALLERY]: GallerySection, // Removed - not in use
   [SectionType.MEMBERS]: MembersSection,
   [SectionType.FAQ]: FAQSection,
+  [SectionType.CTA]: CTASection,
   [SectionType.REVIEWS]: ReviewsSection,
   [SectionType.VIDEO_EMBED]: VideoEmbedSection,
   [SectionType.TABS]: TabsSection,
