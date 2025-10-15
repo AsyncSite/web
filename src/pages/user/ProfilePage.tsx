@@ -528,8 +528,8 @@ function ProfilePage(): React.ReactNode {
                         <p className={styles.studyMeta}>역할: {study.role}</p>
                         <p className={styles.studyMeta}>참여일: {parseDate(study.joinedAt)?.toLocaleDateString() || 'Invalid Date'}</p>
                         <p className={styles.studyMeta}>출석률: {study.attendanceRate == null ? 'N/A' : `${study.attendanceRate}%`}</p>
-                        <div className={styles.studyActions}>
-                          {study.studyStatus === 'COMPLETED' && (
+                        {study.studyStatus === 'COMPLETED' && (
+                          <div className={styles.studyActions}>
                             <button
                               className={styles.reviewActionButton}
                               onClick={() => {
@@ -541,17 +541,8 @@ function ProfilePage(): React.ReactNode {
                             >
                               {studyReviews[study.studyId] ? '리뷰 수정' : '리뷰 작성'}
                             </button>
-                          )}
-                          <button
-                            className={styles.cancelPaymentButton}
-                            onClick={() => {
-                              setSelectedStudyForCancel(study);
-                              setShowPaymentCancelModal(true);
-                            }}
-                          >
-                            결제 취소
-                          </button>
-                        </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
