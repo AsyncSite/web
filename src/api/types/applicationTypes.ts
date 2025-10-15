@@ -8,6 +8,7 @@ export const ApplicationStatus = {
   // 신청 단계
   PENDING: 'PENDING',           // 승인 대기 (호스트 검토 대기)
   ACCEPTED: 'ACCEPTED',         // 승인됨 → 결제 필요 (사용자 액션 필요!)
+  PAYMENT_PENDING: 'PAYMENT_PENDING',  // 입금 대기 (입금 알림 완료, 관리자 확인 대기)
   REJECTED: 'REJECTED',         // 거절됨
 
   // 완료 단계
@@ -31,6 +32,9 @@ export const APPLICATION_CATEGORIES = {
   // 결제 필요 (빨강 배지 + 긴급 CTA)
   awaitingPayment: [ApplicationStatus.ACCEPTED],
 
+  // 입금 확인 대기 (파랑 배지 + 정보성)
+  depositPending: [ApplicationStatus.PAYMENT_PENDING],
+
   // 결제 완료 (초록 배지)
   confirmed: [ApplicationStatus.CONFIRMED],
 
@@ -53,6 +57,7 @@ export type ApplicationCategory = keyof typeof APPLICATION_CATEGORIES;
 export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   [ApplicationStatus.PENDING]: '승인 대기중',
   [ApplicationStatus.ACCEPTED]: '결제 필요',
+  [ApplicationStatus.PAYMENT_PENDING]: '입금 확인 대기',
   [ApplicationStatus.REJECTED]: '거절됨',
   [ApplicationStatus.CONFIRMED]: '참여 확정',
   [ApplicationStatus.CANCELLED]: '취소됨',
@@ -65,6 +70,7 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
 export const STATUS_BADGE_COLORS: Record<ApplicationStatus, string> = {
   [ApplicationStatus.PENDING]: 'gray',
   [ApplicationStatus.ACCEPTED]: 'red',        // 긴급 - 사용자 액션 필요!
+  [ApplicationStatus.PAYMENT_PENDING]: 'blue', // 정보성 - 관리자 확인 대기
   [ApplicationStatus.REJECTED]: 'gray',
   [ApplicationStatus.CONFIRMED]: 'green',
   [ApplicationStatus.CANCELLED]: 'gray',
@@ -114,11 +120,12 @@ export const isInactive = (status: ApplicationStatus): boolean => {
  */
 export const STATUS_PRIORITY: Record<ApplicationStatus, number> = {
   [ApplicationStatus.ACCEPTED]: 1,        // 최우선 - 사용자 액션 필요!
-  [ApplicationStatus.PENDING]: 2,         // 대기 중
-  [ApplicationStatus.CONFIRMED]: 3,       // 완료
-  [ApplicationStatus.CANCELLED]: 4,       // 비활성
-  [ApplicationStatus.REJECTED]: 4,
-  [ApplicationStatus.REFUNDED]: 4
+  [ApplicationStatus.PAYMENT_PENDING]: 2, // 입금 확인 대기
+  [ApplicationStatus.PENDING]: 3,         // 신청 대기 중
+  [ApplicationStatus.CONFIRMED]: 4,       // 완료
+  [ApplicationStatus.CANCELLED]: 5,       // 비활성
+  [ApplicationStatus.REJECTED]: 5,
+  [ApplicationStatus.REFUNDED]: 5
 };
 
 /**
@@ -148,6 +155,16 @@ export interface PaymentRequiredApplication extends ApplicationBase {
 }
 
 /**
+ * 입금 확인 대기 Application (PAYMENT_PENDING)
+ */
+export interface DepositPendingApplication extends ApplicationBase {
+  status: typeof ApplicationStatus.PAYMENT_PENDING;
+  paidAmount: number;
+  costType?: string;
+  checkoutId?: string;
+}
+
+/**
  * Grouped Study Relations 응답 타입
  * Backend의 getAllMyStudyRelations() 응답 구조
  */
@@ -155,6 +172,7 @@ export interface GroupedStudyRelations {
   proposed: any[];
   pending: ApplicationBase[];
   awaitingPayment: PaymentRequiredApplication[];
+  depositPending: DepositPendingApplication[];
   confirmed: ApplicationBase[];
   leading: any[];
   participating: any[];

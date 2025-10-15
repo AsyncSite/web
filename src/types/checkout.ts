@@ -22,8 +22,8 @@ export interface ApiResponse<T> {
 // ===== 도메인 정의 =====
 export type CheckoutDomain = 'study' | 'documento' | 'job-navigator';
 
-// ===== 결제 수단 (네이버페이/카카오페이/이니시스) =====
-export type CheckoutPaymentMethod = 'naverpay' | 'kakaopay' | 'inicis';
+// ===== 결제 수단 (네이버페이/카카오페이/이니시스/계좌이체) =====
+export type CheckoutPaymentMethod = 'naverpay' | 'kakaopay' | 'inicis' | 'ACCOUNT_TRANSFER';
 
 // ===== 구매 유형 =====
 export type CheckoutItemType = 

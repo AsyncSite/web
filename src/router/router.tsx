@@ -22,6 +22,8 @@ const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
 const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
 const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
+const PaymentAccountInfoPage = lazy(() => import('../pages/PaymentAccountInfoPage'));
+const PaymentPendingPage = lazy(() => import('../pages/PaymentPendingPage'));
 const CheckoutTestPage = lazy(() => import('../pages/CheckoutTestPage'));
 // MockPaymentPage 제거
 
@@ -113,6 +115,14 @@ const router = createBrowserRouter([
       {
         path: 'payment/fail',
         element: <PaymentFailPage />,
+      },
+      {
+        path: 'payment/account-info',
+        element: <PaymentAccountInfoPage />,
+      },
+      {
+        path: 'payment/pending',
+        element: <PaymentPendingPage />,
       },
       {
         path: 'checkout/test',

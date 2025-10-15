@@ -9,6 +9,7 @@ import LogoutConfirmModal from '../../components/auth/LogoutConfirmModal';
 import ProfileOnboardingModal from '../../components/auth/ProfileOnboardingModal';
 import PaymentCancelModal from '../../components/payment/PaymentCancelModal';
 import PaymentRequiredCard from '../../components/study/PaymentRequiredCard';
+import DepositPendingCard from '../../components/study/DepositPendingCard';
 import gameActivityService, { GameActivity } from '../../services/gameActivityService';
 import StarBackground from '../../components/common/StarBackground';
 import styles from './ProfilePage.module.css';
@@ -369,6 +370,7 @@ function ProfilePage(): React.ReactNode {
                   myStudiesGrouped.proposed.length === 0 &&
                   myStudiesGrouped.pending.length === 0 &&
                   myStudiesGrouped.awaitingPayment.length === 0 &&
+                  myStudiesGrouped.depositPending.length === 0 &&
                   myStudiesGrouped.confirmed.length === 0
                 )) ? (
               <div className={styles.emptyState}>
@@ -494,6 +496,28 @@ function ProfilePage(): React.ReactNode {
                               console.error('Failed to refresh studies:', error);
                             }
                           }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 입금 확인 대기 스터디 섹션 (PAYMENT_PENDING - 관리자 확인 대기) */}
+                {myStudiesGrouped?.depositPending && myStudiesGrouped.depositPending.length > 0 && (
+                  <div className={styles.studyGroup}>
+                    <div className={styles.mystSectionHeader}>
+                      <h3>
+                        입금 확인 대기
+                        <span className={styles.mystBadge}>
+                          {myStudiesGrouped.depositPending.length}
+                        </span>
+                      </h3>
+                    </div>
+                    <div className={styles.studyCards}>
+                      {myStudiesGrouped.depositPending.map((application: any) => (
+                        <DepositPendingCard
+                          key={application.applicationId}
+                          application={application}
                         />
                       ))}
                     </div>

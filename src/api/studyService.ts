@@ -338,6 +338,15 @@ export interface PaymentResponse {
   };
 }
 
+// Notify Deposit Response
+export interface NotifyDepositResponse {
+  applicationId: string;
+  status: ApplicationStatus;
+  checkoutId?: string;
+  success: boolean;
+  message: string;
+}
+
 // Study Update Request Type
 export interface StudyUpdateRequest {
   title?: string;
@@ -600,6 +609,7 @@ class StudyService {
         proposed: data.proposed || [],
         pending: data.pending || [],
         awaitingPayment: data.awaitingPayment || [],
+        depositPending: data.depositPending || [],
         confirmed: data.confirmed || [],
         leading: data.leading || [],
         participating: data.participating || [],
@@ -855,6 +865,23 @@ class StudyService {
       error: any;
       timestamp: number[];
     }>(`/api/studies/${studyId}/applications/${applicationId}/payment`, request);
+
+    return response.data?.data || response.data;
+  }
+
+  /**
+   * Notify deposit completion (account transfer only)
+   * @param studyId - Study ID
+   * @param applicationId - Application ID
+   * @returns Response with updated application status
+   */
+  async notifyDeposit(studyId: string, applicationId: string): Promise<NotifyDepositResponse> {
+    const response = await apiClient.post<{
+      success: boolean;
+      data: NotifyDepositResponse;
+      error: any;
+      timestamp: number[];
+    }>(`/api/studies/${studyId}/applications/${applicationId}/payment/notify-deposit`);
 
     return response.data?.data || response.data;
   }

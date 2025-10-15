@@ -36,6 +36,14 @@ const PAYMENT_METHODS: PaymentMethodInfo[] = [
     logo: '🟩',  // 실제로는 이미지 URL 사용
     bgColor: '#03C75A',
     borderColor: '#00B050'
+  },
+  {
+    id: 'ACCOUNT_TRANSFER',
+    name: '계좌이체',
+    description: '입금 확인 후 승인 (1-2일 소요)',
+    logo: '🏦',
+    bgColor: '#4A5568',
+    borderColor: '#2D3748'
   }
 ];
 

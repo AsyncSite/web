@@ -32,8 +32,34 @@ const PaymentRequiredCard: React.FC<PaymentRequiredCardProps> = ({
 
       toast.dismiss('payment-loading');
 
+      // 계좌이체인 경우 계좌 정보 페이지로 이동
+      // SDK payload의 payMethod가 ACCOUNT_TRANSFER이거나, checkoutUrl에 ACCOUNT_TRANSFER가 포함된 경우
+      if (response.portOneSdkPayload?.payMethod === 'ACCOUNT_TRANSFER' ||
+          response.checkoutUrl?.includes('ACCOUNT_TRANSFER')) {
+        // 사용자 이름 가져오기 (localStorage에서)
+        const userStr = localStorage.getItem('user');
+        const userName = userStr ? JSON.parse(userStr).name || '' : '';
+
+        // 세션 스토리지에 주문 정보 저장 (입금 알림 API 호출용 studyId, applicationId 포함)
+        const paymentSessionData = {
+          intentId: response.checkoutId,
+          studyId: application.studyId,
+          applicationId: application.applicationId,
+          studyName: application.studyTitle,
+          amount: application.paidAmount,
+          userName: userName
+        };
+        sessionStorage.setItem('currentPaymentSession', JSON.stringify(paymentSessionData));
+
+        toast.success('계좌이체 정보 페이지로 이동합니다', { duration: 2000 });
+        window.location.href = `/payment/account-info?intentId=${response.checkoutId}`;
+
+        if (onPaymentCreated) {
+          onPaymentCreated();
+        }
+      }
       // SDK 모드인 경우 PortOne SDK 호출
-      if (response.invocationType === 'SDK' && response.portOneSdkPayload) {
+      else if (response.invocationType === 'SDK' && response.portOneSdkPayload) {
         toast.loading('결제창을 여는 중...', { id: 'portone-loading' });
 
         const portOneModule = await import('@portone/browser-sdk/v2');
