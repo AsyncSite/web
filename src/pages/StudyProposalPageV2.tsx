@@ -300,10 +300,10 @@ const StudyProposalPageV2: React.FC = () => {
   };
 
   const validateSections = (): string | null => {
-    // LEADER_INTRO 필수 검증
+    // LEADER_INTRO 필수 검증 - name만 필수, introduction은 선택사항
     const leaderIntroData = sectionData[DetailPageSectionType.LEADER_INTRO];
-    if (!leaderIntroData?.name || !leaderIntroData?.introduction) {
-      return '리더 소개 섹션에서 이름과 소개를 입력해주세요.';
+    if (!leaderIntroData?.name) {
+      return '리더 소개 섹션에서 이름을 입력해주세요.';
     }
 
     // HOW_WE_ROLL 필수 검증 - HowWeRollData 구조에 맞게 수정

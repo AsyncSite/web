@@ -57,8 +57,11 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
   // 전문성/배경
   const [career, setCareer] = useState<string[]>(initialData?.background?.career || []);
   const [education, setEducation] = useState<string[]>(initialData?.background?.education || []);
-  const [expertise, setExpertise] = useState<string[]>(
-    initialData?.background?.expertise?.slice(0, 3) || []
+  const [expertise, setExpertise] = useState<Array<{ id: string; value: string }>>(
+    initialData?.background?.expertise?.slice(0, 3).map((e: string, i: number) => ({
+      id: `expertise-${Date.now()}-${i}`,
+      value: e
+    })) || []
   );
   
   // 연락처/링크
@@ -136,7 +139,10 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
     setPhilosophy(RichTextConverter.fromHTML(leaderData.philosophy));
     setWelcomeMessage(RichTextConverter.fromHTML(leaderData.welcomeMessage));
 
-    setExpertise(leaderData.expertise);
+    setExpertise(leaderData.expertise.map((e: string, i: number) => ({
+      id: `expertise-${Date.now()}-${i}`,
+      value: e
+    })));
 
     setSince(leaderData.since);
     setTotalStudies(leaderData.totalStudies);
@@ -164,7 +170,10 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
     setAchievements(initialData?.experience?.achievements || []);
     setCareer(initialData?.background?.career || []);
     setEducation(initialData?.background?.education || []);
-    setExpertise(initialData?.background?.expertise || []);
+    setExpertise(initialData?.background?.expertise?.map((e: string, i: number) => ({
+      id: `expertise-${Date.now()}-${i}`,
+      value: e
+    })) || []);
     setEmail(initialData?.links?.email || '');
     setGithub(initialData?.links?.github || '');
     setLinkedin(initialData?.links?.linkedin || '');
@@ -174,16 +183,16 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
   // 키워드 관리
   const updateKeyword = (index: number, value: string) => {
     const updated = [...expertise];
-    updated[index] = value;
+    updated[index] = { ...updated[index], value };
     setExpertise(updated);
   };
-  
+
   const addKeyword = () => {
     if (expertise.length < 3) {
-      setExpertise([...expertise, '']);
+      setExpertise([...expertise, { id: `expertise-${Date.now()}`, value: '' }]);
     }
   };
-  
+
   const removeKeyword = (index: number) => {
     setExpertise(expertise.filter((_, i) => i !== index));
   };
@@ -236,7 +245,7 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
       background: (career.length > 0 || education.length > 0 || expertise.length > 0) ? {
         career: career.filter(c => c.trim()).length > 0 ? career.filter(c => c.trim()) : undefined,
         education: education.filter(e => e.trim()).length > 0 ? education.filter(e => e.trim()) : undefined,
-        expertise: expertise.filter(e => e.trim()).length > 0 ? expertise.filter(e => e.trim()) : undefined
+        expertise: expertise.filter(e => e.value.trim()).length > 0 ? expertise.map(e => e.value).filter(v => v.trim()) : undefined
       } : undefined,
       links: (email || github || linkedin || blog) ? {
         email: email || undefined,
@@ -332,12 +341,12 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
         <div className="leader-intro-form-group">
           <label>🏷️ 키워드 (최대 3개)</label>
           <div className="leader-intro-keywords">
-            {expertise.map((keyword, index) => (
-              <div key={`keyword-${index}-${keyword || 'empty'}`} className="leader-intro-keyword-item">
+            {expertise.map((item, index) => (
+              <div key={item.id} className="leader-intro-keyword-item">
                 <span className="leader-intro-keyword-prefix">#</span>
                 <input
                   type="text"
-                  value={keyword}
+                  value={item.value}
                   onChange={(e) => updateKeyword(index, e.target.value)}
                   placeholder="키워드"
                   className="leader-intro-keyword-input"
