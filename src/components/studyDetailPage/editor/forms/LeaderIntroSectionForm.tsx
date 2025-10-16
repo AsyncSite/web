@@ -125,8 +125,11 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
 
     if (!leaderData) return;
 
-    setName(leaderData.name);
-    setProfileImage(leaderData.profileImage);
+    // currentUser가 있으면 name과 profileImage는 유지 (자동 연동된 값)
+    if (!currentUser) {
+      setName(leaderData.name);
+      setProfileImage(leaderData.profileImage);
+    }
     setRole(leaderData.role);
 
     setMotivation(RichTextConverter.fromHTML(leaderData.motivation));
@@ -147,8 +150,9 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
   // Clear form and reset to initial state
   const handleClearTemplate = () => {
     // Reset all form fields to initial state
-    setName(initialData?.name || '');
-    setProfileImage(initialData?.profileImage || '');
+    // currentUser가 있으면 name과 profileImage는 currentUser 정보로 유지
+    setName(initialData?.name || currentUser?.name || currentUser?.username || '');
+    setProfileImage(initialData?.profileImage || currentUser?.profileImage || '');
     setRole(initialData?.role || '');
     setIntroduction(initialData?.introduction || RichTextConverter.fromHTML(''));
     setMotivation(initialData?.motivation || RichTextConverter.fromHTML(''));
