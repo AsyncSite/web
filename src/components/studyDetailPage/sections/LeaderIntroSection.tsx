@@ -151,10 +151,12 @@ const LeaderIntroSection: React.FC<LeaderIntroSectionProps> = ({ data }) => {
 
           {/* 하단 액션 영역 */}
           <div className={styles.actionArea}>
-            {/* 연락 버튼 */}
-            {data.showContactButton && data.links?.email && (
-              <a 
-                href={`mailto:${data.links.email}`}
+            {/* 연락 버튼 - 카카오톡 우선, 없으면 이메일 */}
+            {data.showContactButton && (data.links?.kakaoTalk || data.links?.email) && (
+              <a
+                href={data.links?.kakaoTalk || `mailto:${data.links.email}`}
+                target={data.links?.kakaoTalk ? "_blank" : undefined}
+                rel={data.links?.kakaoTalk ? "noopener noreferrer" : undefined}
                 className={styles.contactButtonCompact}
               >
                 <span className={styles.coffeeIconCompact}>☕</span>

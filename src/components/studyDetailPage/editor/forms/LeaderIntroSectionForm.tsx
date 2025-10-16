@@ -66,6 +66,7 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
   
   // 연락처/링크
   const [email, setEmail] = useState(initialData?.links?.email || '');
+  const [kakaoTalk, setKakaoTalk] = useState(initialData?.links?.kakaoTalk || '');
   const [github, setGithub] = useState(initialData?.links?.github || '');
   const [linkedin, setLinkedin] = useState(initialData?.links?.linkedin || '');
   const [blog, setBlog] = useState(initialData?.links?.blog || '');
@@ -175,6 +176,7 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
       value: e
     })) || []);
     setEmail(initialData?.links?.email || '');
+    setKakaoTalk(initialData?.links?.kakaoTalk || '');
     setGithub(initialData?.links?.github || '');
     setLinkedin(initialData?.links?.linkedin || '');
     setBlog(initialData?.links?.blog || '');
@@ -247,8 +249,9 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
         education: education.filter(e => e.trim()).length > 0 ? education.filter(e => e.trim()) : undefined,
         expertise: expertise.filter(e => e.value.trim()).length > 0 ? expertise.map(e => e.value).filter(v => v.trim()) : undefined
       } : undefined,
-      links: (email || github || linkedin || blog) ? {
+      links: (email || kakaoTalk || github || linkedin || blog) ? {
         email: email || undefined,
+        kakaoTalk: kakaoTalk || undefined,
         github: github || undefined,
         linkedin: linkedin || undefined,
         blog: blog || undefined
@@ -455,6 +458,21 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
                   className="leader-intro-input"
                 />
               </div>
+            </div>
+            <div className="leader-intro-form-group">
+              <label>카카오톡 오픈채팅 링크 (선택)</label>
+              <input
+                type="url"
+                value={kakaoTalk}
+                onChange={(e) => setKakaoTalk(e.target.value)}
+                placeholder="https://open.kakao.com/o/..."
+                className="leader-intro-input"
+              />
+              <span className="leader-intro-help">
+                카카오톡 오픈채팅 링크를 입력하면 연락 버튼이 카톡으로 연결됩니다
+              </span>
+            </div>
+            <div className="leader-intro-form-row">
               <div className="leader-intro-form-group">
                 <label>이메일 (선택)</label>
                 <input

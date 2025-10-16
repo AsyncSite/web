@@ -34,6 +34,7 @@ export interface LeaderIntroData {
   // 연락처/링크
   links?: {
     email?: string;
+    kakaoTalk?: string;         // 카카오톡 오픈채팅 링크
     github?: string;
     linkedin?: string;
     blog?: string;
