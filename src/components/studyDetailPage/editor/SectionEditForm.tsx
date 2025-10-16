@@ -9,6 +9,7 @@ import HowWeRollSectionForm from './forms/HowWeRollSectionForm';
 import JourneySectionForm from './forms/JourneySectionForm';
 import ExperienceSectionForm from './forms/ExperienceSectionForm';
 import LeaderIntroSectionForm from './forms/LeaderIntroSectionForm';
+import CTASectionForm from './forms/CTASectionForm';
 import './SectionEditForm.css';
 
 interface SectionEditFormProps {
@@ -114,7 +115,16 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
             onCancel={onCancel}
           />
         );
-      
+
+      case SectionType.CTA:
+        return (
+          <CTASectionForm
+            initialData={initialData}
+            onSave={onSave}
+            onCancel={onCancel}
+          />
+        );
+
       default:
         return (
           <div className="unsupported-section">
