@@ -1,6 +1,7 @@
 // HowWeRoll Section Types
 
 export interface MeetingOverviewItem {
+  id?: string; // 고유 ID (React key로 사용)
   icon: string;
   title: string;
   highlight: string;
@@ -11,6 +12,7 @@ export interface MeetingOverviewItem {
 }
 
 export interface ScheduleItem {
+  id?: string; // 고유 ID (React key로 사용)
   time: string;
   activity: string;
   detail: string;

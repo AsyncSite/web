@@ -138,6 +138,7 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
 
   const addOverviewItem = () => {
     const newItem: MeetingOverviewItem = {
+      id: `overview-${Date.now()}-${Math.random()}`, // 고유 ID 추가
       icon: '📍',
       title: '',
       highlight: '',
@@ -160,6 +161,7 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
 
   const addScheduleItem = () => {
     const newItem: ScheduleItem = {
+      id: `schedule-${Date.now()}-${Math.random()}`, // 고유 ID 추가
       time: '',
       activity: '',
       detail: '',
@@ -247,7 +249,7 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
         
         <div className="study-management-hwr-overview-list">
           {meetingOverview.map((item, index) => (
-            <div key={index} className="study-management-hwr-overview-item">
+            <div key={item.id || `overview-${index}`} className="study-management-hwr-overview-item">
               {editingOverviewIndex === index ? (
                 <div className="study-management-hwr-item-edit-grid">
                   <input
@@ -358,7 +360,7 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
         
         <div className="study-management-hwr-schedule-list">
           {schedule.map((item, index) => (
-            <div key={index} className="study-management-hwr-schedule-item">
+            <div key={item.id || `schedule-${index}`} className="study-management-hwr-schedule-item">
               {editingScheduleIndex === index ? (
                 <div className="study-management-hwr-item-edit-grid">
                   <input

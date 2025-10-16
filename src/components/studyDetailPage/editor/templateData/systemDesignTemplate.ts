@@ -9,8 +9,8 @@ export const systemDesignTemplate: StudyTemplate = {
   sections: {
     hero: {
       title: '🎯 테크 다이브',
-      subtitle: '지금 필요한 건,<br/><span style="background: linear-gradient(90deg, #C3E88D, #82AAFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">프로그래밍 언어가 아닌, 설계의 언어</span>',
-      description: '화이트보드 앞에서 6명이 함께 설계하며 배웁니다. 완벽한 답보다 치열한 고민, 날카로운 질문, 그리고 함께 찾아가는 인사이트가 우리의 성장 동력입니다.',
+      subtitle: '지금 필요한 건,<br/>프로그래밍 언어가 아닌, 설계의 언어',
+      description: '화이트보드 앞에서 함께 설계하고 만들어요. 완벽한 답보다 치열한 고민, 날카로운 질문, 그리고 함께 찾아가는 인사이트가 우리의 성장 동력입니다.',
       buttonText: '스터디 합류하기 🚀',
       buttonLink: '#apply',
       backgroundImage: '/images/techdive/hero-bg.svg',
@@ -19,11 +19,11 @@ export const systemDesignTemplate: StudyTemplate = {
         items: [
           {
             icon: '👥',
-            text: '<strong>몹 디자인 (Mob Design)</strong><br/>6명이 화이트보드 앞에서 함께 설계. 혼자가 아니기에 두렵지 않고, 함께이기에 더 깊게 파고듭니다.'
+            text: '<strong>몹 디자인 (Mob Design)</strong><br/>화이트보드 앞에서 함께 설계. 혼자가 아니기에 두렵지 않고, 함께이기에 더 깊게 파고듭니다.'
           },
           {
             icon: '🤖',
-            text: '<strong>AI를 파트너로</strong><br/>AI는 우리의 설계를 검증하고, 대안을 제시하는 똑똑한 조력자. 비판적으로 활용하며 사고력을 확장합니다.'
+            text: '<strong>AI를 파트너로</strong><br/>AI는 우리의 설계를 검증하고, 대안을 제시하는 똑똑한 조력자, 3의동료. 비판적으로 활용하며 사고력을 확장합니다.'
           },
           {
             icon: '⏱️',
@@ -382,21 +382,21 @@ export const systemDesignTemplate: StudyTemplate = {
       title: '2시간, <span style="color: #FFD700;">5개 Phase</span>로<br/>시스템을 완성하다',
       subtitle: '타이머가 집중력을 만들고, 구조가 학습을 완성합니다',
       tagHeader: '세션 타임테이블',
-      scheduleIntro: '매주 토요일 저녁 20:00-22:00, 화이트보드 앞에서 함께 몰입합니다.',
+      scheduleIntro: '매주 토요일 저녁 19:00-22:00, 화이트보드 앞에서 함께 몰입합니다.',
       subHeading: '⏱️ Phase별 몰입 시스템',
       closingMessage: '완벽한 설계보다 <strong>함께 고민한 시간</strong>이 우리를 성장시킵니다.',
       meetingOverview: [
         {
           icon: '📅',
           title: '스터디 기간',
-          highlight: '12주 집중 과정',
+          highlight: '8주 집중 과정',
           description: '매주 1회, 체계적인 난이도 상승',
           type: 'period'
         },
         {
           icon: '🏢',
           title: '정기 모임',
-          highlight: '매주 토요일 20:00-22:00',
+          highlight: '매주 토요일 19:00-21:00',
           description: '강남역 인근 스터디룸 (오프라인 필수)',
           type: 'location'
         },
@@ -410,7 +410,7 @@ export const systemDesignTemplate: StudyTemplate = {
         {
           icon: '💰',
           title: '참여 비용',
-          highlight: '12주 약 15만원',
+          highlight: '8주 약 10만원',
           description: '스터디룸 대관 및 운영비',
           type: 'fee'
         }
