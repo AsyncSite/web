@@ -1314,6 +1314,7 @@ const StudyProposalPageV2: React.FC = () => {
                         <SectionEditForm
                           sectionType={currentEditingSection}
                           initialData={sectionData[currentEditingSection] || {}}
+                          currentUser={user}
                           onSave={(data) => {
                             setSectionData(prev => ({
                               ...prev,

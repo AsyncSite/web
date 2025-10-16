@@ -11,6 +11,7 @@ import './LeaderIntroSectionForm.css';
 interface LeaderIntroSectionFormProps {
   initialData?: LeaderIntroData;
   studyId?: string;
+  currentUser?: any;  // 로그인한 사용자 정보
   onSave: (data: LeaderIntroData) => void;
   onCancel: () => void;
 }
@@ -18,12 +19,17 @@ interface LeaderIntroSectionFormProps {
 const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
   initialData,
   studyId,
+  currentUser,
   onSave,
   onCancel
 }) => {
-  // 기본 정보
-  const [name, setName] = useState(initialData?.name || '');
-  const [profileImage, setProfileImage] = useState(initialData?.profileImage || '');
+  // 기본 정보 - currentUser가 있으면 자동으로 설정
+  const [name, setName] = useState(
+    initialData?.name || currentUser?.name || currentUser?.username || ''
+  );
+  const [profileImage, setProfileImage] = useState(
+    initialData?.profileImage || currentUser?.profileImage || ''
+  );
   const [role, setRole] = useState(initialData?.role || '');
   
   // 소개 콘텐츠
@@ -276,19 +282,36 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
               placeholder="리더 이름"
               className="leader-intro-input"
               required
+              disabled={!!currentUser}
+              style={currentUser ? {
+                backgroundColor: '#f5f5f5',
+                cursor: 'not-allowed',
+                opacity: 0.7
+              } : {}}
             />
-          </div>
-          <div className="leader-intro-form-group">
-            <label>프로필 이미지 URL</label>
-            <input
-              type="text"
-              value={profileImage}
-              onChange={(e) => setProfileImage(e.target.value)}
-              placeholder="https://example.com/profile.jpg"
-              className="leader-intro-input"
-            />
+            {currentUser && (
+              <span className="leader-intro-help" style={{ color: '#89DDFF' }}>
+                💡 로그인한 사용자의 이름이 자동으로 설정됩니다
+              </span>
+            )}
           </div>
         </div>
+
+        {currentUser && (
+          <div className="leader-intro-form-group">
+            <div style={{
+              padding: '12px',
+              backgroundColor: 'rgba(137, 221, 255, 0.1)',
+              borderLeft: '3px solid #89DDFF',
+              borderRadius: '4px',
+              marginBottom: '20px'
+            }}>
+              <p style={{ margin: 0, color: '#89DDFF', fontSize: '14px' }}>
+                📸 프로필 이미지는 마이 페이지에서만 변경할 수 있습니다
+              </p>
+            </div>
+          </div>
+        )}
         
         <div className="leader-intro-form-group">
           <label>💬 한 줄 철학</label>
@@ -306,7 +329,7 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
           <label>🏷️ 키워드 (최대 3개)</label>
           <div className="leader-intro-keywords">
             {expertise.map((keyword, index) => (
-              <div key={index} className="leader-intro-keyword-item">
+              <div key={`keyword-${index}-${keyword || 'empty'}`} className="leader-intro-keyword-item">
                 <span className="leader-intro-keyword-prefix">#</span>
                 <input
                   type="text"
@@ -533,7 +556,7 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
               <div className="leader-intro-form-group">
                 <label>경력 사항</label>
                 {career.map((item, index) => (
-                  <div key={index} className="leader-intro-array-item">
+                  <div key={`career-${index}-${item.substring(0, 10) || 'empty'}`} className="leader-intro-array-item">
                     <input
                       type="text"
                       value={item}
@@ -562,7 +585,7 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
               <div className="leader-intro-form-group">
                 <label>학력/자격증</label>
                 {education.map((item, index) => (
-                  <div key={index} className="leader-intro-array-item">
+                  <div key={`education-${index}-${item.substring(0, 10) || 'empty'}`} className="leader-intro-array-item">
                     <input
                       type="text"
                       value={item}

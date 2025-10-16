@@ -15,6 +15,7 @@ interface SectionEditFormProps {
   sectionType: SectionType | string;
   studyId?: string;  // 스터디 ID 추가
   initialData?: any;
+  currentUser?: any;  // 현재 로그인한 사용자 정보
   onSave: (data: any) => void;
   onCancel: () => void;
 }
@@ -23,6 +24,7 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
   sectionType,
   studyId,
   initialData = {},
+  currentUser,
   onSave,
   onCancel
 }) => {
@@ -42,6 +44,7 @@ const SectionEditForm: React.FC<SectionEditFormProps> = ({
           <LeaderIntroSectionForm
             studyId={studyId}
             initialData={initialData}
+            currentUser={currentUser}
             onSave={onSave}
             onCancel={onCancel}
           />
