@@ -1,14 +1,14 @@
 <svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background gradient -->
+  <!-- Background - Whiteboard feel -->
   <defs>
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#0f0f1a;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#1a1a2e;stop-opacity:1" />
     </linearGradient>
 
-    <!-- Glow effects -->
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+    <!-- Marker glow effects -->
+    <filter id="markerGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -16,211 +16,268 @@
     </filter>
 
     <filter id="softGlow">
-      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+
+    <!-- Hand-drawn stroke patterns -->
+    <pattern id="sketch" patternUnits="userSpaceOnUse" width="4" height="4">
+      <rect width="4" height="4" fill="none"/>
+      <circle cx="2" cy="2" r="0.5" fill="#ffffff" opacity="0.02"/>
+    </pattern>
   </defs>
 
   <rect width="1200" height="800" fill="url(#bgGradient)"/>
+  <rect width="1200" height="800" fill="url(#sketch)"/>
 
-  <!-- Grid pattern (whiteboard lines) -->
-  <g opacity="0.03">
-    <line x1="0" y1="100" x2="1200" y2="100" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="0" y1="200" x2="1200" y2="200" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="0" y1="300" x2="1200" y2="300" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="0" y1="400" x2="1200" y2="400" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="0" y1="500" x2="1200" y2="500" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="0" y1="600" x2="1200" y2="600" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="0" y1="700" x2="1200" y2="700" stroke="#C3E88D" stroke-width="1"/>
-
-    <line x1="100" y1="0" x2="100" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="200" y1="0" x2="200" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="300" y1="0" x2="300" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="400" y1="0" x2="400" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="500" y1="0" x2="500" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="600" y1="0" x2="600" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="700" y1="0" x2="700" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="800" y1="0" x2="800" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="900" y1="0" x2="900" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="1000" y1="0" x2="1000" y2="800" stroke="#C3E88D" stroke-width="1"/>
-    <line x1="1100" y1="0" x2="1100" y2="800" stroke="#C3E88D" stroke-width="1"/>
+  <!-- Whiteboard grid (subtle) -->
+  <g opacity="0.04">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#C3E88D" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#C3E88D" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#C3E88D" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#C3E88D" stroke-width="0.5"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#C3E88D" stroke-width="0.5"/>
+    <line x1="0" y1="600" x2="1200" y2="600" stroke="#C3E88D" stroke-width="0.5"/>
+    <line x1="0" y1="700" x2="1200" y2="700" stroke="#C3E88D" stroke-width="0.5"/>
   </g>
 
-  <!-- System Architecture Diagram -->
+  <!-- Hand-drawn sketches by 6 people -->
 
-  <!-- Client Layer (Top) -->
-  <g opacity="0.7">
-    <!-- Mobile Client -->
-    <rect x="150" y="80" width="120" height="80" rx="8" fill="none" stroke="#82AAFF" stroke-width="2" filter="url(#glow)"/>
-    <text x="210" y="110" fill="#82AAFF" font-size="14" text-anchor="middle" font-family="monospace">Mobile</text>
-    <text x="210" y="130" fill="#82AAFF" font-size="12" text-anchor="middle" font-family="monospace" opacity="0.6">Client</text>
+  <!-- Person 1's sketch (Blue marker) - Client side -->
+  <g opacity="0.8" filter="url(#markerGlow)">
+    <!-- Rough rectangle for "Client" -->
+    <path d="M 120 100 L 250 102 L 252 180 L 118 178 Z"
+          fill="none" stroke="#82AAFF" stroke-width="3" stroke-linecap="round"/>
+    <text x="185" y="135" fill="#82AAFF" font-size="18" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">Client</text>
+    <text x="185" y="155" fill="#82AAFF" font-size="12" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.7">Mobile / Web</text>
 
-    <!-- Web Client -->
-    <rect x="300" y="80" width="120" height="80" rx="8" fill="none" stroke="#82AAFF" stroke-width="2" filter="url(#glow)"/>
-    <text x="360" y="110" fill="#82AAFF" font-size="14" text-anchor="middle" font-family="monospace">Web</text>
-    <text x="360" y="130" fill="#82AAFF" font-size="12" text-anchor="middle" font-family="monospace" opacity="0.6">Client</text>
+    <!-- Arrow -->
+    <path d="M 185 185 Q 185 220 185 250" stroke="#82AAFF" stroke-width="2.5"
+          fill="none" stroke-dasharray="8,4"/>
+    <polygon points="185,255 180,245 190,245" fill="#82AAFF"/>
   </g>
 
-  <!-- Load Balancer -->
-  <g opacity="0.8">
-    <rect x="240" y="230" width="140" height="70" rx="8" fill="none" stroke="#FFD700" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="310" y="255" fill="#FFD700" font-size="14" text-anchor="middle" font-family="monospace" font-weight="bold">Load</text>
-    <text x="310" y="275" fill="#FFD700" font-size="14" text-anchor="middle" font-family="monospace" font-weight="bold">Balancer</text>
+  <!-- Person 2's sketch (Green marker) - Load Balancer -->
+  <g opacity="0.75" filter="url(#markerGlow)">
+    <ellipse cx="320" cy="290" rx="85" ry="45" fill="none"
+             stroke="#C3E88D" stroke-width="3" stroke-linecap="round"/>
+    <text x="320" y="285" fill="#C3E88D" font-size="16" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">Load</text>
+    <text x="320" y="302" fill="#C3E88D" font-size="16" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">Balancer</text>
+
+    <!-- Multiple arrows going down -->
+    <path d="M 260 325 L 180 385" stroke="#C3E88D" stroke-width="2.5" fill="none"/>
+    <polygon points="175,388 180,378 185,388" fill="#C3E88D"/>
+
+    <path d="M 320 335 L 320 385" stroke="#C3E88D" stroke-width="2.5" fill="none"/>
+    <polygon points="320,390 315,380 325,380" fill="#C3E88D"/>
+
+    <path d="M 380 325 L 460 385" stroke="#C3E88D" stroke-width="2.5" fill="none"/>
+    <polygon points="465,388 455,385 460,378" fill="#C3E88D"/>
   </g>
 
-  <!-- Application Servers -->
-  <g opacity="0.7">
-    <!-- Server 1 -->
-    <rect x="100" y="370" width="100" height="70" rx="6" fill="none" stroke="#C3E88D" stroke-width="2" filter="url(#glow)"/>
-    <text x="150" y="395" fill="#C3E88D" font-size="12" text-anchor="middle" font-family="monospace">Server 1</text>
-    <circle cx="150" cy="418" r="8" fill="#C3E88D" opacity="0.3"/>
+  <!-- Person 3's sketch (Yellow marker) - Servers -->
+  <g opacity="0.8" filter="url(#markerGlow)">
+    <!-- Three rough server boxes -->
+    <path d="M 140 400 L 210 398 L 212 470 L 138 472 Z"
+          fill="none" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="175" y="430" fill="#FFD700" font-size="14" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive">API</text>
+    <text x="175" y="448" fill="#FFD700" font-size="11" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">Server 1</text>
+    <circle cx="175" cy="460" r="3" fill="#FFD700"/>
 
-    <!-- Server 2 -->
-    <rect x="230" y="370" width="100" height="70" rx="6" fill="none" stroke="#C3E88D" stroke-width="2" filter="url(#glow)"/>
-    <text x="280" y="395" fill="#C3E88D" font-size="12" text-anchor="middle" font-family="monospace">Server 2</text>
-    <circle cx="280" cy="418" r="8" fill="#C3E88D" opacity="0.3"/>
+    <path d="M 280 400 L 350 398 L 352 470 L 278 472 Z"
+          fill="none" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="315" y="430" fill="#FFD700" font-size="14" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive">API</text>
+    <text x="315" y="448" fill="#FFD700" font-size="11" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">Server 2</text>
+    <circle cx="315" cy="460" r="3" fill="#FFD700"/>
 
-    <!-- Server 3 -->
-    <rect x="360" y="370" width="100" height="70" rx="6" fill="none" stroke="#C3E88D" stroke-width="2" filter="url(#glow)"/>
-    <text x="410" y="395" fill="#C3E88D" font-size="12" text-anchor="middle" font-family="monospace">Server 3</text>
-    <circle cx="410" cy="418" r="8" fill="#C3E88D" opacity="0.3"/>
+    <path d="M 420 400 L 490 398 L 492 470 L 418 472 Z"
+          fill="none" stroke="#FFD700" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="455" y="430" fill="#FFD700" font-size="14" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive">API</text>
+    <text x="455" y="448" fill="#FFD700" font-size="11" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">Server 3</text>
+    <circle cx="455" cy="460" r="3" fill="#FFD700"/>
   </g>
 
-  <!-- Cache Layer -->
-  <g opacity="0.75">
-    <rect x="530" y="200" width="130" height="90" rx="8" fill="none" stroke="#FF6B9D" stroke-width="2" stroke-dasharray="5,5" filter="url(#glow)"/>
-    <text x="595" y="230" fill="#FF6B9D" font-size="14" text-anchor="middle" font-family="monospace">Redis</text>
-    <text x="595" y="250" fill="#FF6B9D" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Cache</text>
-    <circle cx="565" cy="265" r="4" fill="#FF6B9D"/>
-    <circle cx="595" cy="265" r="4" fill="#FF6B9D"/>
-    <circle cx="625" cy="265" r="4" fill="#FF6B9D"/>
+  <!-- Person 4's sketch (Pink marker) - Cache & DB -->
+  <g opacity="0.75" filter="url(#markerGlow)">
+    <!-- Cache (cloud shape) -->
+    <path d="M 620 240 Q 640 220 660 240 Q 680 230 690 250 Q 690 270 670 280 Q 650 290 630 280 Q 610 280 610 260 Q 610 245 620 240"
+          fill="none" stroke="#FF6B9D" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="650" y="260" fill="#FF6B9D" font-size="14" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">Cache</text>
+
+    <!-- Database (cylinder) -->
+    <ellipse cx="230" cy="580" rx="80" ry="25" fill="none"
+             stroke="#FF6B9D" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 150 580 L 150 620 Q 230 650 310 620 L 310 580"
+          fill="none" stroke="#FF6B9D" stroke-width="3" stroke-linecap="round"/>
+    <text x="230" y="610" fill="#FF6B9D" font-size="16" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">Database</text>
+
+    <!-- Connection from servers to DB -->
+    <path d="M 175 475 Q 180 520 200 570" stroke="#FF6B9D" stroke-width="2"
+          fill="none" stroke-dasharray="6,4"/>
+    <polygon points="202,575 195,565 205,565" fill="#FF6B9D"/>
   </g>
 
-  <!-- Message Queue -->
-  <g opacity="0.75">
-    <rect x="530" y="360" width="130" height="90" rx="8" fill="none" stroke="#FFCB6B" stroke-width="2" stroke-dasharray="5,5" filter="url(#glow)"/>
-    <text x="595" y="390" fill="#FFCB6B" font-size="14" text-anchor="middle" font-family="monospace">Kafka</text>
-    <text x="595" y="410" fill="#FFCB6B" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Queue</text>
-    <path d="M 565 425 L 575 425 L 575 435 L 565 435 Z M 580 425 L 590 425 L 590 435 L 580 435 Z M 595 425 L 605 425 L 605 435 L 595 435 Z" fill="none" stroke="#FFCB6B" stroke-width="1.5"/>
+  <!-- Person 5's sketch (Purple marker) - Message Queue -->
+  <g opacity="0.7" filter="url(#markerGlow)">
+    <path d="M 550 420 L 720 418 L 722 510 L 548 512 Z"
+          fill="none" stroke="#C792EA" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="10,5"/>
+    <text x="635" y="450" fill="#C792EA" font-size="16" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">Message</text>
+    <text x="635" y="470" fill="#C792EA" font-size="16" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">Queue</text>
+    <text x="635" y="490" fill="#C792EA" font-size="11" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">Kafka / RabbitMQ</text>
+
+    <!-- Connection -->
+    <path d="M 492 435 Q 520 430 550 430" stroke="#C792EA" stroke-width="2" fill="none"/>
+    <polygon points="555,430 545,425 545,435" fill="#C792EA"/>
   </g>
 
-  <!-- Database Cluster -->
-  <g opacity="0.8">
-    <!-- Primary DB -->
-    <rect x="140" y="550" width="110" height="80" rx="6" fill="none" stroke="#82AAFF" stroke-width="2.5" filter="url(#glow)"/>
-    <text x="195" y="575" fill="#82AAFF" font-size="13" text-anchor="middle" font-family="monospace" font-weight="bold">Primary</text>
-    <text x="195" y="595" fill="#82AAFF" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Database</text>
-    <circle cx="195" cy="610" r="6" fill="#82AAFF" opacity="0.5"/>
+  <!-- Person 6's sketch (Orange marker) - CDN -->
+  <g opacity="0.7" filter="url(#markerGlow)">
+    <!-- Cloud shape for CDN -->
+    <path d="M 800 150 Q 820 130 840 150 Q 870 140 880 165 Q 885 185 870 200 Q 850 210 830 200 Q 810 210 800 195 Q 790 175 800 150"
+          fill="none" stroke="#FFCB6B" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="840" y="175" fill="#FFCB6B" font-size="14" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">CDN</text>
 
-    <!-- Replica DB 1 -->
-    <rect x="280" y="550" width="90" height="80" rx="6" fill="none" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
-    <text x="325" y="580" fill="#82AAFF" font-size="11" text-anchor="middle" font-family="monospace">Replica</text>
-    <text x="325" y="595" fill="#82AAFF" font-size="10" text-anchor="middle" font-family="monospace" opacity="0.5">Read</text>
-
-    <!-- Replica DB 2 -->
-    <rect x="390" y="550" width="90" height="80" rx="6" fill="none" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
-    <text x="435" y="580" fill="#82AAFF" font-size="11" text-anchor="middle" font-family="monospace">Replica</text>
-    <text x="435" y="595" fill="#82AAFF" font-size="10" text-anchor="middle" font-family="monospace" opacity="0.5">Read</text>
+    <!-- Stars around it (fast) -->
+    <path d="M 760 160 L 765 165 L 760 170 L 755 165 Z" fill="#FFCB6B" opacity="0.6"/>
+    <path d="M 920 155 L 925 160 L 920 165 L 915 160 Z" fill="#FFCB6B" opacity="0.6"/>
+    <path d="M 850 120 L 855 125 L 850 130 L 845 125 Z" fill="#FFCB6B" opacity="0.6"/>
   </g>
 
-  <!-- CDN / Object Storage -->
-  <g opacity="0.7">
-    <rect x="720" y="150" width="140" height="100" rx="8" fill="none" stroke="#C792EA" stroke-width="2" filter="url(#glow)"/>
-    <text x="790" y="180" fill="#C792EA" font-size="13" text-anchor="middle" font-family="monospace">CDN</text>
-    <text x="790" y="200" fill="#C792EA" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Content</text>
-    <text x="790" y="215" fill="#C792EA" font-size="11" text-anchor="middle" font-family="monospace" opacity="0.6">Delivery</text>
-    <circle cx="760" cy="230" r="3" fill="#C792EA"/>
-    <circle cx="775" cy="230" r="3" fill="#C792EA"/>
-    <circle cx="790" cy="230" r="3" fill="#C792EA"/>
-    <circle cx="805" cy="230" r="3" fill="#C792EA"/>
-    <circle cx="820" cy="230" r="3" fill="#C792EA"/>
-  </g>
-
-  <!-- Connection Lines -->
-  <g opacity="0.4">
-    <!-- Clients to Load Balancer -->
-    <line x1="210" y1="160" x2="310" y2="230" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="5,5"/>
-    <line x1="360" y1="160" x2="310" y2="230" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="5,5"/>
-
-    <!-- Load Balancer to Servers -->
-    <line x1="280" y1="300" x2="150" y2="370" stroke="#FFD700" stroke-width="2"/>
-    <line x1="310" y1="300" x2="280" y2="370" stroke="#FFD700" stroke-width="2"/>
-    <line x1="340" y1="300" x2="410" y2="370" stroke="#FFD700" stroke-width="2"/>
-
-    <!-- Servers to Cache -->
-    <line x1="460" y1="400" x2="530" y2="240" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3"/>
-
-    <!-- Servers to Queue -->
-    <line x1="460" y1="410" x2="530" y2="400" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3"/>
-
-    <!-- Servers to Database -->
-    <line x1="150" y1="440" x2="195" y2="550" stroke="#C3E88D" stroke-width="2"/>
-    <line x1="280" y1="440" x2="325" y2="550" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
-    <line x1="410" y1="440" x2="435" y2="550" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
-
-    <!-- DB Replication -->
-    <line x1="250" y1="590" x2="280" y2="590" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.3"/>
-    <line x1="370" y1="590" x2="390" y2="590" stroke="#82AAFF" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.3"/>
-
-    <!-- CDN connection -->
-    <line x1="460" y1="380" x2="720" y2="200" stroke="#C3E88D" stroke-width="1.5" stroke-dasharray="5,5" opacity="0.3"/>
-  </g>
-
-  <!-- Floating connection dots (animated feel) -->
-  <g opacity="0.5">
-    <circle cx="285" cy="265" r="3" fill="#FFD700" filter="url(#softGlow)">
-      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="380" cy="405" r="3" fill="#C3E88D" filter="url(#softGlow)">
-      <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="495" cy="310" r="3" fill="#FF6B9D" filter="url(#softGlow)">
-      <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
-    </circle>
-  </g>
-
-  <!-- Annotations (whiteboard style) -->
+  <!-- Sticky notes / Ideas -->
   <g opacity="0.6">
-    <!-- Arrow pointing to Load Balancer -->
-    <path d="M 450 260 L 380 260" stroke="#FFD700" stroke-width="1.5" fill="none"/>
-    <polygon points="385,260 390,257 390,263" fill="#FFD700"/>
-    <text x="460" y="265" fill="#FFD700" font-size="11" font-family="monospace" opacity="0.7">nginx</text>
+    <!-- Sticky note 1 (Yellow) -->
+    <rect x="90" y="240" width="100" height="90" fill="#FFD700" opacity="0.15"
+          stroke="#FFD700" stroke-width="1.5" rx="2"/>
+    <text x="140" y="270" fill="#FFD700" font-size="11" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.8">Scale?</text>
+    <text x="140" y="290" fill="#FFD700" font-size="10" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">10x 증가</text>
+    <text x="140" y="305" fill="#FFD700" font-size="10" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">대비!</text>
 
-    <!-- Arrow pointing to Cache -->
-    <path d="M 690 230 L 660 235" stroke="#FF6B9D" stroke-width="1.5" fill="none"/>
-    <polygon points="665,235 670,232 670,238" fill="#FF6B9D"/>
-    <text x="700" y="235" fill="#FF6B9D" font-size="11" font-family="monospace" opacity="0.7">fast</text>
+    <!-- Sticky note 2 (Pink) -->
+    <rect x="750" y="320" width="110" height="85" fill="#FF6B9D" opacity="0.12"
+          stroke="#FF6B9D" stroke-width="1.5" rx="2"/>
+    <text x="805" y="350" fill="#FF6B9D" font-size="11" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.8">Trade-off</text>
+    <text x="805" y="370" fill="#FF6B9D" font-size="9" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">일관성 vs</text>
+    <text x="805" y="385" fill="#FF6B9D" font-size="9" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">성능?</text>
 
-    <!-- Scale annotation -->
-    <text x="520" y="540" fill="#82AAFF" font-size="10" font-family="monospace" opacity="0.5">Scale →</text>
+    <!-- Sticky note 3 (Green) -->
+    <rect x="380" y="550" width="95" height="80" fill="#C3E88D" opacity="0.12"
+          stroke="#C3E88D" stroke-width="1.5" rx="2"/>
+    <text x="427" y="580" fill="#C3E88D" font-size="10" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.8">Replication</text>
+    <text x="427" y="598" fill="#C3E88D" font-size="9" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">Master-</text>
+    <text x="427" y="612" fill="#C3E88D" font-size="9" text-anchor="middle"
+          font-family="'Comic Sans MS', cursive" opacity="0.6">Slave</text>
   </g>
 
-  <!-- Background particles (tech feel) -->
-  <g opacity="0.15">
-    <circle cx="850" cy="400" r="2" fill="#C3E88D"/>
-    <circle cx="920" cy="250" r="2" fill="#82AAFF"/>
-    <circle cx="760" cy="500" r="2" fill="#FFD700"/>
-    <circle cx="980" cy="350" r="2" fill="#FF6B9D"/>
-    <circle cx="700" cy="420" r="2" fill="#C792EA"/>
-    <circle cx="880" cy="600" r="2" fill="#FFCB6B"/>
+  <!-- Annotations & Arrows (hand-drawn style) -->
+  <g opacity="0.5">
+    <!-- Question mark -->
+    <text x="480" y="340" fill="#82AAFF" font-size="28"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">?</text>
 
-    <!-- More scattered dots -->
-    <circle cx="90" cy="250" r="1.5" fill="#82AAFF"/>
-    <circle cx="50" cy="450" r="1.5" fill="#C3E88D"/>
-    <circle cx="120" cy="700" r="1.5" fill="#FFD700"/>
-    <circle cx="950" cy="120" r="1.5" fill="#FF6B9D"/>
-    <circle cx="1050" cy="550" r="1.5" fill="#C792EA"/>
+    <!-- Exclamation mark -->
+    <text x="240" y="530" fill="#FFD700" font-size="24"
+          font-family="'Comic Sans MS', cursive" font-weight="bold">!</text>
+
+    <!-- Light bulb (idea) -->
+    <circle cx="700" cy="580" r="15" fill="none" stroke="#FFCB6B" stroke-width="2"/>
+    <path d="M 695 595 L 695 605 L 705 605 L 705 595" stroke="#FFCB6B" stroke-width="2" fill="none"/>
+    <circle cx="700" cy="580" r="3" fill="#FFCB6B" opacity="0.6"/>
+
+    <!-- Check marks -->
+    <path d="M 210 210 L 220 220 L 240 195" stroke="#C3E88D" stroke-width="2.5"
+          fill="none" stroke-linecap="round"/>
+    <path d="M 450 340 L 460 350 L 480 325" stroke="#C3E88D" stroke-width="2.5"
+          fill="none" stroke-linecap="round"/>
   </g>
 
-  <!-- Corner annotations (mob design concept) -->
+  <!-- Scribbles and thinking marks -->
   <g opacity="0.3">
-    <text x="20" y="30" fill="#C3E88D" font-size="10" font-family="monospace">// Mob Design Session</text>
-    <text x="20" y="50" fill="#82AAFF" font-size="9" font-family="monospace">6 people, 1 whiteboard</text>
+    <!-- Curved thinking line -->
+    <path d="M 520 180 Q 540 160 560 180 Q 580 200 600 180"
+          stroke="#82AAFF" stroke-width="1.5" fill="none" stroke-dasharray="3,3"/>
 
-    <text x="1000" y="770" fill="#FFD700" font-size="9" font-family="monospace" text-anchor="end">Phase 1-5 →</text>
-    <text x="1000" y="790" fill="#82AAFF" font-size="8" font-family="monospace" text-anchor="end">2 hours sprint</text>
+    <!-- Underlines -->
+    <path d="M 600 260 L 700 258" stroke="#FF6B9D" stroke-width="2" fill="none"/>
+    <path d="M 140 390 L 210 388" stroke="#FFD700" stroke-width="2" fill="none"/>
+
+    <!-- Circles (emphasis) -->
+    <circle cx="840" cy="175" r="35" fill="none" stroke="#FFCB6B"
+            stroke-width="1.5" stroke-dasharray="5,5" opacity="0.5"/>
+  </g>
+
+  <!-- Corner notes (session info) -->
+  <g opacity="0.4">
+    <text x="30" y="40" fill="#C3E88D" font-size="13" font-family="'Comic Sans MS', cursive">
+      Mob Design ✏️
+    </text>
+    <text x="30" y="60" fill="#82AAFF" font-size="11" font-family="'Comic Sans MS', cursive">
+      6 people, 1 board
+    </text>
+
+    <text x="1020" y="750" fill="#FFD700" font-size="12"
+          font-family="'Comic Sans MS', cursive" text-anchor="end">2시간 스프린트 ⚡</text>
+    <text x="1020" y="770" fill="#FF6B9D" font-size="10"
+          font-family="'Comic Sans MS', cursive" text-anchor="end">Phase 1→2→3→4→5</text>
+  </g>
+
+  <!-- Floating particles (thinking dots) -->
+  <g opacity="0.25">
+    <circle cx="900" cy="400" r="3" fill="#C3E88D">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="950" cy="300" r="2.5" fill="#82AAFF">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="850" cy="500" r="3.5" fill="#FFD700">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="100" cy="600" r="2" fill="#FF6B9D">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1000" cy="200" r="2.5" fill="#C792EA">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Hand-drawn doodles -->
+  <g opacity="0.2">
+    <!-- Star doodle -->
+    <path d="M 980 450 L 985 460 L 996 462 L 988 470 L 990 481 L 980 476 L 970 481 L 972 470 L 964 462 L 975 460 Z"
+          fill="none" stroke="#FFCB6B" stroke-width="1.5"/>
+
+    <!-- Heart doodle -->
+    <path d="M 60 350 Q 60 340 70 340 Q 80 340 80 350 Q 80 360 70 370 Q 60 360 60 350 M 80 350 Q 80 340 90 340 Q 100 340 100 350 Q 100 365 70 380 Q 40 365 60 350"
+          fill="none" stroke="#FF6B9D" stroke-width="1.5"/>
+
+    <!-- Arrow doodles -->
+    <path d="M 920 600 L 970 600" stroke="#82AAFF" stroke-width="2" stroke-linecap="round"/>
+    <polygon points="975,600 965,595 965,605" fill="#82AAFF"/>
   </g>
 </svg>
