@@ -456,14 +456,13 @@ const LeaderIntroSectionForm: React.FC<LeaderIntroSectionFormProps> = ({
                 />
               </div>
               <div className="leader-intro-form-group">
-                <label>이메일 *</label>
+                <label>이메일 (선택)</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="leader@example.com"
                   className="leader-intro-input"
-                  required={showContactButton}
                 />
               </div>
             </div>
