@@ -179,6 +179,23 @@
   border-bottom: 1px solid #3a3a3a;
 }
 
+/* 시간 컬럼 고정 너비 */
+.activityTable th:first-child,
+.activityTable td:first-child {
+  width: 150px;
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+/* 무엇을 컬럼 - 나머지 공간 차지 */
+.activityTable th:nth-child(2),
+.activityTable td:nth-child(2) {
+  width: auto;
+  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
 .activityTable th {
   font-weight: 700;
   font-size: 1.1rem;
@@ -310,6 +327,13 @@
   .activityTable th,
   .activityTable td {
     padding: 15px 12px;
+  }
+
+  /* 모바일에서 시간 컬럼 너비 조정 */
+  .activityTable th:first-child,
+  .activityTable td:first-child {
+    width: 100px;
+    min-width: 100px;
   }
 
   .activityTable th {
