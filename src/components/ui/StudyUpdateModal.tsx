@@ -302,8 +302,10 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
         updateData.location = formData.location;
       }
 
-      if (formData.recruitDeadline) {
-        updateData.recruitDeadline = formData.recruitDeadline + 'T23:59:59';
+      // recruitDeadline은 기존 값과 비교하여 변경된 경우만 전송
+      const currentDeadline = study.deadline ? formatDateForInput(study.deadline) : '';
+      if (formData.recruitDeadline !== currentDeadline) {
+        updateData.recruitDeadline = formData.recruitDeadline ? formData.recruitDeadline + 'T23:59:59' : undefined;
       }
       
       if (formData.startDate) {
