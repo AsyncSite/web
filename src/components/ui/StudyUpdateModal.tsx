@@ -36,40 +36,40 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
   // 상태별 수정 가능 필드 체크
   const isFieldEditable = (fieldName: string): boolean => {
     const status = study.status;
-    
+
     // COMPLETED, TERMINATED, REJECTED 상태에서는 모든 수정 불가
-    if (status === StudyStatus.COMPLETED || 
-        status === StudyStatus.TERMINATED || 
+    if (status === StudyStatus.COMPLETED ||
+        status === StudyStatus.TERMINATED ||
         status === StudyStatus.REJECTED) {
       return false;
     }
-    
+
     // PENDING 상태에서만 수정 가능한 필드
-    const pendingOnlyFields = ['title', 'type', 'recruitDeadline', 'startDate', 'endDate', 'recurrenceType'];
+    const pendingOnlyFields = ['title', 'type', 'startDate', 'endDate', 'recurrenceType'];
     if (pendingOnlyFields.includes(fieldName)) {
       return status === StudyStatus.PENDING;
     }
-    
+
     // PENDING, APPROVED 상태에서 수정 가능한 필드
     const pendingApprovedFields = ['tagline', 'capacity'];
     if (pendingApprovedFields.includes(fieldName)) {
       return status === StudyStatus.PENDING || status === StudyStatus.APPROVED;
     }
-    
+
     // PENDING 상태에서만 수정 가능한 비용 관련 필드
     const costFields = ['costType', 'costDescription'];
     if (costFields.includes(fieldName)) {
       return status === StudyStatus.PENDING;
     }
-    
+
     // PENDING, APPROVED, IN_PROGRESS 상태에서 수정 가능한 필드
-    const alwaysEditableFields = ['schedule', 'duration'];
+    const alwaysEditableFields = ['schedule', 'duration', 'recruitDeadline'];
     if (alwaysEditableFields.includes(fieldName)) {
-      return status === StudyStatus.PENDING || 
-             status === StudyStatus.APPROVED || 
+      return status === StudyStatus.PENDING ||
+             status === StudyStatus.APPROVED ||
              status === StudyStatus.IN_PROGRESS;
     }
-    
+
     return false;
   };
 
@@ -592,12 +592,17 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
                 {!isFieldEditable('recruitDeadline') && <span className="field-status"> (수정 불가)</span>}
               </label>
               {isFieldEditable('recruitDeadline') ? (
-                <DatePickerCustom
-                  value={formData.recruitDeadline || ''}
-                  onChange={(value) => setFormData(prev => ({ ...prev, recruitDeadline: value }))}
-                  placeholder="모집 마감일 선택"
-                  min={new Date().toISOString().split('T')[0]}
-                />
+                <>
+                  <DatePickerCustom
+                    value={formData.recruitDeadline || ''}
+                    onChange={(value) => setFormData(prev => ({ ...prev, recruitDeadline: value }))}
+                    placeholder="모집 마감일 선택"
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                  <div className="form-hint" style={{ marginTop: '8px', fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)' }}>
+                    💡 마감일을 연장하면 모집이 계속되고, 과거로 설정하면 모집이 종료됩니다
+                  </div>
+                </>
               ) : (
                 <div className="readonly-field">
                   {formData.recruitDeadline || '날짜 정보 없음'}
