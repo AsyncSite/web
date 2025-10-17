@@ -82,7 +82,15 @@ const StudyDetailPage: React.FC = () => {
                 <li>정원: {study.capacity}명 (현재 {study.enrolled}명 참여)</li>
               )}
               <li>리더: {study.leader.name}</li>
-              <li>상태: {getStudyDisplayInfo(study.status, study.deadline?.toISOString()).label}</li>
+              <li>상태: {getStudyDisplayInfo(
+                study.status,
+                study.deadline?.toISOString(),
+                study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+                study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+                study.capacity,
+                study.enrolled,
+                study.isRecruiting
+              ).label}</li>
             </ul>
           </div>
 
@@ -123,7 +131,15 @@ const StudyDetailPage: React.FC = () => {
               </button>
             ) : (
               /* 일반 사용자는 참가 신청 버튼 표시 */
-              getStudyDisplayInfo(study.status, study.deadline?.toISOString()).canApply && (
+              getStudyDisplayInfo(
+                study.status,
+                study.deadline?.toISOString(),
+                study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+                study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+                study.capacity,
+                study.enrolled,
+                study.isRecruiting
+              ).canApply && (
                 <button
                   onClick={() => navigate(`/study/${study.slug}/apply`)}
                   style={{

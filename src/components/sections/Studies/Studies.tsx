@@ -38,7 +38,12 @@ const Studies = ({
       const recruitingOnly = studies.filter(study => {
         const displayInfo = getStudyDisplayInfo(
             study.status,
-            study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+            study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline,
+            study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+            study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+            study.capacity,
+            study.enrolled,
+            study.isRecruiting
         );
         return displayInfo.canApply;
       });

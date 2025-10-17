@@ -26,7 +26,8 @@ export function getStudyDisplayInfo(
   startDate?: string | number[] | null,
   endDate?: string | number[] | null,
   capacity?: number,
-  enrolled?: number
+  enrolled?: number,
+  isRecruiting?: boolean | null
 ): StudyDisplayInfo {
   const now = new Date();
   
@@ -45,20 +46,24 @@ export function getStudyDisplayInfo(
       };
 
     case 'APPROVED':
-      // APPROVED 상태일 때는 모집 마감일과 정원을 체크
-      // 백엔드와 일치: 마감일이 없으면 계속 모집, 있으면 미래 날짜인지 체크
-      // 마감일이 오늘이면 오늘 끝까지 모집 가능
-      let isRecruiting = false;
-      if (!deadlineDate) {
-        isRecruiting = true; // 마감일 없으면 계속 모집
+      // 백엔드에서 isRecruiting 값을 제공하면 그 값을 사용 (우선순위)
+      let isRecruitingApproved = false;
+      if (isRecruiting !== undefined && isRecruiting !== null) {
+        // 백엔드 값 사용 (가장 정확함)
+        isRecruitingApproved = isRecruiting;
       } else {
-        // 마감일을 그 날의 끝 시간(23:59:59)으로 설정
-        const deadlineEndOfDay = new Date(deadlineDate);
-        deadlineEndOfDay.setHours(23, 59, 59, 999);
-        isRecruiting = deadlineEndOfDay >= now;
+        // 백엔드 값이 없으면 프론트엔드에서 계산 (fallback)
+        if (!deadlineDate) {
+          isRecruitingApproved = true; // 마감일 없으면 계속 모집
+        } else {
+          // 마감일을 그 날의 끝 시간(23:59:59)으로 설정
+          const deadlineEndOfDay = new Date(deadlineDate);
+          deadlineEndOfDay.setHours(23, 59, 59, 999);
+          isRecruitingApproved = deadlineEndOfDay >= now;
+        }
       }
       const isFull = capacity && enrolled && enrolled >= capacity;
-      
+
       if (isFull) {
         return {
           label: '정원 마감',
@@ -68,8 +73,8 @@ export function getStudyDisplayInfo(
           showReviewButton: false
         };
       }
-      
-      if (isRecruiting) {
+
+      if (isRecruitingApproved) {
         return {
           label: '모집 중',
           color: 'green',
@@ -78,7 +83,7 @@ export function getStudyDisplayInfo(
           showReviewButton: false
         };
       }
-      
+
       return {
         label: '모집 마감',
         color: 'orange',
@@ -88,14 +93,19 @@ export function getStudyDisplayInfo(
       };
 
     case 'IN_PROGRESS':
-      // IN_PROGRESS 상태에서도 조건부 모집 가능 (백엔드와 일치)
-      // recruit_deadline이 NULL이면 상시 모집, 정원 체크
+      // 백엔드에서 isRecruiting 값을 제공하면 그 값을 사용 (우선순위)
       let canApplyInProgress = false;
-      // 마감일이 없거나 아직 지나지 않았으면
-      if (!deadlineDate || deadlineDate >= now) {
-        // 정원이 없거나 정원이 남아있으면 신청 가능
-        if (!(capacity && enrolled && enrolled >= capacity)) {
-          canApplyInProgress = true;
+      if (isRecruiting !== undefined && isRecruiting !== null) {
+        // 백엔드 값 사용 (가장 정확함)
+        canApplyInProgress = isRecruiting;
+      } else {
+        // 백엔드 값이 없으면 프론트엔드에서 계산 (fallback)
+        // 마감일이 없거나 아직 지나지 않았으면
+        if (!deadlineDate || deadlineDate >= now) {
+          // 정원이 없거나 정원이 남아있으면 신청 가능
+          if (!(capacity && enrolled && enrolled >= capacity)) {
+            canApplyInProgress = true;
+          }
         }
       }
 

@@ -43,10 +43,15 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
         const activeStudies = allStudies
           .filter(study => {
             const displayInfo = getStudyDisplayInfo(
-              study.status, 
-              study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+              study.status,
+              study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline,
+              study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+              study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+              study.capacity,
+              study.enrolled,
+              study.isRecruiting
             );
-            
+
             // 모집중
             if (displayInfo.canApply) return true;
             
@@ -381,7 +386,8 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                                  formatDateForInput(study.startDate),
                                  formatDateForInput(study.endDate),
                                  study.capacity,
-                                 study.enrolled
+                                 study.enrolled,
+                                 study.isRecruiting
                               ).label}
                             </span>
                           </Link>

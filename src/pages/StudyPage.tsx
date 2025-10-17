@@ -93,16 +93,26 @@ const StudyPage: React.FC = () => {
   // 각 카테고리별 스터디 필터링
   const recruitingStudies = studies.filter(study => {
     const displayInfo = getStudyDisplayInfo(
-      study.status, 
-      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+      study.status,
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline,
+      study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+      study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+      study.capacity,
+      study.enrolled,
+      study.isRecruiting
     );
     return displayInfo.canApply;
   });
-  
+
   const upcomingStudies = studies.filter(study => {
     const displayInfo = getStudyDisplayInfo(
       study.status,
-      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline,
+      study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+      study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+      study.capacity,
+      study.enrolled,
+      study.isRecruiting
     );
     const startDate = parseDate(study.startDate);
     return study.status === 'APPROVED' && !displayInfo.canApply && startDate && startDate > now;
@@ -139,7 +149,12 @@ const StudyPage: React.FC = () => {
     const getPriority = (study: Study): number => {
       const displayInfo = getStudyDisplayInfo(
         study.status,
-        study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+        study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline,
+        study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+        study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+        study.capacity,
+        study.enrolled,
+        study.isRecruiting
       );
       
       // 시작예정 (가장 높은 우선순위)
@@ -182,7 +197,12 @@ const StudyPage: React.FC = () => {
   const getStatusBadgeClass = (study: Study): string => {
     const displayInfo = getStudyDisplayInfo(
       study.status,
-      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline
+      study.deadline instanceof Date ? study.deadline.toISOString() : study.deadline,
+      study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
+      study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
+      study.capacity,
+      study.enrolled,
+      study.isRecruiting
     );
     
     if (displayInfo.canApply) return 'recruiting';
@@ -206,7 +226,8 @@ const StudyPage: React.FC = () => {
       study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
       study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
       study.capacity,
-      study.enrolled
+      study.enrolled,
+      study.isRecruiting
     );
     
     if (displayInfo.canApply) {
@@ -541,7 +562,8 @@ const StudyPage: React.FC = () => {
                               study.startDate instanceof Date ? study.startDate.toISOString() : study.startDate,
                               study.endDate instanceof Date ? study.endDate.toISOString() : study.endDate,
                               study.capacity,
-                              study.enrolled
+                              study.enrolled,
+                              study.isRecruiting
                             );
                             
                             if (displayInfo.canApply) {

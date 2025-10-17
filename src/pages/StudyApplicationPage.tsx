@@ -70,9 +70,14 @@ const StudyApplicationPage: React.FC = () => {
 
         const displayInfo = getStudyDisplayInfo(
           studyData.status,
-          studyData.deadline?.toISOString()
+          studyData.deadline?.toISOString(),
+          studyData.startDate instanceof Date ? studyData.startDate.toISOString() : studyData.startDate,
+          studyData.endDate instanceof Date ? studyData.endDate.toISOString() : studyData.endDate,
+          studyData.capacity,
+          studyData.enrolled,
+          studyData.isRecruiting
         );
-        
+
         if (!displayInfo.canApply) {
           alert('현재 모집 중이지 않은 스터디입니다.');
           navigate('/study');

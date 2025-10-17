@@ -62,6 +62,7 @@ export interface StudyDTO {
   capacity?: number;
   enrolled?: number;
   recruitDeadline?: string | number[];
+  isRecruiting?: boolean; // 백엔드에서 계산된 모집 중 여부
   startDate?: string | number[];
   endDate?: string | number[];
   deleted?: boolean;
@@ -118,6 +119,7 @@ export interface Study {
   capacity: number;
   enrolled: number;
   deadline: Date | null;
+  isRecruiting?: boolean; // 백엔드에서 계산된 모집 중 여부
   status: StudyStatus; // 백엔드 status 타입 그대로 사용
   recurrenceType?: RecurrenceType;
   startDate?: Date | string | number[] | null;
@@ -190,6 +192,7 @@ const transformStudy = (dto: StudyDTO): Study => {
     capacity: dto.capacity || 0, // 기본값을 0으로 (UI에서 처리)
     enrolled: dto.enrolled || 0,
     deadline: dto.recruitDeadline ? (parseDate(dto.recruitDeadline) || null) : null,
+    isRecruiting: dto.isRecruiting, // 백엔드에서 계산된 모집 중 여부
     status: dto.status, // 백엔드 status 값을 그대로 사용
     recurrenceType: dto.recurrenceType,
     startDate: dto.startDate,
