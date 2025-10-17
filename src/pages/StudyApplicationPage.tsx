@@ -155,13 +155,6 @@ const StudyApplicationPage: React.FC = () => {
     // validation
     if(handleStudyApplicationValidate()) return;
 
-    // 커피챗 확인
-    const confirmed = window.confirm(
-      '이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!\n\n커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요.'
-    );
-
-    if (!confirmed) return;
-
     // 유료/무료 모두 일반 신청 프로세스로 진행 (승인 후 결제)
     await submitApplication();
   };
