@@ -44,33 +44,13 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
       return false;
     }
 
-    // PENDING 상태에서만 수정 가능한 필드
-    const pendingOnlyFields = ['title', 'type', 'startDate', 'endDate', 'recurrenceType'];
-    if (pendingOnlyFields.includes(fieldName)) {
-      return status === StudyStatus.PENDING;
+    // title은 항상 수정 불가
+    if (fieldName === 'title') {
+      return false;
     }
 
-    // PENDING, APPROVED 상태에서 수정 가능한 필드
-    const pendingApprovedFields = ['tagline', 'capacity'];
-    if (pendingApprovedFields.includes(fieldName)) {
-      return status === StudyStatus.PENDING || status === StudyStatus.APPROVED;
-    }
-
-    // PENDING 상태에서만 수정 가능한 비용 관련 필드
-    const costFields = ['costType', 'costDescription'];
-    if (costFields.includes(fieldName)) {
-      return status === StudyStatus.PENDING;
-    }
-
-    // PENDING, APPROVED, IN_PROGRESS 상태에서 수정 가능한 필드
-    const alwaysEditableFields = ['schedule', 'duration', 'recruitDeadline'];
-    if (alwaysEditableFields.includes(fieldName)) {
-      return status === StudyStatus.PENDING ||
-             status === StudyStatus.APPROVED ||
-             status === StudyStatus.IN_PROGRESS;
-    }
-
-    return false;
+    // title을 제외한 나머지 필드는 모두 수정 가능
+    return true;
   };
 
   useEffect(() => {
@@ -419,7 +399,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
           <div className="form-group">
             <label htmlFor="tagline">
               한줄 소개
-              {!isFieldEditable('tagline') && <span className="field-status"> (수정 불가)</span>}
             </label>
             <input
               id="tagline"
@@ -437,16 +416,12 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
           <div className="schedule-section">
             <div className="section-header">
               <h3>📅 일정 및 시간</h3>
-              {(!isFieldEditable('schedule') || !isFieldEditable('duration')) && 
-                <span className="field-status">(일부 수정 불가)</span>
-              }
             </div>
             
             {/* 일정 선택 */}
             <div className="form-group">
               <label>
                 스터디 일정
-                {!isFieldEditable('schedule') && <span className="field-status"> (수정 불가)</span>}
               </label>
               {isFieldEditable('schedule') ? (
                 <ModernScheduleInput
@@ -482,7 +457,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
           <div className="form-group">
             <label htmlFor="capacity">
               모집 인원
-              {!isFieldEditable('capacity') && <span className="field-status"> (수정 불가)</span>}
             </label>
             <input
               id="capacity"
@@ -501,15 +475,11 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
           <div className="cost-section">
             <div className="section-header">
               <h3>💰 스터디 비용</h3>
-              {!isFieldEditable('costType') && 
-                <span className="field-status">(수정 불가)</span>
-              }
             </div>
 
             <div className="form-group">
               <label>
                 비용 유형
-                {!isFieldEditable('costType') && <span className="field-status"> (수정 불가)</span>}
               </label>
               {isFieldEditable('costType') ? (
                 <div className="cost-type-selector">
@@ -551,7 +521,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
               <div className="form-group">
                 <label htmlFor="costDescription">
                   비용 상세 설명
-                  {!isFieldEditable('costDescription') && <span className="field-status"> (수정 불가)</span>}
                 </label>
                 {isFieldEditable('costDescription') ? (
                   <textarea
@@ -584,15 +553,11 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
           <div className="date-section">
             <div className="section-header">
               <h3>📅 스터디 기간</h3>
-              {(!isFieldEditable('recruitDeadline') || !isFieldEditable('startDate') || !isFieldEditable('endDate')) && 
-                <span className="field-status">(수정 불가)</span>
-              }
             </div>
 
             <div className="form-group">
               <label>
                 <span className="label-icon">📝</span> 모집 마감일
-                {!isFieldEditable('recruitDeadline') && <span className="field-status"> (수정 불가)</span>}
               </label>
               {isFieldEditable('recruitDeadline') ? (
                 <>
@@ -618,7 +583,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
               <div className="form-group">
                 <label>
                   <span className="label-icon">🚀</span> 시작일
-                  {!isFieldEditable('startDate') && <span className="field-status"> (수정 불가)</span>}
                 </label>
                 {isFieldEditable('startDate') ? (
                   <DatePickerCustom
@@ -637,7 +601,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
               <div className="form-group">
                 <label>
                   <span className="label-icon">🏁</span> 종료일
-                  {!isFieldEditable('endDate') && <span className="field-status"> (수정 불가)</span>}
                 </label>
                 {isFieldEditable('endDate') ? (
                   <DatePickerCustom
