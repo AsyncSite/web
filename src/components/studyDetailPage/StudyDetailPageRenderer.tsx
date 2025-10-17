@@ -157,6 +157,8 @@ const StudyDetailPageRenderer: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCoffeeChatModal, setShowCoffeeChatModal] = useState(false);
+  const [pendingNavigatePath, setPendingNavigatePath] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -457,15 +459,9 @@ const StudyDetailPageRenderer: React.FC = () => {
                             return;
                           }
 
-                          // 커피챗 확인
-                          const confirmed = window.confirm(
-                            '이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!\n\n커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요.'
-                          );
-
-                          if (!confirmed) return;
-
-                          // 로그인된 경우에만 이동
-                          navigate(`/study/${studyData.id}/apply`);
+                          // 커피챗 확인 모달 표시
+                          setPendingNavigatePath(`/study/${studyData.id}/apply`);
+                          setShowCoffeeChatModal(true);
                         }}
                       >
                         참가 신청하기
@@ -528,14 +524,9 @@ const StudyDetailPageRenderer: React.FC = () => {
                             return;
                           }
 
-                          // 커피챗 확인
-                          const confirmed = window.confirm(
-                            '이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!\n\n커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요.'
-                          );
-
-                          if (!confirmed) return;
-
-                          navigate(`/study/${studyData.id}/apply`);
+                          // 커피챗 확인 모달 표시
+                          setPendingNavigatePath(`/study/${studyData.id}/apply`);
+                          setShowCoffeeChatModal(true);
                         }}
                       >
                         재신청하기
@@ -611,14 +602,9 @@ const StudyDetailPageRenderer: React.FC = () => {
                             return;
                           }
 
-                          // 커피챗 확인
-                          const confirmed = window.confirm(
-                            '이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!\n\n커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요.'
-                          );
-
-                          if (!confirmed) return;
-
-                          navigate(`/study/${studyData.id}/apply`);
+                          // 커피챗 확인 모달 표시
+                          setPendingNavigatePath(`/study/${studyData.id}/apply`);
+                          setShowCoffeeChatModal(true);
                         }}
                       >
                         참가 신청하기
@@ -663,6 +649,29 @@ const StudyDetailPageRenderer: React.FC = () => {
         showCancel={true}
         onConfirm={() => {
           navigate('/login', { state: { from: `/study/${studyData?.id}/apply` } });
+        }}
+      />
+
+      <Modal
+        isOpen={showCoffeeChatModal}
+        onClose={() => {
+          setShowCoffeeChatModal(false);
+          setPendingNavigatePath(null);
+        }}
+        title="커피챗 확인"
+        message="이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!
+
+커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요."
+        type="info"
+        confirmText="완료했어요"
+        cancelText="취소"
+        showCancel={true}
+        onConfirm={() => {
+          if (pendingNavigatePath) {
+            navigate(pendingNavigatePath);
+          }
+          setShowCoffeeChatModal(false);
+          setPendingNavigatePath(null);
         }}
       />
     </div>

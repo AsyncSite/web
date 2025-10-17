@@ -13,6 +13,7 @@ import studyService, { Study } from '../api/studyService';
 import { useAuth } from '../contexts/AuthContext';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 import { parseDate } from '../utils/studyScheduleUtils';
+import Modal from '../components/common/Modal/Modal';
 import styles from './StudyPage.module.css';
 
 const StudyPage: React.FC = () => {
@@ -31,6 +32,8 @@ const StudyPage: React.FC = () => {
   const [myStudies, setMyStudies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCoffeeChatModal, setShowCoffeeChatModal] = useState(false);
+  const [pendingStudySlug, setPendingStudySlug] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStudies = async () => {
@@ -547,14 +550,9 @@ const StudyPage: React.FC = () => {
                                   onClick={(e) => {
                                     e.preventDefault();
 
-                                    // 커피챗 확인
-                                    const confirmed = window.confirm(
-                                      '이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!\n\n커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요.'
-                                    );
-
-                                    if (!confirmed) return;
-
-                                    navigate(`/study/${study.slug}/apply`);
+                                    // 커피챗 확인 모달 표시
+                                    setPendingStudySlug(study.slug);
+                                    setShowCoffeeChatModal(true);
                                   }}
                                   className={`${styles['apply-button']} ${styles['apply-button-rejected']}`}
                                 >
@@ -580,14 +578,9 @@ const StudyPage: React.FC = () => {
                                   onClick={(e) => {
                                     e.preventDefault();
 
-                                    // 커피챗 확인
-                                    const confirmed = window.confirm(
-                                      '이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!\n\n커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요.'
-                                    );
-
-                                    if (!confirmed) return;
-
-                                    navigate(`/study/${study.slug}/apply`);
+                                    // 커피챗 확인 모달 표시
+                                    setPendingStudySlug(study.slug);
+                                    setShowCoffeeChatModal(true);
                                   }}
                                   className={styles['apply-button']}
                                 >
@@ -613,6 +606,29 @@ const StudyPage: React.FC = () => {
           )}
           </div>
         </main>
+
+        <Modal
+          isOpen={showCoffeeChatModal}
+          onClose={() => {
+            setShowCoffeeChatModal(false);
+            setPendingStudySlug(null);
+          }}
+          title="커피챗 확인"
+          message="이 스터디는 참여 신청 전 리더와의 커피챗이 필수에요!
+
+커피챗을 완료하셨나요? 아직 안하셨다면, 상세 페이지를 확인하여 리더의 오픈 카톡으로 메시지 주세요."
+          type="info"
+          confirmText="완료했어요"
+          cancelText="취소"
+          showCancel={true}
+          onConfirm={() => {
+            if (pendingStudySlug) {
+              navigate(`/study/${pendingStudySlug}/apply`);
+            }
+            setShowCoffeeChatModal(false);
+            setPendingStudySlug(null);
+          }}
+        />
       </div>
     );
 };
