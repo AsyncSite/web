@@ -304,8 +304,14 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
 
       // recruitDeadline은 기존 값과 비교하여 변경된 경우만 전송
       const currentDeadline = study.deadline ? formatDateForInput(study.deadline) : '';
+      console.log('[DEBUG] recruitDeadline 비교:', {
+        formDataValue: formData.recruitDeadline,
+        currentDeadline,
+        isDifferent: formData.recruitDeadline !== currentDeadline
+      });
       if (formData.recruitDeadline !== currentDeadline) {
         updateData.recruitDeadline = formData.recruitDeadline ? formData.recruitDeadline + 'T23:59:59' : undefined;
+        console.log('[DEBUG] recruitDeadline 설정됨:', updateData.recruitDeadline);
       }
       
       if (formData.startDate) {
@@ -325,6 +331,7 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
         updateData.costDescription = formData.costDescription || '';
       }
 
+      console.log('[DEBUG] 전송할 updateData:', updateData);
       await onUpdate(updateData);
       onClose();
     } catch (error: any) {
