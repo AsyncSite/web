@@ -129,6 +129,7 @@ const StudyApplicationPage: React.FC = () => {
 
     // Check for user after loading is complete
     if (!user) {
+      alert('스터디 참여 신청을 위해서는 로그인이 필요합니다.');
       navigate('/login', { state: { from: `/study/${studyId}/apply` } });
       return true;
     }
@@ -142,6 +143,7 @@ const StudyApplicationPage: React.FC = () => {
     const missingFields = requiredFields.filter(field => !answers[field]?.trim());
 
     if (missingFields.length > 0) {
+      alert('필수 항목을 모두 입력해주세요.');
       return true;
     }
     return false;
