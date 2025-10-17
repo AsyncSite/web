@@ -215,14 +215,8 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
       newErrors.capacity = '참여 인원은 1명 이상이어야 합니다.';
     }
 
-    if (formData.recruitDeadline && formData.startDate) {
-      const recruitDate = new Date(formData.recruitDeadline);
-      const startDate = new Date(formData.startDate);
-      
-      if (recruitDate >= startDate) {
-        newErrors.recruitDeadline = '모집 마감일은 시작일보다 이전이어야 합니다.';
-      }
-    }
+    // recruitDeadline 검증 제거: 과거/현재/미래 모두 자유롭게 설정 가능
+    // 과거 날짜 설정 = 모집 즉시 종료, 미래 날짜 = 모집 연장
 
     if (formData.startDate && formData.endDate) {
       const startDate = new Date(formData.startDate);
@@ -597,7 +591,6 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
                     value={formData.recruitDeadline || ''}
                     onChange={(value) => setFormData(prev => ({ ...prev, recruitDeadline: value }))}
                     placeholder="모집 마감일 선택"
-                    min={new Date().toISOString().split('T')[0]}
                   />
                   <div className="form-hint" style={{ marginTop: '8px', fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)' }}>
                     💡 마감일을 연장하면 모집이 계속되고, 과거로 설정하면 모집이 종료됩니다
