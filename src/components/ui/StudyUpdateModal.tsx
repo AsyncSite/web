@@ -591,6 +591,7 @@ const StudyUpdateModal: React.FC<StudyUpdateModalProps> = ({
                     value={formData.recruitDeadline || ''}
                     onChange={(value) => setFormData(prev => ({ ...prev, recruitDeadline: value }))}
                     placeholder="모집 마감일 선택"
+                    min=""
                   />
                   <div className="form-hint" style={{ marginTop: '8px', fontSize: '13px', color: 'rgba(255, 255, 255, 0.6)' }}>
                     💡 마감일을 연장하면 모집이 계속되고, 과거로 설정하면 모집이 종료됩니다
