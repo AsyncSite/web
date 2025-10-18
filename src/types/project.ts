@@ -221,7 +221,7 @@ export const getMeetingTypeLabel = (type: MeetingType): string => {
   const labels: Record<MeetingType, string> = {
     ONLINE: '온라인',
     OFFLINE: '오프라인',
-    HYBRID: '하이브리드'
+    HYBRID: '온/오프라인 병행'
   };
   return labels[type];
 };

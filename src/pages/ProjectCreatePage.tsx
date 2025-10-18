@@ -385,7 +385,7 @@ const ProjectCreatePage: React.FC = () => {
                 >
                   <option value="ONLINE">온라인</option>
                   <option value="OFFLINE">오프라인</option>
-                  <option value="HYBRID">하이브리드</option>
+                  <option value="HYBRID">온/오프라인 병행</option>
                 </select>
               </div>
 
