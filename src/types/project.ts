@@ -256,28 +256,28 @@ export const calculateDday = (deadline: Date | null): string | null => {
   return `D-${diffDays}`;
 };
 
-// Project Type Color Themes (본질 기반 색상 정체성)
+// Project Type Color Themes (Soft Glow - 부드럽고 밝은 톤)
 export const PROJECT_TYPE_COLORS = {
   SIDE_PROJECT: {
-    primary: '#10B981',           // 에메랄드 - 창의성, 실험, 자유로운 도전
-    glow: 'rgba(16, 185, 129, 0.3)',
-    light: 'rgba(16, 185, 129, 0.15)',
-    border: 'rgba(16, 185, 129, 0.5)',
-    gradient: 'linear-gradient(135deg, #10B981 0%, #059669 100%)'
+    primary: '#D4F1A8',           // 밝은 라임 그린 - 창의성, 실험
+    glow: 'rgba(212, 241, 168, 0.25)',
+    light: 'rgba(212, 241, 168, 0.12)',
+    border: 'rgba(212, 241, 168, 0.35)',
+    gradient: 'linear-gradient(135deg, #D4F1A8 0%, #C3E88D 100%)'
   },
   STARTUP: {
-    primary: '#F59E0B',           // 엠버 - 열정, 성장, 혁신
-    glow: 'rgba(245, 158, 11, 0.3)',
-    light: 'rgba(245, 158, 11, 0.15)',
-    border: 'rgba(245, 158, 11, 0.5)',
-    gradient: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+    primary: '#FFB59A',           // 밝은 코랄 - 열정, 도전
+    glow: 'rgba(255, 181, 154, 0.25)',
+    light: 'rgba(255, 181, 154, 0.12)',
+    border: 'rgba(255, 181, 154, 0.35)',
+    gradient: 'linear-gradient(135deg, #FFB59A 0%, #F78C6C 100%)'
   },
   OPEN_SOURCE: {
-    primary: '#3B82F6',           // 블루 - 협업, 공유, 커뮤니티
-    glow: 'rgba(59, 130, 246, 0.3)',
-    light: 'rgba(59, 130, 246, 0.15)',
-    border: 'rgba(59, 130, 246, 0.5)',
-    gradient: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)'
+    primary: '#A8C5FF',           // 밝은 블루 - 협업, 공유
+    glow: 'rgba(168, 197, 255, 0.25)',
+    light: 'rgba(168, 197, 255, 0.12)',
+    border: 'rgba(168, 197, 255, 0.35)',
+    gradient: 'linear-gradient(135deg, #A8C5FF 0%, #82AAFF 100%)'
   }
 } as const;
 

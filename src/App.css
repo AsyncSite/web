@@ -138,12 +138,8 @@ body {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
-/* 섹션 전체 */
-section {
-  width: 100%;
-  min-height: 100vh;
-  padding: 40px 20px;
-}
+/* 섹션 전체 - 전역 스타일 제거, 필요한 곳에서만 클래스로 적용 */
+/* REMOVED: 전역 section 스타일은 다른 페이지의 레이아웃을 깨뜨림 */
 
 /***********************
  *   반응형

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLoginRedirect } from '../hooks/useLoginRedirect';
 import projectService from '../api/projectService';
 import type {
   Project,
@@ -22,6 +23,7 @@ import styles from './ProjectListPage.module.css';
 const ProjectListPage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { redirectToLogin } = useLoginRedirect();
 
 
   const [projects, setProjects] = useState<Project[]>([]);
@@ -55,7 +57,7 @@ const ProjectListPage: React.FC = () => {
 
   const handleCreateProject = () => {
     if (!isAuthenticated) {
-      navigate('/login');
+      redirectToLogin('/project/new');
       return;
     }
     navigate('/project/new');

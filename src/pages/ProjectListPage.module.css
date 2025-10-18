@@ -1,9 +1,10 @@
 /* Project List Page */
 .project-list-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #0a0e27 0%, #1a1f3a 100%);
+  background: #05060A;  /* 명시적인 배경색 - transparent 대신 확실한 색상 지정 */
   color: #e4e4e7;
   padding-bottom: 80px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;  /* 명시적 폰트 지정 */
 }
 
 /* Loading State */
@@ -28,7 +29,7 @@
   font-size: 48px;
   font-weight: 700;
   margin-bottom: 16px;
-  background: linear-gradient(135deg, #82AAFF 0%, #C792EA 100%);
+  background: linear-gradient(135deg, #C3E88D 0%, #8FD67A 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -41,8 +42,8 @@
 }
 
 .create-button {
-  background: linear-gradient(135deg, #82AAFF 0%, #C792EA 100%);
-  color: white;
+  background: linear-gradient(135deg, #C3E88D 0%, #8FD67A 100%);
+  color: #05060A;
   border: none;
   padding: 14px 32px;
   font-size: 16px;
@@ -54,7 +55,7 @@
 
 .create-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(130, 170, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(195, 232, 141, 0.3);
 }
 
 /* Search Section */
@@ -112,48 +113,82 @@
 
 .type-tab {
   padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   color: #a1a1aa;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .type-tab:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .type-tab.active {
   color: #e4e4e7;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Type-specific tab colors */
+/* Type-specific tab colors (High Contrast - 불투명 밝은 배경 + 어두운 텍스트) */
 .type-tab.tab-side-project.active {
-  background: rgba(16, 185, 129, 0.15);
-  border-color: #10B981;
-  color: #10B981;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+  background: rgba(212, 241, 168, 0.95);
+  border: 2px solid rgba(212, 241, 168, 1);
+  color: #05060A;  /* 어두운 텍스트로 고대비 확보 */
+  box-shadow: 0 0 20px rgba(212, 241, 168, 0.4),
+              0 4px 12px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+}
+
+.type-tab.tab-side-project.active:hover {
+  background: rgba(212, 241, 168, 1);
+  border-color: rgba(212, 241, 168, 1);
+  color: #05060A;
+  box-shadow: 0 0 28px rgba(212, 241, 168, 0.5),
+              0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
 }
 
 .type-tab.tab-startup.active {
-  background: rgba(245, 158, 11, 0.15);
-  border-color: #F59E0B;
-  color: #F59E0B;
-  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+  background: rgba(255, 181, 154, 0.95);
+  border: 2px solid rgba(255, 181, 154, 1);
+  color: #05060A;  /* 어두운 텍스트로 고대비 확보 */
+  box-shadow: 0 0 20px rgba(255, 181, 154, 0.4),
+              0 4px 12px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+}
+
+.type-tab.tab-startup.active:hover {
+  background: rgba(255, 181, 154, 1);
+  border-color: rgba(255, 181, 154, 1);
+  color: #05060A;
+  box-shadow: 0 0 28px rgba(255, 181, 154, 0.5),
+              0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
 }
 
 .type-tab.tab-open-source.active {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: #3B82F6;
-  color: #3B82F6;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+  background: rgba(168, 197, 255, 0.95);
+  border: 2px solid rgba(168, 197, 255, 1);
+  color: #05060A;  /* 어두운 텍스트로 고대비 확보 */
+  box-shadow: 0 0 20px rgba(168, 197, 255, 0.4),
+              0 4px 12px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+}
+
+.type-tab.tab-open-source.active:hover {
+  background: rgba(168, 197, 255, 1);
+  border-color: rgba(168, 197, 255, 1);
+  color: #05060A;
+  box-shadow: 0 0 28px rgba(168, 197, 255, 0.5),
+              0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
 }
 
 /* Results Info */
@@ -185,8 +220,9 @@
 
 /* Project Card with Type Colors */
 .project-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(5, 6, 10, 0.95) 0%, rgba(15, 17, 25, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   padding: 24px;
   display: flex;
@@ -212,7 +248,7 @@
 }
 
 .project-card:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(5, 6, 10, 0.98) 0%, rgba(15, 17, 25, 0.98) 100%);
   border-color: var(--type-border, rgba(130, 170, 255, 0.5));
   transform: translateY(-4px);
   box-shadow: 0 8px 24px var(--type-glow, rgba(130, 170, 255, 0.3));
@@ -236,40 +272,54 @@
   padding: 4px 12px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
+/* Type Badge - 불투명 밝은 배경 + 어두운 텍스트 */
 .type-badge {
-  background: var(--type-light, rgba(130, 170, 255, 0.15));
-  color: var(--type-color, #82AAFF);
-  border: 1px solid var(--type-border, rgba(130, 170, 255, 0.3));
+  background: var(--type-color, #A8C5FF);
+  color: #05060A;
+  border: 2px solid var(--type-color, #A8C5FF);
+  box-shadow: 0 0 8px var(--type-glow, rgba(168, 197, 255, 0.25));
 }
 
+/* Status Badges - 불투명 밝은 배경 + 어두운 텍스트 */
 .status-badge {
-  background: rgba(195, 232, 141, 0.15);
-  color: #C3E88D;
+  background: rgba(195, 232, 141, 0.95);
+  color: #05060A;
+  border: 2px solid rgba(195, 232, 141, 1);
+  box-shadow: 0 0 8px rgba(195, 232, 141, 0.25);
 }
 
 .status-badge.status-recruiting {
-  background: rgba(195, 232, 141, 0.15);
-  color: #C3E88D;
+  background: rgba(195, 232, 141, 0.95);
+  color: #05060A;
+  border: 2px solid rgba(195, 232, 141, 1);
+  box-shadow: 0 0 8px rgba(195, 232, 141, 0.25);
 }
 
 .status-badge.status-in_progress {
-  background: rgba(255, 203, 107, 0.15);
-  color: #FFCB6B;
+  background: rgba(255, 203, 107, 0.95);
+  color: #05060A;
+  border: 2px solid rgba(255, 203, 107, 1);
+  box-shadow: 0 0 8px rgba(255, 203, 107, 0.25);
 }
 
 .status-badge.status-completed {
-  background: rgba(161, 161, 170, 0.15);
-  color: #a1a1aa;
+  background: rgba(161, 161, 170, 0.95);
+  color: #05060A;
+  border: 2px solid rgba(161, 161, 170, 1);
+  box-shadow: 0 0 8px rgba(161, 161, 170, 0.2);
 }
 
+/* D-Day Badge - 불투명 밝은 배경 + 어두운 텍스트 */
 .dday-badge {
-  background: rgba(247, 140, 108, 0.15);
-  color: #F78C6C;
+  background: rgba(247, 140, 108, 0.95);
+  color: #05060A;
+  border: 2px solid rgba(247, 140, 108, 1);
+  box-shadow: 0 0 8px rgba(247, 140, 108, 0.25);
 }
 
 .meeting-type {

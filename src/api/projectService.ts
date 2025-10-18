@@ -9,9 +9,9 @@ import type {
   ProjectStatus,
   ApplicationStatus,
   TechCategory,
-  MeetingType,
-  getProjectTheme
+  MeetingType
 } from '../types/project';
+import { getProjectThemeByType } from '../types/project';
 
 // Mock data storage (localStorage)
 const STORAGE_KEY = 'asyncsite_projects';
@@ -172,7 +172,7 @@ const getMockProjects = (): Project[] => {
       views: 245,
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-      color: { primary: '#82AAFF', glow: 'rgba(130, 170, 255, 0.3)' }
+      color: { primary: '#D4F1A8', glow: 'rgba(212, 241, 168, 0.25)' }
     },
     {
       id: generateId(),
@@ -258,7 +258,7 @@ const getMockProjects = (): Project[] => {
       views: 512,
       createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      color: { primary: '#F78C6C', glow: 'rgba(247, 140, 108, 0.3)' }
+      color: { primary: '#FFB59A', glow: 'rgba(255, 181, 154, 0.25)' }
     },
     {
       id: generateId(),
@@ -333,7 +333,7 @@ Markdown 지원, Git 기반 버전 관리, 플러그인 시스템을 제공합�
       views: 1024,
       createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      color: { primary: '#C792EA', glow: 'rgba(199, 146, 234, 0.3)' }
+      color: { primary: '#A8C5FF', glow: 'rgba(168, 197, 255, 0.25)' }
     }
   ];
 
@@ -448,7 +448,10 @@ const projectService = {
       views: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
-      color: { primary: '#C3E88D', glow: 'rgba(195, 232, 141, 0.3)' }
+      color: {
+        primary: getProjectThemeByType(formData.projectType).primary,
+        glow: getProjectThemeByType(formData.projectType).glow
+      }
     };
 
     projects.push(newProject);

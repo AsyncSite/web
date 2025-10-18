@@ -1,7 +1,12 @@
 /* 랜딩 페이지 전용 공통 스타일 - 실제 사용되는 클래스만 정리 */
 
 /* 전체 폰트 설정 - Pretendard 우선, title만 Moneygraphy-Rounded */
-* {
+/* SCOPED: MainPage에만 적용되도록 클래스 기반으로 변경 */
+.App {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.App * {
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
@@ -10,14 +15,14 @@
   font-family: 'Moneygraphy-Rounded', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
-/* 스크롤 스냅 */
-html {
-  scroll-behavior: smooth;
-}
-
-body {
+/* 스크롤 스냅 - MainPage에만 적용 */
+.App {
   scroll-snap-type: y mandatory;
   overflow-y: auto;
+}
+
+html.landing-page {
+  scroll-behavior: smooth;
 }
 
 /* 섹션 배경 */

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLoginRedirect } from '../hooks/useLoginRedirect';
 import studyService, { Study, ApplicationRequest } from '../api/studyService';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 import Modal from '../components/common/Modal/Modal';
@@ -11,6 +12,7 @@ const StudyApplicationPage: React.FC = () => {
   const navigate = useNavigate();
   const { studyId } = useParams<{ studyId: string }>();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { redirectToLogin } = useLoginRedirect();
   const [study, setStudy] = useState<Study | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ const StudyApplicationPage: React.FC = () => {
           message: '스터디 참가 신청을 위해서는 로그인이 필요합니다.',
           type: 'info',
           onConfirm: () => {
-            navigate('/login', { state: { from: `/study/${studyId}/apply` } });
+            redirectToLogin(`/study/${studyId}/apply`);
           }
         });
         setShowModal(true);

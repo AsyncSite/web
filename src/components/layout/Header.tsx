@@ -430,6 +430,15 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                   JOBS
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/lab"
+                  className={location.pathname.startsWith('/lab') ? 'active' : ''}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  LAB
+                </Link>
+              </li>
             </ul>
             <div className="auth-section">
             {isLoading ? (

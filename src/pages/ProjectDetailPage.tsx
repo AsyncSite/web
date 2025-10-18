@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLoginRedirect } from '../hooks/useLoginRedirect';
 import projectService from '../api/projectService';
 import type { Project } from '../types/project';
 import {
@@ -19,6 +20,7 @@ const ProjectDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { redirectToLogin } = useLoginRedirect();
 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ const ProjectDetailPage: React.FC = () => {
 
   const handleApplyClick = (positionId?: string) => {
     if (!isAuthenticated) {
-      navigate('/login');
+      redirectToLogin();
       return;
     }
     setSelectedPositionId(positionId || null);
@@ -198,38 +200,38 @@ const ProjectDetailPage: React.FC = () => {
             {/* Overview Tab */}
             {activeTab === 'overview' && (
               <div className={styles['overview-tab']}>
-                <section className={styles['section']}>
+                <div className={styles['section']}>
                   <h2 className={styles['section-title']}>프로젝트 소개</h2>
                   <div className={styles['section-content']}>
                     {project.description.split('\n').map((line, i) => (
                       <p key={i}>{line}</p>
                     ))}
                   </div>
-                </section>
+                </div>
 
                 {project.vision && (
-                  <section className={styles['section']}>
+                  <div className={styles['section']}>
                     <h2 className={styles['section-title']}>비전 & 목표</h2>
                     <div className={styles['vision-box']}>
                       <p>{project.vision}</p>
                     </div>
-                  </section>
+                  </div>
                 )}
 
                 {project.category && (
-                  <section className={styles['section']}>
+                  <div className={styles['section']}>
                     <h2 className={styles['section-title']}>카테고리</h2>
                     <span className={styles['category-tag']}>{project.category}</span>
-                  </section>
+                  </div>
                 )}
 
                 {project.compensationDescription && (
-                  <section className={styles['section']}>
+                  <div className={styles['section']}>
                     <h2 className={styles['section-title']}>보상 & 혜택</h2>
                     <div className={styles['compensation-box']}>
                       <p>{project.compensationDescription}</p>
                     </div>
-                  </section>
+                  </div>
                 )}
               </div>
             )}
@@ -313,7 +315,7 @@ const ProjectDetailPage: React.FC = () => {
             {/* Collaboration Tab */}
             {activeTab === 'collaboration' && (
               <div className={styles['collaboration-tab']}>
-                <section className={styles['section']}>
+                <div className={styles['section']}>
                   <h2 className={styles['section-title']}>미팅 정보</h2>
                   <div className={styles['info-grid']}>
                     <div className={styles['info-item']}>
@@ -329,10 +331,10 @@ const ProjectDetailPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </section>
+                </div>
 
                 {project.collaborationTools.length > 0 && (
-                  <section className={styles['section']}>
+                  <div className={styles['section']}>
                     <h2 className={styles['section-title']}>협업 도구</h2>
                     <div className={styles['tools-grid']}>
                       {project.collaborationTools.map((tool, i) => (
@@ -341,7 +343,7 @@ const ProjectDetailPage: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                  </section>
+                  </div>
                 )}
               </div>
             )}
