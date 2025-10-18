@@ -157,7 +157,7 @@ const ProjectCreatePage: React.FC = () => {
 
         <form onSubmit={handleSubmit} className={styles['form']}>
           {/* Basic Info */}
-          <section className={styles['section']}>
+          <div className={styles['section']}>
             <h2 className={styles['section-title']}>
               1. 기본 정보 <span className={styles['required']}>*</span>
             </h2>
@@ -229,10 +229,10 @@ const ProjectCreatePage: React.FC = () => {
                 />
               </div>
             </div>
-          </section>
+          </div>
 
           {/* Positions */}
-          <section className={styles['section']}>
+          <div className={styles['section']}>
             <h2 className={styles['section-title']}>
               2. 모집 포지션 <span className={styles['required']}>* 최소 1개</span>
             </h2>
@@ -325,10 +325,10 @@ const ProjectCreatePage: React.FC = () => {
                 </div>
               ))}
             </div>
-          </section>
+          </div>
 
           {/* Optional Details */}
-          <section className={styles['section']}>
+          <div className={styles['section']}>
             <h2 className={styles['section-title']}>3. 추가 정보 (선택)</h2>
             <p className={styles['section-description']}>나중에 언제든지 수정할 수 있어요</p>
             <div className={styles['form-grid']}>
@@ -403,7 +403,7 @@ const ProjectCreatePage: React.FC = () => {
                 />
               </div>
             </div>
-          </section>
+          </div>
 
           {/* Submit */}
           <div className={styles['submit-section']}>
