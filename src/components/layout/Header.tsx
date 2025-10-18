@@ -423,11 +423,11 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
               </li>
               <li>
                 <Link
-                  to="/ignition"
+                  to="/ignition/navigator"
                   className={location.pathname.startsWith('/ignition') ? 'active' : ''}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  IGNITION
+                  JOBS
                 </Link>
               </li>
               <li>
