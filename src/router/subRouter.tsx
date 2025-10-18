@@ -27,6 +27,7 @@ const NavigatorPageV1Deprecated = lazy(() => import('../pages/ignition/navigator
 const ProjectListPage = lazy(() => import('../pages/ProjectListPage'));
 const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
 const ProjectCreatePage = lazy(() => import('../pages/ProjectCreatePage'));
+const ProjectEditPage = lazy(() => import('../pages/ProjectEditPage'));
 
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
@@ -133,6 +134,14 @@ const subRouter = [
         element: (
           <PrivateRoute>
             <ProjectCreatePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: ':slug/edit',
+        element: (
+          <PrivateRoute>
+            <ProjectEditPage />
           </PrivateRoute>
         ),
       },

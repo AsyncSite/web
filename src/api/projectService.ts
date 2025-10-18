@@ -464,6 +464,137 @@ const projectService = {
     return newProject;
   },
 
+  // Get project by ID (for editing)
+  getProjectById: async (projectId: string): Promise<Project | null> => {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    const projects = loadProjects();
+    return projects.find((p) => p.id === projectId) || null;
+  },
+
+  // Update project
+  updateProject: async (projectId: string, formData: ProjectFormData, userId: string): Promise<Project> => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const projects = loadProjects();
+    const projectIndex = projects.findIndex((p) => p.id === projectId);
+
+    if (projectIndex === -1) {
+      throw new Error('프로젝트를 찾을 수 없습니다.');
+    }
+
+    const existingProject = projects[projectIndex];
+
+    // Check ownership
+    // TODO: 백엔드 연동 후 활성화
+    // if (existingProject.owner.id !== userId) {
+    //   throw new Error('프로젝트를 수정할 권한이 없습니다.');
+    // }
+
+    const updatedProject: Project = {
+      ...existingProject,
+      name: formData.name,
+      tagline: formData.tagline,
+      description: formData.description,
+      vision: formData.vision,
+      category: formData.category,
+      projectType: formData.projectType,
+      totalCapacity: formData.positions.reduce((sum, p) => sum + p.requiredCount, 0),
+      recruitmentDeadline: formData.recruitmentDeadline
+        ? new Date(formData.recruitmentDeadline)
+        : null,
+      startDate: formData.startDate ? new Date(formData.startDate) : null,
+      expectedDuration: formData.expectedDuration,
+      meetingType: formData.meetingType,
+      meetingFrequency: formData.meetingFrequency,
+      collaborationTools: formData.collaborationTools,
+      compensationDescription: formData.compensationDescription,
+      positions: formData.positions.map((p) => ({
+        id: generateId(),
+        positionName: p.positionName,
+        requiredCount: p.requiredCount,
+        currentCount: 0,
+        requiredSkills: p.requiredSkills,
+        preferredSkills: p.preferredSkills,
+        responsibilities: p.responsibilities
+      })),
+      techStacks: formData.techStacks.map((t) => ({
+        id: generateId(),
+        category: t.category,
+        technology: t.technology
+      })),
+      owner: {
+        ...existingProject.owner,
+        github: formData.ownerGithub,
+        portfolio: formData.ownerPortfolio,
+        openChatUrl: formData.openChatUrl
+      },
+      updatedAt: new Date(),
+      color: {
+        primary: getProjectThemeByType(formData.projectType).primary,
+        glow: getProjectThemeByType(formData.projectType).glow
+      }
+    };
+
+    projects[projectIndex] = updatedProject;
+    saveProjects(projects);
+
+    return updatedProject;
+  },
+
+  // Delete project
+  deleteProject: async (projectId: string, userId: string): Promise<void> => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const projects = loadProjects();
+    const project = projects.find((p) => p.id === projectId);
+
+    if (!project) {
+      throw new Error('프로젝트를 찾을 수 없습니다.');
+    }
+
+    // Check ownership
+    // TODO: 백엔드 연동 후 활성화
+    // if (project.owner.id !== userId) {
+    //   throw new Error('프로젝트를 삭제할 권한이 없습니다.');
+    // }
+
+    const filteredProjects = projects.filter((p) => p.id !== projectId);
+    saveProjects(filteredProjects);
+  },
+
+  // Update project status
+  updateProjectStatus: async (
+    projectId: string,
+    newStatus: ProjectStatus,
+    userId: string
+  ): Promise<Project> => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const projects = loadProjects();
+    const projectIndex = projects.findIndex((p) => p.id === projectId);
+
+    if (projectIndex === -1) {
+      throw new Error('프로젝트를 찾을 수 없습니다.');
+    }
+
+    const project = projects[projectIndex];
+
+    // Check ownership
+    // TODO: 백엔드 연동 후 활성화
+    // if (project.owner.id !== userId) {
+    //   throw new Error('프로젝트 상태를 변경할 권한이 없습니다.');
+    // }
+
+    project.status = newStatus;
+    project.updatedAt = new Date();
+
+    projects[projectIndex] = project;
+    saveProjects(projects);
+
+    return project;
+  },
+
   // Apply to project
   applyToProject: async (
     projectId: string,

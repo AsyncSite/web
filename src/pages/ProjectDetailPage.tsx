@@ -20,12 +20,14 @@ type TabType = 'overview' | 'positions' | 'techstack' | 'collaboration';
 const ProjectDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { redirectToLogin } = useLoginRedirect();
 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -51,6 +53,44 @@ const ProjectDetailPage: React.FC = () => {
       window.open(project.owner.openChatUrl, '_blank', 'noopener,noreferrer');
     }
   };
+
+  const handleEditClick = () => {
+    navigate(`/project/${slug}/edit`);
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!project || !user) return;
+
+    try {
+      setIsDeleting(true);
+      await projectService.deleteProject(project.id, user.id);
+      navigate('/project');
+    } catch (error: any) {
+      alert(error.message || '프로젝트 삭제에 실패했습니다.');
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
+  };
+
+  const handleStatusChange = async (newStatus: 'IN_PROGRESS' | 'COMPLETED') => {
+    if (!project || !user) return;
+
+    try {
+      const updatedProject = await projectService.updateProjectStatus(project.id, newStatus, user.id);
+      setProject(updatedProject);
+    } catch (error: any) {
+      alert(error.message || '상태 변경에 실패했습니다.');
+    }
+  };
+
+  // Check if current user is the project owner
+  // TODO: 백엔드 연동 후 실제 오너십 체크로 변경
+  const isOwner = true; // 프로토타입: 모든 사용자가 관리 가능
 
   if (loading) {
     return (
@@ -339,6 +379,45 @@ const ProjectDetailPage: React.FC = () => {
 
         {/* Sidebar */}
         <aside className={styles['sidebar']}>
+          {/* Owner Controls - Only visible to project owner */}
+          {isOwner && (
+            <div className={styles['sidebar-card']}>
+              <h3 className={styles['sidebar-title']}>프로젝트 관리</h3>
+              <div className={styles['owner-controls']}>
+                <button className={styles['edit-button']} onClick={handleEditClick}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  수정
+                </button>
+                <button className={styles['delete-button']} onClick={handleDeleteClick}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                  삭제
+                </button>
+                {project.status === 'RECRUITING' && (
+                  <button
+                    className={styles['status-button']}
+                    onClick={() => handleStatusChange('IN_PROGRESS')}
+                  >
+                    모집 마감
+                  </button>
+                )}
+                {project.status === 'IN_PROGRESS' && (
+                  <button
+                    className={styles['status-button']}
+                    onClick={() => handleStatusChange('COMPLETED')}
+                  >
+                    완료 처리
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Owner Card */}
           <div className={styles['sidebar-card']}>
             <h3 className={styles['sidebar-title']}>프로젝트 주최자</h3>
@@ -419,6 +498,34 @@ const ProjectDetailPage: React.FC = () => {
         </aside>
       </div>
 
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className={styles['modal-overlay']} onClick={() => setShowDeleteModal(false)}>
+          <div className={styles['modal-content']} onClick={(e) => e.stopPropagation()}>
+            <h3>프로젝트 삭제</h3>
+            <p>정말로 이 프로젝트를 삭제하시겠습니까?</p>
+            <p className={styles['modal-warning']}>
+              이 작업은 되돌릴 수 없습니다.
+            </p>
+            <div className={styles['modal-buttons']}>
+              <button
+                className={styles['modal-cancel']}
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+              >
+                취소
+              </button>
+              <button
+                className={styles['modal-confirm']}
+                onClick={confirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? '삭제 중...' : '삭제'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
