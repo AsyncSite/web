@@ -73,6 +73,7 @@ export interface ProjectOwner {
   github?: string;
   portfolio?: string;
   profileImage?: string;
+  openChatUrl?: string;
 }
 
 // Project Interface
@@ -181,6 +182,7 @@ export interface ProjectFormData {
   // Step 6: Owner Info
   ownerGithub: string;
   ownerPortfolio: string;
+  openChatUrl: string;
 }
 
 // Filter Types

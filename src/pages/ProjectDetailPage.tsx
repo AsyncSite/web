@@ -12,6 +12,7 @@ import {
   calculateDday,
   getProjectThemeByType
 } from '../types/project';
+import RichTextDisplay from '../components/common/RichTextDisplay';
 import styles from './ProjectDetailPage.module.css';
 
 type TabType = 'overview' | 'positions' | 'techstack' | 'collaboration';
@@ -25,8 +26,6 @@ const ProjectDetailPage: React.FC = () => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('overview');
-  const [showApplicationModal, setShowApplicationModal] = useState(false);
-  const [selectedPositionId, setSelectedPositionId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -47,13 +46,10 @@ const ProjectDetailPage: React.FC = () => {
     fetchProject();
   }, [slug]);
 
-  const handleApplyClick = (positionId?: string) => {
-    if (!isAuthenticated) {
-      redirectToLogin();
-      return;
+  const handleOpenChatClick = () => {
+    if (project?.owner.openChatUrl) {
+      window.open(project.owner.openChatUrl, '_blank', 'noopener,noreferrer');
     }
-    setSelectedPositionId(positionId || null);
-    setShowApplicationModal(true);
   };
 
   if (loading) {
@@ -157,8 +153,8 @@ const ProjectDetailPage: React.FC = () => {
           </div>
 
           {project.status === 'RECRUITING' && (
-            <button className={styles['apply-button']} onClick={() => handleApplyClick()}>
-              지원하기
+            <button className={styles['apply-button']} onClick={handleOpenChatClick}>
+              오픈 카톡으로 연락하기
             </button>
           )}
         </div>
@@ -203,9 +199,7 @@ const ProjectDetailPage: React.FC = () => {
                 <div className={styles['section']}>
                   <h2 className={styles['section-title']}>프로젝트 소개</h2>
                   <div className={styles['section-content']}>
-                    {project.description.split('\n').map((line, i) => (
-                      <p key={i}>{line}</p>
-                    ))}
+                    <RichTextDisplay content={project.description} />
                   </div>
                 </div>
 
@@ -279,14 +273,7 @@ const ProjectDetailPage: React.FC = () => {
                       <p>{position.responsibilities}</p>
                     </div>
 
-                    {project.status === 'RECRUITING' && (
-                      <button
-                        className={styles['position-apply-button']}
-                        onClick={() => handleApplyClick(position.id)}
-                      >
-                        이 포지션 지원하기
-                      </button>
-                    )}
+                    {/* 포지션별 버튼 제거 - 상단 오픈 카톡 버튼만 사용 */}
                   </div>
                 ))}
               </div>
@@ -432,16 +419,6 @@ const ProjectDetailPage: React.FC = () => {
         </aside>
       </div>
 
-      {/* Application Modal Placeholder */}
-      {showApplicationModal && (
-        <div className={styles['modal-overlay']} onClick={() => setShowApplicationModal(false)}>
-          <div className={styles['modal']} onClick={(e) => e.stopPropagation()}>
-            <h2>지원 모달</h2>
-            <p>ApplicationModal 컴포넌트가 여기에 들어갑니다.</p>
-            <button onClick={() => setShowApplicationModal(false)}>닫기</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

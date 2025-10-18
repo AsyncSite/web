@@ -404,7 +404,12 @@ const StudyDetailPageRenderer: React.FC = () => {
                     <span className={styles.statusIcon}>🚀</span>
                     <div className={styles.statusInfo}>
                       <h3>{studyData.isRecruiting ? '모집 중인 스터디입니다' : '모집 마감된 스터디입니다'}</h3>
-                      <p>마감일: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}</p>
+                      <p>
+                        모집 마감: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}
+                        {studyData.startDate && studyData.endDate && (
+                          <> | 스터디 기간: {new Date(studyData.startDate).toLocaleDateString()} ~ {new Date(studyData.endDate).toLocaleDateString()}</>
+                        )}
+                      </p>
                       <div className={styles.capacityInfo}>
                         <span className={styles.capacityText}>
                           참여 인원: {studyData.enrolled || 0} / {studyData.capacity || 0}명
@@ -539,17 +544,22 @@ const StudyDetailPageRenderer: React.FC = () => {
                     <span className={styles.statusIcon}>📚</span>
                     <div className={styles.statusInfo}>
                       <h3>진행 중인 스터디입니다</h3>
-                      <p>{getStudyDisplayInfo(
-                        studyData.status,
-                        studyData.recruitDeadline,
-                        studyData.startDate,
-                        studyData.endDate,
-                        studyData.capacity,
-                        studyData.enrolled,
-                        studyData.isRecruiting
-                      ).canApply
-                        ? `마감일: ${studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '상시 모집'}`
-                        : '모집이 마감되었습니다. 현재 활발히 진행되고 있습니다.'}</p>
+                      <p>
+                        {getStudyDisplayInfo(
+                          studyData.status,
+                          studyData.recruitDeadline,
+                          studyData.startDate,
+                          studyData.endDate,
+                          studyData.capacity,
+                          studyData.enrolled,
+                          studyData.isRecruiting
+                        ).canApply
+                          ? `모집 마감: ${studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '상시 모집'}`
+                          : '모집이 마감되었습니다. 현재 활발히 진행되고 있습니다.'}
+                        {studyData.startDate && studyData.endDate && (
+                          <> | 스터디 기간: {new Date(studyData.startDate).toLocaleDateString()} ~ {new Date(studyData.endDate).toLocaleDateString()}</>
+                        )}
+                      </p>
                       <div className={styles.capacityInfo}>
                         <span className={styles.capacityText}>
                           참여 인원: {studyData.enrolled || 0} / {studyData.capacity || 0}명

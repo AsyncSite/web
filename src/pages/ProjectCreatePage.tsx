@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import projectService from '../api/projectService';
 import type { ProjectFormData, ProjectType, MeetingType, TechCategory } from '../types/project';
+import RichTextEditor from '../components/common/RichTextEditor';
 import styles from './ProjectCreatePage.module.css';
 
 const ProjectCreatePage: React.FC = () => {
@@ -27,7 +28,8 @@ const ProjectCreatePage: React.FC = () => {
     collaborationTools: [],
     compensationDescription: '',
     ownerGithub: '',
-    ownerPortfolio: ''
+    ownerPortfolio: '',
+    openChatUrl: ''
   });
 
   const [newTech, setNewTech] = useState({ category: 'FRONTEND' as TechCategory, technology: '' });
@@ -219,13 +221,11 @@ const ProjectCreatePage: React.FC = () => {
                 <label className={styles['label']}>
                   프로젝트 설명 <span className={styles['required']}>*</span>
                 </label>
-                <textarea
-                  className={styles['textarea']}
+                <RichTextEditor
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="프로젝트에 대해 자세히 설명해주세요&#10;&#10;예:&#10;- 무엇을 만드나요?&#10;- 왜 만드나요?&#10;- 어떤 기술을 사용하나요?"
-                  rows={6}
-                  required
+                  onChange={(html) => setFormData({ ...formData, description: html })}
+                  placeholder="프로젝트에 대해 자세히 설명해주세요...&#10;&#10;예:&#10;- 무엇을 만드나요?&#10;- 왜 만드나요?&#10;- 어떤 기술을 사용하나요?"
+                  maxLength={2000}
                 />
               </div>
             </div>
@@ -401,6 +401,23 @@ const ProjectCreatePage: React.FC = () => {
                   })}
                   placeholder="Slack, Notion, GitHub (쉼표로 구분)"
                 />
+              </div>
+
+              <div className={styles['form-group']}>
+                <label className={styles['label']}>
+                  오픈 카톡 링크 <span className={styles['required']}>*</span>
+                </label>
+                <input
+                  type="url"
+                  className={styles['input']}
+                  value={formData.openChatUrl}
+                  onChange={(e) => setFormData({ ...formData, openChatUrl: e.target.value })}
+                  placeholder="https://open.kakao.com/o/..."
+                  required
+                />
+                <small style={{ color: '#a1a1aa', fontSize: '13px', marginTop: '4px', display: 'block' }}>
+                  프로젝트에 관심 있는 분들이 이 링크로 연락합니다
+                </small>
               </div>
             </div>
           </div>

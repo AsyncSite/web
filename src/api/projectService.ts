@@ -167,7 +167,8 @@ const getMockProjects = (): Project[] => {
         email: 'kim@example.com',
         github: 'https://github.com/kimdev',
         portfolio: 'https://kimdev.portfolio.com',
-        profileImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kim'
+        profileImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kim',
+        openChatUrl: 'https://open.kakao.com/o/ai-study-helper'
       },
       views: 245,
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
@@ -253,7 +254,8 @@ const getMockProjects = (): Project[] => {
         name: '박블록',
         email: 'park@example.com',
         github: 'https://github.com/parkblock',
-        profileImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Park'
+        profileImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Park',
+        openChatUrl: 'https://open.kakao.com/o/blockchain-voting'
       },
       views: 512,
       createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
@@ -328,7 +330,8 @@ Markdown 지원, Git 기반 버전 관리, 플러그인 시스템을 제공합�
         email: 'lee@example.com',
         github: 'https://github.com/leeopen',
         portfolio: 'https://leeopen.dev',
-        profileImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lee'
+        profileImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lee',
+        openChatUrl: 'https://open.kakao.com/o/opensource-cms'
       },
       views: 1024,
       createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
@@ -443,7 +446,8 @@ const projectService = {
         name: '사용자', // Should come from auth context
         email: 'user@example.com',
         github: formData.ownerGithub,
-        portfolio: formData.ownerPortfolio
+        portfolio: formData.ownerPortfolio,
+        openChatUrl: formData.openChatUrl
       },
       views: 0,
       createdAt: new Date(),
