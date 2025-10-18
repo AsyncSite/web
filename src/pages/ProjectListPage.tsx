@@ -13,7 +13,8 @@ import {
   getProjectTypeLabel,
   getProjectStatusLabel,
   getMeetingTypeLabel,
-  calculateDday
+  calculateDday,
+  getProjectThemeByType
 } from '../types/project';
 import EmptyState from '../components/ui/EmptyState';
 import styles from './ProjectListPage.module.css';
@@ -22,14 +23,13 @@ const ProjectListPage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filters
+  // Single filter: Project Type (simplified)
   const [typeFilter, setTypeFilter] = useState<ProjectType | 'all'>('all');
-  const [statusFilter, setStatusFilter] = useState<ProjectStatus | 'all'>('all');
-  const [meetingTypeFilter, setMeetingTypeFilter] = useState<MeetingType | 'all'>('all');
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -38,8 +38,6 @@ const ProjectListPage: React.FC = () => {
 
         const filters: ProjectFilters = {};
         if (typeFilter !== 'all') filters.projectType = typeFilter;
-        if (statusFilter !== 'all') filters.status = statusFilter;
-        if (meetingTypeFilter !== 'all') filters.meetingType = meetingTypeFilter;
         if (searchQuery) filters.searchQuery = searchQuery;
 
         const data = await projectService.getAllProjects(filters);
@@ -53,7 +51,7 @@ const ProjectListPage: React.FC = () => {
     };
 
     fetchProjects();
-  }, [typeFilter, statusFilter, meetingTypeFilter, searchQuery]);
+  }, [typeFilter, searchQuery]);
 
   const handleCreateProject = () => {
     if (!isAuthenticated) {
@@ -108,97 +106,32 @@ const ProjectListPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className={styles['filters']}>
-        <div className={styles['filter-group']}>
-          <label className={styles['filter-label']}>프로젝트 타입</label>
-          <div className={styles['filter-buttons']}>
-            <button
-              className={`${styles['filter-button']} ${typeFilter === 'all' ? styles['active'] : ''}`}
-              onClick={() => setTypeFilter('all')}
-            >
-              전체
-            </button>
-            <button
-              className={`${styles['filter-button']} ${typeFilter === 'SIDE_PROJECT' ? styles['active'] : ''}`}
-              onClick={() => setTypeFilter('SIDE_PROJECT')}
-            >
-              사이드 프로젝트
-            </button>
-            <button
-              className={`${styles['filter-button']} ${typeFilter === 'STARTUP' ? styles['active'] : ''}`}
-              onClick={() => setTypeFilter('STARTUP')}
-            >
-              스타트업
-            </button>
-            <button
-              className={`${styles['filter-button']} ${typeFilter === 'OPEN_SOURCE' ? styles['active'] : ''}`}
-              onClick={() => setTypeFilter('OPEN_SOURCE')}
-            >
-              오픈소스
-            </button>
-          </div>
-        </div>
-
-        <div className={styles['filter-group']}>
-          <label className={styles['filter-label']}>모집 상태</label>
-          <div className={styles['filter-buttons']}>
-            <button
-              className={`${styles['filter-button']} ${statusFilter === 'all' ? styles['active'] : ''}`}
-              onClick={() => setStatusFilter('all')}
-            >
-              전체
-            </button>
-            <button
-              className={`${styles['filter-button']} ${statusFilter === 'RECRUITING' ? styles['active'] : ''}`}
-              onClick={() => setStatusFilter('RECRUITING')}
-            >
-              모집중
-            </button>
-            <button
-              className={`${styles['filter-button']} ${statusFilter === 'IN_PROGRESS' ? styles['active'] : ''}`}
-              onClick={() => setStatusFilter('IN_PROGRESS')}
-            >
-              진행중
-            </button>
-            <button
-              className={`${styles['filter-button']} ${statusFilter === 'COMPLETED' ? styles['active'] : ''}`}
-              onClick={() => setStatusFilter('COMPLETED')}
-            >
-              완료
-            </button>
-          </div>
-        </div>
-
-        <div className={styles['filter-group']}>
-          <label className={styles['filter-label']}>미팅 방식</label>
-          <div className={styles['filter-buttons']}>
-            <button
-              className={`${styles['filter-button']} ${meetingTypeFilter === 'all' ? styles['active'] : ''}`}
-              onClick={() => setMeetingTypeFilter('all')}
-            >
-              전체
-            </button>
-            <button
-              className={`${styles['filter-button']} ${meetingTypeFilter === 'ONLINE' ? styles['active'] : ''}`}
-              onClick={() => setMeetingTypeFilter('ONLINE')}
-            >
-              온라인
-            </button>
-            <button
-              className={`${styles['filter-button']} ${meetingTypeFilter === 'OFFLINE' ? styles['active'] : ''}`}
-              onClick={() => setMeetingTypeFilter('OFFLINE')}
-            >
-              오프라인
-            </button>
-            <button
-              className={`${styles['filter-button']} ${meetingTypeFilter === 'HYBRID' ? styles['active'] : ''}`}
-              onClick={() => setMeetingTypeFilter('HYBRID')}
-            >
-              하이브리드
-            </button>
-          </div>
-        </div>
+      {/* Type Tabs (Simplified) */}
+      <div className={styles['type-tabs']}>
+        <button
+          className={`${styles['type-tab']} ${typeFilter === 'all' ? styles['active'] : ''}`}
+          onClick={() => setTypeFilter('all')}
+        >
+          전체
+        </button>
+        <button
+          className={`${styles['type-tab']} ${styles['tab-side-project']} ${typeFilter === 'SIDE_PROJECT' ? styles['active'] : ''}`}
+          onClick={() => setTypeFilter('SIDE_PROJECT')}
+        >
+          🚀 사이드 프로젝트
+        </button>
+        <button
+          className={`${styles['type-tab']} ${styles['tab-startup']} ${typeFilter === 'STARTUP' ? styles['active'] : ''}`}
+          onClick={() => setTypeFilter('STARTUP')}
+        >
+          💡 스타트업
+        </button>
+        <button
+          className={`${styles['type-tab']} ${styles['tab-open-source']} ${typeFilter === 'OPEN_SOURCE' ? styles['active'] : ''}`}
+          onClick={() => setTypeFilter('OPEN_SOURCE')}
+        >
+          🌐 오픈소스
+        </button>
       </div>
 
       {/* Results Info */}
@@ -216,33 +149,41 @@ const ProjectListPage: React.FC = () => {
         />
       ) : (
         <div className={styles['project-grid']}>
-          {projects.map((project) => (
-            <Link
-              key={project.id}
-              to={`/project/${project.slug}`}
-              className={styles['project-card']}
-            >
-              {/* Header */}
-              <div className={styles['card-header']}>
-                <div className={styles['badges']}>
-                  <span className={`${styles['badge']} ${styles['type-badge']}`}>
-                    {getProjectTypeLabel(project.projectType)}
-                  </span>
-                  <span
-                    className={`${styles['badge']} ${styles['status-badge']} ${styles[`status-${project.status.toLowerCase()}`]}`}
-                  >
-                    {getProjectStatusLabel(project.status)}
-                  </span>
-                  {project.recruitmentDeadline && (
-                    <span className={`${styles['badge']} ${styles['dday-badge']}`}>
-                      {calculateDday(project.recruitmentDeadline)}
+          {projects.map((project) => {
+            const typeColors = getProjectThemeByType(project.projectType);
+            return (
+              <Link
+                key={project.id}
+                to={`/project/${project.slug}`}
+                className={styles['project-card']}
+                style={{
+                  '--type-color': typeColors.primary,
+                  '--type-glow': typeColors.glow,
+                  '--type-light': typeColors.light,
+                  '--type-border': typeColors.border
+                } as React.CSSProperties}
+              >
+                {/* Header */}
+                <div className={styles['card-header']}>
+                  <div className={styles['badges']}>
+                    <span className={`${styles['badge']} ${styles['type-badge']}`}>
+                      {getProjectTypeLabel(project.projectType)}
                     </span>
-                  )}
+                    <span
+                      className={`${styles['badge']} ${styles['status-badge']} ${styles[`status-${project.status.toLowerCase()}`]}`}
+                    >
+                      {getProjectStatusLabel(project.status)}
+                    </span>
+                    {project.recruitmentDeadline && (
+                      <span className={`${styles['badge']} ${styles['dday-badge']}`}>
+                        {calculateDday(project.recruitmentDeadline)}
+                      </span>
+                    )}
+                  </div>
+                  <div className={styles['meeting-type']}>
+                    {getMeetingTypeLabel(project.meetingType)}
+                  </div>
                 </div>
-                <div className={styles['meeting-type']}>
-                  {getMeetingTypeLabel(project.meetingType)}
-                </div>
-              </div>
 
               {/* Title */}
               <h3 className={styles['card-title']}>{project.name}</h3>
@@ -342,8 +283,9 @@ const ProjectListPage: React.FC = () => {
                   <span className={styles['duration']}>{project.expectedDuration}</span>
                 </div>
               </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

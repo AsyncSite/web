@@ -152,13 +152,15 @@ const ProjectCreatePage: React.FC = () => {
       <div className={styles['container']}>
         <h1 className={styles['page-title']}>프로젝트 등록</h1>
         <p className={styles['page-subtitle']}>
-          함께 만들어갈 프로젝트를 등록하고 팀원을 모집하세요
+          핵심 정보만 입력하면 바로 시작! 나머지는 나중에 수정할 수 있어요
         </p>
 
         <form onSubmit={handleSubmit} className={styles['form']}>
           {/* Basic Info */}
           <section className={styles['section']}>
-            <h2 className={styles['section-title']}>기본 정보</h2>
+            <h2 className={styles['section-title']}>
+              1. 기본 정보 <span className={styles['required']}>*</span>
+            </h2>
             <div className={styles['form-grid']}>
               <div className={styles['form-group']}>
                 <label className={styles['label']}>
@@ -174,7 +176,7 @@ const ProjectCreatePage: React.FC = () => {
                 />
               </div>
 
-              <div className={styles['form-group']}>
+              <div className={styles['form-group-full']}>
                 <label className={styles['label']}>
                   한 줄 소개 <span className={styles['required']}>*</span>
                 </label>
@@ -183,32 +185,33 @@ const ProjectCreatePage: React.FC = () => {
                   className={styles['input']}
                   value={formData.tagline}
                   onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
-                  placeholder="프로젝트를 한 문장으로 설명해주세요"
+                  placeholder="프로젝트를 한 문장으로 설명해주세요 (예: AI 기반 학습 관리 플랫폼)"
                   required
                 />
               </div>
 
               <div className={styles['form-group']}>
-                <label className={styles['label']}>프로젝트 타입</label>
+                <label className={styles['label']}>
+                  프로젝트 타입 <span className={styles['required']}>*</span>
+                </label>
                 <select
                   className={styles['select']}
                   value={formData.projectType}
                   onChange={(e) => setFormData({ ...formData, projectType: e.target.value as ProjectType })}
                 >
-                  <option value="SIDE_PROJECT">사이드 프로젝트</option>
-                  <option value="STARTUP">스타트업</option>
-                  <option value="OPEN_SOURCE">오픈소스</option>
+                  <option value="SIDE_PROJECT">🚀 사이드 프로젝트</option>
+                  <option value="STARTUP">💡 스타트업</option>
+                  <option value="OPEN_SOURCE">🌐 오픈소스</option>
                 </select>
               </div>
 
               <div className={styles['form-group']}>
-                <label className={styles['label']}>카테고리</label>
+                <label className={styles['label']}>모집 마감일</label>
                 <input
-                  type="text"
+                  type="date"
                   className={styles['input']}
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  placeholder="예: EdTech, FinTech, SaaS"
+                  value={formData.recruitmentDeadline}
+                  onChange={(e) => setFormData({ ...formData, recruitmentDeadline: e.target.value })}
                 />
               </div>
 
@@ -220,68 +223,18 @@ const ProjectCreatePage: React.FC = () => {
                   className={styles['textarea']}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="프로젝트에 대해 자세히 설명해주세요"
+                  placeholder="프로젝트에 대해 자세히 설명해주세요&#10;&#10;예:&#10;- 무엇을 만드나요?&#10;- 왜 만드나요?&#10;- 어떤 기술을 사용하나요?"
                   rows={6}
                   required
                 />
               </div>
-
-              <div className={styles['form-group-full']}>
-                <label className={styles['label']}>비전 & 목표</label>
-                <textarea
-                  className={styles['textarea']}
-                  value={formData.vision}
-                  onChange={(e) => setFormData({ ...formData, vision: e.target.value })}
-                  placeholder="이 프로젝트를 통해 이루고자 하는 것은 무엇인가요?"
-                  rows={3}
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Tech Stack */}
-          <section className={styles['section']}>
-            <h2 className={styles['section-title']}>기술 스택</h2>
-            <div className={styles['add-item-form']}>
-              <select
-                className={styles['select-small']}
-                value={newTech.category}
-                onChange={(e) => setNewTech({ ...newTech, category: e.target.value as TechCategory })}
-              >
-                <option value="FRONTEND">프론트엔드</option>
-                <option value="BACKEND">백엔드</option>
-                <option value="DATABASE">데이터베이스</option>
-                <option value="DEVOPS">DevOps</option>
-                <option value="MOBILE">모바일</option>
-                <option value="DESIGN">디자인</option>
-                <option value="ETC">기타</option>
-              </select>
-              <input
-                type="text"
-                className={styles['input-small']}
-                value={newTech.technology}
-                onChange={(e) => setNewTech({ ...newTech, technology: e.target.value })}
-                placeholder="예: React, Spring Boot"
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTechStack())}
-              />
-              <button type="button" className={styles['add-button']} onClick={addTechStack}>
-                추가
-              </button>
-            </div>
-            <div className={styles['tags']}>
-              {formData.techStacks.map((tech, i) => (
-                <span key={i} className={styles['tag']}>
-                  {tech.technology}
-                  <button type="button" onClick={() => removeTechStack(i)}>×</button>
-                </span>
-              ))}
             </div>
           </section>
 
           {/* Positions */}
           <section className={styles['section']}>
             <h2 className={styles['section-title']}>
-              모집 포지션 <span className={styles['required']}>*</span>
+              2. 모집 포지션 <span className={styles['required']}>* 최소 1개</span>
             </h2>
             <div className={styles['position-form']}>
               <input
@@ -374,19 +327,45 @@ const ProjectCreatePage: React.FC = () => {
             </div>
           </section>
 
-          {/* Schedule */}
+          {/* Optional Details */}
           <section className={styles['section']}>
-            <h2 className={styles['section-title']}>일정</h2>
+            <h2 className={styles['section-title']}>3. 추가 정보 (선택)</h2>
+            <p className={styles['section-description']}>나중에 언제든지 수정할 수 있어요</p>
             <div className={styles['form-grid']}>
               <div className={styles['form-group']}>
-                <label className={styles['label']}>모집 마감일</label>
-                <input
-                  type="date"
-                  className={styles['input']}
-                  value={formData.recruitmentDeadline}
-                  onChange={(e) => setFormData({ ...formData, recruitmentDeadline: e.target.value })}
-                />
+                <label className={styles['label']}>기술 스택</label>
+                <div className={styles['add-item-form']}>
+                  <select
+                    className={styles['select-small']}
+                    value={newTech.category}
+                    onChange={(e) => setNewTech({ ...newTech, category: e.target.value as TechCategory })}
+                  >
+                    <option value="FRONTEND">프론트엔드</option>
+                    <option value="BACKEND">백엔드</option>
+                    <option value="DATABASE">데이터베이스</option>
+                  </select>
+                  <input
+                    type="text"
+                    className={styles['input-small']}
+                    value={newTech.technology}
+                    onChange={(e) => setNewTech({ ...newTech, technology: e.target.value })}
+                    placeholder="React, Spring Boot 등"
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTechStack())}
+                  />
+                  <button type="button" className={styles['add-button']} onClick={addTechStack}>
+                    +
+                  </button>
+                </div>
+                <div className={styles['tags']}>
+                  {formData.techStacks.map((tech, i) => (
+                    <span key={i} className={styles['tag']}>
+                      {tech.technology}
+                      <button type="button" onClick={() => removeTechStack(i)}>×</button>
+                    </span>
+                  ))}
+                </div>
               </div>
+
               <div className={styles['form-group']}>
                 <label className={styles['label']}>시작 예정일</label>
                 <input
@@ -396,23 +375,7 @@ const ProjectCreatePage: React.FC = () => {
                   onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                 />
               </div>
-              <div className={styles['form-group']}>
-                <label className={styles['label']}>예상 기간</label>
-                <input
-                  type="text"
-                  className={styles['input']}
-                  value={formData.expectedDuration}
-                  onChange={(e) => setFormData({ ...formData, expectedDuration: e.target.value })}
-                  placeholder="3개월, 6개월, 지속적"
-                />
-              </div>
-            </div>
-          </section>
 
-          {/* Collaboration */}
-          <section className={styles['section']}>
-            <h2 className={styles['section-title']}>협업 방식</h2>
-            <div className={styles['form-grid']}>
               <div className={styles['form-group']}>
                 <label className={styles['label']}>미팅 방식</label>
                 <select
@@ -425,77 +388,18 @@ const ProjectCreatePage: React.FC = () => {
                   <option value="HYBRID">하이브리드</option>
                 </select>
               </div>
+
               <div className={styles['form-group']}>
-                <label className={styles['label']}>미팅 빈도</label>
+                <label className={styles['label']}>협업 도구</label>
                 <input
                   type="text"
                   className={styles['input']}
-                  value={formData.meetingFrequency}
-                  onChange={(e) => setFormData({ ...formData, meetingFrequency: e.target.value })}
-                  placeholder="주 2회, 주말만, 자율"
-                />
-              </div>
-              <div className={styles['form-group-full']}>
-                <label className={styles['label']}>협업 도구</label>
-                <div className={styles['add-item-form']}>
-                  <input
-                    type="text"
-                    className={styles['input']}
-                    value={newTool}
-                    onChange={(e) => setNewTool(e.target.value)}
-                    placeholder="Slack, Notion, GitHub 등"
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTool())}
-                  />
-                  <button type="button" className={styles['add-button']} onClick={addTool}>
-                    추가
-                  </button>
-                </div>
-                <div className={styles['tags']}>
-                  {formData.collaborationTools.map((tool, i) => (
-                    <span key={i} className={styles['tag']}>
-                      {tool}
-                      <button type="button" onClick={() => removeTool(i)}>×</button>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Compensation */}
-          <section className={styles['section']}>
-            <h2 className={styles['section-title']}>보상 & 혜택</h2>
-            <textarea
-              className={styles['textarea']}
-              value={formData.compensationDescription}
-              onChange={(e) => setFormData({ ...formData, compensationDescription: e.target.value })}
-              placeholder="예: 무료 / 포트폴리오 활용 가능&#10;예: 지분 배분 협의 / 초기 멤버 우대&#10;예: 시급 2만원 / 주 10시간"
-              rows={4}
-            />
-          </section>
-
-          {/* Owner Info */}
-          <section className={styles['section']}>
-            <h2 className={styles['section-title']}>주최자 정보</h2>
-            <div className={styles['form-grid']}>
-              <div className={styles['form-group']}>
-                <label className={styles['label']}>GitHub</label>
-                <input
-                  type="url"
-                  className={styles['input']}
-                  value={formData.ownerGithub}
-                  onChange={(e) => setFormData({ ...formData, ownerGithub: e.target.value })}
-                  placeholder="https://github.com/username"
-                />
-              </div>
-              <div className={styles['form-group']}>
-                <label className={styles['label']}>Portfolio</label>
-                <input
-                  type="url"
-                  className={styles['input']}
-                  value={formData.ownerPortfolio}
-                  onChange={(e) => setFormData({ ...formData, ownerPortfolio: e.target.value })}
-                  placeholder="https://portfolio.com"
+                  value={formData.collaborationTools.join(', ')}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    collaborationTools: e.target.value.split(',').map(t => t.trim()).filter(Boolean)
+                  })}
+                  placeholder="Slack, Notion, GitHub (쉼표로 구분)"
                 />
               </div>
             </div>

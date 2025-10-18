@@ -8,7 +8,8 @@ import {
   getProjectStatusLabel,
   getMeetingTypeLabel,
   getTechCategoryLabel,
-  calculateDday
+  calculateDday,
+  getProjectThemeByType
 } from '../types/project';
 import styles from './ProjectDetailPage.module.css';
 
@@ -84,10 +85,20 @@ const ProjectDetailPage: React.FC = () => {
     {} as Record<string, string[]>
   );
 
+  const typeColors = getProjectThemeByType(project.projectType);
+
   return (
     <div className={styles['project-detail-page']}>
       {/* Hero Section */}
-      <div className={styles['hero']}>
+      <div
+        className={styles['hero']}
+        style={{
+          '--type-color': typeColors.primary,
+          '--type-glow': typeColors.glow,
+          '--type-light': typeColors.light,
+          '--type-gradient': typeColors.gradient
+        } as React.CSSProperties}
+      >
         <div className={styles['hero-content']}>
           <div className={styles['badges']}>
             <span className={styles['type-badge']}>

@@ -39,11 +39,26 @@
   background: rgba(130, 170, 255, 0.25);
 }
 
-/* Hero Section */
+/* Hero Section with Type Colors */
 .hero {
-  background: linear-gradient(135deg, rgba(130, 170, 255, 0.1) 0%, rgba(199, 146, 234, 0.1) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--type-gradient, linear-gradient(135deg, rgba(130, 170, 255, 0.1) 0%, rgba(199, 146, 234, 0.1) 100%));
+  background-size: 150% 150%;
+  border-bottom: 2px solid var(--type-color, rgba(255, 255, 255, 0.1));
   padding: 80px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, var(--type-glow, rgba(130, 170, 255, 0.2)) 0%, transparent 50%);
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .hero-content {
@@ -72,8 +87,9 @@
 }
 
 .type-badge {
-  background: rgba(130, 170, 255, 0.15);
-  color: #82AAFF;
+  background: var(--type-light, rgba(130, 170, 255, 0.15));
+  color: var(--type-color, #82AAFF);
+  border: 1px solid var(--type-color, #82AAFF);
 }
 
 .status-badge {
@@ -139,7 +155,7 @@
   align-self: flex-start;
   margin-top: 16px;
   padding: 14px 32px;
-  background: linear-gradient(135deg, #82AAFF 0%, #C792EA 100%);
+  background: var(--type-gradient, linear-gradient(135deg, #82AAFF 0%, #C792EA 100%));
   border: none;
   border-radius: 8px;
   color: white;
@@ -147,11 +163,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px var(--type-glow, rgba(130, 170, 255, 0.3));
 }
 
 .apply-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(130, 170, 255, 0.3);
+  box-shadow: 0 8px 24px var(--type-glow, rgba(130, 170, 255, 0.4));
 }
 
 /* Main Content */
@@ -196,8 +213,8 @@
 }
 
 .tab.active {
-  color: #82AAFF;
-  border-bottom-color: #82AAFF;
+  color: var(--type-color, #82AAFF);
+  border-bottom-color: var(--type-color, #82AAFF);
 }
 
 /* Tab Content */
@@ -381,10 +398,10 @@
 
 .position-apply-button {
   padding: 10px 20px;
-  background: rgba(130, 170, 255, 0.15);
-  border: 1px solid #82AAFF;
+  background: var(--type-light, rgba(130, 170, 255, 0.15));
+  border: 1px solid var(--type-color, #82AAFF);
   border-radius: 8px;
-  color: #82AAFF;
+  color: var(--type-color, #82AAFF);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -392,7 +409,8 @@
 }
 
 .position-apply-button:hover {
-  background: rgba(130, 170, 255, 0.25);
+  background: var(--type-glow, rgba(130, 170, 255, 0.25));
+  transform: translateY(-1px);
 }
 
 /* Tech Stack Tab */

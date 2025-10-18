@@ -27,11 +27,6 @@ const PaymentPendingPage = lazy(() => import('../pages/PaymentPendingPage'));
 const CheckoutTestPage = lazy(() => import('../pages/CheckoutTestPage'));
 // MockPaymentPage 제거
 
-// Project pages
-const ProjectListPage = lazy(() => import('../pages/ProjectListPage'));
-const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
-const ProjectCreatePage = lazy(() => import('../pages/ProjectCreatePage'));
-
 // Studio components
 const DocuMentor = lazy(() => import('../components/lab/ai-studio/documentor/DocuMentor'));
 
@@ -134,27 +129,6 @@ const router = createBrowserRouter([
         element: <CheckoutTestPage />,
       },
       // mock-payment 라우트 제거
-      {
-        path: 'project',
-        children: [
-          {
-            index: true,
-            element: <ProjectListPage />,
-          },
-          {
-            path: 'new',
-            element: (
-              <PrivateRoute>
-                <ProjectCreatePage />
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: ':slug',
-            element: <ProjectDetailPage />,
-          },
-        ],
-      },
       {
         path: 'studio',
         element: <StudioLayout />,

@@ -100,58 +100,60 @@
   box-shadow: 0 0 0 3px rgba(130, 170, 255, 0.1);
 }
 
-/* Filters */
-.filters {
+/* Type Tabs (Simplified) */
+.type-tabs {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px 32px;
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
   gap: 12px;
-}
-
-.filter-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #a1a1aa;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.filter-buttons {
-  display: flex;
-  gap: 8px;
   flex-wrap: wrap;
 }
 
-.filter-button {
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+.type-tab {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   color: #a1a1aa;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.filter-button:hover {
-  background: rgba(255, 255, 255, 0.08);
+.type-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.2);
-  color: #e4e4e7;
+  transform: translateY(-2px);
 }
 
-.filter-button.active {
-  background: rgba(130, 170, 255, 0.15);
-  border-color: #82AAFF;
-  color: #82AAFF;
+.type-tab.active {
+  color: #e4e4e7;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Type-specific tab colors */
+.type-tab.tab-side-project.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10B981;
+  color: #10B981;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+}
+
+.type-tab.tab-startup.active {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: #F59E0B;
+  color: #F59E0B;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+}
+
+.type-tab.tab-open-source.active {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: #3B82F6;
+  color: #3B82F6;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
 }
 
 /* Results Info */
@@ -181,10 +183,10 @@
   gap: 24px;
 }
 
-/* Project Card */
+/* Project Card with Type Colors */
 .project-card {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 24px;
   display: flex;
@@ -194,13 +196,26 @@
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  position: relative;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--type-color, #82AAFF);
+  border-radius: 16px 16px 0 0;
+  opacity: 0.8;
 }
 
 .project-card:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(130, 170, 255, 0.3);
+  border-color: var(--type-border, rgba(130, 170, 255, 0.5));
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px var(--type-glow, rgba(130, 170, 255, 0.3));
 }
 
 /* Card Header */
@@ -227,8 +242,9 @@
 }
 
 .type-badge {
-  background: rgba(130, 170, 255, 0.15);
-  color: #82AAFF;
+  background: var(--type-light, rgba(130, 170, 255, 0.15));
+  color: var(--type-color, #82AAFF);
+  border: 1px solid var(--type-border, rgba(130, 170, 255, 0.3));
 }
 
 .status-badge {
@@ -384,16 +400,12 @@
     grid-template-columns: 1fr;
   }
 
-  .filters {
-    gap: 16px;
+  .type-tabs {
+    gap: 8px;
   }
 
-  .filter-buttons {
-    gap: 6px;
-  }
-
-  .filter-button {
-    padding: 6px 12px;
-    font-size: 13px;
+  .type-tab {
+    padding: 10px 16px;
+    font-size: 14px;
   }
 }

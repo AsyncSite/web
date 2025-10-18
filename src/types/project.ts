@@ -256,7 +256,37 @@ export const calculateDday = (deadline: Date | null): string | null => {
   return `D-${diffDays}`;
 };
 
-// Helper: Get project theme color
+// Project Type Color Themes (본질 기반 색상 정체성)
+export const PROJECT_TYPE_COLORS = {
+  SIDE_PROJECT: {
+    primary: '#10B981',           // 에메랄드 - 창의성, 실험, 자유로운 도전
+    glow: 'rgba(16, 185, 129, 0.3)',
+    light: 'rgba(16, 185, 129, 0.15)',
+    border: 'rgba(16, 185, 129, 0.5)',
+    gradient: 'linear-gradient(135deg, #10B981 0%, #059669 100%)'
+  },
+  STARTUP: {
+    primary: '#F59E0B',           // 엠버 - 열정, 성장, 혁신
+    glow: 'rgba(245, 158, 11, 0.3)',
+    light: 'rgba(245, 158, 11, 0.15)',
+    border: 'rgba(245, 158, 11, 0.5)',
+    gradient: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+  },
+  OPEN_SOURCE: {
+    primary: '#3B82F6',           // 블루 - 협업, 공유, 커뮤니티
+    glow: 'rgba(59, 130, 246, 0.3)',
+    light: 'rgba(59, 130, 246, 0.15)',
+    border: 'rgba(59, 130, 246, 0.5)',
+    gradient: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)'
+  }
+} as const;
+
+// Helper: Get project theme color by type
+export const getProjectThemeByType = (projectType: ProjectType) => {
+  return PROJECT_TYPE_COLORS[projectType];
+};
+
+// Legacy helper for backward compatibility (deprecated)
 export const getProjectTheme = (id: string) => {
   const themes = [
     { primary: '#C3E88D', glow: 'rgba(195, 232, 141, 0.3)' },

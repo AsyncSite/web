@@ -1,5 +1,6 @@
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
+import PrivateRoute from '../components/auth/PrivateRoute';
 
 // 기존 페이지들
 const LabPage = lazy(() => import('../pages/LabPage'));
@@ -21,6 +22,11 @@ const ReviewWritePage = lazy(() => import('../pages/ReviewWritePage'));
 const IgnitionPage = lazy(() => import('../pages/ignition/IgnitionPage'));
 const NavigatorPage = lazy(() => import('../pages/ignition/navigator/NavigatorPage'));  // V2 is now main
 const NavigatorPageV1Deprecated = lazy(() => import('../pages/ignition/navigator/NavigatorPageV1Deprecated'));
+
+// Project 관련 페이지들
+const ProjectListPage = lazy(() => import('../pages/ProjectListPage'));
+const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
+const ProjectCreatePage = lazy(() => import('../pages/ProjectCreatePage'));
 
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
@@ -112,6 +118,29 @@ const subRouter = [
   {
     path: 'study-plan',
     element: <StudyPlanPage />,
+  },
+
+  // Project 관련 라우트
+  {
+    path: 'project',
+    children: [
+      {
+        index: true,
+        element: <ProjectListPage />,
+      },
+      {
+        path: 'new',
+        element: (
+          <PrivateRoute>
+            <ProjectCreatePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: ':slug',
+        element: <ProjectDetailPage />,
+      },
+    ],
   },
 
   // Ignition 관련 라우트
