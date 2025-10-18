@@ -413,8 +413,17 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                 )}
               </li>
               <li>
-                <Link 
-                  to="/ignition" 
+                <Link
+                  to="/project"
+                  className={location.pathname.startsWith('/project') ? 'active' : ''}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  PROJECT
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/ignition"
                   className={location.pathname.startsWith('/ignition') ? 'active' : ''}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -422,8 +431,8 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/lab" 
+                <Link
+                  to="/lab"
                   className={location.pathname.startsWith('/lab') ? 'active' : ''}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
