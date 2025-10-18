@@ -24,16 +24,6 @@ const IgnitionPage: React.FC = () => {
             </span>
           </div>
         </Link>
-
-        <div className="ignition-service-card coming-soon">
-          <div className="service-icon">🤖</div>
-          <h3 className="service-title">AI Resume Service</h3>
-          <p className="service-description">
-            곧 출시 예정! AI가 당신의 이력서를 분석하고 
-            개선점을 제안합니다.
-          </p>
-          <span className="service-badge">Coming Soon</span>
-        </div>
       </div>
     </div>
   );

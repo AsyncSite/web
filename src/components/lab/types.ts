@@ -1,4 +1,4 @@
-export type CategoryId = 'playground' | 'utilities' | 'ai-studio';
+export type CategoryId = 'playground' | 'utilities';
 
 export interface LabItem {
   title: string;

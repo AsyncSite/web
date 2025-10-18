@@ -56,24 +56,6 @@ const labCategories: LabCategory[] = [
       },
     ],
   },
-  {
-    id: 'ai-studio',
-    title: 'AI Studio',
-    subtitle: 'AI 스튜디오',
-    description: 'AI와 함께하는 창작 공간',
-    icon: '✨',
-    color: '#9C27B0',
-    bgColor: 'rgba(156, 39, 176, 0.1)',
-    items: [
-      {
-        title: '도큐멘토',
-        description: 'AI가 당신의 글을 분석하고 개선해주는 똑똑한 글쓰기 멘토',
-        link: '/studio/documentor',
-        status: 'active',
-        tags: ['AI', '글쓰기', '리뷰'],
-      },
-    ],
-  },
 ];
 
 const LabPage = () => {
@@ -81,7 +63,7 @@ const LabPage = () => {
     // 컴포넌트 초기화 시 sessionStorage에서 이전 선택 값을 복원
     if (typeof window !== 'undefined') {
       const saved = sessionStorage.getItem('lab-selected-category');
-      if (saved && ['all', 'playground', 'utilities', 'ai-studio'].includes(saved)) {
+      if (saved && ['all', 'playground', 'utilities'].includes(saved)) {
         return saved as CategoryId | 'all';
       }
     }
