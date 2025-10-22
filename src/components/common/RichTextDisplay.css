@@ -33,6 +33,10 @@
   line-height: 1.6;
 }
 
+.tiptap-display-container p:empty {
+  min-height: 1em;
+}
+
 .tiptap-display-container p:last-child {
   margin-bottom: 0;
 }
