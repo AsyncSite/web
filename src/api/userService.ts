@@ -122,6 +122,7 @@ class UserService {
    */
   async getWhoWeAreMembers(): Promise<Array<{
     name: string;
+    email?: string;
     role?: string;
     quote?: string;
     bio?: string;
@@ -132,7 +133,9 @@ class UserService {
   }>> {
     try {
       const response = await apiClient.get('/api/public/users/whoweare-members');
-      return response.data;
+      // Filter out renechoi90@gmail.com
+      const members = response.data || [];
+      return members.filter((member: any) => member.email !== 'renechoi90@gmail.com');
     } catch (error) {
       // Return empty array if fetching fails to prevent UI issues
       return [];
