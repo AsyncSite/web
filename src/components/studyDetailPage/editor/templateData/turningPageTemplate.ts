@@ -13,7 +13,7 @@ export const turningPageTemplate: StudyTemplate = {
       description: '삶의 점들을 연결하며 의미를 발견하는 특별한 시간. 진지하지만 따뜻하고, 깊이 있지만 편안한 회고 모임입니다. 혼자가 아닌 함께, 과거를 돌아보고 미래를 그려요.',
       buttonText: '회고 모임 참가하기 ✨',
       buttonLink: '#apply',
-      backgroundImage: '/images/turning-page-bg.jpg',
+      backgroundImage: '/images/turningpage/hero-profile.svg',
       infoBox: {
         header: '우리가 만드는 가치',
         items: [
@@ -34,7 +34,7 @@ export const turningPageTemplate: StudyTemplate = {
     },
     leaderIntro: {
       name: '북마크',
-      profileImage: '/images/leader-bookmark.jpg',
+      profileImage: '/images/turningpage/hero-profile.svg',
       role: '모임 기획자',
       motivation: '혼자 회고하다 보면 객관적이지 못하고, 의미를 찾기 어려웠어요. 함께 나누면 내가 놓친 성장을 발견하고, 서로에게 영감을 주고받을 수 있다고 믿었습니다.',
       philosophy: '삶과 커리어가 계획대로 흘러가지 않지만, 서로의 경험에서 배우며 성장할 수 있어요. "계획 자체보다 계획을 세우는 과정이 중요하다"는 믿음으로 이 모임을 만들었습니다.',

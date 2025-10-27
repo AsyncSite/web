@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" style="background-color: transparent;">
+  <defs>
+    <!-- Gradients -->
+    <radialGradient id="bgGradient1" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#2a2f3e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1f2e;stop-opacity:1" />
+    </radialGradient>
+
+    <linearGradient id="pageGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB86C;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#C3E88D;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#82AAFF;stop-opacity:0.9" />
+    </linearGradient>
+
+    <filter id="glow1">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="shadow1">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="4" result="offsetblur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.3"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="300" cy="300" r="280" fill="url(#bgGradient1)"/>
+
+  <!-- Outer ring decoration -->
+  <circle cx="300" cy="300" r="260" fill="none" stroke="#FFB86C" stroke-width="1" opacity="0.2" stroke-dasharray="5,5">
+    <animateTransform attributeName="transform" type="rotate" from="0 300 300" to="360 300 300" dur="60s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Abstract book pages - geometric interpretation -->
+  <g filter="url(#shadow1)">
+    <!-- Left page (past) - darker geometric shape -->
+    <path d="M 200 250 L 280 200 L 280 400 L 200 350 Z"
+          fill="#2a2f3e"
+          stroke="#FFB86C"
+          stroke-width="2"
+          opacity="0.8"/>
+
+    <!-- Page lines on left -->
+    <line x1="220" y1="270" x2="260" y2="250" stroke="#FFB86C" stroke-width="1.5" opacity="0.4"/>
+    <line x1="220" y1="290" x2="260" y2="270" stroke="#FFB86C" stroke-width="1.5" opacity="0.4"/>
+    <line x1="220" y1="310" x2="260" y2="290" stroke="#FFB86C" stroke-width="1.5" opacity="0.4"/>
+    <line x1="220" y1="330" x2="260" y2="310" stroke="#FFB86C" stroke-width="1.5" opacity="0.4"/>
+
+    <!-- Right page (future) - turning with gradient -->
+    <path d="M 320 200 L 400 250 L 400 350 L 320 400 Z"
+          fill="url(#pageGradient1)"
+          stroke="#C3E88D"
+          stroke-width="2"
+          filter="url(#glow1)"
+          opacity="0.9">
+      <animateTransform attributeName="transform" type="rotate"
+                        values="0 300 300; 2 300 300; 0 300 300"
+                        dur="4s" repeatCount="indefinite"/>
+    </path>
+
+    <!-- Center spine -->
+    <rect x="295" y="190" width="10" height="220" fill="#1a1f2e" opacity="0.9"/>
+
+    <!-- Geometric dots on spine -->
+    <circle cx="300" cy="240" r="4" fill="#FFB86C"/>
+    <circle cx="300" cy="300" r="5" fill="#C3E88D">
+      <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="300" cy="360" r="4" fill="#82AAFF"/>
+  </g>
+
+  <!-- Floating geometric elements -->
+  <g opacity="0.6">
+    <!-- Triangle -->
+    <polygon points="450,150 470,180 430,180" fill="#C3E88D" opacity="0.3">
+      <animateTransform attributeName="transform" type="translate"
+                        values="0,0; 0,-10; 0,0" dur="3s" repeatCount="indefinite"/>
+    </polygon>
+
+    <!-- Square -->
+    <rect x="130" y="420" width="20" height="20" fill="#82AAFF" opacity="0.3" transform="rotate(45 140 430)">
+      <animateTransform attributeName="transform" type="rotate"
+                        values="45 140 430; 90 140 430; 45 140 430" dur="4s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Circle -->
+    <circle cx="480" cy="400" r="8" fill="#FFB86C" opacity="0.3">
+      <animate attributeName="cy" values="400;390;400" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Sparkle effects -->
+  <g filter="url(#glow1)">
+    <circle cx="350" cy="220" r="3" fill="#C3E88D">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="380" cy="280" r="2" fill="#82AAFF">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="360" cy="350" r="2.5" fill="#FFB86C">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Bottom text hint -->
+  <text x="300" y="520" font-family="Arial, sans-serif" font-size="14"
+        fill="#C3E88D" opacity="0.5" text-anchor="middle" font-weight="300">
+    TURNING PAGE
+  </text>
+</svg>
