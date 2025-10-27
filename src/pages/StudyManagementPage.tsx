@@ -13,7 +13,7 @@ import studyDetailPageService, {
   UpdatePageRequest,
   convertSectionTypeToLabel
 } from '../api/studyDetailPageService';
-import { systemDesignTemplate } from '../components/studyDetailPage/editor/templateData/systemDesignTemplate';
+import { systemDesignTemplate, turningPageTemplate } from '../components/studyDetailPage/editor/templateData';
 import { SectionRenderer } from '../components/studyDetailPage/sections';
 import SectionEditForm from '../components/studyDetailPage/editor/SectionEditForm';
 import { normalizeMembersPropsForUI, serializeMembersPropsForAPI } from '../components/studyDetailPage/utils/membersAdapter';
@@ -655,6 +655,20 @@ const StudyManagementPage: React.FC = () => {
           { type: SectionType.REVIEWS, props: systemDesignTemplate.sections.review },
           { type: SectionType.FAQ, props: systemDesignTemplate.sections.faq },
           { type: SectionType.CTA, props: systemDesignTemplate.sections.cta }
+        ];
+      } else if (selectedTemplate === 'turningPage') {
+        templateName = '터닝페이지 (회고 모임)';
+        sectionMapping = [
+          { type: SectionType.HERO, props: turningPageTemplate.sections.hero },
+          { type: SectionType.LEADER_INTRO, props: turningPageTemplate.sections.leaderIntro },
+          { type: SectionType.RICH_TEXT, props: turningPageTemplate.sections.richText },
+          { type: SectionType.HOW_WE_ROLL, props: turningPageTemplate.sections.howWeRoll },
+          { type: SectionType.JOURNEY, props: turningPageTemplate.sections.journey },
+          { type: SectionType.EXPERIENCE, props: turningPageTemplate.sections.experience },
+          { type: SectionType.MEMBERS, props: turningPageTemplate.sections.members },
+          { type: SectionType.FAQ, props: turningPageTemplate.sections.faq },
+          { type: SectionType.CTA, props: turningPageTemplate.sections.cta },
+          { type: SectionType.REVIEWS, props: turningPageTemplate.sections.review }
         ];
       }
       // 향후 다른 템플릿 추가 가능:
@@ -1304,6 +1318,7 @@ const StudyManagementPage: React.FC = () => {
                       >
                         <option value="">템플릿 선택...</option>
                         <option value="systemDesign">시스템 디자인 (테크 다이브)</option>
+                        <option value="turningPage">터닝페이지 (회고 모임)</option>
                         {/* 향후 추가 가능:
                         <option value="algorithm">알고리즘 스터디</option>
                         <option value="mogakup">모각코</option>

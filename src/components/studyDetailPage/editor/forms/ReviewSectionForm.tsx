@@ -8,7 +8,7 @@ import {
   ReviewStats
 } from '../../types/reviewTypes';
 import reviewService, { ReviewResponse, ReviewStatistics } from '../../../../api/reviewService';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate, turningPageTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './ReviewSectionForm.css';
 
@@ -180,6 +180,8 @@ const ReviewSectionForm: React.FC<ReviewSectionFormProps> = ({
       reviewData = bookStudyTemplate.sections.review;
     } else if (templateType === 'systemDesign') {
       reviewData = systemDesignTemplate.sections.review;
+    } else if (templateType === 'turningPage') {
+      reviewData = turningPageTemplate.sections.review;
     } else {
       return;
     }

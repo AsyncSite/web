@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './FAQSectionForm.css';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate, turningPageTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 
 interface FAQItem {
@@ -85,6 +85,8 @@ const FAQSectionForm: React.FC<FAQSectionFormProps> = ({
       faqData = bookStudyTemplate.sections.faq;
     } else if (templateType === 'systemDesign') {
       faqData = systemDesignTemplate.sections.faq;
+    } else if (templateType === 'turningPage') {
+      faqData = turningPageTemplate.sections.faq;
     } else {
       return;
     }

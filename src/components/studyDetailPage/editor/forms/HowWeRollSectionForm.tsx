@@ -8,7 +8,7 @@ import {
 import StudyDetailRichTextEditor from '../../../common/richtext/StudyDetailRichTextEditor';
 import { RichTextData } from '../../../common/richtext/RichTextTypes';
 import { RichTextConverter } from '../../../common/richtext/RichTextConverter';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate, turningPageTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 import './HowWeRollSectionForm.css';
 
@@ -101,6 +101,18 @@ const HowWeRollSectionForm: React.FC<HowWeRollSectionFormProps> = ({
       setSchedule(howWeRollData.schedule);
     } else if (templateType === 'systemDesign') {
       const howWeRollData = systemDesignTemplate.sections.howWeRoll;
+      if (!howWeRollData) return;
+
+      setTitle(RichTextConverter.fromHTML(howWeRollData.title));
+      setSubtitle(RichTextConverter.fromHTML(howWeRollData.subtitle || ''));
+      setTagHeader(howWeRollData.tagHeader || '');
+      setScheduleIntro(RichTextConverter.fromHTML(howWeRollData.scheduleIntro || ''));
+      setSubHeading(RichTextConverter.fromHTML(howWeRollData.subHeading || ''));
+      setClosingMessage(RichTextConverter.fromHTML(howWeRollData.closingMessage || ''));
+      setMeetingOverview(howWeRollData.meetingOverview);
+      setSchedule(howWeRollData.schedule);
+    } else if (templateType === 'turningPage') {
+      const howWeRollData = turningPageTemplate.sections.howWeRoll;
       if (!howWeRollData) return;
 
       setTitle(RichTextConverter.fromHTML(howWeRollData.title));

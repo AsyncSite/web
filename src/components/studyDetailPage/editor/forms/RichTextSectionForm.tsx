@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './RichTextSectionForm.css';
-import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate } from '../templateData';
+import { algorithmTemplate, mogakupTemplate, bookStudyTemplate, systemDesignTemplate, turningPageTemplate } from '../templateData';
 import TemplateSelector from './TemplateSelector';
 
 interface RichTextSectionFormProps {
@@ -65,6 +65,8 @@ const RichTextSectionForm: React.FC<RichTextSectionFormProps> = ({
       richTextData = bookStudyTemplate?.sections?.richText;
     } else if (templateType === 'systemDesign') {
       richTextData = systemDesignTemplate?.sections?.richText;
+    } else if (templateType === 'turningPage') {
+      richTextData = turningPageTemplate?.sections?.richText;
     } else {
       return;
     }

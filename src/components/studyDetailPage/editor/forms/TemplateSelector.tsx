@@ -76,6 +76,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           <option value="systemDesign" style={{ background: '#1a1f2e', color: '#C3E88D' }}>
             시스템 디자인
           </option>
+          <option value="turningPage" style={{ background: '#1a1f2e', color: '#C3E88D' }}>
+            터닝페이지 (회고 모임)
+          </option>
         </select>
       </div>
       {selectedTemplate && (

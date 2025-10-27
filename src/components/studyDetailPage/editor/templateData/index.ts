@@ -3,4 +3,5 @@ export { algorithmTemplate } from './algorithmTemplate';
 export { mogakupTemplate } from './mogakupTemplate';
 export { bookStudyTemplate } from './bookStudyTemplate';
 export { systemDesignTemplate } from './systemDesignTemplate';
+export { turningPageTemplate } from './turningPageTemplate';
 export type { StudyTemplate } from './algorithmTemplate';
