@@ -5,6 +5,7 @@ import { Footer } from '../components/layout';
 import { useAuth } from '../contexts/AuthContext';
 import studyService, { type Study } from '../api/studyService';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
+import styles from './StudyDetailPage.module.css';
 
 const StudyDetailPage: React.FC = () => {
   const { studyIdentifier } = useParams<{ studyIdentifier: string }>();
@@ -168,9 +169,41 @@ const StudyDetailPage: React.FC = () => {
               )
             )}
           </div>
-          
-          <div style={{ 
-            marginTop: '60px', 
+
+          {/* QueryDaily Contextual Promotion Card */}
+          <div className={styles['study-companion-card']}>
+            <div className={styles['companion-header']}>
+              <div className={styles['companion-icon']}>💡</div>
+              <div className={styles['companion-badge']}>추천</div>
+            </div>
+            <div className={styles['companion-content']}>
+              <h4>이 스터디와 함께하면 더 좋아요!</h4>
+              <p>QueryDaily로 매일 3문제씩 풀며 스터디 내용을 복습하세요</p>
+              <div className={styles['companion-benefits']}>
+                <div className={styles['benefit-item']}>
+                  <span className={styles['benefit-icon']}>🔄</span>
+                  <span>반복 학습</span>
+                </div>
+                <div className={styles['benefit-item']}>
+                  <span className={styles['benefit-icon']}>👥</span>
+                  <span>다양한 관점</span>
+                </div>
+                <div className={styles['benefit-item']}>
+                  <span className={styles['benefit-icon']}>📈</span>
+                  <span>꾸준한 성장</span>
+                </div>
+              </div>
+              <button
+                onClick={() => window.open('https://querydaily.asyncsite.com/', '_blank')}
+                className={styles['companion-cta']}
+              >
+                QueryDaily 둘러보기 →
+              </button>
+            </div>
+          </div>
+
+          <div style={{
+            marginTop: '60px',
             padding: '24px',
             background: 'rgba(137, 221, 255, 0.05)',
             borderRadius: '12px',

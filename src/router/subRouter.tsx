@@ -36,6 +36,7 @@ const StudyPlanPage = lazy(() => import('../pages/StudyPlanPage'));
 const WhoWeArePage = lazy(() => import('../pages/WhoWeArePage'));
 const WhoWeAreOriginalPage = lazy(() => import('../pages/WhoWeAreOriginalPage'));
 const WhoWeAreHybridArchivePage = lazy(() => import('../pages/WhoWeAreHybridArchivePage'));
+const QueryDailyPromoDemo = lazy(() => import('../pages/QueryDailyPromoDemo'));
 
 const subRouter = [
   // 스터디 관련 라우트
@@ -216,6 +217,12 @@ const subRouter = [
   {
     path: 'whoweare-hybrid',
     element: <Navigate to="/whoweare-hybrid-archive" replace />,
+  },
+
+  // QueryDaily Promo Demo (internal testing)
+  {
+    path: 'querydaily-promo-demo',
+    element: <QueryDailyPromoDemo />,
   },
 ];
 export default subRouter;

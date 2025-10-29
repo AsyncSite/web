@@ -49,7 +49,7 @@ export type MeetingType = typeof MeetingType[keyof typeof MeetingType];
 
 // Position Interface
 export interface Position {
-  id: string;
+  positionId: string;  // Aligned with backend DTO
   positionName: string;
   requiredCount: number;
   currentCount: number;
@@ -60,25 +60,24 @@ export interface Position {
 
 // Tech Stack Interface
 export interface TechStack {
-  id: string;
+  techStackId: string;  // Aligned with backend DTO
   category: TechCategory;
   technology: string;
 }
 
-// Project Owner Interface
+// Project Owner Interface (matches backend OwnerDto)
 export interface ProjectOwner {
-  id: string;
   name: string;
   email: string;
+  profileImage?: string;
   github?: string;
   portfolio?: string;
-  profileImage?: string;
   openChatUrl?: string;
 }
 
 // Project Interface
 export interface Project {
-  id: string;
+  projectId: string;  // Aligned with backend DTO
   slug: string;
 
   // Basic Info
@@ -112,14 +111,15 @@ export interface Project {
   // Relations
   positions: Position[];
   techStacks: TechStack[];
-  owner: ProjectOwner;
+  owner: ProjectOwner;  // Owner information from backend OwnerDto
+  ownerId: string;  // Deprecated: kept for backward compatibility, use owner.email instead
 
   // Meta
   views: number;
   createdAt: Date;
   updatedAt: Date;
 
-  // UI helpers
+  // UI helpers (frontend-only for display)
   color: {
     primary: string;
     glow: string;
@@ -289,7 +289,7 @@ export const getProjectThemeByType = (projectType: ProjectType) => {
 };
 
 // Legacy helper for backward compatibility (deprecated)
-export const getProjectTheme = (id: string) => {
+export const getProjectTheme = (projectId: string) => {
   const themes = [
     { primary: '#C3E88D', glow: 'rgba(195, 232, 141, 0.3)' },
     { primary: '#82AAFF', glow: 'rgba(130, 170, 255, 0.3)' },
@@ -298,7 +298,7 @@ export const getProjectTheme = (id: string) => {
     { primary: '#FFCB6B', glow: 'rgba(255, 203, 107, 0.3)' }
   ];
 
-  const hash = id.split('').reduce((acc, char) => {
+  const hash = projectId.split('').reduce((acc, char) => {
     return char.charCodeAt(0) + ((acc << 5) - acc);
   }, 0);
 

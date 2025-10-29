@@ -904,3 +904,157 @@
   border-color: rgba(195, 232, 141, 0.6);
   transform: translateY(-2px);
 }
+
+/* ============================================
+   QueryDaily Promotional Banner
+   ============================================ */
+
+.querydaily-promo-banner {
+  position: relative;
+  background: linear-gradient(135deg,
+    rgba(255, 184, 108, 0.15) 0%,
+    rgba(195, 232, 141, 0.15) 100%);
+  border: 2px solid rgba(255, 184, 108, 0.4);
+  border-radius: 16px;
+  padding: 32px;
+  margin: 32px 0;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(255, 184, 108, 0.2);
+}
+
+.promo-pulse {
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle,
+    rgba(255, 184, 108, 0.2) 0%,
+    transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.promo-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.promo-left {
+  flex: 1;
+}
+
+.promo-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #FFB86C 0%, #FF9F51 100%);
+  color: #0a0e27;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(255, 184, 108, 0.4);
+}
+
+.promo-left h3 {
+  font-size: 1.8rem;
+  color: #FFB86C;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.promo-left p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 16px;
+}
+
+.promo-features {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.promo-features span {
+  font-size: 0.9rem;
+  color: #C3E88D;
+  font-weight: 500;
+}
+
+.promo-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.promo-cta {
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #FFB86C 0%, #FF9F51 100%);
+  color: #0a0e27;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255, 184, 108, 0.4);
+  white-space: nowrap;
+}
+
+.promo-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 28px rgba(255, 184, 108, 0.6);
+}
+
+.promo-subtext {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Design for Banner */
+@media (max-width: 768px) {
+  .querydaily-promo-banner {
+    padding: 24px;
+  }
+
+  .promo-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .promo-left h3 {
+    font-size: 1.4rem;
+  }
+
+  .promo-left p {
+    font-size: 1rem;
+  }
+
+  .promo-features {
+    justify-content: center;
+  }
+
+  .promo-right {
+    width: 100%;
+  }
+
+  .promo-cta {
+    width: 100%;
+  }
+}

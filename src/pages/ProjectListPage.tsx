@@ -155,7 +155,7 @@ const ProjectListPage: React.FC = () => {
             const typeColors = getProjectThemeByType(project.projectType);
             return (
               <Link
-                key={project.id}
+                key={project.projectId}
                 to={`/project/${project.slug}`}
                 className={styles['project-card']}
                 style={{
@@ -194,7 +194,7 @@ const ProjectListPage: React.FC = () => {
               {/* Tech Stack */}
               <div className={styles['tech-stacks']}>
                 {project.techStacks.slice(0, 5).map((tech) => (
-                  <span key={tech.id} className={styles['tech-tag']}>
+                  <span key={tech.techStackId} className={styles['tech-tag']}>
                     {tech.technology}
                   </span>
                 ))}

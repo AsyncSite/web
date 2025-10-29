@@ -808,3 +808,63 @@
     }
   }
 }
+
+/* ============================================
+   QueryDaily Navigation Item Styles
+   ============================================ */
+
+/* QueryDaily 메뉴 아이템 */
+.nav-querydaily-item .nav-querydaily {
+  color: #FFB86C !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+}
+
+/* QueryDaily 링크 hover 효과 */
+.nav-querydaily:hover {
+  color: #FF9F51 !important;
+  text-shadow: 0 0 12px rgba(255, 184, 108, 0.6) !important;
+}
+
+/* QueryDaily 링크 ::after 언더라인 커스텀 */
+.nav-querydaily::after {
+  background: linear-gradient(90deg, #FFB86C, #FF9F51) !important;
+}
+
+/* NEW 뱃지 스타일 */
+.nav-new-badge {
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #FFB86C 0%, #FF9F51 100%);
+  color: #0a0e27;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  animation: badgePulse 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(255, 184, 108, 0.4);
+}
+
+/* NEW 뱃지 펄스 애니메이션 */
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 8px rgba(255, 184, 108, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px rgba(255, 184, 108, 0.7);
+  }
+}
+
+/* 모바일에서도 QueryDaily 스타일 유지 */
+@media (max-width: 768px) {
+  .nav-querydaily-item .nav-querydaily {
+    justify-content: flex-start;
+  }
+
+  .nav-new-badge {
+    margin-left: auto;
+  }
+}

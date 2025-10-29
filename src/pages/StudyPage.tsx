@@ -371,7 +371,33 @@ const StudyPage: React.FC = () => {
                 </button>
               </div>
             </div>
-          
+
+          {/* QueryDaily Promotional Banner */}
+          <div className={styles['querydaily-promo-banner']}>
+            <div className={styles['promo-pulse']}></div>
+            <div className={styles['promo-content']}>
+              <div className={styles['promo-left']}>
+                <span className={styles['promo-badge']}>NEW</span>
+                <h3>🎯 매일 3문제로 실력 쌓기</h3>
+                <p>QueryDaily - 다른 개발자들의 생각을 엿보며 함께 성장하세요</p>
+                <div className={styles['promo-features']}>
+                  <span>✅ 매일 새로운 질문</span>
+                  <span>✅ 다양한 답변 공유</span>
+                  <span>✅ 학습 습관 형성</span>
+                </div>
+              </div>
+              <div className={styles['promo-right']}>
+                <button
+                  onClick={() => window.open('https://querydaily.asyncsite.com/', '_blank')}
+                  className={styles['promo-cta']}
+                >
+                  지금 시작하기 →
+                </button>
+                <span className={styles['promo-subtext']}>5분이면 충분해요</span>
+              </div>
+            </div>
+          </div>
+
           {/* View Content */}
           {viewMode === 'list' ? (
             loading ? (

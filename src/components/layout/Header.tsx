@@ -421,6 +421,18 @@ const Header: React.FC<HeaderProps> = ({ transparent = false, alwaysFixed = fals
                   PROJECT
                 </Link>
               </li>
+              <li className="nav-querydaily-item">
+                <a
+                  href="https://querydaily.asyncsite.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-querydaily"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  QUERYDAILY
+                  <span className="nav-new-badge">NEW</span>
+                </a>
+              </li>
               <li>
                 <Link
                   to="/ignition/navigator"

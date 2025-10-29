@@ -1,0 +1,111 @@
+/* ============================================
+   QueryDaily Contextual Promotion Card
+   ============================================ */
+
+.study-companion-card {
+  background: linear-gradient(135deg,
+    rgba(130, 170, 255, 0.1) 0%,
+    rgba(195, 232, 141, 0.1) 100%);
+  border: 2px solid rgba(130, 170, 255, 0.3);
+  border-radius: 16px;
+  padding: 28px;
+  margin: 32px 0;
+  box-shadow: 0 6px 24px rgba(130, 170, 255, 0.15);
+}
+
+.companion-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.companion-icon {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 8px rgba(130, 170, 255, 0.4));
+}
+
+.companion-badge {
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #82AAFF 0%, #6B93E8 100%);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.companion-content h4 {
+  font-size: 1.4rem;
+  color: #82AAFF;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.companion-content p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.companion-benefits {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(130, 170, 255, 0.15);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #C3E88D;
+  font-weight: 500;
+}
+
+.benefit-icon {
+  font-size: 1.1rem;
+}
+
+.companion-cta {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #82AAFF 0%, #6B93E8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(130, 170, 255, 0.3);
+}
+
+.companion-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(130, 170, 255, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .study-companion-card {
+    padding: 20px;
+  }
+
+  .companion-content h4 {
+    font-size: 1.2rem;
+  }
+
+  .companion-content p {
+    font-size: 0.95rem;
+  }
+
+  .companion-benefits {
+    justify-content: center;
+  }
+}

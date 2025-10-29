@@ -603,6 +603,28 @@
   transform: translateY(-1px);
 }
 
+.status-button-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid;
+  background: rgba(255, 203, 107, 0.15);
+  border-color: #FFCB6B;
+  color: #FFCB6B;
+}
+
+.status-button-secondary:hover {
+  background: rgba(255, 203, 107, 0.25);
+  transform: translateY(-1px);
+}
+
 .owner-card {
   display: flex;
   flex-direction: column;

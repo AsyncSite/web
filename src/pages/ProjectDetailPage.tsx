@@ -67,7 +67,7 @@ const ProjectDetailPage: React.FC = () => {
 
     try {
       setIsDeleting(true);
-      await projectService.deleteProject(project.id, user.id);
+      await projectService.deleteProject(project.projectId, user.id);
       navigate('/project');
     } catch (error: any) {
       alert(error.message || '프로젝트 삭제에 실패했습니다.');
@@ -77,11 +77,11 @@ const ProjectDetailPage: React.FC = () => {
     }
   };
 
-  const handleStatusChange = async (newStatus: 'IN_PROGRESS' | 'COMPLETED') => {
+  const handleStatusChange = async (newStatus: 'RECRUITING' | 'IN_PROGRESS' | 'COMPLETED') => {
     if (!project || !user) return;
 
     try {
-      const updatedProject = await projectService.updateProjectStatus(project.id, newStatus, user.id);
+      const updatedProject = await projectService.updateProjectStatus(project.projectId, newStatus, user.id);
       setProject(updatedProject);
     } catch (error: any) {
       alert(error.message || '상태 변경에 실패했습니다.');
@@ -274,7 +274,7 @@ const ProjectDetailPage: React.FC = () => {
             {activeTab === 'positions' && (
               <div className={styles['positions-tab']}>
                 {project.positions.map((position) => (
-                  <div key={position.id} className={styles['position-card']}>
+                  <div key={position.positionId} className={styles['position-card']}>
                     <div className={styles['position-header']}>
                       <h3 className={styles['position-name']}>{position.positionName}</h3>
                       <div className={styles['position-count']}>
@@ -407,11 +407,27 @@ const ProjectDetailPage: React.FC = () => {
                   </button>
                 )}
                 {project.status === 'IN_PROGRESS' && (
+                  <>
+                    <button
+                      className={styles['status-button-secondary']}
+                      onClick={() => handleStatusChange('RECRUITING')}
+                    >
+                      모집 재개
+                    </button>
+                    <button
+                      className={styles['status-button']}
+                      onClick={() => handleStatusChange('COMPLETED')}
+                    >
+                      완료 처리
+                    </button>
+                  </>
+                )}
+                {project.status === 'COMPLETED' && (
                   <button
-                    className={styles['status-button']}
-                    onClick={() => handleStatusChange('COMPLETED')}
+                    className={styles['status-button-secondary']}
+                    onClick={() => handleStatusChange('IN_PROGRESS')}
                   >
-                    완료 처리
+                    진행 중으로 되돌리기
                   </button>
                 )}
               </div>

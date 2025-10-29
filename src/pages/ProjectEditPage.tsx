@@ -134,7 +134,7 @@ const ProjectEditPage: React.FC = () => {
 
     try {
       setSubmitting(true);
-      const updatedProject = await projectService.updateProject(project.id, formData, user?.id || 'user-1');
+      const updatedProject = await projectService.updateProject(project.projectId, formData, user?.id || 'user-1');
       toast.success('프로젝트가 수정되었습니다!');
       navigate(`/project/${updatedProject.slug}`);
     } catch (error: any) {
