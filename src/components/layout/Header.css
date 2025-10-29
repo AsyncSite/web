@@ -842,19 +842,19 @@
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  animation: badgePulse 2s ease-in-out infinite;
+  animation: badgeBounce 2s ease-in-out infinite;
   box-shadow: 0 0 8px rgba(255, 184, 108, 0.4);
 }
 
-/* NEW 뱃지 펄스 애니메이션 */
-@keyframes badgePulse {
+/* NEW 뱃지 바운스 애니메이션 - Subtle Bounce */
+@keyframes badgeBounce {
   0%, 100% {
-    transform: scale(1);
+    transform: translateY(0);
     box-shadow: 0 0 8px rgba(255, 184, 108, 0.4);
   }
   50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 16px rgba(255, 184, 108, 0.7);
+    transform: translateY(-4px);
+    box-shadow: 0 2px 12px rgba(255, 184, 108, 0.6);
   }
 }
 

@@ -378,12 +378,12 @@ const StudyPage: React.FC = () => {
             <div className={styles['promo-content']}>
               <div className={styles['promo-left']}>
                 <span className={styles['promo-badge']}>NEW</span>
-                <h3>🎯 매일 3문제로 실력 쌓기</h3>
-                <p>QueryDaily - 다른 개발자들의 생각을 엿보며 함께 성장하세요</p>
+                <h3>🎯 뻔한 질문은 그만, 진짜 면접 질문</h3>
+                <p>QueryDaily - 당신의 이력서에서 나온 날카로운 질문</p>
                 <div className={styles['promo-features']}>
-                  <span>✅ 매일 새로운 질문</span>
-                  <span>✅ 다양한 답변 공유</span>
-                  <span>✅ 학습 습관 형성</span>
+                  <span>✅ 이력서 맞춤형 꼬리 질문</span>
+                  <span>✅ 실전 면접 시뮬레이션</span>
+                  <span>✅ 매일 오전 9시 질문 도착</span>
                 </div>
               </div>
               <div className={styles['promo-right']}>
@@ -393,7 +393,7 @@ const StudyPage: React.FC = () => {
                 >
                   지금 시작하기 →
                 </button>
-                <span className={styles['promo-subtext']}>5분이면 충분해요</span>
+                <span className={styles['promo-subtext']}>30초면 충분해요</span>
               </div>
             </div>
           </div>

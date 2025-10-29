@@ -136,6 +136,32 @@ const ProjectListPage: React.FC = () => {
         </button>
       </div>
 
+      {/* QueryDaily Promotional Banner */}
+      <div className={styles['querydaily-promo-banner']}>
+        <div className={styles['promo-pulse']}></div>
+        <div className={styles['promo-content']}>
+          <div className={styles['promo-left']}>
+            <span className={styles['promo-badge']}>NEW</span>
+            <h3>🎯 뻔한 질문은 그만, 진짜 면접 질문</h3>
+            <p>QueryDaily - 당신의 이력서에서 나온 날카로운 질문</p>
+            <div className={styles['promo-features']}>
+              <span>✅ 이력서 맞춤형 꼬리 질문</span>
+              <span>✅ 실전 면접 시뮬레이션</span>
+              <span>✅ 매일 오전 9시 질문 도착</span>
+            </div>
+          </div>
+          <div className={styles['promo-right']}>
+            <button
+              onClick={() => window.open('https://querydaily.asyncsite.com/', '_blank')}
+              className={styles['promo-cta']}
+            >
+              지금 시작하기 →
+            </button>
+            <span className={styles['promo-subtext']}>30초면 충분해요</span>
+          </div>
+        </div>
+      </div>
+
       {/* Results Info */}
       <div className={styles['results-info']}>
         <p className={styles['results-count']}>

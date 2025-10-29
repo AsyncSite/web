@@ -177,27 +177,27 @@ const StudyDetailPage: React.FC = () => {
               <div className={styles['companion-badge']}>추천</div>
             </div>
             <div className={styles['companion-content']}>
-              <h4>이 스터디와 함께하면 더 좋아요!</h4>
-              <p>QueryDaily로 매일 3문제씩 풀며 스터디 내용을 복습하세요</p>
+              <h4>스터디와 함께 면접 준비도!</h4>
+              <p>QueryDaily로 당신의 이력서 기반 맞춤 면접 질문 받기</p>
               <div className={styles['companion-benefits']}>
                 <div className={styles['benefit-item']}>
-                  <span className={styles['benefit-icon']}>🔄</span>
-                  <span>반복 학습</span>
+                  <span className={styles['benefit-icon']}>🎯</span>
+                  <span>맞춤형 꼬리 질문</span>
                 </div>
                 <div className={styles['benefit-item']}>
-                  <span className={styles['benefit-icon']}>👥</span>
-                  <span>다양한 관점</span>
+                  <span className={styles['benefit-icon']}>💼</span>
+                  <span>실전 면접 대비</span>
                 </div>
                 <div className={styles['benefit-item']}>
-                  <span className={styles['benefit-icon']}>📈</span>
-                  <span>꾸준한 성장</span>
+                  <span className={styles['benefit-icon']}>⏰</span>
+                  <span>매일 오전 9시</span>
                 </div>
               </div>
               <button
                 onClick={() => window.open('https://querydaily.asyncsite.com/', '_blank')}
                 className={styles['companion-cta']}
               >
-                QueryDaily 둘러보기 →
+                QueryDaily 시작하기 →
               </button>
             </div>
           </div>
