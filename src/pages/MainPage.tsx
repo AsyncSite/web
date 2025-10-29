@@ -53,7 +53,7 @@ const MainPage = () => {
       <Studies studies={allStudies}/>
       <FAQ />
       <CTA />
-      <Contribution />
+      {/*<Contribution />*/}
       <Footer />
     </div>
   );
