@@ -157,11 +157,17 @@ const StudyManagementPage: React.FC = () => {
 
         setStudy(studyData);
 
-        // 권한 체크
-        // TODO: 백엔드에서 실제로 스터디 호스트인지 확인하는 API가 필요합니다.
-        // 현재는 프론트엔드에서만 체크하므로 보안상 완벽하지 않습니다.
-        // 백엔드에서 proposerId나 role 정보를 확인해야 합니다.
-        
+        // 권한 체크: proposerId 또는 ADMIN role
+        const hasPermission = user && (
+          user.email === studyData.proposerId || user.role === 'ADMIN'
+        );
+
+        if (!hasPermission) {
+          addToast('스터디 관리 권한이 없습니다.', 'error');
+          navigate('/study');
+          return;
+        }
+
         // Fetch applications - 실제 study ID 사용
         try {
           const applicationsData = await studyService.getStudyApplications(studyData.id, 0, 50);
