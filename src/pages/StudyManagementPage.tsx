@@ -1008,7 +1008,7 @@ const StudyManagementPage: React.FC = () => {
           ))}
           
           {/* Study Edit Button - using same style as tabs */}
-          {user && study && (user.email === study.proposerId || user.role === 'ADMIN') && (
+          {user && study && (user.email === study.proposerId || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
             <button
               className={styles.tabButton}
               onClick={() => setShowUpdateModal(true)}

@@ -506,8 +506,8 @@ const StudyPage: React.FC = () => {
                         </Link>
                         <div className={styles['study-actions']}>
                           {(() => {
-                            // 스터디 제안자인 경우
-                            if (isAuthenticated && user && study.proposerId === user.email) {
+                            // 스터디 제안자 또는 ADMIN인 경우
+                            if (isAuthenticated && user && (study.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN'))) {
                               return (
                                 <button 
                                   onClick={(e) => {

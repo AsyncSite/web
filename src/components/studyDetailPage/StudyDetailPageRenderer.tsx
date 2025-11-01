@@ -188,11 +188,11 @@ const StudyDetailPageRenderer: React.FC = () => {
         } catch (publishedError: any) {
           console.error('Failed to fetch published page:', publishedError);
 
-          // If published page not found and user is the study proposer, try draft page
+          // If published page not found and user is the study proposer or ADMIN, try draft page
           if (publishedError?.response?.status === 404 &&
               currentStudyData &&
               user &&
-              currentStudyData.proposerId === user.email) {
+              (currentStudyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN'))) {
             try {
               console.log('Trying to fetch draft page for study proposer...');
               const draftData = await studyDetailPageService.getDraftPage(currentStudyData.id);
@@ -384,8 +384,8 @@ const StudyDetailPageRenderer: React.FC = () => {
                       <h3>검토 대기 중인 스터디입니다</h3>
                       <p>관리자 승인을 기다리고 있습니다</p>
                     </div>
-                    {/* 스터디 제안자를 위한 관리 버튼 */}
-                    {user && studyData.proposerId === user.email && (
+                    {/* 스터디 제안자 또는 ADMIN을 위한 관리 버튼 */}
+                    {user && (studyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
                       <button
                         className={styles.manageButton}
                         onClick={(e) => {
@@ -426,8 +426,8 @@ const StudyDetailPageRenderer: React.FC = () => {
                         )}
                       </div>
                     </div>
-                    {/* 스터디 제안자를 위한 관리 버튼 */}
-                    {user && studyData.proposerId === user.email && (
+                    {/* 스터디 제안자 또는 ADMIN을 위한 관리 버튼 */}
+                    {user && (studyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
                       <button
                         className={styles.manageButton}
                         onClick={(e) => {
@@ -576,8 +576,8 @@ const StudyDetailPageRenderer: React.FC = () => {
                         )}
                       </div>
                     </div>
-                    {/* 스터디 제안자를 위한 관리 버튼 */}
-                    {user && studyData.proposerId === user.email && (
+                    {/* 스터디 제안자 또는 ADMIN을 위한 관리 버튼 */}
+                    {user && (studyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
                       <button
                         className={styles.manageButton}
                         onClick={(e) => {
