@@ -103,7 +103,7 @@ const StudyDetailPage: React.FC = () => {
             flexWrap: 'wrap' 
           }}>
             {/* 스터디 제안자 또는 ADMIN인지 확인 */}
-            {isAuthenticated && user && (study.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) ? (
+            {isAuthenticated && user && (study.proposerId === user.email || user.systemRole === 'ROLE_ADMIN') ? (
               /* 스터디 제안자는 관리 버튼만 표시 */
               <button
                 onClick={() => navigate(`/study/${study.slug}/manage`)}

@@ -160,8 +160,7 @@ const StudyManagementPage: React.FC = () => {
         // 권한 체크: proposerId 또는 ADMIN role
         const hasPermission = user && (
           user.email === studyData.proposerId ||
-          user.role === 'ADMIN' ||
-          user.roles?.includes('ADMIN')
+          user.systemRole === 'ROLE_ADMIN'
         );
 
         if (!hasPermission) {
@@ -1008,7 +1007,7 @@ const StudyManagementPage: React.FC = () => {
           ))}
           
           {/* Study Edit Button - using same style as tabs */}
-          {user && study && (user.email === study.proposerId || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
+          {user && study && (user.email === study.proposerId || user.systemRole === 'ROLE_ADMIN') && (
             <button
               className={styles.tabButton}
               onClick={() => setShowUpdateModal(true)}

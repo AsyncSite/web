@@ -192,7 +192,7 @@ const StudyDetailPageRenderer: React.FC = () => {
           if (publishedError?.response?.status === 404 &&
               currentStudyData &&
               user &&
-              (currentStudyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN'))) {
+              (currentStudyData.proposerId === user.email || user.systemRole === 'ROLE_ADMIN')) {
             try {
               console.log('Trying to fetch draft page for study proposer...');
               const draftData = await studyDetailPageService.getDraftPage(currentStudyData.id);
@@ -385,7 +385,7 @@ const StudyDetailPageRenderer: React.FC = () => {
                       <p>관리자 승인을 기다리고 있습니다</p>
                     </div>
                     {/* 스터디 제안자 또는 ADMIN을 위한 관리 버튼 */}
-                    {user && (studyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
+                    {user && (studyData.proposerId === user.email || user.systemRole === 'ROLE_ADMIN') && (
                       <button
                         className={styles.manageButton}
                         onClick={(e) => {
@@ -427,7 +427,7 @@ const StudyDetailPageRenderer: React.FC = () => {
                       </div>
                     </div>
                     {/* 스터디 제안자 또는 ADMIN을 위한 관리 버튼 */}
-                    {user && (studyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
+                    {user && (studyData.proposerId === user.email || user.systemRole === 'ROLE_ADMIN') && (
                       <button
                         className={styles.manageButton}
                         onClick={(e) => {
@@ -577,7 +577,7 @@ const StudyDetailPageRenderer: React.FC = () => {
                       </div>
                     </div>
                     {/* 스터디 제안자 또는 ADMIN을 위한 관리 버튼 */}
-                    {user && (studyData.proposerId === user.email || user.role === 'ADMIN' || user.roles?.includes('ADMIN')) && (
+                    {user && (studyData.proposerId === user.email || user.systemRole === 'ROLE_ADMIN') && (
                       <button
                         className={styles.manageButton}
                         onClick={(e) => {
