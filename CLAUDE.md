@@ -13,6 +13,12 @@
 - 반드시 전체 파일을 읽고 전체 맥락을 이해한 후 수정
 - 의존성과 연관성을 파악한 후 작업 진행
 
+**3. API 연동 기능 구현 시 반드시 실제 백엔드 응답 데이터를 먼저 확인할 것**
+- 타입 정의나 인터페이스만 보고 추측하지 말 것
+- 권한 체크, 데이터 매핑 등 백엔드 의존적인 기능은 **반드시 실제 API 응답 확인 후** 구현
+- 예: User 타입에 `role`, `roles`, `systemRole` 모두 있을 때, 백엔드가 실제로 어떤 필드를 사용하는지 먼저 확인
+- 추측으로 구현 → 실패 → 다시 수정하는 것 절대 금지
+
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
