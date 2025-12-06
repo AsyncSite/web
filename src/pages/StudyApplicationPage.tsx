@@ -306,12 +306,12 @@ const StudyApplicationPage: React.FC = () => {
           });
           setShowModal(true);
         } else {
-          // 결제 성공 → 신청은 백엔드에서 이미 확정됨 (webhook 통해)
+          // 결제 성공 → 리더 승인 대기 상태로 전환
           setModalConfig({
             title: '결제 완료',
-            message: '결제가 완료되었습니다!\n스터디 참여가 확정되었습니다.',
+            message: '결제가 완료되었습니다!\n스터디 리더의 승인 후 참여가 확정됩니다.\n마이페이지에서 신청 상태를 확인할 수 있습니다.',
             type: 'success',
-            onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+            onConfirm: () => navigate(`/users/me`)
           });
           setShowModal(true);
         }
@@ -519,7 +519,8 @@ const StudyApplicationPage: React.FC = () => {
             <ol>
               <li>지원서를 작성하여 제출합니다.</li>
               <li><strong>결제 페이지로 이동하여 {studyPrice.toLocaleString()}원을 결제합니다.</strong></li>
-              <li>결제 완료 즉시 스터디 멤버로 등록됩니다.</li>
+              <li>결제 완료 후 스터디 리더가 신청을 검토합니다.</li>
+              <li>승인되면 스터디 멤버로 등록되고 이메일로 안내받습니다.</li>
               <li>스터디 시작일에 맞춰 활동을 시작합니다.</li>
             </ol>
           ) : (
