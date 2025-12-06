@@ -197,7 +197,7 @@ const StudyApplicationPage: React.FC = () => {
               title: '결제 안내',
               message: `신청이 완료되었습니다.\n결제 페이지로 이동합니다.`,
               type: 'info',
-              onConfirm: () => navigate(`/profile`)
+              onConfirm: () => navigate(`/users/me`)
             });
             setShowModal(true);
           }
