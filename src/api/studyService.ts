@@ -312,6 +312,7 @@ export interface RejectApplicationRequest {
 // Payment related types
 export interface CreatePaymentRequest {
   idempotencyKey?: string; // 멱등성 키 (선택적, 없으면 자동 생성)
+  paymentMethod?: 'kakaopay' | 'naverpay' | 'ACCOUNT_TRANSFER' | 'inicis'; // 결제 수단
 }
 
 export interface PaymentResponse {

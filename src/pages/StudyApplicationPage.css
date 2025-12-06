@@ -259,6 +259,21 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Payment Method Section */
+.payment-method-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-info {
+  background: linear-gradient(135deg, #C3E88D 0%, #89DDFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .study-application-page {

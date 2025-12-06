@@ -5,6 +5,8 @@ import { useLoginRedirect } from '../hooks/useLoginRedirect';
 import studyService, { Study, ApplicationRequest } from '../api/studyService';
 import { getStudyDisplayInfo } from '../utils/studyStatusUtils';
 import Modal from '../components/common/Modal/Modal';
+import PaymentMethodSelector from '../components/UnifiedCheckout/PaymentMethodSelector';
+import type { CheckoutPaymentMethod } from '../types/checkout';
 import './StudyApplicationPage.css';
 
 
@@ -19,6 +21,7 @@ const StudyApplicationPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isPaidStudy, setIsPaidStudy] = useState(false);
   const [studyPrice, setStudyPrice] = useState(0);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<CheckoutPaymentMethod | null>(null);
   const [modalConfig, setModalConfig] = useState<{
     title?: string;
     message: string;
@@ -148,6 +151,13 @@ const StudyApplicationPage: React.FC = () => {
       alert('필수 항목을 모두 입력해주세요.');
       return true;
     }
+
+    // 유료 스터디인 경우 결제 수단 필수
+    if (isPaidStudy && !selectedPaymentMethod) {
+      alert('결제 수단을 선택해주세요.');
+      return true;
+    }
+
     return false;
   }
 
@@ -182,38 +192,96 @@ const StudyApplicationPage: React.FC = () => {
       const applicationId = applicationResponse.id;
 
       // 2. 유료 스터디인 경우 즉시 결제로 이동
-      if (isPaidStudy && studyPrice > 0) {
+      if (isPaidStudy && studyPrice > 0 && selectedPaymentMethod) {
         try {
-          // 결제 생성
-          const paymentResponse = await studyService.createPayment(study.id, applicationId);
+          // 결제 생성 (선택한 결제 수단 포함)
+          const paymentResponse = await studyService.createPayment(study.id, applicationId, {
+            paymentMethod: selectedPaymentMethod
+          });
 
-          // 결제 URL로 리다이렉트
-          if (paymentResponse.checkoutUrl) {
+          // 계좌이체인 경우 계좌 정보 페이지로 이동
+          if (paymentResponse.portOneSdkPayload?.payMethod === 'ACCOUNT_TRANSFER' ||
+              selectedPaymentMethod === 'ACCOUNT_TRANSFER') {
+            // 세션 스토리지에 결제 정보 저장
+            const paymentSessionData = {
+              intentId: paymentResponse.checkoutId,
+              studyId: study.id,
+              applicationId: applicationId,
+              studyName: study.name,
+              amount: studyPrice,
+              userName: user?.name || ''
+            };
+            sessionStorage.setItem('currentPaymentSession', JSON.stringify(paymentSessionData));
+
+            window.location.href = `/payment/account-info?intentId=${paymentResponse.checkoutId}`;
+            return;
+          }
+          // SDK 모드인 경우 PortOne SDK 호출 (카카오페이/네이버페이)
+          else if (paymentResponse.invocationType === 'SDK' && paymentResponse.portOneSdkPayload) {
+            const portOneModule = await import('@portone/browser-sdk/v2');
+            const PortOne = portOneModule.default;
+
+            const sdkResponse = await PortOne.requestPayment({
+              storeId: paymentResponse.portOneSdkPayload.storeId,
+              channelKey: paymentResponse.portOneSdkPayload.channelKey,
+              paymentId: paymentResponse.portOneSdkPayload.paymentId,
+              orderName: paymentResponse.portOneSdkPayload.orderName,
+              totalAmount: paymentResponse.portOneSdkPayload.totalAmount,
+              currency: paymentResponse.portOneSdkPayload.currency as any,
+              payMethod: paymentResponse.portOneSdkPayload.payMethod as any,
+              customer: {
+                fullName: paymentResponse.portOneSdkPayload.customer.fullName,
+                email: paymentResponse.portOneSdkPayload.customer.email,
+                phoneNumber: paymentResponse.portOneSdkPayload.customer.phoneNumber
+              },
+              redirectUrl: paymentResponse.portOneSdkPayload.redirectUrl,
+              noticeUrls: paymentResponse.portOneSdkPayload.noticeUrls,
+              customData: paymentResponse.portOneSdkPayload.customData
+            });
+
+            // SDK 응답 처리
+            if (sdkResponse && sdkResponse.code) {
+              // 결제 실패 or 취소
+              setModalConfig({
+                title: '결제 실패',
+                message: sdkResponse.message || '결제가 완료되지 않았습니다.',
+                type: 'error'
+              });
+              setShowModal(true);
+            } else {
+              // 결제 성공
+              setModalConfig({
+                title: '결제 완료',
+                message: '결제가 완료되었습니다!\n스터디 참여가 확정되었습니다.',
+                type: 'success',
+                onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+              });
+              setShowModal(true);
+            }
+            return;
+          }
+          // URL 모드인 경우 리다이렉트
+          else if (paymentResponse.checkoutUrl) {
             window.location.href = paymentResponse.checkoutUrl;
             return;
-          } else {
-            // SDK 기반 결제는 별도 처리 필요 (현재는 URL 리다이렉트만 지원)
-            setModalConfig({
-              title: '결제 안내',
-              message: `신청이 완료되었습니다.\n결제 페이지로 이동합니다.`,
-              type: 'info',
-              onConfirm: () => navigate(`/users/me`)
-            });
-            setShowModal(true);
+          }
+          // 예외 상황
+          else {
+            throw new Error('Invalid payment response: missing SDK payload or checkout URL');
           }
         } catch (paymentError: any) {
-          console.error('결제 생성 실패:', paymentError);
+          console.error('결제 처리 실패:', paymentError);
           // 신청은 완료되었으나 결제 생성 실패
           setModalConfig({
             title: '신청 완료 - 결제 필요',
-            message: `신청이 완료되었습니다.\n\n결제 페이지 연결 중 오류가 발생했습니다.\n마이페이지에서 결제를 진행해주세요.`,
+            message: `신청이 완료되었습니다.\n\n결제 진행 중 오류가 발생했습니다.\n마이페이지에서 결제를 진행해주세요.`,
             type: 'warning',
-            onConfirm: () => navigate(`/profile`)
+            onConfirm: () => navigate(`/users/me`)
           });
           setShowModal(true);
           return;
         }
-      } else {
+      } else if (!isPaidStudy) {
         // 무료 스터디는 기존 플로우 유지
         setModalConfig({
           title: '신청 완료',
@@ -232,7 +300,7 @@ const StudyApplicationPage: React.FC = () => {
           title: '중복 신청',
           message: '이미 이 스터디에 참가 신청을 하셨습니다.\n마이페이지에서 신청 상태를 확인해주세요.',
           type: 'warning',
-          onConfirm: () => navigate(`/profile`)
+          onConfirm: () => navigate(`/users/me`)
         });
         setShowModal(true);
         return;
@@ -380,6 +448,17 @@ const StudyApplicationPage: React.FC = () => {
               <span className="char-count">{answers.commitment.length}/200</span>
             </div>
           </div>
+
+          {/* 유료 스터디인 경우 결제 수단 선택 */}
+          {isPaidStudy && (
+            <div className="form-section payment-method-section">
+              <PaymentMethodSelector
+                selectedMethod={selectedPaymentMethod}
+                onMethodSelect={setSelectedPaymentMethod}
+                disabled={isSubmitting}
+              />
+            </div>
+          )}
 
           <div className="form-actions">
             <button
