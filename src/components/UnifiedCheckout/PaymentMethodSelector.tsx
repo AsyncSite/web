@@ -66,6 +66,7 @@ const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
           return (
             <button
               key={method.id}
+              type="button"
               className={[
                 styles['unified-payment-method-card'],
                 isSelected && styles['unified-payment-method-card--selected'],
