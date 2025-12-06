@@ -294,7 +294,7 @@ const StudyApplicationPage: React.FC = () => {
         if (sdkResponse && sdkResponse.code) {
           // 결제 실패 or 취소 → 신청 취소 처리
           try {
-            await studyService.cancelApplication(studyId, applicationId);
+            await studyService.cancelApplication(studyId, applicationId, user.email);
           } catch (cancelError) {
             console.error('신청 취소 실패:', cancelError);
           }
