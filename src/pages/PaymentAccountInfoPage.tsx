@@ -20,6 +20,7 @@ const PaymentAccountInfoPage: React.FC = () => {
   const [depositorName, setDepositorName] = useState('');
   const [isNotifying, setIsNotifying] = useState(false);
   const [notifyError, setNotifyError] = useState<string | null>(null);
+  const [showLaterConfirmModal, setShowLaterConfirmModal] = useState(false);
 
   useEffect(() => {
     // URL 파라미터에서 intentId 가져오기
@@ -231,7 +232,7 @@ const PaymentAccountInfoPage: React.FC = () => {
 
           <button
             className={styles['payment-account-info-later-btn']}
-            onClick={() => navigate('/users/me')}
+            onClick={() => setShowLaterConfirmModal(true)}
             disabled={isNotifying}
           >
             나중에 입금할게요
@@ -253,6 +254,65 @@ const PaymentAccountInfoPage: React.FC = () => {
           </a>
         </div>
       </div>
+
+      {/* 나중에 입금 확인 모달 */}
+      {showLaterConfirmModal && (
+        <>
+          <div
+            className={styles['payment-account-info-modal-overlay']}
+            onClick={() => setShowLaterConfirmModal(false)}
+          />
+          <div className={styles['payment-account-info-modal']}>
+            <div className={styles['payment-account-info-modal-header']}>
+              <span className={styles['payment-account-info-modal-icon']}>📋</span>
+              <h3 className={styles['payment-account-info-modal-title']}>
+                계좌 정보를 저장하셨나요?
+              </h3>
+            </div>
+
+            <div className={styles['payment-account-info-modal-body']}>
+              <div className={styles['payment-account-info-modal-account']}>
+                <p className={styles['payment-account-info-modal-bank']}>🏦 국민은행</p>
+                <p className={styles['payment-account-info-modal-number']}>893837-00-005595</p>
+                <p className={styles['payment-account-info-modal-holder']}>예금주: 최보임 (어싱크사이트)</p>
+                <p className={styles['payment-account-info-modal-amount']}>
+                  입금액: <strong>{orderInfo?.amount?.toLocaleString()}원</strong>
+                </p>
+              </div>
+
+              <button
+                className={styles['payment-account-info-modal-copy-btn']}
+                onClick={() => {
+                  navigator.clipboard.writeText('89383700005595');
+                  setCopySuccess('modal');
+                  setTimeout(() => setCopySuccess(''), 2000);
+                }}
+              >
+                {copySuccess === 'modal' ? '✓ 계좌번호 복사됨' : '📋 계좌번호 복사'}
+              </button>
+
+              <p className={styles['payment-account-info-modal-warning']}>
+                이 페이지를 벗어나면 계좌 정보를 다시 확인하기 어려울 수 있습니다
+              </p>
+            </div>
+
+            <div className={styles['payment-account-info-modal-footer']}>
+              <button
+                className={styles['payment-account-info-modal-cancel-btn']}
+                onClick={() => setShowLaterConfirmModal(false)}
+              >
+                다시 확인할게요
+              </button>
+              <button
+                className={styles['payment-account-info-modal-confirm-btn']}
+                onClick={() => navigate('/users/me')}
+              >
+                네, 저장했어요
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 };
