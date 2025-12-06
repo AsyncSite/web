@@ -21,21 +21,13 @@ interface PaymentMethodInfo {
 
 const PAYMENT_METHODS: PaymentMethodInfo[] = [
   {
-    id: 'kakaopay',
-    name: '카카오페이',
-    description: '카카오톡으로 간편결제',
-    logo: '🟨',  // 실제로는 이미지 URL 사용
-    bgColor: '#FEE500',
-    borderColor: '#F5D800',
+    id: 'inicis',
+    name: '카드결제',
+    description: '신용카드/체크카드 결제',
+    logo: '💳',
+    bgColor: '#3182CE',
+    borderColor: '#2B6CB0',
     popular: true
-  },
-  {
-    id: 'naverpay',
-    name: '네이버페이',
-    description: '네이버 아이디로 간편결제',
-    logo: '🟩',  // 실제로는 이미지 URL 사용
-    bgColor: '#03C75A',
-    borderColor: '#00B050'
   },
   {
     id: 'ACCOUNT_TRANSFER',
