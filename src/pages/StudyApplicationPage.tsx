@@ -88,8 +88,8 @@ const StudyApplicationPage: React.FC = () => {
 
         setStudy(studyData);
         
-        // 유료 스터디 여부 확인
-        const isPaid = studyData.costType === 'PAID';
+        // 유료 스터디 여부 확인 (PAID, FREE_WITH_VENUE 모두 유료로 처리)
+        const isPaid = studyData.costType === 'PAID' || studyData.costType === 'FREE_WITH_VENUE';
         setIsPaidStudy(isPaid);
         
         // 실제 스터디 가격 설정
@@ -163,11 +163,11 @@ const StudyApplicationPage: React.FC = () => {
 
   // 실제 신청 제출 함수
   const submitApplication = async (paymentId?: string) => {
-    if (!user || !studyId) {
+    if (!user || !studyId || !study) {
       return;
     }
     setIsSubmitting(true);
-    
+
     try {
       const applicationRequest: ApplicationRequest = {
         applicantId: user.email,
@@ -176,33 +176,68 @@ const StudyApplicationPage: React.FC = () => {
         ),
         paymentId: paymentId // 결제 ID 포함
       };
-      
-      await studyService.applyToStudy(studyId, applicationRequest);
 
-      setModalConfig({
-        title: '신청 완료',
-        message: isPaidStudy
-          ? `스터디 참여 신청이 완료되었습니다!\n\n1. 스터디 호스트가 신청서를 검토합니다\n2. 승인되면 이메일로 안내를 받습니다\n3. 48시간 내에 ${studyPrice.toLocaleString()}원을 결제해주세요\n4. 결제 완료 후 스터디에 참여할 수 있습니다`
-          : '스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.',
-        type: 'success',
-        onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
-      });
-      setShowModal(true);
+      // 1. 신청서 제출
+      const applicationResponse = await studyService.applyToStudy(studyId, applicationRequest);
+      const applicationId = applicationResponse.id;
+
+      // 2. 유료 스터디인 경우 즉시 결제로 이동
+      if (isPaidStudy && studyPrice > 0) {
+        try {
+          // 결제 생성
+          const paymentResponse = await studyService.createPayment(study.id, applicationId);
+
+          // 결제 URL로 리다이렉트
+          if (paymentResponse.checkoutUrl) {
+            window.location.href = paymentResponse.checkoutUrl;
+            return;
+          } else {
+            // SDK 기반 결제는 별도 처리 필요 (현재는 URL 리다이렉트만 지원)
+            setModalConfig({
+              title: '결제 안내',
+              message: `신청이 완료되었습니다.\n결제 페이지로 이동합니다.`,
+              type: 'info',
+              onConfirm: () => navigate(`/profile`)
+            });
+            setShowModal(true);
+          }
+        } catch (paymentError: any) {
+          console.error('결제 생성 실패:', paymentError);
+          // 신청은 완료되었으나 결제 생성 실패
+          setModalConfig({
+            title: '신청 완료 - 결제 필요',
+            message: `신청이 완료되었습니다.\n\n결제 페이지 연결 중 오류가 발생했습니다.\n마이페이지에서 결제를 진행해주세요.`,
+            type: 'warning',
+            onConfirm: () => navigate(`/profile`)
+          });
+          setShowModal(true);
+          return;
+        }
+      } else {
+        // 무료 스터디는 기존 플로우 유지
+        setModalConfig({
+          title: '신청 완료',
+          message: '스터디 참여 신청이 완료되었습니다!\n스터디 호스트가 검토 후 연락드릴 예정입니다.',
+          type: 'success',
+          onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+        });
+        setShowModal(true);
+      }
     } catch (error: any) {
       console.error('스터디 신청 실패:', error);
-      
+
       // 중복 신청 체크 (409 Conflict)
       if (error.response?.status === 409) {
         setModalConfig({
           title: '중복 신청',
-          message: '이미 이 스터디에 참가 신청을 하셨습니다.\n관리자가 검토 중이니 조금만 기다려주세요.',
+          message: '이미 이 스터디에 참가 신청을 하셨습니다.\n마이페이지에서 신청 상태를 확인해주세요.',
           type: 'warning',
-          onConfirm: () => navigate(`/study/${study?.slug || studyId}`)
+          onConfirm: () => navigate(`/profile`)
         });
         setShowModal(true);
         return;
       }
-      
+
       const errorMessage = error.response?.data?.message || '스터디 신청 중 오류가 발생했습니다.\n다시 시도해주세요.';
       setModalConfig({
         title: '오류',
@@ -360,7 +395,7 @@ const StudyApplicationPage: React.FC = () => {
               className="submit-button"
               disabled={isSubmitting}
             >
-              {isSubmitting ? '신청 중...' : isPaidStudy ? `참여 신청하기 (승인 후 ${studyPrice.toLocaleString()}원 결제)` : '참여 신청하기'}
+              {isSubmitting ? '처리 중...' : isPaidStudy ? `신청 및 결제하기 (${studyPrice.toLocaleString()}원)` : '참여 신청하기'}
             </button>
           </div>
         </form>
@@ -370,10 +405,9 @@ const StudyApplicationPage: React.FC = () => {
           {isPaidStudy ? (
             <ol>
               <li>지원서를 작성하여 제출합니다.</li>
-              <li>스터디 호스트가 지원서를 검토합니다. (1-3일 소요)</li>
-              <li>승인되면 이메일로 안내를 받습니다.</li>
-              <li><strong>48시간 내에 {studyPrice.toLocaleString()}원을 결제해주세요.</strong></li>
-              <li>결제 완료 후 스터디 멤버로 활동을 시작합니다.</li>
+              <li><strong>결제 페이지로 이동하여 {studyPrice.toLocaleString()}원을 결제합니다.</strong></li>
+              <li>결제 완료 즉시 스터디 멤버로 등록됩니다.</li>
+              <li>스터디 시작일에 맞춰 활동을 시작합니다.</li>
             </ol>
           ) : (
             <ol>
@@ -384,7 +418,10 @@ const StudyApplicationPage: React.FC = () => {
             </ol>
           )}
           <p className="info-note">
-            * 지원서는 스터디 호스트에게만 공개되며, 성실하게 작성해주시면 선발에 도움이 됩니다.
+            {isPaidStudy
+              ? '* 결제 후 환불 정책은 스터디 상세 페이지를 확인해주세요.'
+              : '* 지원서는 스터디 호스트에게만 공개되며, 성실하게 작성해주시면 선발에 도움이 됩니다.'
+            }
           </p>
         </div>
       </div>
