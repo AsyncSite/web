@@ -11,13 +11,16 @@ interface PaymentRequiredCardProps {
 }
 
 /**
- * 결제 필요 카드 (ACCEPTED 상태)
- * 사용자가 즉시 액션을 취해야 하는 가장 중요한 카드
+ * 결제 필요 카드
+ * - PAYMENT_REQUIRED: 새 플로우 (신청 → 결제 → 리더 승인)
+ * - ACCEPTED: 레거시 플로우 (신청 → 리더 승인 → 결제)
  */
 const PaymentRequiredCard: React.FC<PaymentRequiredCardProps> = ({
   application,
   onPaymentCreated
 }) => {
+  // 새 플로우(PAYMENT_REQUIRED) vs 레거시 플로우(ACCEPTED) 구분
+  const isNewFlow = application.status === 'PAYMENT_REQUIRED';
   const [isProcessing, setIsProcessing] = React.useState(false);
 
   const handlePayment = async () => {
@@ -145,19 +148,34 @@ const PaymentRequiredCard: React.FC<PaymentRequiredCardProps> = ({
       )}
 
       {/* 상태 배지 */}
-      <div className={styles.statusBadge}>승인됨</div>
+      <div className={styles.statusBadge}>
+        {isNewFlow ? '결제 대기' : '승인됨'}
+      </div>
 
       {/* 스터디 정보 */}
       <h4 className={styles.title}>{application.studyTitle}</h4>
 
-      {/* 축하 메시지 */}
+      {/* 안내 메시지 - 플로우에 따라 다름 */}
       <div className={styles.congratsSection}>
-        <p className={styles.congratsMessage}>
-          🎉 축하합니다! 참가 신청이 승인되었습니다.
-        </p>
-        <p className={styles.paymentInfo}>
-          결제를 완료하면 스터디 참여가 확정됩니다.
-        </p>
+        {isNewFlow ? (
+          <>
+            <p className={styles.congratsMessage}>
+              💳 결제를 완료해주세요
+            </p>
+            <p className={styles.paymentInfo}>
+              결제 완료 후 스터디 리더가 신청을 검토합니다.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className={styles.congratsMessage}>
+              🎉 축하합니다! 참가 신청이 승인되었습니다.
+            </p>
+            <p className={styles.paymentInfo}>
+              결제를 완료하면 스터디 참여가 확정됩니다.
+            </p>
+          </>
+        )}
       </div>
 
       {/* 결제 정보 */}
@@ -191,7 +209,7 @@ const PaymentRequiredCard: React.FC<PaymentRequiredCardProps> = ({
         onClick={handlePayment}
         disabled={isProcessing}
       >
-        {isProcessing ? '처리 중...' : '결제하고 참여 확정하기'}
+        {isProcessing ? '처리 중...' : isNewFlow ? '결제하고 신청 완료하기' : '결제하고 참여 확정하기'}
       </button>
 
       {/* 추가 정보 */}

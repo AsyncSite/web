@@ -291,8 +291,8 @@ const PaymentAccountInfoPage: React.FC = () => {
                 {copySuccess === 'modal' ? '✓ 계좌번호 복사됨' : '📋 계좌번호 복사'}
               </button>
 
-              <p className={styles['payment-account-info-modal-warning']}>
-                이 페이지를 벗어나면 계좌 정보를 다시 확인하기 어려울 수 있습니다
+              <p className={styles['payment-account-info-modal-notice']}>
+                마이페이지에서 다시 결제를 진행하면 계좌 정보를 확인할 수 있습니다
               </p>
             </div>
 

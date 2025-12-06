@@ -422,13 +422,13 @@
   background: rgba(59, 130, 246, 0.2);
 }
 
-.payment-account-info-modal-warning {
+.payment-account-info-modal-notice {
   font-size: 13px;
-  color: #dc2626;
+  color: #6b7280;
   text-align: center;
   line-height: 1.5;
   padding: 12px;
-  background: rgba(239, 68, 68, 0.08);
+  background: rgba(107, 114, 128, 0.08);
   border-radius: 8px;
 }
 
