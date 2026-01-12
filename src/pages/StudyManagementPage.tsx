@@ -137,7 +137,7 @@ const StudyManagementPage: React.FC = () => {
         // Fetch study details - studyId가 실제로는 slug일 수도 있음
         let studyData = null;
 
-        // UUID 패턴 체크 (숫자나 slug가 아닌 경우)
+        // UUID 패턴 체크 (UUID v1, v4 등 모든 버전 지원)
         const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(studyId);
 
         if (isUUID) {

@@ -444,8 +444,8 @@ class StudyService {
    * Get study by ID or slug
    */
   async getStudyById(idOrSlug: string | number): Promise<Study | null> {
-    // UUID 패턴 체크 (UUID v4 형식)
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(idOrSlug));
+    // UUID 패턴 체크 (UUID v1, v4 등 모든 버전 지원)
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(idOrSlug));
     
     // slug인 경우 slug 엔드포인트 사용
     const endpoint = isUuid 
@@ -473,8 +473,8 @@ class StudyService {
    * Get study by ID for public access (only approved studies)
    */
   async getApprovedStudyById(idOrSlug: string | number): Promise<Study | null> {
-    // UUID 패턴 체크 (UUID v4 형식)
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(idOrSlug));
+    // UUID 패턴 체크 (UUID v1, v4 등 모든 버전 지원)
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(idOrSlug));
     
     // slug인 경우 slug 엔드포인트 사용
     const endpoint = isUuid 
