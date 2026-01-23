@@ -391,7 +391,36 @@ const StudyDetailPageRenderer: React.FC = () => {
                     <span className={styles.statusIcon}>🚀</span>
                     <div className={styles.statusInfo}>
                       <h3>모집 중인 스터디입니다</h3>
-                      <p>마감일: {studyData.recruitDeadline ? new Date(studyData.recruitDeadline).toLocaleDateString() : '미정'}</p>
+                      <p>
+                        모집 마감: {(() => {
+                          console.log('deadline:', studyData.deadline, 'type:', typeof studyData.deadline);
+                          if (!studyData.deadline) return '미정';
+                          // parseDate로 이미 Date 객체로 변환되어 있음
+                          if (studyData.deadline instanceof Date) {
+                            return studyData.deadline.toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' });
+                          }
+                          // 혹시 배열로 온 경우 대비
+                          if (Array.isArray(studyData.deadline)) {
+                            const date = new Date(studyData.deadline[0], studyData.deadline[1] - 1, studyData.deadline[2]);
+                            return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' });
+                          }
+                          return new Date(studyData.deadline).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' });
+                        })()}
+                        {' | '}
+                        스터디 기간: {studyData.startDate && studyData.endDate
+                          ? `${Array.isArray(studyData.startDate) ? new Date(studyData.startDate[0], studyData.startDate[1] - 1, studyData.startDate[2]).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : new Date(studyData.startDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' })} ~ ${Array.isArray(studyData.endDate) ? new Date(studyData.endDate[0], studyData.endDate[1] - 1, studyData.endDate[2]).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : new Date(studyData.endDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' })}`
+                          : '미정'
+                        }
+                      </p>
+                      <div className={styles.capacityInfo}>
+                        <span className={styles.capacityText}>참여 인원: {studyData.enrolled} / {studyData.capacity}명</span>
+                        <div className={styles.capacityBar}>
+                          <div
+                            className={styles.capacityProgress}
+                            style={{ width: `${(studyData.enrolled / studyData.capacity) * 100}%` }}
+                          />
+                        </div>
+                      </div>
                     </div>
                     {/* 스터디 제안자를 위한 관리 버튼 */}
                     {user && studyData.proposerId === user.email && (
