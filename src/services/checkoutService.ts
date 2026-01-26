@@ -400,7 +400,7 @@ class CheckoutService {
         } catch {}
         try {
           const PortOne = await import('@portone/browser-sdk/v2');
-          const response = await PortOne.requestPayment(intent.portOneSdkPayload);
+          const response = await PortOne.requestPayment(intent.portOneSdkPayload as any);
 
           // SDK 응답 체크 (문서 기반)
           if (response.code !== undefined) {
