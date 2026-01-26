@@ -412,6 +412,13 @@ class CheckoutService {
           }
 
           // SDK 응답 체크 (문서 기반)
+          if (!response) {
+            throw this.createCheckoutError({
+              code: 'PAYMENT_SDK_ERROR',
+              message: '결제 응답을 받지 못했습니다.'
+            });
+          }
+
           if (response.code !== undefined) {
             // 오류 발생 (취소, 실패 등)
             console.log('[PortOne SDK] Payment cancelled or failed:', {
