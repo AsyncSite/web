@@ -401,7 +401,7 @@ class CheckoutService {
         } catch {}
         try {
           const PortOne = await import('@portone/browser-sdk/v2');
-          const response = await PortOne.requestPayment(intent.portOneSdkPayload);
+          const response = await PortOne.requestPayment(intent.portOneSdkPayload as any);
 
           // SDK 응답이 없는 경우 (리디렉션 또는 팝업 닫힘)
           if (!response) {
