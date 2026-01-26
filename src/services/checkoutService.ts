@@ -15,6 +15,7 @@ import {
   ApiResponse
 } from '../types/checkout';
 import toast from 'react-hot-toast';
+import type { Currency, PaymentPayMethod } from '@portone/browser-sdk/v2';
 
 // PortOne SDK payload (server-provided)
 export interface PortOneSdkPayload {
@@ -23,8 +24,8 @@ export interface PortOneSdkPayload {
   paymentId: string;
   orderName: string;
   totalAmount: number;
-  currency: string; // e.g., CURRENCY_KRW
-  payMethod: string; // e.g., CARD | KAKAOPAY | NAVERPAY
+  currency: Currency;
+  payMethod: PaymentPayMethod;
   redirectUrl: string;
 }
 
@@ -401,6 +402,14 @@ class CheckoutService {
         try {
           const PortOne = await import('@portone/browser-sdk/v2');
           const response = await PortOne.requestPayment(intent.portOneSdkPayload);
+
+          // SDK 응답이 없는 경우 (리디렉션 또는 팝업 닫힘)
+          if (!response) {
+            throw this.createCheckoutError({
+              code: 'PAYMENT_SDK_ERROR',
+              message: '결제 응답을 받지 못했습니다. 다시 시도해 주세요.'
+            });
+          }
 
           // SDK 응답 체크 (문서 기반)
           if (response.code !== undefined) {
