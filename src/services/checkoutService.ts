@@ -399,12 +399,7 @@ class CheckoutService {
           console.info('[PortOne SDK] redirectUrl typeof/value', typeof pl.redirectUrl, pl.redirectUrl);
         } catch {}
         try {
-          let PortOne: any;
-          try {
-            PortOne = await import('@portone/browser-sdk/v2');
-          } catch {
-            PortOne = await import('@portone/browser-sdk');
-          }
+          const PortOne = await import('@portone/browser-sdk/v2');
           const response = await PortOne.requestPayment(intent.portOneSdkPayload);
 
           // SDK 응답 체크 (문서 기반)
