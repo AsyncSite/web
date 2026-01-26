@@ -20,6 +20,7 @@ const ProfilePage = lazy(() => import('../pages/user/ProfilePage'));
 const ProfileEditPage = lazy(() => import('../pages/user/ProfileEditPage'));
 const TermsPage = lazy(() => import('../pages/TermsPage')); // 추가
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage')); // 추가
+const SupportPage = lazy(() => import('../pages/SupportPage')); // 고객지원 페이지
 const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
 const PaymentFailPage = lazy(() => import('../pages/PaymentFailPage'));
 const PaymentAccountInfoPage = lazy(() => import('../pages/PaymentAccountInfoPage'));
@@ -107,6 +108,10 @@ const router = createBrowserRouter([
       {
         path: 'privacy', // 추가
         element: <PrivacyPage />,
+      },
+      {
+        path: 'support', // 고객지원 페이지
+        element: <SupportPage />,
       },
       {
         path: 'payment/success',
