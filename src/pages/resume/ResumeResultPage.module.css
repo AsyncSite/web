@@ -1,0 +1,222 @@
+.resume-result-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.resume-result-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.resume-result-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 32px;
+}
+
+.resume-result-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+.resume-result-error {
+  text-align: center;
+  padding: 60px 20px;
+  color: #ef4444;
+  font-size: 15px;
+}
+
+.resume-result-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: #9ca3af;
+}
+
+.resume-result-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.resume-result-empty-text {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #6b7280;
+}
+
+.resume-result-empty-desc {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.resume-request-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resume-request-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  transition: box-shadow 0.2s ease;
+}
+
+.resume-request-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.resume-request-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.resume-request-card-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.resume-request-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.resume-request-status-pending {
+  background: #f59e0b;
+}
+
+.resume-request-status-in-progress {
+  background: #3b82f6;
+}
+
+.resume-request-status-completed {
+  background: #10b981;
+}
+
+.resume-request-status-cancelled {
+  background: #ef4444;
+}
+
+.resume-request-card-date {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+.resume-download-section {
+  margin-top: 12px;
+}
+
+.resume-download-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #6366f1;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.resume-download-button:hover {
+  background: #4f46e5;
+}
+
+.resume-download-button:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.resume-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.resume-file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.resume-file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resume-file-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.resume-file-meta {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.resume-file-download-link {
+  padding: 6px 14px;
+  background: #6366f1;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.resume-file-download-link:hover {
+  background: #4f46e5;
+}
+
+@media (max-width: 768px) {
+  .resume-result-container {
+    padding: 24px 16px;
+  }
+
+  .resume-result-title {
+    font-size: 22px;
+  }
+
+  .resume-request-card {
+    padding: 16px;
+  }
+
+  .resume-request-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .resume-file-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
