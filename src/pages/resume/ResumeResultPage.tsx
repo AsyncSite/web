@@ -126,9 +126,9 @@ function ResumeResultPage(): React.ReactNode {
     resumeFileInputRef.current?.click();
   };
 
-  const handleDownloadResume = (pdfUrl: string | null) => {
-    if (!pdfUrl) return;
-    window.open(pdfUrl, '_blank');
+  const handleDownloadResume = (resumeId: number) => {
+    const url = resumeService.getResumeDownloadUrl(resumeId);
+    window.open(url, '_blank');
   };
 
   if (isAuthLoading) {
@@ -260,7 +260,7 @@ function ResumeResultPage(): React.ReactNode {
                           {resume.pdfUrl && (
                             <button
                               className={styles['resume-file-download-link']}
-                              onClick={() => handleDownloadResume(resume.pdfUrl)}
+                              onClick={() => handleDownloadResume(resume.id)}
                             >
                               다운로드
                             </button>
