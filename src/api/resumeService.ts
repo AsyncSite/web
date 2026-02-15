@@ -25,28 +25,10 @@ export interface ResumeResponse {
   updatedAt: string;
 }
 
-export interface PdfUploadResponse {
-  requestId: number;
-  pdfUrl: string;
-}
-
 const REQUEST_URL = '/api/grit-service/grit/resume/requests';
 const RESUME_URL = '/api/grit-service/grit/resume/resumes';
 
 class ResumeService {
-  async uploadPdf(file: File, userName: string, userEmail?: string): Promise<PdfUploadResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('userName', userName);
-    if (userEmail) {
-      formData.append('userEmail', userEmail);
-    }
-    const response = await apiClient.post<PdfUploadResponse>(`${REQUEST_URL}/upload-pdf`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-    return response.data;
-  }
-
   async getMyResumeRequests(userEmail: string): Promise<ResumeRequestResponse[]> {
     const response = await apiClient.get<ResumeRequestResponse[]>(REQUEST_URL, {
       params: { userEmail },
