@@ -29,9 +29,6 @@ const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
 const ProjectCreatePage = lazy(() => import('../pages/ProjectCreatePage'));
 const ProjectEditPage = lazy(() => import('../pages/ProjectEditPage'));
 
-// 이력서 관련 페이지
-const ResumeResultPage = lazy(() => import('../pages/resume/ResumeResultPage'));
-
 // 기타 페이지들
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 const StudyLeaderGuidePage = lazy(() => import('../pages/guide/StudyLeaderGuidePage'));
@@ -226,16 +223,6 @@ const subRouter = [
   {
     path: 'querydaily-promo-demo',
     element: <QueryDailyPromoDemo />,
-  },
-
-  // 이력서 첨삭 결과 조회
-  {
-    path: 'resume',
-    element: (
-      <PrivateRoute>
-        <ResumeResultPage />
-      </PrivateRoute>
-    ),
   },
 ];
 export default subRouter;
